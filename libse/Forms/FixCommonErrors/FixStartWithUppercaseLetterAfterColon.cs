@@ -13,9 +13,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                var p = new Paragraph(subtitle.Paragraphs[i]);
+                Paragraph p = subtitle.Paragraphs[i];
+                if (!callbacks.AllowFix(p, fixAction))
+                {
+                    continue;
+                }
+
                 Paragraph last = subtitle.GetParagraphOrDefault(i - 1);
-                string oldText = p.Text;
+                string text = subtitle.Paragraphs[i].Text;
+                string oldText = text;
                 int skipCount = 0;
 
                 if (last != null)
@@ -23,10 +29,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string lastText = HtmlUtil.RemoveHtmlTags(last.Text);
                     if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
-                        var st = new StrippableText(p.Text);
+                        var st = new StrippableText(text);
                         if (ShouldCapitalize(st.StrippedText))
                         {
-                            p.Text = st.CombineWithPrePost(st.StrippedText.CapitalizeFirstLetter());
+                            text = st.CombineWithPrePost(st.StrippedText.CapitalizeFirstLetter());
                         }
                     }
                 }
@@ -34,9 +40,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (oldText.Contains(ExpectedChars))
                 {
                     bool lastWasColon = false;
-                    for (int j = 0; j < p.Text.Length; j++)
+                    for (int j = 0; j < text.Length; j++)
                     {
-                        var s = p.Text[j];
+                        var s = text[j];
                         if (s == ':' || s == ';')
                         {
                             lastWasColon = true;
@@ -44,41 +50,41 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         else if (lastWasColon)
                         {
                             // skip whitespace index
-                            if (j + 2 < p.Text.Length && p.Text[j] == ' ')
+                            if (j + 2 < text.Length && text[j] == ' ')
                             {
-                                s = p.Text[++j];
+                                s = text[++j];
                             }
 
-                            var startFromJ = p.Text.Substring(j);
+                            var startFromJ = text.Substring(j);
                             if (startFromJ.Length > 3 && startFromJ[0] == '<' && startFromJ[2] == '>' && (startFromJ[1] == 'i' || startFromJ[1] == 'b' || startFromJ[1] == 'u'))
                             {
                                 skipCount = 2;
                             }
-                            else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && p.Text.Substring(j).Contains('>'))
+                            else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && text.Substring(j).Contains('>'))
                             {
                                 skipCount = (j + startFromJ.IndexOf('>', 6)) - j;
                             }
                             else if (Helper.IsTurkishLittleI(s, callbacks.Encoding, callbacks.Language))
                             {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(s, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
+                                text = text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(s, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
                             else if (char.IsLower(s))
                             {
                                 // iPhone
                                 bool change = true;
-                                if (s == 'i' && p.Text.Length > j + 1)
+                                if (s == 'i' && text.Length > j + 1)
                                 {
-                                    if (p.Text[j + 1] == char.ToUpper(p.Text[j + 1]))
+                                    if (text[j + 1] == char.ToUpper(text[j + 1]))
                                     {
                                         change = false;
                                     }
                                 }
                                 if (change)
                                 {
-                                    string textFromIdx = p.Text.Substring(j).CapitalizeFirstLetter();
-                                    p.Text = p.Text.Remove(j);
-                                    p.Text = p.Text.Insert(j, textFromIdx);
+                                    string textFromIdx = text.Substring(j).CapitalizeFirstLetter();
+                                    text = text.Remove(j);
+                                    text = text.Insert(j, textFromIdx);
                                 }
 
                                 lastWasColon = false;
@@ -98,13 +104,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (oldText != p.Text && callbacks.AllowFix(p, fixAction))
+                if (!oldText.Equals(text, StringComparison.Ordinal))
                 {
                     noOfFixes++;
-                    subtitle.Paragraphs[i].Text = p.Text;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    subtitle.Paragraphs[i].Text = text;
+                    callbacks.AddFixToListView(p, fixAction, oldText, text);
                 }
             }
+
             callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
         }
 
