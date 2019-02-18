@@ -17,17 +17,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            int fine = 0;
-            var sb = new StringBuilder();
-            foreach (string line in lines)
+            if (lines.Count > 0)
             {
-                sb.Append(line);
-                if (CsvLine.IsMatch(line))
+                if (lines[0].Contains(Header))
                 {
-                    fine++;
+                    return true;
                 }
             }
-            return fine > 0 && sb.ToString().Contains(Header);
+            int matchCount = 0;
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (CsvLine.IsMatch(lines[i]))
+                {
+                    matchCount++;
+                }
+            }
+            return matchCount > 0;
         }
 
         public override string ToText(Subtitle subtitle, string title)
