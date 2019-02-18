@@ -53,17 +53,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             bool continuation = false;
             Paragraph p = null;
+
+            // Token indices
+            const int Actor = 0;
+            const int StartTime = 1;
+            const int EndTime = 2;
+            const int Text = 3;
+
             foreach (string line in lines)
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    string[] parts = line.Split(',');
+                    string[] tokens = line.Split(',');
                     try
                     {
-                        var actor = Utilities.FixQuotes(parts[0]);
-                        var start = DecodeTime(parts[1]);
-                        var end = DecodeTime(parts[2]);
-                        string text = Utilities.FixQuotes(parts[3]);
+                        var actor = Utilities.FixQuotes(tokens[Actor]);
+                        var start = DecodeTime(tokens[StartTime]);
+                        var end = DecodeTime(tokens[EndTime]);
+                        string text = Utilities.FixQuotes(tokens[Text]);
                         p = new Paragraph(start, end, text);
                         if (!string.IsNullOrEmpty(actor))
                         {
@@ -71,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
 
                         subtitle.Paragraphs.Add(p);
-                        continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
+                        continuation = tokens[Text].StartsWith('"') && !tokens[Text].EndsWith('"');
                     }
                     catch
                     {
