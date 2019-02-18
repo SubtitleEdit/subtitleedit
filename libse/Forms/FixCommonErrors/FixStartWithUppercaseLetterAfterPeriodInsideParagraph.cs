@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         char charAtPosition = text[start];
                         // Allow fixing lowercase letter after recursive ??? or !!!.
-                        if (charAtPosition != '.') // Dot is not include 'cause I don't capitalize word after the ellipses (...), right?
+                        if (charAtPosition != '.') // Dot is not include 'cause we don't capitalize word after the ellipses (...), right?
                         {
                             while (start + 1 < text.Length && text[start + 1] == charAtPosition)
                             {
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // Try to reach the last dot if char at *start is '.'.
                         if (charAtPosition == '.')
                         {
-                            while (start + 1 < text.Length && text[start + 1] == '.')
+                            while (start + 1 < text.Length && text[start + 1] == charAtPosition)
                             {
                                 start++;
                             }
@@ -97,18 +97,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             if (textBefore != null && textBefore.EndsWith("...", System.StringComparison.Ordinal))
             {
-                if (callbacks.Language == "en" && text.StartsWith("i "))
-                {
-                }
-                else
+                if (!(callbacks.Language == "en" && text.StartsWith("i ", System.StringComparison.Ordinal)))
                 {
                     return text; // too hard to say if uppercase after "..."
                 }
-            }                
+            }
 
             if (textBefore != null && textBefore.EndsWith(" - ", System.StringComparison.Ordinal) && !textBefore.EndsWith(". - ", System.StringComparison.Ordinal))
             {
-                return text; 
+                return text;
             }
 
             // Skip words like iPhone, iPad...
@@ -122,8 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return Helper.GetTurkishUppercaseLetter(text[0], callbacks.Encoding) + text.Substring(1);
             }
 
-            text = char.ToUpper(text[0]) + text.Substring(1);
-            return text;
+            return text.CapitalizeFirstLetter();
         }
 
     }
