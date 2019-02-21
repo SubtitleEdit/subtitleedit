@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {

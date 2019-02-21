@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {

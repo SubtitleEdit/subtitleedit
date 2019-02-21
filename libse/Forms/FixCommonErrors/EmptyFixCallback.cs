@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -67,5 +68,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return new HashSet<string>();
         }
 
+        public bool DoSpell(string word)
+        {
+            return false;
+        }
     }
 }

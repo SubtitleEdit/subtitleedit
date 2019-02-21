@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+﻿namespace Nikse.SubtitleEdit.Core.Interfaces
 {
     public interface IFixCommonError
     {

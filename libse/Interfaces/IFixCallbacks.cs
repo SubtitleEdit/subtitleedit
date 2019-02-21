@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
-namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+namespace Nikse.SubtitleEdit.Core.Interfaces
 {
-    public interface IFixCallbacks
+    public interface IFixCallbacks : IDoSpell
     {
         bool AllowFix(Paragraph p, string action);
         void AddFixToListView(Paragraph p, string action, string before, string after);
