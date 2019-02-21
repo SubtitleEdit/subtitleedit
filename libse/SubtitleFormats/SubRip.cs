@@ -79,28 +79,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
                 {
-                    next = lines[i + 1].TrimEnd();
+                    next = lines[i + 1];
                 }
 
                 string nextNext = string.Empty;
                 if (i + 2 < lines.Count)
                 {
-                    nextNext = lines[i + 2].TrimEnd();
+                    nextNext = lines[i + 2];
                 }
 
                 string nextNextNext = string.Empty;
                 if (i + 3 < lines.Count)
                 {
-                    nextNextNext = lines[i + 3].TrimEnd();
+                    nextNextNext = lines[i + 3];
                 }
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
-                    (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next) || RegexTimeCodes.IsMatch(line)))
+                    (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next.Trim()) || RegexTimeCodes.IsMatch(line.Trim())))
                 {
                     ReadLine(subtitle, string.Empty, string.Empty, string.Empty, string.Empty);
                 }
-                if (_expecting == ExpectingLine.Number && RegexTimeCodes.IsMatch(line))
+                if (_expecting == ExpectingLine.Number && RegexTimeCodes.IsMatch(line.Trim()))
                 {
                     _expecting = ExpectingLine.TimeCodes;
                     doRenum = true;
@@ -226,7 +226,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text));
+            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text.Trim()));
         }
 
         private static string RemoveBadChars(string line)
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace(" -- > ", defaultSeparator)
                 .Replace(" - -> ", defaultSeparator)
                 .Replace(" -->> ", defaultSeparator)
-                .Replace(" ---> ", defaultSeparator);
+                .Replace(" ---> ", defaultSeparator).Trim();
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100

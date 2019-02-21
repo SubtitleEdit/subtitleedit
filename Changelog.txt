@@ -1,5 +1,20 @@
 ﻿Subtitle Edit Changelog
 
+3.5.10 (xth April 2019) BETA
+* NEW:
+   * 
+* IMPROVED:
+   * Auto rename after translate via plugin - thx Sopor
+   * Allow dash in number for WebVTT files - thx Maksim
+   * Make export font name dropdown wider - thx Eduard
+* FIXED:
+   * Fix for "Split long lines" with html tags - thx moob
+   * Fix minor issue with quotes in reverse RTL - thx OmrSi
+   * Fix shortcut searching with "&" character - thx Leon
+   * Remove "gotta" to "got to" from English OCR fix replace list
+   * Fix name/abbreviation check in OCR fix engine - thx teodargent
+
+
 3.5.9 (10th February 2019)
 * NEW:
    * Bookmarks - thx OmrSi/marb99

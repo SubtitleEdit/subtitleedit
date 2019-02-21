@@ -178,6 +178,64 @@ for the show?";
         }
 
         [TestMethod]
+        public void SrtLineNumbers()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+00:01:10,040 --> 00:01:13,360 
+K-A-R...
+
+2
+00:01:16,840 --> 00:01:19,080 
+... A-N-T...
+
+3
+00:01:21,280 --> 00:01:23,720 
+... Æ-N-E.
+
+4
+00:01:27,120 --> 00:01:29,680 
+Karantæne.
+
+5
+00:01:29,840 --> 00:01:32,360 
+K-A-R...";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(5, subtitle.Paragraphs.Count);
+            Assert.AreEqual("K-A-R...", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void SrtSpacesPre()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+ 00:01:10,040 --> 00:01:13,360 
+K-A-R...
+
+ 2
+00:01:16,840 --> 00:01:19,080 
+... A-N-T...
+
+3
+ 00:01:21,280 --> 00:01:23,720 
+... Æ-N-E.
+
+4
+00:01:27,120 --> 00:01:29,680 
+Karantæne.
+
+5
+00:01:29,840 --> 00:01:32,360 
+K-A-R...";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(5, subtitle.Paragraphs.Count);
+            Assert.AreEqual("K-A-R...", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
         public void SrtDifficultLines2()
         {
             var target = new SubRip();
@@ -197,6 +255,9 @@ ppp
 6530";
             Assert.AreEqual(expected.Trim(), subtitle.Paragraphs[0].Text.Trim());
         }
+
+
+       
 
         #endregion SubRip (.srt)
 
