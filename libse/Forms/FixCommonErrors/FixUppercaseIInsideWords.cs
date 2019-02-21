@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -7,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     {
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
         private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùáàìéóúñüéíóúñü]", RegexOptions.Compiled);
+
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -67,6 +69,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 word.Equals("island", StringComparison.OrdinalIgnoreCase) ||
                                 word.Equals("islands", StringComparison.OrdinalIgnoreCase))
                             {
+                            }
+                            else if (word.StartsWith("I") && !callbacks.DoSpell("l" + word.Remove(0,1)))
+                            {
+                                // word starting with "I", replaced by "l" is not spell check correct, so we skip it (probably a name)
                             }
                             else if (match.Index == 0)
                             {  // first letter in paragraph

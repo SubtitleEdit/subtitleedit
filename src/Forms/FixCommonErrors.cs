@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -1824,6 +1826,35 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.InverseSelection();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private Hunspell _hunspell;
+
+        public bool DoSpell(string word)
+        {
+            if (_hunspell == null && Language != null)
+            {
+                var fileMatches = Directory.GetFiles(Utilities.DictionaryFolder, Language + "*.dic");
+                if (fileMatches.Length > 0)
+                {
+                    var dictionary = fileMatches[0].Substring(0, fileMatches[0].Length - 4);
+                    try
+                    {
+                        _hunspell = Hunspell.GetHunspell(dictionary);
+                    }
+                    catch 
+                    {
+                        _hunspell = null;
+                    }
+                }               
+            }
+
+            if (_hunspell == null)
+            {
+                return false;
+            }
+
+            return _hunspell.Spell(word);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+
+namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixLongLines : IFixCommonError
     {
