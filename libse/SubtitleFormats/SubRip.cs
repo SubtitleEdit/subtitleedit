@@ -48,12 +48,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}\r\n{1} --> {2}\r\n{3}\r\n\r\n";
+            const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
 
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text);
+                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
             }
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
         }
@@ -79,19 +79,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
                 {
-                    next = lines[i + 1];
+                    next = lines[i + 1].TrimEnd();
                 }
 
                 string nextNext = string.Empty;
                 if (i + 2 < lines.Count)
                 {
-                    nextNext = lines[i + 2];
+                    nextNext = lines[i + 2].TrimEnd();
                 }
 
                 string nextNextNext = string.Empty;
                 if (i + 3 < lines.Count)
                 {
-                    nextNextNext = lines[i + 3];
+                    nextNextNext = lines[i + 3].TrimEnd();
                 }
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
