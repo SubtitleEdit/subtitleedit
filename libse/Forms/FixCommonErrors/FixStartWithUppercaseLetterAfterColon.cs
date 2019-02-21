@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     noOfFixes++;
                     subtitle.Paragraphs[i].Text = p.Text;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    callbacks.AddFixToListView(subtitle.Paragraphs[i], fixAction, oldText, p.Text);
                 }
             }
             callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
