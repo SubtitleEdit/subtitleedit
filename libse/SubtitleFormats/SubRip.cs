@@ -79,19 +79,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
                 {
-                    next = lines[i + 1];
+                    next = lines[i + 1].TrimEnd();
                 }
 
                 string nextNext = string.Empty;
                 if (i + 2 < lines.Count)
                 {
-                    nextNext = lines[i + 2];
+                    nextNext = lines[i + 2].TrimEnd();
                 }
 
                 string nextNextNext = string.Empty;
                 if (i + 3 < lines.Count)
                 {
-                    nextNextNext = lines[i + 3];
+                    nextNextNext = lines[i + 3].TrimEnd();
                 }
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
