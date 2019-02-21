@@ -24885,6 +24885,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs[index].Text = string.Empty;
                 SubtitleListview1.SetText(index, string.Empty);
+
+                var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                if (original != null)
+                {
+                    original.Text = string.Empty;
+                    SubtitleListview1.SetAlternateText(index, string.Empty);
+                }
+
                 SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, _subtitle.Paragraphs[index]);
             }
             RefreshSelectedParagraph();
