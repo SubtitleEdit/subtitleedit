@@ -23754,25 +23754,32 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var joinSubtitles = new JoinSubtitles())
             {
-                if (joinSubtitles.ShowDialog(this) == DialogResult.OK && joinSubtitles.JoinedSubtitle != null && joinSubtitles.JoinedSubtitle.Paragraphs.Count > 0 && ContinueNewOrExit())
+                // user cancel operation
+                if (joinSubtitles.ShowDialog(this) != DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeDisplaySubtitleJoin);
-
-                    ResetSubtitle();
-                    _subtitle = joinSubtitles.JoinedSubtitle;
-                    SetCurrentFormat(joinSubtitles.JoinedFormat);
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
-                    if (IsFramesRelevant && CurrentFrameRate > 0)
-                    {
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-                    }
-
-                    ShowSource();
-
-                    ShowStatus(_language.SubtitlesJoined);
+                    return;
                 }
+                // nothing to merge
+                if (joinSubtitles.JoinedSubtitle == null || joinSubtitles.JoinedSubtitle.Paragraphs.Count == 0)
+                {
+                    return;
+                }
+                if (!ContinueNewOrExit())
+                {
+                    return;
+                }
+
+                MakeHistoryForUndo(_language.BeforeDisplaySubtitleJoin);
+
+                ResetSubtitle();
+                _subtitle = joinSubtitles.JoinedSubtitle;
+                SetCurrentFormat(joinSubtitles.OutputFormat);
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                ShowSource();
+                ShowStatus(_language.SubtitlesJoined);
+
             }
         }
 

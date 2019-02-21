@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -13,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }
-        public SubtitleFormat JoinedFormat { get; private set; }
+        public SubtitleFormat OutputFormat { get; private set; }
 
         public JoinSubtitles()
         {
@@ -69,162 +70,137 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            int preCount = _fileNamesToJoin.Count;
             foreach (string fileName in files)
             {
-                bool alreadyInList = false;
-                foreach (string existingFileName in _fileNamesToJoin)
-                {
-                    if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        alreadyInList = true;
-                        break;
-                    }
-                }
-                if (!alreadyInList)
+                if (!_fileNamesToJoin.Any(f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                 {
                     _fileNamesToJoin.Add(fileName);
                 }
             }
-            SortAndLoad();
+            // only refresh if new files are dropped
+            if (preCount != _fileNamesToJoin.Count)
+            {
+                SortAndLoad();
+            }
+        }
+
+        private static SubtitleFormat GetSubtitleFormat(string fileName, out Subtitle subtitle)
+        {
+            subtitle = new Subtitle();
+            SubtitleFormat format = subtitle.LoadSubtitle(fileName, out _, Encoding.UTF8);
+
+            // format found using text based formats
+            if (format != null)
+            {
+                return format;
+            }
+
+            // check format using binary formats
+            foreach (SubtitleFormat binaryFormat in new SubtitleFormat[] { new Ebu(), new Pac(), new Cavena890() })
+            {
+                if (binaryFormat.IsMine(null, fileName))
+                {
+                    binaryFormat.LoadSubtitle(subtitle, null, fileName);
+                    return binaryFormat;
+                }
+            }
+
+            // format not found
+            return null;
+        }
+
+        private void CancelMergeOperation(int fileIdx, string errorFile)
+        {
+            for (; fileIdx < _fileNamesToJoin.Count; fileIdx++)
+            {
+                _fileNamesToJoin.RemoveAt(fileIdx);
+            }
+
+            MessageBox.Show("Unkown subtitle format: " + errorFile);
         }
 
         private void SortAndLoad()
         {
-            JoinedFormat = new SubRip(); // default subtitle format
+            OutputFormat = new SubRip(); // default subtitle format
             string header = null;
+            var subtitles = new List<Subtitle>(_fileNamesToJoin.Count);
             SubtitleFormat lastFormat = null;
-            var subtitles = new List<Subtitle>();
-            for (int k = 0; k < _fileNamesToJoin.Count; k++)
+
+            for (int i = 0; i < _fileNamesToJoin.Count; i++)
             {
-                string fileName = _fileNamesToJoin[k];
+                string fileName = _fileNamesToJoin[i];
                 try
                 {
-                    var sub = new Subtitle();
-                    Encoding encoding;
-                    var format = sub.LoadSubtitle(fileName, out encoding, null);
+                    SubtitleFormat format = GetSubtitleFormat(fileName, out Subtitle sub);
 
+                    // unable to find format stop the operation
                     if (format == null)
                     {
-                        var ebu = new Ebu();
-                        if (ebu.IsMine(null, fileName))
-                        {
-                            ebu.LoadSubtitle(sub, null, fileName);
-                            format = ebu;
-                        }
-                    }
-                    if (format == null)
-                    {
-                        var pac = new Pac();
-                        if (pac.IsMine(null, fileName))
-                        {
-                            pac.LoadSubtitle(sub, null, fileName);
-                            format = pac;
-                        }
-                    }
-                    if (format == null)
-                    {
-                        var cavena890 = new Cavena890();
-                        if (cavena890.IsMine(null, fileName))
-                        {
-                            cavena890.LoadSubtitle(sub, null, fileName);
-                            format = cavena890;
-                        }
-                    }
-
-                    if (format == null)
-                    {
-                        for (int j = k; j < _fileNamesToJoin.Count; j++)
-                        {
-                            _fileNamesToJoin.RemoveAt(j);
-                        }
-
-                        MessageBox.Show("Unkown subtitle format: " + fileName);
+                        CancelMergeOperation(i, fileName);
                         return;
                     }
-                    if (sub.Header != null)
+
+                    // use last subtitle header if available
+                    if (!string.IsNullOrEmpty(sub.Header))
                     {
                         header = sub.Header;
                     }
 
-                    if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
+                    // set last-format if not set yet
+                    if (lastFormat == null)
                     {
                         lastFormat = format;
                     }
                     else
                     {
-                        lastFormat = new SubRip(); // default subtitle format
+                        // uset default format as last if previous and current subtitle doesn't match formats
+                        if (!lastFormat.FriendlyName.Equals(format.FriendlyName))
+                        {
+                            lastFormat = OutputFormat;
+                        }
                     }
 
                     subtitles.Add(sub);
                 }
                 catch (Exception exception)
                 {
-                    for (int j = k; j < _fileNamesToJoin.Count; j++)
-                    {
-                        _fileNamesToJoin.RemoveAt(j);
-                    }
-
+                    CancelMergeOperation(i, fileName);
                     MessageBox.Show(exception.Message);
                     return;
                 }
             }
-            JoinedFormat = lastFormat;
 
-            for (int outer = 0; outer < subtitles.Count; outer++)
-            {
-                for (int inner = 1; inner < subtitles.Count; inner++)
-                {
-                    var a = subtitles[inner - 1];
-                    var b = subtitles[inner];
-                    if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
-                    {
-                        string t1 = _fileNamesToJoin[inner - 1];
-                        _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
-                        _fileNamesToJoin[inner] = t1;
+            OutputFormat = lastFormat;
 
-                        var t2 = subtitles[inner - 1];
-                        subtitles[inner - 1] = subtitles[inner];
-                        subtitles[inner] = t2;
-                    }
-                }
-            }
+            var subtitleSorted = subtitles
+                .Where(s => s.Paragraphs.Count > 0)
+                .OrderBy(s => s.Paragraphs[0].StartTime.TotalMilliseconds).ToList();
 
             listViewParts.BeginUpdate();
             listViewParts.Items.Clear();
-            int i = 0;
-            foreach (string fileName in _fileNamesToJoin)
+            foreach (Subtitle sub in subtitleSorted)
             {
-                var sub = subtitles[i];
-                var lvi = new ListViewItem(string.Format("{0:#,###,###}", sub.Paragraphs.Count));
-                if (sub.Paragraphs.Count > 0)
+                var lvi = new ListViewItem($"{sub.Paragraphs.Count:N}")
                 {
-                    lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());
-                    lvi.SubItems.Add(sub.Paragraphs[sub.Paragraphs.Count - 1].StartTime.ToString());
-                }
-                else
-                {
-                    lvi.SubItems.Add("-");
-                    lvi.SubItems.Add("-");
-                }
-                lvi.SubItems.Add(fileName);
+                    SubItems =
+                    {
+                        sub.Paragraphs.First().StartTime.ToString(),
+                        sub.Paragraphs.Last().StartTime.ToString(),
+                        Path.GetFileName(sub.FileName)
+                    }
+                };
                 listViewParts.Items.Add(lvi);
-                i++;
             }
             listViewParts.EndUpdate();
 
-            JoinedSubtitle = new Subtitle();
-            if (JoinedFormat != null && JoinedFormat.FriendlyName != SubRip.NameOfFormat)
+            if (OutputFormat != null && OutputFormat.FriendlyName != SubRip.NameOfFormat)
             {
                 JoinedSubtitle.Header = header;
             }
 
-            foreach (var sub in subtitles)
-            {
-                foreach (var p in sub.Paragraphs)
-                {
-                    JoinedSubtitle.Paragraphs.Add(p);
-                }
-            }
+            JoinedSubtitle.Paragraphs.AddRange(subtitleSorted.SelectMany(s => s.Paragraphs)
+                .OrderBy(p => p.StartTime.TotalMilliseconds));
             JoinedSubtitle.Renumber();
             labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
@@ -250,15 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var fileInfo = new FileInfo(fileName);
                         if (fileInfo.Length < Subtitle.MaxFileSize)
                         {
-                            bool alreadyInList = false;
-                            foreach (string existingFileName in _fileNamesToJoin)
-                            {
-                                if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    alreadyInList = true;
-                                }
-                            }
-                            if (!alreadyInList)
+                            if (!_fileNamesToJoin.Any(f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                             {
                                 _fileNamesToJoin.Add(fileName);
                             }
@@ -279,18 +247,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)
         {
-            var indices = new List<int>();
-            foreach (int index in listViewParts.SelectedIndices)
+            for (int i = listViewParts.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                indices.Add(index);
+                _fileNamesToJoin.RemoveAt(listViewParts.SelectedIndices[i]);
             }
-
-            indices.Reverse();
-            foreach (int index in indices)
-            {
-                _fileNamesToJoin.RemoveAt(index);
-            }
-
             if (_fileNamesToJoin.Count == 0)
             {
                 buttonClear_Click(null, null);
