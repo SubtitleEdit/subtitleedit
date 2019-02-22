@@ -197,6 +197,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
         private static readonly string[] AutoDetectWordsHindi = { "एक", "और", "को", "का", "यह", "सकते", "लिए", "करने", "भारतीय", "सकता", "भारत", "तकनीक", "कंप्यूटिंग", "उपकरण", "भाषाओं", "भाषा", "कंप्यूटर", "आप", "आपको", "अपने", "लेकिन", "करना", "सकता", "बहुत", "चाहते", "अच्छा", "वास्तव", "लगता", "इसलिए", "शेल्डन", "धन्यवाद।", "तरह", "करता", "चाहता", "कोशिश", "करते", "किया", "अजीब", "सिर्फ", "शुरू" };
         private static readonly string[] AutoDetectWordsUrdu = { "نہیں", "ایک", "ہیں", "کیا", "اور", "لئے", "ٹھیک", "ہوں", "مجھے", "تھا", "کرنے", "صرف", "ارے", "یہاں", "بہت", "لیکن", "ساتھ", "اپنے", "اچھا", "میرے", "چاہتا", "انہوں", "تمہیں" };
+        private static readonly string[] AutoDetectWordsSinhalese = { "කරන්න", "නැහැ", "කියල", "මගේ", "එයා", "ඔයාට", "කැප්ටන්", "ඔයාගේ", "පුළුවන්", "හැම", "වගේ", "වෙන්න", "ඕනා", "නෙමේ", "තියෙන්නේ", "වගේම", "දන්නවා", "වෙනවා", "එහෙම", "හිතන්නේ", "කියලා", "කරනවා", "යන්න", "දෙයක්", "තියනවා", "හොදයි", "දෙන්න", "එකක්", "මොනාද", "කියන්න", "කරන්නේ", "වෙන්නේ", "රොජර්ස්", "දාන්න", "කරලා", "ඔයාව", "වෙලා", "කොහොමද", "කිවුවා", "ඔබට", "රාවුල්" };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -480,6 +481,12 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 return "ur";
+            }
+
+            count = GetCount(text, AutoDetectWordsSinhalese);
+            if (count > bestCount)
+            {
+                return "sl";
             }
 
             count = GetCount(text, AutoDetectWordsMarcedonian);
@@ -844,6 +851,15 @@ namespace Nikse.SubtitleEdit.Core
                     case "ur_ur": // Urdu
                     case "ur":
                         count = GetCount(text, AutoDetectWordsUrdu);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "sl_sl": // Sinhalese
+                    case "sl":
+                        count = GetCount(text, AutoDetectWordsSinhalese);
                         if (count > bestCount)
                         {
                             languageName = shortName;
