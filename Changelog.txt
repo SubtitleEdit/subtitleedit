@@ -13,6 +13,9 @@
    * Fix shortcut searching with "&" character - thx Leon
    * Remove "gotta" to "got to" from English OCR fix replace list
    * Fix name/abbreviation check in OCR fix engine - thx teodargent
+   * Make "column->delete text" work in translator mode - thx darnn
+   * Fix focus issue in "Fix common errors" - thx OmrSi/Ding-adong
+   * SRT: Allow spaces before/after time codes - thx SirEllert
 
 
 3.5.9 (10th February 2019)
