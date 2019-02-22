@@ -131,5 +131,34 @@ namespace Test.Core
             Assert.IsTrue(Math.Abs(sub.Paragraphs[1].EndTime.TotalMilliseconds - 2500) < 0.01);
         }
 
+        [TestMethod]
+        public void RenumberNormal()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("0", 0, 1000);
+            var p2 = new Paragraph("0", 2000, 3000);
+            sub.Paragraphs.Add(p1);
+            sub.Paragraphs.Add(p2);
+            sub.Renumber();
+            Assert.AreEqual(sub.Paragraphs.Count, 2);
+            Assert.AreEqual(1, sub.Paragraphs[0].Number);
+            Assert.AreEqual(2, sub.Paragraphs[1].Number);
+        }
+
+        [TestMethod]
+        public void RenumberStartWith2()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("0", 0, 1000);
+            var p2 = new Paragraph("0", 2000, 3000);
+            sub.Paragraphs.Add(p1);
+            sub.Paragraphs.Add(p2);
+            sub.Renumber(2);
+            Assert.AreEqual(sub.Paragraphs.Count, 2);
+            Assert.AreEqual(2, sub.Paragraphs[0].Number);
+            Assert.AreEqual(3, sub.Paragraphs[1].Number);
+        }
+
+
     }
 }
