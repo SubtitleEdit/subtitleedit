@@ -2,12 +2,13 @@
 
 3.5.10 (xth April 2019) BETA
 * NEW:
-   * 
+   * Re-split shortcuts
 * IMPROVED:
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
    * Make export font name dropdown wider - thx Eduard
 * FIXED:
+   * Fix  renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
    * Fix minor issue with quotes in reverse RTL - thx OmrSi
    * Fix shortcut searching with "&" character - thx Leon
