@@ -5,48 +5,47 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class DurationsBridgeGaps
     {
-        public static int BridgeGaps(Subtitle fixedSubtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<string, string> dic)
+        public static int BridgeGaps(Subtitle subtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<string, string> dic)
         {
-            int fixedCount = 0;
-            for (int i = 0; i < fixedSubtitle.Paragraphs.Count - 1; i++)
+            if (minMsBetweenLines > maxMs)
             {
-                Paragraph cur = fixedSubtitle.Paragraphs[i];
-                Paragraph next = fixedSubtitle.Paragraphs[i + 1];
-                string before = null;
-                var difMs = Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds);
-                if (difMs < maxMs && difMs > minMsBetweenLines && maxMs > minMsBetweenLines)
-                {
-                    before = $"{(next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / TimeCode.BaseUnit:0.000}";
-                    if (divideEven && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
-                    {
-                        double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
-                        next.StartTime.TotalMilliseconds -= half;
-                    }
-                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
-                    if (fixedIndexes != null)
-                    {
-                        fixedIndexes.Add(i);
-                        fixedIndexes.Add(i + 1);
-                    }
-                    fixedCount++;
-                }
-                var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
-                if (msToNext < 2000)
-                {
-                    string info;
-                    if (!string.IsNullOrEmpty(before))
-                    {
-                        info = $"{before} => {msToNext / TimeCode.BaseUnit:0.000}";
-                    }
-                    else
-                    {
-                        info = $"{msToNext / TimeCode.BaseUnit:0.000}";
-                    }
-
-                    dic?.Add(cur.ID, info);
-                }
+                string message = $"{nameof(DurationsBridgeGaps)}: {nameof(minMsBetweenLines)} cannot be smaller than {nameof(maxMs)}!";
+                SeLogger.Error(new InvalidOperationException(message), message);
+                return 0;
             }
-            return fixedCount;
+
+            int count = subtitle.Paragraphs.Count - 1;
+            for (int i = 0; i < count; i++)
+            {
+                Paragraph cur = subtitle.Paragraphs[i];
+                Paragraph next = subtitle.Paragraphs[i + 1];
+
+                double currentGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
+
+                // there shouldn't be adjustment if current gaps is shorter than minimum gaps or greater than maximum gaps
+                if (currentGaps < minMsBetweenLines || currentGaps > maxMs)
+                {
+                    continue;
+                }
+
+                // next paragraph start-time will be pull to try to meet the current parragraph
+                if (divideEven)
+                {
+                    next.StartTime.TotalMilliseconds -= currentGaps / 2.0;
+                }
+
+                cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
+                if (fixedIndexes != null)
+                {
+                    fixedIndexes.Add(i);
+                    fixedIndexes.Add(i + 1);
+                }
+
+                double newGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
+                dic?.Add(cur.ID, $"{currentGaps / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
+            }
+
+            return fixedIndexes.Count / 2;
         }
     }
 }
