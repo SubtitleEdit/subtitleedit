@@ -27,33 +27,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == false)
+            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == true)
             {
-                return false;
+                return true;
             }
-            return base.IsMine(lines, fileName);
+
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            var paragraph = new Paragraph();
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
-                Match match = null;
-                if (line.Length >= 4)
+
+                // too short line
+                if (line.Length < 4)
                 {
-                    match = RegexTimeCodes.Match(line);
+                    _errorCount++;
+                    continue;
                 }
-                if (match?.Success == true)
+
+                Match match = RegexTimeCodes.Match(line);
+                if (match.Success == true)
                 {
                     try
                     {
-                        // Read frames.
-                        paragraph.StartFrame = int.Parse(match.Groups[1].Value);
-                        paragraph.EndFrame = int.Parse(match.Groups[2].Value);
+                        var paragraph = new Paragraph
+                        {
+                            Number = subtitle.Paragraphs.Count + 1,
+                            // Read frames.
+                            StartFrame = int.Parse(match.Groups[1].Value),
+                            EndFrame = int.Parse(match.Groups[2].Value)
+                        };
 
                         // Decode text.
                         line = line.Substring(match.Value.Length).Trim();
@@ -67,10 +77,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             line = line.Trim(TrimChars);
                         }
 
-                        paragraph.Number = i + 1;
                         paragraph.Text = string.Join(Environment.NewLine, line.Split('|'));
                         subtitle.Paragraphs.Add(paragraph);
-                        paragraph = new Paragraph();
                     }
                     catch
                     {
