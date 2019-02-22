@@ -2207,6 +2207,8 @@
             public string MainTextBoxSelectionToUpper { get; set; }
             public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
+            public string MainTextBoxAutoBreakFromPos { get; set; }
+            public string MainTextBoxAutoBreakFromPosAndGoToNext { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }

@@ -5545,6 +5545,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MainTextBoxAutoBreak":
                     language.Settings.MainTextBoxAutoBreak = reader.Value;
                     break;
+                case "Settings/MainTextBoxAutoBreakFromPos":
+                    language.Settings.MainTextBoxAutoBreakFromPos = reader.Value;
+                    break;
+                case "Settings/MainTextBoxAutoBreakFromPosAndGoToNext":
+                    language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext = reader.Value;
+                    break;
                 case "Settings/MainTextBoxUnbreak":
                     language.Settings.MainTextBoxUnbreak = reader.Value;
                     break;

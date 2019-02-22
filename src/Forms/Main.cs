@@ -9267,18 +9267,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
             {
-                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                var lines = textBoxListViewText.Text.SplitToLines();
-                if (lines.Count > 0)
+                var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
+                if (text != textBoxListViewText.Text)
                 {
-                    textBoxListViewText.SelectionStart = lines[0].Length;
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPos));
+                    textBoxListViewText.Text = text;
+                    var lines = textBoxListViewText.Text.SplitToLines();
+                    if (lines.Count > 0)
+                    {
+                        textBoxListViewText.SelectionStart = lines[0].Length;
+                    }
                 }
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxBreakAtCursorPositionAndGoToNext)
             {
-                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
-                ButtonNextClick(null, null);
+                var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
+                if (text != textBoxListViewText.Text)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, Configuration.Settings.Language.Settings.MainTextBoxAutoBreakFromPosAndGoToNext));
+                    textBoxListViewText.Text = text;
+                    ButtonNextClick(null, null);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxUnbreak)
@@ -14203,6 +14213,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ContinueNewOrExit())
                     {
                         var subtitle = new Subtitle();
+                        subtitle.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
+                        var fr = CurrentFrameRate;
+                        var format = GetCurrentSubtitleFormat();
+                        var videoFileName = _videoFileName;
                         foreach (var p in _subtitle.Paragraphs)
                         {
                             var newP = new Paragraph(p);
@@ -14216,12 +14230,21 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         RemoveAlternate(true);
                         FileNew();
+                        SetCurrentFormat(format);
+                        toolStripComboBoxFrameRate.Text = fr.ToString();
                         _subtitle = subtitle;
                         _subtitleListViewIndex = -1;
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
+                        if (!string.IsNullOrEmpty(videoFileName))
+                        {
+                            OpenVideo(videoFileName);
+                        }
+                        if (IsFramesRelevant && CurrentFrameRate > 0)
+                        {
+                            _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        }
                         e.SuppressKeyPress = true;
                     }
                 }
