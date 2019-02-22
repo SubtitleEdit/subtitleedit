@@ -1877,6 +1877,17 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUppercaseIInsideWords_Dont_Change_Starting_I()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Ioannises had a nice day.");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Ioannises had a nice day.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line
