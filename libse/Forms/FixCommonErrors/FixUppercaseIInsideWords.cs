@@ -6,9 +6,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUppercaseIInsideWords : IFixCommonError
     {
-        private static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
-        private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùáàìéóúñüéíóúñü]", RegexOptions.Compiled);
-
+        private static readonly Regex ReAfterLowercaseLetter = new Regex(@"\p{Ll}I", RegexOptions.Compiled);
+        private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"\p{L}I\p{Ll}", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -65,101 +64,42 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         if (callbacks.AllowFix(p, fixAction))
                         {
-                            if (word.Equals("internal", StringComparison.OrdinalIgnoreCase) ||
-                                word.Equals("island", StringComparison.OrdinalIgnoreCase) ||
-                                word.Equals("islands", StringComparison.OrdinalIgnoreCase))
+                            if (language == "en" && word.EndsWith('s') &&
+                                     p.Text.Length > match.Index + 1 &&
+                                     word.TrimEnd('s') == word.TrimEnd('s').ToUpperInvariant())
                             {
-                            }
-                            else if (word.StartsWith("I") && !callbacks.DoSpell("l" + word.Remove(0,1)))
-                            {
-                                // word starting with "I", replaced by "l" is not spell check correct, so we skip it (probably a name)
-                            }
-                            else if (match.Index == 0)
-                            {  // first letter in paragraph
-
-                                //too risky! - perhaps if periods is fixed at the same time... or too complicated!?
-                                //if (isLineContinuation)
-                                //{
-                                //    st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                //    p.Text = st.MergedString;
-                                //    uppercaseIsInsideLowercaseWords++;
-                                //    AddFixToListView(p, fixAction, oldText, p.Text);
-                                //}
+                                // skip words like "MRIs" where the last 's' indicates plural
                             }
                             else
                             {
-                                if (match.Index > 2 && st.StrippedText[match.Index - 1] == ' ')
+                                var before = st.StrippedText[match.Index];
+                                var after = '\0';
+                                if (match.Index < st.StrippedText.Length - 3)
                                 {
-                                    if ((Utilities.AllLettersAndNumbers + @",").Contains(st.StrippedText[match.Index - 2])
-                                        && match.Length >= 2 && Utilities.LowercaseVowels.Contains(char.ToLower(match.Value[1])))
-                                    {
-                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                        p.Text = st.MergedString;
-                                        uppercaseIsInsideLowercaseWords++;
-                                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                    }
+                                    after = st.StrippedText[match.Index + 2];
                                 }
-                                else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1]))
+
+                                if (before != '\0' && char.IsUpper(before) && after != '\0' && char.IsLower(after) &&
+                                    !Utilities.LowercaseVowels.Contains(char.ToLower(before)) && !Utilities.LowercaseVowels.Contains(after))
                                 {
-                                    if ((Utilities.AllLettersAndNumbers + @",").Contains(st.StrippedText[match.Index - Environment.NewLine.Length + 1])
-                                        && match.Length >= 2 && Utilities.LowercaseVowels.Contains(match.Value[1]))
-                                    {
-                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                        p.Text = st.MergedString;
-                                        uppercaseIsInsideLowercaseWords++;
-                                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                    }
+                                    st.StrippedText = st.StrippedText.Remove(match.Index + 1, 1).Insert(match.Index + 1, "i");
+                                    p.Text = st.MergedString;
+                                    uppercaseIsInsideLowercaseWords++;
+                                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                                 }
-                                else if (match.Index > 1 && "\"'<>()[]{}-—,.‘’¡¿„“()[]♪@".Contains(st.StrippedText[match.Index - 1]))
+                                else if (@"‘’¡¿„“()[]♪'. @".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
                                 {
-                                }
-                                else if (language == "en" && word.EndsWith('s') &&
-                                         p.Text.Length > match.Index + 1 &&
-                                         word.TrimEnd('s') == word.TrimEnd('s').ToUpperInvariant())
-                                {
-                                    // skip words like "MRIs" where the last 's' indicates plural
                                 }
                                 else
                                 {
-                                    var before = '\0';
-                                    var after = '\0';
-                                    if (match.Index > 0)
-                                    {
-                                        before = st.StrippedText[match.Index - 1];
-                                    }
+                                    bool ok = !(match.Index >= 1 && st.StrippedText.Substring(match.Index - 1, 2) == "Mc");
 
-                                    if (match.Index < st.StrippedText.Length - 2)
+                                    if (ok)
                                     {
-                                        after = st.StrippedText[match.Index + 1];
-                                    }
-
-                                    if (before != '\0' && char.IsUpper(before) && after != '\0' && char.IsLower(after) &&
-                                        !Utilities.LowercaseVowels.Contains(char.ToLower(before)) && !Utilities.LowercaseVowels.Contains(after))
-                                    {
-                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
+                                        st.StrippedText = st.StrippedText.Remove(match.Index + 1, 1).Insert(match.Index + 1, "l");
                                         p.Text = st.MergedString;
                                         uppercaseIsInsideLowercaseWords++;
                                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                    }
-                                    else if (@"‘’¡¿„“()[]♪'. @".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
-                                    {
-                                    }
-                                    else
-                                    {
-                                        var ok = true;
-
-                                        if (match.Index >= 2 && st.StrippedText.Substring(match.Index - 2, 2) == "Mc")
-                                        {
-                                            ok = false;
-                                        }
-
-                                        if (ok)
-                                        {
-                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                            p.Text = st.MergedString;
-                                            uppercaseIsInsideLowercaseWords++;
-                                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                                        }
                                     }
                                 }
                             }
