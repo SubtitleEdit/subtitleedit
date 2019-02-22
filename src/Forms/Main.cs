@@ -6087,8 +6087,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
                     SubtitleFormat format = GetCurrentSubtitleFormat();
-                    var list = textBoxSource.Lines.ToList();
-                    format = new Subtitle().ReloadLoadSubtitle(list, null, format);
+                    var lines = new List<string>(textBoxSource.Lines);
+                    format = new Subtitle().ReloadLoadSubtitle(lines, null, format);
                     if (format == null)
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
@@ -6096,20 +6096,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     _sourceViewChange = false;
                     MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
-                    _subtitle.ReloadLoadSubtitle(list, null, format);
+                    _subtitle.ReloadLoadSubtitle(lines, null, format);
                     if (format.IsFrameBased)
                     {
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
 
                     int index = 0;
-                    foreach (object obj in comboBoxSubtitleFormats.Items)
+                    foreach (string formatName in comboBoxSubtitleFormats.Items)
                     {
-                        if (obj.ToString() == format.FriendlyName)
+                        if (formatName == format.FriendlyName)
                         {
                             comboBoxSubtitleFormats.SelectedIndex = index;
+                            break;
                         }
-
                         index++;
                     }
 
@@ -22680,7 +22680,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), _fileName, currentFormat);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), _fileName, currentFormat);
                 if (format == null)
                 {
                     e.Cancel = true;
