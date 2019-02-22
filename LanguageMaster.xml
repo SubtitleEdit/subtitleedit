@@ -2041,6 +2041,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Break at first space from cursor position</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
