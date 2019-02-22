@@ -408,6 +408,8 @@
     <Word from="isterao" to="istjerao" />
     <Word from="isteraš" to="istjeraš" />
     <Word from="Isteraš" to="Istjeraš" />
+    <Word from="isterajte" to="istjerajte" />
+    <Word from="Isterajte" to="Istjerajte" />
     <Word from="istrebi" to="istrijebi" />
     <Word from="istrebiti" to="istrijebiti" />
     <Word from="isuviše" to="previše" />
@@ -1263,6 +1265,8 @@
     <Word from="savešću" to="savješću" />
     <Word from="secka" to="sjecka" />
     <Word from="seckam" to="sjeckam" />
+    <Word from="sečivo" to="sječivo" />
+    <Word from="sečiva" to="sječiva" />
     <Word from="sedećeš" to="sjedit ćeš" />
     <Word from="sedeli" to="sjedili" />
     <Word from="sedišta" to="sjedala" />
@@ -1718,6 +1722,7 @@
     <Word from="veka" to="stoljeća" />
     <Word from="veke" to="vijeke" />
     <Word from="vekova" to="stoljeća" />
+    <Word from="vekovima" to="vjekovima" />
     <Word from="venca" to="vijenca" />
     <Word from="večnost" to="vječnost" />
     <Word from="veoma" to="vrlo" />
@@ -3410,6 +3415,7 @@
     <RegEx find="s([čć])" replaceWith="š$1" />
     <RegEx find="seden" replaceWith="sjeden" />
     <RegEx find="selektuj" replaceWith="odaber" />
+    <RegEx find="sjp" replaceWith="spj" />
     <RegEx find="smeva" replaceWith="smijava" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
     <RegEx find="\bstaral" replaceWith="brinul" />
