@@ -561,12 +561,24 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
         }
 
-        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly)
+        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string language = null)
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
+
+            _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
+            if (language == null)
+            {
+                language = Configuration.Settings.VobSubOcr.TesseractLastLanguage;
+            }
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "en";
+            }
+            InitializeTesseract(language);
+            SetTesseractLanguageFromLanguageString(language);
 
             int max = GetSubtitleCount();
             if (_tesseractAsyncStrings == null)
@@ -5385,8 +5397,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             bmp.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-
-            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, _ocrMethodIndex == _ocrMethodTesseract302);
+            var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, _ocrMethodIndex != _ocrMethodTesseract4);
             if (_tesseractRunner.TesseractErrors.Count <= 2 && !string.IsNullOrEmpty(_tesseractRunner.LastError))
             {
                 MessageBox.Show(_tesseractRunner.LastError);
