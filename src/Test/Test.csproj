@@ -45,6 +45,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\FixCasingTest.cs" />
     <Compile Include="Core\LanguageAutoDetectTest.cs" />
     <Compile Include="Core\PlainTextImporterTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
