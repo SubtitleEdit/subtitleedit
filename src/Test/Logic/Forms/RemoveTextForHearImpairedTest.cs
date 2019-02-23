@@ -1314,6 +1314,36 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiDialogMusicSymbolsFirstLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string actual = target.RemoveColon("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.");
+            Assert.AreEqual("- ♪ To defeat ♪" + Environment.NewLine + "- Salute.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiDialogMusicSymbolsFirstLine2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            string actual = target.RemoveColon("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.");
+            Assert.AreEqual("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiDialogMusicSymbolsFirstLine3()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            string actual = target.RemoveTextFromHearImpaired("- ♪ To defeat ♪" + Environment.NewLine + "- Referee: Salute.");
+            Assert.AreEqual("Salute.", actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionKeepDotDotDot()
         {
             string text = "She uh..." + Environment.NewLine + "she disappeared.";
@@ -1685,7 +1715,7 @@ namespace Test.Logic.Forms
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBetweenParentheses = true;
             var source = "{\\an8}But I know of something" + Environment.NewLine +
-                         "<i>that could:</i>"; 
+                         "<i>that could:</i>";
             string actual = target.RemoveColon(source);
             Assert.AreEqual(source, actual);
         }

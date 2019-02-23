@@ -17,6 +17,7 @@
    * Make "column->delete text" work in translator mode - thx darnn
    * Fix focus issue in "Fix common errors" - thx OmrSi/Ding-adong
    * SRT: Allow spaces before/after time codes - thx SirEllert
+   * Fix issue with music tags/remove text for HI - thx btsix
 
 
 3.5.9 (10th February 2019)

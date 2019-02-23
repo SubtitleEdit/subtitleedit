@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (Utilities.CountTagInText(line, ':') == 1)
                         {
                             if (count == 1 && newText.Length > 1 && removedInFirstLine &&
-                                !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                 line != line.ToUpperInvariant())
                             {
                                 newText += Environment.NewLine;
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 }
                             }
                             else if (count == 1 && newTextNoHtml.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
-                                     !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                     !".?!♪♫".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                      line != line.ToUpperInvariant())
                             {
                                 newText += Environment.NewLine;
@@ -253,10 +253,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 string l1Trimmed = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
                                 if (count == 1 && lines.Count == 2 && !l1Trimmed.EndsWith('.') &&
-                                                                       !l1Trimmed.EndsWith('!') &&
-                                                                       !l1Trimmed.EndsWith('?') &&
-                                                                       !l1Trimmed.EndsWith("--", StringComparison.Ordinal) &&
-                                                                       !l1Trimmed.EndsWith("—", StringComparison.Ordinal))
+                                    !l1Trimmed.EndsWith('!') &&
+                                    !l1Trimmed.EndsWith('?') &&
+                                    !l1Trimmed.EndsWith('♪') &&
+                                    !l1Trimmed.EndsWith('♫') &&
+                                    !l1Trimmed.EndsWith("--", StringComparison.Ordinal) &&
+                                    !l1Trimmed.EndsWith("—", StringComparison.Ordinal))
                                 {
                                     remove = false;
                                 }
@@ -485,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (insertDash)
                         {
                             string arr0QuoteTrimmed = arr[0].TrimEnd('"');
-                            if (arr0QuoteTrimmed.Length > 0 && !".?!".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("--", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("—", StringComparison.Ordinal))
+                            if (arr0QuoteTrimmed.Length > 0 && !".?!♪♫".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("--", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("—", StringComparison.Ordinal))
                             {
                                 if (!arr1Strippable.Pre.Contains('-'))
                                 {
