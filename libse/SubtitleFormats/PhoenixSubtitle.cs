@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -27,14 +26,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == true)
+            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == false)
             {
-                return true;
+                return false;
             }
-
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -52,8 +48,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     continue;
                 }
 
-                Match match = RegexTimeCodes.Match(line);
-                if (match.Success == true)
+                var match = RegexTimeCodes.Match(line);
+                if (match.Success)
                 {
                     try
                     {

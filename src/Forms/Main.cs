@@ -22680,7 +22680,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), _fileName, currentFormat);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
                 if (format == null)
                 {
                     e.Cancel = true;
