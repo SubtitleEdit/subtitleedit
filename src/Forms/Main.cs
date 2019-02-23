@@ -14223,7 +14223,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                newP.Text += Environment.NewLine + Environment.NewLine + original.Text;
+                                newP.Text = (newP.Text.TrimEnd() + Environment.NewLine + original.Text.TrimStart()).Trim();
                             }
 
                             subtitle.Paragraphs.Add(newP);
