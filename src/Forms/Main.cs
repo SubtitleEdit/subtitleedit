@@ -6103,13 +6103,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int index = 0;
-                    foreach (object obj in comboBoxSubtitleFormats.Items)
+                    foreach (string formatName in comboBoxSubtitleFormats.Items)
                     {
-                        if (obj.ToString() == format.FriendlyName)
+                        if (formatName == format.FriendlyName)
                         {
                             comboBoxSubtitleFormats.SelectedIndex = index;
+                            break;
                         }
-
                         index++;
                     }
 
