@@ -3139,6 +3139,10 @@
     <Beginning from="!/ do" to="I do" />
     <Beginning from="!/ am" to="I am" />
     <Beginning from="J ust " to="Just " />
+    <Beginning from="W-w-wh" to="W-W-Wh" />
+    <Beginning from="W-wh" to="W-Wh" />
+    <Beginning from="I-i-i " to="I-I-I " />
+    <Beginning from="I-i " to="I-I " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
