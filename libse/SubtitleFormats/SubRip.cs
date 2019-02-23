@@ -98,7 +98,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
                     (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next.Trim()) || RegexTimeCodes.IsMatch(line.Trim())))
                 {
-                    ReadLine(subtitle, string.Empty, string.Empty, string.Empty, string.Empty);
+                    if (!string.IsNullOrEmpty(_paragraph.Text))
+                    {
+                        subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
+                        _paragraph = new Paragraph();
+                    }
+                    _expecting = ExpectingLine.Number;
                 }
                 if (_expecting == ExpectingLine.Number && RegexTimeCodes.IsMatch(line.Trim()))
                 {
@@ -126,7 +132,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
                 }
             }
-
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                p.Text = p.Text.TrimEnd();
+            }
             Errors = _errors.ToString();
         }
 
@@ -203,6 +212,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _paragraph = new Paragraph();
                             _expecting = ExpectingLine.Number;
                         }
+                    }
+                    else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(next))
+                    {
+                        _paragraph.Text += Environment.NewLine + RemoveBadChars(line).TrimEnd();
                     }
                     else
                     {
