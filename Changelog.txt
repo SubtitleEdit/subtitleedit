@@ -7,6 +7,8 @@
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
    * Make export font name dropdown wider - thx Eduard
+   * Remove empty line between original/current after merge - thx darnn
+   * Improve arabic handling in WebVTT - thx OmrSi
 * FIXED:
    * Fix  renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
@@ -18,6 +20,9 @@
    * Fix focus issue in "Fix common errors" - thx OmrSi/Ding-adong
    * SRT: Allow spaces before/after time codes - thx SirEllert
    * Fix issue with music tags/remove text for HI - thx btsix
+   * Keep format/frame rate/video after merge original/current - thx darnn
+   * Fix batch OCR issue - thx orbittwz
+   * Fix issue with realoading subtitle from source view - thx ivandrofly
 
 
 3.5.9 (10th February 2019)
