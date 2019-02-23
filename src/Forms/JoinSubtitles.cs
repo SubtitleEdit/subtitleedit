@@ -100,34 +100,19 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var sub = new Subtitle();
-                    Encoding encoding;
-                    var format = sub.LoadSubtitle(fileName, out encoding, null);
+                    var format = sub.LoadSubtitle(fileName, out _, null);
 
                     if (format == null)
                     {
-                        var ebu = new Ebu();
-                        if (ebu.IsMine(null, fileName))
+                        foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats())
                         {
-                            ebu.LoadSubtitle(sub, null, fileName);
-                            format = ebu;
-                        }
-                    }
-                    if (format == null)
-                    {
-                        var pac = new Pac();
-                        if (pac.IsMine(null, fileName))
-                        {
-                            pac.LoadSubtitle(sub, null, fileName);
-                            format = pac;
-                        }
-                    }
-                    if (format == null)
-                    {
-                        var cavena890 = new Cavena890();
-                        if (cavena890.IsMine(null, fileName))
-                        {
-                            cavena890.LoadSubtitle(sub, null, fileName);
-                            format = cavena890;
+                            if (binaryFormat.IsMine(null, fileName))
+                            {
+                                _fileNamesToJoin.Add(fileName);
+                                binaryFormat.LoadSubtitle(sub, null, fileName);
+                                format = binaryFormat;
+                                break;
+                            }
                         }
                     }
 
@@ -195,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string fileName in _fileNamesToJoin)
             {
                 var sub = subtitles[i];
-                var lvi = new ListViewItem(string.Format("{0:#,###,###}", sub.Paragraphs.Count));
+                var lvi = new ListViewItem($"{sub.Paragraphs.Count:#,###,###}");
                 if (sub.Paragraphs.Count > 0)
                 {
                     lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());

@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
-        public static SubtitleFormat[] BinaryFormats()
+        public static SubtitleFormat[] GetBinaryFormats()
         {
             var formats = new SubtitleFormat[]
             {
