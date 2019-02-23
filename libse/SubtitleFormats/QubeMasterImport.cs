@@ -13,37 +13,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //SubLine2
         //10:01:04:12
         //10:01:07:09
-        private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
         public override string Name => "QubeMasterPro Import";
-        
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            int index = 0;
-
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (index != 0)
-                {
-                    sb.AppendLine();
-                }
-
-                index++;
-
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
+                sb.AppendLine();
             }
             return sb.ToString();
         }
 
-        private static string EncodeTimeCode(TimeCode time)
-        {
-            return time.ToHHMMSSFF();
-        }
+        private static string EncodeTimeCode(TimeCode time) => time.ToHHMMSSFF();
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -54,53 +43,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                var match = RegexTimeCodes1.Match(s);
-                if (match.Success)
-                {
-                    string[] parts = s.Split(':');
-                    if (parts.Length == 4)
-                    {
-                        try
-                        {
-                            if (expectStartTime)
-                            {
-                                p.StartTime = DecodeTimeCodeFramesFourParts(parts);
-                                expectStartTime = false;
-                            }
-                            else
-                            {
-                                if (p.EndTime.TotalMilliseconds < 0.01)
-                                {
-                                    _errorCount++;
-                                }
+                Match match = null;
 
-                                p.EndTime = DecodeTimeCodeFramesFourParts(parts);
-                            }
-                        }
-                        catch (Exception exception)
-                        {
-                            _errorCount++;
-                            System.Diagnostics.Debug.WriteLine(exception.Message);
-                        }
+                // try to match using regex is length of current line is exactly 11
+                if (s.Length == 11)
+                {
+                    match = RegexTimeCodes.Match(s);
+                }
+                if (match?.Success == true)
+                {
+                    string[] tokens = s.Split(':');
+                    try
+                    {
+                        (expectStartTime ? p.StartTime : p.EndTime).TotalMilliseconds = DecodeTimeCodeFramesFourParts(tokens).TotalMilliseconds;
+                    }
+                    catch (Exception exception)
+                    {
+                        _errorCount++;
+                        System.Diagnostics.Debug.WriteLine(exception.Message);
                     }
                 }
                 else if (string.IsNullOrWhiteSpace(line))
                 {
-                    if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.001 && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
+                    if (IsValidParagraph(p))
                     {
-                        _errorCount++;
+                        p.Number = subtitle.Paragraphs.Count + 1;
+                        subtitle.Paragraphs.Add(p);
                     }
                     else
                     {
-                        subtitle.Paragraphs.Add(p);
+                        _errorCount++;
                     }
-
                     p = new Paragraph();
                 }
                 else
                 {
                     expectStartTime = true;
-                    p.Text = (p.Text + Environment.NewLine + line).Trim();
+                    p.Text = (p.Text + Environment.NewLine + s).TrimStart();
                     if (p.Text.Length > 500)
                     {
                         _errorCount += 10;
@@ -108,26 +87,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            if (p.EndTime.TotalMilliseconds > 0)
+
+            if (IsValidParagraph(p))
             {
                 subtitle.Paragraphs.Add(p);
             }
-
-            bool allNullEndTime = true;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            else
             {
-                if (Math.Abs(subtitle.Paragraphs[i].EndTime.TotalMilliseconds) > 0.001)
-                {
-                    allNullEndTime = false;
-                }
+                _errorCount++;
             }
-            if (allNullEndTime)
+        }
+
+        protected static bool IsValidParagraph(Paragraph p)
+        {
+            // empty text (uncomment if empty text shouldn't be allowed)
+            //if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(p.Text, true)))
+            //{
+            //    return false;
+            //}
+
+            // shouldn't have zero duration time
+            if (p.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
             {
-                subtitle.Paragraphs.Clear();
+                return false;
             }
 
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            double minTime = Math.Min(p.EndTime.TotalMilliseconds, p.StartTime.TotalMilliseconds);
+
+            // one of the paragraphs contains negative time
+            if (minTime < 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
     }
