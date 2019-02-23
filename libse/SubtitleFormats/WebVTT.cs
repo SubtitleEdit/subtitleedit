@@ -231,7 +231,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
-                paragraph.Text = System.Net.WebUtility.HtmlDecode(paragraph.Text);
             }
 
             subtitle.Renumber();
@@ -368,7 +367,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (p.Text.Contains('<'))
                 {
-                    string text = p.Text;
+                    string text = p.Text
+                        .Replace("<c.arabic>", string.Empty)
+                        .Replace("</c.arabic>", string.Empty)
+                        .Replace("&rlm;", "\u202B")
+                        .Replace("&lmr;", "\u202A");
+
+                    text = System.Net.WebUtility.HtmlDecode(text);
 
                     var match = regexWebVttColorMulti.Match(text);
                     while (match.Success)
@@ -403,7 +408,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private string FindBestColorTagOrDefault(string tag)
-        {            
+        {
             var tags = tag.Split('.').ToList();
             tags.Reverse();
             foreach (var s in tags)
@@ -438,18 +443,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var match = regex.Match(res);
             while (match.Success)
             {
-                var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
+                var value = match.Value.Substring(3, match.Value.Length - 4);
                 if (match.Value.StartsWith("<c.color", StringComparison.Ordinal))
-                    fontString = "<font color=\"#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5) + "\">";
-
-                fontString = fontString.Trim('"').Trim('\'');
-                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                var endIndex = res.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
-                if (endIndex >= 0)
                 {
-                    res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                    value = "#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5);
                 }
-                match = regex.Match(res);
+
+                if (value != "arabic")
+                {
+                    var fontString = "<font color=\"" + value + "\">";
+                    fontString = fontString.Trim('"').Trim('\'');
+                    res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                    var endIndex = res.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
+                    if (endIndex >= 0)
+                    {
+                        res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                    }
+                }
+
+                match = regex.Match(res, match.Index + 1);
             }
             return res;
         }
@@ -573,7 +585,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static TimeCode GetTimeCodeFromString(string time)
         {
             // hh:mm:ss.mmm
-            string[] timeCode = time.Trim().Split(':', '.', ' ');
+            var timeCode = time.Trim().Split(':', '.', ' ');
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),
                                 int.Parse(timeCode[2]),
