@@ -371,7 +371,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         .Replace("<c.arabic>", string.Empty)
                         .Replace("</c.arabic>", string.Empty)
                         .Replace("&rlm;", "\u202B")
-                        .Replace("&lmr;", "\u202A");
+                        .Replace("&lrm;", "\u202A");
 
                     text = System.Net.WebUtility.HtmlDecode(text);
 
