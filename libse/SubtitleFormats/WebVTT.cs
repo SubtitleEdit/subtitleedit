@@ -368,8 +368,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (p.Text.Contains('<'))
                 {
                     string text = p.Text
-                        .Replace("<c.arabic>", string.Empty)
-                        .Replace("</c.arabic>", string.Empty)
+                        .Replace("<c.arabic>", string.Empty).Replace("</c.arabic>", string.Empty)
+                        .Replace("<c.hebrew>", string.Empty).Replace("</c.hebrew>", string.Empty)
+                        .Replace("<c.simplifiedchinese>", string.Empty).Replace("</c.simplifiedchinese>", string.Empty)
+                        .Replace("<c.traditionalchinese>", string.Empty).Replace("</c.traditionalchinese>", string.Empty)
+                        .Replace("<c.thai>", string.Empty).Replace("</c.thai>", string.Empty)
+                        .Replace("<c.korean>", string.Empty).Replace("</c.korean>", string.Empty)
+                        .Replace("<c.Japanese>", string.Empty).Replace("</c.Japanese>", string.Empty)
                         .Replace("&rlm;", "\u202B")
                         .Replace("&lrm;", "\u202A");
 
