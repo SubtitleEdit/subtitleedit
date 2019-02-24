@@ -4282,34 +4282,38 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Hyphens
             return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
-             .Replace('\u2010', defHyphen)  // ‐ Hyphen (\u2010)
-             .Replace('\u2012', defHyphen)  // ‒ Figure dash (\u2012)
-             .Replace('\u2013', defHyphen)  // – En dash (\u2013)
-             .Replace('\u2014', defHyphen)  // — Em dash (\u2014)
-             .Replace('\u2015', defHyphen)  // ― Horizontal bar (\u2015)
+                .Replace('\u2010', defHyphen) // ‐ Hyphen (\u2010)
+                .Replace('\u2012', defHyphen) // ‒ Figure dash (\u2012)
+                .Replace('\u2013', defHyphen) // – En dash (\u2013)
+                .Replace('\u2014', defHyphen) // — Em dash (\u2014)
+                .Replace('\u2015', defHyphen) // ― Horizontal bar (\u2015)
 
-             // Colons:
-             .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
-             .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
-             .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
+                // Colons:
+                .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
+                .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
+                .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
 
-             // Others
-             .Replace("…", "...")
-             .Replace('♪', '#')
-             .Replace('♫', '#')
-             .Replace("⇒", "=>")
+                // Others
+                .Replace("…", "...")
+                .Replace('♪', '#')
+                .Replace('♫', '#')
+                .Replace("⇒", "=>")
 
-             // Spaces
-             .Replace('\u00A0', ' ') // No-Break Space
-             .Replace("\u200B", string.Empty) // Zero Width Space
-             .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
+                // Spaces
+                .Replace('\u00A0', ' ') // No-Break Space
+                .Replace("\u200B", string.Empty) // Zero Width Space
+                .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
 
-             // Intellectual property
-             .Replace("\u00A9", "(Copyright)") // © copyright
-             .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
-             .Replace("\u00AE", "(Registered Trademark)") // ® registered trademark
-             .Replace("\u2120", "(Service Mark)") // ℠ service mark
-             .Replace("\u2122", "(Trademark)"); // ™ trademark
+                // Intellectual property
+                .Replace("\u00A9", "(Copyright)") // © copyright
+                .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
+                .Replace("\u00AE", "(Registered Trademark)") // ® registered trademark
+                .Replace("\u2120", "(Service Mark)") // ℠ service mark
+                .Replace("\u2122", "(Trademark)") // ™ trademark
+
+                // RTL/LTR markers
+                .Replace("\u202B", string.Empty) // &rlm;
+                .Replace("\u202A", string.Empty); // &lmr;
         }
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)
