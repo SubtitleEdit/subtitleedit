@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-           var  text = input.Replace(Environment.NewLine, " ");
+            var text = input.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
 
             if (_namesMultiList.Contains(word))
@@ -282,12 +282,24 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public bool ContainsCaseInsensitive(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (name == null)
             {
                 return false;
             }
 
-            foreach (var n in name.Contains(' ') ? _namesMultiList : _namesList)
+            // name must contain atleast two chars
+            if (name.Length < 2)
+            {
+                return false;
+            }
+
+            var lookupCollection = name.Contains(' ') ? _namesMultiList : _namesList;
+            if (lookupCollection.Contains(name)) // O(1)
+            {
+                return true;
+            }
+
+            foreach (var n in lookupCollection)
             {
                 if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
                 {
