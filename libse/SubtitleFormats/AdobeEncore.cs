@@ -31,22 +31,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             LoadSubtitle(subtitle, lines, fileName);
 
-            bool containsNewLine = false;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains(Environment.NewLine))
                 {
-                    containsNewLine = true;
+                    return subtitle.Paragraphs.Count > _errorCount;
                 }
             }
-            if (sb.ToString().Contains("//") && !containsNewLine)
-            {
-                return false; // "DVD Subtitle System" format
-            }
 
-            if (_maxMsDiv10 > 90 && !containsNewLine)
+            // "DVD Subtitle System" format (frame rate should not go higher than 90...)
+            if (_maxMsDiv10 > 90)
             {
-                return false; // "DVD Subtitle System" format (frame rate should not go higher than 90...)
+                return false;
+            }
+            // "DVD Subtitle System" format
+            if (sb.ToString().Contains("//"))
+            {
+                return false;
             }
 
             return subtitle.Paragraphs.Count > _errorCount;
