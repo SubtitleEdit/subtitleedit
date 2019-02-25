@@ -46,6 +46,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             },
         };
 
+        private static readonly string[] KnownLanguages = new[] { "arabic", "hebrew", "simplifiedchinese", "traditionalchinese", "thai", "korean", "Japanese" };
+
         public override string Extension => ".vtt";
 
         public override string Name => "WebVTT";
@@ -367,17 +369,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (p.Text.Contains('<'))
                 {
-                    string text = p.Text
-                        .Replace("<c.arabic>", string.Empty).Replace("</c.arabic>", string.Empty)
-                        .Replace("<c.hebrew>", string.Empty).Replace("</c.hebrew>", string.Empty)
-                        .Replace("<c.simplifiedchinese>", string.Empty).Replace("</c.simplifiedchinese>", string.Empty)
-                        .Replace("<c.traditionalchinese>", string.Empty).Replace("</c.traditionalchinese>", string.Empty)
-                        .Replace("<c.thai>", string.Empty).Replace("</c.thai>", string.Empty)
-                        .Replace("<c.korean>", string.Empty).Replace("</c.korean>", string.Empty)
-                        .Replace("<c.Japanese>", string.Empty).Replace("</c.Japanese>", string.Empty)
-                        .Replace("&rlm;", "\u202B")
-                        .Replace("&lrm;", "\u202A");
-
+                    var text = p.Text.Replace("&rlm;", "\u202B").Replace("&lrm;", "\u202A");
+                    foreach (var knownLanguage in KnownLanguages)
+                    {
+                        text = text.Replace("<c." + knownLanguage + ">", string.Empty).Replace("</c." + knownLanguage + "", string.Empty);
+                    }
                     text = System.Net.WebUtility.HtmlDecode(text);
 
                     var match = regexWebVttColorMulti.Match(text);
@@ -454,7 +450,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     value = "#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5);
                 }
 
-                if (value != "arabic")
+                if (!KnownLanguages.Contains(value))
                 {
                     var fontString = "<font color=\"" + value + "\">";
                     fontString = fontString.Trim('"').Trim('\'');
