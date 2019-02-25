@@ -24016,22 +24016,70 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static string RemoveAssAlignmentTags(string s)
+        {
+            return s.Replace("{\\an1}", string.Empty) // ASS tags alone
+                .Replace("{\\an2}", string.Empty)
+                .Replace("{\\an3}", string.Empty)
+                .Replace("{\\an4}", string.Empty)
+                .Replace("{\\an5}", string.Empty)
+                .Replace("{\\an6}", string.Empty)
+                .Replace("{\\an7}", string.Empty)
+                .Replace("{\\an8}", string.Empty)
+                .Replace("{\\an9}", string.Empty)
+
+                .Replace("{an1\\", "{") // ASS multi tags (start)
+                .Replace("{an2\\", "{")
+                .Replace("{an3\\", "{")
+                .Replace("{an4\\", "{")
+                .Replace("{an5\\", "{")
+                .Replace("{an6\\", "{")
+                .Replace("{an7\\", "{")
+                .Replace("{an8\\", "{")
+                .Replace("{an9\\", "{")
+
+                .Replace("\\an1\\", "\\") // ASS multi tags (middle)
+                .Replace("\\an2\\", "\\")
+                .Replace("\\an3\\", "\\")
+                .Replace("\\an4\\", "\\")
+                .Replace("\\an5\\", "\\")
+                .Replace("\\an6\\", "\\")
+                .Replace("\\an7\\", "\\")
+                .Replace("\\an8\\", "\\")
+                .Replace("\\an9\\", "\\")
+
+                .Replace("\\an1}", "}") // ASS multi tags (end)
+                .Replace("\\an2}", "}")
+                .Replace("\\an3}", "}")
+                .Replace("\\an4}", "}")
+                .Replace("\\an5}", "}")
+                .Replace("\\an6}", "}")
+                .Replace("\\an7}", "}")
+                .Replace("\\an8}", "}")
+                .Replace("\\an9}", "}")
+
+                .Replace("{\\a1}", string.Empty) // SSA tags
+                .Replace("{\\a2}", string.Empty)
+                .Replace("{\\a3}", string.Empty)
+                .Replace("{\\a4}", string.Empty)
+                .Replace("{\\a5}", string.Empty)
+                .Replace("{\\a6}", string.Empty)
+                .Replace("{\\a7}", string.Empty)
+                .Replace("{\\a8}", string.Empty)
+                .Replace("{\\a9}", string.Empty);
+        }
+
         private static void SetAlignTag(Paragraph p, string tag)
         {
-            if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 5 && p.Text[5] == '}')
+            var text = RemoveAssAlignmentTags(p.Text);
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.Contains('}'))
             {
-                p.Text = p.Text.Remove(0, 6);
+                p.Text = text.Insert(1, "\\" + tag.TrimStart('{').TrimStart('\\').TrimEnd('}'));
             }
-            else if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 5 && p.Text[5] == '\\')
+            else
             {
-                p.Text = p.Text.Remove(1, 4);
-            }
-            else if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 4 && p.Text[4] == '}')
-            {
-                p.Text = p.Text.Remove(0, 5);
-            }
-
-            p.Text = string.Format(@"{0}{1}", tag, p.Text);
+                p.Text = string.Format(@"{0}{1}", tag, text);
+            }            
         }
 
         private void toolStripMenuItemAlignment_Click(object sender, EventArgs e)
@@ -26233,38 +26281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return p.Text;
                 }
-
-                var text = p.Text.Replace("{\\an1}", string.Empty) //ASS tags
-                    .Replace("{\\an2}", string.Empty)
-                    .Replace("{\\an3}", string.Empty)
-                    .Replace("{\\an4}", string.Empty)
-                    .Replace("{\\an5}", string.Empty)
-                    .Replace("{\\an6}", string.Empty)
-                    .Replace("{\\an7}", string.Empty)
-                    .Replace("{\\an8}", string.Empty)
-                    .Replace("{\\an9}", string.Empty)
-
-                    .Replace("\\an1\\", "\\") // ASS inline tags
-                    .Replace("\\an2\\", "\\")
-                    .Replace("\\an3\\", "\\")
-                    .Replace("\\an4\\", "\\")
-                    .Replace("\\an5\\", "\\")
-                    .Replace("\\an6\\", "\\")
-                    .Replace("\\an7\\", "\\")
-                    .Replace("\\an8\\", "\\")
-                    .Replace("\\an9\\", "\\")
-
-                    .Replace("{\\a1}", string.Empty) //SSA tags
-                    .Replace("{\\a2}", string.Empty)
-                    .Replace("{\\a3}", string.Empty)
-                    .Replace("{\\a4}", string.Empty)
-                    .Replace("{\\a5}", string.Empty)
-                    .Replace("{\\a6}", string.Empty)
-                    .Replace("{\\a7}", string.Empty)
-                    .Replace("{\\a8}", string.Empty)
-                    .Replace("{\\a9}", string.Empty);
-
-                return text;
+                return RemoveAssAlignmentTags(p.Text);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAlignment));
         }
     }
