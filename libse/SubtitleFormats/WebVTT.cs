@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var text = p.Text.Replace("&rlm;", "\u202B").Replace("&lrm;", "\u202A");
                     foreach (var knownLanguage in KnownLanguages)
                     {
-                        text = text.Replace("<c." + knownLanguage + ">", string.Empty).Replace("</c." + knownLanguage + "", string.Empty);
+                        text = text.Replace("<c." + knownLanguage + ">", string.Empty).Replace("</c." + knownLanguage + ">", string.Empty);
                     }
                     text = System.Net.WebUtility.HtmlDecode(text);
 
