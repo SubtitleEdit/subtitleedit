@@ -1534,7 +1534,13 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMergeDialog.Text = _language.Menu.ContextMenu.MergeSelectedLinesAsDialog;
             mergeBeforeToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineBefore;
             mergeAfterToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineAfter;
-            normalToolStripMenuItem.Text = _language.Menu.ContextMenu.Normal;
+            removeFormattinglToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormatting;
+            removeBoldToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingBold;
+            removeItalicToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingItalic;
+            removeUnderlineToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingUnderline;
+            removeColorToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingColor;
+            removeFontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingFontName;
+            removeAlignmentToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingAlignment;
             boldToolStripMenuItem.Text = _languageGeneral.Bold;
             underlineToolStripMenuItem.Text = _language.Menu.ContextMenu.Underline;
             italicToolStripMenuItem.Text = _languageGeneral.Italic;
@@ -1564,7 +1570,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             toolStripMenuItemSplitViaWaveform.Text = _language.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
-            normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
+            normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.RemoveFormattingAll;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
             italicToolStripMenuItem1.Text = _languageGeneral.Italic;
             boxToolStripMenuItem.Text = _language.Menu.ContextMenu.Box;
@@ -8982,41 +8988,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.ResumeLayout();
-        }
-
-        private void NormalToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                MakeHistoryForUndo(_language.BeforeSettingFontToNormal);
-                var subFormatName = GetCurrentSubtitleFormat().Name;
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(item.Index);
-                    if (p != null)
-                    {
-                        // Remove music symbols.
-                        p.Text = p.Text.Replace("♪", string.Empty);
-                        p.Text = p.Text.Replace("♫", string.Empty);
-                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                        SubtitleListview1.SetText(item.Index, p.Text);
-
-                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                        {
-                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                original.Text = original.Text.Replace("♪", string.Empty);
-                                original.Text = original.Text.Replace("♫", string.Empty);
-                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text, true).Trim();
-                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
-                            }
-                        }
-                    }
-                }
-                ShowSource();
-                RefreshSelectedParagraph();
-            }
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
@@ -19395,8 +19366,7 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile);
             toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
-            normalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
-            normalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
+            removeAllFormattingsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
             boldToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
@@ -26084,6 +26054,218 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
         {
             ToggleBookmarks(true);
+        }
+
+
+        delegate string FixText(Paragraph p);
+
+        private void RunActionOnAllParagraphs(FixText action, string historyMessage)
+        {
+            if (_subtitle.Paragraphs.Count <= 0 || SubtitleListview1.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            int linesUpdated = 0;
+            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            {
+                var p = _subtitle.GetParagraphOrDefault(item.Index);
+                if (p != null)
+                {
+                    var newText = action.Invoke(p);
+                    if (newText != p.Text)
+                    {
+                        if (linesUpdated == 0)
+                        {
+                            MakeHistoryForUndo(historyMessage);
+                        }
+                        linesUpdated++;
+                        p.Text = newText;
+                    }
+                    SubtitleListview1.SetText(item.Index, p.Text);
+
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            newText = action.Invoke(original);
+                            if (newText != original.Text)
+                            {
+                                if (linesUpdated == 0)
+                                {
+                                    MakeHistoryForUndo(historyMessage);
+                                }
+                                linesUpdated++;
+                                original.Text = newText;
+                            }
+                            SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                        }
+                    }
+                }
+            }
+            ShowSource();
+            RefreshSelectedParagraph();
+            ShowStatus(string.Format(_language.LinesUpdatedX, linesUpdated));
+        }
+
+        private void removeAllFormattingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                var s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
+                return HtmlUtil.RemoveHtmlTags(s, true).Trim();
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAll));
+        }
+
+        private void removeBoldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                return p.Text.Replace("<b>", string.Empty)
+                             .Replace("<B>", string.Empty)
+                             .Replace("</b>", string.Empty)
+                             .Replace("</B>", string.Empty);
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingBold));
+        }
+
+        private void removeItalicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                return p.Text.Replace("<i>", string.Empty)
+                             .Replace("<I>", string.Empty)
+                             .Replace("</i>", string.Empty)
+                             .Replace("</I>", string.Empty);
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingItalic));
+        }
+
+        private void removeUnderlineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                return p.Text.Replace("<u>", string.Empty)
+                             .Replace("<U>", string.Empty)
+                             .Replace("</u>", string.Empty)
+                             .Replace("</U>", string.Empty);
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingUnderline));
+        }
+
+        private void removeColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                if (!p.Text.Contains("<font", StringComparison.OrdinalIgnoreCase))
+                {
+                    return p.Text;
+                }
+                var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
+                var s = p.Text;
+                var match = r.Match(s);
+                while (match.Success)
+                {
+                    s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                    if (match.Index > 4)
+                    {
+                        var font = s.Substring(match.Index - 5);
+                        if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                        {
+                            s = s.Remove(match.Index - 5, 7);
+                            var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                s = s.Remove(endIndex, 7);
+                            }
+                        }
+                        else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                        {
+                            s = s.Remove(match.Index, 1);
+                        }
+                    }
+                    match = r.Match(s);
+                }
+                return s.Trim();
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingColor));
+        }
+
+        private void removeFontNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                if (!p.Text.Contains("<font", StringComparison.OrdinalIgnoreCase))
+                {
+                    return p.Text;
+                }
+                var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
+                var s = p.Text;
+                var match = r.Match(s);
+                while (match.Success)
+                {
+                    s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
+                    if (match.Index > 4)
+                    {
+                        var font = s.Substring(match.Index - 5);
+                        if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                        {
+                            s = s.Remove(match.Index - 5, 7);
+                            var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex >= 0)
+                            {
+                                s = s.Remove(endIndex, 7);
+                            }
+                        }
+                        else if (s.Length > match.Index + 1 && s[match.Index + 1] == '>')
+                        {
+                            s = s.Remove(match.Index, 1);
+                        }
+                    }
+                    match = r.Match(s);
+                }
+                return s;
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingFontName));
+        }
+
+        private void removeAlignmentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunActionOnAllParagraphs((p) =>
+            {
+                if (!p.Text.Contains('{'))
+                {
+                    return p.Text;
+                }
+
+                var text = p.Text.Replace("{\\an1}", string.Empty) //ASS tags
+                    .Replace("{\\an2}", string.Empty)
+                    .Replace("{\\an3}", string.Empty)
+                    .Replace("{\\an4}", string.Empty)
+                    .Replace("{\\an5}", string.Empty)
+                    .Replace("{\\an6}", string.Empty)
+                    .Replace("{\\an7}", string.Empty)
+                    .Replace("{\\an8}", string.Empty)
+                    .Replace("{\\an9}", string.Empty)
+
+                    .Replace("\\an1\\", "\\") // ASS inline tags
+                    .Replace("\\an2\\", "\\")
+                    .Replace("\\an3\\", "\\")
+                    .Replace("\\an4\\", "\\")
+                    .Replace("\\an5\\", "\\")
+                    .Replace("\\an6\\", "\\")
+                    .Replace("\\an7\\", "\\")
+                    .Replace("\\an8\\", "\\")
+                    .Replace("\\an9\\", "\\")
+
+                    .Replace("{\\a1}", string.Empty) //SSA tags
+                    .Replace("{\\a2}", string.Empty)
+                    .Replace("{\\a3}", string.Empty)
+                    .Replace("{\\a4}", string.Empty)
+                    .Replace("{\\a5}", string.Empty)
+                    .Replace("{\\a6}", string.Empty)
+                    .Replace("{\\a7}", string.Empty)
+                    .Replace("{\\a8}", string.Empty)
+                    .Replace("{\\a9}", string.Empty);
+
+                return text;
+            }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAlignment));
         }
     }
 }

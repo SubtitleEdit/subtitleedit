@@ -463,18 +463,18 @@
     <value>
         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
-        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
+        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
         AABJRU5ErkJggg==
 </value>
   </data>
@@ -662,6 +662,9 @@
   <metadata name="toolStripWaveControls.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>650, 56</value>
   </metadata>
+  <metadata name="toolStripWaveControls.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>650, 56</value>
+  </metadata>
   <data name="toolStripButtonWaveformZoomOut.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -771,7 +774,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD2
-        CAAAAk1TRnQBSQFMAgEBAgEAAZgBJQGYASUBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAbABJQGwASUBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -819,6 +822,6 @@
     <value>916, 95</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>74</value>
+    <value>121</value>
   </metadata>
 </root>
