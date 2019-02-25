@@ -224,22 +224,6 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewGetPlugins.Items.Add(item);
                 }
 
-                //double onlinePluginVer = GetInvariantVersion(plugin.Version);
-                //foreach (ListViewItem installed in listViewInstalledPlugins.Items)
-                //{
-                //    if (!installed.Name.Equals(plugin.Name, StringComparison.OrdinalIgnoreCase))
-                //    {
-                //        continue;
-                //    }
-                //    var installedVer = GetInvariantVersion(installed.SubItems[2].Text);
-                //    if (installedVer < onlinePluginVer)
-                //    {
-                //        installed.BackColor = Color.LightPink;
-                //        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
-                //        buttonUpdateAll.Visible = true;
-                //    }
-                //}
-
                 // add "NEW" tag to plugins that has lesser than one month release
                 if (DateTime.Now.AddMonths(-1) < DateTime.Parse(plugin.Date))
                 {
