@@ -1535,6 +1535,7 @@ namespace Nikse.SubtitleEdit.Forms
             mergeBeforeToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineBefore;
             mergeAfterToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineAfter;
             removeFormattinglToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormatting;
+            removeAllFormattingsToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingAll;
             removeBoldToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingBold;
             removeItalicToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingItalic;
             removeUnderlineToolStripMenuItem.Text = _language.Menu.ContextMenu.RemoveFormattingUnderline;
