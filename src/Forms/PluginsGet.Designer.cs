@@ -290,6 +290,7 @@
             // 
             // labelPleaseWait
             // 
+            this.labelPleaseWait.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(13, 447);
             this.labelPleaseWait.Name = "labelPleaseWait";
