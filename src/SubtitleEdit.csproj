@@ -950,6 +950,7 @@
     <Compile Include="Forms\YouTubeAnnotationsImport.Designer.cs">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\BookmarkPersistence.cs" />
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
