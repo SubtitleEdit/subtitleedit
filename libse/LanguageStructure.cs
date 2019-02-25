@@ -1132,7 +1132,6 @@
             public string BeforeInsertLine { get; set; }
             public string LineInserted { get; set; }
             public string BeforeLineUpdatedInListView { get; set; }
-            public string BeforeSettingFontToNormal { get; set; }
             public string BeforeSplitLine { get; set; }
             public string LineSplitted { get; set; }
             public string BeforeMergeLines { get; set; }
@@ -1242,6 +1241,7 @@
             public string BeforeColumnImportText { get; set; }
             public string BeforeColumnShiftCellsDown { get; set; }
             public string BeforeX { get; set; }
+            public string LinesUpdatedX { get; set; }
             public string ErrorLoadingPluginXErrorY { get; set; }
             public string BeforeRunningPluginXVersionY { get; set; }
             public string UnableToReadPluginResult { get; set; }
@@ -1525,7 +1525,14 @@
                     public string MergeSelectedLinesAsDialog { get; set; }
                     public string MergeWithLineBefore { get; set; }
                     public string MergeWithLineAfter { get; set; }
-                    public string Normal { get; set; }
+                    public string RemoveFormatting { get; set; }
+                    public string RemoveFormattingAll { get; set; }
+                    public string RemoveFormattingBold { get; set; }
+                    public string RemoveFormattingItalic { get; set; }
+                    public string RemoveFormattingUnderline { get; set; }
+                    public string RemoveFormattingColor { get; set; }
+                    public string RemoveFormattingFontName { get; set; }
+                    public string RemoveFormattingAlignment { get; set; }
                     public string Underline { get; set; }
                     public string Box { get; set; }
                     public string Color { get; set; }

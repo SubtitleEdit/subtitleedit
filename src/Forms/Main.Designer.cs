@@ -38,9 +38,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode16 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode17 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode18 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -286,7 +286,14 @@
             this.mergeBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeFormattinglToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAllFormattingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeBoldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeItalicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeUnderlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeFontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAlignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2387,7 +2394,7 @@
             this.mergeBeforeToolStripMenuItem,
             this.mergeAfterToolStripMenuItem,
             this.toolStripSeparator8,
-            this.normalToolStripMenuItem,
+            this.removeFormattinglToolStripMenuItem,
             this.boldToolStripMenuItem,
             this.italicToolStripMenuItem,
             this.boxToolStripMenuItem,
@@ -2412,7 +2419,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 892);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 914);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -2623,12 +2630,68 @@
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(281, 6);
             // 
-            // normalToolStripMenuItem
+            // removeFormattinglToolStripMenuItem
             // 
-            this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.normalToolStripMenuItem.Text = "Normal";
-            this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
+            this.removeFormattinglToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.removeAllFormattingsToolStripMenuItem,
+            this.removeBoldToolStripMenuItem,
+            this.removeItalicToolStripMenuItem,
+            this.removeUnderlineToolStripMenuItem,
+            this.removeColorToolStripMenuItem,
+            this.removeFontNameToolStripMenuItem,
+            this.removeAlignmentToolStripMenuItem});
+            this.removeFormattinglToolStripMenuItem.Name = "removeFormattinglToolStripMenuItem";
+            this.removeFormattinglToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.removeFormattinglToolStripMenuItem.Text = "Remove formatting";
+            // 
+            // removeAllFormattingsToolStripMenuItem
+            // 
+            this.removeAllFormattingsToolStripMenuItem.Name = "removeAllFormattingsToolStripMenuItem";
+            this.removeAllFormattingsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeAllFormattingsToolStripMenuItem.Text = "Remove all formattings";
+            this.removeAllFormattingsToolStripMenuItem.Click += new System.EventHandler(this.removeAllFormattingsToolStripMenuItem_Click);
+            // 
+            // removeBoldToolStripMenuItem
+            // 
+            this.removeBoldToolStripMenuItem.Name = "removeBoldToolStripMenuItem";
+            this.removeBoldToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeBoldToolStripMenuItem.Text = "Remove bold";
+            this.removeBoldToolStripMenuItem.Click += new System.EventHandler(this.removeBoldToolStripMenuItem_Click);
+            // 
+            // removeItalicToolStripMenuItem
+            // 
+            this.removeItalicToolStripMenuItem.Name = "removeItalicToolStripMenuItem";
+            this.removeItalicToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeItalicToolStripMenuItem.Text = "Remove italic";
+            this.removeItalicToolStripMenuItem.Click += new System.EventHandler(this.removeItalicToolStripMenuItem_Click);
+            // 
+            // removeUnderlineToolStripMenuItem
+            // 
+            this.removeUnderlineToolStripMenuItem.Name = "removeUnderlineToolStripMenuItem";
+            this.removeUnderlineToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeUnderlineToolStripMenuItem.Text = "Remove underline";
+            this.removeUnderlineToolStripMenuItem.Click += new System.EventHandler(this.removeUnderlineToolStripMenuItem_Click);
+            // 
+            // removeColorToolStripMenuItem
+            // 
+            this.removeColorToolStripMenuItem.Name = "removeColorToolStripMenuItem";
+            this.removeColorToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeColorToolStripMenuItem.Text = "Remove color";
+            this.removeColorToolStripMenuItem.Click += new System.EventHandler(this.removeColorToolStripMenuItem_Click);
+            // 
+            // removeFontNameToolStripMenuItem
+            // 
+            this.removeFontNameToolStripMenuItem.Name = "removeFontNameToolStripMenuItem";
+            this.removeFontNameToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeFontNameToolStripMenuItem.Text = "Remove font name";
+            this.removeFontNameToolStripMenuItem.Click += new System.EventHandler(this.removeFontNameToolStripMenuItem_Click);
+            // 
+            // removeAlignmentToolStripMenuItem
+            // 
+            this.removeAlignmentToolStripMenuItem.Name = "removeAlignmentToolStripMenuItem";
+            this.removeAlignmentToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeAlignmentToolStripMenuItem.Text = "Remove alignment";
+            this.removeAlignmentToolStripMenuItem.Click += new System.EventHandler(this.removeAlignmentToolStripMenuItem_Click);
             // 
             // boldToolStripMenuItem
             // 
@@ -3313,14 +3376,14 @@
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode1;
+            timeCode16.Hours = 0;
+            timeCode16.Milliseconds = 0;
+            timeCode16.Minutes = 0;
+            timeCode16.Seconds = 0;
+            timeCode16.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode16.TotalMilliseconds = 0D;
+            timeCode16.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode16;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -3746,14 +3809,14 @@
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
+            timeCode17.Hours = 0;
+            timeCode17.Milliseconds = 0;
+            timeCode17.Minutes = 0;
+            timeCode17.Seconds = 0;
+            timeCode17.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode17.TotalMilliseconds = 0D;
+            timeCode17.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode17;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // ShowSubtitleTimer
@@ -4274,7 +4337,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(273, 446);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(273, 424);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -4538,14 +4601,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 0;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
+            timeCode18.Hours = 0;
+            timeCode18.Milliseconds = 0;
+            timeCode18.Minutes = 0;
+            timeCode18.Seconds = 0;
+            timeCode18.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode18.TotalMilliseconds = 0D;
+            timeCode18.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode18;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -4900,7 +4963,7 @@
         private System.Windows.Forms.ToolStripMenuItem mergeAfterToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.Button buttonAutoBreak;
-        private System.Windows.Forms.ToolStripMenuItem normalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeFormattinglToolStripMenuItem;
         private System.Windows.Forms.Label labelTextLineLengths;
         private System.Windows.Forms.NumericUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelDurationWarning;
@@ -5275,5 +5338,12 @@
         private System.Windows.Forms.ToolStripMenuItem googleTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem microsoftBingTranslateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBookmark;
+        private System.Windows.Forms.ToolStripMenuItem removeAllFormattingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeBoldToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeItalicToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeUnderlineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeFontNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeAlignmentToolStripMenuItem;
     }
 }

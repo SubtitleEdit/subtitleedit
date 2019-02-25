@@ -2806,9 +2806,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BeforeLineUpdatedInListView":
                     language.Main.BeforeLineUpdatedInListView = reader.Value;
                     break;
-                case "Main/BeforeSettingFontToNormal":
-                    language.Main.BeforeSettingFontToNormal = reader.Value;
-                    break;
                 case "Main/BeforeSplitLine":
                     language.Main.BeforeSplitLine = reader.Value;
                     break;
@@ -3135,6 +3132,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/BeforeX":
                     language.Main.BeforeX = reader.Value;
+                    break;
+                case "Main/LinesUpdatedX":
+                    language.Main.LinesUpdatedX = reader.Value;
                     break;
                 case "Main/ErrorLoadingPluginXErrorY":
                     language.Main.ErrorLoadingPluginXErrorY = reader.Value;
@@ -3859,8 +3859,29 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/MergeWithLineAfter":
                     language.Main.Menu.ContextMenu.MergeWithLineAfter = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/Normal":
-                    language.Main.Menu.ContextMenu.Normal = reader.Value;
+                case "Main/Menu/ContextMenu/RemoveFormatting":
+                    language.Main.Menu.ContextMenu.RemoveFormatting = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingAll":
+                    language.Main.Menu.ContextMenu.RemoveFormattingAll = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingBold":
+                    language.Main.Menu.ContextMenu.RemoveFormattingBold = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingItalic":
+                    language.Main.Menu.ContextMenu.RemoveFormattingItalic = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingUnderline":
+                    language.Main.Menu.ContextMenu.RemoveFormattingUnderline = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingColor":
+                    language.Main.Menu.ContextMenu.RemoveFormattingColor = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingFontName":
+                    language.Main.Menu.ContextMenu.RemoveFormattingFontName = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveFormattingAlignment":
+                    language.Main.Menu.ContextMenu.RemoveFormattingAlignment = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Underline":
                     language.Main.Menu.ContextMenu.Underline = reader.Value;

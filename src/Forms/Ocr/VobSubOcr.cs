@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
-            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
+            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
             importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;

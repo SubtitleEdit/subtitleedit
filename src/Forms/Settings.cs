@@ -1039,7 +1039,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewAndTextBoxNode, language.AlignmentN7, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN7));
             AddNode(listViewAndTextBoxNode, language.AlignmentN8, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN8));
             AddNode(listViewAndTextBoxNode, language.AlignmentN9, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN9));
-            AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.Normal, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
+            AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
             if (listViewAndTextBoxNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(listViewAndTextBoxNode);
