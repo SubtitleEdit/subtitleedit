@@ -128,6 +128,7 @@
             this.listViewGetPlugins.TabIndex = 15;
             this.listViewGetPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewGetPlugins.View = System.Windows.Forms.View.Details;
+            this.listViewGetPlugins.SelectedIndexChanged += new System.EventHandler(this.ListViewGetPlugins_SelectedIndexChanged);
             // 
             // columnHeaderName
             // 

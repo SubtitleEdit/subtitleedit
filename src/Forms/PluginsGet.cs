@@ -177,12 +177,19 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 _downloadList.Add(item);
 
+                double onlinePluginVer = GetInvariantVersion(item.Version);
                 foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                 {
-                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                    var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+                    // not same plugin
+                    if (!item.Name.Equals(installed.Name, StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
 
-                    if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
+                    var installedVer = GetInvariantVersion(installed.SubItems[2].Text);
+
+                    // update available
+                    if (onlinePluginVer > installedVer)
                     {
                         installed.BackColor = Color.LightPink;
                         installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
@@ -217,21 +224,34 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewGetPlugins.Items.Add(item);
                 }
 
-                foreach (ListViewItem installed in listViewInstalledPlugins.Items)
-                {
-                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                    var currentVer = Convert.ToDouble(plugin.Version.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+                //double onlinePluginVer = GetInvariantVersion(plugin.Version);
+                //foreach (ListViewItem installed in listViewInstalledPlugins.Items)
+                //{
+                //    if (!installed.Name.Equals(plugin.Name, StringComparison.OrdinalIgnoreCase))
+                //    {
+                //        continue;
+                //    }
+                //    var installedVer = GetInvariantVersion(installed.SubItems[2].Text);
+                //    if (installedVer < onlinePluginVer)
+                //    {
+                //        installed.BackColor = Color.LightPink;
+                //        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
+                //        buttonUpdateAll.Visible = true;
+                //    }
+                //}
 
-                    if (string.Compare(installed.Text, plugin.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
-                    {
-                        installed.BackColor = Color.LightPink;
-                        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
-                        buttonUpdateAll.Visible = true;
-                    }
+                // add "NEW" tag to plugins that has lesser than one month release
+                if (DateTime.Now.AddMonths(-1) < DateTime.Parse(plugin.Date))
+                {
+                    item.Text = $"{item.Text} - NEW";
+                    item.BackColor = Color.LightSkyBlue;
                 }
+
             }
             listViewGetPlugins.EndUpdate();
         }
+
+        private static double GetInvariantVersion(string ver) => Convert.ToDouble(ver.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
 
         private void ShowInstalledPlugins()
         {
@@ -494,6 +514,27 @@ namespace Nikse.SubtitleEdit.Forms
             ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
+        }
+
+        private void ListViewGetPlugins_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewGetPlugins.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            ListViewItem lvi = listViewGetPlugins.SelectedItems[0];
+
+            if (lvi.Text.EndsWith("NEW", StringComparison.Ordinal))
+            {
+                var pluginInfo = (PluginInfoItem)lvi.Tag;
+                labelPleaseWait.Visible = true;
+                labelPleaseWait.Text = $"NEW release: {DateTime.Parse(pluginInfo.Date):dd/MMM/yyy}";
+            }
+            else
+            {
+                labelPleaseWait.Visible = false;
+            }
         }
     }
 }
