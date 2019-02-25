@@ -16003,11 +16003,11 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            SetAlignTag(original, tag);
+                            original.Text = SetAlignTag(original.Text, tag);
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
-                    SetAlignTag(_subtitle.Paragraphs[i], tag);
+                    _subtitle.Paragraphs[i].Text = SetAlignTag(_subtitle.Paragraphs[i].Text, tag);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 SubtitleListview1.EndUpdate();
@@ -16023,20 +16023,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var pos = tb.SelectionStart;
                 int oldLength = tb.Text.Length;
                 bool atEnd = pos == oldLength;
-                if (tb.Text.StartsWith(tag, StringComparison.Ordinal) && tb.Text.Length > 5 && tb.Text[5] == '}')
-                {
-                    tb.Text = tb.Text.Remove(0, 6);
-                    tag = string.Empty;
-                }
-                else if (tb.Text.StartsWith("{\\a", StringComparison.Ordinal) && tb.Text.Length > 5 && tb.Text[5] == '}')
-                {
-                    tb.Text = tb.Text.Remove(0, 6);
-                }
-                else if (tb.Text.StartsWith("{\\a", StringComparison.Ordinal) && tb.Text.Length > 4 && tb.Text[4] == '}')
-                {
-                    tb.Text = tb.Text.Remove(0, 5);
-                }
-                tb.Text = string.Format(@"{0}{1}", tag, tb.Text);
+                tb.Text = SetAlignTag(tb.Text, tag);
                 if (atEnd)
                 {
                     tb.SelectionStart = tb.Text.Length;
@@ -24070,17 +24057,21 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("{\\a9}", string.Empty);
         }
 
-        private static void SetAlignTag(Paragraph p, string tag)
+        private static string SetAlignTag(string s, string tag)
         {
-            var text = RemoveAssAlignmentTags(p.Text);
+            var text = RemoveAssAlignmentTags(s);
             if (text.StartsWith("{\\", StringComparison.Ordinal) && text.Contains('}'))
             {
-                p.Text = text.Insert(1, "\\" + tag.TrimStart('{').TrimStart('\\').TrimEnd('}'));
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    return text.Insert(1, "\\" + tag.TrimStart('{').TrimStart('\\').TrimEnd('}'));
+                }
+                return text;
             }
             else
             {
-                p.Text = string.Format(@"{0}{1}", tag, text);
-            }            
+                return string.Format(@"{0}{1}", tag, text);
+            }
         }
 
         private void toolStripMenuItemAlignment_Click(object sender, EventArgs e)
