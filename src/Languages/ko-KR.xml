@@ -937,7 +937,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
         <EbuProperties>EBU STL 속성...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro 속성...</DvdStuioProProperties>
-        <TimedTextProperties>시간 제한 텍스트 속성...</TimedTextProperties>
+        <TimedTextProperties>Timed Text 속성...</TimedTextProperties>
         <PacProperties>PAC 속성...</PacProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
