@@ -4,11 +4,13 @@
 * NEW:
    * Re-split shortcuts
 * IMPROVED:
+   * Remove formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
    * Make export font name dropdown wider - thx Eduard
    * Remove empty line between original/current after merge - thx darnn
-   * Improve arabic handling in WebVTT - thx OmrSi
+   * Improve language tag handling in WebVTT - thx OmrSi/Jamakmake
+   * Add stuttering support in "Change casing" - thx techguru
 * FIXED:
    * Fix  renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
@@ -23,6 +25,7 @@
    * Keep format/frame rate/video after merge original/current - thx darnn
    * Fix batch OCR issue - thx orbittwz
    * Fix issue with realoading subtitle from source view - thx ivandrofly
+   * Allow multiple blank lines in .srt files - thx Sopor
 
 
 3.5.9 (10th February 2019)
