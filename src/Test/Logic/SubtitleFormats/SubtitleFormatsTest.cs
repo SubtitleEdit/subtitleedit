@@ -296,6 +296,29 @@ ppp
    </font>", subtitle.Paragraphs[1].Text);
         }
 
+        [TestMethod]
+        public void SrtBadTimeCode1()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+00:00:16.583 --> 00:00:19.833
+1941
+
+2
+00:00:21.333 --> 00:00:24.083
+Half the world is at war...
+
+3
+00:00:26.500 --> 00:00:28.875
+Germany has taken most of Europe...";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+            Assert.AreEqual("1941", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("Half the world is at war...", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("Germany has taken most of Europe...", subtitle.Paragraphs[2].Text);
+        }
+
         #endregion SubRip (.srt)
 
         #region Advanced Sub Station alpha (.ass)

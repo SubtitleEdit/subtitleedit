@@ -95,8 +95,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
-                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
-                    (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next.Trim()) || RegexTimeCodes.IsMatch(line.Trim())))
+                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) && 
+                    Utilities.IsInteger(line) && TryReadTimeCodesLine(line.Trim(), null))
                 {
                     if (!string.IsNullOrEmpty(_paragraph.Text))
                     {
@@ -106,8 +106,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     _expecting = ExpectingLine.Number;
                 }
-                if (_expecting == ExpectingLine.Number && RegexTimeCodes.IsMatch(line.Trim()))
+                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(line.Trim(), null))
                 {
+                    _expecting = ExpectingLine.TimeCodes;
+                    doRenum = true;
+                }
+                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(line.Trim(), null))
+                {
+                    subtitle.Paragraphs.Add(_paragraph);
+                    _lastParagraph = _paragraph;
+                    _paragraph = new Paragraph();
                     _expecting = ExpectingLine.TimeCodes;
                     doRenum = true;
                 }
@@ -205,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
                         _paragraph.Text = string.Empty;
-                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || RegexTimeCodes.IsMatch(next)))
+                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next,null)))
                         {
                             subtitle.Paragraphs.Add(_paragraph);
                             _lastParagraph = _paragraph;
@@ -237,9 +245,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return (p.Number + 1).ToString(CultureInfo.InvariantCulture);
         }
 
-        private static bool IsText(string text)
+        private bool IsText(string text)
         {
-            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text.Trim()));
+            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null));
         }
 
         private static string RemoveBadChars(string line)
@@ -303,18 +311,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _isMsFrames = false;
                     }
 
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                    if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
+                    if (paragraph != null)
                     {
-                        paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
-                    }
+                        paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                        if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
+                        {
+                            paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
+                        }
 
-                    paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
-                    {
-                        paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
+                        paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                        if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
+                        {
+                            paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
+                        }
                     }
-
                     return true;
                 }
                 catch
