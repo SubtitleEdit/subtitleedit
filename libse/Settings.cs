@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Core
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AdjustDurationExtendOnly = true;
-            AutoBreakCommaBreakEarly = true;
+            AutoBreakCommaBreakEarly = true;
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
         }
