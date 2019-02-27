@@ -120,70 +120,25 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 _subtitle1 = new Subtitle();
-                var format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out _, null);
+                SubtitleFormat format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out _, null);
                 if (format == null)
                 {
-                    var pac = new Pac();
-                    if (pac.IsMine(null, openFileDialog1.FileName))
+                    // try advanced format (non-text base formats)
+                    foreach (SubtitleFormat advancedFormat in GetAdvancedFormats())
                     {
-                        pac.BatchMode = true;
-                        pac.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = pac;
+                        if (!advancedFormat.IsMine(null, openFileDialog1.FileName))
+                        {
+                            continue;
+                        }
+                        if (advancedFormat is Pac pacFormat)
+                        {
+                            pacFormat.BatchMode = true;
+                        }
+                        advancedFormat.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        break; // format found, exit the loop
                     }
                 }
-                if (format == null)
-                {
-                    var cavena890 = new Cavena890();
-                    if (cavena890.IsMine(null, openFileDialog1.FileName))
-                    {
-                        cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = cavena890;
-                    }
-                }
-                if (format == null)
-                {
-                    var spt = new Spt();
-                    if (spt.IsMine(null, openFileDialog1.FileName))
-                    {
-                        spt.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = spt;
-                    }
-                }
-                if (format == null)
-                {
-                    var cheetahCaption = new CheetahCaption();
-                    if (cheetahCaption.IsMine(null, openFileDialog1.FileName))
-                    {
-                        cheetahCaption.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = cheetahCaption;
-                    }
-                }
-                if (format == null)
-                {
-                    var chk = new Chk();
-                    if (chk.IsMine(null, openFileDialog1.FileName))
-                    {
-                        chk.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = chk;
-                    }
-                }
-                if (format == null)
-                {
-                    var asc = new TimeLineAscii();
-                    if (asc.IsMine(null, openFileDialog1.FileName))
-                    {
-                        asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = asc;
-                    }
-                }
-                if (format == null)
-                {
-                    var asc = new TimeLineFootageAscii();
-                    if (asc.IsMine(null, openFileDialog1.FileName))
-                    {
-                        asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                    }
-                }
+
                 subtitleListView1.Fill(_subtitle1);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
@@ -194,6 +149,20 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareSubtitles();
                 }
             }
+        }
+
+        /// <summary>
+        /// Get advanced subtitle formats (These formats are not include in SubtitleFormat.AllSubtitleFormats)
+        /// </summary>
+        private static IEnumerable<SubtitleFormat> GetAdvancedFormats()
+        {
+            yield return new Pac();
+            yield return new Cavena890();
+            yield return new Spt();
+            yield return new CheetahCaption();
+            yield return new Chk();
+            yield return new TimeLineAscii();
+            yield return new TimeLineFootageAscii();
         }
 
         private void ButtonOpenSubtitle2Click(object sender, EventArgs e)
