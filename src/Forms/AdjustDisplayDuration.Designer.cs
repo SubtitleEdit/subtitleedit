@@ -295,7 +295,7 @@
             0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
             this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownFixedMilliseconds.TabIndex = 8;
+            this.numericUpDownFixedMilliseconds.TabIndex = 9;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -326,7 +326,7 @@
             this.checkBoxExtendOnly.Location = new System.Drawing.Point(357, 184);
             this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
             this.checkBoxExtendOnly.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxExtendOnly.TabIndex = 23;
+            this.checkBoxExtendOnly.TabIndex = 8;
             this.checkBoxExtendOnly.Text = "Extend only";
             this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
             // 
