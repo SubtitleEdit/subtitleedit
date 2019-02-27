@@ -47,6 +47,7 @@
             this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
@@ -119,7 +120,7 @@
             // labelNote
             // 
             this.labelNote.AutoSize = true;
-            this.labelNote.Location = new System.Drawing.Point(12, 191);
+            this.labelNote.Location = new System.Drawing.Point(10, 211);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 7;
@@ -148,7 +149,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(537, 210);
+            this.buttonCancel.Location = new System.Drawing.Point(537, 231);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 21;
@@ -159,7 +160,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(456, 210);
+            this.buttonOK.Location = new System.Drawing.Point(456, 231);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 20;
@@ -194,7 +195,7 @@
             // labelMaxCharsPerSecond
             // 
             this.labelMaxCharsPerSecond.AutoSize = true;
-            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(357, 70);
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(354, 70);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
             this.labelMaxCharsPerSecond.TabIndex = 5;
@@ -277,7 +278,7 @@
             // labelOptimalCharsSec
             // 
             this.labelOptimalCharsSec.AutoSize = true;
-            this.labelOptimalCharsSec.Location = new System.Drawing.Point(357, 128);
+            this.labelOptimalCharsSec.Location = new System.Drawing.Point(354, 128);
             this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
             this.labelOptimalCharsSec.Size = new System.Drawing.Size(92, 13);
             this.labelOptimalCharsSec.TabIndex = 10;
@@ -294,7 +295,7 @@
             0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
             this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownFixedMilliseconds.TabIndex = 8;
+            this.numericUpDownFixedMilliseconds.TabIndex = 9;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -304,7 +305,7 @@
             // labelMillisecondsFixed
             // 
             this.labelMillisecondsFixed.AutoSize = true;
-            this.labelMillisecondsFixed.Location = new System.Drawing.Point(501, 70);
+            this.labelMillisecondsFixed.Location = new System.Drawing.Point(498, 70);
             this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
             this.labelMillisecondsFixed.Size = new System.Drawing.Size(62, 13);
             this.labelMillisecondsFixed.TabIndex = 12;
@@ -319,11 +320,22 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "%";
             // 
+            // checkBoxExtendOnly
+            // 
+            this.checkBoxExtendOnly.AutoSize = true;
+            this.checkBoxExtendOnly.Location = new System.Drawing.Point(357, 184);
+            this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
+            this.checkBoxExtendOnly.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxExtendOnly.TabIndex = 8;
+            this.checkBoxExtendOnly.Text = "Extend only";
+            this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 247);
+            this.ClientSize = new System.Drawing.Size(624, 268);
+            this.Controls.Add(this.checkBoxExtendOnly);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDownFixedMilliseconds);
             this.Controls.Add(this.labelMillisecondsFixed);
@@ -382,5 +394,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxExtendOnly;
     }
 }
