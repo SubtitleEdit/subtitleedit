@@ -233,6 +233,7 @@ namespace Nikse.SubtitleEdit.Core
         public decimal AdjustDurationSeconds { get; set; }
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
+        public bool AdjustDurationExtendOnly { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
@@ -327,6 +328,7 @@ namespace Nikse.SubtitleEdit.Core
             MoveStartEndMs = 100;
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
+            AdjustDurationExtendOnly = true;
             AutoBreakCommaBreakEarly = true;
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
@@ -3252,6 +3254,12 @@ $HorzAlign          =   Center
                 settings.Tools.AdjustDurationLast = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("AdjustDurationExtendOnly");
+            if (subNode != null)
+            {
+                settings.Tools.AdjustDurationExtendOnly = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoBreakCommaBreakEarly");
             if (subNode != null)
             {
@@ -5889,6 +5897,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
+                textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString());
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString());
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString());
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString());

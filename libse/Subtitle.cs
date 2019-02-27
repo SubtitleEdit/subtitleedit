@@ -385,24 +385,26 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes, double optimalCharactersPerSeconds)
+        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes, double optimalCharactersPerSeconds, bool extendOnly = false)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    RecalculateDisplayTime(maxCharactersPerSecond, i, optimalCharactersPerSeconds);
+                    RecalculateDisplayTime(maxCharactersPerSecond, i, optimalCharactersPerSeconds, extendOnly);
                 }
             }
         }
 
-        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds)
+        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds, bool extendOnly = false)
         {
             Paragraph p = GetParagraphOrDefault(index);
             if (p == null)
             {
                 return;
             }
+
+            double originalEndTime = p.EndTime.TotalMilliseconds;
 
             double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
@@ -411,6 +413,11 @@ namespace Nikse.SubtitleEdit.Core
             {
                 duration++;
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+            }
+
+            if (extendOnly && p.EndTime.TotalMilliseconds < originalEndTime)
+            {
+                p.EndTime.TotalMilliseconds = originalEndTime;
             }
 
             Paragraph next = GetParagraphOrDefault(index + 1);

@@ -406,6 +406,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "AdjustDisplayDuration/Milliseconds":
                     language.AdjustDisplayDuration.Milliseconds = reader.Value;
                     break;
+                case "AdjustDisplayDuration/ExtendOnly":
+                    language.AdjustDisplayDuration.ExtendOnly = reader.Value;
+                    break;
                 case "ApplyDurationLimits/Title":
                     language.ApplyDurationLimits.Title = reader.Value;
                     break;

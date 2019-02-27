@@ -6289,7 +6289,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (adjustDisplayTime.AdjustUsingRecalc)
                     {
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
-                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond, adjustDisplayTime.ExtendOnly);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     }
                     else
