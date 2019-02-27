@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelMaxDuration = new System.Windows.Forms.Label();
-            this.labelMinDuration = new System.Windows.Forms.Label();
             this.numericUpDownDurationMax = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownDurationMin = new System.Windows.Forms.NumericUpDown();
             this.labelNote = new System.Windows.Forms.Label();
@@ -44,6 +42,8 @@
             this.groupBoxUnfixable = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
+            this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.groupBoxFixesAvailable.SuspendLayout();
@@ -54,27 +54,9 @@
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // labelMaxDuration
-            // 
-            this.labelMaxDuration.AutoSize = true;
-            this.labelMaxDuration.Location = new System.Drawing.Point(13, 48);
-            this.labelMaxDuration.Name = "labelMaxDuration";
-            this.labelMaxDuration.Size = new System.Drawing.Size(133, 13);
-            this.labelMaxDuration.TabIndex = 48;
-            this.labelMaxDuration.Text = "Max. duration, milliseconds";
-            // 
-            // labelMinDuration
-            // 
-            this.labelMinDuration.AutoSize = true;
-            this.labelMinDuration.Location = new System.Drawing.Point(12, 21);
-            this.labelMinDuration.Name = "labelMinDuration";
-            this.labelMinDuration.Size = new System.Drawing.Size(130, 13);
-            this.labelMinDuration.TabIndex = 47;
-            this.labelMinDuration.Text = "Min. duration, milliseconds";
-            // 
             // numericUpDownDurationMax
             // 
-            this.numericUpDownDurationMax.Location = new System.Drawing.Point(191, 46);
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(191, 38);
             this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -99,7 +81,7 @@
             // 
             // numericUpDownDurationMin
             // 
-            this.numericUpDownDurationMin.Location = new System.Drawing.Point(191, 19);
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(191, 12);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -262,17 +244,39 @@
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 54;
             // 
+            // checkBoxMinDuration
+            // 
+            this.checkBoxMinDuration.AutoSize = true;
+            this.checkBoxMinDuration.Location = new System.Drawing.Point(16, 13);
+            this.checkBoxMinDuration.Name = "checkBoxMinDuration";
+            this.checkBoxMinDuration.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxMinDuration.TabIndex = 55;
+            this.checkBoxMinDuration.Text = "Min. duration, milliseconds";
+            this.checkBoxMinDuration.UseVisualStyleBackColor = true;
+            this.checkBoxMinDuration.CheckedChanged += new System.EventHandler(this.checkBoxMinDuration_CheckedChanged);
+            // 
+            // checkBoxMaxDuration
+            // 
+            this.checkBoxMaxDuration.AutoSize = true;
+            this.checkBoxMaxDuration.Location = new System.Drawing.Point(16, 39);
+            this.checkBoxMaxDuration.Name = "checkBoxMaxDuration";
+            this.checkBoxMaxDuration.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxMaxDuration.TabIndex = 56;
+            this.checkBoxMaxDuration.Text = "Max. duration, milliseconds";
+            this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
+            this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.checkBoxMaxDuration_CheckedChanged);
+            // 
             // ApplyDurationLimits
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(961, 571);
+            this.Controls.Add(this.checkBoxMaxDuration);
+            this.Controls.Add(this.checkBoxMinDuration);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelNote);
-            this.Controls.Add(this.labelMaxDuration);
-            this.Controls.Add(this.labelMinDuration);
             this.Controls.Add(this.numericUpDownDurationMax);
             this.Controls.Add(this.numericUpDownDurationMin);
             this.KeyPreview = true;
@@ -300,9 +304,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label labelMaxDuration;
-        private System.Windows.Forms.Label labelMinDuration;
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMax;
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
         private System.Windows.Forms.Label labelNote;
@@ -317,5 +318,7 @@
         private System.Windows.Forms.GroupBox groupBoxUnfixable;
         private Controls.SubtitleListView subtitleListView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckBox checkBoxMinDuration;
+        private System.Windows.Forms.CheckBox checkBoxMaxDuration;
     }
 }
