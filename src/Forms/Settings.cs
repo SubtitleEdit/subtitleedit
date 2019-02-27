@@ -149,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveBlankLinesWhenOpening.Checked = gs.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             numericUpDownSubtitleLineMaximumLength.Value = gs.SubtitleLineMaximumLength;
+            numericUpDownOptimalCharsSec.Value = (decimal)gs.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)gs.SubtitleMaximumCharactersPerSeconds;
             numericUpDownMaxWordsMin.Value = (decimal)gs.SubtitleMaximumWordsPerMinute;
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
@@ -354,6 +355,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
+            labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
             labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
@@ -1514,6 +1516,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 45;
             }
 
+            gs.SubtitleOptimalCharactersPerSeconds = (double)numericUpDownOptimalCharsSec.Value;
             gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
             gs.SubtitleMaximumWordsPerMinute = (double)numericUpDownMaxWordsMin.Value;
 

@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSeconds.Text = language.Seconds;
             radioButtonPercent.Text = language.Percent;
             radioButtonAutoRecalculate.Text = language.Recalculate;
+            labelOptimalCharsSec.Text = Configuration.Settings.Language.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = Configuration.Settings.Language.Settings.MaximumCharactersPerSecond;
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
