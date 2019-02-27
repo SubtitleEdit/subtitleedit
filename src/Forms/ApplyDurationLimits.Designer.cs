@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelMaxDuration = new System.Windows.Forms.Label();
-            this.labelMinDuration = new System.Windows.Forms.Label();
             this.numericUpDownDurationMax = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownDurationMin = new System.Windows.Forms.NumericUpDown();
             this.labelNote = new System.Windows.Forms.Label();
@@ -44,6 +42,8 @@
             this.groupBoxUnfixable = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
+            this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.groupBoxFixesAvailable.SuspendLayout();
@@ -54,27 +54,9 @@
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // labelMaxDuration
-            // 
-            this.labelMaxDuration.AutoSize = true;
-            this.labelMaxDuration.Location = new System.Drawing.Point(13, 48);
-            this.labelMaxDuration.Name = "labelMaxDuration";
-            this.labelMaxDuration.Size = new System.Drawing.Size(133, 13);
-            this.labelMaxDuration.TabIndex = 48;
-            this.labelMaxDuration.Text = "Max. duration, milliseconds";
-            // 
-            // labelMinDuration
-            // 
-            this.labelMinDuration.AutoSize = true;
-            this.labelMinDuration.Location = new System.Drawing.Point(12, 21);
-            this.labelMinDuration.Name = "labelMinDuration";
-            this.labelMinDuration.Size = new System.Drawing.Size(130, 13);
-            this.labelMinDuration.TabIndex = 47;
-            this.labelMinDuration.Text = "Min. duration, milliseconds";
-            // 
             // numericUpDownDurationMax
             // 
-            this.numericUpDownDurationMax.Location = new System.Drawing.Point(191, 46);
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(191, 38);
             this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -87,7 +69,7 @@
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
             this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 46;
+            this.numericUpDownDurationMax.TabIndex = 4;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -99,7 +81,7 @@
             // 
             // numericUpDownDurationMin
             // 
-            this.numericUpDownDurationMin.Location = new System.Drawing.Point(191, 19);
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(191, 12);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -112,7 +94,7 @@
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
             this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMin.TabIndex = 45;
+            this.numericUpDownDurationMin.TabIndex = 2;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -129,7 +111,7 @@
             this.labelNote.Location = new System.Drawing.Point(19, 542);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(265, 13);
-            this.labelNote.TabIndex = 49;
+            this.labelNote.TabIndex = 53;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
             // buttonCancel
@@ -140,7 +122,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(874, 538);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 51;
+            this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -151,7 +133,7 @@
             this.buttonOK.Location = new System.Drawing.Point(793, 538);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 50;
+            this.buttonOK.TabIndex = 7;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -163,7 +145,7 @@
             this.groupBoxFixesAvailable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFixesAvailable.Name = "groupBoxFixesAvailable";
             this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 302);
-            this.groupBoxFixesAvailable.TabIndex = 52;
+            this.groupBoxFixesAvailable.TabIndex = 5;
             this.groupBoxFixesAvailable.TabStop = false;
             this.groupBoxFixesAvailable.Text = "Fixes available: {0}";
             // 
@@ -183,7 +165,7 @@
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(919, 273);
-            this.listViewFixes.TabIndex = 9;
+            this.listViewFixes.TabIndex = 6;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             // 
@@ -214,12 +196,13 @@
             this.groupBoxUnfixable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxUnfixable.Name = "groupBoxUnfixable";
             this.groupBoxUnfixable.Size = new System.Drawing.Size(931, 154);
-            this.groupBoxUnfixable.TabIndex = 53;
+            this.groupBoxUnfixable.TabIndex = 51;
             this.groupBoxUnfixable.TabStop = false;
             this.groupBoxUnfixable.Text = "Unable to fix min duration: {0}";
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -227,6 +210,7 @@
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
             this.subtitleListView1.Name = "subtitleListView1";
@@ -235,7 +219,7 @@
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
-            this.subtitleListView1.TabIndex = 111;
+            this.subtitleListView1.TabIndex = 52;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
@@ -262,17 +246,39 @@
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 54;
             // 
+            // checkBoxMinDuration
+            // 
+            this.checkBoxMinDuration.AutoSize = true;
+            this.checkBoxMinDuration.Location = new System.Drawing.Point(16, 13);
+            this.checkBoxMinDuration.Name = "checkBoxMinDuration";
+            this.checkBoxMinDuration.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxMinDuration.TabIndex = 1;
+            this.checkBoxMinDuration.Text = "Min. duration, milliseconds";
+            this.checkBoxMinDuration.UseVisualStyleBackColor = true;
+            this.checkBoxMinDuration.CheckedChanged += new System.EventHandler(this.checkBoxMinDuration_CheckedChanged);
+            // 
+            // checkBoxMaxDuration
+            // 
+            this.checkBoxMaxDuration.AutoSize = true;
+            this.checkBoxMaxDuration.Location = new System.Drawing.Point(16, 39);
+            this.checkBoxMaxDuration.Name = "checkBoxMaxDuration";
+            this.checkBoxMaxDuration.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxMaxDuration.TabIndex = 3;
+            this.checkBoxMaxDuration.Text = "Max. duration, milliseconds";
+            this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
+            this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.checkBoxMaxDuration_CheckedChanged);
+            // 
             // ApplyDurationLimits
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(961, 571);
+            this.Controls.Add(this.checkBoxMaxDuration);
+            this.Controls.Add(this.checkBoxMinDuration);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelNote);
-            this.Controls.Add(this.labelMaxDuration);
-            this.Controls.Add(this.labelMinDuration);
             this.Controls.Add(this.numericUpDownDurationMax);
             this.Controls.Add(this.numericUpDownDurationMin);
             this.KeyPreview = true;
@@ -300,9 +306,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label labelMaxDuration;
-        private System.Windows.Forms.Label labelMinDuration;
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMax;
         private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
         private System.Windows.Forms.Label labelNote;
@@ -317,5 +320,7 @@
         private System.Windows.Forms.GroupBox groupBoxUnfixable;
         private Controls.SubtitleListView subtitleListView1;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckBox checkBoxMinDuration;
+        private System.Windows.Forms.CheckBox checkBoxMaxDuration;
     }
 }
