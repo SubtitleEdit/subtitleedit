@@ -69,7 +69,7 @@
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
             this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 46;
+            this.numericUpDownDurationMax.TabIndex = 4;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -94,7 +94,7 @@
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
             this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMin.TabIndex = 45;
+            this.numericUpDownDurationMin.TabIndex = 2;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -111,7 +111,7 @@
             this.labelNote.Location = new System.Drawing.Point(19, 542);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(265, 13);
-            this.labelNote.TabIndex = 49;
+            this.labelNote.TabIndex = 53;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
             // buttonCancel
@@ -122,7 +122,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(874, 538);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 51;
+            this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -133,7 +133,7 @@
             this.buttonOK.Location = new System.Drawing.Point(793, 538);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 50;
+            this.buttonOK.TabIndex = 7;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -145,7 +145,7 @@
             this.groupBoxFixesAvailable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxFixesAvailable.Name = "groupBoxFixesAvailable";
             this.groupBoxFixesAvailable.Size = new System.Drawing.Size(931, 302);
-            this.groupBoxFixesAvailable.TabIndex = 52;
+            this.groupBoxFixesAvailable.TabIndex = 5;
             this.groupBoxFixesAvailable.TabStop = false;
             this.groupBoxFixesAvailable.Text = "Fixes available: {0}";
             // 
@@ -165,7 +165,7 @@
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(919, 273);
-            this.listViewFixes.TabIndex = 9;
+            this.listViewFixes.TabIndex = 6;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             // 
@@ -196,12 +196,13 @@
             this.groupBoxUnfixable.Location = new System.Drawing.Point(0, 0);
             this.groupBoxUnfixable.Name = "groupBoxUnfixable";
             this.groupBoxUnfixable.Size = new System.Drawing.Size(931, 154);
-            this.groupBoxUnfixable.TabIndex = 53;
+            this.groupBoxUnfixable.TabIndex = 51;
             this.groupBoxUnfixable.TabStop = false;
             this.groupBoxUnfixable.Text = "Unable to fix min duration: {0}";
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -209,6 +210,7 @@
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
             this.subtitleListView1.Name = "subtitleListView1";
@@ -217,7 +219,7 @@
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
-            this.subtitleListView1.TabIndex = 111;
+            this.subtitleListView1.TabIndex = 52;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
@@ -250,7 +252,7 @@
             this.checkBoxMinDuration.Location = new System.Drawing.Point(16, 13);
             this.checkBoxMinDuration.Name = "checkBoxMinDuration";
             this.checkBoxMinDuration.Size = new System.Drawing.Size(149, 17);
-            this.checkBoxMinDuration.TabIndex = 55;
+            this.checkBoxMinDuration.TabIndex = 1;
             this.checkBoxMinDuration.Text = "Min. duration, milliseconds";
             this.checkBoxMinDuration.UseVisualStyleBackColor = true;
             this.checkBoxMinDuration.CheckedChanged += new System.EventHandler(this.checkBoxMinDuration_CheckedChanged);
@@ -261,7 +263,7 @@
             this.checkBoxMaxDuration.Location = new System.Drawing.Point(16, 39);
             this.checkBoxMaxDuration.Name = "checkBoxMaxDuration";
             this.checkBoxMaxDuration.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxMaxDuration.TabIndex = 56;
+            this.checkBoxMaxDuration.TabIndex = 3;
             this.checkBoxMaxDuration.Text = "Max. duration, milliseconds";
             this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
             this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.checkBoxMaxDuration_CheckedChanged);
