@@ -277,7 +277,8 @@ namespace Nikse.SubtitleEdit.Core
                 Seconds = "Seconds",
                 Note = "Note: Display time will not overlap start time of next text",
                 Fixed = "Fixed",
-                Milliseconds = "Milliseconds"
+                Milliseconds = "Milliseconds",
+                ExtendOnly = "Extend only"
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits

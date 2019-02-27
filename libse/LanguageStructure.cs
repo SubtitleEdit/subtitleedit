@@ -149,6 +149,7 @@
             public string Note { get; set; }
             public string Fixed { get; set; }
             public string Milliseconds { get; set; }
+            public string ExtendOnly { get; set; }
         }
 
         public class ApplyDurationLimits
