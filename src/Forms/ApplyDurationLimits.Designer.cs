@@ -122,7 +122,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(874, 538);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.TabIndex = 110;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -133,7 +133,7 @@
             this.buttonOK.Location = new System.Drawing.Point(793, 538);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 7;
+            this.buttonOK.TabIndex = 100;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
