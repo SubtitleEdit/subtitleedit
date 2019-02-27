@@ -37,6 +37,8 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
+            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelSubMaxLen = new System.Windows.Forms.Label();
             this.numericUpDownMaxWordsMin = new System.Windows.Forms.NumericUpDown();
             this.labelMergeShortLines = new System.Windows.Forms.Label();
@@ -351,12 +353,11 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxWordsMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxNumberOfLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
@@ -429,7 +430,6 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -589,6 +589,38 @@
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
+            // labelOptimalCharsPerSecond
+            // 
+            this.labelOptimalCharsPerSecond.AutoSize = true;
+            this.labelOptimalCharsPerSecond.Location = new System.Drawing.Point(6, 48);
+            this.labelOptimalCharsPerSecond.Name = "labelOptimalCharsPerSecond";
+            this.labelOptimalCharsPerSecond.Size = new System.Drawing.Size(92, 13);
+            this.labelOptimalCharsPerSecond.TabIndex = 8;
+            this.labelOptimalCharsPerSecond.Text = "Optimal chars/sec";
+            // 
+            // numericUpDownOptimalCharsSec
+            // 
+            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
+            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(203, 46);
+            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownOptimalCharsSec.TabIndex = 8;
+            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            // 
             // labelSubMaxLen
             // 
             this.labelSubMaxLen.AutoSize = true;
@@ -747,7 +779,7 @@
             this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(6, 75);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 8;
+            this.labelMaxCharsPerSecond.TabIndex = 9;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
             // numericUpDownMinGapMs
@@ -4236,38 +4268,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // labelOptimalCharsPerSecond
-            // 
-            this.labelOptimalCharsPerSecond.AutoSize = true;
-            this.labelOptimalCharsPerSecond.Location = new System.Drawing.Point(6, 48);
-            this.labelOptimalCharsPerSecond.Name = "labelOptimalCharsPerSecond";
-            this.labelOptimalCharsPerSecond.Size = new System.Drawing.Size(92, 13);
-            this.labelOptimalCharsPerSecond.TabIndex = 50;
-            this.labelOptimalCharsPerSecond.Text = "Optimal chars/sec";
-            // 
-            // numericUpDownOptimalCharsSec
-            // 
-            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
-            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(203, 46);
-            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
-            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
-            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownOptimalCharsSec.TabIndex = 51;
-            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
-            11,
-            0,
-            0,
-            0});
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4293,6 +4293,7 @@
             this.groupBoxMiscellaneous.PerformLayout();
             this.groupBoxGeneralRules.ResumeLayout(false);
             this.groupBoxGeneralRules.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxWordsMin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxNumberOfLines)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
@@ -4397,7 +4398,6 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
