@@ -4756,6 +4756,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SubtitleLineMaximumLength":
                     language.Settings.SubtitleLineMaximumLength = reader.Value;
                     break;
+                case "Settings/OptimalCharactersPerSecond":
+                    language.Settings.OptimalCharactersPerSecond = reader.Value;
+                    break;
                 case "Settings/MaximumCharactersPerSecond":
                     language.Settings.MaximumCharactersPerSecond = reader.Value;
                     break;
