@@ -234,6 +234,8 @@ namespace Nikse.SubtitleEdit.Core
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
+        public bool ApplyMinimumDurationLimit { get; set; }
+        public bool ApplyMaximumDurationLimit { get; set; }
 
         public ToolsSettings()
         {
@@ -326,6 +328,8 @@ namespace Nikse.SubtitleEdit.Core
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AutoBreakCommaBreakEarly = true;
+            ApplyMinimumDurationLimit = true;
+            ApplyMaximumDurationLimit = true;
         }
     }
 
@@ -3254,6 +3258,18 @@ $HorzAlign          =   Center
                 settings.Tools.AutoBreakCommaBreakEarly = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("ApplyMinimumDurationLimit");
+            if (subNode != null)
+            {
+                settings.Tools.ApplyMinimumDurationLimit = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ApplyMaximumDurationLimit");
+            if (subNode != null)
+            {
+                settings.Tools.ApplyMaximumDurationLimit = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -5874,7 +5890,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString());
-                
+                textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString());
+                textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString());
+
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
