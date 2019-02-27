@@ -22,8 +22,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ApplyDurationLimits.Title;
-            labelMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
-            labelMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
+            checkBoxMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
+            checkBoxMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
+            checkBoxMinDuration.Checked = Configuration.Settings.Tools.ApplyMinimumDurationLimit;
+            checkBoxMaxDuration.Checked = Configuration.Settings.Tools.ApplyMaximumDurationLimit;
             labelNote.Text = Configuration.Settings.Language.AdjustDisplayDuration.Note;
             numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
@@ -82,8 +84,14 @@ namespace Nikse.SubtitleEdit.Forms
             _working = new Subtitle(_subtitle);
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            FixShortDisplayTimes();
-            FixLongDisplayTimes();
+            if (checkBoxMinDuration.Checked)
+            {
+                FixShortDisplayTimes();
+            }
+            if (checkBoxMaxDuration.Checked)
+            {
+                FixLongDisplayTimes();
+            }
             listViewFixes.EndUpdate();
 
             groupBoxFixesAvailable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.FixesAvailable, _totalFixes);
@@ -203,10 +211,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            Configuration.Settings.Tools.ApplyMinimumDurationLimit = checkBoxMinDuration.Checked;
+            Configuration.Settings.Tools.ApplyMaximumDurationLimit = checkBoxMaxDuration.Checked;
+
             _onlyListFixes = false;
             _working = new Subtitle(_subtitle);
-            FixShortDisplayTimes();
-            FixLongDisplayTimes();
+            if (checkBoxMinDuration.Checked)
+            {
+                FixShortDisplayTimes();
+            }            
+            if (checkBoxMaxDuration.Checked)
+            {
+                FixLongDisplayTimes();
+            }
             DialogResult = DialogResult.OK;
         }
 
@@ -237,5 +254,14 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Focus();
         }
 
+        private void checkBoxMinDuration_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void checkBoxMaxDuration_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
     }
 }
