@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public int FixedMilliseconds => (int)numericUpDownFixedMilliseconds.Value;
 
+        public bool ExtendOnly => checkBoxExtendOnly.Checked;
+
         public AdjustDisplayDuration()
         {
             UiUtil.PreInitialize(this);
@@ -68,6 +70,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
+            checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+
             LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
             Text = language.Title;
             groupBoxAdjustVia.Text = language.AdjustVia;
@@ -80,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelNote.Text = language.Note;
             radioButtonFixed.Text = language.Fixed;
             labelMillisecondsFixed.Text = language.Milliseconds;
+            checkBoxExtendOnly.Text = language.ExtendOnly;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
@@ -131,6 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownSeconds.Enabled = radioButtonSeconds.Checked;
             numericUpDownMaxCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
             numericUpDownOptimalCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
+            checkBoxExtendOnly.Enabled = radioButtonAutoRecalculate.Checked;
             numericUpDownFixedMilliseconds.Enabled = radioButtonFixed.Checked;
         }
 
@@ -143,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.AdjustDurationSeconds = numericUpDownSeconds.Value;
             Configuration.Settings.Tools.AdjustDurationPercent = (int)numericUpDownPercent.Value;
+            Configuration.Settings.Tools.AdjustDurationExtendOnly = checkBoxExtendOnly.Checked;
 
             if (radioButtonSeconds.Checked)
             {

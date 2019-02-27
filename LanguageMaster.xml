@@ -147,6 +147,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Note>Note: Display time will not overlap start time of next text</Note>
     <Fixed>Fixed</Fixed>
     <Milliseconds>Milliseconds</Milliseconds>
+    <ExtendOnly>Extend only</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
