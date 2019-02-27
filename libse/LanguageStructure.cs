@@ -1940,6 +1940,7 @@
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
+            public string OptimalCharactersPerSecond { get; set; }
             public string MaximumCharactersPerSecond { get; set; }
             public string MaximumWordssPerMinute { get; set; }
             public string AutoWrapWhileTyping { get; set; }
