@@ -256,11 +256,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxMinDuration_CheckedChanged(object sender, EventArgs e)
         {
+            numericUpDownDurationMin.Enabled = checkBoxMinDuration.Checked;
             GeneratePreview();
+
         }
 
         private void checkBoxMaxDuration_CheckedChanged(object sender, EventArgs e)
         {
+            numericUpDownDurationMax.Enabled = checkBoxMaxDuration.Checked;
             GeneratePreview();
         }
     }
