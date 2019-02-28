@@ -1456,18 +1456,15 @@ namespace Nikse.SubtitleEdit.Controls
             selectedItem.Focused = true;
 
             var topIndex = topItem.Index;
-            int bottomIndex = topIndex + (Height - 30) / GetItemRect(0).Height;
-            if (index < topIndex || index > bottomIndex)
+            var numberOfVisibleItems = (Height - 30) / GetItemRect(0).Height;
+            int bottomIndex = topIndex + numberOfVisibleItems;
+            if (index >= bottomIndex)
             {
-                var nextScrollToIndex = index + (bottomIndex - topIndex) / 2;
-                if (nextScrollToIndex < Items.Count && nextScrollToIndex > 1)
-                {
-                    Items[nextScrollToIndex].EnsureVisible();
-                }
-                else
-                {
-                    selectedItem.EnsureVisible();
-                }
+                Items[Math.Min(Items.Count - 1, index + numberOfVisibleItems)].EnsureVisible();
+            }
+            else if (index < topIndex)
+            {
+                Items[Math.Max(0, index - numberOfVisibleItems / 2)].EnsureVisible();
             }
             EndUpdate();
         }
