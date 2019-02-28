@@ -2635,6 +2635,8 @@
     <Word from="Youve" to="You've" />
     <Word from="Zea/and" to="Zealand" />
     <Word from="ZSth" to="25th" />
+    <Word from="Ipush" to="I push" />
+    <Word from="lpush" to="I push" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
