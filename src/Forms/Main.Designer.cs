@@ -4254,7 +4254,7 @@
             // 
             this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(682, 101);
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(682, 94);
             this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
             this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(35, 13);
             this.labelTextAlternateLineTotal.TabIndex = 37;

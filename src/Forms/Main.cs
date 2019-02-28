@@ -17820,12 +17820,29 @@ namespace Nikse.SubtitleEdit.Forms
                 lbSingleLineOriginal.Left = tbOriginal.Left;
                 labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
                 labelTextAlternateLineTotal.Left = tbOriginal.Left + (tbOriginal.Width - labelTextAlternateLineTotal.Width);
+                if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
+                {
+                    labelTextAlternateLineTotal.Visible = false;
+                }
+                else
+                {
+                    labelTextAlternateLineTotal.Visible = true;
+                }
             }
 
             labelAlternateCharactersPerSecond.Top = labelCharactersPerSecond.Top;
             labelCharactersPerSecond.Left = tbText.Left + (tbText.Width - labelCharactersPerSecond.Width);
             labelTextLineTotal.Left = tbText.Left + (tbText.Width - labelTextLineTotal.Width);
             SubtitleListview1.AutoSizeAllColumns(this);
+
+            if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
+            {
+                labelTextLineTotal.Visible = false;
+            }
+            else
+            {
+                labelTextLineTotal.Visible = true;
+            }
 
             FixRightToLeftDependingOnLanguage();
         }
