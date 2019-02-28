@@ -11602,6 +11602,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            string pre = string.Empty;
+            if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && p.Text.IndexOf('}') >= 0)
+            {
+                int endIndex = p.Text.IndexOf('}') + 1;
+                pre = p.Text.Substring(0, endIndex);
+                p.Text = p.Text.Remove(0, endIndex);
+            }
             string s = p.Text;
             if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
@@ -11614,7 +11621,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var start = s.IndexOf(" face=", StringComparison.Ordinal);
                         s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                        p.Text = s;
+                        p.Text = pre + s;
                         return;
                     }
 
@@ -11627,13 +11634,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                        p.Text = s;
+                        p.Text = pre + s;
                         return;
                     }
                 }
             }
 
-            p.Text = string.Format("<font color=\"{0}\">{1}</font>", color, p.Text);
+            p.Text = $"{pre}<font color=\"{color}\">{p.Text}</font>";
         }
 
         private void toolStripMenuItemFont_Click(object sender, EventArgs e)
@@ -11678,6 +11685,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            string pre = string.Empty;
+            if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && p.Text.IndexOf('}') >= 0)
+            {
+                int endIndex = p.Text.IndexOf('}') + 1;
+                pre = p.Text.Substring(0, endIndex);
+                p.Text = p.Text.Remove(0, endIndex);
+            }
             string s = p.Text;
             if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
@@ -11689,7 +11703,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (f.Contains(" color=") && !f.Contains(" face="))
                     {
                         var start = s.IndexOf(" color=", StringComparison.Ordinal);
-                        p.Text = s.Insert(start, string.Format(" face=\"{0}\"", fontName));
+                        p.Text = pre + s.Insert(start, string.Format(" face=\"{0}\"", fontName));
                         return;
                     }
 
@@ -11701,13 +11715,13 @@ namespace Nikse.SubtitleEdit.Forms
                             end = s.IndexOf('"', faceStart + 7);
                         }
 
-                        p.Text = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontName) + s.Substring(end);
+                        p.Text = pre + s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontName) + s.Substring(end);
                         return;
                     }
                 }
             }
 
-            p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontName, s);
+            p.Text = $"{pre}<font face=\"{fontName}\">{s}</font>";
         }
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
@@ -20857,6 +20871,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             bool done = false;
+            string pre = string.Empty;
+            if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+            {
+                int endIndex = text.IndexOf('}') + 1;
+                pre = text.Substring(0, endIndex);
+                text = text.Remove(0, endIndex);
+            }
             string s = text;
             if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
@@ -20884,11 +20905,15 @@ namespace Nikse.SubtitleEdit.Forms
                         done = true;
                     }
                 }
-            }
+            }           
 
             if (!done)
             {
-                text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
+                text = $"{pre}<font color=\"{color}\">{text}</font>";
+            }
+            else
+            {
+                text = pre + text;
             }
 
             tb.SelectedText = text;
@@ -20910,6 +20935,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     bool done = false;
 
+                    string pre = string.Empty;
+                    if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+                    {
+                        int endIndex = text.IndexOf('}') + 1;
+                        pre = text.Substring(0, endIndex);
+                        text = text.Remove(0, endIndex);
+                    }
                     if (text.StartsWith("<font ", StringComparison.Ordinal))
                     {
                         int end = text.IndexOf('>');
@@ -20937,7 +20969,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (!done)
                     {
-                        text = string.Format("<font face=\"{0}\">{1}</font>", form.FontName, text);
+                        text = $"{pre}<font face=\"{form.FontName}\">{text}</font>";
+                    }
+                    else
+                    {
+                        text = pre + text;
                     }
 
                     tb.SelectedText = text;
