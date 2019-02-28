@@ -15724,9 +15724,9 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.AppendLine(p.Text + Environment.NewLine);
                     }
                 }
-                if (sb.Length > 0)
+                if (sb.ToString().TrimEnd().Length > 0)
                 {
-                    Clipboard.SetText(sb.ToString().Trim());
+                    Clipboard.SetText(sb.ToString().TrimEnd());
                 }
                 e.SuppressKeyPress = true;
             }
@@ -20905,7 +20905,7 @@ namespace Nikse.SubtitleEdit.Forms
                         done = true;
                     }
                 }
-            }           
+            }
 
             if (!done)
             {
