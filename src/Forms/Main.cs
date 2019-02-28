@@ -15989,15 +15989,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
 
-                var indices = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                {
-                    indices.Add(item.Index);
-                }
-
                 bool first = true;
                 SubtitleListview1.BeginUpdate();
-                foreach (int i in indices)
+                foreach (int i in SubtitleListview1.SelectedIndices)
                 {
                     if (first)
                     {
