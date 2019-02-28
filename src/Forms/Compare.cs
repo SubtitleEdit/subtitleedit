@@ -119,25 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
                 }
-                _subtitle1 = new Subtitle();
-                SubtitleFormat format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out _, null);
-                if (format == null)
-                {
-                    // try advanced format (non-text base formats)
-                    foreach (SubtitleFormat advancedFormat in GetAdvancedFormats())
-                    {
-                        if (!advancedFormat.IsMine(null, openFileDialog1.FileName))
-                        {
-                            continue;
-                        }
-                        if (advancedFormat is Pac pacFormat)
-                        {
-                            pacFormat.BatchMode = true;
-                        }
-                        advancedFormat.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        break; // format found, exit the loop
-                    }
-                }
+                _subtitle1 = LoadSubtitle(openFileDialog1.FileName);
 
                 subtitleListView1.Fill(_subtitle1);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
@@ -151,11 +133,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        /// <summary>
-        /// Get advanced subtitle formats (These formats are not include in SubtitleFormat.AllSubtitleFormats)
-        /// </summary>
-        private static IEnumerable<SubtitleFormat> GetAdvancedFormats()
+        private static Subtitle LoadSubtitle(string fileName)
         {
+            var subtitle = new Subtitle();
+            var format = subtitle.LoadSubtitle(fileName, out _, null);
+            if (format == null)
+            {
+                foreach (var f in GetNonImageNonDefaultFormats())
+                {
+                    if (!f.IsMine(null, fileName))
+                    {
+                        continue;
+                    }
+
+                    if (f is Pac pacFormat)
+                    {
+                        pacFormat.BatchMode = true;
+                    }
+
+                    f.LoadSubtitle(subtitle, null, fileName);
+                    break; // format found, exit the loop
+                }
+            }
+            return subtitle;
+        }
+
+        /// <summary>
+        /// Get non image based subtitle formats not included in SubtitleFormat.AllSubtitleFormats
+        /// </summary>
+        private static IEnumerable<SubtitleFormat> GetNonImageNonDefaultFormats()
+        {
+            yield return new Ebu();
             yield return new Pac();
             yield return new Cavena890();
             yield return new Spt();
@@ -176,26 +184,8 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
                 }
-                _subtitle2 = new Subtitle();
-                var format = _subtitle2.LoadSubtitle(openFileDialog1.FileName, out _, null);
-                if (format == null)
-                {
-                    var pac = new Pac();
-                    if (pac.IsMine(null, openFileDialog1.FileName))
-                    {
-                        pac.BatchMode = true;
-                        pac.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
-                        format = pac;
-                    }
-                }
-                if (format == null)
-                {
-                    var cavena890 = new Cavena890();
-                    if (cavena890.IsMine(null, openFileDialog1.FileName))
-                    {
-                        cavena890.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
-                    }
-                }
+
+                _subtitle2 = LoadSubtitle(openFileDialog1.FileName);
 
                 subtitleListView2.Fill(_subtitle2);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
