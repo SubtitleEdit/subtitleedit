@@ -76,6 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = buttonOpenText.Text;
             openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechanges" +
                                      "|Matroska xml chapter file|*.xml" +
+                                     "|EZTitles shotchanges XML file|*.xml" +
                                      "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -93,6 +94,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxIImport.Text = res;
                     radioButtonHHMMSSMS.Checked = true;
+                    return;
+                }
+
+                res = LoadFromEZTitlesShotchangesFile(fileName);
+                if (!string.IsNullOrEmpty(res))
+                {
+                    textBoxIImport.Text = res;
+                    radioButtonFrames.Checked = true;
                     return;
                 }
 
@@ -155,6 +164,29 @@ namespace Nikse.SubtitleEdit.Forms
                             var ts = new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3]));
                             sb.AppendLine(new TimeCode(ts).ToShortStringHHMMSSFF());
                         }
+                    }
+                }
+                return sb.ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string LoadFromEZTitlesShotchangesFile(string fileName)
+        {
+            try
+            {
+                var x = new XmlDocument();
+                x.Load(fileName);
+                var xmlNodeList = x.SelectNodes("/shotchanges/shotchanges_list/shotchange");
+                var sb = new StringBuilder();
+                if (xmlNodeList != null)
+                {
+                    foreach (XmlNode shotChange in xmlNodeList)
+                    {
+                        sb.AppendLine(shotChange.Attributes["frame"]?.InnerText);
                     }
                 }
                 return sb.ToString();
