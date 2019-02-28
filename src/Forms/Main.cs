@@ -20894,13 +20894,8 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (f.Contains(" color="))
                     {
                         int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
-                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                        {
-                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                        }
-
-                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                        text = s;
+                        int colorEnd = s.IndexOf('"', colorStart + " color=".Length + 1);
+                        text = s.Substring(0, colorStart) + string.Format(" color=\"{0}", colorEnd > 0 ? colorEnd : end) + s.Substring(end);
                         done = true;
                     }
                 }
