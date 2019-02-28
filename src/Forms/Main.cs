@@ -15991,6 +15991,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 bool first = true;
                 SubtitleListview1.BeginUpdate();
+                bool changeOriginal = _subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible;
                 foreach (int i in SubtitleListview1.SelectedIndices)
                 {
                     if (first)
@@ -16006,7 +16007,7 @@ namespace Nikse.SubtitleEdit.Forms
                         first = false;
                     }
 
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                    if (changeOriginal)
                     {
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
