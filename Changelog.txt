@@ -3,6 +3,8 @@
 3.5.10 (xth April 2019) BETA
 * NEW:
    * Re-split shortcuts
+   * Optimal CPS configurable in UI - thx Flitskikker
+   * Import scene changes from EZTitles - thx Flitskikker 
 * IMPROVED:
    * Remove formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
@@ -11,7 +13,10 @@
    * Remove empty line between original/current after merge - thx darnn
    * Improve language tag handling in WebVTT - thx OmrSi/Jamakmake
    * Add stuttering support in "Change casing" - thx techguru
+   * Add checkboxes to "Apply duration limits" - thx Flitskikker
+   * "Extend only" option for "Duration recalculate" - thx Flitskikker
 * FIXED:
+   * Fix "Change all" for whole text in OCR - thx wtester7
    * Fix  renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
    * Fix minor issue with quotes in reverse RTL - thx OmrSi
@@ -26,6 +31,10 @@
    * Fix batch OCR issue - thx orbittwz
    * Fix issue with realoading subtitle from source view - thx ivandrofly
    * Allow multiple blank lines in .srt files - thx Sopor
+   * Fix listview not going to video position - thx OmrSi
+   * Fix crash when copy empty text to clipboard - thx OmrSi
+   * Keep alignment tags first when changing font - thx LeXXuz
+   * Fix translate italic issue - thx moob
 
 
 3.5.9 (10th February 2019)
