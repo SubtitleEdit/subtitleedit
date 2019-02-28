@@ -1080,7 +1080,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     newNode.Attributes.Append(aFrom);
                     newNode.Attributes.Append(aTo);
                     wholeWordsNode.AppendChild(newNode);
-                    userDocument.Save(_replaceListXmlFileName);
+                    userDocument.Save(ReplaceListXmlFileNameUser);
                 }
             }
         }
