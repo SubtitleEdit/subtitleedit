@@ -20867,12 +20867,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool done = false;
             string pre = string.Empty;
-            if (selectionStart == 0 && text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') >= 0)
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
             {
-                int endIndex = text.IndexOf('}') + 1;
-                pre = text.Substring(0, endIndex);
-                text = text.Remove(0, endIndex);
+                int endIndex = text.IndexOf('}', 2);
+                if (endIndex > 1)
+                {
+                    pre = text.Substring(0, endIndex + 1);
+                    text = text.Remove(0, endIndex + 1);
+                }
             }
+
             string s = text;
             if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
