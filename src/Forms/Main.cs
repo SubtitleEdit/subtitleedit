@@ -4505,6 +4505,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var formatType = format.GetType();
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
+                if (_fileName != null && _oldSubtitleFormat != null && _fileName.EndsWith(_oldSubtitleFormat.Extension, StringComparison.Ordinal))
+                {
+                    _fileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length);
+                }
                 _oldSubtitleFormat = format;
                 Configuration.Settings.General.LastSaveAsFormat = format.Name;
 
@@ -12040,13 +12044,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetCurrentFormat(format);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+            _oldSubtitleFormat = format;
             SetEncoding(Encoding.UTF8);
             ShowStatus(_language.SubtitleImportedFromMatroskaFile);
             _subtitle.Renumber();
             _subtitle.WasLoadedWithFrameNumbers = false;
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
-                _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + GetCurrentSubtitleFormat().Extension;
+                _fileName = matroska.Path.Remove(matroska.Path.Length - 4);
                 Text = Title + " - " + _fileName;
             }
             else
