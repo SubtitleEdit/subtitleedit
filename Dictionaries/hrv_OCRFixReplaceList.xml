@@ -790,6 +790,7 @@
     <Word from="nemora" to="ne mora" />
     <Word from="Nemora" to="Ne mora" />
     <Word from="nene" to="njene" />
+    <Word from="nepto" to="nešto" />
     <Word from="nešo" to="nešto" />
     <Word from="neutešan" to="neutješan" />
     <Word from="neutešna" to="neutješna" />
@@ -3446,6 +3447,7 @@
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
     <RegEx find="teriv" replaceWith="tjeriv" />
     <RegEx find="tnerk" replaceWith="tneric" />
+    <RegEx find="trbn" replaceWith="trebn" />
     <RegEx find="trisa" replaceWith="trira" />
     <RegEx find="triši" replaceWith="triraj" />
     <!-- ne diraj!!! - mijenja drugačije (komentira) -->
