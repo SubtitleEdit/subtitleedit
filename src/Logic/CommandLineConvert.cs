@@ -388,6 +388,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                     var vobSubs = BatchConvert.LoadVobSubFromMatroska(track, matroska, out var idx);
                                                     if (vobSubs.Count > 0)
                                                     {
+                                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
                                                         using (var vobSubOcr = new VobSubOcr())
                                                         {
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -508,7 +509,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 subPicturesWithTimeCodes.Add(new VobSubOcr.SubPicturesWithSeparateTimeCodes(track.Mdia.Minf.Stbl.SubPictures[i], start, end));
                                             }
                                         }
-
+                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
                                         using (var vobSubOcr = new VobSubOcr())
                                         {
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -525,6 +526,7 @@ namespace Nikse.SubtitleEdit.Logic
                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
                                         sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
                                         BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                        done = true;
                                     }
                                 }
                             }
