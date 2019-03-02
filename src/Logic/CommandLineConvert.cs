@@ -12,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -95,6 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /targetfps:<frame rate>");
                     _stdOutWriter.WriteLine("        /encoding:<encoding name>");
                     _stdOutWriter.WriteLine("        /pac-codepage:<code page>");
+                    _stdOutWriter.WriteLine("        /trac-number:<track number>");
                     _stdOutWriter.WriteLine("        /resolution:<width,height>");
                     _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                     _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
@@ -163,6 +165,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
                 var offset = GetArgument(args, "offset:");
+                var trackNumber = GetArgument(args, "track-number:");
                 var targetFrameRate = GetFrameRate(args, "targetfps");
                 var frameRate = GetFrameRate(args, "fps");
                 var resolution = GetResolution(args);
@@ -377,80 +380,83 @@ namespace Nikse.SubtitleEdit.Logic
                                     {
                                         foreach (var track in tracks)
                                         {
-                                            var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
-                                            if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
+                                            if (string.IsNullOrEmpty(trackNumber) || track.TrackNumber.ToString(CultureInfo.InvariantCulture) == trackNumber)
                                             {
-                                                var vobSubs = BatchConvert.LoadVobSubFromMatroska(track, matroska, out var idx);
-                                                if (vobSubs.Count > 0)
+                                                var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
+                                                if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                                 {
-                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    var vobSubs = BatchConvert.LoadVobSubFromMatroska(track, matroska, out var idx);
+                                                    if (vobSubs.Count > 0)
                                                     {
-                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, lang);
-                                                        sub = vobSubOcr.SubtitleFromOcr;
-                                                    }
-                                                }
-                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                if (mkvFileNames.Contains(fileName))
-                                                {
-                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                }
-                                                mkvFileNames.Add(fileName);
-                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
-                                                done = true;
-                                            }
-                                            else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
-                                            {
-                                                var bluRaySubtitles = BatchConvert.LoadBluRaySupFromMatroska(track, matroska, IntPtr.Zero);
-                                                if (bluRaySubtitles.Count > 0)
-                                                {
-                                                    _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
-                                                    using (var vobSubOcr = new VobSubOcr())
-                                                    {
-                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                        vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
-                                                        sub = vobSubOcr.SubtitleFromOcr;
-                                                    }
-                                                }
-                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                if (mkvFileNames.Contains(fileName))
-                                                {
-                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                }
-                                                mkvFileNames.Add(fileName);
-                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
-                                                done = true;
-                                            }
-                                            else
-                                            {
-                                                var ss = matroska.GetSubtitle(track.TrackNumber, null);
-                                                format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
-
-                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                if (mkvFileNames.Contains(fileName))
-                                                {
-                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                }
-                                                mkvFileNames.Add(fileName);
-
-                                                if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
-                                                {
-                                                    if (!AdvancedSubStationAlpha.NameOfFormat.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase) &&
-                                                        !SubStationAlpha.NameOfFormat.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
-                                                    {
-                                                        foreach (SubtitleFormat sf in formats)
+                                                        using (var vobSubOcr = new VobSubOcr())
                                                         {
-                                                            if (sf.Name.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                            vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                            sub = vobSubOcr.SubtitleFromOcr;
+                                                        }
+                                                    }
+                                                    var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                    if (mkvFileNames.Contains(fileName))
+                                                    {
+                                                        newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                    }
+                                                    mkvFileNames.Add(fileName);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    done = true;
+                                                }
+                                                else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    var bluRaySubtitles = BatchConvert.LoadBluRaySupFromMatroska(track, matroska, IntPtr.Zero);
+                                                    if (bluRaySubtitles.Count > 0)
+                                                    {
+                                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                                                        using (var vobSubOcr = new VobSubOcr())
+                                                        {
+                                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                            sub = vobSubOcr.SubtitleFromOcr;
+                                                        }
+                                                    }
+                                                    var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                    if (mkvFileNames.Contains(fileName))
+                                                    {
+                                                        newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                    }
+                                                    mkvFileNames.Add(fileName);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    done = true;
+                                                }
+                                                else
+                                                {
+                                                    var ss = matroska.GetSubtitle(track.TrackNumber, null);
+                                                    format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
+
+                                                    var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                    if (mkvFileNames.Contains(fileName))
+                                                    {
+                                                        newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                    }
+                                                    mkvFileNames.Add(fileName);
+
+                                                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                                                    {
+                                                        if (!AdvancedSubStationAlpha.NameOfFormat.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase) &&
+                                                            !SubStationAlpha.NameOfFormat.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            foreach (SubtitleFormat sf in formats)
                                                             {
-                                                                format.RemoveNativeFormatting(sub, sf);
-                                                                break;
+                                                                if (sf.Name.RemoveChar(' ').Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                                                                {
+                                                                    format.RemoveNativeFormatting(sub, sf);
+                                                                    break;
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
 
-                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
-                                                done = true;
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    done = true;
+                                                }
                                             }
                                         }
                                     }
@@ -479,6 +485,49 @@ namespace Nikse.SubtitleEdit.Logic
                             _stdOutWriter.WriteLine("Found VobSub subtitle format");
                             ConvertVobSubSubtitle(fileName, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, forcedOnly);
                             done = true;
+                        }
+
+                        if ((fileInfo.Extension == ".mp4" || fileInfo.Extension == ".m4v" || fileInfo.Extension == ".3gp") && fileInfo.Length > 10000)
+                        {
+                            var mp4Parser = new MP4Parser(fileName);
+                            var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
+                            foreach (var track in mp4SubtitleTracks)
+                            {
+                                if (string.IsNullOrEmpty(trackNumber) || track.Tkhd.TrackId.ToString(CultureInfo.InvariantCulture) == trackNumber)
+                                {
+                                    if (track.Mdia.IsVobSubSubtitle)
+                                    {
+                                        var subPicturesWithTimeCodes = new List<VobSubOcr.SubPicturesWithSeparateTimeCodes>();
+                                        var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
+                                        for (int i = 0; i < paragraphs.Count; i++)
+                                        {
+                                            if (track.Mdia.Minf.Stbl.SubPictures.Count > i)
+                                            {
+                                                var start = paragraphs[i].StartTime.TimeSpan;
+                                                var end = paragraphs[i].EndTime.TimeSpan;
+                                                subPicturesWithTimeCodes.Add(new VobSubOcr.SubPicturesWithSeparateTimeCodes(track.Mdia.Minf.Stbl.SubPictures[i], start, end));
+                                            }
+                                        }
+
+                                        using (var vobSubOcr = new VobSubOcr())
+                                        {
+                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                                            vobSubOcr.InitializeBatch(subPicturesWithTimeCodes, fileName);
+                                            sub = vobSubOcr.SubtitleFromOcr;
+                                        }
+
+                                        var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                        done = true;
+                                    }
+                                    else
+                                    {
+                                        var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
+                                        sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                    }
+                                }
+                            }
                         }
 
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb

@@ -792,6 +792,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DoBatch();
         }
 
+        internal void InitializeBatch(List<SubPicturesWithSeparateTimeCodes> list, string fileName)
+        {
+            Initialize(list, Configuration.Settings.VobSubOcr, fileName);
+            DoBatch();
+        }
+
         private void DoBatch()
         {
             _abort = false;
