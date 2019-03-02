@@ -148,6 +148,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Note>Nota: A duração não pode sobrepor o tempo de início do texto seguinte</Note>
     <Fixed>Corrigido</Fixed>
     <Milliseconds>Milissegundos</Milliseconds>
+	<ExtendOnly>Apenas aumentar</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -633,7 +634,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <XOverlappingTimestampsFixed>{0} sobreposições de tempo corrigidas</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} durações prolongadas</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} etiquetas HTML inválidas corrigidas</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} duração encurtada</XDisplayTimesShortned>
+    <XDisplayTimesShortned>{0} durações reduzidas</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linhas unidas</XLinesUnbreaked>
     <UnneededSpace>Espaço desnecessário</UnneededSpace>
     <XUnneededSpacesRemoved>{0} espaços desnecessários removidos</XUnneededSpacesRemoved>
@@ -1160,7 +1161,14 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
-        <Normal>Normal (remove a formatação)</Normal>
+		<RemoveFormatting>Eliminar formatação</RemoveFormatting>
+		<RemoveFormattingAll>Remover qualquer formatação</RemoveFormattingAll>
+		<RemoveFormattingBold>Remover negrito</RemoveFormattingBold>
+		<RemoveFormattingItalic>Remover itálico</RemoveFormattingItalic>
+		<RemoveFormattingUnderline>Remover sublinhado</RemoveFormattingUnderline>
+		<RemoveFormattingColor>Remover cor</RemoveFormattingColor>
+		<RemoveFormattingFontName>Remover tipo de letra</RemoveFormattingFontName>
+		<RemoveFormattingAlignment>Remover alinhamento</RemoveFormattingAlignment>
         <Underline>Sublinhado</Underline>
         <Box>Caixa</Box>
         <Color>Cor</Color>
@@ -1366,7 +1374,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <DeleteOneLinePrompt>Deseja eliminar linha?</DeleteOneLinePrompt>
     <BeforeInsertLine>Antes de inserir linha</BeforeInsertLine>
     <LineInserted>Linha inserida</LineInserted>
-    <BeforeLineUpdatedInListView>Antes de actualizar linha na lista</BeforeLineUpdatedInListView>
     <BeforeSettingFontToNormal>Antes de definir o tipo de letra para normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Antes de dividir a linha</BeforeSplitLine>
     <LineSplitted>Linha foi dividida</LineSplitted>
@@ -1477,6 +1484,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeColumnImportText>Antes da importação de texto da coluna</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Antes baixar as células da coluna</BeforeColumnShiftCellsDown>
     <BeforeX>Antes: {0}</BeforeX>
+	<LinesUpdatedX>Linhas actualizadas: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Erro ao carregar plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Antes de executar plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Impossível de ler o resultado da legenda do plugin!</UnableToReadPluginResult>
@@ -1770,11 +1778,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
+	<OptimalCharactersPerSecond>Caracteres/seg ideais</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Duração mínima milissegundos</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Duração máxima milissegundos</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Duração mínima, milisseg</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Duração máxima, milisseg</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
     <MaximumLines>Número máximo de linhas</MaximumLines>
     <SubtitleFont>Tipo de letra</SubtitleFont>
@@ -2041,6 +2050,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Alternar duração automática</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Quebra de linha automática</MainTextBoxAutoBreak>
+	<MainTextBoxAutoBreakFromPos>Quebrar no primeiro espaço a partir da posição do cursor</MainTextBoxAutoBreakFromPos>
+	<MainTextBoxAutoBreakFromPosAndGoToNext>Quebrar no primeiro espaço a partir da posição do cursor e ir para o próximo</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Remover quebra de linha</MainTextBoxUnbreak>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
