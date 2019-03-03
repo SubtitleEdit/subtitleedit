@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FlashXml(),
                     new FLVCoreCuePoints(),
                     new Footage(),
+                    new GooglePlayJson(),
                     new GpacTtxt(),
                     new Gremots(),
                     new ImageLogicAutocaption(),
