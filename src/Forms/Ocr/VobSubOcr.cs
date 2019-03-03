@@ -805,6 +805,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
+            if (_ocrMethodIndex != _ocrMethodTesseract4 && _ocrMethodIndex != _ocrMethodTesseract302)
+            {
+                _ocrMethodIndex = _ocrMethodTesseract302;
+            }
             if (_ocrMethodIndex == _ocrMethodTesseract4 && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
@@ -867,7 +871,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     SetButtonsEnabledAfterOcrDone();
                     return;
                 }
-
             }
         }
 
