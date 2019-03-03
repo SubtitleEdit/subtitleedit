@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /targetfps:<frame rate>");
                     _stdOutWriter.WriteLine("        /encoding:<encoding name>");
                     _stdOutWriter.WriteLine("        /pac-codepage:<code page>");
-                    _stdOutWriter.WriteLine("        /trac-number:<track number>");
+                    _stdOutWriter.WriteLine("        /track-number:<track number>");
                     _stdOutWriter.WriteLine("        /resolution:<width,height>");
                     _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                     _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
