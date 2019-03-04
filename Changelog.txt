@@ -2,10 +2,12 @@
 
 3.5.10 (xth April 2019) BETA
 * NEW:
-   * Re-split shortcuts
+   * Re-break line at cursor position shortcuts
    * Optimal CPS configurable in UI - thx Flitskikker
    * Import scene changes from EZTitles - thx Flitskikker 
+   * Add new sub format - thx Matmanamane
 * IMPROVED:
+   * Update Portuguese translation - thx moob
    * Remove formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
@@ -15,6 +17,7 @@
    * Add stuttering support in "Change casing" - thx techguru
    * Add checkboxes to "Apply duration limits" - thx Flitskikker
    * "Extend only" option for "Duration recalculate" - thx Flitskikker
+   * Add track number to cmd line convert - thx sneaker_ger
 * FIXED:
    * Fix "Change all" for whole text in OCR - thx wtester7
    * Fix  renumber problem - thx marb99
@@ -35,6 +38,7 @@
    * Fix crash when copy empty text to clipboard - thx OmrSi
    * Keep alignment tags first when changing font - thx LeXXuz
    * Fix translate italic issue - thx moob
+   * Fix file ext when importing from mkv - thx innuit
 
 
 3.5.9 (10th February 2019)
