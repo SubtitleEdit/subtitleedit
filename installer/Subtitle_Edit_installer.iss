@@ -75,14 +75,14 @@
 [Setup]
 AppID=SubtitleEdit
 AppCopyright={#app_copyright}
-AppContact=http://www.nikse.dk/SubtitleEdit/
+AppContact=https://www.nikse.dk/SubtitleEdit/
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit {#app_ver}
 AppVersion={#app_ver_full}
 AppPublisher=Nikse
-AppPublisherURL=http://www.nikse.dk/SubtitleEdit/
-AppSupportURL=http://www.nikse.dk/SubtitleEdit/
-AppUpdatesURL=http://www.nikse.dk/SubtitleEdit/
+AppPublisherURL=https://www.nikse.dk/SubtitleEdit/
+AppSupportURL=https://www.nikse.dk/SubtitleEdit/
+AppUpdatesURL=https://www.nikse.dk/SubtitleEdit/
 UninstallDisplayName=Subtitle Edit {#app_ver}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
@@ -281,8 +281,8 @@ Source: ..\Tesseract302\msvcr90.dll;                 DestDir: {app}\Tesseract302
 [Icons]
 Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
-Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/SubtitleEdit/Help
-Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/SubtitleEdit/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\Help and Support\Online Help; Filename: https://www.nikse.dk/SubtitleEdit/Help
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: https://www.nikse.dk/SubtitleEdit/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};                     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
@@ -386,7 +386,7 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 [Run]
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
 Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
-Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
+Filename: https://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
