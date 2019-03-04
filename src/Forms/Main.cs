@@ -8314,6 +8314,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.Value = 0;
                 ShowHideBookmark(new Paragraph());
                 labelAlternateSingleLine.Text = string.Empty;
+                textBoxListViewTextAlternate.Enabled = false;
                 labelAlternateCharactersPerSecond.Text = string.Empty;
                 labelTextAlternateLineLengths.Text = string.Empty;
                 labelTextAlternateLineTotal.Text = string.Empty;
