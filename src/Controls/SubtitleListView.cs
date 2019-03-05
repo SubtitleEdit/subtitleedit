@@ -1460,7 +1460,7 @@ namespace Nikse.SubtitleEdit.Controls
             int bottomIndex = topIndex + numberOfVisibleItems;
             if (index >= bottomIndex)
             {
-                Items[Math.Min(Items.Count - 1, index + numberOfVisibleItems)].EnsureVisible();
+                Items[Math.Min(Items.Count - 1, index + numberOfVisibleItems / 2)].EnsureVisible();
             }
             else if (index < topIndex)
             {
