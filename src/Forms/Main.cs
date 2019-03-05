@@ -8495,7 +8495,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-            }         
+            }
 
             if (_networkSession != null)
             {
@@ -22252,6 +22252,16 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.SelectionLength = length;
                     e.SuppressKeyPress = true;
                 }
+            }
+            else if (_mainTextBoxSplitAtCursor == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            {
+                ToolStripMenuItemSplitTextAtCursorClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSplitAtCursorAndVideoPos == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            {
+                toolStripMenuItemSplitViaWaveform_Click(null, null);
+                e.SuppressKeyPress = true;
             }
 
             // last key down in text
