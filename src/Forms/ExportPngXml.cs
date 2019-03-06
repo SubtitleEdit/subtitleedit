@@ -1253,7 +1253,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string numberString = $"IMAGE{i:000}";
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
 
-                        if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                        if (checkBoxFullFrameImage.Checked)
                         {
                             var nbmp = new NikseBitmap(param.Bitmap);
                             nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -1638,7 +1638,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
           </clipitem>";
 
             var outBitmap = param.Bitmap;
-            if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+            if (checkBoxFullFrameImage.Checked)
             {
                 var nbmp = new NikseBitmap(param.Bitmap);
                 nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -3851,7 +3851,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             bool showImageFormat = exportType == ExportFormats.Fab || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Stl || exportType == ExportFormats.Fcp || exportType == ExportFormats.BdnXml;
-            checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+            if (exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp)
+            {
+                checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+            }
+            else
+            {
+                checkBoxFullFrameImage.Checked = false;
+            }
+
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == ExportFormats.BdnXml || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Dost || exportType == ExportFormats.ImageFrame;
@@ -4379,14 +4387,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                MakeBitmapParameter mbp;
                 var p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
                 if (p == null)
                 {
                     return;
                 }
-                var bmp = GenerateImageFromTextWithStyle(p, out mbp);
-                if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                var bmp = GenerateImageFromTextWithStyle(p, out var mbp);
+                if (checkBoxFullFrameImage.Checked)
                 {
                     var nbmp = new NikseBitmap(bmp);
                     nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -4462,7 +4469,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                    if (checkBoxFullFrameImage.Checked)
                     {
                         groupBoxExportImage.BackColor = panelFullFrameBackground.BackColor;
                     }
