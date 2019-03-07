@@ -264,18 +264,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)
         {
-            var indices = new List<int>();
-            foreach (int index in listViewParts.SelectedIndices)
+            for (int i = listViewParts.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                indices.Add(index);
+                _fileNamesToJoin.RemoveAt(listViewParts.SelectedIndices[i]);
             }
-
-            indices.Reverse();
-            foreach (int index in indices)
-            {
-                _fileNamesToJoin.RemoveAt(index);
-            }
-
             if (_fileNamesToJoin.Count == 0)
             {
                 buttonClear_Click(null, null);
