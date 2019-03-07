@@ -38,8 +38,8 @@
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.labelTotalLines = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
-            this.ButtonRemoveVob = new System.Windows.Forms.Button();
-            this.buttonAddVobFile = new System.Windows.Forms.Button();
+            this.buttonRemoveFile = new System.Windows.Forms.Button();
+            this.buttonAddFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelNote = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
@@ -118,8 +118,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.labelTotalLines);
             this.groupBoxPreview.Controls.Add(this.buttonClear);
-            this.groupBoxPreview.Controls.Add(this.ButtonRemoveVob);
-            this.groupBoxPreview.Controls.Add(this.buttonAddVobFile);
+            this.groupBoxPreview.Controls.Add(this.buttonRemoveFile);
+            this.groupBoxPreview.Controls.Add(this.buttonAddFile);
             this.groupBoxPreview.Controls.Add(this.listViewParts);
             this.groupBoxPreview.Location = new System.Drawing.Point(11, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
@@ -149,27 +149,27 @@
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
-            // ButtonRemoveVob
+            // buttonRemoveFile
             // 
-            this.ButtonRemoveVob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonRemoveVob.Location = new System.Drawing.Point(642, 46);
-            this.ButtonRemoveVob.Name = "ButtonRemoveVob";
-            this.ButtonRemoveVob.Size = new System.Drawing.Size(74, 21);
-            this.ButtonRemoveVob.TabIndex = 103;
-            this.ButtonRemoveVob.Text = "Remove";
-            this.ButtonRemoveVob.UseVisualStyleBackColor = true;
-            this.ButtonRemoveVob.Click += new System.EventHandler(this.ButtonRemoveVob_Click);
+            this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveFile.Location = new System.Drawing.Point(642, 46);
+            this.buttonRemoveFile.Name = "buttonRemoveFile";
+            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 21);
+            this.buttonRemoveFile.TabIndex = 103;
+            this.buttonRemoveFile.Text = "Remove";
+            this.buttonRemoveFile.UseVisualStyleBackColor = true;
+            this.buttonRemoveFile.Click += new System.EventHandler(this.ButtonRemoveSubtitle_Click);
             // 
-            // buttonAddVobFile
+            // buttonAddFile
             // 
-            this.buttonAddVobFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddVobFile.Location = new System.Drawing.Point(642, 19);
-            this.buttonAddVobFile.Name = "buttonAddVobFile";
-            this.buttonAddVobFile.Size = new System.Drawing.Size(73, 21);
-            this.buttonAddVobFile.TabIndex = 102;
-            this.buttonAddVobFile.Text = "Add...";
-            this.buttonAddVobFile.UseVisualStyleBackColor = true;
-            this.buttonAddVobFile.Click += new System.EventHandler(this.ButtonAddSubtitleClick);
+            this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAddFile.Location = new System.Drawing.Point(642, 19);
+            this.buttonAddFile.Name = "buttonAddFile";
+            this.buttonAddFile.Size = new System.Drawing.Size(73, 21);
+            this.buttonAddFile.TabIndex = 102;
+            this.buttonAddFile.Text = "Add...";
+            this.buttonAddFile.UseVisualStyleBackColor = true;
+            this.buttonAddFile.Click += new System.EventHandler(this.ButtonAddSubtitleClick);
             // 
             // openFileDialog1
             // 
@@ -224,8 +224,8 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFileName;
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.Button ButtonRemoveVob;
-        private System.Windows.Forms.Button buttonAddVobFile;
+        private System.Windows.Forms.Button buttonRemoveFile;
+        private System.Windows.Forms.Button buttonAddFile;
         private System.Windows.Forms.ColumnHeader columnHeaderEndTime;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelTotalLines;
