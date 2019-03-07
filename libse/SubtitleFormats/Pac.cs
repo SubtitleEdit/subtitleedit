@@ -1512,6 +1512,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var result = new List<byte>();
             bool firstLine = true;
+            Encoding latinEncoding = GetEncoding(CodePageLatin);
             foreach (var line in text.SplitToLines())
             {
                 if (!firstLine)
@@ -1523,7 +1524,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (OnlyAnsi(line))
                 {
-                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment))
+                    foreach (var b in GetLatinBytes(latinEncoding, line, alignment))
                     {
                         result.Add(b);
                     }
