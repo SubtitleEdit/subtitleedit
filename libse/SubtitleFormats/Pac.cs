@@ -1546,18 +1546,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return result.ToArray();
         }
 
-        private static bool OnlyAnsi(string line)
-        {
-            string latin = Utilities.AllLettersAndNumbers + " .!?/%:;=()#$'&\"";
-            foreach (char ch in line)
-            {
-                if (!latin.Contains(ch))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        private static bool OnlyAnsi(string line) => !line.All(c => CharUtils.IsAnsi(c));
 
         public static string GetArabicString(byte[] buffer, ref int index)
         {

@@ -18,5 +18,10 @@
         /// Checks if character is between A-Z or a-z
         /// </summary>
         public static bool IsEnglishAlphabet(char ch) => ch >= 'A' && ch <= 'z' && (ch <= 'Z' || ch >= 'a');
+
+        /// <summary>
+        /// Check whether the character is within ANSI range (0 t0 0xff)
+        /// </summary>
+        public static bool IsAnsi(char ch) => ch >= 0x00 && ch <= 0xff;
     }
 }
