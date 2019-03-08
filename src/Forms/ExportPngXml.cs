@@ -727,7 +727,8 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_exportType == ExportFormats.Fab)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "Fab_Image_script.txt"), sb.ToString());
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.ImageFrame)
                 {
@@ -736,13 +737,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string numberString = $"{imagesSavedCount:00000}";
                     string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                     SaveImage(empty, fileName, ImageFormat);
-
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Stl)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Spumux)
                 {
@@ -752,17 +754,20 @@ namespace Nikse.SubtitleEdit.Forms
                                "\t</stream>" + Environment.NewLine +
                                "</subpictures>";
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
                 else if (_exportType == ExportFormats.Fcp)
                 {
                     WriteFcpFile(width, height, sb, saveFileDialog1.FileName);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.Dost)
                 {
                     WriteDostFile(saveFileDialog1.FileName, sb.ToString());
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else if (_exportType == ExportFormats.DCinemaInterop)
                 {
@@ -789,7 +794,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(fName));
                 }
                 else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
                 {
@@ -801,12 +807,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName));
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(saveFileDialog1.FileName));
                 }
                 else
                 {
                     WriteBdnXmlFile(imagesSavedCount, sb, Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"));
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath);
+                    MessageBoxShowWithFolderName(text, folderBrowserDialog1.SelectedPath);
                 }
             }
             buttonExport.Enabled = true;
@@ -814,6 +822,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
+        }
+
+        private void MessageBoxShowWithFolderName(string text, string folderName)
+        {
+            using (var f = new ExportPngXmlDialogOpenFolder(text, folderName))
+            {
+                f.ShowDialog(this);
             }
         }
 
@@ -1253,7 +1269,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string numberString = $"IMAGE{i:000}";
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
 
-                        if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                        if (checkBoxFullFrameImage.Checked)
                         {
                             var nbmp = new NikseBitmap(param.Bitmap);
                             nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -1638,7 +1654,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
           </clipitem>";
 
             var outBitmap = param.Bitmap;
-            if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+            if (checkBoxFullFrameImage.Checked)
             {
                 var nbmp = new NikseBitmap(param.Bitmap);
                 nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -3851,7 +3867,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             bool showImageFormat = exportType == ExportFormats.Fab || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Stl || exportType == ExportFormats.Fcp || exportType == ExportFormats.BdnXml;
-            checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+            if (exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp)
+            {
+                checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
+            }
+            else
+            {
+                checkBoxFullFrameImage.Checked = false;
+            }
+
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == ExportFormats.BdnXml || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Dost || exportType == ExportFormats.ImageFrame;
@@ -4379,14 +4403,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                MakeBitmapParameter mbp;
                 var p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
                 if (p == null)
                 {
                     return;
                 }
-                var bmp = GenerateImageFromTextWithStyle(p, out mbp);
-                if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                var bmp = GenerateImageFromTextWithStyle(p, out var mbp);
+                if (checkBoxFullFrameImage.Checked)
                 {
                     var nbmp = new NikseBitmap(bmp);
                     nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
@@ -4462,7 +4485,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                    if (checkBoxFullFrameImage.Checked)
                     {
                         groupBoxExportImage.BackColor = panelFullFrameBackground.BackColor;
                     }
