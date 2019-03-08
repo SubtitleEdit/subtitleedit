@@ -17487,6 +17487,11 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
+
+            if (mediaPlayer.VideoPlayer is LibMpvDynamic && !Configuration.Settings.General.MpvHandlesPreviewText)
+            {
+                (mediaPlayer.VideoPlayer as LibMpvDynamic)?.RemoveSubtitle();
+            }
         }
 
         private void VideoEnded(object sender, EventArgs e)
