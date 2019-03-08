@@ -23427,40 +23427,28 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int extraNewLineLength = Environment.NewLine.Length - 1;
-            int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-            int pos = textBox.SelectionStart;
-            var s = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            int totalLength = s.Length;
-            string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
-            if (lineBreakPos < 0 || pos <= lineBreakPos)
-            {
-                lineTotal.Text = "1," + (pos + 1) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-                return;
-            }
-            int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1, StringComparison.Ordinal);
-            if (secondLineBreakPos < 0 || pos <= secondLineBreakPos + extraNewLineLength)
-            {
-                lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-                return;
-            }
-            int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1, StringComparison.Ordinal);
-            if (thirdLineBreakPos < 0 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
-            {
-                lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-                return;
-            }
-            int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1, StringComparison.Ordinal);
-            if (forthLineBreakPos < 0 || pos < forthLineBreakPos + (extraNewLineLength * 3))
-            {
-                lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-                return;
-            }
-            lineTotal.Text = string.Empty;
+            // caches
+            int selStart = textBox.SelectionStart;
+            string textOriginal = textBox.Text;
+            string textToPosition = textOriginal.Substring(0, selStart);
+
+            // look for newline before current cursor position
+            int column = textToPosition.LastIndexOf(Environment.NewLine);
+
+            // if there is newline pre current cursor position, then we only want start counting column after that newline
+            column += column >= 0 ? Environment.NewLine.Length : 0 - column;
+
+            // line where the cursor is currently located (can be 0 when Textbox.SelectionStart is at 0 position so add 1)
+            int linePosition = Math.Max(Utilities.GetNumberOfLines(textToPosition), 1);
+
+            // get length of only *displayable characters (formattings are excluded)
+            string noTagText = HtmlUtil.RemoveHtmlTags(textOriginal, true);
+            // take max because Utilities.GetNumberOfLines can return 0 in case *noTagText is empty
+            int displayLength = noTagText.Length - Math.Max((Utilities.GetNumberOfLines(noTagText) - 1) * Environment.NewLine.Length, 0);
+
+            lineTotal.Text = $"Ln {linePosition}, Col {selStart - column + 1}     {string.Format(_languageGeneral.TotalLengthX, displayLength)}";
+
+            lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
         }
 
         private void TextBoxListViewTextMouseClick(object sender, MouseEventArgs e)
