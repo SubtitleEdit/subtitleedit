@@ -11268,6 +11268,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
             {
+                Configuration.Settings.General.UndockedVideoFullscreen = _videoPlayerUndocked.IsFullscreen;
                 Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUndocked.Left + @";" + _videoPlayerUndocked.Top + @";" + _videoPlayerUndocked.Width + @";" + _videoPlayerUndocked.Height;
             }
 
@@ -14386,7 +14387,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _mainVideoFullscreen) // fullscreen
             {
-                GoFullscreen();
+                GoFullscreen(false);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainVideoSlower)
@@ -15504,9 +15505,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoFullscreen()
+        private void GoFullscreen(bool force)
         {
-            if (mediaPlayer.VideoPlayer == null)
+            if (mediaPlayer.VideoPlayer == null && !force)
             {
                 return;
             }
@@ -17414,7 +17415,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    GoFullscreen();
+                    GoFullscreen(false);
                 }
             }
         }
@@ -19122,6 +19123,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.General.Undocked = false;
                 UndockVideoControlsToolStripMenuItemClick(null, null);
+                if (Configuration.Settings.General.UndockedVideoFullscreen)
+                {
+                    GoFullscreen(true);
+                }
             }
 
             Main_Resize(null, null);

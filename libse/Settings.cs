@@ -703,6 +703,7 @@ $HorzAlign          =   Center
         public bool PromptDeleteLines { get; set; }
         public bool Undocked { get; set; }
         public string UndockedVideoPosition { get; set; }
+        public bool UndockedVideoFullscreen { get; set; }
         public string UndockedWaveformPosition { get; set; }
         public string UndockedVideoControlsPosition { get; set; }
         public bool WaveformCenter { get; set; }
@@ -2080,6 +2081,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UndockedVideoPosition = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("UndockedVideoFullscreen");
+            if (subNode != null)
+            {
+                settings.General.UndockedVideoFullscreen = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("UndockedWaveformPosition");
@@ -5699,6 +5706,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("PromptDeleteLines", settings.General.PromptDeleteLines.ToString());
                 textWriter.WriteElementString("Undocked", settings.General.Undocked.ToString());
                 textWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
+                textWriter.WriteElementString("UndockedVideoFullscreen", settings.General.UndockedVideoFullscreen.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
                 textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
                 textWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString());
