@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return new QuartsPlayer();
             }
 
-            throw new NotSupportedException("You need DirectX, VLC media player 1.1.x, or MPlayer2 installed as well as Subtitle Edit dll files in order to use the video player!");
+            throw new NotSupportedException("You need DirectX, or mpv media player, or VLC media player installed as well as Subtitle Edit dll files in order to use the video player!");
         }
 
         public static void InitializeVideoPlayerAndContainer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
