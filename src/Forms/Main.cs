@@ -25774,7 +25774,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsNetflixGlyphCheckAvailable()
         {
             var formatType = GetCurrentSubtitleFormat().GetType();
-            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText);
+            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText) || formatType == typeof(Ebu);
         }
 
         private void NetflixGlyphCheck(bool isSaving)
