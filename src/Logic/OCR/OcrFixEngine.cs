@@ -102,31 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return;
             }
 
-            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
-            {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en_GB.dic", true);
-                return;
-            }
-            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
-            {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-CA"), "en_CA.dic", true);
-                return;
-            }
-            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
-            {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-AU"), "en_AU.dic", true);
-                return;
-            }
-            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
-            {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-ZA"), "en_ZA.dic", true);
-                return;
-            }
-            if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
-            {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-US"), "en_US.dic", true);
-                return;
-            }
+            TryLoadEnglishDictionary(hunspellName, threeLetterIsoLanguageName, dictionaryFolder);
 
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
@@ -216,6 +192,51 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
                     return;
                 }
+            }
+        }
+
+        private void TryLoadEnglishDictionary(string hunspellName, string englishIsoThreeLetter, string dictionaryDir)
+        {
+            // invalid params
+            if (string.IsNullOrEmpty(hunspellName) || string.IsNullOrEmpty(englishIsoThreeLetter))
+            {
+                return;
+            }
+
+            // non english ISO three letter provided
+            if (!englishIsoThreeLetter.Equals("eng", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // non english hunspell dictionary requested
+            if (!hunspellName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // invalid english dictionary requested
+            if (hunspellName.Length != 5)
+            {
+                LoadSpellingDictionariesViaDictionaryFileName(englishIsoThreeLetter, CultureInfo.GetCultureInfo("en-US"), "en_US.dic", true);
+            }
+            else
+            {
+                // e.g: en_GB => en-GB
+                string normalizedCultureName = hunspellName.Replace('_', '-');
+
+                // check if hunspell dictionary exists
+                if (!File.Exists(Path.Combine(dictionaryDir, hunspellName)))
+                {
+                    // dictionary for culture doesn't exits (use default culture)
+                    if (hunspellName.Equals("en_US", StringComparison.OrdinalIgnoreCase))
+                    {
+                        LoadSpellingDictionariesViaDictionaryFileName(englishIsoThreeLetter, CultureInfo.GetCultureInfo("en-US"), "en_US.dic", true);
+                    }
+                    return;
+                }
+
+                LoadSpellingDictionariesViaDictionaryFileName(englishIsoThreeLetter, CultureInfo.GetCultureInfo(normalizedCultureName), $"{hunspellName}.dic", true);
             }
         }
 
