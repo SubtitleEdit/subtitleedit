@@ -713,6 +713,7 @@
     <Word from="minut" to="minutu" />
     <Word from="mje" to="moje" />
     <Word from="mleo" to="mljeo" />
+    <Word from="moež" to="može" />
     <Word from="moč" to="moć" />
     <Word from="mođe" to="može" />
     <Word from="mofu" to="mogu" />
@@ -994,6 +995,7 @@
     <Word from="Plenom" to="Plijenom" />
     <Word from="pljenom" to="plijenom" />
     <Word from="Pljenom" to="Plijenom" />
+    <Word from="pocetku" to="početku" />
     <Word from="počeću" to="počet ću" />
     <Word from="poči" to="poći" />
     <Word from="podjelimo" to="podijelimo" />
@@ -3306,6 +3308,7 @@
     <RegEx find="(?&lt;!hva)lisa([ol])" replaceWith="lira$1" />
     <RegEx find="(?&lt;!hva)lisati" replaceWith="lirati" />
     <RegEx find="irać" replaceWith="irat ć" />
+    <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
     <RegEx find="jdin" replaceWith="jedin" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
