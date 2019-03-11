@@ -404,6 +404,8 @@
     <Word from="Interesuju" to="Zanimaju" />
     <Word from="interesuju" to="zanimaju" />
     <Word from="isekao" to="izrezao" />
+    <Word from="islednik" to="detektiv" />
+    <Word from="Islednik" to="Detektiv" />
     <Word from="isljednici" to="detektivi" />
     <Word from="isljednicima" to="detektivima" />
     <Word from="isljednike" to="detektive" />
@@ -703,6 +705,7 @@
     <Word from="merdevine" to="ljestve" />
     <Word from="merdevinama" to="ljestvama" />
     <Word from="merljivo" to="mjerljivo" />
+    <Word from="mešajte" to="miješajte" />
     <Word from="mešane" to="miješane" />
     <Word from="mešavina" to="mješavina" />
     <Word from="mešavine" to="mješavine" />
@@ -1584,6 +1587,7 @@
     <Word from="tvrtci" to="tvrtki" />
     <Word from="ubede" to="uvjere" />
     <Word from="Ubeđivao" to="Uvjeravao" />
+    <Word from="ubeđivao" to="uvjeravao" />
     <Word from="ubeđivati" to="uvjeravati" />
     <Word from="ubijedio" to="uvjerio" />
     <Word from="ubjeđivati" to="uvjeravati" />
@@ -3103,8 +3107,8 @@
     <RegEx find="varać" replaceWith="varat ć" />
     <RegEx find="\bvarvar" replaceWith="barbar" />
     <RegEx find="\bVarvar" replaceWith="Barbar" />
-    <RegEx find="vaskrsn" replaceWith="uskrns" />
-    <RegEx find="Vaskrsn" replaceWith="Uskrns" />
+    <RegEx find="vaskrs[en]" replaceWith="uskrns" />
+    <RegEx find="Vaskrs[en]" replaceWith="Uskrns" />
     <RegEx find="vaspitan" replaceWith="obrazovan" />
     <RegEx find="Vaspitan" replaceWith="Obrazovan" />
     <RegEx find="vaspitn" replaceWith="obrazovn" />
@@ -3418,6 +3422,7 @@
     <RegEx find="s([čć])" replaceWith="š$1" />
     <RegEx find="seden" replaceWith="sjeden" />
     <RegEx find="selektuj" replaceWith="odaber" />
+    <RegEx find="sljen" replaceWith="slen" />
     <RegEx find="sjp" replaceWith="spj" />
     <RegEx find="smeva" replaceWith="smijava" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
