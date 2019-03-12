@@ -25,9 +25,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             public string NewName { get; set; }
         }
 
-        public List<NameEdit> RenameActions { get; set; } = new List<NameEdit>();
-        private string _startName = null;
-        private string _editedName = null;
+        public List<NameEdit> RenameActions { get; set; }
+        private string _startName;
+        private string _editedName;
         private string _header;
         private bool _doUpdate;
         private string _oldSsaName;
@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            RenameActions = new List<NameEdit>();
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
