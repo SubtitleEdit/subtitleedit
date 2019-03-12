@@ -5656,6 +5656,20 @@ $HorzAlign          =   Center
                     CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
                     MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
                 });
+                settings.General.Profiles.Add(new RulesProfile
+                {
+                    Name = "Netflix (English)",
+                    SubtitleLineMaximumLength = 42,
+                    MaxNumberOfLines = 2,
+                    MergeLinesShorterThan = 42,
+                    SubtitleMaximumCharactersPerSeconds = 20,
+                    SubtitleOptimalCharactersPerSeconds = 15,
+                    SubtitleMaximumDisplayMilliseconds = 7000,
+                    SubtitleMinimumDisplayMilliseconds = 833,
+                    SubtitleMaximumWordsPerMinute = 300,
+                    CpsIncludesSpace = false,
+                    MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
+                });
             }
 
             return settings;
