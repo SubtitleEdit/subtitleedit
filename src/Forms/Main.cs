@@ -7287,6 +7287,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshSelectedParagraph()
         {
             var idx = FirstSelectedIndex;
+            if (idx == -1 && _subtitle?.Paragraphs?.Count > 0)
+            {
+                idx = 0;
+            }
             var p = _subtitle.GetParagraphOrDefault(idx);
             _subtitleListViewIndex = -1;
             SubtitleListview1_SelectedIndexChanged(null, null);
@@ -24107,17 +24111,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitle.Header = styles.Header;
                         var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                        if (styleList.Count > 0)
+                        if ((styles as SubStationAlphaStyles).RenameActions.Count > 0)
                         {
-                            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                            foreach (var renameAction in (styles as SubStationAlphaStyles).RenameActions)
                             {
-                                var p = _subtitle.Paragraphs[i];
-                                if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra == "*Default" ? "Default" : p.Extra, StringComparison.OrdinalIgnoreCase)))
+                                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                                 {
-                                    p.Extra = styleList[0];
-                                    SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                                    var p = _subtitle.Paragraphs[i];
+                                    if (p.Extra == renameAction.OldName)
+                                    {
+                                        p.Extra = renameAction.NewName;
+                                    }
                                 }
                             }
+                            CleanRemovedStyles(styleList);
+                            SaveSubtitleListviewIndices();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            RestoreSubtitleListviewIndices();
+                        }
+                        else
+                        {
+                            CleanRemovedStyles(styleList);
                         }
                     }
                 }
@@ -24139,6 +24153,19 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.LastParagraph = null;
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
                 styles?.Dispose();
+            }
+        }
+
+        private void CleanRemovedStyles(List<string> styleList)
+        {
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra == "*Default" ? "Default" : p.Extra, StringComparison.OrdinalIgnoreCase)))
+                {
+                    p.Extra = styleList[0];
+                    SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
+                }
             }
         }
 
