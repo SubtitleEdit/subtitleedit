@@ -14,6 +14,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 {
     public sealed partial class SubStationAlphaStyles : StylesForm
     {
+        public class NameEdit
+        {
+            public NameEdit(string oldName, string newName)
+            {
+                OldName = oldName;
+                NewName = newName;
+            }
+            public string OldName { get; set; }
+            public string NewName { get; set; }
+        }
+
+        public List<NameEdit> RenameActions { get; set; }
+        private string _startName;
+        private string _editedName;
         private string _header;
         private bool _doUpdate;
         private string _oldSsaName;
@@ -27,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            RenameActions = new List<NameEdit>();
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
@@ -208,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
                 else
                 {
-                    left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
+                    left = (float)(bmp.Width - measuredWidth * 0.8 + 15) / 2;
                 }
 
                 float top;
@@ -486,14 +501,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonNextFinish_Click(object sender, EventArgs e)
         {
+            LogNameChanges();
             DialogResult = DialogResult.OK;
         }
 
         private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LogNameChanges();
+
             if (listViewStyles.SelectedItems.Count == 1)
             {
                 string styleName = listViewStyles.SelectedItems[0].Text;
+                _startName = styleName;
+                _editedName = null;
                 _oldSsaName = styleName;
                 SsaStyle style = GetSsaStyle(styleName);
                 SetControlsFromStyle(style);
@@ -506,6 +526,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
+            }
+        }
+
+        private void LogNameChanges()
+        {
+            if (_startName != null && _editedName != null && _startName != _editedName)
+            {
+                RenameActions.Add(new NameEdit(_startName, _editedName));
+                _startName = null;
+                _editedName = null;
             }
         }
 
@@ -529,14 +559,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             panelPrimaryColor.BackColor = style.Primary;
             panelSecondaryColor.BackColor = style.Secondary;
-            if (_isSubStationAlpha)
-            {
-                panelOutlineColor.BackColor = style.Tertiary;
-            }
-            else
-            {
-                panelOutlineColor.BackColor = style.Outline;
-            }
+            panelOutlineColor.BackColor = _isSubStationAlpha ? style.Tertiary : style.Outline;
             panelBackColor.BackColor = style.Background;
 
             if (style.OutlineWidth >= 0 && style.OutlineWidth <= numericUpDownOutline.Maximum)
@@ -901,6 +924,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
 
                     _oldSsaName = textBoxStyleName.Text;
+                    _editedName = _oldSsaName;
                 }
                 else
                 {
@@ -1272,9 +1296,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
-                Encoding encoding;
                 var s = new Subtitle();
-                var format = s.LoadSubtitle(openFileDialogImport.FileName, out encoding, null);
+                var format = s.LoadSubtitle(openFileDialogImport.FileName, out _, null);
                 if (format != null && format.HasStyleSupport)
                 {
                     var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
