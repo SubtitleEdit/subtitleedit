@@ -85,7 +85,6 @@ namespace Nikse.SubtitleEdit.Core
         public int StartSceneIndex { get; set; }
         public int EndSceneIndex { get; set; }
         public int VerifyPlaySeconds { get; set; }
-        public int MergeLinesShorterThan { get; set; }
         public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
         public bool RemoveEmptyLinesBetweenText { get; set; }
         public string MusicSymbol { get; set; }
@@ -114,7 +113,6 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
         public bool ListViewSyntaxMoreThanXLines { get; set; }
-        public int ListViewSyntaxMoreThanXLinesX { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
         public bool ListViewShowColumnEndTime { get; set; }
@@ -243,7 +241,6 @@ namespace Nikse.SubtitleEdit.Core
             StartSceneIndex = 1;
             EndSceneIndex = 1;
             VerifyPlaySeconds = 2;
-            MergeLinesShorterThan = 33;
             FixShortDisplayTimesAllowMoveStartTime = false;
             RemoveEmptyLinesBetweenText = true;
             MusicSymbol = "♪";
@@ -270,7 +267,6 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
             ListViewSyntaxMoreThanXLines = true;
-            ListViewSyntaxMoreThanXLinesX = 2;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             ListViewShowColumnEndTime = true;
@@ -618,6 +614,8 @@ $HorzAlign          =   Center
 
     public class GeneralSettings
     {
+        public List<RulesProfile> Profiles { get; set; }
+        public string CurrentProfile { get; set; }
         public bool ShowToolbarNew { get; set; }
         public bool ShowToolbarOpen { get; set; }
         public bool ShowToolbarSave { get; set; }
@@ -668,6 +666,8 @@ $HorzAlign          =   Center
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public bool RemoveBadCharsWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
+        public int MaxNumberOfLines { get; set; }
+        public int MergeLinesShorterThan { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
         public int MinimumMillisecondsBetweenLines { get; set; }
@@ -794,6 +794,8 @@ $HorzAlign          =   Center
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
+            MaxNumberOfLines = 2;
+            MergeLinesShorterThan = 33;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
             RemoveBadCharsWhenOpening = true;
@@ -851,8 +853,24 @@ $HorzAlign          =   Center
             UseDarkTheme = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
-        }
 
+            Profiles = new List<RulesProfile>();
+            CurrentProfile = "Default";
+            Profiles.Add(new RulesProfile
+            {
+                Name = CurrentProfile,
+                SubtitleLineMaximumLength = SubtitleLineMaximumLength,
+                MaxNumberOfLines = MaxNumberOfLines,
+                MergeLinesShorterThan = MergeLinesShorterThan,
+                SubtitleMaximumCharactersPerSeconds = (decimal)SubtitleMaximumCharactersPerSeconds,
+                SubtitleOptimalCharactersPerSeconds = (decimal)SubtitleOptimalCharactersPerSeconds,
+                SubtitleMaximumDisplayMilliseconds = SubtitleMaximumDisplayMilliseconds,
+                SubtitleMinimumDisplayMilliseconds = SubtitleMinimumDisplayMilliseconds,
+                SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
+                CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
+                MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
+            });
+        }
     }
 
     public class VideoControlsSettings
@@ -1262,7 +1280,7 @@ $HorzAlign          =   Center
             MainSynchronizationVisualSync = "Control+Shift+V";
             MainSynchronizationPointSync = "Control+Shift+P";
             MainSynchronizationChangeFrameRate = string.Empty;
-            MainListViewItalic = "Control+I";            
+            MainListViewItalic = "Control+I";
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
@@ -1586,7 +1604,52 @@ $HorzAlign          =   Center
 
             // General
             node = doc.DocumentElement.SelectSingleNode("General");
-            XmlNode subNode = node.SelectSingleNode("ShowToolbarNew");
+
+            // Profiles            
+            int profileCount = 0;
+            foreach (XmlNode listNode in node.SelectNodes("Profiles/Profile"))
+            {
+                if (profileCount == 0)
+                {
+                    settings.General.Profiles.Clear();
+                }
+
+                var p = new RulesProfile();
+                var subtitleLineMaximumLength = listNode.SelectSingleNode("SubtitleLineMaximumLength")?.InnerText;
+                var subtitleMaximumCharactersPerSeconds = listNode.SelectSingleNode("SubtitleMaximumCharactersPerSeconds")?.InnerText;
+                var subtitleOptimalCharactersPerSeconds = listNode.SelectSingleNode("SubtitleOptimalCharactersPerSeconds")?.InnerText;
+                var subtitleMinimumDisplayMilliseconds = listNode.SelectSingleNode("SubtitleMinimumDisplayMilliseconds")?.InnerText;
+                var subtitleMaximumDisplayMilliseconds = listNode.SelectSingleNode("SubtitleMaximumDisplayMilliseconds")?.InnerText;
+                var subtitleMaximumWordsPerMinute = listNode.SelectSingleNode("SubtitleMaximumWordsPerMinute")?.InnerText;
+                var cpsIncludesSpace = listNode.SelectSingleNode("CpsIncludesSpace")?.InnerText;
+                var maxNumberOfLines = listNode.SelectSingleNode("MaxNumberOfLines")?.InnerText;
+                var mergeLinesShorterThan = listNode.SelectSingleNode("MergeLinesShorterThan")?.InnerText;
+                var minimumMillisecondsBetweenLines = listNode.SelectSingleNode("MinimumMillisecondsBetweenLines")?.InnerText;
+                settings.General.Profiles.Add(new RulesProfile
+                {
+                    Name = listNode.SelectSingleNode("Name")?.InnerText,
+                    SubtitleLineMaximumLength = Convert.ToInt32(subtitleLineMaximumLength, CultureInfo.InvariantCulture),
+                    SubtitleMaximumCharactersPerSeconds = Convert.ToDecimal(subtitleMaximumCharactersPerSeconds, CultureInfo.InvariantCulture),
+                    SubtitleOptimalCharactersPerSeconds = Convert.ToDecimal(subtitleOptimalCharactersPerSeconds, CultureInfo.InvariantCulture),
+                    SubtitleMinimumDisplayMilliseconds = Convert.ToInt32(subtitleMinimumDisplayMilliseconds, CultureInfo.InvariantCulture),
+                    SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subtitleMaximumDisplayMilliseconds, CultureInfo.InvariantCulture),
+                    SubtitleMaximumWordsPerMinute = Convert.ToDecimal(subtitleMaximumWordsPerMinute, CultureInfo.InvariantCulture),
+                    CpsIncludesSpace = Convert.ToBoolean(cpsIncludesSpace, CultureInfo.InvariantCulture),
+                    MaxNumberOfLines = Convert.ToInt32(maxNumberOfLines, CultureInfo.InvariantCulture),
+                    MergeLinesShorterThan = Convert.ToInt32(mergeLinesShorterThan, CultureInfo.InvariantCulture),
+                    MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture)
+                });
+                profileCount++;
+            }
+
+
+            XmlNode subNode = node.SelectSingleNode("CurrentProfile");
+            if (subNode != null)
+            {
+                settings.General.CurrentProfile = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ShowToolbarNew");
             if (subNode != null)
             {
                 settings.General.ShowToolbarNew = Convert.ToBoolean(subNode.InnerText);
@@ -1871,6 +1934,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MaxNumberOfLines");
+            if (subNode != null)
+            {
+                settings.General.MaxNumberOfLines = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MergeLinesShorterThan");
+            if (subNode != null)
+            {
+                settings.General.MergeLinesShorterThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SubtitleMinimumDisplayMilliseconds");
@@ -2373,12 +2448,6 @@ $HorzAlign          =   Center
                 settings.Tools.VerifyPlaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("MergeLinesShorterThan");
-            if (subNode != null)
-            {
-                settings.Tools.MergeLinesShorterThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
             subNode = node.SelectSingleNode("FixShortDisplayTimesAllowMoveStartTime");
             if (subNode != null)
             {
@@ -2539,12 +2608,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ListViewSyntaxMoreThanXLines = Convert.ToBoolean(subNode.InnerText);
-            }
-
-            subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLinesX");
-            if (subNode != null)
-            {
-                settings.Tools.ListViewSyntaxMoreThanXLinesX = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
@@ -5575,6 +5638,26 @@ $HorzAlign          =   Center
                 }
             }
 
+            if (profileCount == 0)
+            {
+                settings.General.CurrentProfile = "Default";
+                settings.General.Profiles = new List<RulesProfile>();
+                settings.General.Profiles.Add(new RulesProfile
+                {
+                    Name = settings.General.CurrentProfile,
+                    SubtitleLineMaximumLength = settings.General.SubtitleLineMaximumLength,
+                    MaxNumberOfLines = settings.General.MaxNumberOfLines,
+                    MergeLinesShorterThan = settings.General.MergeLinesShorterThan,
+                    SubtitleMaximumCharactersPerSeconds = (decimal)settings.General.SubtitleMaximumCharactersPerSeconds,
+                    SubtitleOptimalCharactersPerSeconds = (decimal)settings.General.SubtitleOptimalCharactersPerSeconds,
+                    SubtitleMaximumDisplayMilliseconds = settings.General.SubtitleMaximumDisplayMilliseconds,
+                    SubtitleMinimumDisplayMilliseconds = settings.General.SubtitleMinimumDisplayMilliseconds,
+                    SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
+                    CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
+                    MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
+                });
+            }
+
             return settings;
         }
 
@@ -5624,6 +5707,27 @@ $HorzAlign          =   Center
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("General", string.Empty);
+
+                textWriter.WriteStartElement("Profiles", string.Empty);
+                foreach (var profile in settings.General.Profiles)
+                {
+                    textWriter.WriteStartElement("Profile");
+                    textWriter.WriteElementString("Name", profile.Name);
+                    textWriter.WriteElementString("SubtitleLineMaximumLength", profile.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", profile.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", profile.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", profile.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", profile.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", profile.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("MinimumMillisecondsBetweenLines", profile.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("CpsIncludesSpace", profile.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteEndElement();
+                }
+                textWriter.WriteEndElement();
+
+                textWriter.WriteElementString("CurrentProfile", settings.General.CurrentProfile);
                 textWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString());
                 textWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString());
                 textWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString());
@@ -5671,6 +5775,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
                 textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString());
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MaxNumberOfLines", settings.General.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeLinesShorterThanb", settings.General.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MinimumMillisecondsBetweenLines", settings.General.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
@@ -5757,7 +5863,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
                 textWriter.WriteElementString("RemoveEmptyLinesBetweenText", settings.Tools.RemoveEmptyLinesBetweenText.ToString());
                 textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
@@ -5785,7 +5890,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString());
-                textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));

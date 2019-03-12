@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 }
 
-                int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start + 1);
+                int index = Configuration.Settings.General.MergeLinesShorterThan - (start + 1);
                 if (index > 0 && index < max)
                 {
                     comboBoxConditions.SelectedIndex = index;
@@ -97,12 +97,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (Configuration.Settings.Tools.MergeLinesShorterThan > MinimumLength)
+                if (Configuration.Settings.General.MergeLinesShorterThan > MinimumLength)
                 {
                     return MinimumLength - 1;
                 }
 
-                return Configuration.Settings.Tools.MergeLinesShorterThan;
+                return Configuration.Settings.General.MergeLinesShorterThan;
             }
         }
 
