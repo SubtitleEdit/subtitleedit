@@ -14600,18 +14600,45 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
+                    var historyAdded = false;
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     var p = _subtitle.Paragraphs[idx];
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
                     if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                        historyAdded = true;
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
                     else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                        historyAdded = true;
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            var originalNext = _subtitleAlternate.GetParagraphOrDefault(_subtitleAlternate.GetIndex(original) + 1);
+                            if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                            {
+                                if (!historyAdded)
+                                {
+                                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                }
+                                original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                            }
+                            else if (originalNext != null && originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds)
+                            {
+                                if (!historyAdded)
+                                {
+                                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                }
+                                original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            }
+                        }
                     }
                     RefreshSelectedParagraph();
                     e.SuppressKeyPress = true;
