@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (Utilities.CountTagInText(Environment.NewLine, text) > 1)
                 {                    
-                    text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+                    text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
                 }
 
                 text = text.Replace(Environment.NewLine, Environment.NewLine + "\t\t\t\t");
