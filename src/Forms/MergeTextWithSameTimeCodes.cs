@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -222,5 +223,25 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
         }
 
+        private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewFixes.SelectedIndices.Count > 0)
+            {
+                int index = listViewFixes.SelectedIndices[0];
+                ListViewItem item = listViewFixes.Items[index];
+                string[] numbers = item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string number in numbers)
+                {
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        if (p.Number.ToString(CultureInfo.InvariantCulture) == number)
+                        {
+                            index = _subtitle.GetIndex(p);
+                            SubtitleListview1.EnsureVisible(index);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
