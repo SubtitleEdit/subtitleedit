@@ -1451,9 +1451,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else  // fix with unicode char
                     {
-                        string rtl = "\u202B";
-                        paragraph.Text = paragraph.Text.Replace(rtl, string.Empty);
-                        paragraph.Text = rtl + paragraph.Text.Replace(Environment.NewLine, Environment.NewLine + rtl);
+                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
                     }
                 }
             }

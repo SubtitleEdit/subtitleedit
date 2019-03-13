@@ -352,9 +352,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         styleCount++;
 
                         string fontFamily = "Arial";
-                        if (node.Attributes["tts:fontFamily"] != null)
+                        if (node.Attributes["tts:fontFamily"]?.Value != null)
                         {
                             fontFamily = node.Attributes["tts:fontFamily"].Value;
+                            if (fontFamily.Contains(","))
+                            {
+                                fontFamily = fontFamily.Split(',')[0];
+                            }
                         }
 
                         string fontWeight = "normal";
@@ -496,9 +500,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         styleCount++;
 
                         string fontFamily = "Arial";
-                        if (node.Attributes["tts:fontFamily"] != null)
+                        if (node.Attributes["tts:fontFamily"]?.Value != null)
                         {
                             fontFamily = node.Attributes["tts:fontFamily"].Value;
+                            if (fontFamily.Contains(","))
+                            {
+                                fontFamily = fontFamily.Split(',')[0];
+                            }
                         }
 
                         string fontWeight = "normal";
