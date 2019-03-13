@@ -52,20 +52,25 @@ namespace Nikse.SubtitleEdit.Forms
 
             Width = Math.Max(usedLabel.Width + usedLabel.Left * 3, 300);
 
-            btnOpen.Visible = isAnyLinks;
-            int buttonsPosMid;
-
-            if (isAnyLinks)
+            // only Windows OS support calling *explorer.exe with arguments
+            if (!(Configuration.IsRunningOnMac() || Configuration.IsRunningOnLinux()))
             {
-                buttonsPosMid = btnOpen.Left + ((btnOk.Left + btnOk.Width) - btnOpen.Left) / 2;
-            }
-            else
-            {
-                buttonsPosMid = btnOk.Left + btnOk.Width / 2;
-            }
+                btnOpen.Visible = isAnyLinks;
+                btnOpen.Enabled = true;
+                int buttonsPosMid;
 
-            btnOpen.Left = btnOpen.Left - buttonsPosMid + Width / 2;
-            btnOk.Left = btnOk.Left - buttonsPosMid + Width / 2;
+                if (isAnyLinks)
+                {
+                    buttonsPosMid = btnOpen.Left + ((btnOk.Left + btnOk.Width) - btnOpen.Left) / 2;
+                }
+                else
+                {
+                    buttonsPosMid = btnOk.Left + btnOk.Width / 2;
+                }
+
+                btnOpen.Left = btnOpen.Left - buttonsPosMid + Width / 2;
+                btnOk.Left = btnOk.Left - buttonsPosMid + Width / 2; 
+            }
         }
 
         protected override bool ProcessDialogKey(Keys keyData)

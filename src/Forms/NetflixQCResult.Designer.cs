@@ -46,12 +46,14 @@
             // 
             // btnOpen
             // 
+            this.btnOpen.Enabled = false;
             this.btnOpen.Location = new System.Drawing.Point(46, 64);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(110, 23);
             this.btnOpen.TabIndex = 1;
             this.btnOpen.Text = "Open file location";
             this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Visible = false;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // lnkLblText
