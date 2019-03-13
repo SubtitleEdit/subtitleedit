@@ -39,6 +39,9 @@
    * Keep alignment tags first when changing font - thx LeXXuz
    * Fix translate italic issue - thx moob
    * Fix file ext when importing from mkv - thx innuit
+   * Fix remove empty lines in "Multiple replace" + "Apply" - thx Kronopt
+   * Fix rename ass style name bug - thx Jamakmake
+   * Fix TTML to ASS with multi "font-family" - thx Leon Sk
 
 
 3.5.9 (10th February 2019)
