@@ -2807,5 +2807,13 @@ namespace Nikse.SubtitleEdit.Core
             }
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
+
+        public static string FixRtlViaUnicodeChars(string input)
+        {
+            string rtl = "\u202B";
+            var text = input.Replace(rtl, string.Empty);
+            text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
+            return text;
+        }
     }
 }
