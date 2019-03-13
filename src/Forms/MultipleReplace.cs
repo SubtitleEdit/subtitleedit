@@ -29,27 +29,22 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _original;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
+        public List<int> DeleteIndices { get; private set; }
 
-        public List<int> DeleteIndices
+        public void SetDeleteIndices()
         {
-            get
+            foreach (ListViewItem item in listViewFixes.Items)
             {
-                var resultList = new List<int>();
-                foreach (ListViewItem item in listViewFixes.Items)
+                if (item.Checked && item.SubItems[3].Text == string.Empty)
                 {
-                    if (item.Checked && item.SubItems[3].Text == string.Empty)
+                    var index = _subtitle.GetIndex(item.Tag as Paragraph);
+                    if (!DeleteIndices.Contains(index))
                     {
-                        var index = _subtitle.GetIndex(item.Tag as Paragraph);
-                        if (_deleteIndices.Contains(index))
-                        {
-                            resultList.Add(index);
-                        }
+                        DeleteIndices.Add(index);
                     }
                 }
-                return resultList;
             }
         }
-        private List<int> _deleteIndices;
 
         private MultipleSearchAndReplaceGroup _currentGroup;
 
@@ -59,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            DeleteIndices = new List<int>();
             openFileDialog1.FileName = string.Empty;
             saveFileDialog1.FileName = string.Empty;
 
@@ -239,7 +235,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
-            _deleteIndices = new List<int>();
             int fixedLines = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -316,10 +311,6 @@ namespace Nikse.SubtitleEdit.Forms
                     fixes.Add(MakePreviewListItem(p, newText));
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
-                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
-                    {
-                        _deleteIndices.Add(index);
-                    }
                 }
             }
 
@@ -327,7 +318,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, fixedLines);
             Cursor = Cursors.Default;
-            _deleteIndices.Reverse();
         }
 
         private void AddToRulesListView(MultipleSearchAndReplaceSetting rule)
@@ -381,6 +371,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            SetDeleteIndices();
             ResetUncheckLines();
             SetFixCount();
             SaveReplaceList(true);
@@ -1210,6 +1201,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
+            SetDeleteIndices();
             ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
             GeneratePreview();
