@@ -886,7 +886,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumDisplayMilliseconds = 7000,
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
-                CpsIncludesSpace = false,
+                CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
             });
         }
