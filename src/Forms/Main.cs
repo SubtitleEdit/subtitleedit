@@ -25548,13 +25548,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
         {
-            string rtl = "\u202B";
             int selectedIndex = FirstSelectedIndex;
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
-                var text = p.Text.Replace(rtl, string.Empty);
-                p.Text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
+                p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
                 SubtitleListview1.SetText(index, p.Text);
                 if (index == selectedIndex)
                 {
