@@ -870,6 +870,25 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
                 MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
             });
+            AddExtraProfiles(Profiles);
+        }
+
+        internal static void AddExtraProfiles(List<RulesProfile> profiles)
+        {
+            profiles.Add(new RulesProfile
+            {
+                Name = "Netflix (English)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 42,
+                SubtitleMaximumCharactersPerSeconds = 20,
+                SubtitleOptimalCharactersPerSeconds = 15,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 833,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = false,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
+            });
         }
     }
 
@@ -5656,24 +5675,11 @@ $HorzAlign          =   Center
                     CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
                     MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
                 });
-                settings.General.Profiles.Add(new RulesProfile
-                {
-                    Name = "Netflix (English)",
-                    SubtitleLineMaximumLength = 42,
-                    MaxNumberOfLines = 2,
-                    MergeLinesShorterThan = 42,
-                    SubtitleMaximumCharactersPerSeconds = 20,
-                    SubtitleOptimalCharactersPerSeconds = 15,
-                    SubtitleMaximumDisplayMilliseconds = 7000,
-                    SubtitleMinimumDisplayMilliseconds = 833,
-                    SubtitleMaximumWordsPerMinute = 300,
-                    CpsIncludesSpace = false,
-                    MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
-                });
+                GeneralSettings.AddExtraProfiles(settings.General.Profiles);
             }
 
             return settings;
-        }
+        }        
 
         private static void CustomSerialize(string fileName, Settings settings)
         {
