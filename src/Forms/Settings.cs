@@ -434,6 +434,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
             checkBoxCheckForUpdates.Text = language.CheckForUpdates;
             checkBoxAutoSave.Text = language.AutoSave;
+            checkBoxCheckForUpdates.Left = checkBoxAutoSave.Left + checkBoxAutoSave.Width + 15;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
 

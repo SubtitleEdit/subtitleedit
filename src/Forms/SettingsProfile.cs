@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,11 +17,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SettingsProfile(List<RulesProfile> rulesProfiles, string name)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var language = Configuration.Settings.Language.Settings;
             Text = language.Profiles;
             groupBoxGeneralRules.Text = language.Rules;
+            labelName.Text = Configuration.Settings.Language.General.Name;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
@@ -30,6 +34,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
             labelMaxLines.Text = language.MaximumLines;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
+            listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
+            listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
+            listViewProfiles.Columns[2].Text = language.OptimalCharactersPerSecond;
+            listViewProfiles.Columns[3].Text = language.MaximumCharactersPerSecond;
+            listViewProfiles.Columns[4].Text = language.MinimumGapMilliseconds;
 
             var l = Configuration.Settings.Language.SubStationAlphaStyles;
             buttonImport.Text = l.Import;
@@ -38,6 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            UiUtil.FixLargeFonts(this, buttonOK);
+
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
