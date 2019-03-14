@@ -2,12 +2,17 @@
 
 3.5.10 (xth April 2019) BETA
 * NEW:
+   * Profiles - thx philippwr, OmrSi, moob
    * Re-break line at cursor position shortcuts
    * Optimal CPS configurable in UI - thx Flitskikker
    * Import scene changes from EZTitles - thx Flitskikker 
    * Add new sub format - thx Matmanamane
 * IMPROVED:
    * Update Portuguese translation - thx moob
+   * Update Brazil translation - thx Igor
+   * Update Korean translation - thx domdoll
+   * Update Hungarian translation - thx Zityi
+   * Update Japanese translation - thx ScratchBuild
    * Remove formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
