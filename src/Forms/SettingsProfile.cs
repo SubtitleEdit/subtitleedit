@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
             labelMaxLines.Text = language.MaximumLines;
+            labelMergeShortLines.Text = language.MergeLinesShorterThan;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
