@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class RulesProfile
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public decimal SubtitleLineMaximumLength { get; set; }
         public decimal SubtitleOptimalCharactersPerSeconds { get; set; }
@@ -16,15 +15,26 @@ namespace Nikse.SubtitleEdit.Core
         public bool CpsIncludesSpace { get; set; }
         public int MaxNumberOfLines { get; set; }
         public int MergeLinesShorterThan { get; set; }
+        private Guid _id;
 
         public RulesProfile()
         {
-            Id = Guid.NewGuid();
+            ResetId();
+        }
+
+        public Guid GetId()
+        {
+            return _id;
+        }
+
+        public void ResetId()
+        {
+            _id = Guid.NewGuid();
         }
 
         public RulesProfile(RulesProfile profile)
         {
-            Id = profile.Id;
+            _id = profile.GetId();
             Name = profile.Name;
             SubtitleLineMaximumLength = profile.SubtitleLineMaximumLength;
             SubtitleOptimalCharactersPerSeconds = profile.SubtitleOptimalCharactersPerSeconds;
