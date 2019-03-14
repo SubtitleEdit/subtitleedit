@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return !ReferenceEquals(ti, null) && CultureName.Equals(ti.CultureName, StringComparison.OrdinalIgnoreCase);
             }
 
-            public override bool Equals(Object obj)
+            public override bool Equals(object obj)
             {
                 return Equals(obj as TranslationInfo);
             }
@@ -52,43 +52,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private readonly TranslationInfo DefaultTranslation;
-        private readonly TranslationInfo CurrentTranslation;
+        private readonly TranslationInfo _defaultTranslation;
 
-        public string CultureName
-        {
-            get
-            {
-                var translation = comboBoxLanguages.SelectedItem as TranslationInfo;
-                return (translation == null) ? DefaultTranslation.CultureName : translation.CultureName;
-            }
-        }
+        public string CultureName => !(comboBoxLanguages.SelectedItem is TranslationInfo translation) ? _defaultTranslation.CultureName : translation.CultureName;
 
         public ChooseLanguage()
         {
+            TranslationInfo currentTranslation;
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
             var defaultLanguage = new Language();
-            DefaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);
+            _defaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);
             var currentLanguage = Configuration.Settings.Language;
             if (currentLanguage == null)
             {
-                CurrentTranslation = new TranslationInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.NativeName);
+                currentTranslation = new TranslationInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.NativeName);
                 Configuration.Settings.Language = defaultLanguage;
             }
             else
             {
-                CurrentTranslation = new TranslationInfo(currentLanguage.General.CultureName, currentLanguage.Name);
+                currentTranslation = new TranslationInfo(currentLanguage.General.CultureName, currentLanguage.Name);
             }
 
-            var translations = new HashSet<TranslationInfo>();
-            translations.Add(DefaultTranslation);
+            var translations = new HashSet<TranslationInfo> { _defaultTranslation };
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
                 var versionInfo = Utilities.AssemblyVersion.Split('.');
-                var currentVersion = string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
+                var currentVersion = $"{versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}";
                 var document = new XmlDocument { XmlResolver = null };
 
                 foreach (var fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
@@ -118,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var translation in translations.OrderBy(ti => ti.DisplayName, StringComparer.CurrentCultureIgnoreCase).ThenBy(ti => ti.CultureName, StringComparer.Ordinal))
             {
                 int i = comboBoxLanguages.Items.Add(translation);
-                if (translation.Equals(CurrentTranslation) || (index < 0 && translation.Equals(DefaultTranslation)))
+                if (translation.Equals(currentTranslation) || (index < 0 && translation.Equals(_defaultTranslation)))
                 {
                     index = i;
                 }
