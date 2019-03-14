@@ -95,16 +95,15 @@
             this.groupBoxStyles.Controls.Add(this.listViewProfiles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(890, 382);
-            this.groupBoxStyles.TabIndex = 6;
+            this.groupBoxStyles.Size = new System.Drawing.Size(927, 382);
+            this.groupBoxStyles.TabIndex = 1;
             this.groupBoxStyles.TabStop = false;
-            this.groupBoxStyles.Text = "Styles";
             // 
             // labelName
             // 
             this.labelName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(579, 19);
+            this.labelName.Location = new System.Drawing.Point(616, 19);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(35, 13);
             this.labelName.TabIndex = 53;
@@ -113,10 +112,10 @@
             // textBoxName
             // 
             this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxName.Location = new System.Drawing.Point(582, 35);
+            this.textBoxName.Location = new System.Drawing.Point(619, 35);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(250, 20);
-            this.textBoxName.TabIndex = 52;
+            this.textBoxName.TabIndex = 80;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // groupBoxGeneralRules
@@ -142,10 +141,10 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinGapMs);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxGeneralRules.Location = new System.Drawing.Point(582, 61);
+            this.groupBoxGeneralRules.Location = new System.Drawing.Point(619, 61);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
             this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 285);
-            this.groupBoxGeneralRules.TabIndex = 11;
+            this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
             // 
@@ -155,7 +154,7 @@
             this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 256);
             this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
             this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(270, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 54;
+            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 190;
             this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes white spaces";
             this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
             this.checkBoxCpsIncludeWhiteSpace.CheckedChanged += new System.EventHandler(this.UiElementChanged);
@@ -185,7 +184,7 @@
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
             this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownOptimalCharsSec.TabIndex = 8;
+            this.numericUpDownOptimalCharsSec.TabIndex = 110;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             11,
             0,
@@ -217,7 +216,7 @@
             0});
             this.numericUpDownMaxWordsMin.Name = "numericUpDownMaxWordsMin";
             this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxWordsMin.TabIndex = 10;
+            this.numericUpDownMaxWordsMin.TabIndex = 130;
             this.numericUpDownMaxWordsMin.Value = new decimal(new int[] {
             300,
             0,
@@ -267,7 +266,7 @@
             0});
             this.numericUpDownMaxNumberOfLines.Name = "numericUpDownMaxNumberOfLines";
             this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxNumberOfLines.TabIndex = 15;
+            this.numericUpDownMaxNumberOfLines.TabIndex = 170;
             this.numericUpDownMaxNumberOfLines.Value = new decimal(new int[] {
             2,
             0,
@@ -308,7 +307,7 @@
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
             this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMin.TabIndex = 11;
+            this.numericUpDownDurationMin.TabIndex = 140;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -331,7 +330,7 @@
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
             this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownDurationMax.TabIndex = 13;
+            this.numericUpDownDurationMax.TabIndex = 150;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -346,7 +345,7 @@
             this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(203, 229);
             this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
             this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxMergeShortLineLength.TabIndex = 16;
+            this.comboBoxMergeShortLineLength.TabIndex = 180;
             this.comboBoxMergeShortLineLength.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelMaxCharsPerSecond
@@ -368,7 +367,7 @@
             0});
             this.numericUpDownMinGapMs.Name = "numericUpDownMinGapMs";
             this.numericUpDownMinGapMs.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMinGapMs.TabIndex = 14;
+            this.numericUpDownMinGapMs.TabIndex = 160;
             this.numericUpDownMinGapMs.Value = new decimal(new int[] {
             25,
             0,
@@ -392,7 +391,7 @@
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownMaxCharsSec.TabIndex = 9;
+            this.numericUpDownMaxCharsSec.TabIndex = 120;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -424,7 +423,7 @@
             0});
             this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
             this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 20);
-            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 7;
+            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 100;
             this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
             100,
             0,
@@ -439,7 +438,7 @@
             this.buttonExport.Location = new System.Drawing.Point(6, 355);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(82, 21);
-            this.buttonExport.TabIndex = 6;
+            this.buttonExport.TabIndex = 20;
             this.buttonExport.Text = "Export...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
@@ -451,7 +450,7 @@
             this.buttonImport.Location = new System.Drawing.Point(94, 355);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(82, 21);
-            this.buttonImport.TabIndex = 5;
+            this.buttonImport.TabIndex = 30;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
@@ -463,7 +462,7 @@
             this.buttonCopy.Location = new System.Drawing.Point(182, 355);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 21);
-            this.buttonCopy.TabIndex = 1;
+            this.buttonCopy.TabIndex = 40;
             this.buttonCopy.Text = "Copy";
             this.buttonCopy.UseVisualStyleBackColor = true;
             this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
@@ -475,7 +474,7 @@
             this.buttonRemoveAll.Location = new System.Drawing.Point(446, 355);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 21);
-            this.buttonRemoveAll.TabIndex = 4;
+            this.buttonRemoveAll.TabIndex = 70;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
             this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
@@ -487,7 +486,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(270, 355);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 21);
-            this.buttonAdd.TabIndex = 2;
+            this.buttonAdd.TabIndex = 50;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -499,7 +498,7 @@
             this.buttonRemove.Location = new System.Drawing.Point(358, 355);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(82, 21);
-            this.buttonRemove.TabIndex = 3;
+            this.buttonRemove.TabIndex = 60;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -521,8 +520,8 @@
             this.listViewProfiles.Location = new System.Drawing.Point(6, 19);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(567, 327);
-            this.listViewProfiles.TabIndex = 0;
+            this.listViewProfiles.Size = new System.Drawing.Size(604, 327);
+            this.listViewProfiles.TabIndex = 10;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
             this.listViewProfiles.SelectedIndexChanged += new System.EventHandler(this.listViewProfiles_SelectedIndexChanged);
@@ -530,37 +529,37 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "Name";
-            this.columnHeaderName.Width = 180;
+            this.columnHeaderName.Width = 170;
             // 
             // columnHeaderMaxLength
             // 
             this.columnHeaderMaxLength.Text = "Single line max. length";
-            this.columnHeaderMaxLength.Width = 128;
+            this.columnHeaderMaxLength.Width = 135;
             // 
             // columnHeaderOptimalCps
             // 
             this.columnHeaderOptimalCps.Text = "Optimal CPS";
-            this.columnHeaderOptimalCps.Width = 80;
+            this.columnHeaderOptimalCps.Width = 100;
             // 
             // columnHeaderMaxCps
             // 
             this.columnHeaderMaxCps.Text = "Max. CPS";
-            this.columnHeaderMaxCps.Width = 65;
+            this.columnHeaderMaxCps.Width = 75;
             // 
             // columnHeaderMinGap
             // 
             this.columnHeaderMinGap.Text = "Min. gap (ms)";
-            this.columnHeaderMinGap.Width = 80;
+            this.columnHeaderMinGap.Width = 95;
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(827, 409);
+            this.buttonCancel.Location = new System.Drawing.Point(864, 409);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 205;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -568,10 +567,10 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(746, 409);
+            this.buttonOK.Location = new System.Drawing.Point(783, 409);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 8;
+            this.buttonOK.TabIndex = 200;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -580,12 +579,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(914, 442);
+            this.ClientSize = new System.Drawing.Size(951, 442);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
-            this.MinimumSize = new System.Drawing.Size(930, 480);
+            this.MinimumSize = new System.Drawing.Size(965, 480);
             this.Name = "SettingsProfile";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

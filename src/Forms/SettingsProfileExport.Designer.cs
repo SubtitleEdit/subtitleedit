@@ -108,6 +108,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SettingsProfileExport";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SettingsProfileExport_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

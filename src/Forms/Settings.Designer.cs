@@ -602,7 +602,7 @@
             this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 299);
             this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
             this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(271, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 53;
+            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 60;
             this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes white spaces";
             this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
             this.checkBoxCpsIncludeWhiteSpace.CheckedChanged += new System.EventHandler(this.ProfileUiValueChanged);
@@ -612,7 +612,7 @@
             this.buttonEditProfile.Location = new System.Drawing.Point(282, 19);
             this.buttonEditProfile.Name = "buttonEditProfile";
             this.buttonEditProfile.Size = new System.Drawing.Size(28, 23);
-            this.buttonEditProfile.TabIndex = 52;
+            this.buttonEditProfile.TabIndex = 10;
             this.buttonEditProfile.Text = "...";
             this.buttonEditProfile.UseVisualStyleBackColor = true;
             this.buttonEditProfile.Click += new System.EventHandler(this.buttonEditProfile_Click);
@@ -624,7 +624,7 @@
             this.comboBoxRulesProfileName.Location = new System.Drawing.Point(78, 20);
             this.comboBoxRulesProfileName.Name = "comboBoxRulesProfileName";
             this.comboBoxRulesProfileName.Size = new System.Drawing.Size(198, 21);
-            this.comboBoxRulesProfileName.TabIndex = 51;
+            this.comboBoxRulesProfileName.TabIndex = 5;
             this.comboBoxRulesProfileName.SelectedIndexChanged += new System.EventHandler(this.comboBoxRulesProfileName_SelectedIndexChanged);
             // 
             // labelRulesProfileName
@@ -661,7 +661,7 @@
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
             this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownOptimalCharsSec.TabIndex = 8;
+            this.numericUpDownOptimalCharsSec.TabIndex = 20;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             11,
             0,
@@ -693,7 +693,7 @@
             0});
             this.numericUpDownMaxWordsMin.Name = "numericUpDownMaxWordsMin";
             this.numericUpDownMaxWordsMin.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownMaxWordsMin.TabIndex = 10;
+            this.numericUpDownMaxWordsMin.TabIndex = 30;
             this.numericUpDownMaxWordsMin.Value = new decimal(new int[] {
             300,
             0,
@@ -743,7 +743,7 @@
             0});
             this.numericUpDownMaxNumberOfLines.Name = "numericUpDownMaxNumberOfLines";
             this.numericUpDownMaxNumberOfLines.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownMaxNumberOfLines.TabIndex = 15;
+            this.numericUpDownMaxNumberOfLines.TabIndex = 50;
             this.numericUpDownMaxNumberOfLines.Value = new decimal(new int[] {
             2,
             0,
@@ -784,7 +784,7 @@
             0});
             this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
             this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownDurationMin.TabIndex = 11;
+            this.numericUpDownDurationMin.TabIndex = 35;
             this.numericUpDownDurationMin.Value = new decimal(new int[] {
             100,
             0,
@@ -807,7 +807,7 @@
             0});
             this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
             this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownDurationMax.TabIndex = 13;
+            this.numericUpDownDurationMax.TabIndex = 40;
             this.numericUpDownDurationMax.Value = new decimal(new int[] {
             50000,
             0,
@@ -822,7 +822,7 @@
             this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(203, 270);
             this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
             this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxMergeShortLineLength.TabIndex = 16;
+            this.comboBoxMergeShortLineLength.TabIndex = 55;
             this.comboBoxMergeShortLineLength.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // labelMaxCharsPerSecond
@@ -844,7 +844,7 @@
             0});
             this.numericUpDownMinGapMs.Name = "numericUpDownMinGapMs";
             this.numericUpDownMinGapMs.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownMinGapMs.TabIndex = 14;
+            this.numericUpDownMinGapMs.TabIndex = 45;
             this.numericUpDownMinGapMs.Value = new decimal(new int[] {
             25,
             0,
@@ -868,7 +868,7 @@
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownMaxCharsSec.TabIndex = 9;
+            this.numericUpDownMaxCharsSec.TabIndex = 25;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -900,7 +900,7 @@
             0});
             this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
             this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 7;
+            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 15;
             this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
             100,
             0,

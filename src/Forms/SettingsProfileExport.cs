@@ -65,5 +65,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void SettingsProfileExport_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
     }
 }
