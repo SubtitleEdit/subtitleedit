@@ -297,20 +297,20 @@ it.types_default=Installazione predefinita
 
 
 ; Japanese
-ja.comp_translations=Translations
-ja.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
-ja.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-ja.msg_OptimizingPerformance=Optimizing performance...
-ja.run_VisitWebsite=Visit Subtitle Edit's Website
-ja.sm_com_Changelog=Subtitle Edit's Changelog
-ja.tsk_AllUsers=For all users
-ja.tsk_CurrentUser=For the current user only
-ja.tsk_Other=Other:
-ja.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-ja.tsk_ResetSettings=Reset Subtitle Edit's settings
-ja.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-ja.types_custom=Custom installation
-ja.types_default=Default installation
+ja.comp_translations=翻訳
+ja.msg_AskToDownNET=Subtitle Editには .NET Framework 4.0 が必要です。.NET Framework のダウンロード、インストールを行ってからもう一度セットアップを実行してください。%n%n今すぐ .NET Framework 4.0 をダウンロードしますか？
+ja.msg_DeleteSettings=Subtitle Editの設定や辞書で行ったカスタマイズの変更も削除しますか？%n%nSubtitle Editを再インストールする場合、これらを削除する必要はありません。
+ja.msg_OptimizingPerformance=パフォーマンスを最適化中...
+ja.run_VisitWebsite=Subtitle Editのwebサイトを開く
+ja.sm_com_Changelog=Subtitle Editの変更履歴
+ja.tsk_AllUsers=すべてのユーザー
+ja.tsk_CurrentUser=このユーザーのみ
+ja.tsk_Other=その他:
+ja.tsk_ResetDictionaries=辞書をリセットしてカスタム名を削除する
+ja.tsk_ResetSettings=Subtitle Editの設定をリセットする
+ja.tsk_SetFileTypes=SubRip Text (.srt)ファイルをSubtitle Editに関連付ける
+ja.types_custom=カスタムインストール
+ja.types_default=デフォルトインストール
 
 
 ; Korean
