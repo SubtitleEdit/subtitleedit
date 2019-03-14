@@ -3591,6 +3591,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
         {
+            checkBoxFullFrameImage.Checked = false;
+            checkBoxFullFrameImage.Visible = false;
             _exportType = exportType;
             _fileName = fileName;
             _format = format;
