@@ -31,6 +31,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxLines.Text = language.MaximumLines;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
 
+            var l = Configuration.Settings.Language.SubStationAlphaStyles;
+            buttonImport.Text = l.Import;
+            buttonExport.Text = l.Export;
+            buttonCopy.Text = l.Copy;
+            buttonAdd.Text = l.New;
+            buttonRemove.Text = l.Remove;
+            buttonRemoveAll.Text = l.RemoveAll;
+
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
             for (int i = 10; i < 100; i++)
