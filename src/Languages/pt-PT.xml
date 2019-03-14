@@ -46,7 +46,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <FrameRateX>Fotogramas por segundo: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total de fotogramas: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificação de vídeo: {0}</VideoEncodingX>
-    <SingleLineLengths>Comprimento da linha individual:</SingleLineLengths>
+    <SingleLineLengths>Comprimento da linha:</SingleLineLengths>
     <TotalLengthX>Comprimento total: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Comprimento total: {0} (dividir linha!)</TotalLengthXSplitLine>
     <SplitLine>Dividir linha!</SplitLine>
@@ -1374,7 +1374,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <DeleteOneLinePrompt>Deseja eliminar linha?</DeleteOneLinePrompt>
     <BeforeInsertLine>Antes de inserir linha</BeforeInsertLine>
     <LineInserted>Linha inserida</LineInserted>
-    <BeforeSettingFontToNormal>Antes de definir o tipo de letra para normal</BeforeSettingFontToNormal>
+    <BeforeLineUpdatedInListView>Antes da linha ser actualizada na lista</BeforeLineUpdatedInListView>
     <BeforeSplitLine>Antes de dividir a linha</BeforeSplitLine>
     <LineSplitted>Linha foi dividida</LineSplitted>
     <BeforeMergeLines>Antes de combinar as linhas</BeforeMergeLines>
@@ -1777,6 +1777,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
+	<Profile>Perfil</Profile>
+	<Profiles>Perfis</Profiles>
+	<ImportProfiles>Importar perfis</ImportProfiles>
+	<ExportProfiles>Exportar perfis</ExportProfiles>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
 	<OptimalCharactersPerSecond>Caracteres/seg ideais</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
@@ -1912,7 +1916,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros</FixCommonerrors>
     <RemoveTextForHi>Deficientes Auditivos</RemoveTextForHi>
-    <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Remover quebra em linha menor...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
