@@ -144,6 +144,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Note>Bemærk: Visningstid vil ikke overlappe starttidspunkt for næste tekst</Note>
     <Fixed>Fast</Fixed>
     <Milliseconds>Millisekunder</Milliseconds>
+    <ExtendOnly>Kun udvid</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
@@ -1157,7 +1158,14 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <MergeSelectedLinesAsDialog>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
         <MergeWithLineAfter>Flet med linjen efter</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <RemoveFormatting>Fjern formatering</RemoveFormatting>
+        <RemoveFormattingAll>Fjern alle formateringer</RemoveFormattingAll>
+        <RemoveFormattingBold>Fjern fed</RemoveFormattingBold>
+        <RemoveFormattingItalic>Fjern kursiv</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Fjern understreg</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Fjern farve</RemoveFormattingColor>
+        <RemoveFormattingFontName>Fjern skrifttypenavn</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Fjern justering</RemoveFormattingAlignment>
         <Underline>Understregning</Underline>
         <Box>Boks</Box>
         <Color>Farve...</Color>
@@ -1363,7 +1371,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeInsertLine>Før indsætte linje</BeforeInsertLine>
     <LineInserted>Line indsat</LineInserted>
     <BeforeLineUpdatedInListView>Før linje opdateret i listevisning</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Før ændring af skrifttype til normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Før delt linje</BeforeSplitLine>
     <LineSplitted>Line delt</LineSplitted>
     <BeforeMergeLines>Før fusionering af linjer</BeforeMergeLines>
@@ -1473,6 +1480,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeColumnImportText>Før kolonne import af tekst</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Før indsæt og flyt kolonner ned</BeforeColumnShiftCellsDown>
     <BeforeX>Før: {0}</BeforeX>
+    <LinesUpdatedX>Linjer opdateret: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Fejl ved indlæsning af plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Før kørsel af plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Kan ikke læse underteksterne fra plugin!</UnableToReadPluginResult>
@@ -1764,7 +1772,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
+    <Profile>Profil</Profile>
+    <Profiles>Profiler</Profiles>
+    <ImportProfiles>Importer profiler</ImportProfiles>
+    <ExportProfiles>Eksporter profiler</ExportProfiles>
     <SubtitleLineMaximumLength>Linje max. længde</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Optimale tegn/sek</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Maks tegn/sek</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Maks ord/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
@@ -2037,6 +2050,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto varighed</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Bryd ved første mellemrum fra markørposition</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Bryd i første mellemrum fra markørposition og gå til næste</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
