@@ -4689,7 +4689,7 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
                                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
                                        Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
-                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX +
+                                       Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
@@ -4740,7 +4740,7 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
                                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
                                        Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
-                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX +
+                                       Configuration.Settings.General.MaxNumberOfLines +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
@@ -8900,7 +8900,7 @@ namespace Nikse.SubtitleEdit.Forms
             int maxLines = int.MaxValue;
             if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines)
             {
-                maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+                maxLines = Configuration.Settings.General.MaxNumberOfLines;
             }
 
             var splitLines = text.SplitToLines();
@@ -9264,7 +9264,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
-            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
                 e.SuppressKeyPress = true;
             }
@@ -9930,7 +9930,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+                                s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, language);
                             }
                         }
 
@@ -10108,7 +10108,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, languageOriginal);
+                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, languageOriginal);
                             lines = s.SplitToLines();
                         }
 
@@ -22233,7 +22233,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
 
-            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.General.MaxNumberOfLines)
             {
                 e.SuppressKeyPress = true;
             }

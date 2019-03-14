@@ -1337,7 +1337,7 @@ namespace Nikse.SubtitleEdit.Controls
                     int len = noOfLines > 1 ? s.Length - Environment.NewLine.Length * (noOfLines - 1) : s.Length;
                     if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                     {
-                        if (noOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX && _settings.Tools.ListViewSyntaxMoreThanXLines)
+                        if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                         {
                             item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         }
@@ -1354,7 +1354,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                     item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
-                    if (paragraph.NumberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+                    if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }

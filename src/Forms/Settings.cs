@@ -11,6 +11,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,8 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly string _oldVlcLocationRelative;
         private readonly bool _oldListViewShowCps;
         private readonly bool _oldListViewShowWpm;
-
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
+        private List<RulesProfile> _rulesProfiles;
 
         private class ComboBoxLanguage
         {
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
 
             labelStatus.Text = string.Empty;
-
+            _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
@@ -298,10 +299,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
             checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines;
-            if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX >= numericUpDownMaxNumberOfLines.Minimum &&
-                Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX <= numericUpDownMaxNumberOfLines.Maximum)
+            if (Configuration.Settings.General.MaxNumberOfLines >= numericUpDownMaxNumberOfLines.Minimum &&
+                Configuration.Settings.General.MaxNumberOfLines <= numericUpDownMaxNumberOfLines.Maximum)
             {
-                numericUpDownMaxNumberOfLines.Value = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+                numericUpDownMaxNumberOfLines.Value = Configuration.Settings.General.MaxNumberOfLines;
             }
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -350,6 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxGeneralRules.Text = language.Rules;
+            labelRulesProfileName.Text = language.Profile;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
             labelDefaultFrameRate.Text = language.DefaultFrameRate;
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
@@ -730,14 +732,16 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (toolsSettings.MergeLinesShorterThan >= 10 && toolsSettings.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
+            if (gs.MergeLinesShorterThan >= 10 && gs.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = toolsSettings.MergeLinesShorterThan - 10;
+                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan - 10;
             }
             else
             {
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
             }
+
+            UpdateProfileNames(gs.Profiles);
 
             // Music notes / music symbols
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
@@ -857,7 +861,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Text = language.SyntaxColorDurationIfTooSmall;
             checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
-            checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX);
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.General.MaxNumberOfLines);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
@@ -878,6 +882,27 @@ namespace Nikse.SubtitleEdit.Forms
             _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+        }
+
+        private Guid _oldProfileId = Guid.Empty;
+        private void UpdateProfileNames(List<RulesProfile> profiles)
+        {
+            comboBoxRulesProfileName.BeginUpdate();
+            comboBoxRulesProfileName.Items.Clear();
+            foreach (var profile in profiles)
+            {
+                comboBoxRulesProfileName.Items.Add(profile.Name);
+                if (_oldProfileId == Guid.Empty && profile.Name == Configuration.Settings.General.CurrentProfile || profile.Id == _oldProfileId)
+                {
+                    comboBoxRulesProfileName.SelectedIndex = comboBoxRulesProfileName.Items.Count - 1;
+                    _oldProfileId = profile.Id;
+                }
+            }
+            comboBoxRulesProfileName.EndUpdate();
+            if (comboBoxRulesProfileName.SelectedIndex < 0 && comboBoxRulesProfileName.Items.Count > 0)
+            {
+                comboBoxRulesProfileName.SelectedIndex = 0;
+            }
         }
 
         ShortcutNode _shortcuts = new ShortcutNode("root");
@@ -1405,6 +1430,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
 
+            gs.Profiles = _rulesProfiles;
+
             if (comboBoxSaveAsFileNameFrom.SelectedIndex == 0)
             {
                 gs.SaveAsUseFileNameFrom = "video";
@@ -1417,6 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
             gs.MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
+            gs.CurrentProfile = comboBoxRulesProfileName.Text;
 
             if (comboBoxAutoBackup.SelectedIndex == 1)
             {
@@ -1519,6 +1547,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.SubtitleOptimalCharactersPerSeconds = (double)numericUpDownOptimalCharsSec.Value;
             gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
             gs.SubtitleMaximumWordsPerMinute = (double)numericUpDownMaxWordsMin.Value;
+            gs.MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 
@@ -1531,10 +1560,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.VerifyPlaySeconds = comboBoxToolsVerifySeconds.SelectedIndex + 2;
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
             toolsSettings.EndSceneIndex = comboBoxToolsEndSceneIndex.SelectedIndex;
-            toolsSettings.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
-            if (toolsSettings.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
+            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
+            if (gs.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
             {
-                toolsSettings.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
+                gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
             }
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
@@ -1594,7 +1623,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownMaxNumberOfLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
@@ -2895,6 +2923,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
+            ProfileUiValueChanged(sender, e);
         }
 
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
@@ -2962,6 +2991,75 @@ namespace Nikse.SubtitleEdit.Forms
         private void linkLabelGoogleTranslateSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.google.com/search?q=google+cloud+get+api+key");
+        }
+
+        private void buttonEditProfile_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsProfile(_rulesProfiles, comboBoxRulesProfileName.Text))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _rulesProfiles = form.RulesProfiles;
+                    UpdateProfileNames(_rulesProfiles);
+                }
+            }
+        }
+
+        private bool _editProfileOn = false;
+        private void comboBoxRulesProfileName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _editProfileOn = true;
+            var profile = _rulesProfiles.First(p => p.Name == comboBoxRulesProfileName.Text);
+            numericUpDownSubtitleLineMaximumLength.Value = profile.SubtitleLineMaximumLength;
+            numericUpDownOptimalCharsSec.Value = profile.SubtitleOptimalCharactersPerSeconds;
+            numericUpDownMaxCharsSec.Value = profile.SubtitleMaximumCharactersPerSeconds;
+            numericUpDownMaxWordsMin.Value = profile.SubtitleMaximumWordsPerMinute;
+            numericUpDownDurationMin.Value = profile.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownDurationMax.Value = profile.SubtitleMaximumDisplayMilliseconds;
+            if (profile.MinimumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
+                profile.MinimumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
+            {
+                numericUpDownMinGapMs.Value = profile.MinimumMillisecondsBetweenLines;
+            }
+            if (profile.MaxNumberOfLines >= numericUpDownMaxNumberOfLines.Minimum &&
+                profile.MaxNumberOfLines <= numericUpDownMaxNumberOfLines.Maximum)
+            {
+                numericUpDownMaxNumberOfLines.Value = profile.MaxNumberOfLines;
+            }
+            else
+            {
+                numericUpDownMaxNumberOfLines.Value = numericUpDownMaxNumberOfLines.Minimum;
+            }
+            if (profile.MergeLinesShorterThan >= 10 && profile.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
+            {
+                comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan - 10;
+            }
+            else
+            {
+                comboBoxMergeShortLineLength.SelectedIndex = 0;
+            }
+            checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
+            _oldProfileId = profile.Id;
+            _editProfileOn = false;
+        }
+
+        private void ProfileUiValueChanged(object sender, EventArgs e)
+        {
+            var idx = comboBoxRulesProfileName.SelectedIndex;
+            if (idx < 0 || _editProfileOn)
+            {
+                return;
+            }
+            _rulesProfiles[idx].SubtitleLineMaximumLength = numericUpDownSubtitleLineMaximumLength.Value;
+            _rulesProfiles[idx].SubtitleOptimalCharactersPerSeconds = numericUpDownOptimalCharsSec.Value;
+            _rulesProfiles[idx].SubtitleMaximumCharactersPerSeconds = numericUpDownMaxCharsSec.Value;
+            _rulesProfiles[idx].SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
+            _rulesProfiles[idx].SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
+            _rulesProfiles[idx].MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
+            _rulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
+            _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
+            _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
+            _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
         }
     }
 }

@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
 
-                    bool merge = !(p.Text.Contains(Environment.NewLine) || next == null) && Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX > 1;
+                    bool merge = !(p.Text.Contains(Environment.NewLine) || next == null) && Configuration.Settings.General.MaxNumberOfLines > 1;
 
                     if (merge && (p.Text.TrimEnd().EndsWith('!') || p.Text.TrimEnd().EndsWith('.')))
                     {
@@ -633,7 +633,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, "en").SplitToLines())
+            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, "en").SplitToLines())
             {
                 if (p == null)
                 {

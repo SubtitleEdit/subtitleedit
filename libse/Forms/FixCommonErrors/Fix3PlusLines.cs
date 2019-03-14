@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 Paragraph p = subtitle.Paragraphs[i];
                 if (Utilities.GetNumberOfLines(p.Text) > 2 && callbacks.AllowFix(p, fixAction))
                 {
-                    var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-                    Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 2;
+                    var old = Configuration.Settings.General.MaxNumberOfLines;
+                    Configuration.Settings.General.MaxNumberOfLines = 2;
                     string oldText = p.Text;
                     try
                     {
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     finally
                     {
-                        Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+                        Configuration.Settings.General.MaxNumberOfLines = old;
                     }
                     if (oldText != p.Text)
                     {

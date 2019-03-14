@@ -151,11 +151,11 @@ namespace Test.Logic
         [TestMethod]
         public void AutoBreakPreferPeriod()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for today.";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Sorry. Sorry, I was miles away." + Environment.NewLine + "Got to get everything ready for today.", s2);
         }
 
@@ -186,11 +186,11 @@ namespace Test.Logic
         [TestMethod]
         public void AutoBreakPreferPeriodAndItalic()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for <i>today</i>.";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Sorry. Sorry, I was miles away." + Environment.NewLine + "Got to get everything ready for <i>today</i>.", s2);
         }
 
@@ -205,55 +205,55 @@ namespace Test.Logic
         [TestMethod]
         public void AutoBreakLine3Lines1ButOnlyTwo()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes <b>again<b>!", s2);
         }
 
         [TestMethod]
         public void AutoBreakLine3Lines1ButOnlyTwoWithSpaces()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "Follow him.    Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes <b>again<b>!", s2);
         }
 
         [TestMethod]
         public void AutoBreakLine3Lines1()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes and he goes and goes and goes and he goes <b>again<b>!!";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes and he" + Environment.NewLine + "goes and goes and goes and he goes <b>again<b>!!", s2);
         }
 
         [TestMethod]
         public void AutoBreakLine3Lines2()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la", s2);
         }
 
         [TestMethod]
         public void AutoBreakLine3Lines3()
         {
-            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            var old = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = 3;
             const string s1 = "<i>la</i> la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la <i>la</i>";
             string s2 = Utilities.AutoBreakLine(s1);
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("<i>la</i> la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la <i>la</i>", s2);
         }
 
