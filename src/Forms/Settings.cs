@@ -351,6 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxMiscellaneous.Text = language.General;
             groupBoxGeneralRules.Text = language.Rules;
+            labelRulesProfileName.Text = language.Profile;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
             labelDefaultFrameRate.Text = language.DefaultFrameRate;
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;

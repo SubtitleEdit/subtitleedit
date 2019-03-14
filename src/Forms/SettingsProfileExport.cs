@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class SettingsProfileExport : Form
+    public sealed partial class SettingsProfileExport : Form
     {
         public List<RulesProfile> ExportedProfiles { get; set; }
 
@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewExportStyles.Items.Add(new ListViewItem(profile.Name) { Checked = true, Tag = profile });
             }
 
+            Text = Configuration.Settings.Language.Settings.ExportProfiles;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
@@ -40,10 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            saveFileDialogStyle.Title = "Save profiles to";
+            saveFileDialogStyle.Title = Configuration.Settings.Language.Settings.ExportProfiles;
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
-            saveFileDialogStyle.Filter = "Profile file|*.profile";
-            saveFileDialogStyle.FileName = "SE_Profile.profile";
+            saveFileDialogStyle.Filter = Configuration.Settings.Language.Settings.Profiles + "|*.profile";
+            saveFileDialogStyle.FileName = "SE_Profiles.profile";
 
             if (saveFileDialogStyle.ShowDialog(this) != DialogResult.OK)
             {

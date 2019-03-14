@@ -9,14 +9,28 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class SettingsProfile : Form
+    public sealed partial class SettingsProfile : Form
     {
         public List<RulesProfile> RulesProfiles { get; set; }
-        private bool _editOn = false;
+        private bool _editOn;
 
         public SettingsProfile(List<RulesProfile> rulesProfiles, string name)
         {
             InitializeComponent();
+
+            var language = Configuration.Settings.Language.Settings;
+            Text = language.Profiles;
+            groupBoxGeneralRules.Text = language.Rules;
+            labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
+            labelOptimalCharsPerSecond.Text = language.OptimalCharactersPerSecond;
+            labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
+            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
+            labelMinDuration.Text = language.DurationMinimumMilliseconds;
+            labelMaxDuration.Text = language.DurationMaximumMilliseconds;
+            labelMinGapMs.Text = language.MinimumGapMilliseconds;
+            labelMaxLines.Text = language.MaximumLines;
+            checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
+
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
             for (int i = 10; i < 100; i++)
@@ -229,9 +243,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = "Import profile"; // Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
+            openFileDialogImport.Title = Configuration.Settings.Language.Settings.ImportProfiles;
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
-            openFileDialogImport.Filter = "Profiles|*.profile";
+            openFileDialogImport.Filter = Configuration.Settings.Language.Settings.Profiles + "|*.profile";
             if (openFileDialogImport.ShowDialog(this) != DialogResult.OK)
             {
                 return;
