@@ -458,6 +458,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDuration.Text = _languageGeneral.Duration;
             buttonAutoBreak.Text = _language.AutoBreak;
             buttonUnBreak.Text = _language.Unbreak;
+            buttonSplitLine.Text = _languageGeneral.SplitLine;
             subtitleListView1.InitializeLanguage(_languageGeneral, Configuration.Settings);
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
