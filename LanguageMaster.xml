@@ -1777,6 +1777,10 @@ can edit in same subtitle file (collaboration)</Information>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
+    <Profile>Profile</Profile>
+    <Profiles>Profiles</Profiles>
+    <ImportProfiles>Import profiles</ImportProfiles>
+    <ExportProfiles>Export profiles</ExportProfiles>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>

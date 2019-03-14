@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLine(string text, string language)
         {
-            return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+            return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
         }
 
         public static string AutoBreakLine(string text)
@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
-            if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX <= 2)
+            if (Configuration.Settings.General.MaxNumberOfLines <= 2)
             {
                 return AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language);
             }

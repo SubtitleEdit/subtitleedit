@@ -1939,6 +1939,10 @@
             public string DefaultFrameRate { get; set; }
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
+            public string Profile { get; set; }
+            public string Profiles { get; set; }
+            public string ImportProfiles { get; set; }
+            public string ExportProfiles { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
             public string OptimalCharactersPerSecond { get; set; }
             public string MaximumCharactersPerSecond { get; set; }

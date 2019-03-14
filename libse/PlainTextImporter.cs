@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Core
                 return string.Empty;
             }
 
-            var line = Utilities.AutoBreakLine(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language);
+            var line = Utilities.AutoBreakLine(text.Trim(), _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language);
             if (ExceedsMax(line) || CurrentWordInDoNotBreakList(line, line.Length))
             {
                 var lastWords = string.Empty;
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         lastWords = line.Substring(lastIndexOfSpace).Trim() + " " + lastWords;
                         line = line.Substring(0, lastIndexOfSpace).Trim();
-                        line = Utilities.AutoBreakLine(line, _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language);
+                        line = Utilities.AutoBreakLine(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language);
                         if (!ExceedsMax(line))
                         {
                             list.Add(line);
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (three.Count == 3)
                     {
                         list.RemoveAt(list.Count - 1);
-                        var firstLine = Utilities.AutoBreakLine(three[0] + " " + three[1], _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language);
+                        var firstLine = Utilities.AutoBreakLine(three[0] + " " + three[1], _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language);
                         list.Add(firstLine);
                         list.Add(three[2]);
                         return string.Empty;
@@ -287,11 +287,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public List<string> SplitToFour(string text)
         {
-            var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language).SplitToLines();
+            var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language).SplitToLines();
             var list = new List<string>();
             foreach (var line in lines)
             {
-                list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language));
+                list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.General.MergeLinesShorterThan, _language));
             }
             return list;
         }

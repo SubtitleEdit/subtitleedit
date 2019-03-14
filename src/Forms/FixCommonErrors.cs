@@ -1298,7 +1298,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineTotal.ForeColor = Color.Black;
             buttonSplitLine.Visible = false;
             var abl = Utilities.AutoBreakLine(s, _autoDetectGoogleLanguage).SplitToLines();
-            if (abl.Count > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+            if (abl.Count > Configuration.Settings.General.MaxNumberOfLines || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength))
             {
                 buttonSplitLine.Visible = true;
                 labelTextLineTotal.ForeColor = Color.Red;
@@ -1700,7 +1700,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, Language);
                     lines = s.SplitToLines();
                     if (lines.Count == 2)
                     {

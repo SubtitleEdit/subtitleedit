@@ -4753,6 +4753,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AutoDetectAnsiEncoding":
                     language.Settings.AutoDetectAnsiEncoding = reader.Value;
                     break;
+                case "Settings/Profile":
+                    language.Settings.Profile = reader.Value;
+                    break;
+                case "Settings/Profiles":
+                    language.Settings.Profiles = reader.Value;
+                    break;
+                case "Settings/ImportProfiles":
+                    language.Settings.ImportProfiles = reader.Value;
+                    break;
+                case "Settings/ExportProfiles":
+                    language.Settings.ExportProfiles = reader.Value;
+                    break;
                 case "Settings/SubtitleLineMaximumLength":
                     language.Settings.SubtitleLineMaximumLength = reader.Value;
                     break;
