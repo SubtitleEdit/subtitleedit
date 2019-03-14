@@ -33,6 +33,7 @@
     <Number>Szám</Number>
     <Text>Szöveg</Text>
     <HourMinutesSecondsMilliseconds>Óra:perc:mp:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>Óra:perc:mp:képkocka</HourMinutesSecondsFrames>
     <Bold>Félkövér</Bold>
     <Italic>Dőlt</Italic>
     <Underline>Aláhúzás</Underline>
@@ -77,6 +78,7 @@
     <After>Utána</After>
     <Size>Méret</Size>
     <Search>Keresés</Search>
+    <DeleteCurrentLine>Aktuális sor törlése</DeleteCurrentLine>
   </General>
   <About>
     <Title>Subtitle Edit névjegy</Title>
@@ -145,6 +147,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Note>Megjegyzés: A megjelenítési idő nem fogja fedni a következő szöveg kezdési idejét</Note>
     <Fixed>Rögzített</Fixed>
     <Milliseconds>ezredmásodperc</Milliseconds>
+    <ExtendOnly>Csak növelés</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Időtartam-korlátok alkalmazása</Title>
@@ -213,6 +216,11 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
   <Beamer>
     <Title>Projektor</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Könyvjelző szerkesztése</EditBookmark>
+    <AddBookmark>Könyvjelző hozzáadása</AddBookmark>
+    <GoToBookmark>Ugrás a könyvjelzőre</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Betűállás módosítása</Title>
     <ChangeCasingTo>Betűállás módosítása erre:</ChangeCasingTo>
@@ -476,6 +484,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Right>Jobbra</Right>
     <Center>Középre</Center>
     <CenterLeftJustify>Középre, balra zárt</CenterLeftJustify>
+    <CenterTopJustify>Középre, felülre zárás</CenterTopJustify>
     <BottomMargin>Alsó margó</BottomMargin>
     <LeftRightMargin>Bal/jobb margó</LeftRightMargin>
     <SaveBluRraySupAs>Válassza ki a Blu-ray sup fájl nevét</SaveBluRraySupAs>
@@ -691,9 +700,9 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <PleaseWait>Kis türelmet... ez több időt vehet igénybe</PleaseWait>
     <PoweredByGoogleTranslate>Szolgáltató: Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Szolgáltató: Microsoft translate</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Sajnáljuk,egy Bing klienskulcsra van szükség a Microsoft-tól a legfrissebb Bing fordító használatához
+    <MsClientSecretNeeded>Sajnáljuk, egy Kognitív szolgáltatások "Fordítószöveg" kulcsra van szükség a Microsoft-tól  a legújabb Microsoft Fordító használatához.
 
-Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Bing klienskulcsának megadásához.</MsClientSecretNeeded>
+Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a kulcs megadásához.</MsClientSecretNeeded>
     <GoogleApiKeyNeeded>Sajnáljuk,egy API-kulcsra van szükség a Google-tól a legfrissebb Google fordító használatához.
 
 Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordító API-kulcsának megadásához.</GoogleApiKeyNeeded>
@@ -933,6 +942,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <SubStationAlphaProperties>Sub Station Alpha tulajdonságok...</SubStationAlphaProperties>
         <EbuProperties>EBU STL tulajdonságok...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro tulajdonságai...</DvdStuioProProperties>
+        <TimedTextProperties>Időzített szöveg tulajdonságai...</TimedTextProperties>
         <PacProperties>PAC tulajdonságok...</PacProperties>
         <OpenOriginal>Eredeti felirat megnyitása (fordító mód)...</OpenOriginal>
         <SaveOriginal>Eredeti felirat mentése</SaveOriginal>
@@ -1011,6 +1021,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <SplitLongLines>Hosszú sorok felosztása...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Feliratok közti legkisebb megjelenítési idő...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Rendezés</SortBy>
+        <NetflixQualityCheck>Netflix minőségellenőrzés...</NetflixQualityCheck>
         <Number>Szám</Number>
         <StartTime>Kezdési idő</StartTime>
         <EndTime>Befejezési idő</EndTime>
@@ -1035,11 +1046,13 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
       <Video>
         <Title>Videó</Title>
         <OpenVideo>Videófájl megnyitása...</OpenVideo>
+        <OpenVideoFromUrl>Videó megnyitása az URL-ről...</OpenVideoFromUrl>
         <OpenDvd>DVD megnyitása...</OpenDvd>
         <ChooseAudioTrack>Válasszon hangsávot</ChooseAudioTrack>
         <CloseVideo>Videófájl bezárása</CloseVideo>
         <SetVideoOffset>Videóeltolás beállítása...</SetVideoOffset>
         <SmptTimeMode>SMPTE időzítés (keretkihagyás)</SmptTimeMode>
+        <GenerateTextFromVideo>Szöveg létrehozása videóból...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Jelenetváltozások létrehozása/importálása...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Jelenet váltások eltávolítása</RemoveSceneChanges>
         <WaveformBatchGenerate>Hullámformák csoportos létrehozása...</WaveformBatchGenerate>
@@ -1148,11 +1161,20 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <MergeSelectedLinesAsDialog>Kijelölt sorok összevonása párbeszédként</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Összevonás az előző sorral</MergeWithLineBefore>
         <MergeWithLineAfter>Összevonás a következő sorral</MergeWithLineAfter>
-        <Normal>Normál (formázás eltávolítása)</Normal>
+        <RemoveFormatting>Formázás eltávolítása</RemoveFormatting>
+        <RemoveFormattingAll>Minden formázás eltávolítása</RemoveFormattingAll>
+        <RemoveFormattingBold>Félkövér betű eltávolítása</RemoveFormattingBold>
+        <RemoveFormattingItalic>Dőlt betű eltávolítás</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Aláhúzás eltávolítása</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Szín eltávolítása</RemoveFormattingColor>
+        <RemoveFormattingFontName>Betűtípus nevének eltávolítása</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Igazítás eltávolítása</RemoveFormattingAlignment>
         <Underline>Aláhúzott</Underline>
         <Box>Doboz</Box>
         <Color>Szín...</Color>
         <FontName>Betűtípus neve...</FontName>
+        <Superscript>Felső index</Superscript>
+        <Subscript>Alsó index</Subscript>
         <Alignment>Igazítás...</Alignment>
         <AutoBalanceSelectedLines>Kijelölt sorok automatikus kiegyenlítése...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Kijelölt sorok sortöréseinek eltávolítása...</RemoveLineBreaksFromSelectedLines>
@@ -1161,7 +1183,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <ShowSelectedLinesEarlierLater>Kijelölt sorok megjelenítése korábban/később...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Kijelölt sorok vizuális szinkronizálása...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Eredeti sor Google/Microsoft fordítása</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Kijelölt sorok fordítása a Google-val...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Kijelölt sorok lefordítása...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Kijelölt sorok időtartamának beállítása...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Gyakori hibák javítása a kijelölt sorokban...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Betűállás módosítás a kijelölt soroknál...</ChangeCasingForSelectedLines>
@@ -1170,6 +1192,8 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <WebVTTRemoveVoices>Hangok eltávolítása</WebVTTRemoveVoices>
         <NewActor>Új színész...</NewActor>
         <RemoveActors>Színészek eltávolítása</RemoveActors>
+        <EditBookmark>Könyvjelző szerkesztése</EditBookmark>
+        <RemoveBookmark>Könyvjelző eltávolítása</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1185,6 +1209,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
     </Controls>
     <VideoControls>
       <Translate>Fordítás</Translate>
+      <CreateAndAdjust>Létrehozás/beállítás</CreateAndAdjust>
       <Create>Létrehozás</Create>
       <Adjust>Igazítás</Adjust>
       <SelectCurrentElementWhilePlaying>A jelenlegi felirat kiválasztása lejátszás közben</SelectCurrentElementWhilePlaying>
@@ -1350,7 +1375,6 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeInsertLine>A sorbeszúrás előtti állapotra</BeforeInsertLine>
     <LineInserted>Sor beszúrva</LineInserted>
     <BeforeLineUpdatedInListView>A sor listanézetben történő frissítése előtti állapotra</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>A betűtípus normálra állítása előtti állapotra</BeforeSettingFontToNormal>
     <BeforeSplitLine>A sorfelosztás előtti állapotra</BeforeSplitLine>
     <LineSplitted>Felosztott sorok</LineSplitted>
     <BeforeMergeLines>A sorok összevonása előtti állapotra</BeforeMergeLines>
@@ -1460,6 +1484,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeColumnImportText>Az oszlop szöveg importálása előtti állapotra</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>A cellák lefelé tolási művelete előtti állapotra</BeforeColumnShiftCellsDown>
     <BeforeX>Előtt: {0}</BeforeX>
+    <LinesUpdatedX>Frissített sorok: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Hiba a beépülő betöltése közben: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>A beépülő futtatása előtt: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Nem olvasható a felirat eredménye a beépülőből!</UnableToReadPluginResult>
@@ -1741,12 +1766,19 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SettingsName>Beállítások</SettingsName>
     <Help>Súgó</Help>
     <UnbreakNoSpace>Szóközök nélküli sortörések eltávolítása (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Könyvjelzők váltása</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Könyvjelzők váltása - megjegyzés hozzáadása</ToggleBookmarksWithComment>
+    <ClearBookmarks>Könyvjelzők törlése</ClearBookmarks>
+    <GoToBookmark>Ugrás a könyvjelzőre</GoToBookmark>
+    <GoToPreviousBookmark>Ugrás az előző könyvjelzőre</GoToPreviousBookmark>
+    <GoToNextBookmark>Ugrás a következő könyvjelzőre</GoToNextBookmark>
     <FontInUi>Felület betűtípusa</FontInUi>
     <ShowFrameRate>Képarány megjelenítése az eszköztáron</ShowFrameRate>
     <DefaultFrameRate>Alapértelmezett képarány</DefaultFrameRate>
     <DefaultFileEncoding>Alapértelmezett fájlkódolás</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI kódolás automatikus észlelése</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Felirat maximális hossza</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Optimális karakter/mp</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Max. karakter/mp</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Max. szó/perc</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Automatikus sortörés gépelés közben</AutoWrapWhileTyping>
@@ -1792,6 +1824,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AutoBackupDeleteAfterThreeMonths>3 hónap</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 hónap</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Frissítések ellenőrzése</CheckForUpdates>
+    <AutoSave>Automatikus mentés</AutoSave>
     <AllowEditOfOriginalSubtitle>Eredeti felirat szerkesztésének engedélyezése</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Kérdezzen rá a sorok törlésére</PromptDeleteLines>
     <TimeCodeMode>Időkód mód</TimeCodeMode>
@@ -1914,7 +1947,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Az aktuális sor kibővítése a következő feliratra vagy max időtartamra</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Az aktuális felirat időtartamának újraszámolása</RecalculateDurationOfCurrentSubtitle>
-    <MainCreateStartDownEndUp>Új létrehozása a le gombbal, befejezési idő beállítása a fel gombbal</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Új felirat beszúrása a gomb lenyomásakor, befejezési idő beállítása a gomb elengedésekor</MainCreateStartDownEndUp>
     <MergeDialog>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialog>
     <GoToNext>Ugrás a következő sorra</GoToNext>
     <GoToPrevious>Ugrás az előző sorra</GoToPrevious>
@@ -2017,12 +2050,16 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <MainTextBoxSelectionToUpper>Kijelölés nagybetűsre</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Automatikus időtartam kapcsoló</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatikus sortörés</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Sortörés az első szóköznél a kurzor pozíciójától</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Sortörés az első szóköznél a kurzor pozíciójától és ugrás a következőre</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Tördeletlen szöveg</MainTextBoxUnbreak>
     <MainFileSaveAll>Összes mentése</MainFileSaveAll>
     <Miscellaneous>Egyéb</Miscellaneous>
     <CpsIncludesSpace>A karakter/mp (CPS) szóközöket tartalmaz</CpsIncludesSpace>
     <UseDoNotBreakAfterList>A ne-tördelje-utána lista használata (auto-tördelésre)</UseDoNotBreakAfterList>
-    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <GoogleTranslate>Google Translate</GoogleTranslate>
+    <GoogleTranslateApiKey>API-kulcs</GoogleTranslateApiKey>
+    <MicrosoftBingTranslator>Microsoft Translator</MicrosoftBingTranslator>
     <HowToSignUp>Regisztráció módja</HowToSignUp>
     <MicrosoftTranslateApiKey>Kulcs</MicrosoftTranslateApiKey>
     <FontNote>Megjegyzés: Ezek a betűtípus beállítások csak a Subtitle Edit felhasználói felületére vonatkoznak.
@@ -2090,6 +2127,7 @@ A feliratozáshoz használt betűtípust általában a videólejátszóban vála
     <AutoFixNames>Nevek auto-javítása, ahol csak a betűállás különbözik</AutoFixNames>
     <CheckOneLetterWords>Rákérdezés az ismeretlen egy betűs szavakra</CheckOneLetterWords>
     <TreatINQuoteAsING>Az " in' " szóvéget kezelje " ing "-ként (Csak angol nyelven)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Emlékezzen az "Mindig használ" listára</RememberUseAlwaysList>
     <ImageText>Képszöveg</ImageText>
     <SpellCheckCompleted>A helyesírás-ellenőrzés befejeződött.</SpellCheckCompleted>
     <SpellCheckAborted>A helyesírás-ellenőrzés félbeszakadt</SpellCheckAborted>
