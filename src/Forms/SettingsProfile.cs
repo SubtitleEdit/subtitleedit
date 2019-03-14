@@ -133,8 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             var gs = new GeneralSettings();
-            var profile = new RulesProfile(gs.Profiles.First()) { Name = "New" };
-            profile.ResetId();
+            var profile = new RulesProfile(gs.Profiles.First()) { Name = "New", Id = Guid.NewGuid() };
             RulesProfiles.Add(profile);
             ShowRulesProfiles(profile, false);
             textBoxName.Focus();
@@ -149,8 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var source = RulesProfiles[idx];
-            var profile = new RulesProfile(source) { Name = "Copy of " + source.Name };
-            profile.ResetId();
+            var profile = new RulesProfile(source) { Name = "Copy of " + source.Name, Id = Guid.NewGuid() };
             RulesProfiles.Add(profile);
             ShowRulesProfiles(profile, false);
         }

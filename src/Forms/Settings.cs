@@ -893,10 +893,10 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var profile in profiles)
             {
                 comboBoxRulesProfileName.Items.Add(profile.Name);
-                if (_oldProfileId == Guid.Empty && profile.Name == Configuration.Settings.General.CurrentProfile || profile.GetId() == _oldProfileId)
+                if (_oldProfileId == Guid.Empty && profile.Name == Configuration.Settings.General.CurrentProfile || profile.Id == _oldProfileId)
                 {
                     comboBoxRulesProfileName.SelectedIndex = comboBoxRulesProfileName.Items.Count - 1;
-                    _oldProfileId = profile.GetId();
+                    _oldProfileId = profile.Id;
                 }
             }
             comboBoxRulesProfileName.EndUpdate();
@@ -3040,7 +3040,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
             }
             checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
-            _oldProfileId = profile.GetId();
+            _oldProfileId = profile.Id;
             _editProfileOn = false;
         }
 
