@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class SettingsProfile
+    sealed partial class SettingsProfile
     {
         /// <summary>
         /// Required designer variable.
