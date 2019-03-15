@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 
@@ -273,25 +272,20 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var serializer = new XmlSerializer(typeof(List<RulesProfile>));
-            using (var fileStream = new FileStream(openFileDialogImport.FileName, FileMode.Open, FileAccess.ReadWrite))
+            var importProfiles = RulesProfile.Deserialize(FileUtil.ReadAllTextShared(openFileDialogImport.FileName, Encoding.UTF8));
+            foreach (var profile in importProfiles)
             {
-                var importProfiles = (List<RulesProfile>)serializer.Deserialize(fileStream);
-                foreach (var profile in importProfiles)
+                var name = profile.Name;
+                if (RulesProfiles.Any(p => p.Name == profile.Name))
                 {
-                    var name = profile.Name;
-                    if (RulesProfiles.Any(p => p.Name == profile.Name))
-                    {
-                        profile.Name = name + "_2";
-                    }
-                    if (RulesProfiles.Any(p => p.Name == profile.Name))
-                    {
-                        profile.Name = name + "_" + Guid.NewGuid();
-                    }
-
-                    RulesProfiles.Add(profile);
-                    ShowRulesProfiles(profile, false);
+                    profile.Name = name + "_2";
                 }
+                if (RulesProfiles.Any(p => p.Name == profile.Name))
+                {
+                    profile.Name = name + "_" + Guid.NewGuid();
+                }
+                RulesProfiles.Add(profile);
+                ShowRulesProfiles(profile, false);
             }
         }
 
