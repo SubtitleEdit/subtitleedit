@@ -1350,21 +1350,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                     if (!correct && word.Contains('/') && !word.Contains("//"))
                     {
-                        var slashedWords = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                        bool allSlashedCorrect = true;
-                        foreach (var slashedWord in slashedWords)
-                        {
-                            if (slashedWord.Length < 2)
-                            {
-                                allSlashedCorrect = false;
-                            }
-
-                            if (allSlashedCorrect && !(DoSpell(slashedWord) || IsWordKnownOrNumber(slashedWord, line)))
-                            {
-                                allSlashedCorrect = false;
-                            }
-                        }
-                        correct = allSlashedCorrect;
+                        correct = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                            .All(w => w.Length > 2 && (DoSpell(w) || IsWordKnownOrNumber(word, line)));
                     }
 
                     if (word.Length == 0)
