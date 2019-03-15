@@ -272,20 +272,27 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var importProfiles = RulesProfile.Deserialize(FileUtil.ReadAllTextShared(openFileDialogImport.FileName, Encoding.UTF8));
-            foreach (var profile in importProfiles)
+            try
             {
-                var name = profile.Name;
-                if (RulesProfiles.Any(p => p.Name == profile.Name))
+                var importProfiles = RulesProfile.Deserialize(FileUtil.ReadAllTextShared(openFileDialogImport.FileName, Encoding.UTF8));
+                foreach (var profile in importProfiles)
                 {
-                    profile.Name = name + "_2";
+                    var name = profile.Name;
+                    if (RulesProfiles.Any(p => p.Name == profile.Name))
+                    {
+                        profile.Name = name + "_2";
+                    }
+                    if (RulesProfiles.Any(p => p.Name == profile.Name))
+                    {
+                        profile.Name = name + "_" + Guid.NewGuid();
+                    }
+                    RulesProfiles.Add(profile);
+                    ShowRulesProfiles(profile, false);
                 }
-                if (RulesProfiles.Any(p => p.Name == profile.Name))
-                {
-                    profile.Name = name + "_" + Guid.NewGuid();
-                }
-                RulesProfiles.Add(profile);
-                ShowRulesProfiles(profile, false);
+            }
+            catch 
+            {
+                MessageBox.Show("Unable to import profiles");       
             }
         }
 
