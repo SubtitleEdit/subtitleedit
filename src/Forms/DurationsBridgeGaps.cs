@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DurationsBridgeGaps : PositionAndSizeForm
     {
+        private readonly bool _shouldClearExtraColumn;
         private readonly Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         private Dictionary<string, string> _dic;
@@ -73,6 +75,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _refreshTimer.Tick += RefreshTimerTick;
                 GeneratePreview();
             }
+
+            // if subtitle format stores information in Paragraph.Extra, the extra column
+            // will contains Paragraph.Extra content in ExtraColumn
+            _shouldClearExtraColumn = ShouldClearExtra();
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)
@@ -107,6 +113,27 @@ namespace Nikse.SubtitleEdit.Forms
             _refreshTimer.Start();
         }
 
+        private bool ShouldClearExtra()
+        {
+            var originalType = _subtitle.OriginalFormat.GetType();
+
+            // these are the formats that uses Paragraph.Extra property to store information
+            return originalType == typeof(TimedText) ||
+            originalType == typeof(AdvancedSubStationAlpha) ||
+            originalType == typeof(TimedText10) ||
+            originalType == typeof(WebVTT) ||
+            originalType == typeof(WebVTTFileWithLineNumber) ||
+            originalType == typeof(SubStationAlpha) ||
+            originalType == typeof(StructuredTitles) ||
+            originalType == typeof(SmpteTt2052) ||
+            originalType == typeof(ItunesTimedText) ||
+            originalType == typeof(NetflixTimedText) ||
+            originalType == typeof(VocapiaSplit) ||
+            originalType == typeof(SubUrbia) ||
+            originalType == typeof(FinalCutProImage) ||
+            originalType == typeof(Sami);
+        }
+
         private void GeneratePreviewReal()
         {
             groupBoxLinesFound.Text = string.Empty;
@@ -116,8 +143,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Cursor = Cursors.WaitCursor;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             _fixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
@@ -125,13 +152,24 @@ namespace Nikse.SubtitleEdit.Forms
             var minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
             FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(_fixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
 
+            // Note: By default SubtitleListView will update the extra-column if current subtitle format uses Paragraph.Extra
+            // property e.g: NetflixTimedText
             SubtitleListview1.Fill(_fixedSubtitle);
+
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
                 if (_dic.ContainsKey(cur.ID))
                 {
                     SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
+                }
+                else
+                {
+                    if (_shouldClearExtraColumn)
+                    {
+                        // don't display paragraph.text information
+                        SubtitleListview1.SetExtraText(i, string.Empty, SubtitleListview1.BackColor);
+                    }
                 }
 
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
