@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -51,12 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var ser = new XmlSerializer(typeof(List<RulesProfile>));
-            using (var writer = new StreamWriter(saveFileDialogStyle.FileName))
-            {
-                ser.Serialize(writer, ExportedProfiles);
-                writer.Close();
-            }
+            File.WriteAllText(saveFileDialogStyle.FileName, RulesProfile.Serialize(ExportedProfiles));
 
             DialogResult = DialogResult.OK;
         }
