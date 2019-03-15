@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Xml.Serialization;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
 {
     public class RulesProfile
     {
-        [XmlIgnore]
         public Guid Id { get; set; }
         public string Name { get; set; }
         public decimal SubtitleLineMaximumLength { get; set; }
@@ -58,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core
                     sb.Append(",");
                 }
                 sb.Append("{\"name\":" + Json.EncodeJsonText(p.Name) + "," +
-                          "\"maxNumberOfLines\":\"" +p.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture) + "\"," +
+                          "\"maxNumberOfLines\":\"" + p.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"cpsIncludesSpace\":\"" + p.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"mergeLinesShorterThan\":\"" + p.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"minimumMillisecondsBetweenLines\":\"" + p.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture) + "\"," +
