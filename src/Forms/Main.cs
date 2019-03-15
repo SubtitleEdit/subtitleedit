@@ -23800,7 +23800,6 @@ namespace Nikse.SubtitleEdit.Forms
                     applyDurationLimits.Initialize(_subtitle);
                 }
 
-                applyDurationLimits.Initialize(_subtitle);
                 if (applyDurationLimits.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
