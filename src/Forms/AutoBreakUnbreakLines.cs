@@ -56,14 +56,13 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = start; i <= max; i++)
                 {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                    if (i == Configuration.Settings.General.MergeLinesShorterThan - 1)
+                    {
+                        comboBoxConditions.SelectedIndex = comboBoxConditions.Items.Count - 1;
+                    }
                 }
 
-                int index = Configuration.Settings.General.MergeLinesShorterThan - (start + 1);
-                if (index > 0 && index < max)
-                {
-                    comboBoxConditions.SelectedIndex = index;
-                }
-                else
+                if (comboBoxConditions.SelectedIndex < 0)
                 {
                     comboBoxConditions.SelectedIndex = 30;
                 }
@@ -76,10 +75,15 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 5; i < 51; i++)
                 {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                    if (i == Configuration.Settings.General.MergeLinesShorterThan - 1)
+                    {
+                        comboBoxConditions.SelectedIndex = comboBoxConditions.Items.Count - 1;
+                    }
                 }
-
-                comboBoxConditions.SelectedIndex = 5;
-
+                if (comboBoxConditions.SelectedIndex < 0)
+                {
+                    comboBoxConditions.SelectedIndex = 5;
+                }
                 Unbreak();
             }
             comboBoxConditions.SelectedIndexChanged += ComboBoxConditionsSelectedIndexChanged;
