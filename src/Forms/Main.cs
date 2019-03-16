@@ -11328,7 +11328,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void BreakUnbreakTextBox(bool unbreak, TextBox tb)
-        {
+        {          
             var textCaretPos = tb.SelectionStart;
             var startText = tb.Text.Substring(0, textCaretPos);
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
@@ -11340,7 +11340,28 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 int i = 0;
-                var s = Utilities.AutoBreakLine(tb.Text);
+                string s;
+                bool useLanguage = false;
+                var language = "en";
+                if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewText)
+                {
+                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    useLanguage = true;
+                }
+                else if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewTextAlternate)
+                {
+                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                    useLanguage = true;
+                }
+                if (useLanguage)
+                {
+                    s = Utilities.AutoBreakLine(tb.Text, language);
+                }
+                else
+                {
+                    s = Utilities.AutoBreakLine(tb.Text);
+                }
+                
                 while (i < textCaretPos && i < s.Length)
                 {
                     var ch = s[i];
