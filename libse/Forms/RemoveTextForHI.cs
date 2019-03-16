@@ -525,7 +525,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         var st = new StrippableText(second, String.Empty, String.Empty);
                         second = st.Pre + "- " + st.StrippedText + st.Post;
-                        newText = newText.Remove(indexOfNewLine) + Environment.NewLine + second;
+                        var firstLine = newText.Remove(indexOfNewLine);
+                        newText = firstLine + Environment.NewLine + second;
+
+                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') && 
+                            !HtmlUtil.RemoveHtmlTags(newText, true).StartsWith('-'))
+                        {
+                            firstLine = HtmlUtil.RemoveHtmlTags(firstLine, true);
+                            if (firstLine.Length > 0 && "!?.".Contains(firstLine[firstLine.Length - 1]))
+                            {
+                                newText = "- " + newText.Trim();
+                            }
+                        }
                     }
                 }
             }

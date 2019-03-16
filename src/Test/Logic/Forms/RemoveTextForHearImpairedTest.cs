@@ -214,6 +214,22 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveColonTest10()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "- Rich: Hm-mm." + Environment.NewLine + "- Sam: Yes, and it was,";
+            string expected = "- Hm-mm." + Environment.NewLine + "- Yes, and it was,";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// A test for RemoveHIInsideLine
         /// </summary>
