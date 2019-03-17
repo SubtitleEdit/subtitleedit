@@ -20,8 +20,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".cmft", StringComparison.OrdinalIgnoreCase))
             {
-                var parser = new CmafParser(fileName);
-                return parser.Subtitle.Paragraphs.Count > 0;
+                try
+                {
+                    var parser = new CmafParser(fileName);
+                    return parser.Subtitle.Paragraphs.Count > 0;
+                }
+                catch
+                {
+                    return false;
+                }
             }
             return false;
         }
