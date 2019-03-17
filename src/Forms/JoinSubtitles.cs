@@ -118,6 +118,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
+                        var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                        var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
+                        foreach (var f in SubtitleFormat.GetTextOtherFormats())
+                        {
+                            if (f.IsMine(lines, fileName))
+                            {
+                                _fileNamesToJoin.Add(fileName);
+                                f.LoadSubtitle(sub, lines, fileName);
+                                format = f;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (format == null)
+                    {
                         for (int j = k; j < _fileNamesToJoin.Count; j++)
                         {
                             _fileNamesToJoin.RemoveAt(j);
