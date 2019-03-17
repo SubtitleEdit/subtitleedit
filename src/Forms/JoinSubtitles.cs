@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats())
+                        foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats(true))
                         {
                             if (binaryFormat.IsMine(null, fileName))
                             {
