@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format == null)
                         {
-                            foreach (var f in SubtitleFormat.GetBinaryFormats())
+                            foreach (var f in SubtitleFormat.GetBinaryFormats(true))
                             {
                                 if (f.IsMine(null, fileName))
                                 {
@@ -609,7 +609,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format == null)
                         {
-                            foreach (var f in SubtitleFormat.GetBinaryFormats())
+                            foreach (var f in SubtitleFormat.GetBinaryFormats(true))
                             {
                                 if (f.IsMine(null, fileName))
                                 {
@@ -1606,7 +1606,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (format == null)
                                 {
-                                    foreach (var f in SubtitleFormat.GetBinaryFormats())
+                                    foreach (var f in SubtitleFormat.GetBinaryFormats(true))
                                     {
                                         if (f.IsMine(null, fileName))
                                         {

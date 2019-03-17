@@ -503,13 +503,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
-        public static SubtitleFormat[] GetBinaryFormats()
+        public static SubtitleFormat[] GetBinaryFormats(bool batchMode)
         {
             return new SubtitleFormat[]
             {
-                new Ebu(), new Pac(), new PacUnicode(), new Cavena890(), new Spt(), new CheetahCaption(),
-                new Chk(), new Ayato(), new CapMakerPlus(), new Captionate(), new Ultech130(), new NciCaption(), new AvidStl(),
-                new WinCaps32(),  new IsmtDfxp(), new Cavena890(), new Spt(), new IaiSub(), new ELRStudioClosedCaption(), new CaptionsInc()
+                new Ebu() { BatchMode = batchMode }, new Pac() { BatchMode = batchMode }, new PacUnicode(), new Cavena890() { BatchMode = batchMode },
+                new Spt(), new CheetahCaption(), new TSB4(), new Chk(), new Ayato(), new CapMakerPlus(), new Ultech130(), new NciCaption(),
+                new AvidStl(), new WinCaps32(),  new IsmtDfxp(), new Cavena890(), new Spt(), new Sptx(), new IaiSub(),
+                new ELRStudioClosedCaption(), new CaptionsInc()
             };
         }
 
@@ -517,7 +518,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return new SubtitleFormat[]
             {
-                new DlDd(),new Ted20(),  new CapMakerPlus(), new Captionate(),
+                new DlDd(),new Ted20(), new Captionate(),
                 new TimeLineAscii(), new TimeLineFootageAscii(),  new TimedTextImage(), new FinalCutProImage(),
                 new SpuImage(), new Dost(), new SeImageHtmlIndex(), new BdnXml()
             };
