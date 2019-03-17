@@ -472,7 +472,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (arr0.Length > 0 && arr1.Length > 1)
                     {
                         // line continuation?
-                        if (char.IsLower(arr1[0])) // second line starts with lower case letter
+                        if (char.IsLower(arr1[0]) && arr[1][0] != '(' && arr[1][0] != '[') // second line starts with lower case letter
                         {
                             char c = arr0[arr0.Length - 1];
                             if (char.IsLower(c) || c == ',') // first line ends with comma or lower case letter
