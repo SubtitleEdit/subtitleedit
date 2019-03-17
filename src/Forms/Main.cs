@@ -17084,7 +17084,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    var formats = SubtitleFormat.GetBinaryFormats().Union(new SubtitleFormat[]
+                    var formats = SubtitleFormat.GetBinaryFormats().Union(SubtitleFormat.GetTextOtherFormats()).Union(new SubtitleFormat[]
                     {
                         new TimeCodesOnly1(),
                         new TimeCodesOnly2()

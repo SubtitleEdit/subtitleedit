@@ -507,12 +507,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var formats = new SubtitleFormat[]
             {
-                new FinalCutProImage(),
-                new SpuImage(),
-                new Ebu(),
-                new BdnXml(),
-                new Pac(),
-                new Cavena890(),
+                new Ebu(), new Pac(),new PacUnicode(), new Cavena890(), new Spt(), new CheetahCaption(),
+                new Chk(), new Ayato(), new CapMakerPlus(), new Captionate(), new Ultech130(), new NciCaption(), new AvidStl(),
+                new WinCaps32(),  new IsmtDfxp(), new Cavena890(), new Spt(), new IaiSub(), new ELRStudioClosedCaption(), new CaptionsInc()
+            };
+            return formats;
+        }
+
+        public static SubtitleFormat[] GetTextOtherFormats()
+        {
+            var formats = new SubtitleFormat[]
+            {
+                new DlDd(),new Ted20(),  new CapMakerPlus(), new Captionate(),
+                new TimeLineAscii(), new TimeLineFootageAscii(),  new TimedTextImage(), new FinalCutProImage(),
+                new SpuImage(), new Dost(), new SeImageHtmlIndex(), new BdnXml()
             };
             return formats;
         }
