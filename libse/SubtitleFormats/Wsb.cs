@@ -10,6 +10,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "WSB";
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            return base.IsMine(lines, fileName);
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
