@@ -9685,7 +9685,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
                             if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?') || a.EndsWith('؟')) &&
-                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?') || b.EndsWith('؟')))
+                                b.StartsWith('-'))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
