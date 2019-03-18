@@ -126,12 +126,16 @@ namespace Nikse.SubtitleEdit.Forms
             FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(_fixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
 
             SubtitleListview1.Fill(_fixedSubtitle);
-            for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
+            for (int i = 0; i < _fixedSubtitle.Paragraphs.Count; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
                 if (_dic.ContainsKey(cur.ID))
                 {
                     SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
+                }
+                else if (!string.IsNullOrEmpty(cur.Extra))
+                {
+                    SubtitleListview1.SetExtraText(i, string.Empty, SubtitleListview1.ForeColor);
                 }
 
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
