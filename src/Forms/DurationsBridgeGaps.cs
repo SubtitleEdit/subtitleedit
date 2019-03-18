@@ -116,8 +116,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Cursor = Cursors.WaitCursor;
-            SubtitleListview1.Items.Clear();
-            SubtitleListview1.BeginUpdate();
             _fixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
@@ -126,6 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(_fixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
 
             SubtitleListview1.Fill(_fixedSubtitle);
+            SubtitleListview1.BeginUpdate();
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
@@ -145,7 +144,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
             }
-
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, FixedCount);
 
