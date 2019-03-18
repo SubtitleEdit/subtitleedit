@@ -214,6 +214,39 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveColonTest10()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "- Rich: Hm-mm." + Environment.NewLine + "- Sam: Yes, and it was,";
+            string expected = "- Hm-mm." + Environment.NewLine + "- Yes, and it was,";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveColonTest11()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "- He's got the clap." + Environment.NewLine + "- SAM: (gasps) What?";
+            string expected = "- He's got the clap." + Environment.NewLine + "- What?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// A test for RemoveHIInsideLine
         /// </summary>

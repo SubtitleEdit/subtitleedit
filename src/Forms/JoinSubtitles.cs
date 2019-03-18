@@ -104,13 +104,29 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats())
+                        foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats(true))
                         {
                             if (binaryFormat.IsMine(null, fileName))
                             {
                                 _fileNamesToJoin.Add(fileName);
                                 binaryFormat.LoadSubtitle(sub, null, fileName);
                                 format = binaryFormat;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (format == null)
+                    {
+                        var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                        var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
+                        foreach (var f in SubtitleFormat.GetTextOtherFormats())
+                        {
+                            if (f.IsMine(lines, fileName))
+                            {
+                                _fileNamesToJoin.Add(fileName);
+                                f.LoadSubtitle(sub, lines, fileName);
+                                format = f;
                                 break;
                             }
                         }

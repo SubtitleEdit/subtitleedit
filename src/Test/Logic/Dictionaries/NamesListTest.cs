@@ -11,7 +11,7 @@ namespace Test.Logic.Dictionaries
         public void NamesListAddWord()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "sv", false, null);
 
             // Act
             namesList.Add("Jones123");
@@ -25,7 +25,7 @@ namespace Test.Logic.Dictionaries
         public void NamesListAddMultiWord()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "da", false, null);
 
             // Act
             namesList.Add("Charlie Parker123");
@@ -39,7 +39,7 @@ namespace Test.Logic.Dictionaries
         public void NamesListIsInNameMultiWordList()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "ru", false, null);
 
             // Act
             namesList.Add("Charlie Parker123");
@@ -53,7 +53,7 @@ namespace Test.Logic.Dictionaries
         public void NamesListNotInList()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "fr", false, null);
 
             // Act
             var exists = namesList.GetNames().Contains("JonesASDFLKJCKJXFLKJSLDKFJASDF");
@@ -65,11 +65,11 @@ namespace Test.Logic.Dictionaries
         public void NamesListAddWordReload()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "it", false, null);
             namesList.Add("Jones123");
 
             // Act
-            namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            namesList = new NameList(Directory.GetCurrentDirectory(), "it", false, null);
 
             // Assert
             Assert.IsTrue(namesList.GetNames().Contains("Jones123"));
@@ -79,7 +79,7 @@ namespace Test.Logic.Dictionaries
         public void NamesListRemove()
         {
             // Arrange
-            var namesList = new NameList(Directory.GetCurrentDirectory(), "en", false, null);
+            var namesList = new NameList(Directory.GetCurrentDirectory(), "de", false, null);
             namesList.Add("Jones123");
 
             // Act
