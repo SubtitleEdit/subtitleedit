@@ -2339,35 +2339,6 @@ namespace Nikse.SubtitleEdit.Forms
             ShowHideTextBasedFeatures(format);
 
             bool justConverted = false;
-            if (format == null)
-            {
-                var ebu = new Ebu();
-                if (ebu.IsMine(null, fileName))
-                {
-                    ebu.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = ebu;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var pac = new Pac();
-                if (pac.IsMine(null, fileName))
-                {
-                    pac.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = pac;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
 
             if (ext == ".m2ts" || ext == ".textst")
             {
@@ -2376,293 +2347,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textST.LoadSubtitle(_subtitle, null, fileName);
                     _oldSubtitleFormat = textST;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var pns = new Pns();
-                if (pns.IsMine(null, fileName))
-                {
-                    pns.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = pns;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var cavena890 = new Cavena890();
-                if (cavena890.IsMine(null, fileName))
-                {
-                    cavena890.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = cavena890;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var spt = new Spt();
-                if (spt.IsMine(null, fileName))
-                {
-                    spt.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = spt;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var sptx = new Sptx();
-                if (sptx.IsMine(null, fileName))
-                {
-                    sptx.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = sptx;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null && ext == ".wsb")
-            {
-                var wsb = new Wsb();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                if (wsb.IsMine(list, fileName))
-                {
-                    wsb.LoadSubtitle(_subtitle, list, fileName);
-                    _oldSubtitleFormat = wsb;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var cheetahCaption = new CheetahCaption();
-                if (cheetahCaption.IsMine(null, fileName))
-                {
-                    cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = cheetahCaption;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var cheetahCaption = new CheetahCaptionOld();
-                if (cheetahCaption.IsMine(null, fileName))
-                {
-                    cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = cheetahCaption;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var capMakerPlus = new CapMakerPlus();
-                if (capMakerPlus.IsMine(null, fileName))
-                {
-                    capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = capMakerPlus;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var captionsInc = new CaptionsInc();
-                if (captionsInc.IsMine(null, fileName))
-                {
-                    captionsInc.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = captionsInc;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var ultech130 = new Ultech130();
-                if (ultech130.IsMine(null, fileName))
-                {
-                    ultech130.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = ultech130;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var nciCaption = new NciCaption();
-                if (nciCaption.IsMine(null, fileName))
-                {
-                    nciCaption.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = nciCaption;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var tsb4 = new TSB4();
-                if (tsb4.IsMine(null, fileName))
-                {
-                    tsb4.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = tsb4;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var avidStl = new AvidStl();
-                if (avidStl.IsMine(null, fileName))
-                {
-                    avidStl.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = avidStl;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var chk = new Chk();
-                if (chk.IsMine(null, fileName))
-                {
-                    chk.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = chk;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var ayato = new Ayato();
-                if (ayato.IsMine(null, fileName))
-                {
-                    ayato.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = ayato;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var pacUnicode = new PacUnicode();
-                if (pacUnicode.IsMine(null, fileName))
-                {
-                    pacUnicode.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = pacUnicode;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var iai = new IaiSub();
-                if (iai.IsMine(null, fileName))
-                {
-                    iai.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = iai;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var f = new DlDd();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                if (f.IsMine(list, fileName))
-                {
-                    f.LoadSubtitle(_subtitle, list, fileName);
-                    _oldSubtitleFormat = f;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var f = new Ted20();
-                if (f.IsMine(null, fileName))
-                {
-                    f.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = f;
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     SetEncoding(Configuration.Settings.General.DefaultEncoding);
                     encoding = GetCurrentEncoding();
@@ -2690,38 +2374,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (format == null)
             {
                 var f = new TimeCodesOnly2();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                if (f.IsMine(list, fileName))
-                {
-                    f.LoadSubtitle(_subtitle, list, fileName);
-                    _oldSubtitleFormat = f;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var f = new JsonTypeOnlyLoad1();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                if (f.IsMine(list, fileName))
-                {
-                    f.LoadSubtitle(_subtitle, list, fileName);
-                    _oldSubtitleFormat = f;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var f = new TranscriptiveJson();
                 var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                 if (f.IsMine(list, fileName))
                 {
@@ -2825,66 +2477,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format == null)
             {
-                var elr = new ELRStudioClosedCaption();
-                if (elr.IsMine(null, fileName))
-                {
-                    elr.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = elr;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var asc = new TimeLineAscii();
-                if (asc.IsMine(null, fileName))
-                {
-                    asc.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = asc;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var asc = new TimeLineFootageAscii();
-                if (asc.IsMine(null, fileName))
-                {
-                    asc.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = asc;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
-                var mtv = new TimeLineMvt();
-                if (mtv.IsMine(null, fileName))
-                {
-                    mtv.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = mtv;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
-                }
-            }
-
-            if (format == null)
-            {
                 var arib = new AribB36();
                 if (arib.IsMine(null, fileName))
                 {
@@ -2961,27 +2553,6 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     format = null;
-                }
-            }
-
-            if (format == null)
-            {
-                try
-                {
-                    var cmaf = new Cmaft();
-                    if (cmaf.IsMine(null, fileName))
-                    {
-                        cmaf.LoadSubtitle(_subtitle, null, fileName);
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-                catch
-                {
-                    // ignore
                 }
             }
 
@@ -3104,31 +2675,38 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format == null)
             {
-                var f = new WinCaps32();
-                if (f.IsMine(null, fileName))
+                foreach (var f in SubtitleFormat.GetBinaryFormats(false))
                 {
-                    f.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = f;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
+                    if (f.IsMine(null, fileName))
+                    {
+                        f.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = f;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                        break;
+                    }
                 }
             }
 
             if (format == null)
             {
-                var f = new IsmtDfxp();
-                if (f.IsMine(null, fileName))
+                var lines = FileUtil.ReadAllTextShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)).SplitToLines();
+                foreach (var f in SubtitleFormat.GetTextOtherFormats())
                 {
-                    f.LoadSubtitle(_subtitle, null, fileName);
-                    _oldSubtitleFormat = f;
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                    encoding = GetCurrentEncoding();
-                    justConverted = true;
-                    format = GetCurrentSubtitleFormat();
+                    if (f.IsMine(lines, fileName))
+                    {
+                        f.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = f;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                        break;
+                    }
                 }
             }
 
@@ -9862,7 +9440,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (currentParagraph.Text.StartsWith("<i>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</i>") &&
                            newParagraph.Text.EndsWith("</i>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<i>"))
                         {
-                            if (currentParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (currentParagraph.Text.EndsWith(".", StringComparison.Ordinal) || currentParagraph.Text.EndsWith("?", StringComparison.Ordinal) || 
+                            if (currentParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (currentParagraph.Text.EndsWith(".", StringComparison.Ordinal) || currentParagraph.Text.EndsWith("?", StringComparison.Ordinal) ||
                                                                  currentParagraph.Text.EndsWith("!", StringComparison.Ordinal) || currentParagraph.Text.EndsWith("؟", StringComparison.Ordinal)) && newParagraph.Text.StartsWith("-", StringComparison.Ordinal))
                             {
                                 currentParagraph.Text = "<i>" + currentParagraph.Text.Remove(0, 4).Trim();
@@ -10107,7 +9685,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
                             if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?') || a.EndsWith('؟')) &&
-                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?') || b.EndsWith('؟')))
+                                b.StartsWith('-'))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
@@ -11340,7 +10918,28 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 int i = 0;
-                var s = Utilities.AutoBreakLine(tb.Text);
+                string s;
+                bool useLanguage = false;
+                var language = "en";
+                if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewText)
+                {
+                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    useLanguage = true;
+                }
+                else if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewTextAlternate)
+                {
+                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                    useLanguage = true;
+                }
+                if (useLanguage)
+                {
+                    s = Utilities.AutoBreakLine(tb.Text, language);
+                }
+                else
+                {
+                    s = Utilities.AutoBreakLine(tb.Text);
+                }
+
                 while (i < textCaretPos && i < s.Length)
                 {
                     var ch = s[i];
@@ -17063,7 +16662,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    var formats = SubtitleFormat.GetBinaryFormats().Union(new SubtitleFormat[]
+                    var formats = SubtitleFormat.GetBinaryFormats(true).Union(SubtitleFormat.GetTextOtherFormats()).Union(new SubtitleFormat[]
                     {
                         new TimeCodesOnly1(),
                         new TimeCodesOnly2()
@@ -17215,111 +16814,28 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format == null)
             {
-                var ebu = new Ebu();
-                if (ebu.IsMine(null, fileName))
+                foreach (var binaryFormat in SubtitleFormat.GetBinaryFormats(false))
                 {
-                    ebu.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = ebu;
+                    if (binaryFormat.IsMine(null, fileName))
+                    {
+                        binaryFormat.LoadSubtitle(_subtitleAlternate, null, fileName);
+                        format = binaryFormat;
+                        break;
+                    }
                 }
             }
+
             if (format == null)
             {
-                var pac = new Pac();
-                if (pac.IsMine(null, fileName))
+                var lines = FileUtil.ReadAllTextShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)).SplitToLines();
+                foreach (var f in SubtitleFormat.GetTextOtherFormats())
                 {
-                    pac.BatchMode = true;
-                    pac.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = pac;
-                }
-            }
-            if (format == null)
-            {
-                var cavena890 = new Cavena890();
-                if (cavena890.IsMine(null, fileName))
-                {
-                    cavena890.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = cavena890;
-                }
-            }
-            if (format == null)
-            {
-                var spt = new Spt();
-                if (spt.IsMine(null, fileName))
-                {
-                    spt.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = spt;
-                }
-            }
-            if (format == null)
-            {
-                var sptx = new Sptx();
-                if (sptx.IsMine(null, fileName))
-                {
-                    sptx.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = sptx;
-                }
-            }
-            if (format == null)
-            {
-                var cheetahCaption = new CheetahCaption();
-                if (cheetahCaption.IsMine(null, fileName))
-                {
-                    cheetahCaption.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = cheetahCaption;
-                }
-            }
-            if (format == null)
-            {
-                var capMakerPlus = new CapMakerPlus();
-                if (capMakerPlus.IsMine(null, fileName))
-                {
-                    capMakerPlus.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = capMakerPlus;
-                }
-            }
-            if (format == null)
-            {
-                var captionate = new Captionate();
-                if (captionate.IsMine(null, fileName))
-                {
-                    captionate.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = captionate;
-                }
-            }
-            if (format == null)
-            {
-                var ultech130 = new Ultech130();
-                if (ultech130.IsMine(null, fileName))
-                {
-                    ultech130.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = ultech130;
-                }
-            }
-            if (format == null)
-            {
-                var nciCaption = new NciCaption();
-                if (nciCaption.IsMine(null, fileName))
-                {
-                    nciCaption.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = nciCaption;
-                }
-            }
-            if (format == null)
-            {
-                var tsb4 = new TSB4();
-                if (tsb4.IsMine(null, fileName))
-                {
-                    tsb4.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = tsb4;
-                }
-            }
-            if (format == null)
-            {
-                var avidStl = new AvidStl();
-                if (avidStl.IsMine(null, fileName))
-                {
-                    avidStl.LoadSubtitle(_subtitleAlternate, null, fileName);
-                    format = avidStl;
+                    if (f.IsMine(lines, fileName))
+                    {
+                        f.LoadSubtitle(_subtitleAlternate, lines, fileName);
+                        format = f;
+                        break;
+                    }
                 }
             }
 
