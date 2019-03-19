@@ -7237,12 +7237,18 @@ namespace Nikse.SubtitleEdit.Forms
                 // actor
                 foreach (var p in _subtitle.Paragraphs)
                 {
-                    if (!string.IsNullOrEmpty(p.Actor) && !actors.Contains(p.Actor))
+                    if (string.IsNullOrEmpty(p.Actor))
                     {
-                        actors.Add(p.Actor);
+                        continue;
                     }
-                    actors.Sort();
+                    if (actors.Contains(p.Actor))
+                    {
+                        continue;
+                    }
+                    actors.Add(p.Actor);
                 }
+                actors.Sort();
+
                 setActorForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
                 foreach (var actor in actors)
                 {
