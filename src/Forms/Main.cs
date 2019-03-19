@@ -7211,7 +7211,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
             List<string> actors = null;
-            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo)) && SubtitleListview1.SelectedItems.Count > 0)
+            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 actors = new List<string>();
                 toolStripMenuItemWebVTT.Visible = false;
@@ -7408,18 +7408,43 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemWebVTT.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTRemoveVoices, null, WebVTTRemoveVoices);
                 }
             }
-            else if ((format.Name == "Nuendo" && SubtitleListview1.SelectedItems.Count > 0))
+            else if (formatType == typeof(CsvNuendo) && SubtitleListview1.SelectedItems.Count > 0)
             {
-                toolStripMenuItemWebVTT.Visible = false;
-                var styles = GetNuendoStyles();
-                setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
-                foreach (var style in styles)
+                // characters
+                actors = GetNuendoStyles();
+                setActorForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
+                foreach (var character in actors)
                 {
-                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, NuendoSetStyle);
+                    if (string.IsNullOrEmpty(character))
+                    {
+                        continue;
+                    }
+                    if (actors.Contains(character))
+                    {
+                        continue;
+                    }
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(character, null, NuendoSetStyle);
                 }
-                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                actors.Sort();
+
+                if (actors.Count > 0)
+                {
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(tss);
+                }
+                setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.NewActor, null, SetNewActor);
+                if (actors.Count > 0)
+                {
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.RemoveActors, null, RemoveActors);
+                }
+
                 toolStripMenuItemAssStyles.Visible = false;
-                setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.NuendoSetStyle;
+                toolStripMenuItemWebVTT.Visible = false;
+                toolStripMenuItemSubStationAlpha.Visible = false;
+                setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+
+                setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.NuendoSetStyle;
             }
             else
             {
