@@ -2698,7 +2698,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (f.IsMine(lines, fileName))
                     {
-                        f.LoadSubtitle(_subtitle, null, fileName);
+                        f.LoadSubtitle(_subtitle, lines, fileName);
                         _oldSubtitleFormat = f;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
