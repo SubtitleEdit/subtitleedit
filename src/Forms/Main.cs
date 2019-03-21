@@ -10917,29 +10917,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                int i = 0;
-                string s;
-                bool useLanguage = false;
-                var language = "en";
-                if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewText)
+                string language = string.Empty;
+                if (Configuration.Settings.Tools.UseNoLineBreakAfter && (tb == textBoxListViewText || tb == textBoxListViewTextAlternate))
                 {
-                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                    useLanguage = true;
+                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(tb == textBoxListViewText ? _subtitle : _subtitleAlternate);
                 }
-                else if (Configuration.Settings.Tools.UseNoLineBreakAfter && tb == textBoxListViewTextAlternate)
-                {
-                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
-                    useLanguage = true;
-                }
-                if (useLanguage)
-                {
-                    s = Utilities.AutoBreakLine(tb.Text, language);
-                }
-                else
-                {
-                    s = Utilities.AutoBreakLine(tb.Text);
-                }
+                string s = Utilities.AutoBreakLine(tb.Text, language);
 
+                int i = 0;
                 while (i < textCaretPos && i < s.Length)
                 {
                     var ch = s[i];
