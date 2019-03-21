@@ -798,8 +798,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        bool skip = CheckSkipFilter(fileName, format, sub);
-                        if (skip)
+                        if (ShouldSkipFile(fileName, format, sub))
                         {
                             item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.FilterSkipped;
                         }
@@ -1023,41 +1022,24 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
+        private bool ShouldSkipFile(string fileName, SubtitleFormat format, Subtitle sub)
         {
-            bool skip = false;
-            if (comboBoxFilter.SelectedIndex == 1)
+            switch (comboBoxFilter.SelectedIndex)
             {
-                if (format != null && format.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName))
-                {
-                    skip = true;
-                }
+                case 0: // don't skip file
+                    return false;
+
+                case 1: // skip if file has boom
+                    return (format?.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName));
+
+                case 2: // skip if doesn't have lines with more than two lines
+                    return sub.Paragraphs.All(p => Utilities.GetNumber0To7FromUserName(p.Text) < 2);
+
+                case 3 when !string.IsNullOrWhiteSpace(textBoxFilter.Text): // skip if all paragraphs dont meet the criteria
+                    return sub.Paragraphs.All(p => p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal) == false);
             }
-            else if (comboBoxFilter.SelectedIndex == 2)
-            {
-                skip = true;
-                foreach (Paragraph p in sub.Paragraphs)
-                {
-                    if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
-                    {
-                        skip = false;
-                        break;
-                    }
-                }
-            }
-            else if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
-            {
-                skip = true;
-                foreach (Paragraph p in sub.Paragraphs)
-                {
-                    if (p.Text != null && p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal))
-                    {
-                        skip = false;
-                        break;
-                    }
-                }
-            }
-            return skip;
+
+            return true; // skip by default. all the filters must be handled inside switch
         }
 
         private void IncrementAndShowProgress()
