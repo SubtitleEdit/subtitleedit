@@ -17,15 +17,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
-        private static string EncodeTimeCode(TimeCode ts)
-        {
-            if (ts.Hours == 0 && ts.Minutes == 0 && ts.Seconds == 0)
-            {
-                return string.Format("{0:0}.{1:000}", ts.Seconds, ts.Milliseconds);
-            }
-            return string.Format("{0:0}:{1:00}.{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //59.874 : 1:00.113 : Toa*
@@ -71,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             if (parts.Length == 4)
             {
