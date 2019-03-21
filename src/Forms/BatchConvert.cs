@@ -575,15 +575,9 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = 0;
             _errors = 0;
             _abort = false;
-            var worker1 = new BackgroundWorker();
-            var worker2 = new BackgroundWorker();
-            var worker3 = new BackgroundWorker();
-            worker1.DoWork += DoThreadWork;
-            worker1.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker2.DoWork += DoThreadWork;
-            worker2.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker3.DoWork += DoThreadWork;
-            worker3.RunWorkerCompleted += ThreadWorkerCompleted;
+            var worker1 = SpawnWorker();
+            var worker2 = SpawnWorker();
+            var worker3 = SpawnWorker();
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
@@ -1724,6 +1718,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private BackgroundWorker SpawnWorker()
+        {
+            var backgroundWorker = new BackgroundWorker();
+            backgroundWorker.RunWorkerCompleted += ThreadWorkerCompleted;
+            backgroundWorker.DoWork += DoThreadWork;
+
+            return backgroundWorker;
         }
     }
 }
