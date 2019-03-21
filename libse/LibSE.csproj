@@ -196,6 +196,7 @@
     <Compile Include="PlainTextImporter.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />
+    <Compile Include="SubtitleFormats\PowerkaraokeText.cs" />
     <Compile Include="SubtitleFormats\GooglePlayJson.cs" />
     <Compile Include="SubtitleFormats\OgmChapters.cs" />
     <Compile Include="SubtitleFormats\JsonType14.cs" />
