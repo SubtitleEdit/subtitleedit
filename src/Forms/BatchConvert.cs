@@ -1056,12 +1056,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void IncrementAndShowProgress()
         {
-            if (progressBar1.Value < progressBar1.Maximum)
+            if (progressBar1.Value + 1 >= progressBar1.Maximum)
             {
-                progressBar1.Value++;
+                return;
             }
-
-            TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
+            TaskbarList.SetProgressValue(Handle, ++progressBar1.Value, progressBar1.Maximum);
             labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
         }
 
