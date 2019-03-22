@@ -3234,6 +3234,7 @@
     <RegEx find="azać" replaceWith="azat ć" />
     <RegEx find="atrać" replaceWith="atrat ć" />
     <RegEx find="aterać" replaceWith="atjerat ć" />
+    <RegEx find="atž" replaceWith="taž" />
     <RegEx find="(?&lt;!s)avešć" replaceWith="avest ć" />
     <RegEx find="aviknuće" replaceWith="aviknut će" />
     <RegEx find="avirin" replaceWith="abirin" />
@@ -3253,6 +3254,7 @@
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="cjenil" replaceWith="cijenil" />
     <RegEx find="ćnot" replaceWith="ćnost" />
+    <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
@@ -3290,6 +3292,7 @@
     <RegEx find="(?&lt;!o)formiš" replaceWith="formiraj" />
     <RegEx find="fi(sa|še)" replaceWith="fira" />
     <RegEx find="fiskov" replaceWith="fiscir" />
+    <RegEx find="frm" replaceWith="form" />
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="grišć" replaceWith="grist ć" />
