@@ -147,27 +147,28 @@ namespace Nikse.SubtitleEdit.Forms
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
 
-                // be sure to match frames with movie
-                if (_inputSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
-                {
-                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
-                    {
-                        _inputSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
-                        LoadAndShowOriginalSubtitle();
-                        FrameRateChanged = true;
-                    }
-                }
-                if (_inputAlternateSubtitle != null && _inputAlternateSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
-                {
-                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
-                    {
-                        _inputAlternateSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
-                        LoadAndShowOriginalSubtitle();
-                        FrameRateChanged = true;
-                    }
-                }
+                // ensure time code is calculate from frame from both subtitles
+                EnsureTranscodeFromFrame(_inputSubtitle);
+                EnsureTranscodeFromFrame(_inputAlternateSubtitle);
+
+                LoadAndShowOriginalSubtitle();
 
                 UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, MediaPlayerStart, VideoStartLoaded, VideoStartEnded);
+            }
+        }
+
+        private void EnsureTranscodeFromFrame(Subtitle subtitle)
+        {
+            if (subtitle == null || !subtitle.WasLoadedWithFrameNumbers)
+            {
+                return;
+            }
+
+            // frame based subtitles like MicroDVD
+            if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
+            {
+                subtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
+                FrameRateChanged = true;
             }
         }
 
