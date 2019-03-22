@@ -10964,70 +10964,83 @@ namespace Nikse.SubtitleEdit.Forms
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
             textCaretPos -= numberOfNewLines;
 
+            MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+            // UNDONE: How to make history item for _subtitleAlternate?
+
+            bool isTranslationModeOn = _subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-
                 SubtitleListview1.BeginUpdate();
+                bool isPhantomMain = true;
+                bool isPhantomAlternate = true;
+
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(index);
-                    if (removeNewLineOnly)
+                    string text = removeNewLineOnly ? p.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(p.Text);
+
+                    // only update in change
+                    if (p.Text.Length != text.Length)
                     {
-                        p.Text = p.Text.Replace(Environment.NewLine, string.Empty);
-                    }
-                    else
-                    {
-                        p.Text = Utilities.UnbreakLine(p.Text);
+                        p.Text = text;
+                        SubtitleListview1.SetText(index, p.Text);
+                        isPhantomMain = false;
                     }
 
-                    SubtitleListview1.SetText(index, p.Text);
-
-                    if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (!isTranslationModeOn)
                     {
-                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
-                        if (original != null)
+                        continue;
+                    }
+
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        text = removeNewLineOnly ? original.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(original.Text);
+                        if (original.Text.Length != text.Length)
                         {
-                            if (removeNewLineOnly)
-                            {
-                                original.Text = original.Text.Replace(Environment.NewLine, string.Empty);
-                            }
-                            else
-                            {
-                                original.Text = Utilities.UnbreakLine(original.Text);
-                            }
-
+                            original.Text = text;
                             SubtitleListview1.SetAlternateText(index, original.Text);
+                            isPhantomAlternate = false;
                         }
                     }
                 }
+
+                // remove phantom history in case of no change
+                if (isPhantomMain)
+                {
+                    _subtitle.HistoryItems.RemoveAt(_subtitle.HistoryItems.Count - 1);
+                }
+                /* uncomment if _subtitleAlternate also generated history items
+                if (isPhantomAlternate)
+                {
+                    _subtitleAlternate.HistoryItems.RemoveAt(_subtitleAlternate.HistoryItems.Count - 1);
+                }*/
+
                 SubtitleListview1.EndUpdate();
                 RefreshSelectedParagraph();
             }
             else
             {
-                var fixedText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewText.Text);
-                var makeHistory = textBoxListViewText.Text != fixedText;
-                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                string unbreakText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewText.Text);
+                if (unbreakText.Length != textBoxListViewText.Text.Length)
                 {
-                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
-                    if (!makeHistory)
-                    {
-                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
-                    }
-
-                    if (makeHistory)
-                    {
-                        MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-                        textBoxListViewText.Text = fixedText;
-                    }
-
-                    textBoxListViewTextAlternate.Text = alternateFixedText;
+                    textBoxListViewText.Text = unbreakText;
                 }
-                else if (makeHistory)
+                else
                 {
-                    MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-                    textBoxListViewText.Text = fixedText;
+                    _subtitle.HistoryItems.RemoveAt(_subtitle.HistoryItems.Count - 1);
+                }
+                if (isTranslationModeOn)
+                {
+                    unbreakText = removeNewLineOnly ? textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
+                    if (unbreakText.Length != textBoxListViewTextAlternate.Text.Length)
+                    {
+                        textBoxListViewTextAlternate.Text = unbreakText;
+                    }
+                    else
+                    {
+                        _subtitleAlternate.HistoryItems.RemoveAt(_subtitleAlternate.HistoryItems.Count - 1);
+                    }
                 }
             }
 
