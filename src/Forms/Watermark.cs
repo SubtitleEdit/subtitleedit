@@ -160,9 +160,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 indices.Sort();
                 int j = 0;
+                var sb = new StringBuilder();
                 foreach (byte b in buffer)
                 {
-                    StringBuilder sb = new StringBuilder();
                     Paragraph p = subtitle.Paragraphs[indices[j]];
                     sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
@@ -180,6 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     j++;
+                    sb.Clear();
                 }
             }
         }
