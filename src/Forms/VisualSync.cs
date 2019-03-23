@@ -460,28 +460,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var fixOverlappingDisplayTimes = new FixOverlappingDisplayTimes();
             // fix overlapping time codes
-            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputSubtitle.WasLoadedWithFrameNumbers };
-            foreach (Paragraph p in _paragraphs)
-            {
-                tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-            }
-
-            new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
-            _paragraphs = tmpSubtitle.Paragraphs;
-
-            // fix overlapping time codes for alternate subtitle (translation)
-            if (_inputAlternateSubtitle != null)
-            {
-                tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputAlternateSubtitle.WasLoadedWithFrameNumbers };
-                foreach (Paragraph p in _paragraphsAlternate)
-                {
-                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                }
-
-                new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
-                _paragraphsAlternate = tmpSubtitle.Paragraphs;
-            }
+            FixOverlapping(_paragraphs, fixOverlappingDisplayTimes);
+            FixOverlapping(_paragraphsAlternate, fixOverlappingDisplayTimes); // translation 
 
             // update comboboxes
             int startSaveIdx = comboBoxStartTexts.SelectedIndex;
@@ -492,6 +474,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelSyncDone.Text = _language.SynchronizationDone;
             _timerHideSyncLabel.Start();
+        }
+
+        private void FixOverlapping(List<Paragraph> paragraphs, FixOverlappingDisplayTimes fixOverlappingDisplayTimes)
+        {
+            if (paragraphs == null || paragraphs.Count == 0)
+            {
+                return;
+            }
+            // fix overlapping time codes
+            var tempSub = new Subtitle(_paragraphs)
+            {
+                WasLoadedWithFrameNumbers = _inputSubtitle.WasLoadedWithFrameNumbers
+            };
+            fixOverlappingDisplayTimes.Fix(tempSub, new EmptyFixCallback());
         }
 
         private void GoBackSeconds(double seconds, VideoPlayerContainer mediaPlayer)
