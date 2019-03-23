@@ -289,6 +289,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
+                if (_wavePeaks == null)
+                {
+                    return 0;
+                }
+
                 return RelativeXPositionToSeconds(Width);
             }
         }

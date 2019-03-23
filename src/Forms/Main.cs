@@ -14083,7 +14083,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         mediaPlayer.CurrentPosition = prev.StartTime.TotalSeconds;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(prev), true);
-                        if (p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
+                        if (audioVisualizer.WavePeaks != null && p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
                         {
                             audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
                         }
@@ -14101,7 +14101,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(p), true);
-                        if (p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
+                        if (audioVisualizer.WavePeaks != null && p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
                         {
                             audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
                         }
