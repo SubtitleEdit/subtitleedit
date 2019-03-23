@@ -410,30 +410,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEndTexts.EndUpdate();
         }
 
-        private void TryToFindAndOpenMovieFile(string fileNameNoExtension)
-        {
-            string movieFileName = null;
-
-            foreach (string extension in Utilities.VideoFileExtensions)
-            {
-                movieFileName = fileNameNoExtension + extension;
-                if (File.Exists(movieFileName))
-                {
-                    break;
-                }
-            }
-
-            if (movieFileName != null && File.Exists(movieFileName))
-            {
-                OpenVideo(movieFileName);
-            }
-            else if (fileNameNoExtension.Contains('.'))
-            {
-                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
-                TryToFindAndOpenMovieFile(fileNameNoExtension);
-            }
-        }
-
         private void ButtonGotoStartSubtitlePositionClick(object sender, EventArgs e)
         {
             GotoSubtitlePosition(MediaPlayerStart);
@@ -825,15 +801,34 @@ namespace Nikse.SubtitleEdit.Forms
         private void VisualSync_Load(object sender, EventArgs e)
         {
             LoadAndShowOriginalSubtitle();
-            if (!string.IsNullOrEmpty(VideoFileName) && File.Exists(VideoFileName))
+
+            if (!File.Exists(VideoFileName))
             {
-                OpenVideo(VideoFileName);
-            }
-            else if (!string.IsNullOrEmpty(_subtitleFileName))
-            {
-                TryToFindAndOpenMovieFile(Path.GetDirectoryName(_subtitleFileName) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(_subtitleFileName));
+                string parentDir = Path.GetDirectoryName(_subtitleFileName);
+
+                // generate video file from subtitle file
+                string guessPattern = Path.Combine(parentDir, Path.GetFileNameWithoutExtension(_subtitleFileName));
+
+                // try combining subtitle file name with all video extension in order to find video file
+                foreach (string extension in Utilities.VideoFileExtensions)
+                {
+                    VideoFileName = guessPattern + extension;
+
+                    // video file found with one of the guessed extension
+                    if (File.Exists(VideoFileName))
+                    {
+                        break;
+                    }
+                }
+                // foobar.en.srt => foobar.mp4; ignore
+                //if (fileNameNoExtension.Contains('.'))
+                //{
+                //    fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
+                //    TryToFindAndOpenMovieFile(fileNameNoExtension);
+                //}
             }
 
+            OpenVideo(VideoFileName);
             FormVisualSync_Resize(null, null);
         }
 
