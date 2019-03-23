@@ -4,13 +4,13 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class PowerkaraokeText : SubtitleFormat
+    public class KaraokeCdgCreatorText : SubtitleFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+(:\d+){0,1}\.\d+ : \d+(:\d+){0,1}\.\d+ : .+", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
-        public override string Name => "Powerkaraoke text";
+        public override string Name => "Karaoke CDG Creator text";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -34,11 +34,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     char[] splitChars = { ':', '.', ',' };
                     string[] startParts = start.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     string[] endParts = end.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
-                    if ((startParts.Length >= 2 && startParts.Length <= 4) && (endParts.Length >= 2 && endParts.Length <= 4))
+                    if (startParts.Length >= 2 && startParts.Length <= 4 && (endParts.Length >= 2 && endParts.Length <= 4))
                     {
                         try
                         {
-                            string text = line.Remove(0, temp[0].Length + temp[1].Length).Trim().TrimStart(':');
+                            string text = line.Remove(0, temp[0].Length + temp[1].Length + 6).Trim().TrimStart('\0');
                             text = text.Replace("\\n", Environment.NewLine);
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                             subtitle.Paragraphs.Add(p);
@@ -59,6 +59,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            // merge lines
+            int i = 0;
+            while (i < subtitle.Paragraphs.Count - 1)
+            {
+                p = subtitle.Paragraphs[i];
+                var next = subtitle.Paragraphs[i + 1];
+                if (next.StartTime.TotalMilliseconds - 1000 < p.EndTime.TotalMilliseconds &&
+                    !(next.Text.StartsWith(Environment.NewLine, StringComparison.Ordinal) || p.Text.EndsWith(Environment.NewLine, StringComparison.Ordinal)))
+                {
+                    p.Text += " " + next.Text;
+                    p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
+                    subtitle.Paragraphs.RemoveAt(i + 1);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            // remove "*" (syllable separator) and trim 
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.Text = paragraph.Text.Replace("* ", string.Empty).RemoveChar('*').Trim();
+            }
+
             subtitle.Renumber();
         }
 
