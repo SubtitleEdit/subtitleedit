@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose();
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 DoMpvCommand("quit");
             }
 
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
     }

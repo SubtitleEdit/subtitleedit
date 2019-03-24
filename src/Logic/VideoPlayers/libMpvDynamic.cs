@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose();
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -603,7 +603,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         protected virtual void Dispose(bool disposing)
         {
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
     }
 }

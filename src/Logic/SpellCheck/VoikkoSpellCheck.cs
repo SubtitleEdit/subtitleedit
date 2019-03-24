@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             Dispose(false);
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             {
                 //ReleaseManagedResources();
             }
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
     }
