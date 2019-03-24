@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             Dispose(false);
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             if (_hunspellHandle != IntPtr.Zero)
             {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             {
                 //ReleaseManagedResources();
             }
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
     }
