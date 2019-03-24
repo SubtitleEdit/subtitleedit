@@ -1236,6 +1236,8 @@ $HorzAlign          =   Center
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
+        public string MainTranslateGoogleIt { get; set; }
+        public string MainTranslateGoogleTranslate { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -5490,6 +5492,18 @@ $HorzAlign          =   Center
                     settings.Shortcuts.WaveformToggleSceneChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTranslateGoogleIt");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainTranslateGoogleIt = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainTranslateGoogleTranslate");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainTranslateGoogleTranslate = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
                 {
@@ -5679,7 +5693,7 @@ $HorzAlign          =   Center
             }
 
             return settings;
-        }        
+        }
 
         private static void CustomSerialize(string fileName, Settings settings)
         {
@@ -6438,6 +6452,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
+                textWriter.WriteElementString("MainTranslateGoogleIt", settings.Shortcuts.MainTranslateGoogleIt);
+                textWriter.WriteElementString("MainTranslateGoogleTranslate", settings.Shortcuts.MainTranslateGoogleTranslate);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
                 textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
                 textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
