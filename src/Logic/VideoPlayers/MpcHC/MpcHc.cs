@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
     public class MpcHc : VideoPlayer, IDisposable
     {
+        private readonly object _locker = new object();
+
         private const string ModePlay = "0";
         private const string ModePause = "1";
         private string _playMode = string.Empty;
@@ -437,7 +439,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         {
             try
             {
-                lock (this)
+                lock (_locker)
                 {
                     if (_mpcHandle != IntPtr.Zero)
                     {
