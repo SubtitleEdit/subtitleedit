@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         public override event EventHandler OnVideoEnded;
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -497,7 +497,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     }
                     _startInfo = null;
                 }
-                ReleaseUnmangedResources();
+                ReleaseUnmanagedResources();
             }
             catch (Exception exception)
             {
