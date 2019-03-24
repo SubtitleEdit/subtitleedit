@@ -252,6 +252,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformGoToPreviousSceneChange = Keys.None;
         private Keys _waveformGoToNextSceneChange = Keys.None;
         private Keys _waveformToggleSceneChange = Keys.None;
+        private Keys _mainTranslateGoogleIt = Keys.None;
+        private Keys _mainTranslateGoogleTranslate = Keys.None;
         private Keys _mainTranslateCustomSearch1 = Keys.None;
         private Keys _mainTranslateCustomSearch2 = Keys.None;
         private Keys _mainTranslateCustomSearch3 = Keys.None;
@@ -14204,7 +14206,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveWordUpDownInCurrent(false);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAutoCalcCurrentDuration == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
+            else if (_mainAutoCalcCurrentDuration == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 if (SubtitleListview1.SelectedItems.Count >= 1)
@@ -14217,7 +14219,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = false;
                 }
             }
-            else if (_mainAdjustExtendCurrentSubtitle == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
+            else if (_mainAdjustExtendCurrentSubtitle == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -14468,6 +14470,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // translate
+            else if (_mainTranslateGoogleIt == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                buttonGoogleIt_Click(null, null);
+            }
+            else if (_mainTranslateGoogleTranslate == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                buttonGoogleTranslateIt_Click(null, null);
+            }
             else if (_mainTranslateCustomSearch1 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
@@ -15159,14 +15171,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RunCustomSearch(string url)
         {
-            if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(textBoxSearchWord.Text))
+            if (!string.IsNullOrEmpty(url))
             {
-                if (url.Contains("{0}"))
+                RunTranslateSearch((text) =>
                 {
-                    url = string.Format(url, Utilities.UrlEncode(textBoxSearchWord.Text));
-                }
-
-                System.Diagnostics.Process.Start(url);
+                    url = string.Format(url, Utilities.UrlEncode(text));
+                    System.Diagnostics.Process.Start(url);
+                });
             }
         }
 
@@ -18344,15 +18355,42 @@ namespace Nikse.SubtitleEdit.Forms
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
+        public void RunTranslateSearch(Action<string> act)
+        {
+            var text = textBoxSearchWord.Text;
+            if (tabControlButtons.SelectedTab != tabPageTranslate)
+            {
+                var tb = GetFocusedTextBox();
+                if (tb.SelectionLength == 0)
+                {
+                    text = tb.Text;
+                }
+                else
+                {
+                    text = tb.SelectedText;
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                act(text);
+            }
+        }
+
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            RunTranslateSearch((text) =>
+            {
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+            });
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
         {
-            string languageId = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-            System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            RunTranslateSearch((text) =>
+            {
+                string languageId = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(text));
+            });
         }
 
         private void ButtonPlayCurrentClick(object sender, EventArgs e)
@@ -19107,6 +19145,8 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
 
+            _mainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
+            _mainTranslateGoogleTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate);
             _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
             _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
