@@ -854,7 +854,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override event EventHandler OnVideoEnded;
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -924,7 +924,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 Application.DoEvents();
             }
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
     }
