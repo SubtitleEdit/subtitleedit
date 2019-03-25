@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j - 1] == ' ')
                         {
                             string rest = s.Substring(mid + j + 1).TrimStart();
-                            if (rest.Length > 0 && char.IsUpper(rest[0]))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]) || rest[0] == '(' || rest[0] == '[')
                             {
                                 splitPos = mid + j;
                                 break;
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (s[mid - j] == '-' && s[mid - j + 1] == ' ' && s[mid - j - 1] == ' ')
                         {
                             string rest = s.Substring(mid - j + 1).TrimStart();
-                            if (rest.Length > 0 && char.IsUpper(rest[0]))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]) || rest[0] == '[' || rest[0] == '(')
                             {
                                 if (mid - j > 5)
                                 {
@@ -649,14 +649,8 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            if (splitPos > maximumLength) // too long first line
-            {
-                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
-                {
-                    splitPos = -1;
-                }
-            }
-            else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+            // for dialog, ignore long line length
+            if (!(PossibleDialogFromSplitPosition(s, splitPos) || IsQualifiedSplitPosition(splitPos, s.Length, maximumLength)))
             {
                 splitPos = -1;
             }
@@ -695,14 +689,8 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                if (splitPos > maximumLength) // too long first line
-                {
-                    if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
-                    {
-                        splitPos = -1;
-                    }
-                }
-                else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+                // for dialogs, ignore max line length
+                if (!(PossibleDialogFromSplitPosition(s, splitPos) || IsQualifiedSplitPosition(splitPos, s.Length, maximumLength)))
                 {
                     splitPos = -1;
                 }
@@ -820,6 +808,36 @@ namespace Nikse.SubtitleEdit.Core
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             return s.TrimEnd();
+        }
+
+        private static bool IsQualifiedSplitPosition(int idx, int len, int singleLineMaxLength)
+        {
+            int maxLength = Math.Max(idx + 1, len - (idx + 1));
+            return singleLineMaxLength < maxLength;
+        }
+
+        private static bool PossibleDialogFromSplitPosition(string input, int idx)
+        {
+            // too short split position
+            if (idx - 2 <= 0)
+            {
+                return false;
+            }
+
+            // character at split position is not a hyphen
+            if (input[idx] != '-')
+            {
+                return false;
+            }
+
+            // ensure white-space before hyphen
+            if (input[idx - 1] != ' ')
+            {
+                return false;
+            }
+
+            char ch = input[idx - 2];
+            return ch == '!' || ch == '?' || ch == '.' || ch == ')' || ch == ']';
         }
 
         public static string RemoveLineBreaks(string input)
