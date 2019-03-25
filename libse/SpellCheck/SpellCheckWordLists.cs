@@ -184,7 +184,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 _useAlwaysList.Remove(oldKey.Trim());
             }
-            _skipAllList = new HashSet<string>(_skipAllList.OrderBy(p => p).ToList());
 
             foreach (KeyValuePair<string, string> kvp in _useAlwaysList)
             {
@@ -298,15 +297,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public string ReplaceAssTagsWithBlanks(string s)
         {
             int start = s.IndexOf("{\\", StringComparison.Ordinal);
-            int end = s.IndexOf('}');
-            if (start < 0 || end < 0 || end < start)
-            {
-                return s;
-            }
-
             while (start >= 0)
             {
-                end = s.IndexOf('}', start + 1);
+                int end = s.IndexOf('}', start + 1);
                 if (end < start)
                 {
                     break;
