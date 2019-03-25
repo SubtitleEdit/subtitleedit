@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void DisposeVLC(object player)
         {
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
         public override event EventHandler OnVideoLoaded;
@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose(false);
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmanagedResources()
         {
             try
             {
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _videoEndTimer = null;
                 }
             }
-            ReleaseUnmangedResources();
+            ReleaseUnmanagedResources();
         }
 
     }
