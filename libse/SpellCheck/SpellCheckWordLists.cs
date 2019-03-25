@@ -438,9 +438,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             _wordsWithDashesOrPeriods.Add(word);
 
-            var namesList = new NameList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            namesList.Add(word);
-            return true;
+            return _nameList.Add(word);
         }
 
         public bool AddUserWord(string word)
