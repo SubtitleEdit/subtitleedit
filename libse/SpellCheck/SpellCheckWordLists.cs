@@ -39,10 +39,8 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             _nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _names = _nameList.GetNames();
             var namesMultiWordList = _nameList.GetMultiNames();
-            if (Configuration.Settings.Tools.RememberUseAlwaysList)
-            {
-                LoadUseAlwaysList();
-            }
+
+            LoadUseAlwaysList();
 
             foreach (string namesItem in _names)
             {
@@ -130,9 +128,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
 
             var fileName = GetUseAlwaysListFileName();
-            var xmlDoc = new XmlDocument();
             if (File.Exists(fileName))
             {
+                var xmlDoc = new XmlDocument();
                 xmlDoc.Load(fileName);
                 var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("Pair");
                 if (xmlNodeList != null)
@@ -150,10 +148,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         }
                     }
                 }
-            }
-            else
-            {
-                xmlDoc.LoadXml("<UseAlways></UseAlways>");
             }
         }
 
