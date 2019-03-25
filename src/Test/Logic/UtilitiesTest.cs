@@ -55,6 +55,18 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakLineDialogsSingleLine()
+        {
+            string input = "- CHARLIE: Can I, uh, sit down? - Yeah, yeah. Mmm-hmm.";
+            string output = Utilities.AutoBreakLine(input, "en");
+            Assert.AreEqual("- CHARLIE: Can I, uh, sit down?\r\n- Yeah, yeah. Mmm-hmm.", output);
+
+            string input2 = "- Let go of me! You're touching my buttocks! - (SHUSHES)";
+            string output2 = Utilities.AutoBreakLine(input2, "en");
+            Assert.AreEqual("- Let go of me! You're touching my buttocks!\r\n- (SHUSHES)", output2);
+        }
+
+        [TestMethod]
         public void AutoBreakLine5DoNoBreakAtArabicDialogue()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
