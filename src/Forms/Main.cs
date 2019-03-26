@@ -10257,32 +10257,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (insertDash)
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
-                                if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
-                                {
-                                    original.Text = s;
-                                }
-                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
-                                {
-                                    original.Text = s.Insert(3, "- ");
-                                }
-                                else
-                                {
-                                    original.Text = "- " + s;
-                                }
+                                original.Text = InsertStartDash(s);
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
-                                {
-                                    original.Text += Environment.NewLine + s;
-                                }
-                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
-                                {
-                                    original.Text += Environment.NewLine + s.Insert(3, "- ");
-                                }
-                                else
-                                {
-                                    original.Text += Environment.NewLine + "- " + s;
-                                }
+                                original.Text += Environment.NewLine + InsertStartDash(s);
 
                                 original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             }
@@ -10335,32 +10313,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertDash)
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
-                    {
-                        currentParagraph.Text = s;
-                    }
-                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
-                    {
-                        currentParagraph.Text = s.Insert(3, "- ");
-                    }
-                    else
-                    {
-                        currentParagraph.Text = "- " + s;
-                    }
+                    currentParagraph.Text = InsertStartDash(s);
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
-                    {
-                        currentParagraph.Text += Environment.NewLine + s;
-                    }
-                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
-                    {
-                        currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
-                    }
-                    else
-                    {
-                        currentParagraph.Text += Environment.NewLine + "- " + s;
-                    }
+                    currentParagraph.Text += Environment.NewLine + InsertStartDash(s);
 
                     currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                 }
@@ -10434,6 +10390,32 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
+        }
+
+        private static string InsertStartDash(string input)
+        {
+            string pre = string.Empty;
+
+            string s = input;
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.Contains('}'))
+            {
+                var idx = s.IndexOf('}') + 1;
+                pre = s.Substring(0, idx);
+                s = s.Remove(0, idx);
+            }
+
+            while (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && s.Contains('>')))
+            {
+                var idx = s.IndexOf('>') + 1;
+                pre += s.Substring(0, idx);
+                s = s.Remove(0, idx);
+            }
+
+            if (s.StartsWith('-'))
+            {
+                return input;
+            }
+            return pre + "- " + s.TrimStart();
         }
 
         private void UpdateStartTimeInfo(TimeCode startTime)
