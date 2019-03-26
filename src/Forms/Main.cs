@@ -8599,23 +8599,43 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                MakeHistoryForUndo(_language.Controls.AutoBreak);
+                bool historyAdded = false;
                 SubtitleListview1.BeginUpdate();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(index);
                     if (p != null)
                     {
-                        p.Text = Utilities.AutoBreakLine(p.Text, language);
-                        SubtitleListview1.SetText(index, p.Text);
+                        var oldText = p.Text;
+                        var newText = Utilities.AutoBreakLine(p.Text, language);
+                        if (oldText != newText)
+                        {
+                            if (!historyAdded)
+                            {
+                                historyAdded = true;
+                                MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                            }
+                            p.Text = newText;
+                            SubtitleListview1.SetText(index, p.Text);
+                        }
 
                         if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                         {
                             var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = Utilities.AutoBreakLine(original.Text, languageOriginal);
-                                SubtitleListview1.SetAlternateText(index, original.Text);
+                                oldText = original.Text;
+                                newText = Utilities.AutoBreakLine(original.Text, language);
+                                if (oldText != newText)
+                                {
+                                    if (!historyAdded)
+                                    {
+                                        historyAdded = true;
+                                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
+                                    }
+                                    original.Text = newText;
+                                    SubtitleListview1.SetAlternateText(index, original.Text);
+                                }
                             }
                         }
                         SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
@@ -10947,41 +10967,60 @@ namespace Nikse.SubtitleEdit.Forms
             var startText = textBoxListViewText.Text.Substring(0, textCaretPos);
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
             textCaretPos -= numberOfNewLines;
+            bool historyAdded = false;
 
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
-
                 SubtitleListview1.BeginUpdate();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(index);
+                    var oldText = p.Text;
+                    var newText = p.Text;
                     if (removeNewLineOnly)
                     {
-                        p.Text = p.Text.Replace(Environment.NewLine, string.Empty);
+                        newText = newText.Replace(Environment.NewLine, string.Empty);
                     }
                     else
                     {
-                        p.Text = Utilities.UnbreakLine(p.Text);
+                        newText = Utilities.UnbreakLine(newText);
                     }
-
-                    SubtitleListview1.SetText(index, p.Text);
+                    if (oldText != newText)
+                    {
+                        if (!historyAdded)
+                        {
+                            historyAdded = true;
+                            MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+                        }
+                        p.Text = newText;
+                        SubtitleListview1.SetText(index, p.Text);
+                    }
 
                     if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
+                            oldText = original.Text;
+                            newText = original.Text;
                             if (removeNewLineOnly)
                             {
-                                original.Text = original.Text.Replace(Environment.NewLine, string.Empty);
+                                newText = newText.Replace(Environment.NewLine, string.Empty);
                             }
                             else
                             {
-                                original.Text = Utilities.UnbreakLine(original.Text);
+                                newText = Utilities.UnbreakLine(newText);
                             }
-
-                            SubtitleListview1.SetAlternateText(index, original.Text);
+                            if (oldText != newText)
+                            {
+                                if (!historyAdded)
+                                {
+                                    historyAdded = true;
+                                    MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+                                }
+                                original.Text = newText;
+                                SubtitleListview1.SetAlternateText(index, original.Text);
+                            }
                         }
                     }
                 }
