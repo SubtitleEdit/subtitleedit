@@ -588,6 +588,7 @@ namespace Nikse.SubtitleEdit.Core
                 TextLeftJustifiedText = "Left justified text",
                 TextCenteredText = "Centered text",
                 TextRightJustifiedText = "Right justified text",
+                UseBoxForOneNewLine = "Check 'Use box around text' for only one new-line"
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke

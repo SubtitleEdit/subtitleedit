@@ -68,10 +68,12 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMarginTop.Left = tempW;
             numericUpDownMarginBottom.Left = tempW;
             numericUpDownNewLineRows.Left = tempW;
+            labelUseBox.Left = numericUpDownNewLineRows.Left + numericUpDownNewLineRows.Width + 9;
             checkBoxTeletextBox.Text = language.UseBox;
             checkBoxTeletextDoubleHeight.Text = language.DoubleHeight;
 
             labelErrors.Text = language.Errors;
+            labelUseBox.Text = language.UseBoxForOneNewLine;
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -482,6 +484,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxLanguageCode_TextChanged(object sender, EventArgs e)
         {
             labelLanguageCodeFriendlyName.Text = EbuLanguageCode.GetLanguageFromCode(textBoxLanguageCode.Text);
+        }
+
+        private void numericUpDownNewLineRows_ValueChanged(object sender, EventArgs e)
+        {
+            labelUseBox.Visible = numericUpDownNewLineRows.Value == 1 && !checkBoxTeletextBox.Checked;
+        }
+
+        private void checkBoxTeletextBox_CheckedChanged(object sender, EventArgs e)
+        {
+            labelUseBox.Visible = numericUpDownNewLineRows.Value == 1 && !checkBoxTeletextBox.Checked;
         }
     }
 }
