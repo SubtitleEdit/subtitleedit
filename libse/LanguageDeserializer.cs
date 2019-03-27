@@ -1075,6 +1075,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/TextRightJustifiedText":
                     language.EbuSaveOptions.TextRightJustifiedText = reader.Value;
                     break;
+                case "EbuSaveOptions/UseBoxForOneNewLine":
+                    language.EbuSaveOptions.UseBoxForOneNewLine = reader.Value;
+                    break;
                 case "EffectKaraoke/Title":
                     language.EffectKaraoke.Title = reader.Value;
                     break;

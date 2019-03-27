@@ -460,6 +460,7 @@
             public string TextLeftJustifiedText { get; set; }
             public string TextCenteredText { get; set; }
             public string TextRightJustifiedText { get; set; }
+            public string UseBoxForOneNewLine { get; set; }            
         }
 
         public class EffectKaraoke

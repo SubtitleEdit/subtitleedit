@@ -413,6 +413,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
     <TextCenteredText>Centered text</TextCenteredText>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
+    <UseBoxForOneNewLine>Check 'Use box around text' for only one new-line</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>

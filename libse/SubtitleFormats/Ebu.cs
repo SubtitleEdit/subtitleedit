@@ -482,7 +482,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
                 {
-                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0b, 0x0b }); // 0a==end box, 0b==start box
+                    newline = "\u000a\u000a" + 
+                              string.Empty.PadLeft(Configuration.Settings.SubtitleSettings.EbuStlNewLineRows, '\u008a') + 
+                              encoding.GetString(new byte[] {  0x0b, 0x0b }); // 0a==end box, 0b==start box
                 }
                 else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
                 {

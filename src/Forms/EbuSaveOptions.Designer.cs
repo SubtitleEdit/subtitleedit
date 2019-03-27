@@ -87,6 +87,7 @@
             this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
             this.groupBoxVerticalPosition = new System.Windows.Forms.GroupBox();
+            this.labelUseBox = new System.Windows.Forms.Label();
             this.numericUpDownNewLineRows = new System.Windows.Forms.NumericUpDown();
             this.labelNewLineRows = new System.Windows.Forms.Label();
             this.labelMarginTop = new System.Windows.Forms.Label();
@@ -725,6 +726,7 @@
             this.groupBoxVerticalPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVerticalPosition.Controls.Add(this.labelUseBox);
             this.groupBoxVerticalPosition.Controls.Add(this.numericUpDownNewLineRows);
             this.groupBoxVerticalPosition.Controls.Add(this.labelNewLineRows);
             this.groupBoxVerticalPosition.Controls.Add(this.labelMarginTop);
@@ -737,6 +739,17 @@
             this.groupBoxVerticalPosition.TabIndex = 46;
             this.groupBoxVerticalPosition.TabStop = false;
             this.groupBoxVerticalPosition.Text = "Vertical position";
+            // 
+            // labelUseBox
+            // 
+            this.labelUseBox.AutoSize = true;
+            this.labelUseBox.ForeColor = System.Drawing.Color.Red;
+            this.labelUseBox.Location = new System.Drawing.Point(318, 80);
+            this.labelUseBox.Name = "labelUseBox";
+            this.labelUseBox.Size = new System.Drawing.Size(240, 13);
+            this.labelUseBox.TabIndex = 73;
+            this.labelUseBox.Text = "Check \'Use box around text\' for only one new-line";
+            this.labelUseBox.Visible = false;
             // 
             // numericUpDownNewLineRows
             // 
@@ -754,6 +767,7 @@
             0,
             0,
             0});
+            this.numericUpDownNewLineRows.ValueChanged += new System.EventHandler(this.numericUpDownNewLineRows_ValueChanged);
             // 
             // labelNewLineRows
             // 
@@ -839,6 +853,7 @@
             this.checkBoxTeletextBox.TabIndex = 0;
             this.checkBoxTeletextBox.Text = "Use box around text";
             this.checkBoxTeletextBox.UseVisualStyleBackColor = true;
+            this.checkBoxTeletextBox.CheckedChanged += new System.EventHandler(this.checkBoxTeletextBox_CheckedChanged);
             // 
             // comboBoxJustificationCode
             // 
@@ -1008,5 +1023,6 @@
         private System.Windows.Forms.Label labelColorRequiresTeletext;
         private System.Windows.Forms.Button buttonChooseLanguageCode;
         private System.Windows.Forms.Label labelLanguageCodeFriendlyName;
+        private System.Windows.Forms.Label labelUseBox;
     }
 }
