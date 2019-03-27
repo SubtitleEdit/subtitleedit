@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private static readonly string[] ExpectedStrings = { ". ", "! ", "? " };
         public string RemoveColon(string text)
         {
-            if (!(Settings.RemoveTextBeforeColon && text.Contains(':')))
+            if (!(Settings.RemoveTextBeforeColon && HasQualifedColon(text)))
             {
                 return text;
             }
@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         var firstLine = newText.Remove(indexOfNewLine);
                         newText = firstLine + Environment.NewLine + second;
 
-                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') && 
+                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') &&
                             !HtmlUtil.RemoveHtmlTags(newText, true).StartsWith('-'))
                         {
                             firstLine = HtmlUtil.RemoveHtmlTags(firstLine, true);
@@ -575,6 +575,35 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             return preAssTag + newText;
+        }
+
+        private static bool HasQualifedColon(string input)
+        {
+            int len = input.Length;
+            for (int i = len - 1; i >= 0; i--)
+            {
+                char ch = input[i];
+                if (ch != ':')
+                {
+                    continue;
+                }
+                // is qualifed if text ends wtih colon
+                if (i == len -1)
+                {
+                    return true;
+                }
+                if (i - 1 < 0 || i + 1 >= len)
+                {
+                    continue;
+                }
+                // number on both side of colon represents hour. e.g: 10:12pm
+                if (!(CharUtils.IsDigit(input[i - 1]) && CharUtils.IsDigit(input[i + 1])))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private string RemovePartialBeforeColon(string line, int indexOfColon, string newText, int count, ref bool removedInFirstLine, ref bool removedInSecondLine, ref bool remove)
