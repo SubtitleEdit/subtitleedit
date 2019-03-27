@@ -167,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.ContextMenu = null;
             }
+            checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
         }
 
         private void TextBoxFindKeyDown(object sender, KeyEventArgs e)
