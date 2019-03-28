@@ -12783,7 +12783,6 @@ namespace Nikse.SubtitleEdit.Forms
                     Encoding encoding = chooseEncoding.GetEncoding();
                     SetEncoding(Encoding.UTF8);
                     OpenSubtitle(openFileDialog1.FileName, encoding);
-                    _converted = true;
                 }
             }
         }

@@ -1446,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Core
                         ImportBluRaySupFile = "Import/OCR Blu-ray (.sup) subtitle file...",
                         ImportXSub = "Import/OCR XSub from divx/avi...",
                         ImportSubtitleFromMatroskaFile = "Import subtitle from Matroska (.mkv) file...",
-                        ImportSubtitleWithManualChosenEncoding = "Import subtitle with manual chosen encoding...",
+                        ImportSubtitleWithManualChosenEncoding = "Import subtitle with manually chosen encoding...",
                         ImportText = "Import plain text...",
                         ImportImages = "Import images...",
                         ImportTimecodes = "Import time codes...",
