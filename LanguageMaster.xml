@@ -957,7 +957,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
         <ImportXSub>Import/OCR XSub from divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Import subtitle with manual chosen encoding...</ImportSubtitleWithManualChosenEncoding>
+        <ImportSubtitleWithManualChosenEncoding>Import subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import plain text...</ImportText>
         <ImportImages>Import images...</ImportImages>
         <ImportTimecodes>Import time codes...</ImportTimecodes>

@@ -1205,7 +1205,7 @@
             // 
             this.toolStripMenuItemManualAnsi.Name = "toolStripMenuItemManualAnsi";
             this.toolStripMenuItemManualAnsi.Size = new System.Drawing.Size(330, 22);
-            this.toolStripMenuItemManualAnsi.Text = "Import subtitle with manual chosen encoding...";
+            this.toolStripMenuItemManualAnsi.Text = "Import subtitle with manually chosen encoding...";
             this.toolStripMenuItemManualAnsi.Click += new System.EventHandler(this.ToolStripMenuItemManualAnsiClick);
             // 
             // toolStripMenuItemImportText
