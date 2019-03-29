@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Plugin
 
         public string Invoke(PluginInvokeContext context)
         {
+            // load plugin into app-domain and create instance
             Assembly assembly = Assembly.Load(File.ReadAllBytes(FileName));
             string pluginTypeName = Path.GetFileNameWithoutExtension(FileName);
             Type pluginType = assembly.GetType($"{PluginController.DefaultNamespace}{pluginTypeName}");
@@ -39,6 +40,7 @@ namespace Nikse.SubtitleEdit.Plugin
 
             MethodInfo EntryPoint = pluginType.GetInterface("IPlugin").GetMethod(_entryPointName);
 
+            // invoke plugin action and get the result back
             string result = (string)EntryPoint.Invoke(instance,
                  new object[]
                  {

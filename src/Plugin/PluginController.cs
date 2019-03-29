@@ -4,24 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Plugin
 {
-    public class PluginResultEventArgs : EventArgs
-    {
-        public string Result { get; set; }
-    }
-
     internal class PluginController
     {
-        // handle plugin result from asynchronous call
-        public event EventHandler<PluginResultEventArgs> AsyncPluginResult;
-
         public PluginController(string pluginDirectory)
         {
             PluginDirectory = pluginDirectory;
@@ -72,8 +62,8 @@ namespace Nikse.SubtitleEdit.Plugin
                     }
 
                     // maps the values from *instance *plugin
-                    Plugin plugin = MapValues(instance, contractType, pluginFile);
-                    if (plugin == default)
+                    Plugin plugin = Build(instance, contractType, pluginFile);
+                    if (plugin == null)
                     {
                         continue;
                     }
@@ -83,12 +73,11 @@ namespace Nikse.SubtitleEdit.Plugin
 
                     if (ShouldInvokeOnLoad(pluginType))
                     {
+                        // TODO
+                        // the result from thesse plugin are not awaited... these plugin are intended to update the UI only
+                        // for that when accessing the controls that belong to the UI check if can Invoke..?
                         if (ShouldRunOnWorkerThread(pluginType))
                         {
-                            // TODO:
-                            // construct cancelation
-                            // handle dead-lock
-                            // when calling plugin on separated thread don't send Main.cs instance
                             Task.Factory.StartNew(() =>
                             {
                                 plugin.Invoke(invokeContext);
@@ -122,7 +111,7 @@ namespace Nikse.SubtitleEdit.Plugin
                  .Any(attr => (bool)attr.GetType().GetProperty("IsBackground")?.GetValue(attr, null));
         }
 
-        private Plugin MapValues(object instance, Type interfaceType, string fileName)
+        private Plugin Build(object instance, Type interfaceType, string fileName)
         {
             // default binding flags
             BindingFlags bindings = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
@@ -189,6 +178,7 @@ namespace Nikse.SubtitleEdit.Plugin
             {
                 File.Delete(plugin.FileName);
                 Plugins.Remove(plugin);
+                // make sure it's remove from the UI
                 // log plugin uninstalled
             }
             catch
@@ -204,12 +194,11 @@ namespace Nikse.SubtitleEdit.Plugin
             // log plugins reloaded
         }
 
-        protected void OnPluginResult(string result)
+        public void Install(Plugin plugin)
         {
-            AsyncPluginResult?.Invoke(this, new PluginResultEventArgs { Result = result });
+            Plugins.Add(plugin);
+            Reload();
         }
-
-        public void Install(Plugin plugin) => Plugins.Add(plugin);
 
         /// <summary>
         /// Return names of registered properties
