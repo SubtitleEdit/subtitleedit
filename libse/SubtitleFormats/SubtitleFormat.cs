@@ -527,5 +527,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonTypeOnlyLoad1(), new TranscriptiveJson(), new KaraokeCdgCreatorText()
             };
         }
+
+        /// <summary>
+        /// Load and return subtitle format from lines.
+        /// </summary>
+        /// <param name="lines">The lines to detect the format from.</param>
+        /// <param name="subtitle">The subtitle that will be used to load the lines into</param>
+        /// <returns>The subtitle format that matched the lines' format or default.</returns>
+        public static SubtitleFormat GetFormatFromLines(List<string> lines, Subtitle subtitle)
+        {
+            foreach (SubtitleFormat subtitleFormat in AllSubtitleFormats)
+            {
+                if (subtitleFormat.IsMine(lines, null))
+                {
+                    subtitleFormat.LoadSubtitle(subtitle, lines, null);
+                    return subtitleFormat;
+                }
+            }
+
+            return default;
+        }
     }
 }

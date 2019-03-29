@@ -33,6 +33,7 @@ using Nikse.SubtitleEdit.Forms.Networking;
 
 namespace Nikse.SubtitleEdit.Forms
 {
+    using Plugin;
 
     public sealed partial class Main : Form
     {
@@ -19187,6 +19188,47 @@ namespace Nikse.SubtitleEdit.Forms
             return null;
         }
 
+        private PluginInvokeContext GetPluginInvokeContext(Subtitle subtitle)
+        {
+            SubtitleFormat format = GetCurrentSubtitleFormat();
+            string rawText = string.Empty;
+
+            // serialize using current subtitle-format if available
+            if (format != null)
+            {
+                if (format.IsFrameBased)
+                {
+                    subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                }
+                else
+                {
+                    subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                }
+
+                rawText = subtitle.ToText(format);
+            }
+            else
+            {
+                // TODO: only read non binary file's text
+                //rawText = File.ReadAllText(_fileName);
+            }
+
+            // return the default invoke context
+            return new PluginInvokeContext
+            {
+                // TODO: when loading don't send the context to avoid deadlock and all kind problem caused by multi-thread
+                Context = this,
+                File = _fileName,
+                Video = _videoFileName,
+                SrtText = subtitle.ToText(new SubRip()),
+                Frame = Configuration.Settings.General.CurrentFrameRate,
+                UiLineBreak = Configuration.Settings.General.ListViewLineSeparatorString,
+                RawText = rawText /*File.ReadAllText(_fileName),*/
+            };
+        }
+
+        PluginController _pluginController = new PluginController(Configuration.PluginsDirectory);
+
         private void LoadPlugins()
         {
             var path = Configuration.PluginsDirectory;
@@ -19197,12 +19239,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             var pluginFiles = Directory.GetFiles(path, "*.DLL");
 
-            int filePluginCount = 0;
-            int toolsPluginCount = 0;
-            int syncPluginCount = 0;
-            int translatePluginCount = 0;
-            int spellCheckPluginCount = 0;
-
             UiUtil.CleanUpMenuItemPlugin(fileToolStripMenuItem);
             UiUtil.CleanUpMenuItemPlugin(toolsToolStripMenuItem);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSpellCheckMain);
@@ -19210,208 +19246,195 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
 
-            foreach (var pluginFileName in pluginFiles)
+            // load plugin into current app-domain
+            _pluginController.LoadPlugins(GetPluginInvokeContext(_subtitle));
+
+            var toolStripSeparator = new ToolStripSeparator();
+
+            // theme
+            UiUtil.FixFonts(toolStripSeparator);
+
+            // add plugin separator (exclude for file tool-strip-menu-item)
+            foreach (ToolStripMenuItem menuItem in new[] { toolsToolStripMenuItem, toolStripMenuItemSynchronization,
+                toolStripMenuItemSynchronization, toolStripMenuItemTranslateSelected, toolStripMenuItemSpellCheckMain })
             {
-                try
+                var latPosition = menuItem.DropDownItems.Count;
+                // already has separator at last position
+                if (latPosition == 0 || menuItem.DropDownItems[menuItem.DropDownItems.Count - 1].GetType() == typeof(ToolStripSeparator))
                 {
-                    string name, description, text, shortcut, actionType;
-                    decimal version;
-                    MethodInfo mi;
-                    GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
-                    {
-                        var item = new ToolStripMenuItem();
-                        item.Name = "Plugin" + toolsPluginCount;
-                        item.Text = text;
-                        item.Tag = pluginFileName;
-                        UiUtil.FixFonts(item);
-
-                        if (!string.IsNullOrEmpty(shortcut))
-                        {
-                            item.ShortcutKeys = UiUtil.GetKeys(shortcut);
-                        }
-
-                        if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddSeparator(filePluginCount, fileToolStripMenuItem, 2);
-                            item.Click += PluginToolClick;
-                            fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
-                            filePluginCount++;
-                        }
-                        else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddSeparator(toolsPluginCount, toolsToolStripMenuItem);
-                            item.Click += PluginToolClick;
-                            toolsToolStripMenuItem.DropDownItems.Add(item);
-                            toolsPluginCount++;
-                        }
-                        else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddSeparator(syncPluginCount, toolStripMenuItemSynchronization);
-                            item.Click += PluginToolClick;
-                            toolStripMenuItemSynchronization.DropDownItems.Add(item);
-                            syncPluginCount++;
-                        }
-                        else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddSeparator(translatePluginCount, toolStripMenuItemAutoTranslate);
-                            item.Click += PluginClickTranslate;
-                            toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
-
-                            // selected lines
-                            item = new ToolStripMenuItem();
-                            item.Name = "PluginTSL" + toolsPluginCount;
-                            item.Text = text;
-                            item.Tag = pluginFileName;
-                            UiUtil.FixFonts(item);
-                            AddSeparator(translatePluginCount, toolStripMenuItemTranslateSelected);
-                            item.Click += PluginClickTranslateSelectedLines;
-                            toolStripMenuItemTranslateSelected.DropDownItems.Add(item);
-
-                            translatePluginCount++;
-                        }
-                        else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
-                        {
-                            AddSeparator(spellCheckPluginCount, toolStripMenuItemSpellCheckMain);
-                            item.Click += PluginClickNoFormatChange;
-                            toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
-                            spellCheckPluginCount++;
-                        }
-                    }
+                    continue;
                 }
-                catch (Exception exception)
+
+                // add separator ast last position
+                menuItem.DropDownItems.Add(toolStripSeparator);
+            }
+
+            foreach (Plugin plugin in _pluginController.Plugins)
+            {
+                var tsItem = new ToolStripMenuItem()
                 {
-                    MessageBox.Show(string.Format(_language.ErrorLoadingPluginXErrorY, pluginFileName, exception.Message));
+                    Name = $"Plugin-{Guid.NewGuid()}",
+                    Text = plugin.Text,
+                    Tag = plugin,
+                };
+
+                // load shortcut is available
+                if (!string.IsNullOrEmpty(plugin.Shortcut))
+                {
+                    tsItem.ShortcutKeys = UiUtil.GetKeys(plugin.Shortcut);
                 }
+
+                // fix fonts
+                UiUtil.FixFonts(tsItem);
+
+                // set the tool-strip click handler
+                tsItem.Click += PluginClickEventHandler;
+
+                switch (plugin.ActionType)
+                {
+                    case ActionType.File:
+                        // insert the plugin before the separator above "Exit" in File menu
+                        fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, tsItem);
+                        break;
+
+                    case ActionType.Tool:
+                        toolsToolStripMenuItem.DropDownItems.Add(tsItem);
+                        break;
+
+                    case ActionType.Sync:
+                        //toolStripMenuItemSynchronization
+                        toolStripMenuItemSynchronization.DropDownItems.Add(tsItem);
+                        break;
+
+                    case ActionType.Translate:
+                        toolStripMenuItemTranslateSelected.DropDownItems.Add(tsItem);
+
+                        // build menu item that will handle translation only for selected item in listview
+                        var selItem = new ToolStripMenuItem
+                        {
+                            Name = $"PluginTSL-{Guid.NewGuid()}",
+                            Text = plugin.Text,
+                            Tag = plugin,
+                        };
+                        UiUtil.FixFonts(selItem);
+                        selItem.Click += PluginClickEventHandler;
+                        toolStripMenuItemTranslateSelected.DropDownItems.Add(selItem);
+                        break;
+
+                    case ActionType.Spellcheck:
+                        toolStripMenuItemSpellCheckMain.DropDownItems.Add(tsItem);
+                        break;
+                }
+            }
+
+            // clear futile separator
+            foreach (ToolStripMenuItem menuItem in new[] { toolsToolStripMenuItem, toolStripMenuItemSynchronization,
+                toolStripMenuItemSynchronization, toolStripMenuItemTranslateSelected, toolStripMenuItemSpellCheckMain })
+            {
+                var lastPosition = menuItem.DropDownItems.Count;
+                if (lastPosition == 0 || menuItem.DropDownItems[lastPosition - 1].GetType() != typeof(ToolStripSeparator))
+                {
+                    continue;
+                }
+
+                // remove item separator at last position when no more item is going to be added
+                menuItem.DropDownItems.RemoveAt(lastPosition - 1);
             }
         }
 
-        private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
+        private void PluginClickEventHandler(object sender, EventArgs eventArgs)
         {
-            if (pluginCount == 0)
+            var clickedMenuItem = (ToolStripMenuItem)sender;
+            var plugin = (Plugin)clickedMenuItem.Tag;
+
+            Subtitle subtitle = _subtitle;
+
+            // run actions only on selected paragraphs
+            bool selectionOnly = plugin.ActionType == ActionType.Translate && clickedMenuItem.Name.StartsWith("PluginSL", StringComparison.Ordinal);
+
+            // build subtitle from selected paragraphs only and save selected index for later restore selection
+            if (selectionOnly)
             {
-                var tss = new ToolStripSeparator();
-                if (relativeOffset == null)
+                SaveSubtitleListviewIndices();
+                var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                foreach (int index in SubtitleListview1.SelectedIndices)
                 {
-                    if (parent.DropDownItems.Count > 0 && parent.DropDownItems[parent.DropDownItems.Count - 1].GetType() == typeof(ToolStripSeparator))
+                    var p = _subtitle.Paragraphs[index];
+                    if (_subtitleAlternate?.Paragraphs.Count > 0)
                     {
-                        return; // don't app separator after separator
+                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            p = original;
+                        }
+                        else
+                        {
+                            p = new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                        }
                     }
-
-                    parent.DropDownItems.Add(tss);
+                    selectedLines.Paragraphs.Add(p);
                 }
-                else
-                {
-                    if (parent.DropDownItems.Count - relativeOffset.Value >= 0 &&
-                        relativeOffset.Value < parent.DropDownItems.Count &&
-                        parent.DropDownItems.Count > 0 &&
-                        parent.DropDownItems[parent.DropDownItems.Count - relativeOffset.Value].GetType() == typeof(ToolStripSeparator))
-                    {
-                        return; // don't app separator after separator
-                    }
-
-                    parent.DropDownItems.Insert(parent.DropDownItems.Count - relativeOffset.Value, tss);
-                }
-                UiUtil.FixFonts(tss);
+                subtitle = selectedLines;
             }
-        }
 
-        private void PluginToolClick(object sender, EventArgs e)
-        {
-            CallPlugin(sender, true, false);
-        }
-
-        private void PluginClickNoFormatChange(object sender, EventArgs e)
-        {
-            CallPlugin(sender, false, false);
-        }
-
-        private void PluginClickTranslate(object sender, EventArgs e)
-        {
-            CallPlugin(sender, false, true);
-        }
-
-        private void PluginClickTranslateSelectedLines(object sender, EventArgs e)
-        {
-            CallPluginTranslateSelectedLines(sender);
-        }
-
-
-        private void CallPlugin(object sender, bool allowChangeFormat, bool translate)
-        {
             try
             {
-                var item = (ToolStripItem)sender;
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                MethodInfo mi;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                if (mi == null)
+                // invoke the action in plugin and get the output
+                string pluginResult = plugin.Invoke(GetPluginInvokeContext(subtitle));
+
+                // if plugin isn't capable of producing valid data then ignore its actions
+                if (IsValidPluginResult(pluginResult, plugin.Text) == false)
                 {
                     return;
                 }
 
-                string rawText = null;
-                SubtitleFormat format = GetCurrentSubtitleFormat();
-                if (format != null)
+                // make history for undoing the plugin action
+                MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, plugin.Name, plugin.Version));
+
+                var lines = pluginResult.SplitToLines();
+                var sub = new Subtitle();
+
+                // only update selected paragraphs and restore selection from main-listview
+                if (selectionOnly)
                 {
-                    if (format.IsFrameBased)
+                    // use subrip as the default format for parsing plugin result when selection-action is performed
+                    var sr = new SubRip();
+                    if (sr.IsMine(lines, null))
                     {
-                        _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-                    }
-                    else
-                    {
-                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                    }
-
-                    rawText = _subtitle.ToText(format);
-                }
-
-                string pluginResult = (string)mi.Invoke(pluginObject,
-                    new object[]
-                    {
-                        this,
-                        _subtitle.ToText(new SubRip()),
-                        Configuration.Settings.General.CurrentFrameRate,
-                        Configuration.Settings.General.ListViewLineSeparatorString,
-                        _fileName,
-                        _videoFileName,
-                        rawText
-                    });
-
-                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
-                {
-                    var lines = new List<string>(pluginResult.SplitToLines());
-
-                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
-
-                    var s = new Subtitle();
-                    SubtitleFormat newFormat = null;
-                    foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats)
-                    {
-                        if (subtitleFormat.IsMine(lines, null))
+                        sr.LoadSubtitle(sub, lines, null);
+                        //update only selected paragraphs from listview
+                        for (int i = SubtitleListview1.Items.Count - 1; i >= 0; i--)
                         {
-                            subtitleFormat.LoadSubtitle(s, lines, null);
-                            newFormat = subtitleFormat;
-                            break;
+                            _subtitle.Paragraphs[SubtitleListview1.SelectedIndices[i]] = sub.Paragraphs[i];
                         }
-                    }
 
-                    if (translate)
+                        ShowSource();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
+                        ShowStatus(string.Format(_language.PluginXExecuted, plugin.Name));
+                    }
+                }
+                else
+                {
+                    SubtitleFormat newFormat = SubtitleFormat.GetFormatFromLines(lines, sub);
+
+                    if (plugin.ActionType == ActionType.Translate)
                     {
                         _subtitleAlternate = new Subtitle(_subtitle);
                         _subtitleAlternateFileName = _fileName;
 
-                        var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(s);
-                        if (language != null && !string.IsNullOrEmpty(_fileName))
+                        var newLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
+                        // handle suffix language + file extension after translation
+                        if (newLang != null && !string.IsNullOrEmpty(_fileName))
                         {
                             _fileName = Path.GetFileNameWithoutExtension(_fileName);
-                            var oldLang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
-                            if (oldLang.Length == 3 && _fileName.EndsWith(oldLang, StringComparison.OrdinalIgnoreCase))
+                            // e.g: en, pt...
+                            var oldLang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                            if (_fileName.EndsWith(oldLang, StringComparison.OrdinalIgnoreCase))
                             {
-                                _fileName = _fileName.Remove(_fileName.Length - 3);
+                                _fileName = _fileName.Remove(_fileName.Length - oldLang.Length);
                             }
-                            _fileName += "." + language + GetCurrentSubtitleFormat().Extension;
+                            _fileName += "." + newLang + GetCurrentSubtitleFormat().Extension;
                         }
                         else
                         {
@@ -19419,7 +19442,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         _subtitle.Paragraphs.Clear();
-                        foreach (var p in s.Paragraphs)
+                        foreach (var p in sub.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(new Paragraph(p));
                         }
@@ -19434,31 +19457,26 @@ namespace Nikse.SubtitleEdit.Forms
                         RestoreSubtitleListviewIndices();
                         _converted = true;
                         SetTitle();
-                        return;
                     }
-
-                    if (newFormat != null)
+                    else if (newFormat != null)
                     {
-                        if (!allowChangeFormat && IsOnlyTextChanged(_subtitle, s))
+                        if (plugin.ActionType == ActionType.Spellcheck && IsOnlyTextChanged(_subtitle, sub))
                         {
-                            for (int k = 0; k < s.Paragraphs.Count; k++)
+                            for (int k = 0; k < sub.Paragraphs.Count; k++)
                             {
-                                _subtitle.Paragraphs[k].Text = s.Paragraphs[k].Text;
+                                _subtitle.Paragraphs[k].Text = sub.Paragraphs[k].Text;
                             }
                         }
                         else
                         {
                             _subtitle.Paragraphs.Clear();
-                            _subtitle.Header = s.Header;
-                            _subtitle.Footer = s.Footer;
-                            foreach (var p in s.Paragraphs)
+                            _subtitle.Header = sub.Header;
+                            _subtitle.Footer = sub.Footer;
+                            foreach (var p in sub.Paragraphs)
                             {
                                 _subtitle.Paragraphs.Add(p);
                             }
-                        }
 
-                        if (allowChangeFormat)
-                        {
                             SetCurrentFormat(newFormat);
                         }
 
@@ -19467,12 +19485,13 @@ namespace Nikse.SubtitleEdit.Forms
                         RestoreSubtitleListviewIndices();
                         ShowSource();
 
-                        ShowStatus(string.Format(_language.PluginXExecuted, name));
+                        ShowStatus(string.Format(_language.PluginXExecuted, plugin.Name));
                     }
                     else
                     {
                         MessageBox.Show(_language.UnableToReadPluginResult);
                     }
+
                 }
             }
             catch (Exception exception)
@@ -19485,100 +19504,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void CallPluginTranslateSelectedLines(object sender)
+        private static bool IsValidPluginResult(string pluginResult, string pluginText)
         {
-            try
+            // empty result
+            if (string.IsNullOrWhiteSpace(pluginResult))
             {
-                var item = (ToolStripItem)sender;
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                MethodInfo mi;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                if (mi == null)
-                {
-                    return;
-                }
-
-                SaveSubtitleListviewIndices();
-                var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
-                foreach (int index in SubtitleListview1.SelectedIndices)
-                {
-                    var p = _subtitle.Paragraphs[index];
-                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
-                    {
-                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            p = original;
-                        }
-                        else
-                        {
-                            p = new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
-                        }
-                    }
-                    selectedLines.Paragraphs.Add(p);
-                }
-
-                string rawText = null;
-                SubtitleFormat format = GetCurrentSubtitleFormat();
-                if (format != null)
-                {
-                    if (format.IsFrameBased)
-                    {
-                        selectedLines.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-                    }
-                    else
-                    {
-                        selectedLines.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                    }
-
-                    rawText = selectedLines.ToText(format);
-                }
-
-                string pluginResult = (string)mi.Invoke(pluginObject,
-                    new object[]
-                    {
-                        this,
-                        selectedLines.ToText(new SubRip()),
-                        Configuration.Settings.General.CurrentFrameRate,
-                        Configuration.Settings.General.ListViewLineSeparatorString,
-                        _fileName,
-                        _videoFileName,
-                        rawText
-                    });
-
-                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
-                {
-                    var lines = new List<string>(pluginResult.SplitToLines());
-                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
-                    var s = new Subtitle();
-                    var f = new SubRip();
-                    if (f.IsMine(lines, null))
-                    {
-                        f.LoadSubtitle(s, lines, null);
-
-                        // we only update selected lines
-                        int i = 0;
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                        {
-                            _subtitle.Paragraphs[index] = s.Paragraphs[i];
-                            i++;
-                        }
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        RestoreSubtitleListviewIndices();
-                        ShowStatus(string.Format(_language.PluginXExecuted, name));
-                    }
-                }
+                return false;
             }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-                if (exception.InnerException != null)
-                {
-                    MessageBox.Show(exception.InnerException.Message + Environment.NewLine + exception.InnerException.StackTrace);
-                }
-            }
+            return pluginResult.Length > 10 && pluginResult.Equals(pluginText, StringComparison.OrdinalIgnoreCase) == false;
         }
 
         private bool IsOnlyTextChanged(Subtitle s1, Subtitle s2)

@@ -1046,6 +1046,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Plugin\Plugin.cs" />
+    <Compile Include="Plugin\PluginController.cs" />
+    <Compile Include="Plugin\PluginInvokeContext.cs" />
     <Compile Include="Web References\SeNetworkService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
