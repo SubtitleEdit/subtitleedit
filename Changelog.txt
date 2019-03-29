@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.10 (xth April 2019) BETA
+3.5.10 (xth July 2019) BETA
 * NEW:
    * Profiles - thx philippwr, OmrSi, moob
    * Re-break line at cursor position shortcuts
