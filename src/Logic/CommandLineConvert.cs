@@ -977,6 +977,12 @@ namespace Nikse.SubtitleEdit.Logic
                             targetEncoding = Encoding.UTF8;
                         }
 
+                        // Remove native formatting
+                        if (format == null || format.Name != sf.Name)
+                        {
+                            format.RemoveNativeFormatting(sub, sf);
+                        }
+
                         try
                         {
                             if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
