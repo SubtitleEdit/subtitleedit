@@ -414,6 +414,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <TextLeftJustifiedText>Alinhado à esquerda</TextLeftJustifiedText>
     <TextCenteredText>Centralizado</TextCenteredText>
     <TextRightJustifiedText>Alinhado à direita</TextRightJustifiedText>
+	<UseBoxForOneNewLine>Marcar 'Usar a caixa à volta do texto' apenas numa linha nova</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
@@ -1781,7 +1782,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
 	<Profiles>Perfis</Profiles>
 	<ImportProfiles>Importar perfis</ImportProfiles>
 	<ExportProfiles>Exportar perfis</ExportProfiles>
-    <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
+    <SubtitleLineMaximumLength>Comprimento máximo de linha</SubtitleLineMaximumLength>
 	<OptimalCharactersPerSecond>Caracteres/seg ideais</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
