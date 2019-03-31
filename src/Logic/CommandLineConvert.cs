@@ -978,7 +978,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
 
                         // Remove native formatting
-                        if (format == null || format.Name != sf.Name)
+                        if (format?.Name != sf.Name)
                         {
                             format.RemoveNativeFormatting(sub, sf);
                         }
