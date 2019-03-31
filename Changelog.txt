@@ -23,6 +23,7 @@
    * Add checkboxes to "Apply duration limits" - thx Flitskikker
    * "Extend only" option for "Duration recalculate" - thx Flitskikker
    * Add track number to cmd line convert - thx sneaker_ger
+   * Include "Remove native formatting" in convert - thx Jamakmake
 * FIXED:
    * Fix "Change all" for whole text in OCR - thx wtester7
    * Fix  renumber problem - thx marb99
