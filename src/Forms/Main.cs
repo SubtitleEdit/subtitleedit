@@ -9572,7 +9572,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var l0Trimmed = string.Empty;
                         if (lines.Count > 0)
                         {
-                            HtmlUtil.RemoveHtmlTags(originalCurrent.Text).TrimEnd('\'').TrimEnd('"');
+                            l0Trimmed = HtmlUtil.RemoveHtmlTags(originalCurrent.Text).TrimEnd('\'').TrimEnd('"');
                         }
 
                         oldText = originalCurrent.Text;
