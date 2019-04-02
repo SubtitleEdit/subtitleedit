@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
             checkBoxBridgeGaps.Text = l.BridgeGaps;
 
-            _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
+            _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings("en"));
             _removeTextForHiSettings = _removeTextForHearingImpaired.Settings;
 
             labelFilter.Text = l.Filter;

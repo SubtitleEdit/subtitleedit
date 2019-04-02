@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public string CustomEnd { get; set; }
         public NameList NameList { get; set; }
 
-        public RemoveTextForHISettings(Subtitle subtitle)
+        public RemoveTextForHISettings(string language)
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
@@ -45,8 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             RemoveTextBetweenParentheses = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses;
             CustomStart = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore;
             CustomEnd = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter;
-            var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            NameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            NameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
         }
 
     }

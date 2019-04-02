@@ -21,7 +21,7 @@ namespace Test.Logic.Forms
 
         private static RemoveTextForHI GetRemoveTextForHiLib()
         {
-            var hiSettings = new RemoveTextForHISettings(new Subtitle());
+            var hiSettings = new RemoveTextForHISettings("en");
             return new RemoveTextForHI(hiSettings);
         }
 

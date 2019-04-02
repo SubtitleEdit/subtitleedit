@@ -897,11 +897,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
 
+                string lang = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
                 foreach (var action in actions)
                 {
                     if (action == BatchAction.RemoveTextForHI)
                     {
-                        var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
+                        var hiSettings = new Core.Forms.RemoveTextForHISettings(lang);
                         var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
                         foreach (var p in sub.Paragraphs)
                         {

@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public RemoveTextForHISettings GetSettings(Subtitle subtitle)
         {
-            var settings = new RemoveTextForHISettings(subtitle)
+            var settings = new RemoveTextForHISettings(LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle))
             {
                 OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked,
                 RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked,
