@@ -59,7 +59,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
-            var header = new StringBuilder();
             bool foundTranscribedTag = false;
             foreach (string line in lines)
             {
@@ -116,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTimeCode(string s, char[] splitCharColon)
+        private static TimeCode DecodeTimeCode(string s, char[] splitCharColon)
         {
             var arr = s.Split(splitCharColon);
             if (arr.Length == 2)
