@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core
             // use interface converter if available
             if (NativeRtfTextConverter != null)
             {
-                NativeRtfTextConverter.RtfToText(inputRtf);
+                return NativeRtfTextConverter.RtfToText(inputRtf);
             }
 
             var stack = new Stack<StackEntry>();

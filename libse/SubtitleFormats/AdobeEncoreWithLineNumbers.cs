@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false; // Pinnacle Impression
             }
 
-            if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
+            if (sb.ToString().StartsWith("{\\rtf1", StringComparison.Ordinal))
             {
                 return false;
             }

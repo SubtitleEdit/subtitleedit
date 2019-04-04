@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
             }
 
-            if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
+            if (sb.ToString().StartsWith("{\\rtf1", StringComparison.Ordinal))
             {
                 return false;
             }
