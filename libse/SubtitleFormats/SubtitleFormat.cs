@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new OpenDvt(),
                     new Oresme(),
                     new OresmeDocXDocument(),
+                    new OtterAi(),
                     new Pe2(),
                     new PhoenixSubtitle(),
                     new PinnacleImpression(),
@@ -278,7 +279,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle85(),
                     new UnknownSubtitle86(),
                     new UnknownSubtitle87(),
-                    new UnknownSubtitle88(),
+                    new UnknownSubtitle88()
                 };
 
                 string path = Configuration.PluginsDirectory;
