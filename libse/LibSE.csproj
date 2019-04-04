@@ -198,6 +198,7 @@
     <Compile Include="RulesProfile.cs" />
     <Compile Include="SubtitleFormats\KaraokeCdgCreatorText.cs" />
     <Compile Include="SubtitleFormats\GooglePlayJson.cs" />
+    <Compile Include="SubtitleFormats\OtterAi.cs" />
     <Compile Include="SubtitleFormats\OgmChapters.cs" />
     <Compile Include="SubtitleFormats\JsonType14.cs" />
     <Compile Include="SubtitleFormats\Sptx.cs" />

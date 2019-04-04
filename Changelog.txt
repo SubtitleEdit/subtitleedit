@@ -7,6 +7,7 @@
    * Optimal CPS configurable in UI - thx Flitskikker
    * Import scene changes from EZTitles - thx Flitskikker 
    * Add new sub format - thx Matmanamane
+   * Add new sub format - thx Rob
 * IMPROVED:
    * Update Portuguese translation - thx moob
    * Update Brazil translation - thx Igor
@@ -24,7 +25,7 @@
    * "Extend only" option for "Duration recalculate" - thx Flitskikker
    * Add track number to cmd line convert - thx sneaker_ger
    * Include "Remove native formatting" in convert - thx Jamakmake
-   * Spell check split include more Unicode spaces - thx Greg
+   * Include more Unicode spaces in "Spell check" word split - thx Greg
 * FIXED:
    * Fix "Change all" for whole text in OCR - thx wtester7
    * Fix  renumber problem - thx marb99
