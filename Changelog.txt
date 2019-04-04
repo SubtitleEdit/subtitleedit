@@ -52,6 +52,7 @@
    * Fix TTML to ASS with multi "font-family" - thx Leon Sk
    * Fix crash after going to next/prev subtitle line - thx green-pigeon
    * Fix translate shortcuts in adjust/create mode - thx OmrSi
+   * Fix a few issues regarding RTF - thx Liora
 
 
 3.5.9 (10th February 2019)
