@@ -5,28 +5,25 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class OtterAi : SubtitleFormat
+    public class UnknownSubtitle89 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes1 = new Regex(@" \d{1,2}:\d\d$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodes2 = new Regex(@" \d{1,2}:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d{1,2}:\d\d ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes2 = new Regex(@"^\d{1,2}:\d\d:\d\d ", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
-        public override string Name => "Otter AI transcription";
-
-        private const string Signature = "Transcribed by https://otter.ai";
+        public override string Name => "Unknown 89";
 
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append(string.IsNullOrWhiteSpace(p.Actor) ? "Speaker" : p.Actor);
-                sb.AppendLine("  " + EncodeTime(p.StartTime));
+                sb.Append(EncodeTime(p.StartTime) + " " + (string.IsNullOrWhiteSpace(p.Actor) ? "Speaker" : p.Actor));
+                sb.AppendLine();
                 sb.AppendLine(p.Text);
                 sb.AppendLine();
             }
-            sb.AppendLine(Signature);
             return sb.ToString();
         }
 
@@ -59,31 +56,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
-            bool foundTranscribedTag = false;
-            foreach (string line in lines)
-            {
-                if (line.Contains(Signature))
-                {
-                    foundTranscribedTag = true;
-                    break;
-                }
-            }
-            if (!foundTranscribedTag)
-            {
-                return;
-            }
-
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
                 string s = line.Trim();
                 var match1 = RegexTimeCodes1.Match(s);
                 var match2 = RegexTimeCodes2.Match(s);
-                if (s == Signature)
-                {
-                    // Skip
-                }
-                else if (match1.Success || match2.Success)
+                if (match1.Success || match2.Success)
                 {
                     var m = match1.Success ? match1 : match2;
                     if (p != null && sb.Length > 0)
@@ -93,10 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     p = new Paragraph();
                     p.StartTime = DecodeTimeCode(m.Value.Trim(), SplitCharColon);
-                    if (m.Index > 0)
-                    {
-                        p.Actor = s.Substring(0, m.Index).Trim();
-                    }
+                    p.Actor = s.Remove(0, m.Value.Length).Trim();
                     sb.Clear();
                 }
                 else if (p != null)
