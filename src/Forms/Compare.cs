@@ -139,38 +139,16 @@ namespace Nikse.SubtitleEdit.Forms
             var format = subtitle.LoadSubtitle(fileName, out _, null);
             if (format == null)
             {
-                foreach (var f in GetNonImageNonDefaultFormats())
+                foreach (var f in SubtitleFormat.GetBinaryFormats(false))
                 {
-                    if (!f.IsMine(null, fileName))
+                    if (f.IsMine(null, fileName))
                     {
-                        continue;
+                        f.LoadSubtitle(subtitle, null, fileName);
+                        break; // format found, exit the loop
                     }
-
-                    if (f is Pac pacFormat)
-                    {
-                        pacFormat.BatchMode = true;
-                    }
-
-                    f.LoadSubtitle(subtitle, null, fileName);
-                    break; // format found, exit the loop
                 }
             }
             return subtitle;
-        }
-
-        /// <summary>
-        /// Get non image based subtitle formats not included in SubtitleFormat.AllSubtitleFormats
-        /// </summary>
-        private static IEnumerable<SubtitleFormat> GetNonImageNonDefaultFormats()
-        {
-            yield return new Ebu();
-            yield return new Pac();
-            yield return new Cavena890();
-            yield return new Spt();
-            yield return new CheetahCaption();
-            yield return new Chk();
-            yield return new TimeLineAscii();
-            yield return new TimeLineFootageAscii();
         }
 
         private void ButtonOpenSubtitle2Click(object sender, EventArgs e)
