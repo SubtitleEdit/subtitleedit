@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                 }
             }
-            if (subtitle.Paragraphs.Count > 2 && subtitle.Paragraphs[0].StartTime.TotalMilliseconds < 0.001 && subtitle.Paragraphs[1].StartTime.TotalMilliseconds < 0.001)
+            if (subtitle.Paragraphs.Count > 2 && subtitle.Paragraphs[0].StartTime.TotalMilliseconds < 0.001 && subtitle.Paragraphs[0].EndTime.TotalMilliseconds < 0.001)
             {
                 subtitle.Paragraphs.RemoveAt(0);
             }
@@ -137,7 +137,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (textIndex > textBegin)
                     {
-                        sb.AppendLine(Encoding.UTF8.GetString(buffer, textBegin, textIndex - textBegin - 1));
+                        for (int j = textBegin; j <= textIndex - textBegin - 1; j++)
+                        {
+                            if (buffer[j] == 0xff)
+                            {
+                                buffer[j] = 0x2e; // replace end of line marker
+                            }
+                        }
+
+                        sb.AppendLine(Encoding.UTF8.GetString(buffer, textBegin, textIndex - textBegin));
                         textBegin = textIndex + 7;
                         textIndex += 6;
                     }
@@ -213,8 +221,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.Text = "{\\an3}" + p.Text;
                 }
             }
+
             // Remove all control-characters if any in p.Text.
             p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
+
+
+            p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
+
+            // Fix italics (basic)
+            if (p.Text.StartsWith('<') &&
+                !p.Text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
+                !p.Text.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) &&
+                !p.Text.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) &&
+                !p.Text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+            {
+                p.Text = "<i>" + p.Text.TrimStart('<').Replace(Environment.NewLine + "<", Environment.NewLine) + "</i>";
+            }
+            else if (p.Text.Contains(Environment.NewLine + "<"))
+            {
+                p.Text = p.Text.Replace(Environment.NewLine + "<", Environment.NewLine + "<i>") + "</i>";
+            }
             return p;
         }
 
@@ -320,8 +348,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var result = new List<byte>();
             bool firstLine = true;
-            foreach (var line in text.SplitToLines())
+            var lines = text.SplitToLines();
+            for (var i = 0; i < lines.Count; i++)
             {
+                var line = lines[i];
                 if (!firstLine)
                 {
                     result.Add(0xfe);
@@ -340,7 +370,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var ch = s[index];
                     if (ch == '.') // 0x2e
                     {
-                        result.Add(0xff); // to avoid confusion with end of line marker
+                        result.Add(0xff); // period
                     }
                     else
                     {
@@ -350,9 +380,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
+
+
                 firstLine = false;
             }
-            result.Add(0x2e); // end of line marker?
+            result.Add(0x2e);
             return result.ToArray();
         }
 
