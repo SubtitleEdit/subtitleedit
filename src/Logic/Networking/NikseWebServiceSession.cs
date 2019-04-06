@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         private System.Windows.Forms.Timer _timerWebService;
         public List<UpdateLogEntry> UpdateLog { get; } = new List<UpdateLogEntry>();
         public List<ChatEntry> ChatLog { get; } = new List<ChatEntry>();
-        private SeNetworkService.SeService _seWs;
+        private SeNetworkService.SeServiceSoapClient _seWs;
         private DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
         public SeNetworkService.SeUser CurrentUser { get; set; }
         public Subtitle LastSubtitle { get; set; }
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public List<SeNetworkService.SeUser> Users { get; private set; }
         public StringBuilder Log { get; }
 
-        public string WebServiceUrl => _seWs.Url;
+        public string WebServiceUrl => _seWs.Endpoint.ListenUri.ToString();
 
         public NikseWebServiceSession(Subtitle subtitle, Subtitle originalSubtitle, EventHandler onUpdateTimerTick, EventHandler onUpdateUserLogEntries)
         {
@@ -56,6 +56,9 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             SessionId = sessionKey;
             _userName = userName;
             _fileName = fileName;
+            System.ServiceModel.EndpointAddress endpointAddr = new System.ServiceModel.EndpointAddress(webServiceUrl);
+            System.ServiceModel.BasicHttpBinding binding = new System.ServiceModel.BasicHttpBinding(securityMode: System.ServiceModel.BasicHttpSecurityMode.Transport);
+
             var list = new List<SeNetworkService.SeSequence>();
             foreach (Paragraph p in Subtitle.Paragraphs)
             {
@@ -80,12 +83,9 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                     });
                 }
             }
+            //TODO: set the proxy stuff
+            _seWs = new SeNetworkService.SeServiceSoapClient(binding: binding, remoteAddress: endpointAddr);
 
-            _seWs = new SeNetworkService.SeService
-            {
-                Url = webServiceUrl,
-                Proxy = Utilities.GetProxy()
-            };
             var user = _seWs.Start(sessionKey, userName, list.ToArray(), originalSubtitle.ToArray(), fileName, out message);
             CurrentUser = user;
             Users = new List<SeNetworkService.SeUser> { user };
@@ -97,12 +97,20 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         public bool Join(string webServiceUrl, string userName, string sessionKey, out string message)
         {
-            SessionId = sessionKey;
-            _seWs = new SeNetworkService.SeService
+            System.ServiceModel.EndpointAddress endpointAddr = new System.ServiceModel.EndpointAddress(webServiceUrl);
+            System.ServiceModel.BasicHttpBinding binding = new System.ServiceModel.BasicHttpBinding(securityMode:System.ServiceModel.BasicHttpSecurityMode.Transport);
+            /*WebProxy proxy = Utilities.GetProxy();
+            
+            if (proxy != null)
             {
-                Url = webServiceUrl,
-                Proxy = Utilities.GetProxy()
-            };
+                binding.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.TransportCredentialOnly;
+                binding.Security.Transport.ProxyCredentialType = System.ServiceModel.HttpProxyCredentialType.Basic;
+                binding.Securi
+            }*/
+            SessionId = sessionKey;
+            //TODO: set the proxy stuff
+            _seWs = new SeNetworkService.SeServiceSoapClient(binding: binding, remoteAddress: endpointAddr);
+
             Users = new List<SeNetworkService.SeUser>();
             var users = _seWs.Join(sessionKey, userName, out message);
             if (message != "OK")
@@ -284,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         internal void DeleteLines(List<int> indices)
         {
-            _seWs.DeleteLines(SessionId, indices.ToArray(), CurrentUser);
+            _seWs.DeleteLines(SessionId, (SeNetworkService.ArrayOfInt)indices, CurrentUser);
             foreach (int index in indices)
             {
                 AdjustUpdateLogToDelete(index);
@@ -339,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    StartServer(_seWs.Url, SessionId, _userName, _fileName, out message);
+                    StartServer(_seWs.Endpoint.ListenUri.ToString(), SessionId, _userName, _fileName, out message);
                     retries = maxRetries;
                 }
                 catch
@@ -366,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    if (Join(_seWs.Url, _userName, SessionId, out message))
+                    if (Join(_seWs.Endpoint.ListenUri.ToString(), _userName, SessionId, out message))
                     {
                         message = "Reload";
                     }
@@ -400,7 +408,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 }
                 if (_seWs != null)
                 {
-                    _seWs.Dispose();
+                    _seWs.Close();
                     _seWs = null;
                 }
             }

@@ -63,11 +63,18 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Connected Services\SeNetworkService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SETextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1046,11 +1053,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Web References\SeNetworkService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Controls\TimeUpDown.resx">
       <DependentUpon>TimeUpDown.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1508,6 +1510,16 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Connected Services\SeNetworkService\Nikse.SubtitleEdit.SeNetworkService.SeSequence.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\SeNetworkService\Nikse.SubtitleEdit.SeNetworkService.SeUpdate.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\SeNetworkService\Nikse.SubtitleEdit.SeNetworkService.SeUser.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\SeNetworkService\SeService.wsdl" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -1532,23 +1544,16 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
-    <None Include="Web References\SeNetworkService\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\SeNetworkService\SeSequence.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\SeNetworkService\SeService.wsdl" />
-    <None Include="Web References\SeNetworkService\SeUpdate.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\SeNetworkService\SeUser.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Transparent Background.png" />
+    <None Include="Connected Services\SeNetworkService\SeService.disco" />
+    <None Include="Connected Services\SeNetworkService\configuration91.svcinfo" />
+    <None Include="Connected Services\SeNetworkService\configuration.svcinfo" />
+    <None Include="Connected Services\SeNetworkService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <Content Include="Icons\RemoveTextForHI.png" />
@@ -1666,7 +1671,6 @@
     <None Include="Resources\pictureBoxNoFSOver.Image.png" />
     <None Include="Resources\pictureBoxNoFSDown.Image.png" />
     <None Include="Resources\pictureBoxNoFS.Image.png" />
-    <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
     <Content Include="..\LICENSE.txt" />
@@ -1787,19 +1791,6 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://localhost:2782/se/SeService.asmx">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\SeNetworkService\</RelPath>
-      <UpdateFromURL>http://localhost:2782/se/SeService.asmx</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>SubtitleEdit_SeNetworkService_SeService</CachedSettingsPropName>
-    </WebReferenceUrl>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj">
       <Project>{3e3cb28f-3a7b-430f-9eb3-0d6c1e53b753}</Project>
       <Name>LibSE</Name>
@@ -1822,6 +1813,12 @@
     <HunspellAssemblies Include="Hunspellx86.dll">
       <Visible>false</Visible>
     </HunspellAssemblies>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\SeNetworkService\" />
   </ItemGroup>
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
