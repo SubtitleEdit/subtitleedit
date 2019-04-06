@@ -143,6 +143,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Note>※ 현재 자막이 표시되는 시간은 다음 자막이 시작하는 시간을 초과하지 않습니다!</Note>
     <Fixed>수정됨</Fixed>
     <Milliseconds>밀리초</Milliseconds>
+    <ExtendOnly>확장 만</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>최대/최소 표시시간 설정</Title>
@@ -408,6 +409,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TextLeftJustifiedText>왼쪽 정렬</TextLeftJustifiedText>
     <TextCenteredText>가운데 정렬</TextCenteredText>
     <TextRightJustifiedText>오른쪽 정렬</TextRightJustifiedText>
+    <UseBoxForOneNewLine>하나의 새 줄에만 '텍스트 주위에 상자 사용' 체크</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>노래방 효과</Title>
@@ -937,7 +939,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
         <EbuProperties>EBU STL 속성...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro 속성...</DvdStuioProProperties>
-        <TimedTextProperties>Timed Text 속성...</TimedTextProperties>
+        <TimedTextProperties>시간 제한 텍스트 속성...</TimedTextProperties>
         <PacProperties>PAC 속성...</PacProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
@@ -1156,7 +1158,14 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <MergeSelectedLinesAsDialog>선택한 대화 라인 병합</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>이전 줄과 병합</MergeWithLineBefore>
         <MergeWithLineAfter>다음 줄과 병합</MergeWithLineAfter>
-        <Normal>기본 (서식 태그 제거)</Normal>
+        <RemoveFormatting>서식 제거</RemoveFormatting>
+        <RemoveFormattingAll>모든 서식 제거</RemoveFormattingAll>
+        <RemoveFormattingBold>굵게 제거</RemoveFormattingBold>
+        <RemoveFormattingItalic>기울임꼴 제거</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>밑줄 제거</RemoveFormattingUnderline>
+        <RemoveFormattingColor>색상 제거</RemoveFormattingColor>
+        <RemoveFormattingFontName>글꼴 제거</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>정렬 제거</RemoveFormattingAlignment>
         <Underline>밑줄</Underline>
         <Box>박스</Box>
         <Color>색상</Color>
@@ -1361,7 +1370,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <BeforeInsertLine>줄 삽입 전</BeforeInsertLine>
     <LineInserted>줄이 삽입됨</LineInserted>
     <BeforeLineUpdatedInListView>줄을 목록보기에 업데이트하기 전</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>글꼴을 보통으로 설정하기 전</BeforeSettingFontToNormal>
     <BeforeSplitLine>줄 분할 전</BeforeSplitLine>
     <LineSplitted>줄을 분할했습니다.</LineSplitted>
     <BeforeMergeLines>줄 병합 전</BeforeMergeLines>
@@ -1472,6 +1480,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <BeforeColumnImportText>열에 텍스트를 가져오기 전</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>열을 셀 아래로 이동하기 전</BeforeColumnShiftCellsDown>
     <BeforeX>전: {0}</BeforeX>
+    <LinesUpdatedX>업데이트된 줄: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>플러그인 로드 오류: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>플러그인을 실행하기 전: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>플러그인에서 자막 결과를 읽을 수 없습니다!</UnableToReadPluginResult>
@@ -1765,7 +1774,12 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
     <DefaultFileEncoding>기본 파일 인코딩</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI 인코딩 자동 검색</AutoDetectAnsiEncoding>
+    <Profile>프로필</Profile>
+    <Profiles>프로필</Profiles>
+    <ImportProfiles>프로필 가져오기</ImportProfiles>
+    <ExportProfiles>프로필 내보내기</ExportProfiles>
     <SubtitleLineMaximumLength>줄당 최대 문자수</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>최적 문자/초</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>초당 최대 문자수</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>분당 최대 문자수</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>타이핑시 자동 줄바꿈</AutoWrapWhileTyping>
@@ -2037,6 +2051,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>자동 표시시간</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>커서 위치에서 첫 번째 공간에 줄바꿈</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>커서 위치에서 첫 번째 공간에 줄바꿈하고 다음으로 이동</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
