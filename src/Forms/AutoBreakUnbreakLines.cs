@@ -115,28 +115,30 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             _notAllowedFixes = new HashSet<string>();
             _fixedText = new Dictionary<string, string>();
-            int minLength = MinimumLength;
+            // lacks of semantic. TODO: Rename MinimumLength prop to something more meaningful?
+            int maxLineLen = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
-
-
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
+                if (!ShouldBreak(p.Text, maxLineLen))
                 {
-                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, _language);
-                    if (text != p.Text)
-                    {
-                        AddToListView(p, text);
-                        _fixedText.Add(p.ID, text);
-                    }
+                    continue;
+                }
+
+                var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, _language);
+                if (text != p.Text)
+                {
+                    AddToListView(p, text);
+                    _fixedText.Add(p.ID, text);
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
+
 
         private void Unbreak()
         {
@@ -149,19 +151,55 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength)
+                if (!ShouldUnbreak(p.Text, minLength))
                 {
-                    var text = Utilities.UnbreakLine(p.Text);
-                    if (text != p.Text)
-                    {
-                        AddToListView(p, text);
-                        _fixedText.Add(p.ID, text);
-                    }
+                    continue;
+                }
+                string text = Utilities.UnbreakLine(p.Text);
+                if (text.Length != p.Text.Length)
+                {
+                    AddToListView(p, text);
+                    _fixedText.Add(p.ID, text);
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+        }
+
+        private static bool ShouldUnbreak(string input, int maxUnbreakLength)
+        {
+            if (!input.Contains(Environment.NewLine))
+            {
+                return false;
+            }
+            // only unbreak if line will be shorter or equal to maxUnbreakLength
+            return GetLengthExclusive(input) < maxUnbreakLength;
+        }
+
+        private static bool ShouldBreak(string input, int maxLen)
+        {
+            // always perform auto-break if line contains break chars
+            if (input.Contains(Environment.NewLine))
+            {
+                return true;
+            }
+            // line too long
+            return GetLengthExclusive(input) > maxLen;
+        }
+
+        private static int GetLengthExclusive(string input)
+        {
+            int lineCount = Utilities.GetNumberOfLines(input);
+
+            // take out all the formattings
+            string inputNoTags = HtmlUtil.RemoveHtmlTags(input, true);
+
+            // we always want line to be greatar than 0, so we *Max it with 1
+            int numLine = Math.Max(lineCount, 1);
+
+            // exclude line break chars when cal len
+            return inputNoTags.Length - ((numLine - 1) * Environment.NewLine.Length);
         }
 
         private void AutoBreakUnbreakLinesKeyDown(object sender, KeyEventArgs e)
