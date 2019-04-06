@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>SubtitleEdit</AssemblyName>
+    <RootNamespace>Nikse.SubtitleEdit</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\**\*.cs" />
+    <EmbeddedResource Include="..\..\src\**\*.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\src\Icons\**" CopyToOutputDirectory="Icons" Link="Icons\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\..\src\Resources\**" CopyToOutputDirectory="Resources" Link="Resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\..\src\Languages\**" CopyToOutputDirectory="Languages" Link="Languages\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\..\LICENSE.txt" CopyToOutputDirectory="\" Link="\%(RecursiveDir)\%(Filename)%(Extension)" />
+    <Content Include="..\..\Changelog.txt" CopyToOutputDirectory="\" Link="\%(RecursiveDir)\%(Filename)%(Extension)" />
+
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="..\..\src\Test\**" />
+    <Compile Remove="..\..\src\UpdateAssemblyInfo\**" />
+    <Compile Remove="..\..\src\UpdateLanguageFiles\**" />
+    <Compile Remove="..\..\src\UpdateResourceScript\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NHunspell" Version="1.2.5554.16953" />
+    <PackageReference Include="System.Private.ServiceModel" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.5.3" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libsecore\LibSECore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Interop.QuartzTypeLib">
+      <HintPath>..\..\src\DLLs\Interop.QuartzTypeLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

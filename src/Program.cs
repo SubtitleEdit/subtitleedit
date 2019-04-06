@@ -81,9 +81,9 @@ namespace Nikse.SubtitleEdit
                           "\nPlease report at https://github.com/SubtitleEdit/subtitleedit/issues with the following information:" +
                           "\n\nError Message:\n" + exc.Message +
                           "\n\nStack Trace:\n" + exc.StackTrace;
-
+                
                 // Since we can't prevent the app from terminating, log this to the event log.
-                if (!EventLog.SourceExists("ThreadException"))
+                /*if (!EventLog.SourceExists("ThreadException"))
                 {
                     EventLog.CreateEventSource("ThreadException", "Application");
                 }
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit
                 using (var eventLog = new EventLog { Source = "ThreadException" })
                 {
                     eventLog.WriteEntry(msg);
-                }
+                }*/
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 14.0.23107.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -37,6 +37,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Resources", "Win32Reso
 		{2CB9698C-F0A8-42FF-8938-DE047292D5FE} = {2CB9698C-F0A8-42FF-8938-DE047292D5FE}
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SECore", "..\coreport\SECore\SECore.csproj", "{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CorePort", "CorePort", "{9A6EF3C3-0DEC-42C2-803A-19CC24F5A70B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSECore", "..\coreport\libsecore\LibSECore.csproj", "{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,9 +75,24 @@ Global
 		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.ActiveCfg = Release|Win32
 		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.Build.0 = Release|Win32
+		{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CFD7EB97-4FD8-48C0-BEEE-B2BA5BE6F4EF} = {9A6EF3C3-0DEC-42C2-803A-19CC24F5A70B}
+		{CDD28BE2-22B2-4593-9A13-3C5EB29DDC72} = {9A6EF3C3-0DEC-42C2-803A-19CC24F5A70B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5C61EE9-0950-4CF3-B4A3-1C493640D92F}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SubtitleEdit.vsmdi

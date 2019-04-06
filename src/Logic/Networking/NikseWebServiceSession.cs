@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public List<SeNetworkService.SeUser> Users { get; private set; }
         public StringBuilder Log { get; }
 
-        public string WebServiceUrl => _seWs.Endpoint.ListenUri.ToString();
+        public string WebServiceUrl => _seWs.Endpoint.Address.ToString();
 
         public NikseWebServiceSession(Subtitle subtitle, Subtitle originalSubtitle, EventHandler onUpdateTimerTick, EventHandler onUpdateUserLogEntries)
         {
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    StartServer(_seWs.Endpoint.ListenUri.ToString(), SessionId, _userName, _fileName, out message);
+                    StartServer(_seWs.Endpoint.Address.ToString(), SessionId, _userName, _fileName, out message);
                     retries = maxRetries;
                 }
                 catch
@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    if (Join(_seWs.Endpoint.ListenUri.ToString(), _userName, SessionId, out message))
+                    if (Join(_seWs.Endpoint.Address.ToString(), _userName, SessionId, out message))
                     {
                         message = "Reload";
                     }

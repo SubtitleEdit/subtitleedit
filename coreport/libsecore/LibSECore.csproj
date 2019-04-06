@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>libse</AssemblyName>
+    <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\libse\**\*.cs" />
+    <EmbeddedResource Include="..\..\libse\**\*.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\libse\Resources\**" CopyToOutputDirectory="Resources" Link="Resources\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
+  </ItemGroup>
+</Project>
