@@ -39,8 +39,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>..\src\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\src\packages\zlib.net-mutliplatform.1.0.4\lib\net40\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
