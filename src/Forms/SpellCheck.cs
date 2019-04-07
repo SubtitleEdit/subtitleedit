@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
             var suggestThread = new System.Threading.Thread(DoWork);
             suggestThread.Start(parameter);
             suggestThread.Join(3000); // wait max 3 seconds
-            suggestThread.Abort();
+            //suggestThread.Abort();
             if (!parameter.Success)
             {
                 LoadHunspell(_currentDictionary);
