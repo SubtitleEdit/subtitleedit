@@ -1046,11 +1046,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Web References\MicrosoftTranslationService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <Compile Include="Web References\SeNetworkService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1537,30 +1532,6 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
-    <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\soap.wsdl" />
-    <None Include="Web References\MicrosoftTranslationService\soap.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\soap0.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\soap1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\soap2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\MicrosoftTranslationService\SoapService.wsdl" />
-    <None Include="Web References\MicrosoftTranslationService\TranslateArrayResponse.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
     <None Include="Web References\SeNetworkService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -1816,17 +1787,6 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://api.microsofttranslator.com/V2/Soap.svc">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\MicrosoftTranslationService\</RelPath>
-      <UpdateFromURL>http://api.microsofttranslator.com/V2/Soap.svc</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>SubtitleEdit_MicrosoftTranslationService_SoapService</CachedSettingsPropName>
-    </WebReferenceUrl>
     <WebReferenceUrl Include="http://localhost:2782/se/SeService.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\SeNetworkService\</RelPath>
