@@ -129,19 +129,6 @@ namespace Nikse.SubtitleEdit.Forms
                     var result = translator.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder());
                     buttonMicrosoft.Text = result[0];
                 }
-                else
-                {
-                    using (var gt = new GoogleTranslate())
-                    {
-                        var subtitle = new Subtitle();
-                        subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
-                        gt.Initialize(subtitle, null, string.Empty, false, Encoding.UTF8);
-                        from = FixMsLocale(from);
-                        to = FixMsLocale(to);
-                        gt.DoMicrosoftTranslate(from, to);
-                        buttonMicrosoft.Text = gt.TranslatedSubtitle.Paragraphs[0].Text;
-                    }
-                }
             }
             finally
             {
