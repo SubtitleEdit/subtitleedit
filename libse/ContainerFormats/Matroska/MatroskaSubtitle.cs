@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
 
             var outStream = new MemoryStream();
-            var outZStream = new zlib.ZOutputStream(outStream);
+            var outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
             var inStream = new MemoryStream(Data);
             byte[] buffer;
             try

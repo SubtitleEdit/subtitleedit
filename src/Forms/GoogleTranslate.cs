@@ -19,7 +19,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private bool _breakTranslation;
         private bool _googleTranslate = true;
-        private MicrosoftTranslationService.SoapService _microsoftTranslationService;
         private const string SplitterString = "+-+";
         private ITranslator _translator;
 
@@ -570,88 +569,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Left = buttonTranslate.Left + buttonTranslate.Width + 9;
             progressBar1.Left = labelPleaseWait.Left;
             progressBar1.Width = subtitleListViewTo.Width - (progressBar1.Left - subtitleListViewTo.Left);
-        }
-
-        private MicrosoftTranslationService.SoapService MsTranslationServiceClient
-        {
-            get
-            {
-                if (_microsoftTranslationService == null)
-                {
-                    _microsoftTranslationService = new MicrosoftTranslationService.SoapService { Proxy = Utilities.GetProxy() };
-                }
-                return _microsoftTranslationService;
-            }
-        }
-
-        public void DoMicrosoftTranslate(string from, string to)
-        {
-            MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
-            _breakTranslation = false;
-            buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
-            const int textMaxSize = 10000;
-            Cursor.Current = Cursors.WaitCursor;
-            progressBar1.Maximum = _subtitle.Paragraphs.Count;
-            progressBar1.Value = 0;
-            progressBar1.Visible = true;
-            labelPleaseWait.Visible = true;
-            int start = 0;
-            bool overQuota = false;
-
-            try
-            {
-                var sb = new StringBuilder();
-                int index = 0;
-                foreach (Paragraph p in _subtitle.Paragraphs)
-                {
-                    string text = string.Format("{1}{0}|", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")), SplitterString);
-                    if (!overQuota)
-                    {
-                        if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
-                        {
-                            try
-                            {
-                                FillTranslatedText(client.Translate(Configuration.Settings.Tools.MicrosoftBingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
-                            }
-                            catch (System.Web.Services.Protocols.SoapHeaderException exception)
-                            {
-                                MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
-                                overQuota = true;
-                            }
-                            sb.Clear();
-                            progressBar1.Refresh();
-                            Application.DoEvents();
-                            start = index;
-                        }
-                        sb.Append(text);
-                    }
-                    index++;
-                    progressBar1.Value = index;
-                    if (_breakTranslation)
-                    {
-                        break;
-                    }
-                }
-                if (sb.Length > 0 && !overQuota)
-                {
-                    try
-                    {
-                        FillTranslatedText(client.Translate(Configuration.Settings.Tools.MicrosoftBingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
-                    }
-                    catch (System.Web.Services.Protocols.SoapHeaderException exception)
-                    {
-                        MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
-                    }
-                }
-            }
-            finally
-            {
-                labelPleaseWait.Visible = false;
-                progressBar1.Visible = false;
-                Cursor.Current = Cursors.Default;
-                buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
-                buttonTranslate.Enabled = true;
-            }
         }
 
         private void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
