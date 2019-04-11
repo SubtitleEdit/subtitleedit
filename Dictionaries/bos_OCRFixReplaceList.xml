@@ -1866,6 +1866,7 @@
 		<RegEx find="slusa" replaceWith="sluša" />
 		<RegEx find="slusk" replaceWith="slušk" />
 		<RegEx find="slj?edece" replaceWith="sljedeće" />
+		<RegEx find="snad" replaceWith="snađ" />
 		<RegEx find="spesn" replaceWith="spješn" />
 		<RegEx find="splac" replaceWith="splač" />
 		<RegEx find="stand(?!a)" replaceWith="štand" />
