@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Core
                 GoogleApiKeyNeeded = "Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
                                      Environment.NewLine +
                                      "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
-                GoogleNoApiKeyWarning = "Trying to translate wihtout API key... (slow and limited data)"
+                GoogleNoApiKeyWarning = "Trying to translate without API key... (slow and limited data)"
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
