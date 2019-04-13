@@ -1,337 +1,347 @@
-; *** Inno Setup version 5.5.3+ Chinese (Simplified) messages ***
-;   By Qiming Li (qiming at clault.com)
+ï»¿; *** Inno Setup version 6.0.0+ Chinese Simplified messages ***
 ;
-; To download user-contributed translations of this file, go to:
-;   http://www.jrsoftware.org/files/istrans/
+; Maintained by Zhenghan Yang
+; Email: 847320916@QQ.com
+; Translation based on network resource
 ;
-; Note: When translating this text, do not add periods (.) to the end of
-; messages that didn't have them already, because on those messages Inno
-; Setup adds the periods automatically (appending a period would result in
-; two periods being displayed).
 
 [LangOptions]
-; The following three entries are very important. Be sure to read and 
-; understand the '[LangOptions] section' topic in the help file.
-LanguageName=<4E2D><6587><FF08><7B80><4F53><FF09>
-LanguageID=$0804
+LanguageName=<7B80><4F53><4E2D><6587>
+LanguageID=$0004
 LanguageCodePage=936
-; If the language you are translating to requires special font faces or
-; sizes, uncomment any of the following entries and change them accordingly.
-DialogFontName=ËÎÌå
-;DialogFontSize=8
-;WelcomeFontName=Verdana
-;WelcomeFontSize=12
-;TitleFontName=Arial
-;TitleFontSize=29
-;CopyrightFontName=Arial
-;CopyrightFontSize=8
 
 [Messages]
 
-; *** Application titles
-SetupAppTitle=°²×°Ïòµ¼
-SetupWindowTitle=°²×°Ïòµ¼ - %1
-UninstallAppTitle=Ğ¶ÔØÏòµ¼
-UninstallAppFullTitle=%1Ğ¶ÔØÏòµ¼
+; *** åº”ç”¨ç¨‹åºæ ‡é¢˜
+SetupAppTitle=å®‰è£…
+SetupWindowTitle=å®‰è£… - %1
+UninstallAppTitle=å¸è½½
+UninstallAppFullTitle=%1 å¸è½½
 
 ; *** Misc. common
-InformationTitle=ĞÅÏ¢
-ConfirmTitle=È·ÈÏ
-ErrorTitle=´íÎó
+InformationTitle=ä¿¡æ¯
+ConfirmTitle=ç¡®è®¤
+ErrorTitle=é”™è¯¯
 
-; *** SetupLdr messages
-SetupLdrStartupMessage=°²×°Ïòµ¼½«ÔÚÄúµÄµçÄÔÉÏ°²×°%1¡£È·¶¨Òª¼ÌĞøÂğ£¿
-LdrCannotCreateTemp=ÎŞ·¨´´½¨ÁÙÊ±ÎÄ¼ş¡£°²×°ÒÑÖÕÖ¹
-LdrCannotExecTemp=ÎŞ·¨ÔËĞĞÁÙÊ±ÎÄ¼ş¼ĞÖĞµÄÎÄ¼ş¡£°²×°ÒÑÖÕÖ¹
+; *** å®‰è£…é”™è¯¯æ¶ˆæ¯
+SetupLdrStartupMessage=ç°åœ¨å°†å®‰è£… %1ã€‚æ‚¨æƒ³è¦ç»§ç»­å—ï¼Ÿ
+LdrCannotCreateTemp=ä¸èƒ½åˆ›å»ºä¸´æ—¶æ–‡ä»¶ã€‚å®‰è£…ä¸­æ–­ã€‚
+LdrCannotExecTemp=ä¸èƒ½æ‰§è¡Œä¸´æ—¶ç›®å½•ä¸­çš„æ–‡ä»¶ã€‚å®‰è£…ä¸­æ–­ã€‚
+HelpTextNote=
 
-; *** Startup error messages
-LastErrorMessage=%1.%n%n´íÎó %2: %3
-SetupFileMissing=°²×°Ä¿Â¼ÖĞÈ±Ê§ÎÄ¼ş%1¡£Çë½â¾ö¸ÃÎÊÌâ£¬»òÖØĞÂ»ñÈ¡Ò»·İ³ÌĞò¿½±´¡£
-SetupFileCorrupt=°²×°ÎÄ¼şÒÑ±»Ëğ»µ¡£ÇëÖØĞÂ»ñÈ¡Ò»·İ³ÌĞò¿½±´¡£
-SetupFileCorruptOrWrongVer=°²×°ÎÄ¼şÒÑ±»Ëğ»µ£¬»òÓë±¾°²×°Ïòµ¼°æ±¾²»¼æÈİ¡£Çë½â¾ö¸ÃÎÊÌâ£¬»òÖØĞÂ»ñÈ¡Ò»·İ³ÌĞò¿½±´¡£
-InvalidParameter=ÎŞĞ§ÃüÁîĞĞ²ÎÊı£º%n%n%1
-SetupAlreadyRunning=°²×°³ÌĞòÒÑ¾­ÔËĞĞ¡£
-WindowsVersionNotSupported=³ÌĞò²»Ö§³ÖÄúµçÄÔÉÏÔËĞĞµÄWindows°æ±¾¡£
-WindowsServicePackRequired=³ÌĞòÒªÇó%1 Service Pack %2»ò¸üĞÂ°æ±¾¡£
-NotOnThisPlatform=³ÌĞò²»¿ÉÔÚ%1ÉÏÔËĞĞ¡£
-OnlyOnThisPlatform=³ÌĞò±ØĞëÔÚ%1ÉÏÔËĞĞ¡£
-OnlyOnTheseArchitectures=³ÌĞòÖ»ÄÜÔÚÎªÒÔÏÂ´¦ÀíÆ÷¼Ü¹¹ËùÉè¼ÆµÄWindows°æ±¾ÉÏ°²×°£º%n%n%1
-MissingWOW64APIs=ÄúËùÊ¹ÓÃµÄWindows°æ±¾Ã»ÓĞ°üº¬½øĞĞ64Î»°²×°ËùĞèµÄ¹¦ÄÜ¡£Çë°²×°Service Pack %1½â¾ö´ËÎÊÌâ¡£
-WinVersionTooLowError=³ÌĞòÒªÇó%2°æ±¾»òÒÔÉÏµÄ%1¡£
-WinVersionTooHighError=³ÌĞò²»¿É°²×°µÄ%2»ò¸ü¸ß°æ±¾µÄ%1ÉÏ¡£
-AdminPrivilegesRequired=Äú±ØĞëµÇÂ¼Îª¹ÜÀíÔ±²ÅÄÜ°²×°´Ë³ÌĞò¡£
-PowerUserPrivilegesRequired=Äú±ØĞëµÇÂ¼Îª¹ÜÀíÔ±»ò¸ßÈ¨ÏŞÓÃ»§²ÅÄÜ°²×°´Ë³ÌĞò¡£
-SetupAppRunningError=°²×°Ïòµ¼¼ì²âµ½%1ÕıÔÚÔËĞĞ¡£%n%nÇë¹Ø±ÕÆäËùÓĞ´°¿Ú²¢µã»÷¡°È·¶¨¡±¼ÌĞø£¬»òµã»÷¡°È¡Ïû¡±ÍË³ö°²×°¡£
-UninstallAppRunningError=Ğ¶ÔØÏòµ¼¼ì²âµ½%1ÕıÔÚÔËĞĞ¡£%n%nÇë¹Ø±ÕÆäËùÓĞ´°¿Ú£¬È»ºóµã»÷¡°È·¶¨¡±¼ÌĞø£¬»òµã»÷¡°È¡Ïû¡±ÍË³ö¡£
+; *** å¯åŠ¨é”™è¯¯æ¶ˆæ¯
+LastErrorMessage=%1.%n%né”™è¯¯ %2: %3
+SetupFileMissing=å®‰è£…ç›®å½•ä¸­çš„æ–‡ä»¶ %1 ä¸¢å¤±ã€‚è¯·ä¿®æ­£è¿™ä¸ªé—®é¢˜æˆ–è·å–ä¸€ä¸ªæ–°çš„ç¨‹åºå‰¯æœ¬ã€‚
+SetupFileCorrupt=å®‰è£…æ–‡ä»¶å·²æŸåã€‚è¯·è·å–ä¸€ä¸ªæ–°çš„ç¨‹åºå‰¯æœ¬ã€‚
+SetupFileCorruptOrWrongVer=å®‰è£…æ–‡ä»¶å·²æŸåï¼Œæˆ–æ˜¯ä¸è¿™ä¸ªå®‰è£…ç¨‹åºçš„ç‰ˆæœ¬ä¸å…¼å®¹ã€‚è¯·ä¿®æ­£è¿™ä¸ªé—®é¢˜æˆ–è·å–æ–°çš„ç¨‹åºå‰¯æœ¬ã€‚
+InvalidParameter=æ— æ•ˆçš„å‘½ä»¤è¡Œå‚æ•°: %n%n%1
+SetupAlreadyRunning=å®‰è£…ç¨‹åºæ­£åœ¨è¿è¡Œã€‚
+WindowsVersionNotSupported=è¿™ä¸ªç¨‹åºä¸æ”¯æŒè¯¥ç‰ˆæœ¬çš„è®¡ç®—æœºè¿è¡Œã€‚
+WindowsServicePackRequired=è¿™ä¸ªç¨‹åºè¦æ±‚%1æœåŠ¡åŒ…%1æˆ–æ›´é«˜ã€‚
+NotOnThisPlatform=è¿™ä¸ªç¨‹åºå°†ä¸èƒ½è¿è¡Œäº %1ã€‚
+OnlyOnThisPlatform=è¿™ä¸ªç¨‹åºå¿…é¡»è¿è¡Œäº %1ã€‚
+OnlyOnTheseArchitectures=è¿™ä¸ªç¨‹åºåªèƒ½åœ¨ä¸ºä¸‹åˆ—å¤„ç†å™¨ç»“æ„è®¾è®¡çš„ Windows ç‰ˆæœ¬ä¸­è¿›è¡Œå®‰è£…:%n%n%1
+WinVersionTooLowError=è¿™ä¸ªç¨‹åºéœ€è¦ %1 ç‰ˆæœ¬ %2 æˆ–æ›´é«˜ã€‚
+WinVersionTooHighError=è¿™ä¸ªç¨‹åºä¸èƒ½å®‰è£…äº %1 ç‰ˆæœ¬ %2 æˆ–æ›´é«˜ã€‚
+AdminPrivilegesRequired=åœ¨å®‰è£…è¿™ä¸ªç¨‹åºæ—¶æ‚¨å¿…é¡»ä»¥ç®¡ç†å‘˜èº«ä»½ç™»å½•ã€‚
+PowerUserPrivilegesRequired=åœ¨å®‰è£…è¿™ä¸ªç¨‹åºæ—¶æ‚¨å¿…é¡»ä»¥ç®¡ç†å‘˜èº«ä»½æˆ–æœ‰æƒé™çš„ç”¨æˆ·ç»„èº«ä»½ç™»å½•ã€‚
+SetupAppRunningError=å®‰è£…ç¨‹åºå‘ç° %1 å½“å‰æ­£åœ¨è¿è¡Œã€‚%n%nè¯·å…ˆå…³é—­æ‰€æœ‰è¿è¡Œçš„çª—å£ï¼Œç„¶åå•å‡»â€œç¡®å®šâ€ç»§ç»­ï¼Œæˆ–æŒ‰â€œå–æ¶ˆâ€é€€å‡ºã€‚
+UninstallAppRunningError=å¸è½½ç¨‹åºå‘ç° %1 å½“å‰æ­£åœ¨è¿è¡Œã€‚%n%nè¯·å…ˆå…³é—­æ‰€æœ‰è¿è¡Œçš„çª—å£ï¼Œç„¶åå•å‡»â€œç¡®å®šâ€ç»§ç»­ï¼Œæˆ–æŒ‰â€œå–æ¶ˆâ€é€€å‡ºã€‚
 
-; *** Misc. errors
-ErrorCreatingDir=°²×°Ïòµ¼ÎŞ·¨´´½¨ÎÄ¼ş¼Ğ¡°%1¡±
-ErrorTooManyFilesInDir=ÓÉÓÚÎÄ¼ş¼Ğ¡°%1¡±ÖĞÎÄ¼ş¹ı¶à£¬ÎŞ·¨ÔÚÆäÖĞ´´½¨ÎÄ¼ş
+; *** Startup questions
+PrivilegesRequiredOverrideTitle=é€‰æ‹©å®‰è£…ç¨‹åºæ¨¡å¼
+PrivilegesRequiredOverrideInstruction=é€‰æ‹©å®‰è£…æ¨¡å¼
+PrivilegesRequiredOverrideText1=%1 å¯ä»¥ä¸ºæ‰€æœ‰ç”¨æˆ·å®‰è£…(éœ€è¦ç®¡ç†å‘˜æƒé™)ï¼Œæˆ–ä»…ä¸ºæ‚¨å®‰è£…ã€‚
+PrivilegesRequiredOverrideText2=%1 åªèƒ½ä¸ºæ‚¨å®‰è£…ï¼Œæˆ–ä¸ºæ‰€æœ‰ç”¨æˆ·å®‰è£…(éœ€è¦ç®¡ç†å‘˜æƒé™)ã€‚
+PrivilegesRequiredOverrideAllUsers=ä¸ºæ‰€æœ‰ç”¨æˆ·å®‰è£…(&A)
+PrivilegesRequiredOverrideAllUsersRecommended=ä¸ºæ‰€æœ‰ç”¨æˆ·å®‰è£…(å»ºè®®é€‰é¡¹)(&A)
+PrivilegesRequiredOverrideCurrentUser=åªä¸ºæˆ‘å®‰è£…(&M)
+PrivilegesRequiredOverrideCurrentUserRecommended=åªä¸ºæˆ‘å®‰è£…(å»ºè®®é€‰é¡¹)(&M)
 
-; *** Setup common messages
-ExitSetupTitle=ÍË³ö°²×°Ïòµ¼
-ExitSetupMessage=°²×°ÉĞÎ´Íê³É¡£Èç¹ûÏÖÔÚÍË³ö£¬³ÌĞò½«²»»á±»°²×°¡£ %n%nÄú¿ÉÒÔÏÂ´ÎÔÙÔËĞĞ°²×°Ïòµ¼À´Íê³É³ÌĞòµÄ°²×°¡£%n%nÈ·¶¨ÍË³ö°²×°Ïòµ¼Âğ£¿
-AboutSetupMenuItem=¹ØÓÚ°²×°Ïòµ¼(&A)¡­
-AboutSetupTitle=¹ØÓÚ°²×°Ïòµ¼
-AboutSetupMessage=%1°æ±¾%2%n%3%n%n%1Ö÷Ò³£º%n%4
+; *** å…¶å®ƒé”™è¯¯
+ErrorCreatingDir=å®‰è£…ç¨‹åºä¸èƒ½åˆ›å»ºç›®å½•â€œ%1â€ã€‚
+ErrorTooManyFilesInDir=ä¸èƒ½åœ¨ç›®å½•â€œ%1â€ä¸­åˆ›å»ºæ–‡ä»¶ï¼Œå› ä¸ºé‡Œé¢çš„æ–‡ä»¶å¤ªå¤š
+
+; *** å®‰è£…ç¨‹åºå…¬å…±æ¶ˆæ¯
+ExitSetupTitle=é€€å‡ºå®‰è£…ç¨‹åº
+ExitSetupMessage=å®‰è£…ç¨‹åºæœªå®Œæˆå®‰è£…ã€‚å¦‚æœæ‚¨ç°åœ¨é€€å‡ºï¼Œæ‚¨çš„ç¨‹åºå°†ä¸èƒ½å®‰è£…ã€‚%n%næ‚¨å¯ä»¥ä»¥åå†è¿è¡Œå®‰è£…ç¨‹åºå®Œæˆå®‰è£…ã€‚%n%né€€å‡ºå®‰è£…ç¨‹åºå—ï¼Ÿ
+AboutSetupMenuItem=å…³äºå®‰è£…ç¨‹åº(&A)...
+AboutSetupTitle=å…³äºå®‰è£…ç¨‹åº
+AboutSetupMessage=%1 ç‰ˆæœ¬ %2%n%3%n%n%1 ä¸»é¡µ:%n%4
 AboutSetupNote=
 TranslatorNote=
 
-; *** Buttons
-ButtonBack=< ÉÏÒ»²½(&B)
-ButtonNext=ÏÂÒ»²½(&N) >
-ButtonInstall=°²×°(&I)
-ButtonOK=È·¶¨
-ButtonCancel=È¡Ïû
-ButtonYes=ÊÇ(&Y)
-ButtonYesToAll=È«Ñ¡ÊÇ(&A)
-ButtonNo=·ñ(&N)
-ButtonNoToAll=È«Ñ¡·ñ(&O)
-ButtonFinish=½áÊø(&F)
-ButtonBrowse=ä¯ÀÀ(&B)¡­
-ButtonWizardBrowse=ä¯ÀÀ(&R)¡­
-ButtonNewFolder=´´½¨ÎÄ¼ş¼Ğ(&M)
+; *** æŒ‰é’®
+ButtonBack=< ä¸Šä¸€æ­¥(&B)
+ButtonNext=ä¸‹ä¸€æ­¥(&N) >
+ButtonInstall=å®‰è£…(&I)
+ButtonOK=ç¡®å®š
+ButtonCancel=å–æ¶ˆ
+ButtonYes=æ˜¯(&Y)
+ButtonYesToAll=å…¨æ˜¯(&A)
+ButtonNo=å¦(&N)
+ButtonNoToAll=å…¨å¦(&O)
+ButtonFinish=å®Œæˆ(&F)
+ButtonBrowse=æµè§ˆ(&B)...
+ButtonWizardBrowse=æµè§ˆ(&R)...
+ButtonNewFolder=æ–°å»ºæ–‡ä»¶å¤¹(&M)
 
-; *** "Select Language" dialog messages
-SelectLanguageTitle=Ñ¡ÔñÓïÑÔ
-SelectLanguageLabel=Ñ¡Ôñ°²×°Ê±Ê¹ÓÃÓïÑÔ£º
+; *** â€œé€‰æ‹©è¯­è¨€â€å¯¹è¯æ¡†æ¶ˆæ¯
+SelectLanguageTitle=é€‰æ‹©å®‰è£…è¯­è¨€
+SelectLanguageLabel=é€‰æ‹©å®‰è£…æ—¶è¦ä½¿ç”¨çš„è¯­è¨€:
 
-; *** Common wizard text
-ClickNext=µã»÷¡°ÏÂÒ»²½¡±¼ÌĞø£¬»ò¡°È¡Ïû¡±ÍË³ö°²×°Ïòµ¼¡£
+; *** å…¬å…±å‘å¯¼æ–‡å­—
+ClickNext=å•å‡»â€œä¸‹ä¸€æ­¥â€ç»§ç»­ï¼Œæˆ–å•å‡»â€œå–æ¶ˆâ€é€€å‡ºå®‰è£…ç¨‹åºã€‚
 BeveledLabel=
-BrowseDialogTitle=ä¯ÀÀÑ¡ÔñÎÄ¼ş¼Ğ
-BrowseDialogLabel=ÔÚÒÔÏÂÁĞ±íÖĞÑ¡È¡Ò»¸öÎÄ¼ş¼Ğ£¬²¢µã»÷¡°È·¶¨¡±¡£
-NewFolderName=ĞÂ½¨ÎÄ¼ş¼Ğ
+BrowseDialogTitle=æµè§ˆæ–‡ä»¶å¤¹
+BrowseDialogLabel=åœ¨ä¸‹åˆ—åˆ—è¡¨ä¸­é€‰æ‹©ä¸€ä¸ªæ–‡ä»¶å¤¹ï¼Œç„¶åå•å‡»â€œç¡®å®šâ€ã€‚
+NewFolderName=æ–°å»ºæ–‡ä»¶å¤¹
 
-; *** "Welcome" wizard page
-WelcomeLabel1=»¶Ó­Ê¹ÓÃ[name]°²×°Ïòµ¼
-WelcomeLabel2=±¾Ïòµ¼½«ÔÚÄúµÄµçÄÔÉÏ°²×°[name/ver]%n%n½¨ÒéÄúÔÚ¼ÌĞøÖ®Ç°¹Ø±ÕÆäËûËùÓĞÓ¦ÓÃ³ÌĞò¡£
+; *** â€œæ¬¢è¿â€å‘å¯¼é¡µ
+WelcomeLabel1=æ¬¢è¿ä½¿ç”¨ [name] å®‰è£…å‘å¯¼
+WelcomeLabel2=ç°åœ¨å°†å®‰è£… [name/ver] åˆ°æ‚¨çš„ç”µè„‘ä¸­ã€‚%n%næ¨èæ‚¨åœ¨ç»§ç»­å®‰è£…å‰å…³é—­æ‰€æœ‰å…¶å®ƒåº”ç”¨ç¨‹åºã€‚
 
-; *** "Password" wizard page
-WizardPassword=ÃÜÂë
-PasswordLabel1=±¾°²×°³ÌĞòÓÉÃÜÂë±£»¤¡£
-PasswordLabel3=ÇëÊäÈëÃÜÂë£¬²¢µã»÷¡°ÏÂÒ»²½¡±¡£ÃÜÂëÇø·Ö´óĞ¡Ğ´¡£
-PasswordEditLabel=ÃÜÂë(&P)£º
-IncorrectPassword=ÄúÊäÈëµÄÃÜÂë²»ÕıÈ·¡£ÇëÖØÊÔ¡£
+; *** â€œå¯†ç â€å‘å¯¼é¡µ
+WizardPassword=å¯†ç 
+PasswordLabel1=è¿™ä¸ªå®‰è£…ç¨‹åºæœ‰å¯†ç ä¿æŠ¤ã€‚
+PasswordLabel3=è¯·è¾“å…¥å¯†ç ï¼Œç„¶åå•å‡»â€œä¸‹ä¸€æ­¥â€ç»§ç»­ã€‚å¯†ç åŒºåˆ†å¤§å°å†™ã€‚
+PasswordEditLabel=å¯†ç (&P):
+IncorrectPassword=æ‚¨è¾“å…¥çš„å¯†ç ä¸æ­£ç¡®ï¼Œè¯·é‡è¯•ã€‚
 
-; *** "License Agreement" wizard page
-WizardLicense=Ğí¿ÉĞ­Òé
-LicenseLabel=ÇëÔÄ¶ÁÒÔÏÂÖØÒªĞÅÏ¢£¬È»ºóÔÙ½øÈëÏÂÒ»²½¡£
-LicenseLabel3=ÇëÔÄ¶ÁÒÔÏÂĞí¿ÉĞ­Òé¡£Äú±ØĞë½ÓÊÜ´ËĞ­ÒéµÄÌõ¿î£¬È»ºó²ÅÄÜ¼ÌĞø°²×°¡£
-LicenseAccepted=ÎÒ½ÓÊÜĞ­Òé(&A)
-LicenseNotAccepted=ÎÒ²»½ÓÊÜĞ­Òé(&D)
+; *** â€œè®¸å¯åè®®â€å‘å¯¼é¡µ
+WizardLicense=è®¸å¯åè®®
+LicenseLabel=ç»§ç»­å®‰è£…å‰è¯·é˜…è¯»ä¸‹åˆ—é‡è¦ä¿¡æ¯ã€‚
+LicenseLabel3=è¯·ä»”ç»†é˜…è¯»ä¸‹åˆ—è®¸å¯åè®®ã€‚æ‚¨åœ¨ç»§ç»­å®‰è£…å‰å¿…é¡»åŒæ„è¿™äº›åè®®æ¡æ¬¾ã€‚
+LicenseAccepted=æˆ‘åŒæ„æ­¤åè®®(&A)
+LicenseNotAccepted=æˆ‘ä¸åŒæ„æ­¤åè®®(&D)
 
-; *** "Information" wizard pages
-WizardInfoBefore=ĞÅÏ¢
-InfoBeforeLabel=ÇëÔÄ¶ÁÒÔÏÂÖØÒªĞÅÏ¢ÔÙ½øÈëÏÂÒ»²½¡£
-InfoBeforeClickLabel=×¼±¸ºÃ¼ÌĞø°²×°ºó£¬µã»÷¡°ÏÂÒ»²½¡±¡£
-WizardInfoAfter=ĞÅÏ¢
-InfoAfterLabel=ÇëÔÄ¶ÁÒÔÏÂÖØÒªĞÅÏ¢ÔÙ½øÈëÏÂÒ»²½¡£
-InfoAfterClickLabel=×¼±¸ºÃ¼ÌĞø°²×°ºó£¬µã»÷¡°ÏÂÒ»²½¡±¡£
+; *** â€œä¿¡æ¯â€å‘å¯¼é¡µ
+WizardInfoBefore=ä¿¡æ¯
+InfoBeforeLabel=è¯·åœ¨ç»§ç»­å®‰è£…å‰é˜…è¯»ä¸‹åˆ—é‡è¦ä¿¡æ¯ã€‚
+InfoBeforeClickLabel=å¦‚æœæ‚¨æƒ³ç»§ç»­å®‰è£…ï¼Œå•å‡»â€œä¸‹ä¸€æ­¥â€ã€‚
+WizardInfoAfter=ä¿¡æ¯
+InfoAfterLabel=è¯·åœ¨ç»§ç»­å®‰è£…å‰é˜…è¯»ä¸‹åˆ—é‡è¦ä¿¡æ¯ã€‚
+InfoAfterClickLabel=å¦‚æœæ‚¨æƒ³ç»§ç»­å®‰è£…ï¼Œå•å‡»â€œä¸‹ä¸€æ­¥â€ã€‚
 
-; *** "User Information" wizard page
-WizardUserInfo=ÓÃ»§ĞÅÏ¢
-UserInfoDesc=ÇëÊäÈëÄúµÄĞÅÏ¢
-UserInfoName=ÓÃ»§Ãû³Æ(&U)£º
-UserInfoOrg=»ú¹¹Ãû³Æ(&O)£º
-UserInfoSerial=ĞòÁĞºÅÂë(&S)£º
-UserInfoNameRequired=±ØĞëÊäÈëÓÃ»§Ãû
+; *** â€œç”¨æˆ·ä¿¡æ¯â€å‘å¯¼é¡µ
+WizardUserInfo=ç”¨æˆ·ä¿¡æ¯
+UserInfoDesc=è¯·è¾“å…¥æ‚¨çš„ä¿¡æ¯ã€‚
+UserInfoName=ç”¨æˆ·å(&U):
+UserInfoOrg=ç»„ç»‡(&O):
+UserInfoSerial=åºåˆ—å·(&S):
+UserInfoNameRequired=æ‚¨å¿…é¡»è¾“å…¥åå­—ã€‚
 
-; *** "Select Destination Location" wizard page
-WizardSelectDir=Ñ¡Ôñ°²×°Î»ÖÃ
-SelectDirDesc=½«[name]°²×°µ½ºÎ´¦£¿
-SelectDirLabel3=°²×°Ïòµ¼½«°Ñ[name]°²×°µ½ÒÔÏÂÎÄ¼ş¼ĞÖĞ¡£
-SelectDirBrowseLabel=µã»÷¡°ÏÂÒ»²½¡±¼ÌĞø¡£Èç¹ûÄúÒªÑ¡Ôñ²»Í¬µÄÎÄ¼ş¼Ğ£¬Çëµã»÷¡°ä¯ÀÀ¡±¡£
-DiskSpaceMBLabel=±ØĞëÖÁÉÙÓĞ[mb]Õ××Ö½Ú£¨MB£©µÄÏĞÖÃ´ÅÅÌ¿Õ¼ä¡£
-CannotInstallToNetworkDrive=ÎŞ·¨°²×°ÖÁÍøÂçÇı¶¯Æ÷¡£
-CannotInstallToUNCPath=ÎŞ·¨°²×°ÖÁUNCÂ·¾¶¡£
-InvalidPath=Äú±ØĞëÊäÈë°üÀ¨ÅÌ·ûµÄÍêÕûÂ·¾¶£¬ÀıÈç£º%n%nC:\Ó¦ÓÃ³ÌĞò%n%n»òÈçÏÂ¸ñÊ½µÄUNCÂ·¾¶£º%n%n\\·şÎñÆ÷Ãû\¹²ÏíÄ¿Â¼Ãû
-InvalidDrive=ÄúÑ¡ÔñµÄÇı¶¯Æ÷»òUNC¹²Ïí²»´æÔÚ»ò²»¿É·ÃÎÊ¡£ÇëÁíÑ¡Ò»¸ö¡£
-DiskSpaceWarningTitle=´ÅÅÌ¿Õ¼ä²»×ã
-DiskSpaceWarning=±ØĞëÖÁÉÙÓĞ%1Ç§×Ö½Ú£¨KB£©µÄÏĞÖÃ¿Õ¼ä²Å¿É°²×°£¬µ«ËùÑ¡Çı¶¯Æ÷½öÓĞ%2Ç§×Ö½Ú£¨KB£©¿ÉÓÃ¿Õ¼ä¡£%n%nÄúÈ·¶¨Òª¼ÌĞøÂğ£¿
-DirNameTooLong=ÎÄ¼ş¼ĞÃû³Æ»òÂ·¾¶Ì«³¤¡£
-InvalidDirName=ÎÄ¼ş¼ĞÃû³ÆÎŞĞ§¡£
-BadDirName32=ÎÄ¼ş¼ĞÃû³Æ²»ÄÜ°üº¬ÏÂÁĞ×Ö·û£º%n%n%1
-DirExistsTitle=ÎÄ¼ş¼ĞÒÑ´æÔÚ
-DirExists=ÎÄ¼ş¼Ğ%n%n%1%n%nÒÑ´æÔÚ¡£ÄúÈ·¶¨Òª°²×°µ½¸ÃÎÄ¼ş¼ĞÂğ£¿
-DirDoesntExistTitle=ÎÄ¼ş¼Ğ²»´æÔÚ
-DirDoesntExist=ÎÄ¼ş¼Ğ%n%n%1%n%n²»´æÔÚ¡£ÄúÒª´´½¨¸ÃÎÄ¼ş¼ĞÂğ£¿
+; *** â€œé€‰æ‹©ç›®æ ‡ç›®å½•â€å‘å¯¼é¢
+WizardSelectDir=é€‰æ‹©ç›®æ ‡ä½ç½®
+SelectDirDesc=æ‚¨æƒ³å°† [name] å®‰è£…åœ¨ä»€ä¹ˆåœ°æ–¹ï¼Ÿ
+SelectDirLabel3=å®‰è£…ç¨‹åºå°†å®‰è£… [name] åˆ°ä¸‹åˆ—æ–‡ä»¶å¤¹ä¸­ã€‚
+SelectDirBrowseLabel=å•å‡»â€œä¸‹ä¸€æ­¥â€ç»§ç»­ã€‚å¦‚æœæ‚¨æƒ³é€‰æ‹©å…¶å®ƒæ–‡ä»¶å¤¹ï¼Œå•å‡»â€œæµè§ˆâ€ã€‚
+DiskSpaceMBLabel=è‡³å°‘éœ€è¦æœ‰ [mb] MB çš„å¯ç”¨ç£ç›˜ç©ºé—´ã€‚
+CannotInstallToNetworkDrive=å®‰è£…ç¨‹åºæ— æ³•å®‰è£…åˆ°ä¸€ä¸ªç½‘ç»œé©±åŠ¨å™¨ã€‚
+CannotInstallToUNCPath=å®‰è£…ç¨‹åºæ— æ³•å®‰è£…åˆ°ä¸€ä¸ªUNCè·¯å¾„ã€‚
+InvalidPath=æ‚¨å¿…é¡»è¾“å…¥ä¸€ä¸ªå¸¦é©±åŠ¨å™¨å·æ ‡çš„å®Œæ•´è·¯å¾„ï¼Œä¾‹å¦‚:%n%nC:\APP%n%næˆ–ä¸‹åˆ—å½¢å¼çš„ UNC è·¯å¾„:%n%n\\server\share
+InvalidDrive=æ‚¨é€‰å®šçš„é©±åŠ¨å™¨æˆ– UNC å…±äº«ä¸å­˜åœ¨æˆ–ä¸èƒ½è®¿é—®ã€‚è¯·é€‰é€‰æ‹©å…¶å®ƒä½ç½®ã€‚
+DiskSpaceWarningTitle=æ²¡æœ‰è¶³å¤Ÿçš„ç£ç›˜ç©ºé—´
+DiskSpaceWarning=å®‰è£…ç¨‹åºè‡³å°‘éœ€è¦ %1 KB çš„å¯ç”¨ç©ºé—´æ‰èƒ½å®‰è£…ï¼Œä½†é€‰å®šé©±åŠ¨å™¨åªæœ‰ %2 KB çš„å¯ç”¨ç©ºé—´ã€‚%n%næ‚¨ä¸€å®šè¦ç»§ç»­å—ï¼Ÿ
+DirNameTooLong=æ–‡ä»¶å¤¹åæˆ–è·¯å¾„å¤ªé•¿ã€‚
+InvalidDirName=æ–‡ä»¶å¤¹åæ˜¯æ— æ•ˆçš„ã€‚
+BadDirName32=æ–‡ä»¶å¤¹åä¸èƒ½åŒ…å«ä¸‹åˆ—ä»»ä½•å­—ç¬¦:%n%n%1
+DirExistsTitle=æ–‡ä»¶å¤¹å­˜åœ¨
+DirExists=æ–‡ä»¶å¤¹:%n%n%1%n%nå·²ç»å­˜åœ¨ã€‚æ‚¨ä¸€å®šè¦å®‰è£…åˆ°è¿™ä¸ªæ–‡ä»¶å¤¹ä¸­å—ï¼Ÿ
+DirDoesntExistTitle=æ–‡ä»¶å¤¹ä¸å­˜åœ¨
+DirDoesntExist=æ–‡ä»¶å¤¹:%n%n%1%n%nä¸å­˜åœ¨ã€‚æ‚¨æƒ³è¦åˆ›å»ºæ­¤ç›®å½•å—ï¼Ÿ
 
-; *** "Select Components" wizard page
-WizardSelectComponents=Ñ¡Ôñ×é¼ş
-SelectComponentsDesc=Òª°²×°ÄÄĞ©×é¼ş£¿
-SelectComponentsLabel2=ÇëÑ¡ÔñÒª°²×°µÄ×é¼ş£¬Çå³ı²»Òª°²×°µÄ×é¼ş¡£×¼±¸ºÃºóµã»÷¡°ÏÂÒ»²½¡±¡£
-FullInstallation=È«²¿°²×°
+; *** â€œé€‰æ‹©ç»„ä»¶â€å‘å¯¼é¡µ
+WizardSelectComponents=é€‰æ‹©ç»„ä»¶
+SelectComponentsDesc=æ‚¨æƒ³å®‰è£…å“ªäº›ç¨‹åºçš„ç»„ä»¶ï¼Ÿ
+SelectComponentsLabel2=é€‰æ‹©æ‚¨æƒ³è¦å®‰è£…çš„ç»„ä»¶ï¼›æ¸…é™¤æ‚¨ä¸æƒ³å®‰è£…çš„ç»„ä»¶ã€‚ç„¶åå•å‡»â€œä¸‹ä¸€æ­¥â€ç»§ç»­ã€‚
+FullInstallation=å®Œå…¨å®‰è£…
 ; if possible don't translate 'Compact' as 'Minimal' (I mean 'Minimal' in your language)
-CompactInstallation=¼ò½à°²×°
-CustomInstallation=×Ô¶¨Òå°²×°
-NoUninstallWarningTitle=×é¼şÒÑ´æÔÚ
-NoUninstallWarning=°²×°Ïòµ¼¼ì²âµ½ÒÑ¾­°²×°ÏÂÁĞ×é¼ş£º%n%n%1%n%nÈ¡ÏûÑ¡¶¨²»»áĞ¶ÔØÕâĞ©×é¼ş¡£%n%nÄúÈ·¶¨Òª¼ÌĞø°²×°Âğ£¿
-ComponentSize1=%1Ç§×Ö½Ú£¨KB£©
-ComponentSize2=%1Õ××Ö½Ú£¨MB£©
-ComponentsDiskSpaceMBLabel=Ä¿Ç°ËùÑ¡×é¼şÒªÇóÖÁÉÙ[mb]Õ××Ö½Ú£¨MB£©´ÅÅÌ¿Õ¼ä¡£
+CompactInstallation=ç®€æ´å®‰è£…
+CustomInstallation=è‡ªå®šä¹‰å®‰è£…
+NoUninstallWarningTitle=ç»„ä»¶å­˜åœ¨
+NoUninstallWarning=å®‰è£…ç¨‹åºä¾¦æµ‹åˆ°ä¸‹åˆ—ç»„ä»¶å·²åœ¨æ‚¨çš„ç”µè„‘ä¸­å®‰è£…ã€‚:%n%n%1%n%nå–æ¶ˆé€‰å®šè¿™äº›ç»„ä»¶å°†ä¸èƒ½å¸è½½å®ƒä»¬ã€‚%n%næ‚¨ä¸€å®šè¦ç»§ç»­å—ï¼Ÿ
+ComponentSize1=%1 KB
+ComponentSize2=%1 MB
+ComponentsDiskSpaceMBLabel=å½“å‰é€‰æ‹©çš„ç»„ä»¶è‡³å°‘éœ€è¦ [mb] MB çš„ç£ç›˜ç©ºé—´ã€‚
 
-; *** "Select Additional Tasks" wizard page
-WizardSelectTasks=Ñ¡Ôñ¸½¼ÓÈÎÎñ
-SelectTasksDesc=ÒªÖ´ĞĞÄÄĞ©¸½¼ÓÈÎÎñ£¿
-SelectTasksLabel2=ÇëÑ¡Ôñ°²×°[name]Ê±ĞèÒªÖ´ĞĞµÄ¸½¼ÓÈÎÎñ£¬È»ºóµã»÷¡°ÏÂÒ»²½¡±¡£
+; *** â€œé€‰æ‹©é™„åŠ ä»»åŠ¡â€å‘å¯¼é¡µ
+WizardSelectTasks=é€‰æ‹©é™„åŠ ä»»åŠ¡
+SelectTasksDesc=æ‚¨æƒ³è¦å®‰è£…ç¨‹åºæ‰§è¡Œå“ªäº›é™„åŠ ä»»åŠ¡ï¼Ÿ
+SelectTasksLabel2=é€‰æ‹©æ‚¨æƒ³è¦å®‰è£…ç¨‹åºåœ¨å®‰è£… [name] æ—¶æ‰§è¡Œçš„é™„åŠ ä»»åŠ¡ï¼Œç„¶åå•å‡»â€œä¸‹ä¸€æ­¥â€ã€‚
 
-; *** "Select Start Menu Folder" wizard page
-WizardSelectProgramGroup=Ñ¡Ôñ¿ªÊ¼²Ëµ¥ÎÄ¼ş¼Ğ
-SelectStartMenuFolderDesc=°Ñ³ÌĞò¿ì½İ·½Ê½·Åµ½ÄÄÀï£¿
-SelectStartMenuFolderLabel3=°²×°Ïòµ¼½«ÔÚÒÔÏÂ¿ªÊ¼²Ëµ¥ÎÄ¼ş¼ĞÖĞ´´½¨³ÌĞò¿ì½İ·½Ê½¡£
-SelectStartMenuFolderBrowseLabel=µã»÷¡°ÏÂÒ»²½¡±¼ÌĞø¡£ÈçÒªÑ¡ÔñÁíÒ»¸öÎÄ¼ş¼Ğ£¬µã»÷¡°ä¯ÀÀ¡±¡£
-MustEnterGroupName=Äú±ØĞëÊäÈëÎÄ¼ş¼ĞÃû³Æ
-GroupNameTooLong=ÎÄ¼ş¼ĞÃû³Æ»òÂ·¾¶Ì«³¤¡£
-InvalidGroupName=ÎÄ¼ş¼ĞÃû³ÆÎŞĞ§¡£
-BadGroupName=ÎÄ¼ş¼ĞÃû³Æ²»ÄÜ°üº¬ÏÂÁĞ×Ö·û£º%n%n%1
-NoProgramGroupCheck2=²»Òª´´½¨¿ªÊ¼²Ëµ¥ÎÄ¼ş¼Ğ(&D)
+; *** â€œé€‰æ‹©å¼€å§‹èœå•æ–‡ä»¶å¤¹â€å‘å¯¼é¡µ
+WizardSelectProgramGroup=é€‰æ‹©å¼€å§‹èœå•æ–‡ä»¶å¤¹
+SelectStartMenuFolderDesc=æ‚¨æƒ³åœ¨å“ªé‡Œæ”¾ç½®ç¨‹åºçš„å¿«æ·æ–¹å¼ï¼Ÿ
+SelectStartMenuFolderLabel3=å®‰è£…ç¨‹åºç°åœ¨å°†åœ¨ä¸‹åˆ—å¼€å§‹èœå•æ–‡ä»¶å¤¹ä¸­åˆ›å»ºç¨‹åºçš„å¿«æ·æ–¹å¼ã€‚
+SelectStartMenuFolderBrowseLabel=å•å‡»â€œä¸‹ä¸€æ­¥â€ç»§ç»­ã€‚å¦‚æœæ‚¨æƒ³é€‰æ‹©å…¶å®ƒæ–‡ä»¶å¤¹ï¼Œå•å‡»â€œæµè§ˆâ€ã€‚
+MustEnterGroupName=æ‚¨å¿…é¡»è¾“å…¥ä¸€ä¸ªæ–‡ä»¶å¤¹åã€‚
+GroupNameTooLong=æ–‡ä»¶å¤¹åæˆ–è·¯å¾„å¤ªé•¿ã€‚
+InvalidGroupName=æ–‡ä»¶å¤¹åæ˜¯æ— æ•ˆçš„ã€‚
+BadGroupName=æ–‡ä»¶å¤¹åä¸èƒ½åŒ…å«ä¸‹åˆ—ä»»ä½•å­—ç¬¦:%n%n%1
+NoProgramGroupCheck2=ä¸åˆ›å»ºå¼€å§‹èœå•æ–‡ä»¶å¤¹(&D)
 
-; *** "Ready to Install" wizard page
-WizardReady=°²×°×¼±¸Íê±Ï
-ReadyLabel1=°²×°Ïòµ¼ÒÑ×¼±¸Íê±Ï£¬½«¿ªÊ¼ÔÚÄúµÄµçÄÔÉÏ°²×°[name]¡£
-ReadyLabel2a=µã»÷¡°°²×°¡±¿ªÊ¼°²×°¡£ÈçÒªÈ·ÈÏ»ò¸ü¸ÄÉèÖÃÇëµã»÷¡°ÉÏÒ»²½¡±¡£
-ReadyLabel2b=µã»÷¡°°²×°¡±¿ªÊ¼°²×°¡£
-ReadyMemoUserInfo=ÓÃ»§ĞÅÏ¢£º
-ReadyMemoDir=°²×°Î»ÖÃ£º
-ReadyMemoType=°²×°ÀàĞÍ£º
-ReadyMemoComponents=ËùÑ¡×é¼ş£º
-ReadyMemoGroup=¿ªÊ¼²Ëµ¥ÎÄ¼ş¼Ğ£º
-ReadyMemoTasks=¸½¼ÓÈÎÎñ£º
+; *** â€œå‡†å¤‡å®‰è£…â€å‘å¯¼é¡µ
+WizardReady=å‡†å¤‡å®‰è£…
+ReadyLabel1=å®‰è£…ç¨‹åºç°åœ¨å‡†å¤‡å¼€å§‹å®‰è£… [name] åˆ°æ‚¨çš„ç”µè„‘ä¸­ã€‚
+ReadyLabel2a=å•å‡»â€œå®‰è£…â€ç»§ç»­æ­¤å®‰è£…ç¨‹åºã€‚å¦‚æœæ‚¨æƒ³è¦å›é¡¾æˆ–æ”¹å˜è®¾ç½®ï¼Œè¯·å•å‡»â€œä¸Šä¸€æ­¥â€ã€‚
+ReadyLabel2b=å•å‡»â€œå®‰è£…â€ç»§ç»­æ­¤å®‰è£…ç¨‹åº?
+ReadyMemoUserInfo=ç”¨æˆ·ä¿¡æ¯:
+ReadyMemoDir=ç›®æ ‡ä½ç½®:
+ReadyMemoType=å®‰è£…ç±»å‹:
+ReadyMemoComponents=é€‰å®šç»„ä»¶:
+ReadyMemoGroup=å¼€å§‹èœå•æ–‡ä»¶å¤¹:
+ReadyMemoTasks=é™„åŠ ä»»åŠ¡:
 
-; *** "Preparing to Install" wizard page
-WizardPreparing=×¼±¸°²×°
-PreparingDesc=°²×°Ïòµ¼ÕıÔÚ×¼±¸ÔÚÄúµÄµçÄÔÉÏ°²×°[name]¡£
-PreviousInstallNotCompleted=ÉÏ´Î³ÌĞò°²×°/Ğ¶ÔØÎ´ÄÜÍê³É¡£ÄúĞèÒªÖØÆôµçÄÔÀ´Íê³ÉÉÏ´Î°²×°¡£%n%nµçÄÔÖØÆôÖ®ºó£¬ÇëÖØĞÂÔËĞĞ°²×°Ïòµ¼À´°²×°[name]¡£ 
-CannotContinue=°²×°ÎŞ·¨¼ÌĞø¡£Çëµã»÷¡°È¡Ïû¡±ÍË³ö¡£
-ApplicationsFound=°²×°Ïòµ¼ĞèÒª¸üĞÂµÄÎÄ¼ş±»ÏÂÁĞÓ¦ÓÃ³ÌĞòÕ¼ÓÃ¡£½¨ÒéÔÊĞí°²×°Ïòµ¼×Ô¶¯¹Ø±ÕÕâĞ©Ó¦ÓÃ³ÌĞò¡£
-ApplicationsFound2=°²×°Ïòµ¼ĞèÒª¸üĞÂµÄÎÄ¼ş±»ÏÂÁĞÓ¦ÓÃ³ÌĞòÕ¼ÓÃ¡£½¨ÒéÔÊĞí°²×°Ïòµ¼×Ô¶¯¹Ø±ÕÕâĞ©Ó¦ÓÃ³ÌĞò¡£°²×°Íê³Éºó£¬°²×°Ïòµ¼½«³¢ÊÔÖØĞÂÆô¶¯ÕâĞ©Ó¦ÓÃ³ÌĞò¡£ 
-CloseApplications=×Ô¶¯¹Ø±ÕÓ¦ÓÃ³ÌĞò(&A)
-DontCloseApplications=²»×Ô¶¯¹Ø±ÕÓ¦ÓÃ³ÌĞò(&D)
-ErrorCloseApplications=°²×°Ïòµ¼ÎŞ·¨×Ô¶¯¹Ø±ÕËùÓĞµÄÓ¦ÓÃ³ÌĞò¡£ÔÚ½øÈëÏÂÒ»²½Ö®Ç°£¬½¨ÒéÄú¹Ø±ÕÄÇĞ©Õ¼ÓÃ°²×°Ïòµ¼ĞèÒª¸üĞÂÎÄ¼şµÄÓ¦ÓÃ³ÌĞò¡£
+; *** â€œæ­£åœ¨å‡†å¤‡å®‰è£…â€å‘å¯¼é¡µ
+WizardPreparing=æ­£åœ¨å‡†å¤‡å®‰è£…
+PreparingDesc=å®‰è£…ç¨‹åºæ­£åœ¨å‡†å¤‡å®‰è£… [name] åˆ°æ‚¨çš„ç”µè„‘ä¸­ã€‚
+PreviousInstallNotCompleted=å…ˆå‰ç¨‹åºçš„å®‰è£…/å¸è½½æœªå®Œæˆã€‚æ‚¨éœ€è¦é‡æ–°å¯åŠ¨æ‚¨çš„ç”µè„‘æ‰èƒ½å®Œæˆå®‰è£…ã€‚%n%nåœ¨é‡æ–°å¯åŠ¨ç”µè„‘åï¼Œå†è¿è¡Œå®‰è£…å®Œæˆ [name] çš„å®‰è£…ã€‚
+CannotContinue=å®‰è£…ç¨‹åºä¸èƒ½ç»§ç»­ã€‚è¯·å•å‡»â€œå–æ¶ˆâ€é€€å‡ºã€‚
+ApplicationsFound=ä¸‹åˆ—åº”ç”¨ç¨‹åºæ­£åœ¨ä½¿ç”¨çš„æ–‡ä»¶éœ€è¦æ›´æ–°è®¾ç½®ã€‚å®ƒæ˜¯å»ºè®®æ‚¨å…è®¸å®‰è£…ç¨‹åºè‡ªåŠ¨å…³é—­è¿™äº›åº”ç”¨ç¨‹åºã€‚
+ApplicationsFound2=ä¸‹åˆ—åº”ç”¨ç¨‹åºæ­£åœ¨ä½¿ç”¨çš„æ–‡ä»¶éœ€è¦æ›´æ–°è®¾ç½®ã€‚å®ƒæ˜¯å»ºè®®æ‚¨å…è®¸å®‰è£…ç¨‹åºè‡ªåŠ¨å…³é—­è¿™äº›åº”ç”¨ç¨‹åºã€‚å®‰è£…å®Œæˆåï¼Œå®‰è£…ç¨‹åºå°†å°è¯•é‡æ–°å¯åŠ¨åº”ç”¨ç¨‹åºã€‚
+CloseApplications=è‡ªåŠ¨å…³é—­è¯¥åº”ç”¨ç¨‹åº(&A)
+DontCloseApplications=ä¸è¦å…³é—­è¯¥åº”ç”¨ç¨‹åº(D)
+ErrorCloseApplications=å®‰è£…ç¨‹åºæ— æ³•è‡ªåŠ¨å…³é—­æ‰€æœ‰åº”ç”¨ç¨‹åºã€‚åœ¨ç»§ç»­ä¹‹å‰ï¼Œæˆ‘ä»¬å»ºè®®æ‚¨å…³é—­æ‰€æœ‰ä½¿ç”¨éœ€è¦æ›´æ–°çš„å®‰è£…ç¨‹åºæ–‡ä»¶ã€‚
 
-; *** "Installing" wizard page
-WizardInstalling=ÕıÔÚ°²×°
-InstallingLabel=ÇëÉÔºò£¬°²×°Ïòµ¼ÕıÔÚÄúµÄµçÄÔÉÏ°²×°[name]¡£
+; *** â€œæ­£åœ¨å®‰è£…â€å‘å¯¼é¡µ
+WizardInstalling=æ­£åœ¨å®‰è£…
+InstallingLabel=å®‰è£…ç¨‹åºæ­£åœ¨å®‰è£… [name] åˆ°æ‚¨çš„ç”µè„‘ä¸­ï¼Œè¯·ç¨ç­‰ã€‚
 
-; *** "Setup Completed" wizard page
-FinishedHeadingLabel=[name]°²×°Íê³É
-FinishedLabelNoIcons=°²×°Ïòµ¼ÒÑÔÚÄúµÄµçÄÔÉÏ°²×°[name]¡£
-FinishedLabel=°²×°Ïòµ¼ÒÑÔÚÄúµÄµçÄÔÉÏ°²×°[name]¡£¿ÉÒÔÍ¨¹ıÒÑ°²×°µÄ¿ì½İ·½Ê½À´´ò¿ª´ËÓ¦ÓÃ³ÌĞò¡£
-ClickFinish=µã»÷¡°½áÊø¡±ÍË³ö°²×°¡£
-FinishedRestartLabel=ÎªÁËÍê³É[name]µÄ°²×°£¬°²×°Ïòµ¼±ØĞëÖØÆôÄúµÄµçÄÔ¡£ÒªÁ¢¼´ÖØÆôÂğ£¿
-FinishedRestartMessage=ÎªÁËÍê³É[name]µÄ°²×°£¬°²×°Ïòµ¼±ØĞëÖØÆôÄúµÄµçÄÔ¡£%n%nÒªÁ¢¼´ÖØÆôÂğ£¿
-ShowReadmeCheck=ÊÇ£¬ÎÒÒªÔÄ¶Á×ÔÊöÎÄ¼ş
-YesRadio=ÊÇ£¬Á¢¼´ÖØÆôµçÄÔ(&Y)
-NoRadio=·ñ£¬ÉÔºóÎÒÔÙÖØÆôµçÄÔ(&N)
-; used for example as 'Run MyProg.exe'
-RunEntryExec=ÔËĞĞ%1
-; used for example as 'View Readme.txt'
-RunEntryShellExec=²éÔÄ%1
+; *** â€œå®‰è£…å®Œæˆâ€å‘å¯¼é¡µ
+FinishedHeadingLabel=[name] å®‰è£…å®Œæˆ
+FinishedLabelNoIcons=å®‰è£…ç¨‹åºå·²åœ¨æ‚¨çš„ç”µè„‘ä¸­å®‰è£…äº† [name]ã€‚
+FinishedLabel=å®‰è£…ç¨‹åºå·²åœ¨æ‚¨çš„ç”µè„‘ä¸­å®‰è£…äº† [name]ã€‚æ­¤åº”ç”¨ç¨‹åºå¯ä»¥é€šè¿‡é€‰æ‹©å®‰è£…çš„å¿«æ·æ–¹å¼è¿è¡Œã€‚
+ClickFinish=å•å‡»â€œå®Œæˆâ€é€€å‡ºå®‰è£…ç¨‹åºã€‚
+FinishedRestartLabel=è¦å®Œæˆ [name] çš„å®‰è£…ï¼Œå®‰è£…ç¨‹åºå¿…é¡»é‡æ–°å¯åŠ¨æ‚¨çš„ç”µè„‘ã€‚æ‚¨æƒ³ç°åœ¨é‡æ–°å¯åŠ¨å—ï¼Ÿ
+FinishedRestartMessage=è¦å®Œæˆ [name] çš„å®‰è£…ï¼Œå®‰è£…ç¨‹åºå¿…é¡»é‡æ–°å¯åŠ¨æ‚¨çš„ç”µè„‘ã€‚%n%næ‚¨æƒ³ç°åœ¨é‡æ–°å¯åŠ¨å—ï¼Ÿ
+ShowReadmeCheck=æ˜¯ï¼Œæ‚¨æƒ³æŸ¥é˜…è‡ªè¿°æ–‡ä»¶
+YesRadio=æ˜¯ï¼Œç«‹å³é‡æ–°å¯åŠ¨ç”µè„‘(&Y)
+NoRadio=å¦ï¼Œç¨åé‡æ–°å¯åŠ¨ç”µè„‘(&N)
+; ç”¨äºè±¡â€œè¿è¡Œ MyProg.exeâ€
+RunEntryExec=è¿è¡Œ %1
+; ç”¨äºè±¡â€œæŸ¥é˜… Readme.txtâ€
+RunEntryShellExec=æŸ¥é˜… %1
 
-; *** "Setup Needs the Next Disk" stuff
-ChangeDiskTitle=°²×°Ïòµ¼ĞèÒªÏÂÒ»ÕÅ´ÅÅÌ
-SelectDiskLabel2=Çë²åÈë´ÅÅÌ%1 ²¢µã»÷¡°È·¶¨¡±¡£%n%nÈç¹û¸Ã´ÅÅÌÖĞµÄÎÄ¼ş²¢²»ÔÚÒÔÏÂËùÊ¾ÎÄ¼ş¼ĞÖĞ£¬ÇëÊäÈëÕıÈ·µÄÂ·¾¶»òµã»÷¡°ä¯ÀÀ¡±¡£
-PathLabel=Â·¾¶(&P)£º
-FileNotInDir2=ÎÄ¼ş¡°%1¡±²»ÔÚ¡°%2¡±ÖĞ¡£Çë²åÈëÕıÈ·µÄ´ÅÅÌ»òÑ¡ÔñÆäËüÎÄ¼ş¼Ğ¡£
-SelectDirectoryLabel=ÇëÖ¸¶¨ÏÂÒ»ÕÅ´ÅÅÌµÄÎ»ÖÃ¡£
+; *** â€œå®‰è£…ç¨‹åºéœ€è¦ä¸‹ä¸€å¼ ç£ç›˜â€æç¤º
+ChangeDiskTitle=å®‰è£…ç¨‹åºéœ€è¦ä¸‹ä¸€å¼ ç£ç›˜
+SelectDiskLabel2=è¯·æ’å…¥ç£ç›˜ %1 å¹¶å•å‡»â€œç¡®å®šâ€ã€‚%n%nå¦‚æœè¿™ä¸ªç£ç›˜ä¸­çš„æ–‡ä»¶ä¸èƒ½åœ¨ä¸åŒäºä¸‹åˆ—æ˜¾ç¤ºçš„æ–‡ä»¶å¤¹ä¸­æ‰¾åˆ°ï¼Œè¾“å…¥æ­£ç¡®çš„è·¯å¾„æˆ–å•å‡»â€œæµè§ˆâ€ã€‚
+PathLabel=è·¯å¾„(&P):
+FileNotInDir2=æ–‡ä»¶â€œ%1â€ä¸èƒ½åœ¨â€œ%2â€å®šä½ã€‚è¯·æ’å…¥æ­£ç¡®çš„ç£ç›˜æˆ–é€‰æ‹©å…¶å®ƒæ–‡ä»¶å¤¹ã€‚
+SelectDirectoryLabel=è¯·æŒ‡å®šä¸‹ä¸€å¼ ç£ç›˜çš„ä½ç½®ã€‚
 
-; *** Installation phase messages
-SetupAborted=°²×°Î´ÄÜÍê³É¡£%n%nÇë½â¾öÎÊÌâºóÔÙÖØĞÂÔËĞĞ°²×°Ïòµ¼¡£
-EntryAbortRetryIgnore=µã»÷¡°ÖØÊÔ¡±ÖØĞÂ³¢ÊÔ£¬µã»÷¡°ºöÂÔ¡±¼ÌĞø°²×°£¬»òµã»÷¡°ÖĞÖ¹¡±È¡Ïû°²×°¡£
+; *** å®‰è£…çŠ¶æ€æ¶ˆæ¯
+SetupAborted=å®‰è£…ç¨‹åºæœªå®Œæˆå®‰è£…ã€‚%n%nè¯·ä¿®æ­£è¿™ä¸ªé—®é¢˜å¹¶é‡æ–°è¿è¡Œå®‰è£…ç¨‹åºã€‚
+AbortRetryIgnoreSelectAction=é€‰é¡¹
+AbortRetryIgnoreRetry=é‡è¯•(&T)
+AbortRetryIgnoreIgnore=å¿½ç•¥é”™è¯¯å¹¶ç»§ç»­(&I)
+AbortRetryIgnoreCancel=å…³é—­å®‰è£…ç¨‹åº
 
-; *** Installation status messages
-StatusClosingApplications=ÕıÔÚ¹Ø±ÕÓ¦ÓÃ³ÌĞò¡­
-StatusCreateDirs=ÕıÔÚ´´½¨ÎÄ¼ş¼Ğ¡­
-StatusExtractFiles=ÕıÔÚÈ¡³öÎÄ¼ş¡­
-StatusCreateIcons=ÕıÔÚ´´½¨¿ì½İ·½Ê½¡­
-StatusCreateIniEntries=ÕıÔÚ´´½¨INIÌõÄ¿¡­
-StatusCreateRegistryEntries=ÕıÔÚ´´½¨×¢²á±íÌõÄ¿¡­
-StatusRegisterFiles=ÕıÔÚ´´½¨×¢²á±íÏîÄ¿¡­
-StatusSavingUninstall=ÕıÔÚ±£´æĞ¶ÔØĞÅÏ¢¡­
-StatusRunProgram=ÕıÔÚ½áÊø°²×°¡­
-StatusRestartingApplications=ÕıÔÚÖØÆôÓ¦ÓÃ³ÌĞò¡­
-StatusRollback=ÕıÔÚ³·Ïú¸ü¸Ä¡­
+; *** å®‰è£…çŠ¶æ€æ¶ˆæ¯
+StatusClosingApplications=æ­£åœ¨å…³é—­åº”ç”¨ç¨‹åº...
+StatusCreateDirs=æ­£åœ¨åˆ›å»ºç›®å½•...
+StatusExtractFiles=æ­£åœ¨è§£å‹ç¼©æ–‡ä»¶...
+StatusCreateIcons=æ­£åœ¨åˆ›å»ºå¿«æ·æ–¹å¼...
+StatusCreateIniEntries=æ­£åœ¨åˆ›å»º INI æ¡ç›®...
+StatusCreateRegistryEntries=æ­£åœ¨åˆ›å»ºæ³¨å†Œè¡¨æ¡ç›®...
+StatusRegisterFiles=æ­£åœ¨æ³¨å†Œæ–‡ä»¶...
+StatusSavingUninstall=æ­£åœ¨ä¿å­˜å¸è½½ä¿¡æ¯...
+StatusRunProgram=æ­£åœ¨å®Œæˆå®‰è£…...
+StatusRestartingApplications=æ­£åœ¨é‡å¯åº”ç”¨ç¨‹åº...
+StatusRollback=æ­£åœ¨æ’¤é”€æ›´æ”¹...
 
-; *** Misc. errors
-ErrorInternal2=ÄÚ²¿´íÎó£º%1
-ErrorFunctionFailedNoCode=%1Ê§°Ü
-ErrorFunctionFailed=%1Ê§°Ü£¬´íÎóÂë%2
-ErrorFunctionFailedWithMessage=%1Ê§°Ü£¬´íÎóÂë%2¡£%n%3
-ErrorExecutingProgram=ÎŞ·¨ÔËĞĞ³ÌĞò£º%n%1
+; *** å…¶å®ƒé”™è¯¯
+ErrorInternal2=å†…éƒ¨é”™è¯¯: %1
+ErrorFunctionFailedNoCode=%1 å¤±è´¥
+ErrorFunctionFailed=%1 å¤±è´¥ï¼›ä»£ç  %2
+ErrorFunctionFailedWithMessage=%1 å¤±è´¥ï¼›ä»£ç  %2.%n%3
+ErrorExecutingProgram=ä¸èƒ½æ‰§è¡Œæ–‡ä»¶:%n%1
 
-; *** Registry errors
-ErrorRegOpenKey=´ò¿ª×¢²á±í¼üÊ±³ö´í£º%n%1\%2
-ErrorRegCreateKey=´´½¨×¢²á±í¼üÊ±³ö´í£º%n%1\%2
-ErrorRegWriteKey=Ğ´Èë×¢²á±í¼üÊ±³ö´í£º%n%1\%2
+; *** æ³¨å†Œè¡¨é”™è¯¯
+ErrorRegOpenKey=é”™è¯¯æ‰“å¼€æ³¨å†Œè¡¨é”®:%n%1\%2
+ErrorRegCreateKey=é”™è¯¯åˆ›å»ºæ³¨å†Œè¡¨é”®:%n%1\%2
+ErrorRegWriteKey=é”™è¯¯å†™å…¥æ³¨å†Œè¡¨é”®:%n%1\%2
 
-; *** INI errors
-ErrorIniEntry=ÔÚÎÄ¼ş¡°%1¡±ÖĞ´´½¨INIÌõÄ¿Ê±³ö´í¡£
+; *** INI é”™è¯¯
+ErrorIniEntry=åœ¨æ–‡ä»¶â€œ%1â€åˆ›å»º INI é¡¹ç›®é”™è¯¯ã€‚
 
-; *** File copying errors
-FileAbortRetryIgnore=µã»÷¡°ÖØÊÔ¡±ÖØĞÂ³¢ÊÔ£¬µã»÷¡°ºöÂÔ¡±Ìø¹ı´ËÎÄ¼ş£¨²»ÍÆ¼öÕâÑù×ö£©£¬»òµã»÷¡°ÖĞÖ¹¡±È¡Ïû°²×°¡£
-FileAbortRetryIgnore2=µã»÷¡°ÖØÊÔ¡±ÖØĞÂ³¢ÊÔ£¬µã»÷¡°ºöÂÔ¡±¼ÌĞø°²×°£¨²»ÍÆ¼öÕâÑù×ö£©£¬»òµã»÷¡°ÖĞÖ¹¡±È¡Ïû°²×°¡£
-SourceIsCorrupted=Ô´ÎÄ¼şÒÑËğ»µ
-SourceDoesntExist=Ô´ÎÄ¼ş¡°%1¡±²»´æÔÚ
-ExistingFileReadOnly=ÏÖÓĞÎÄ¼ş±»±ê¼ÇÎªÖ»¶Á¡£%n%nµã»÷¡°ÖØÊÔ¡±ÒÆ³ıÆäÖ»¶ÁÊôĞÔ²¢ÖØĞÂ³¢ÊÔ£¬µã»÷¡°ºöÂÔ¡±Ìø¹ı´ËÎÄ¼ş£¬»òµã»÷¡°ÖĞÖ¹¡±È¡Ïû°²×°¡£
-ErrorReadingExistingDest=¶ÁÈ¡ÏÖÓĞÎÄ¼şÊ±³ö´í£º
-FileExists=ÎÄ¼şÒÑ´æÔÚ¡£%n%nÈÃ°²×°Ïòµ¼¸²¸ÇËüÂğ£¿
-ExistingFileNewer=ÏÖÓĞÎÄ¼ş±È°²×°Ïòµ¼ÊÔÍ¼°²×°µÄ»¹ÒªĞÂ¡£½¨Òé±£ÁôÏÖÓĞÎÄ¼ş¡£%n%nÄúÒª±£ÁôÏÖÓĞÎÄ¼şÂğ£¿
-ErrorChangingAttr=¸ü¸ÄÏÖÓĞÎÄ¼şÊôĞÔÊ±³ö´í£º
-ErrorCreatingTemp=ÔÚÄ¿µÄÎÄ¼ş¼ĞÖĞ´´½¨ÎÄ¼şÊ±³ö´í£º
-ErrorReadingSource=¶ÁÈ¡Ô´ÎÄ¼şÊ±³ö´í£º
-ErrorCopying=¸´ÖÆÎÄ¼şÊ±³ö´í£º
-ErrorReplacingExistingFile=Ìæ»»ÏÖÓĞÎÄ¼şÊ±³ö´í£º
-ErrorRestartReplace=ÖØÆôÌæ»»Ê§°Ü£º
-ErrorRenamingTemp=ÎªÄ¿µÄÎÄ¼ş¼ĞÖĞÎÄ¼şÖØÃüÃûÊ±³ö´í£º
-ErrorRegisterServer=ÎŞ·¨×¢²á¶¯Ì¬¿â»ò¿Ø¼ş£¨DLL/OCX£©£º%1
-ErrorRegSvr32Failed=ÔËĞĞRegSvr32Ê§°Ü£¬Æä·µ»ØÖµÎª£º%1
-ErrorRegisterTypeLib=ÎŞ·¨×¢²áÀàĞÍ¿â£º%1
+; *** æ–‡ä»¶å¤åˆ¶é”™è¯¯
+FileAbortRetryIgnoreSkipNotRecommended=è·³è¿‡è¿™ä¸ªæ–‡ä»¶ (ä¸æ¨è)(&S)
+FileAbortRetryIgnoreIgnoreNotRecommended=å¿½ç•¥é”™è¯¯å¹¶ç»§ç»­ (ä¸æ¨è)(&I)
+SourceIsCorrupted=æºæ–‡ä»¶è¢«ç ´å
+SourceDoesntExist=æºæ–‡ä»¶â€œ%1â€ä¸å­˜åœ¨
+ExistingFileReadOnly2=æ— æ³•æ›¿æ¢ç°æœ‰æ–‡ä»¶ï¼Œå› ä¸ºå®ƒæ˜¯åªè¯»çš„ã€‚
+ExistingFileReadOnlyRetry=ç§»é™¤åªè¯»å±æ€§å¹¶é‡è¯•(&R)
+ExistingFileReadOnlyKeepExisting=ä¿ç•™ç°æœ‰æ–‡ä»¶(&K)
+ErrorReadingExistingDest=å°è¯•è¯»äº†ç°æœ‰çš„æ–‡ä»¶æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯:
+FileExists=æ–‡ä»¶å·²ç»å­˜åœ¨ã€‚%n%næ‚¨æƒ³è¦å®‰è£…ç¨‹åºè¦†ç›–å®ƒå—ï¼Ÿ
+ExistingFileNewer=ç°æœ‰çš„æ–‡ä»¶æ–°ä¸å®‰è£…ç¨‹åºè¦å®‰è£…çš„æ–‡ä»¶ã€‚æ¨èæ‚¨ä¿ç•™ç°æœ‰æ–‡ä»¶ã€‚%n%næ‚¨æƒ³è¦ä¿ç•™ç°æœ‰çš„æ–‡ä»¶å—ï¼Ÿ
+ErrorChangingAttr=å°è¯•æ”¹å˜ä¸‹åˆ—ç°æœ‰çš„æ–‡ä»¶çš„å±æ€§æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯:
+ErrorCreatingTemp=å°è¯•åœ¨ç›®æ ‡ç›®å½•åˆ›å»ºæ–‡ä»¶æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯:
+ErrorReadingSource=å°è¯•è¯»å–ä¸‹åˆ—æºæ–‡ä»¶æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯:
+ErrorCopying=å°è¯•å¤åˆ¶ä¸‹åˆ—æ–‡ä»¶æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯:
+ErrorReplacingExistingFile=å°è¯•æ›¿æ¢ç°æœ‰çš„æ–‡ä»¶æ—¶å‘ç”Ÿé”™è¯¯:
+ErrorRestartReplace=é‡å¯ç”µè„‘åæ›¿æ¢æ–‡ä»¶å¤±è´¥:
+ErrorRenamingTemp=å°è¯•é‡æ–°å‘½åä»¥ä¸‹ç›®æ ‡ç›®å½•ä¸­çš„ä¸€ä¸ªæ–‡ä»¶æ—¶å‘ç”Ÿé”™è¯¯:
+ErrorRegisterServer=ä¸èƒ½æ³¨å†Œ DLL/OCX: %1
+ErrorRegSvr32Failed=RegSvr32 å¤±è´¥ï¼›é€€å‡ºä»£ç  %1
+ErrorRegisterTypeLib=ä¸èƒ½æ³¨å†Œç±»å‹åº“: %1
 
-; *** Post-installation errors
-ErrorOpeningReadme=´ò¿ª×ÔÊöÎÄ¼şÊ±³ö´í¡£
-ErrorRestartingComputer=°²×°Ïòµ¼ÎŞ·¨ÖØÆôµçÄÔ¡£ÇëÊÖ¶¯ÖØÆô¡£
+; *** Uninstall display name markings
+; used for example as 'My Program (32-bit)'
+UninstallDisplayNameMark=%1 (%2)
+; used for example as 'My Program (32-bit, All users)'
+UninstallDisplayNameMarks=%1 (%2, %3)
+UninstallDisplayNameMark32Bit=32ä½
+UninstallDisplayNameMark64Bit=64ä½
+UninstallDisplayNameMarkAllUsers=æ‰€æœ‰ç”¨æˆ·
+UninstallDisplayNameMarkCurrentUser=å½“å‰ç”¨æˆ·
 
-; *** Uninstaller messages
-UninstallNotFound=ÎÄ¼ş¡°%1¡±²»´æÔÚ¡£ÎŞ·¨Ğ¶ÔØ¡£
-UninstallOpenError=ÎŞ·¨´ò¿ªÎÄ¼ş¡°%1¡±¡£ÎŞ·¨Ğ¶ÔØ
-UninstallUnsupportedVer=´Ë°æ±¾µÄĞ¶ÔØÏòµ¼ÎŞ·¨Ê¶±ğĞ¶ÔØÈÕÖ¾ÎÄ¼ş¡°%1¡±µÄ¸ñÊ½¡£ÎŞ·¨Ğ¶ÔØ
-UninstallUnknownEntry=ÔÚĞ¶ÔØÈÕÖ¾ÖĞÓöµ½Î´ÖªÌõÄ¿ (%1)
-ConfirmUninstall=ÄúÊÇ·ñÈ·¶¨ÒªÍêÈ«É¾³ı%1¼°ÆäËùÓĞ×é¼ş£¿
-UninstallOnlyOnWin64=´Ë°²×°Ö»ÄÜÔÚ64Î»WindowsÉÏĞ¶ÔØ¡£
-OnlyAdminCanUninstall=´Ë°²×°Ö»ÄÜÓÉ¾ß±¸¹ÜÀíÔ±È¨ÏŞµÄÓÃ»§Ğ¶ÔØ¡£
-UninstallStatusLabel=ÇëÉÔºò£¬ÕıÔÚÉ¾³ı%1¡£
-UninstalledAll=ÒÑ³É¹¦µØ´ÓÄúµÄµçÄÔÖĞÉ¾³ı%1¡£
-UninstalledMost=%1Ğ¶ÔØÍê±Ï¡£%n%nÄ³Ğ©ÏîÄ¿ÎŞ·¨ÔÚĞ¶ÔØ¹ı³ÌÖĞÉ¾³ı¡£¿ÉÒÔÊÖ¶¯É¾³ıÕâĞ©ÏîÄ¿¡£
-UninstalledAndNeedsRestart=ÈôÒªÍê³É%1µÄĞ¶ÔØ£¬±ØĞëÖØÆôµçÄÔ¡£%n%nÒªÁ¢¼´ÖØÆôÂğ£¿
-UninstallDataCorrupted=ÎÄ¼ş¡°%1¡±ÒÑËğ»µ¡£ÎŞ·¨Ğ¶ÔØ
+; *** å®‰è£…åé”™è¯¯
+ErrorOpeningReadme=å½“å°è¯•æ‰“å¼€è‡ªè¿°æ–‡ä»¶æ—¶å‘ç”Ÿä¸€ä¸ªé”™è¯¯ã€‚
+ErrorRestartingComputer=å®‰è£…ç¨‹åºä¸èƒ½é‡æ–°å¯åŠ¨ç”µè„‘ï¼Œè¯·æ‰‹åŠ¨é‡å¯ã€‚
 
-; *** Uninstallation phase messages
-ConfirmDeleteSharedFileTitle=É¾³ı¹²ÏíÎÄ¼şÂğ£¿
-ConfirmDeleteSharedFile2=ÏµÍ³ÏÔÊ¾Ã»ÓĞÈÎºÎ³ÌĞòÊ¹ÓÃÒÔÏÂ¹²ÏíÎÄ¼ş¡£ÒªÉ¾³ı¸Ã¹²ÏíÎÄ¼şÂğ£¿%n%nÈç¹ûÓĞ³ÌĞòÊ¹ÓÃ¸ÃÎÄ¼ş£¬µ±Ëü±»É¾³ıºóÕâĞ©³ÌĞò¿ÉÄÜÎŞ·¨Õı³£ÔËĞĞ¡£Èç¹û²»È·¶¨£¬ÇëÑ¡Ôñ¡°·ñ¡±¡£ÁôÏÂ¸ÃÎÄ¼ş²»»á¶ÔÏµÍ³Ôì³ÉÈÎºÎÎ£º¦¡£
-SharedFileNameLabel=ÎÄ¼şÃû£º
-SharedFileLocationLabel=Î»ÖÃ£º
-WizardUninstalling=Ğ¶ÔØ×´Ì¬
-StatusUninstalling=ÕıÔÚĞ¶ÔØ%1¡­
+; *** å¸è½½æ¶ˆæ¯
+UninstallNotFound=æ–‡ä»¶â€œ%1â€ä¸å­˜åœ¨ã€‚ä¸èƒ½å¸è½½ã€‚
+UninstallOpenError=æ–‡ä»¶â€œ%1â€ä¸èƒ½æ‰“å¼€ã€‚ä¸èƒ½å¸è½½
+UninstallUnsupportedVer=å¸è½½æ—¥å¿—æ–‡ä»¶â€œ%1â€æœ‰æœªè¢«è¿™ä¸ªç‰ˆæœ¬çš„å¸è½½å™¨æ‰¿è®¤çš„æ ¼å¼ã€‚ä¸èƒ½å¸è½½
+UninstallUnknownEntry=åœ¨å¸è½½æ—¥å¿—ä¸­é‡åˆ°ä¸€ä¸ªæœªçŸ¥çš„æ¡ç›® (%1)
+ConfirmUninstall=æ‚¨ç¡®è®¤æƒ³è¦å®Œå…¨åˆ é™¤ %1 åŠå®ƒçš„æ‰€æœ‰ç»„ä»¶å—ï¼Ÿ
+UninstallOnlyOnWin64=è¿™ä¸ªå®‰è£…ç¨‹åºåªèƒ½åœ¨ 64 ä½ Windows ä¸­è¿›è¡Œå¸è½½ã€‚
+OnlyAdminCanUninstall=è¿™ä¸ªå®‰è£…çš„ç¨‹åºåªèƒ½æ˜¯æœ‰ç®¡ç†å‘˜æƒé™çš„ç”¨æˆ·æ‰èƒ½å¸è½½ã€‚
+UninstallStatusLabel=æ­£åœ¨ä»æ‚¨çš„ç”µè„‘ä¸­åˆ é™¤ %1ï¼Œè¯·ç­‰å¾…ã€‚
+UninstalledAll=%1 å·²é¡ºåˆ©åœ°ä»æ‚¨çš„ç”µè„‘ä¸­åˆ é™¤ã€‚
+UninstalledMost=%1 å¸è½½å®Œæˆã€‚%n%næœ‰ä¸€äº›å†…å®¹ä¸èƒ½è¢«åˆ é™¤ã€‚æ‚¨å¯ä»¥æ‰‹å·¥åˆ é™¤å®ƒä»¬ã€‚
+UninstalledAndNeedsRestart=è¦å®Œæˆ %1 çš„å¸è½½ï¼Œæ‚¨çš„ç”µè„‘å¿…é¡»é‡æ–°å¯åŠ¨ã€‚%n%næ‚¨ç°åœ¨æƒ³é‡æ–°å¯åŠ¨ç”µè„‘å—ï¼Ÿ
+UninstallDataCorrupted=â€œ%1â€æ–‡ä»¶è¢«ç ´åï¼Œä¸èƒ½å¸è½½
+
+; *** å¸è½½çŠ¶æ€æ¶ˆæ¯
+ConfirmDeleteSharedFileTitle=åˆ é™¤å…±äº«æ–‡ä»¶å—ï¼Ÿ
+ConfirmDeleteSharedFile2=ç³»ç»Ÿä¸­åŒ…å«çš„ä¸‹åˆ—å…±äº«æ–‡ä»¶å·²ç»ä¸è¢«å…¶å®ƒç¨‹åºä½¿ç”¨ã€‚æ‚¨æƒ³è¦å¸è½½ç¨‹åºåˆ é™¤è¿™äº›å…±äº«æ–‡ä»¶å—ï¼Ÿ%n%nå¦‚æœè¿™äº›æ–‡ä»¶è¢«åˆ é™¤ï¼Œä½†è¿˜æœ‰ç¨‹åºæ­£åœ¨ä½¿ç”¨è¿™äº›æ–‡ä»¶ï¼Œè¿™äº›ç¨‹åºå¯èƒ½ä¸èƒ½æ­£ç¡®æ‰§è¡Œã€‚å¦‚æœæ‚¨ä¸èƒ½ç¡®å®šï¼Œé€‰æ‹©â€œå¦â€ã€‚æŠŠè¿™äº›æ–‡ä»¶ä¿ç•™åœ¨ç³»ç»Ÿä¸­ä»¥å…å¼•èµ·é—®é¢˜ã€‚
+SharedFileNameLabel=æ–‡ä»¶å:
+SharedFileLocationLabel=ä½ç½®:
+WizardUninstalling=å¸è½½çŠ¶æ€
+StatusUninstalling=æ­£åœ¨å¸è½½ %1...
 
 ; *** Shutdown block reasons
-ShutdownBlockReasonInstallingApp=ÕıÔÚ°²×°%1¡£
-ShutdownBlockReasonUninstallingApp=ÕıÔÚĞ¶ÔØ%1¡£
+ShutdownBlockReasonInstallingApp=æ­£åœ¨å®‰è£… %1.
+ShutdownBlockReasonUninstallingApp=æ­£åœ¨å¸è½½ %1.
 
 ; The custom messages below aren't used by Setup itself, but if you make
 ; use of them in your scripts, you'll want to translate them.
 
 [CustomMessages]
 
-NameAndVersion=%1°æ±¾%2
-AdditionalIcons=¸½¼Ó¿ì½İ·½Ê½£º
-CreateDesktopIcon=´´½¨×ÀÃæ¿ì½İ·½Ê½(&D)
-CreateQuickLaunchIcon=´´½¨¿ìËÙÆô¶¯À¸¿ì½İ·½Ê½(&Q)
-ProgramOnTheWeb=%1ÍøÕ¾
-UninstallProgram=Ğ¶ÔØ%1
-LaunchProgram=ÔËĞĞ%1
-AssocFileExtension=½«%1Óë%2ÎÄ¼şÀ©Õ¹Ãû¹ØÁª(&A)
-AssocingFileExtension=ÕıÔÚ½«%1Óë%2ÎÄ¼şÀ©Õ¹Ãû¹ØÁª¡­
-AutoStartProgramGroupDescription=Æô¶¯£º
-AutoStartProgram=×Ô¶¯Æô¶¯%1
-AddonHostProgramNotFound=ÔÚÄúËùÑ¡ÎÄ¼ş¼ĞÖĞÕÒ²»µ½%1¡£%n%nÊÇ·ñÈÔÈ»¼ÌĞø£¿
+NameAndVersion=%1 ç‰ˆæœ¬ %2
+AdditionalIcons=é™„åŠ å¿«æ·æ–¹å¼:
+CreateDesktopIcon=åˆ›å»ºæ¡Œé¢å¿«æ·æ–¹å¼(&D)
+CreateQuickLaunchIcon=åˆ›å»ºå¿«é€Ÿè¿è¡Œæ å¿«æ·æ–¹å¼(&Q)
+ProgramOnTheWeb=%1 ç½‘ç«™
+UninstallProgram=å¸è½½ %1
+LaunchProgram=è¿è¡Œ %1
+AssocFileExtension=å°† %2 æ–‡ä»¶æ‰©å±•åä¸ %1 å»ºç«‹å…³è”(&A)
+AssocingFileExtension=æ­£åœ¨å°† %2 æ–‡ä»¶æ‰©å±•åä¸ %1 å»ºç«‹å…³è”...
+AutoStartProgramGroupDescription=å¯åŠ¨ç»„:
+AutoStartProgram=è‡ªåŠ¨å¯åŠ¨ %1
+AddonHostProgramNotFound=%1æ— æ³•æ‰¾åˆ°æ‚¨æ‰€é€‰æ‹©çš„æ–‡ä»¶å¤¹ã€‚%n%nä½ æƒ³ç»§ç»­å—ï¼Ÿ
+
