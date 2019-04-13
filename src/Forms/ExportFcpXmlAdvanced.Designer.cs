@@ -60,7 +60,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(848, 477);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 7;
+            this.buttonCancel.TabIndex = 101;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -72,7 +72,7 @@
             this.buttonSave.Location = new System.Drawing.Point(725, 477);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(117, 23);
-            this.buttonSave.TabIndex = 6;
+            this.buttonSave.TabIndex = 100;
             this.buttonSave.Text = "&Save as...";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -101,7 +101,7 @@
             this.groupBoxImageSettings.Location = new System.Drawing.Point(11, 246);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
             this.groupBoxImageSettings.Size = new System.Drawing.Size(912, 225);
-            this.groupBoxImageSettings.TabIndex = 9;
+            this.groupBoxImageSettings.TabIndex = 0;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
@@ -111,7 +111,7 @@
             this.buttonCustomResolution.Location = new System.Drawing.Point(589, 54);
             this.buttonCustomResolution.Name = "buttonCustomResolution";
             this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
-            this.buttonCustomResolution.TabIndex = 51;
+            this.buttonCustomResolution.TabIndex = 91;
             this.buttonCustomResolution.Text = "...";
             this.buttonCustomResolution.UseVisualStyleBackColor = true;
             this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
@@ -147,7 +147,7 @@
             this.comboBoxResolution.Location = new System.Drawing.Point(465, 54);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxResolution.TabIndex = 50;
+            this.comboBoxResolution.TabIndex = 90;
             // 
             // comboBoxFrameRate
             // 
@@ -155,7 +155,7 @@
             this.comboBoxFrameRate.Location = new System.Drawing.Point(465, 24);
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFrameRate.TabIndex = 48;
+            this.comboBoxFrameRate.TabIndex = 80;
             // 
             // labelFrameRate
             // 
@@ -282,7 +282,7 @@
             this.comboBoxBaseline.Location = new System.Drawing.Point(112, 170);
             this.comboBoxBaseline.Name = "comboBoxBaseline";
             this.comboBoxBaseline.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBaseline.TabIndex = 46;
+            this.comboBoxBaseline.TabIndex = 70;
             // 
             // labelSubtitleFontFace
             // 
@@ -302,7 +302,7 @@
             this.comboBoxFontFace.Location = new System.Drawing.Point(112, 78);
             this.comboBoxFontFace.Name = "comboBoxFontFace";
             this.comboBoxFontFace.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFontFace.TabIndex = 44;
+            this.comboBoxFontFace.TabIndex = 30;
             // 
             // comboBoxHAlign
             // 
@@ -316,7 +316,7 @@
             this.comboBoxHAlign.Location = new System.Drawing.Point(112, 140);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxHAlign.TabIndex = 8;
+            this.comboBoxHAlign.TabIndex = 60;
             // 
             // labelHorizontalAlign
             // 
@@ -343,7 +343,7 @@
             this.comboBoxFontName.Location = new System.Drawing.Point(112, 24);
             this.comboBoxFontName.Name = "comboBoxFontName";
             this.comboBoxFontName.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFontName.TabIndex = 1;
+            this.comboBoxFontName.TabIndex = 10;
             // 
             // comboBoxFontSize
             // 
@@ -461,7 +461,7 @@
             this.comboBoxFontSize.Location = new System.Drawing.Point(112, 51);
             this.comboBoxFontSize.Name = "comboBoxFontSize";
             this.comboBoxFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFontSize.TabIndex = 3;
+            this.comboBoxFontSize.TabIndex = 20;
             // 
             // labelSubtitleFont
             // 
@@ -478,7 +478,7 @@
             this.panelColor.Location = new System.Drawing.Point(239, 106);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
-            this.panelColor.TabIndex = 12;
+            this.panelColor.TabIndex = 50;
             this.panelColor.Click += new System.EventHandler(this.panelColor_Click);
             // 
             // buttonColor
@@ -486,7 +486,7 @@
             this.buttonColor.Location = new System.Drawing.Point(112, 105);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 23);
-            this.buttonColor.TabIndex = 18;
+            this.buttonColor.TabIndex = 40;
             this.buttonColor.Text = "Font color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -512,7 +512,7 @@
             this.SubtitleListview.SubtitleFontBold = false;
             this.SubtitleListview.SubtitleFontName = "Tahoma";
             this.SubtitleListview.SubtitleFontSize = 8;
-            this.SubtitleListview.TabIndex = 13;
+            this.SubtitleListview.TabIndex = 200;
             this.SubtitleListview.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview.UseSyntaxColoring = true;
             this.SubtitleListview.View = System.Windows.Forms.View.Details;
