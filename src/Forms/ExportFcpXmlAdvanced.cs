@@ -50,6 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
             _videoFileName = videoFileName;
 
             Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.Title;
+            groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
+            buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontName;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontSize;
             labelSubtitleFontFace.Text = Configuration.Settings.Language.ExportFcpXmlAdvanced.FontFace;
@@ -59,6 +61,12 @@ namespace Nikse.SubtitleEdit.Forms
             labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             buttonSave.Text = Configuration.Settings.Language.ExportCustomText.SaveAs;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            comboBoxHAlign.Items.Clear();
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
 
             foreach (var x in FontFamily.Families)
             {

@@ -3791,17 +3791,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
             labelBottomMargin.Text = Configuration.Settings.Language.ExportPngXml.BottomMargin;
             labelLeftRightMargin.Text = Configuration.Settings.Language.ExportPngXml.LeftRightMargin;
-            if (Configuration.Settings.Language.ExportPngXml.Left != null &&
-                Configuration.Settings.Language.ExportPngXml.Center != null &&
-                Configuration.Settings.Language.ExportPngXml.Right != null)
-            {
-                comboBoxHAlign.Items.Clear();
-                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
-                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
-                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
-                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
-                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
-            }
+
+            comboBoxHAlign.Items.Clear();
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
             labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
