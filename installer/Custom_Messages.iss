@@ -229,20 +229,20 @@ fi.types_default=Oletusasennus
 
 
 ; French
-fr.comp_translations=Translations
-fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
-fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-fr.msg_OptimizingPerformance=Optimizing performance...
-fr.run_VisitWebsite=Visit Subtitle Edit's Website
-fr.sm_com_Changelog=Subtitle Edit's Changelog
-fr.tsk_AllUsers=For all users
-fr.tsk_CurrentUser=For the current user only
-fr.tsk_Other=Other:
-fr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-fr.tsk_ResetSettings=Reset Subtitle Edit's settings
-fr.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-fr.types_custom=Custom installation
-fr.types_default=Default installation
+fr.comp_translations=Traductions
+fr.msg_AskToDownNET=Subtitle Edit requiert le logiciel .NET Framework 4.0. Téléchargez et installez .NET Framework et ré-exécutez l'installation.%n%nVoulez-vous télécharger .NET Framework 4.0 maintenant ?
+fr.msg_DeleteSettings=Voulez-vous également supprimer tous les réglages et les adaptations personnelles apportées aux dictionnaires ? %n%nSi vous prévoyez de réinstaller Subtitle Edit, vous pouvez conserver ces éléments.
+fr.msg_OptimizingPerformance=Optimisation de la performance ...
+fr.run_VisitWebsite=Visitez le site web de Subtitle Edit
+fr.sm_com_Changelog=Journal des modifications de Subtitle Edit
+fr.tsk_AllUsers=Pour tous les utilisateurs
+fr.tsk_CurrentUser=Uniquement pour l'utilisateur actuel
+fr.tsk_Other=Autre :
+fr.tsk_ResetDictionaries=Rétablir les Dictionnaires originaux
+fr.tsk_ResetSettings=Rétablir les réglages de Subtitle Edit
+fr.tsk_SetFileTypes=Associer les fichiers SubRip Text (.srt) à Subtitle Edit
+fr.types_custom=Installation personnalisée
+fr.types_default=Installation par défaut
 
 
 ; Croatian
