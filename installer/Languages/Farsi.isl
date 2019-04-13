@@ -1,5 +1,5 @@
-; *** Inno Setup version 5.5.3+ English messages ***
-;Translator:Hessam Mohamadi-Improved And Updated
+; *** Inno Setup version 5.5.3+ Farsi messages ***
+;Translator:Hessam Mohamadi
 ;Email:hessam55@hotmail.com
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/files/istrans/
@@ -14,7 +14,7 @@
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=Farsi
 LanguageID=$0429
-LanguageCodePage=0
+LanguageCodePage=1256
 ; If the language you are translating to requires special font faces or
 ; sizes, uncomment any of the following entries and change them accordingly.
 DialogFontName=Tahoma
