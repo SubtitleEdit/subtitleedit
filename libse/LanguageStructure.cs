@@ -508,6 +508,7 @@
             public string FontName { get; set; }
             public string FontSize { get; set; }
             public string FontFace { get; set; }
+            public string FontFaceRegular { get; set; }
             public string Alignment { get; set; }
             public string Baseline { get; set; }
         }

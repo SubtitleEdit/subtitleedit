@@ -636,6 +636,7 @@ namespace Nikse.SubtitleEdit.Core
                 FontName = "Font name",
                 FontSize = "Font size",
                 FontFace = "Font face",
+                FontFaceRegular = "Regular",
                 Alignment = "Alignment",
                 Baseline = "Baseline",
             };
