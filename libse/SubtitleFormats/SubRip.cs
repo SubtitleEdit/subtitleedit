@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _paragraph.Text += Environment.NewLine;
                         }
 
-                        _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        _paragraph.Text += RemoveBadChars(line).TrimEnd();
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
