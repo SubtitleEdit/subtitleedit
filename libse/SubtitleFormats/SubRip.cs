@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
-                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) && 
+                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
                     Utilities.IsInteger(line) && TryReadTimeCodesLine(line.Trim(), null))
                 {
                     if (!string.IsNullOrEmpty(_paragraph.Text))
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ReadLine(subtitle, line, next, nextNext, nextNextNext);
             }
             if (_paragraph != null && _paragraph.ToString() != new Paragraph().ToString() &&
-                subtitle.Paragraphs.Count > 0 || _paragraph.EndTime.TotalMilliseconds > 0.001)
+                (subtitle.Paragraphs.Count > 0 || _paragraph.EndTime.TotalMilliseconds > 0.001))
             {
                 subtitle.Paragraphs.Add(_paragraph);
             }
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
                         _paragraph.Text = string.Empty;
-                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next,null)))
+                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next, null)))
                         {
                             subtitle.Paragraphs.Add(_paragraph);
                             _lastParagraph = _paragraph;
