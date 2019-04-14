@@ -133,16 +133,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Renumber();
             }
 
-            if (_isMsFrames)
+            foreach (Paragraph p in subtitle.Paragraphs)
             {
-                foreach (Paragraph p in subtitle.Paragraphs)
+                if (_isMsFrames)
                 {
                     p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
                     p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
                 }
-            }
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
                 p.Text = p.Text.TrimEnd();
             }
             Errors = _errors.ToString();
