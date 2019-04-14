@@ -451,6 +451,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FontName>Font name</FontName>
     <FontSize>Font size</FontSize>
     <FontFace>Font face</FontFace>
+    <FontFaceRegular>Regular</FontFaceRegular>
     <Alignment>Alignment</Alignment>
     <Baseline>Baseline</Baseline>
   </ExportFcpXmlAdvanced>

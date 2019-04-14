@@ -122,6 +122,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            comboBoxFontFace.Items.Clear();
+            comboBoxFontFace.Items.Add(Configuration.Settings.Language.ExportFcpXmlAdvanced.FontFaceRegular);
             comboBoxFontFace.SelectedIndex = 0;
 
             comboBoxHAlign.SelectedIndex = 1;
@@ -188,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var format = new FinalCutProXml15();
                 format.DefaultStyle.FontName = comboBoxFontName.SelectedItem.ToString();
                 format.DefaultStyle.FontSize = int.Parse(comboBoxFontSize.SelectedItem.ToString());
-                format.DefaultStyle.FontFace = comboBoxFontFace.SelectedItem.ToString();
+                format.DefaultStyle.FontFace = GetFontFace();
                 format.DefaultStyle.Alignment = comboBoxHAlign.SelectedItem.ToString();
                 format.DefaultStyle.Baseline = int.Parse(comboBoxBaseline.SelectedItem.ToString());
                 int height, width;
@@ -202,6 +204,11 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 DialogResult = DialogResult.OK;
             }
+        }
+
+        private string GetFontFace()
+        {
+            return "Regular";
         }
 
         private void buttonColor_Click(object sender, EventArgs e)

@@ -1159,6 +1159,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ExportFcpXmlAdvanced/FontFace":
                     language.ExportFcpXmlAdvanced.FontFace = reader.Value;
                     break;
+                case "ExportFcpXmlAdvanced/FontFaceRegular":
+                    language.ExportFcpXmlAdvanced.FontFaceRegular = reader.Value;
+                    break;
                 case "ExportFcpXmlAdvanced/Alignment":
                     language.ExportFcpXmlAdvanced.Alignment = reader.Value;
                     break;
