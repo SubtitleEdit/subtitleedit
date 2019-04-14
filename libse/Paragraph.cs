@@ -51,6 +51,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public string Bookmark { get; set; }
 
+        public bool IsDefault => StartTime.TotalMilliseconds == 0 && EndTime.TotalMilliseconds == 0 && string.IsNullOrEmpty(Text);
+
         private string GenerateId()
         {
             return Guid.NewGuid().ToString();

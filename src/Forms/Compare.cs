@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
         private bool _loadingConfig = true;
-        private static readonly string EmptyParagraphString = new Paragraph().ToString();
 
         public Compare()
         {
@@ -247,12 +246,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     bool addIndexToDifferences = false;
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
-                    if (p1.ToString() == EmptyParagraphString)
+                    if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == EmptyParagraphString)
+                    else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
@@ -279,12 +278,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     bool addIndexToDifferences = false;
-                    if (p1.ToString() == EmptyParagraphString)
+                    if (p1.IsDefault)
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == EmptyParagraphString)
+                    else if (p2.IsDefault)
                     {
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
@@ -1119,7 +1118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetHtmlText(Paragraph p, string text)
         {
-            if (p.ToString() == EmptyParagraphString)
+            if (p.IsDefault)
             {
                 return string.Empty;
             }
