@@ -158,7 +158,18 @@ namespace Nikse.SubtitleEdit.Core
 
         public static int CountWords(this string source)
         {
-            return HtmlUtil.RemoveHtmlTags(source, true).Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            string[] words = HtmlUtil.RemoveHtmlTags(source, true).Split(new[] { ' ', '\n', '\r', '-' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int count = 0;
+            foreach (var word in words)
+            {
+                if (word.ContainsLetter())
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
