@@ -685,6 +685,7 @@
     <Word from="maja" to="svibnja"/>
     <Word from="maju" to="svibnju"/>
     <Word from="majem" to="svibnjem"/>
+    <Word from="majek" to="majke" />
     <Word from="majca" to="majica" />
     <Word from="majce" to="majice" />
     <Word from="majcu" to="majicu" />
@@ -3302,6 +3303,7 @@
     <RegEx find="fiskov" replaceWith="fiscir" />
     <RegEx find="frm" replaceWith="form" />
     <RegEx find="frov" replaceWith="frir" />
+    <RegEx find="gačuj" replaceWith="gaćuj" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="grišć" replaceWith="grist ć" />
     <RegEx find="(?&lt;!e)grš" replaceWith="greš" />
