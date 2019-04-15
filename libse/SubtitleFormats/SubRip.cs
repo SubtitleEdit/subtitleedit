@@ -122,8 +122,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 ReadLine(subtitle, line, next, nextNext, nextNextNext);
             }
-            if (_paragraph != null && _paragraph.ToString() != new Paragraph().ToString() &&
-                (subtitle.Paragraphs.Count > 0 || _paragraph.EndTime.TotalMilliseconds > 0.001))
+
+            if (_paragraph?.IsDefault == false)
             {
                 subtitle.Paragraphs.Add(_paragraph);
             }
