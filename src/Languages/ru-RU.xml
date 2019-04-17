@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -35,6 +35,7 @@
     <Number>Номер</Number>
     <Text>Текст</Text>
     <HourMinutesSecondsMilliseconds>час:мин:сек:мс</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>час:мин:сек:кадры</HourMinutesSecondsFrames>
     <Bold>Полужирный</Bold>
     <Italic>Курсив</Italic>
     <Underline>Подчеркнутый</Underline>
@@ -79,6 +80,7 @@
     <After>После</After>
     <Size>Размер</Size>
     <Search>Поиск</Search>
+    <DeleteCurrentLine>Удалить текущую строку</DeleteCurrentLine>
   </General>
   <About>
     <Title>О программе</Title>
@@ -150,6 +152,7 @@ https://github.com/SubtitleEdit/subtitleedit
 без наложения на следующий текст.</Note>
     <Fixed>Исправления</Fixed>
     <Milliseconds>Миллисекунд(-ы)</Milliseconds>
+    <ExtendOnly>Только продлить</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ограничения продолжительности</Title>
@@ -219,6 +222,11 @@ https://github.com/SubtitleEdit/subtitleedit
   <Beamer>
     <Title>Проектор</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Изменить закладку</EditBookmark>
+    <AddBookmark>Добавить закладку</AddBookmark>
+    <GoToBookmark>Перейти в закладке</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Изменение регистра</Title>
     <ChangeCasingTo>Изменить регистр на</ChangeCasingTo>
@@ -412,6 +420,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextLeftJustifiedText>Выровнять текст по левому краю</TextLeftJustifiedText>
     <TextCenteredText>Выровнять текст по центру</TextCenteredText>
     <TextRightJustifiedText>Выровнять текст по правому краю</TextRightJustifiedText>
+    <UseBoxForOneNewLine>Отметить «Использовать обводку вокруг текста» только для одной новой строки</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Эффект Караоке</Title>
@@ -482,7 +491,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <Left>Слева</Left>
     <Right>Справа</Right>
     <Center>По центру</Center>
-    <CenterLeftJustify>Центрирование по левому краю</CenterLeftJustify>
+    <CenterLeftJustify>Центрировать по левому краю</CenterLeftJustify>
+    <CenterTopJustify>Центрировать по верхнему краю</CenterTopJustify>
     <BottomMargin>Отступ снизу</BottomMargin>
     <LeftRightMargin>Лев./Прав. поле</LeftRightMargin>
     <SaveBluRraySupAs>Выбор имени файла Blu-ray sup</SaveBluRraySupAs>
@@ -943,6 +953,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SubStationAlphaProperties>Свойства Sub Station Alpha...</SubStationAlphaProperties>
         <EbuProperties>EBU STL свойства...</EbuProperties>
         <DvdStuioProProperties>Свойства DVD Studio Pro...</DvdStuioProProperties>
+        <TimedTextProperties>Свойства синхр-ного текста...</TimedTextProperties>
         <PacProperties>PAC свойства...</PacProperties>
         <OpenOriginal>Открыть исходные субтитры (режим перевода)...</OpenOriginal>
         <SaveOriginal>Сохранить исходные субтитры</SaveOriginal>
@@ -1021,6 +1032,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SplitLongLines>Разделить длинные строки...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Временной интервал между субтитрами...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сортировка строк</SortBy>
+        <NetflixQualityCheck>Проверка качества Netflix...</NetflixQualityCheck>
         <Number>Номер</Number>
         <StartTime>Начало</StartTime>
         <EndTime>Конец</EndTime>
@@ -1045,11 +1057,13 @@ https://github.com/SubtitleEdit/subtitleedit
       <Video>
         <Title>Видео</Title>
         <OpenVideo>Открыть файл видео...</OpenVideo>
+        <OpenVideoFromUrl>Открыть видео с URL...</OpenVideoFromUrl>
         <OpenDvd>Открыть DVD...</OpenDvd>
         <ChooseAudioTrack>Выбор аудио трека</ChooseAudioTrack>
         <CloseVideo>Закрыть файл видео</CloseVideo>
         <SetVideoOffset>Задать видео задержку...</SetVideoOffset>
         <SmptTimeMode>SMPTE разметка (с пропуском кадров)</SmptTimeMode>
+        <GenerateTextFromVideo>Создать текст из видео...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Создание/Открытие изменений сцен...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Удалить изменения сцен</RemoveSceneChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала...</WaveformBatchGenerate>
@@ -1065,7 +1079,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SpellCheckFromCurrentLine>Проверить орфографию от текущей строки...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Найти дубликаты слов</FindDoubleWords>
         <FindDoubleLines>Найти дубликаты строк</FindDoubleLines>
-        <GetDictionaries>Получение словарей...</GetDictionaries>
+        <GetDictionaries>Получить словарь...</GetDictionaries>
         <AddToNameList>Добавить слово в список имен</AddToNameList>
       </SpellCheck>
       <Synchronization>
@@ -1158,11 +1172,20 @@ https://github.com/SubtitleEdit/subtitleedit
         <MergeSelectedLinesAsDialog>Объединить выбранные строки как диалог</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Объединить с предыдущей строкой</MergeWithLineBefore>
         <MergeWithLineAfter>Объединить со следующей строкой</MergeWithLineAfter>
-        <Normal>Обычный</Normal>
+        <RemoveFormatting>Удалить форматирование</RemoveFormatting>
+        <RemoveFormattingAll>Удалить все форматирование</RemoveFormattingAll>
+        <RemoveFormattingBold>Удалить жирный</RemoveFormattingBold>
+        <RemoveFormattingItalic>Удалить курсив</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Удалить подчеркивание</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Удалить цвет</RemoveFormattingColor>
+        <RemoveFormattingFontName>Удалить название шрифта</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Удалить выравнивание</RemoveFormattingAlignment>
         <Underline>Подчеркнутый</Underline>
         <Box>Обводка</Box>
         <Color>Цвет шрифта...</Color>
         <FontName>Выбрать шрифт...</FontName>
+        <Superscript>Superscript</Superscript>
+        <Subscript>Subscript</Subscript>
         <Alignment>Выравнивание...</Alignment>
         <AutoBalanceSelectedLines>Автовыравнивание выбранных строк...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Удалить все переносы из выбранных строк...</RemoveLineBreaksFromSelectedLines>
@@ -1171,7 +1194,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ShowSelectedLinesEarlierLater>Сдвинуть выбранные строки по времени...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Синхронизация выбранных строк...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Перевести в Google/Microsoft исходные строки</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Перевести в Google выбранные строки...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Перевести выделенные строки...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Изменить продолжительность выбранных строк...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Исправить ошибки в выбранных строках...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Изменить регистр в выбранных строках...</ChangeCasingForSelectedLines>
@@ -1180,6 +1203,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <WebVTTRemoveVoices>Удалить голоса</WebVTTRemoveVoices>
         <NewActor>Новый актер...</NewActor>
         <RemoveActors>Удалить актеров</RemoveActors>
+        <EditBookmark>Изменить закладку</EditBookmark>
+        <RemoveBookmark>Удалить закладку</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1195,6 +1220,7 @@ https://github.com/SubtitleEdit/subtitleedit
     </Controls>
     <VideoControls>
       <Translate>Перевод</Translate>
+      <CreateAndAdjust>Создать/настроить</CreateAndAdjust>
       <Create>Создание</Create>
       <Adjust>Настройка</Adjust>
       <SelectCurrentElementWhilePlaying>Выбрать текущий субтитр во время воспроизведения</SelectCurrentElementWhilePlaying>
@@ -1361,7 +1387,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeInsertLine>Перед вставкой строки</BeforeInsertLine>
     <LineInserted>Строка вставлена</LineInserted>
     <BeforeLineUpdatedInListView>Перед обновлением строки в списке</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Перед изменением шрифта</BeforeSettingFontToNormal>
     <BeforeSplitLine>Перед разделением строки</BeforeSplitLine>
     <LineSplitted>Строка разделена</LineSplitted>
     <BeforeMergeLines>Перед объединением строк</BeforeMergeLines>
@@ -1476,6 +1501,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeColumnImportText>Перед импортом текста колонки</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Перед сдвигом колонки вниз</BeforeColumnShiftCellsDown>
     <BeforeX>Перед: {0}</BeforeX>
+    <LinesUpdatedX>Строки обновлены: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Ошибка загрузки плагина: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Перед запуском плагина: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Не удается получить результат из плагина!</UnableToReadPluginResult>
@@ -1755,13 +1781,24 @@ https://github.com/SubtitleEdit/subtitleedit
     <NetflixQualityCheck>Netflix проверка качества</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
     <Help>Справка</Help>
-    <UnbreakNoSpace>Безпробельный, сплошной, перенос между двумя строками (CJK - для Китайского-Японского-Корейского)</UnbreakNoSpace>
+    <UnbreakNoSpace>Объединить в одну сплошную строку (CJK - для Китайского-Японского-Корейского)</UnbreakNoSpace>
+    <ToggleBookmarks>Переключить закладки</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Переключить закладки - добавить комментарий</ToggleBookmarksWithComment>
+    <ClearBookmarks>Очистить закладки</ClearBookmarks>
+    <GoToBookmark>Перейти в закладки</GoToBookmark>
+    <GoToPreviousBookmark>Перейти к предыдущей закладке</GoToPreviousBookmark>
+    <GoToNextBookmark>Перейти к следующей закладке</GoToNextBookmark>
     <FontInUi>Шрифты для Интерфейса Пользователя (UI)</FontInUi>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
     <DefaultFileEncoding>Кодировка файла по умолчанию</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Определение ANSI кодировки</AutoDetectAnsiEncoding>
+    <Profile>Профиль</Profile>
+    <Profiles>Профили</Profiles>
+    <ImportProfiles>Импорт профилей</ImportProfiles>
+    <ExportProfiles>Экспорт профилей</ExportProfiles>
     <SubtitleLineMaximumLength>Макс. число символов в строке</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Оптимально симв./сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Макс. слов/мин.</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
@@ -1772,7 +1809,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
-    <VideoAutoOpen>При открытии субтитров подгружать видеофайл автоматически </VideoAutoOpen>
+    <VideoAutoOpen>При открытых субтитрах подгружать Видео автоматически (если названия совпадают)</VideoAutoOpen>
     <AllowVolumeBoost>Разрешить изменение уровня громкости</AllowVolumeBoost>
     <SubtitleCenter>По центру</SubtitleCenter>
     <SubtitleFontColor>Цвет шрифта субтитров</SubtitleFontColor>
@@ -1807,6 +1844,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Проверка обновлений</CheckForUpdates>
+    <AutoSave>Автосохранение</AutoSave>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Выдавать запрос перед удалением строк</PromptDeleteLines>
     <TimeCodeMode>Режим таймкода:</TimeCodeMode>
@@ -2005,8 +2043,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MergeSelectedLines>Объединить выделенные строки</MergeSelectedLines>
     <MergeSelectedLinesAndAutoBreak>Объединить выделенные строки с автопереносом</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Объединить выделенные строки без переноса</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Объединить выделенные строки безпробельным переносом (CJK)</MergeSelectedLinesAndUnbreakCjk>
-    <MergeSelectedLinesOnlyFirstText>Объединить выбранные строки, сохранив только первый непустой текст</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesAndUnbreakCjk>Объединить выделенные строки в одну сплошную (CJK - для Китайского-Японского-Корейского)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesOnlyFirstText>Объединить выбранные строки, сохранив только первый не пустой текст</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Объединить выделенные строки в двуязычную</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Разделить выделенную строку на двуязычную</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Вкл./Откл. режим перевода</ToggleTranslationMode>
@@ -2034,11 +2072,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxSelectionToUpper>Увеличить регистр для выделения</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Автопереключение определения</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоперенос текста</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Разделить на первом пробеле в расположении курсора</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Разделить на первом пробеле в расположении курсора и перейти к следующему</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Отменить перенос текста</MainTextBoxUnbreak>
     <MainFileSaveAll>Сохранить все</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
     <CpsIncludesSpace>Символов/сек (CPS) включая пробелы</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Применить список исключений
+    (для автопереноса)</UseDoNotBreakAfterList>
+    <GoogleTranslate>Переводчик Google</GoogleTranslate>
+    <GoogleTranslateApiKey>Ключ API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
@@ -2107,6 +2150,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoFixNames>Исправить, если отличается только регистром</AutoFixNames>
     <CheckOneLetterWords>Запрос при неизвестных словах</CheckOneLetterWords>
     <TreatINQuoteAsING>Менять окончание слов " in' " на " ing " (только для English)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Запомнить список "Всегда использовать"</RememberUseAlwaysList>
     <ImageText>Текст изображения</ImageText>
     <SpellCheckCompleted>Проверка орфографии завершена.</SpellCheckCompleted>
     <SpellCheckAborted>Проверка орфографии прервана пользователем.</SpellCheckAborted>
