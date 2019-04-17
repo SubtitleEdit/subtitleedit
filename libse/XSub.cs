@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core
@@ -16,21 +15,25 @@ namespace Nikse.SubtitleEdit.Core
 
         public XSub(string timeCode, int width, int height, byte[] colors, byte[] rle)
         {
-            Start = DecodeTimeCode(timeCode.Substring(0, 13));
-            End = DecodeTimeCode(timeCode.Substring(13, 12));
+            char[] SplitChars = { ':', ';', '.', ',', '-' };
+            Start = DecodeTimeCode(timeCode.Substring(0, 13).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries));
+            End = DecodeTimeCode(timeCode.Substring(13, 12).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries));
             Width = width;
             Height = height;
             _colorBuffer = colors;
             _rleBuffer = rle;
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string[] tokens)
         {
-            var parts = timeCode.Split(new[] { ':', ';', '.', ',', '-' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+            if (tokens.Length < 4)
+            {
+                return new TimeCode();
+            }
+            return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), int.Parse(tokens[3]));
         }
 
-        private static int GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
+        private static int GenerateBitmap(FastBitmap bmp, byte[] buf, Color[] fourColors)
         {
             int w = bmp.Width;
             int h = bmp.Height;
@@ -99,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
-            var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
+            var fourColors = new Color[] { background, pattern, emphasis1, emphasis2 };
             var bmp = new Bitmap(Width, Height);
             if (fourColors[0] != Color.Transparent)
             {
