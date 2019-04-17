@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             FixCommonErrors,
             RemoveTextForHI,
+            RemoveFormatting,
             ReDoCasing
         }
 
@@ -103,6 +104,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /overwrite");
                     _stdOutWriter.WriteLine("        /multiplereplace:<comma separated file name list> ('.' represents the default replace rules)");
                     _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
+                    _stdOutWriter.WriteLine("        /removeformatting");
                     _stdOutWriter.WriteLine("        /removetextforhi");
                     _stdOutWriter.WriteLine("        /fixcommonerrors");
                     _stdOutWriter.WriteLine("        /redocasing");
@@ -803,6 +805,12 @@ namespace Nikse.SubtitleEdit.Logic
                     list.Add(BatchAction.RemoveTextForHI);
                     args.RemoveAt(i);
                 }
+                else if (argument.StartsWith("/removeformatting", StringComparison.OrdinalIgnoreCase) ||
+                         argument.StartsWith("-removeformatting", StringComparison.OrdinalIgnoreCase))
+                {
+                    list.Add(BatchAction.RemoveFormatting);
+                    args.RemoveAt(i);
+                }
             }
             list.Reverse();
             return list;
@@ -906,6 +914,13 @@ namespace Nikse.SubtitleEdit.Logic
                         foreach (var p in sub.Paragraphs)
                         {
                             p.Text = hiLib.RemoveTextFromHearImpaired(p.Text);
+                        }
+                    }
+                    else if (action == BatchAction.RemoveFormatting)
+                    {
+                        foreach (var p in sub.Paragraphs)
+                        {
+                            p.Text = HtmlUtil.RemoveHtmlTags(p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty), true).Trim();
                         }
                     }
                     else if (action == BatchAction.FixCommonErrors)
