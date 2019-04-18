@@ -146,7 +146,7 @@ Name: "th"; MessagesFile: "Languages\Thai.isl"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "vi"; MessagesFile: "Languages\Vietnamese.islu"
-Name: "zh"; MessagesFile: "Languages\ChineseSimplified.isl"
+Name: "zh"; MessagesFile: "Languages\ChineseSimplified.islu"
 Name: "zhTW"; MessagesFile: "Languages\ChineseTraditional.isl"
 #endif
 
