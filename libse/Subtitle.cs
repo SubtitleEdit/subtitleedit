@@ -25,24 +25,19 @@ namespace Nikse.SubtitleEdit.Core
 
         public List<HistoryItem> HistoryItems => _history;
 
-        public Subtitle()
+        public Subtitle() : this(new List<Paragraph>(), new List<HistoryItem>())
         {
-            _paragraphs = new List<Paragraph>();
-            _history = new List<HistoryItem>();
-            FileName = "Untitled";
         }
 
-        public Subtitle(List<HistoryItem> historyItems)
-            : this()
+        public Subtitle(List<HistoryItem> historyItems) : this(new List<Paragraph>(), historyItems)
         {
-            _history = historyItems;
         }
 
         public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-                   : this()
         {
             _history = historyItems;
             _paragraphs = paragraphs;
+            FileName = "Untitled";
         }
 
         /// <summary>
