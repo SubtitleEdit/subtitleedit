@@ -8,6 +8,7 @@
    * Import scene changes from EZTitles - thx Flitskikker 
    * Add new sub format - thx Matmanamane
    * Add new sub format - thx Rob
+   * Add "remove formating" via command line - thx JySzE
 * IMPROVED:
    * Update Portuguese translation - thx moob
    * Update Brazil translation - thx Igor
