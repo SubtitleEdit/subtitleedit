@@ -27,7 +27,8 @@ namespace Nikse.SubtitleEdit.Logic
             FixCommonErrors,
             RemoveTextForHI,
             RemoveFormatting,
-            ReDoCasing
+            ReDoCasing,
+            ReverseRtlStartEnd
         }
 
         public static void Convert(string title, string[] arguments) // E.g.: /convert *.txt SubRip
@@ -107,6 +108,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /removeformatting");
                     _stdOutWriter.WriteLine("        /removetextforhi");
                     _stdOutWriter.WriteLine("        /fixcommonerrors");
+                    _stdOutWriter.WriteLine("        /reversertlstartend");
                     _stdOutWriter.WriteLine("        /redocasing");
                     _stdOutWriter.WriteLine("        /forcedonly");
                     _stdOutWriter.WriteLine();
@@ -793,6 +795,12 @@ namespace Nikse.SubtitleEdit.Logic
                     list.Add(BatchAction.FixCommonErrors);
                     args.RemoveAt(i);
                 }
+                else if (argument.StartsWith("/reversertlstartend", StringComparison.OrdinalIgnoreCase) ||
+                         argument.StartsWith("-reversertlstartend", StringComparison.OrdinalIgnoreCase))
+                {
+                    list.Add(BatchAction.ReverseRtlStartEnd);
+                    args.RemoveAt(i);
+                }
                 else if (argument.StartsWith("/redocasing", StringComparison.OrdinalIgnoreCase) ||
                          argument.StartsWith("-redocasing", StringComparison.OrdinalIgnoreCase))
                 {
@@ -950,6 +958,13 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             changeCasingNames.Initialize(sub);
                             changeCasingNames.FixCasing();
+                        }
+                    }
+                    else if (action == BatchAction.ReverseRtlStartEnd)
+                    {
+                        foreach (var p in sub.Paragraphs)
+                        {
+                            p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
                         }
                     }
                 }
