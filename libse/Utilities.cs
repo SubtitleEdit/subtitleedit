@@ -1450,6 +1450,18 @@ namespace Nikse.SubtitleEdit.Core
                 string postTags = string.Empty;
                 for (int k = 0; k < 10; k++)
                 {
+                    if (s2.StartsWith("♪ ", StringComparison.Ordinal) ||
+                       s2.StartsWith("♫ ", StringComparison.Ordinal))
+                    {
+                        preTags.Append(s2.Substring(0, 2));
+                        s2 = s2.Remove(0, 2);
+                    }
+                    if (s2.StartsWith("♪", StringComparison.Ordinal) ||
+                        s2.StartsWith("♫", StringComparison.Ordinal))
+                    {
+                        preTags.Append(s2.Substring(0, 1));
+                        s2 = s2.Remove(0, 1);
+                    }
                     if (s2.StartsWith("<i>", StringComparison.Ordinal) ||
                         s2.StartsWith("<b>", StringComparison.Ordinal) ||
                         s2.StartsWith("<u>", StringComparison.Ordinal))
@@ -1465,6 +1477,18 @@ namespace Nikse.SubtitleEdit.Core
                         s2 = s2.Remove(0, idx);
                     }
 
+                    if (s2.EndsWith(" ♪", StringComparison.Ordinal) ||
+                        s2.EndsWith(" ♫", StringComparison.Ordinal))
+                    {
+                        postTags = s2.Substring(s2.Length - 2) + postTags;
+                        s2 = s2.Remove(s2.Length - 2);
+                    }
+                    if (s2.EndsWith("♪", StringComparison.Ordinal) ||
+                        s2.EndsWith("♫", StringComparison.Ordinal))
+                    {
+                        postTags = s2.Substring(s2.Length - 1) + postTags;
+                        s2 = s2.Remove(s2.Length - 1);
+                    }
                     if (s2.EndsWith("</i>", StringComparison.Ordinal) ||
                         s2.EndsWith("</b>", StringComparison.Ordinal) ||
                         s2.EndsWith("</u>", StringComparison.Ordinal))

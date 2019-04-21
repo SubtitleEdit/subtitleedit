@@ -737,5 +737,19 @@ namespace Test.Logic
             var result = Utilities.ReverseStartAndEndingForRightToLeft("\"Hey." + Environment.NewLine + "Hey.\"");
             Assert.AreEqual(".Hey\"" + Environment.NewLine + "\".Hey", result);
         }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeftMusicSymbols()
+        {
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("♪ Hey... ♪");
+            Assert.AreEqual("♪ ...Hey ♪", result);
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeftMusicSymbols2()
+        {
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("♫Hey...♫");
+            Assert.AreEqual("♫...Hey♫", result);
+        }
     }
 }
