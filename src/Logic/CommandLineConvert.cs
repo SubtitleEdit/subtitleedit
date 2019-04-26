@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
@@ -12,7 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -34,20 +34,16 @@ namespace Nikse.SubtitleEdit.Logic
         public static void Convert(string title, string[] arguments) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
-            if (IsWindows)
             {
                 var stdout = Console.OpenStandardOutput();
-                if (stdout != Stream.Null) // output is being redirected
-                {
-                    _stdOutWriter = new StreamWriter(stdout) { AutoFlush = true };
-                }
-                else
+                if (IsWindows && stdout == Stream.Null)
                 {
                     // only attach if output is not being redirected
                     _consoleAttached = NativeMethods.AttachConsole(ATTACH_PARENT_PROCESS);
                     // parent process output stream
-                    _stdOutWriter = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
+                    stdout = Console.OpenStandardOutput();
                 }
+                _stdOutWriter = new StreamWriter(stdout) { AutoFlush = true };
             }
 
             var currentFolder = Directory.GetCurrentDirectory();
@@ -116,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("    list available formats: SubtitleEdit /convert /list");
                 }
                 _stdOutWriter.WriteLine();
-                DetachedConsole(currentFolder);
+                DetachConsole(currentFolder);
                 Environment.Exit(1);
             }
 
@@ -392,7 +388,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                     var vobSubs = BatchConvert.LoadVobSubFromMatroska(track, matroska, out var idx);
                                                     if (vobSubs.Count > 0)
                                                     {
-                                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                                                        _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                                         using (var vobSubOcr = new VobSubOcr())
                                                         {
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -414,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                     var bluRaySubtitles = BatchConvert.LoadBluRaySupFromMatroska(track, matroska, IntPtr.Zero);
                                                     if (bluRaySubtitles.Count > 0)
                                                     {
-                                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                                                        _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                                         using (var vobSubOcr = new VobSubOcr())
                                                         {
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -513,7 +509,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 subPicturesWithTimeCodes.Add(new VobSubOcr.SubPicturesWithSeparateTimeCodes(track.Mdia.Minf.Stbl.SubPictures[i], start, end));
                                             }
                                         }
-                                        _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                                        _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                         using (var vobSubOcr = new VobSubOcr())
                                         {
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -624,8 +620,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (exception.Message.Length > 0)
                 {
                     _stdOutWriter.WriteLine();
-                    _stdOutWriter.WriteLine("ERROR: " + exception.Message + Environment.NewLine +
-                                            exception.StackTrace);
+                    _stdOutWriter.WriteLine("ERROR: " + exception.Message + Environment.NewLine + exception.StackTrace);
                 }
                 else
                 {
@@ -642,7 +637,7 @@ namespace Nikse.SubtitleEdit.Logic
                 _stdOutWriter.WriteLine();
             }
 
-            DetachedConsole(currentFolder);
+            DetachConsole(currentFolder);
             if (count == converted && errors == 0)
             {
                 Environment.Exit(0);
@@ -901,7 +896,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     if (parts != null)
                     {
-                        _stdOutWriter?.Write(" (unable to read offset " + offset + ")");
+                        _stdOutWriter?.Write($" (unable to read offset '{offset}')");
                     }
                 }
 
@@ -1038,8 +1033,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         catch (Exception ex)
                         {
-                            _stdOutWriter?.WriteLine(ex.Message + Environment.NewLine +
-                                                     ex.StackTrace);
+                            _stdOutWriter?.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
                             errors++;
                             return false;
                         }
@@ -1537,13 +1531,9 @@ namespace Nikse.SubtitleEdit.Logic
             return outputFileName;
         }
 
-        private static void DetachedConsole(string cwd)
+        private static void DetachConsole(string cwd)
         {
-            _stdOutWriter?.Close();
-            if (!IsWindows)
-            {
-                return;
-            }
+            _stdOutWriter.Close();
 
             if (_consoleAttached)
             {
