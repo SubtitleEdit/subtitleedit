@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /encoding:<encoding name>");
                     _stdOutWriter.WriteLine("        /pac-codepage:<code page>");
                     _stdOutWriter.WriteLine("        /track-number:<track number>");
-                    _stdOutWriter.WriteLine("        /resolution:<width,height>");
+                    _stdOutWriter.WriteLine("        /resolution:<width>x<height> (or <width>,<height>)");
                     _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                     _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
                     _stdOutWriter.WriteLine("        /overwrite");
@@ -166,9 +166,9 @@ namespace Nikse.SubtitleEdit.Logic
                 var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
                 var offset = GetArgument(args, "offset:");
                 var trackNumber = GetArgument(args, "track-number:");
+                var resolution = GetResolution(args);
                 var targetFrameRate = GetFrameRate(args, "targetfps");
                 var frameRate = GetFrameRate(args, "fps");
-                var resolution = GetResolution(args);
                 if (frameRate.HasValue)
                 {
                     Configuration.Settings.General.CurrentFrameRate = frameRate.Value;
@@ -756,15 +756,19 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
+        /// <summary>
+        /// Gets a resolution argument from the command line
+        /// </summary>
+        /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         private static Point? GetResolution(IList<string> commandLineArguments)
         {
             var res = GetArgument(commandLineArguments, "resolution:");
-            if (!string.IsNullOrEmpty(res))
+            if (string.IsNullOrEmpty(res))
             {
-                GetArgument(commandLineArguments, "res:");
+                res = GetArgument(commandLineArguments, "res:");
             }
 
-            if (!string.IsNullOrEmpty(res))
+            if (res.Length > 0)
             {
                 var arr = res.Split(',', 'x');
                 if (arr.Length == 2)
@@ -774,6 +778,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return new Point(w, h);
                     }
                 }
+                throw new Exception($"The /resolution value '{res}' is invalid - <width>x<height> or <width>,<height> expected.");
             }
             return null;
         }
