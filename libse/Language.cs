@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = "3.4",
+                Version = "3.5",
                 TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
