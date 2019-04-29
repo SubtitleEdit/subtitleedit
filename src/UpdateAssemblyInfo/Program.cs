@@ -11,7 +11,7 @@ namespace UpdateAssemblyInfo
     internal class Program
     {
         private static readonly Regex LongGitTagRegex; // e.g.: 3.4.8-226-g7037fef
-        private static readonly Regex ShortGitTagRegex; // e.g.: 3.4.8-226-g7037fef
+        private static readonly Regex ShortGitTagRegex; // e.g.: 3.4-226-g7037fef
         private static readonly Regex LongVersionRegex; // e.g.: 3.4.8.226
         private static readonly Regex ShortVersionRegex; // e.g.: 3.4.8 (w/o build number)
         private static readonly Regex TemplateFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.[REVNO]")]
@@ -40,14 +40,7 @@ namespace UpdateAssemblyInfo
             public int Build { get; private set; }
             public string RevisionGuid { get; private set; }
 
-            public string FullVersion
-            {
-                get
-                {
-                    return string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
-                }
-            }
-
+            public string FullVersion  => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
             public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
 
             public VersionInfo()
@@ -78,6 +71,7 @@ namespace UpdateAssemblyInfo
                     Build = int.Parse(match.Groups["build"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
                     RevisionGuid = guid.Trim().ToLowerInvariant();
                 }
+
                 if (!match.Success)
                 {
                     match = ShortVersionRegex.Match(version);
@@ -90,7 +84,7 @@ namespace UpdateAssemblyInfo
 
                 Major = int.Parse(match.Groups["major"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
                 Minor = int.Parse(match.Groups["minor"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
-                Maintenance = string.IsNullOrEmpty(match.Groups["maintenance"].Value) ? 0 : int.Parse(match.Groups["maintenance"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
+                Maintenance = match.Groups["maintenance"].Success ? int.Parse(match.Groups["maintenance"].Value, NumberStyles.None, CultureInfo.InvariantCulture) : 0;
             }
 
             public int CompareTo(VersionInfo vi)
@@ -103,7 +97,6 @@ namespace UpdateAssemblyInfo
                     {
                         cmp = Minor.CompareTo(vi.Minor);
                     }
-
                     if (cmp == 0)
                     {
                         cmp = Maintenance.CompareTo(vi.Maintenance);
@@ -161,6 +154,7 @@ namespace UpdateAssemblyInfo
             foreach (var fileName in Directory.EnumerateFiles(languagesFolderName).Where(fn => fileNameRegex.IsMatch(fn)))
             {
                 translation.Load(fileName);
+
                 var node = translation.DocumentElement.SelectSingleNode("General/Version") as XmlElement;
                 if (node != null && node.InnerText.Trim() == oldVersion.ShortVersion)
                 {
