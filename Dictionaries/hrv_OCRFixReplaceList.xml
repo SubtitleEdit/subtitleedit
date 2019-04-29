@@ -776,6 +776,7 @@
     <Word from="nebiste" to="ne biste" />
     <Word from="Nebiste" to="Ne biste" />
     <Word from="nedaj" to="ne daj" />
+    <Word from="nedgje" to="negdje" />
     <Word from="nega" to="njega" />
     <Word from="Nega" to="Njega" />
     <Word from="nege" to="njege" />
@@ -3236,7 +3237,7 @@
     <RegEx find="ampovan" replaceWith="ampiran" />
     <RegEx find="(an|ru|men|mi)tovan" replaceWith="$1tiran" />
     <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
-    <RegEx find="apb" replaceWith="aob" />
+    <RegEx find="([ad])pb" replaceWith="$1ob" />
     <RegEx find="asmj?eš" replaceWith="asmiješ" />
     <RegEx find="asnić" replaceWith="asnit ć" />
     <RegEx find="ašić" replaceWith="ašit ć" />
