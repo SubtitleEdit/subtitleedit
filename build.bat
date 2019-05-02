@@ -39,14 +39,21 @@ IF "%~1" == "" (
 PUSHD "src"
 
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
-
-if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+ECHO %InstallDir%
+IF exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
+ /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
+  IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
+) ELSE (
+IF exist "%InstallDir%\MSBuild\Current\Bin\MSBuild.exe" (
+  "%InstallDir%\MSBuild\Current\Bin\MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
   IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 ) else (
   ECHO Cannot find Visual Studio 2017
   GOTO EndWithError
+)
+
 )
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO END
