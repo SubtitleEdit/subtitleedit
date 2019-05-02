@@ -1,10 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -77,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechanges" +
                                      "|Matroska xml chapter file|*.xml" +
                                      "|EZTitles shotchanges XML file|*.xml" +
+                                     "|JSON scene changes file|*.json" +
                                      "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -102,6 +105,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxIImport.Text = res;
                     radioButtonFrames.Checked = true;
+                    return;
+                }
+
+                res = LoadFromJsonShotchangesFile(fileName);
+                if (!string.IsNullOrEmpty(res))
+                {
+                    textBoxIImport.Text = res;
+                    radioButtonHHMMSSMS.Checked = true;
                     return;
                 }
 
@@ -196,6 +207,40 @@ namespace Nikse.SubtitleEdit.Forms
                 return null;
             }
         }
+
+        private string LoadFromJsonShotchangesFile(string fileName)
+        {
+            try
+            {
+                var text = FileUtil.ReadAllTextShared(fileName, Encoding.UTF8);
+                var list = new List<double>();
+                foreach (string line in text.Split(','))
+                {
+                    string s = line.Trim() + "}";
+                    string start = Json.ReadTag(s, "frame_time");
+                    if (start != null)
+                    {
+                        double startSeconds;
+                        if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds))
+                        {
+                            list.Add(startSeconds * 1000.0);
+                        }
+                    }
+                }
+
+                var sb = new StringBuilder();
+                foreach (double ms in list.OrderBy(p=>p))
+                {
+                    sb.AppendLine(new TimeCode(ms).ToShortStringHHMMSSFF());
+                }
+                return sb.ToString();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
 
         private static readonly char[] SplitChars = { ':', '.', ',' };
 
