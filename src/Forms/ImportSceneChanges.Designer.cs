@@ -38,6 +38,7 @@
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.buttonOpenText = new System.Windows.Forms.Button();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
             this.groupBoxGenerateSceneChanges = new System.Windows.Forms.GroupBox();
             this.labelThressholdDescription = new System.Windows.Forms.Label();
             this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
@@ -45,7 +46,6 @@
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
             this.textBoxGenerate = new System.Windows.Forms.TextBox();
-            this.textBoxLog = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxImportText.SuspendLayout();
@@ -167,13 +167,28 @@
             // buttonOpenText
             // 
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenText.Location = new System.Drawing.Point(191, 19);
+            this.buttonOpenText.Location = new System.Drawing.Point(189, 21);
             this.buttonOpenText.Name = "buttonOpenText";
             this.buttonOpenText.Size = new System.Drawing.Size(153, 23);
             this.buttonOpenText.TabIndex = 0;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;
             this.buttonOpenText.Click += new System.EventHandler(this.buttonOpenText_Click);
+            // 
+            // textBoxLog
+            // 
+            this.textBoxLog.AllowDrop = true;
+            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.Location = new System.Drawing.Point(7, 19);
+            this.textBoxLog.MaxLength = 0;
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxLog.Size = new System.Drawing.Size(337, 387);
+            this.textBoxLog.TabIndex = 6;
             // 
             // groupBoxGenerateSceneChanges
             // 
@@ -277,21 +292,6 @@
             this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxGenerate.Size = new System.Drawing.Size(337, 299);
             this.textBoxGenerate.TabIndex = 1;
-            // 
-            // textBoxLog
-            // 
-            this.textBoxLog.AllowDrop = true;
-            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Location = new System.Drawing.Point(7, 19);
-            this.textBoxLog.MaxLength = 0;
-            this.textBoxLog.Multiline = true;
-            this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.ReadOnly = true;
-            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxLog.Size = new System.Drawing.Size(337, 387);
-            this.textBoxLog.TabIndex = 6;
             // 
             // progressBar1
             // 
