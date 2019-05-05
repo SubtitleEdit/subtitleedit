@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            const string writeFormat = "data_000001 1 {0:0.##} {1:0.##} {2}";
+            const string writeFormat = "data_000001 1 {0:0.00} {1:0.00} {2}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.Duration), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "<br>"))));
@@ -44,10 +44,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = line.Remove(0, match.Length).Trim();
                     text = text.Replace("<br>", Environment.NewLine);
                     text = text.Replace("</br>", Environment.NewLine);
-                    var dur = DecodeTimeCode(arr[3]);
-                    var start = DecodeTimeCode(arr[2]);
-                    var p = new Paragraph(start, new TimeCode(start.TotalMilliseconds + dur.TotalMilliseconds), text);
-                    subtitle.Paragraphs.Add(p);
+                    try
+                    {
+                        var dur = DecodeTimeCode(arr[3]);
+                        var start = DecodeTimeCode(arr[2]);
+                        var p = new Paragraph(start, new TimeCode(start.TotalMilliseconds + dur.TotalMilliseconds), text);
+                        subtitle.Paragraphs.Add(p);
+                    }
+                    catch
+                    {
+                        _errorCount++;
+                    }
                     if (text.Length > 0 && char.IsDigit(text[0]))
                     {
                         _errorCount++;
