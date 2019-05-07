@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            throw new Exception($"The /outputfolder '{folder}' does not exist.");
+                            throw new DirectoryNotFoundException($"The /outputfolder '{folder}' does not exist.");
                         }
                     }
                 }
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            throw new Exception($"The /inputfolder '{folder}' does not exist.");
+                            throw new DirectoryNotFoundException($"The /inputfolder '{folder}' does not exist.");
                         }
                     }
                 }
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (!int.TryParse(pcp, out pacCodePage) || !Pac.IsValidCodePage(pacCodePage))
                         {
-                            throw new Exception($"The /pac-codepage value '{pcp}' is invalid.");
+                            throw new FormatException($"The /pac-codepage value '{pcp}' is invalid.");
                         }
                     }
                 }
@@ -761,7 +761,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return d;
                     }
                 }
-                throw new Exception($"The /{requestedFrameRateName} value '{fps}' is invalid - number between {minimumFrameRate} and {maximumFrameRate} expected.");
+                throw new FormatException($"The /{requestedFrameRateName} value '{fps}' is invalid - number between {minimumFrameRate} and {maximumFrameRate} expected.");
             }
             return null;
         }
@@ -788,7 +788,7 @@ namespace Nikse.SubtitleEdit.Logic
                         return new Point(w, h);
                     }
                 }
-                throw new Exception($"The /resolution value '{res}' is invalid - <width>x<height> or <width>,<height> expected.");
+                throw new FormatException($"The /resolution value '{res}' is invalid - <width>x<height> or <width>,<height> expected.");
             }
             return null;
         }
