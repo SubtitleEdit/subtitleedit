@@ -1840,7 +1840,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Nur Text vom Original im aktuellen Untertitel kopieren</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto Dauer (gewählte Zeilen)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Rechts-nach-Links Start/Ende umkehren</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikale vergrößern</VerticalZoom>
     <VerticalZoomOut>Vertikal verkleinern</VerticalZoomOut>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>

@@ -1801,7 +1801,7 @@ meur a zen ar memes restr istitloù (kenlabour)</Information>
     <CopyTextOnly>Eilañ an destenn e-barzh ar golvar (linennoù diuzet)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Eilañ an destenn orin e-barzh ar istitl red</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Padelezh emgefreek (linennoù diuzet)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Adsevel RTL Start/Stop</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Adsevel RTL Start/Stop</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom plom war-raok</VerticalZoom>
     <VerticalZoomOut>Zoom plomm war-gil</VerticalZoomOut>
     <WaveformSeekSilenceForward>Klask a-raok an didrouz</WaveformSeekSilenceForward>

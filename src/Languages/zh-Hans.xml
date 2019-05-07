@@ -1906,7 +1906,7 @@ Command line: {1} {2}
     <CopyTextOnly>仅将文本复制到剪贴板 (所选行)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>将文本从原内容复制到当前内容</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>反转 RTL 开始/结束</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>反转 RTL 开始/结束</ReverseStartAndEndingForRtl>
     <VerticalZoom>纵向缩小</VerticalZoom>
     <VerticalZoomOut>纵向放大</VerticalZoomOut>
     <WaveformSeekSilenceForward>向前搜索静音</WaveformSeekSilenceForward>

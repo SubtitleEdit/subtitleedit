@@ -1976,7 +1976,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CopyTextOnly>Copiar apenas o texto (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Inverter RTL início/fim</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Inverter RTL início/fim</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom vertical entrada</VerticalZoom>
     <VerticalZoomOut>Zoom vertical saída</VerticalZoomOut>
     <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>

@@ -1716,7 +1716,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Alignment>Στοίχιση (επιλεγμένες γραμμές)</Alignment>
     <CopyTextOnly>Αντιγραφή μόνο του κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyTextOnly>
     <AutoDurationSelectedLines>Αυτόματη διάρκεια (επιλεγμένες γραμμές)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Αντιστροφή έναρξης/λήξης RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Αντιστροφή έναρξης/λήξης RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Κάθετη μεγέθυνση</VerticalZoom>
     <VerticalZoomOut>Κάθετη σμίκρυνση</VerticalZoomOut>
     <WaveformSeekSilenceForward>Αναζήτηση σιωπής μπροστά</WaveformSeekSilenceForward>

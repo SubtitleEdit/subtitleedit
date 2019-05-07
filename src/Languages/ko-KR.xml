@@ -1972,7 +1972,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRtl>
     <VerticalZoom>세로 확대</VerticalZoom>
     <VerticalZoomOut>세로 축소</VerticalZoomOut>
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>

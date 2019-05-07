@@ -1889,7 +1889,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyTextOnly>Copia text només al porta-retalls (selecció línies)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia text de l'original a l'actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-durada (selecció línies)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Reverteix RTL Inici/final</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Reverteix RTL Inici/final</ReverseStartAndEndingForRtl>
     <VerticalZoom>Amplia vertical</VerticalZoom>
     <VerticalZoomOut>Fora zoom vertical</VerticalZoomOut>
     <WaveformSeekSilenceForward>Cerca silenci avant</WaveformSeekSilenceForward>

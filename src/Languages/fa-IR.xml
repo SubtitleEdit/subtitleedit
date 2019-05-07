@@ -1865,7 +1865,7 @@ http://soft98.ir
     <CopyTextOnly>کپی متن فقط به کلیپ برد (خطوط انتخاب شده)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>کپی متن از اصلی به فعلی</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>مدت زمان خودکار (خطوط انتخاب شده)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>معکوس کردن شروع/پایان RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>معکوس کردن شروع/پایان RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>بزرگنمایی عمودی</VerticalZoom>
     <VerticalZoomOut>کوچکنمایی عمودی</VerticalZoomOut>
     <WaveformSeekSilenceForward>جستجوی آرام بعدی</WaveformSeekSilenceForward>
