@@ -1581,6 +1581,7 @@
     <Word from="toha" to="toga" />
     <Word from="tovj" to="tvoj" />
     <Word from="tovju" to="tvoju" />
+    <Word from="tp" to="to" />
     <Word from="trabam" to="trebam" />
     <Word from="trezna" to="trijezna" />
     <Word from="trkanje" to="utrkivanje" />
@@ -2839,6 +2840,7 @@
     <RegEx find="(?&lt;![mn])o(d?)se([kć])(?!s)" replaceWith="o$1sje$2" />
     <RegEx find="odu?hvat" replaceWith="othvat" />
     <RegEx find="(?&lt;!r)oent" replaceWith="oant" />
+    <RegEx find="ovatn" replaceWith="ojatn" />
     <RegEx find="overn" replaceWith="ovjern" />
     <RegEx find="ovren" replaceWith="ovoren" />
     <RegEx find="([pP])ogrj?eši(?!v)" replaceWith="$1ogriješi" />
