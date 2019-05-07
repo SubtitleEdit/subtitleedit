@@ -37,8 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 15;
         private const int IndexStartWithUppercaseLetterAfterColon = 16;
         private const int IndexAddMissingQuotes = 17;
-        private const int IndexFixHyphens = 18;
-        private const int IndexFixHyphensAdd = 19;
+        private const int IndexFixHyphensAdd = 18;
+        private const int IndexFixHyphens = 19;
         private const int IndexFix3PlusLines = 20;
         private const int IndexFixDoubleDash = 21;
         private const int IndexFixDoubleGreaterThan = 22;
@@ -377,8 +377,8 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, () => new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
                 new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, () => new FixStartWithUppercaseLetterAfterColon().Fix(Subtitle, this), ce.StartWithUppercaseLetterAfterColonTicked),
                 new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, () => new AddMissingQuotes().Fix(Subtitle, this), ce.AddMissingQuotesTicked),
-                new FixItem(_language.FixHyphens, string.Empty, () => new FixHyphensRemove().Fix(Subtitle, this), ce.FixHyphensTicked),
                 new FixItem(_language.FixHyphensAdd, string.Empty, () => new FixHyphensAdd().Fix(Subtitle, this), ce.FixHyphensAddTicked),
+                new FixItem(_language.FixHyphens, string.Empty, () => new FixHyphensRemove().Fix(Subtitle, this), ce.FixHyphensTicked),
                 new FixItem(_language.Fix3PlusLines, string.Empty, () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
@@ -1843,11 +1843,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _hunspell = Hunspell.GetHunspell(dictionary);
                     }
-                    catch 
+                    catch
                     {
                         _hunspell = null;
                     }
-                }               
+                }
             }
 
             if (_hunspell == null)
