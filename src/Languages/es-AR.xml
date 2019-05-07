@@ -1917,7 +1917,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <CopyTextOnly>Copia sólo para recortar tabla (líneas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia el texto del original al actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duración (líneas seleccionadas)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Reverse inicio RTL/final</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Reverse inicio RTL/final</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom Vertical acercar</VerticalZoom>
     <VerticalZoomOut>Zoom Vertical alejar</VerticalZoomOut>
     <WaveformSeekSilenceForward>Busque silencio hacia adelante</WaveformSeekSilenceForward>

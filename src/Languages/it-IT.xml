@@ -1787,7 +1787,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia il testo dall'originale al corrente</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durata automatica (linee selezionate)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Inverti DTS inizio/fine</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Inverti DTS inizio/fine</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom verticale in</VerticalZoom>
     <VerticalZoomOut>Zoom verticale out</VerticalZoomOut>
     <WaveformSeekSilenceForward>Cerca silenzio avanti</WaveformSeekSilenceForward>

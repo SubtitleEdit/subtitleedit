@@ -1813,7 +1813,7 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <CopyTextOnly>Kopier kun tekst til utklippstavle (valgte linjer)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra opprinnelig til nåværende</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighet (valgte linjer)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Reversert start/sluttid for høyre-til-venstre</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Reversert start/sluttid for høyre-til-venstre</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikal innzooming</VerticalZoom>
     <VerticalZoomOut>Vertikal utzooming</VerticalZoomOut>
     <WaveformSeekSilenceForward>Let forover etter stillhet</WaveformSeekSilenceForward>

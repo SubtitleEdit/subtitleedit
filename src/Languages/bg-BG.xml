@@ -1945,7 +1945,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyTextOnly>Копиране само на текста в клип борда (избрания ред)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Копиране на текста от оригинал в текущ</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автоматично времетраене (избрания ред(ове))</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Смяна на посоката отДясно наЛяво начало/край</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Смяна на посоката отДясно наЛяво начало/край</ReverseStartAndEndingForRtl>
     <VerticalZoom>Вертикално увеличаване</VerticalZoom>
     <VerticalZoomOut>Вертикално намаляване</VerticalZoomOut>
     <WaveformSeekSilenceForward>Търсене на тишина НАПРЕД</WaveformSeekSilenceForward>

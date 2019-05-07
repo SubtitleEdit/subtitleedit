@@ -1906,7 +1906,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiraj tekst iz izvornika na trenutno</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-trajanje (odabrane linije)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Obrnuti RTL početak/kraj</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Obrnuti RTL početak/kraj</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikalno uvećanje</VerticalZoom>
     <VerticalZoomOut>Vertikalno smanjivanje</VerticalZoomOut>
     <WaveformSeekSilenceForward>Traži tišinu naprijed</WaveformSeekSilenceForward>

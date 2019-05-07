@@ -1976,7 +1976,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do aktualnego</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Odwróć start/koniec PDL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Odwróć start/koniec PDL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Powiększ w pionie</VerticalZoom>
     <VerticalZoomOut>Pomniejsz w pionie</VerticalZoomOut>
     <WaveformSeekSilenceForward>Szukaj ciszy do przodu</WaveformSeekSilenceForward>

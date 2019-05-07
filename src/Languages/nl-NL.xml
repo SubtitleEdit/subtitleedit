@@ -1981,7 +1981,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <CopyTextOnly>Alleen tekst kopiëren naar klembord (geselecteerde ondertitels)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Tekst van origineel naar huidige kopiëren</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duur (geselecteerde regels)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>RNL begin/einde omkeren</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>RNL begin/einde omkeren</ReverseStartAndEndingForRtl>
     <VerticalZoom>Verticale zoom</VerticalZoom>
     <VerticalZoomOut>Verticale zoom out</VerticalZoomOut>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>

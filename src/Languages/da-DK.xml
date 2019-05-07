@@ -1970,7 +1970,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRtl>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <VerticalZoomOut>Lodret zoom ud</VerticalZoomOut>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
