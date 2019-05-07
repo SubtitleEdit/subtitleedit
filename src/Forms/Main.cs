@@ -376,19 +376,16 @@ namespace Nikse.SubtitleEdit.Forms
             base.OnLoad(e);
         }
 
-        private static string GetArgumentAfterColon(IList<string> commandLineArguments, string requestedArgumentName)
+        private static string GetArgumentAfterColon(IEnumerable<string> commandLineArguments, string requestedArgumentName)
         {
-            for (int i = 0; i < commandLineArguments.Count; i++)
+            foreach (var argument in commandLineArguments)
             {
-                var argument = commandLineArguments[i];
                 if (argument.StartsWith(requestedArgumentName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var idx = argument.IndexOf(':');
-                    if (idx >= 0)
+                    if (requestedArgumentName.EndsWith(':'))
                     {
-                        return argument.Remove(0, idx + 1);
+                        return argument.Substring(requestedArgumentName.Length);
                     }
-
                     return argument;
                 }
             }
@@ -493,29 +490,23 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000;
                 _timerClearStatus.Tick += TimerClearStatus_Tick;
 
+                var commandLineArgs = Environment.GetCommandLineArgs();
                 var fileName = string.Empty;
-                var args = Environment.GetCommandLineArgs();
                 int srcLineNumber = -1;
-                if (args.Length >= 2 && (args[1].Equals("/convert", StringComparison.OrdinalIgnoreCase) || args[1].Equals("/?", StringComparison.Ordinal) ||
-                    args[1].Equals("/help", StringComparison.OrdinalIgnoreCase) || args[1].Equals("-help", StringComparison.OrdinalIgnoreCase)))
+                if (commandLineArgs.Length > 1)
                 {
-                    CommandLineConvert.Convert(Title, args);
-                    return;
-                }
-                if (args.Length >= 2)
-                {
-                    fileName = args[1];
+                    // ConvertOrReturn() shall not return if a command line conversion has been requested
+                    CommandLineConvert.ConvertOrReturn(Title, commandLineArgs);
 
-                    var sourceLineString = GetArgumentAfterColon(args, "/srcline:");
-                    if (!string.IsNullOrEmpty(sourceLineString))
+                    fileName = commandLineArgs[1];
+
+                    var sourceLineString = GetArgumentAfterColon(commandLineArgs, "/srcline:");
+                    if (!int.TryParse(sourceLineString, out srcLineNumber))
                     {
-                        if (!int.TryParse(sourceLineString, out srcLineNumber))
-                        {
-                            srcLineNumber = -1;
-                        }
+                        srcLineNumber = -1;
                     }
 
-                    _videoFileName = GetArgumentAfterColon(args, "/video:");
+                    _videoFileName = GetArgumentAfterColon(commandLineArgs, "/video:");
                 }
 
                 labelAutoDuration.Visible = false;
@@ -8851,7 +8842,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
-            { // surround ctrl+v action with history (for undo) 
+            { // surround ctrl+v action with history (for undo)
                 _listViewTextTicks = 0;
                 TimerTextUndoTick(sender, e);
                 Application.DoEvents();
@@ -21743,7 +21734,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
-            { // surround ctrl+v action with history (for undo) 
+            { // surround ctrl+v action with history (for undo)
                 _listViewAlternateTextTicks = 0;
                 TimerAlternateTextUndoTick(sender, e);
                 Application.DoEvents();
