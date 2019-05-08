@@ -416,15 +416,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public static string GetMpvPath(string fileName)
         {
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnWindows)
             {
-                return null;
-            }
-
-            var path = Path.Combine(Configuration.DataDirectory, fileName);
-            if (File.Exists(path))
-            {
-                return path;
+                var path = Path.Combine(Configuration.DataDirectory, fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
             }
 
             return null;

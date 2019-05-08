@@ -8,12 +8,12 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
     {
         public static Hunspell GetHunspell(string dictionary)
         {
-            if (Configuration.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux)
             {
                 return new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
             }
 
-            if (Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnMac)
             {
                 return new MacHunspell(dictionary + ".aff", dictionary + ".dic");
             }

@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class CommandLineConvert
     {
-        private static readonly bool IsWindows = !(Configuration.IsRunningOnMac() || Configuration.IsRunningOnLinux());
         private static StreamWriter _stdOutWriter;
         private static string _currentFolder;
         private static bool _consoleAttached;
@@ -884,7 +883,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void AttachConsole()
         {
             var stdout = Console.OpenStandardOutput();
-            if (IsWindows && stdout == Stream.Null)
+            if (Configuration.IsRunningOnWindows && stdout == Stream.Null)
             {
                 // only attach if output is not being redirected
                 _consoleAttached = NativeMethods.AttachConsole(NativeMethods.ATTACH_PARENT_PROCESS);

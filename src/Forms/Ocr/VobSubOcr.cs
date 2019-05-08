@@ -6398,8 +6398,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void InitializeTesseract(string chosenLanguage = null)
         {
-            if (!Directory.Exists(Configuration.Tesseract302Directory) &&
-                !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac() &&
+            if (Configuration.IsRunningOnWindows &&
+                !Directory.Exists(Configuration.Tesseract302Directory) &&
                 Directory.Exists(Configuration.TesseractOriginalDirectory))
             {
                 foreach (string dirPath in Directory.GetDirectories(Configuration.TesseractOriginalDirectory, "*", SearchOption.AllDirectories))

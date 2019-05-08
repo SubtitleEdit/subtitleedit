@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
             buttonDownloadFfmpeg.Text = language.DownloadFFmpeg;
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
                 buttonDownloadFfmpeg.Visible = false;
             }
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxSpellChecker.SelectedIndex = gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
 
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
                 comboBoxSpellChecker.SelectedIndex = 0;
                 comboBoxSpellChecker.Enabled = false;
@@ -2710,9 +2710,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialogFFmpeg.FileName = string.Empty;
             openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFmpeg;
-            if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnWindows)
             {
-                openFileDialogFFmpeg.Filter = "FFmpeg.exe|FFmpeg.exe";
+                openFileDialogFFmpeg.Filter = "FFmpeg (ffmpeg.exe)|ffmpeg.exe";
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
@@ -2729,9 +2729,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialogFFmpeg.FileName = string.Empty;
             openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToVLC;
-            if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnWindows)
             {
-                openFileDialogFFmpeg.Filter = "vlc.exe|vlc.exe";
+                openFileDialogFFmpeg.Filter = $"{Configuration.Settings.Language.Settings.VlcMediaPlayer} (vlc.exe)|vlc.exe";
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
@@ -2796,7 +2796,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialogFFmpeg.FileName = string.Empty;
             openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFmpeg;
-            openFileDialogFFmpeg.Filter = Configuration.Settings.Language.General.AudioFiles + "|*.wav";
+            openFileDialogFFmpeg.Filter = $"{Configuration.Settings.Language.General.AudioFiles} (*.wav)|*.wav";
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
                 textBoxNetworkSessionNewMessageSound.Text = openFileDialogFFmpeg.FileName;
@@ -2870,7 +2870,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
             }
 
-            if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
             {
                 labelMpvSettings.Text = "--vo=vaapi";
             }
