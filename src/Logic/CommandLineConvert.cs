@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var multipleReplaceImportFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var multipleReplaceImportFiles = new HashSet<string>(FilePathComparer.Native);
                 {
                     var mra = GetArgument(unconsumedArguments, "multiplereplace:");
                     if (mra.Length > 0)
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic
                     patterns.Add(pattern);
                 }
 
-                var files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var files = new HashSet<string>(FilePathComparer.Native);
 
                 foreach (var p in patterns)
                 {
@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 if (matroska.IsValid)
                                 {
-                                    var mkvFileNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                    var mkvFileNames = new HashSet<string>(FilePathComparer.Native);
                                     var tracks = matroska.GetTracks(true);
                                     if (tracks.Count > 0)
                                     {
