@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         _errorCount++;
                     }
-                    if (text.Length > 0 && char.IsDigit(text[0]))
+                    if (text.Length > 0 && CharUtils.IsDigit(text[0]))
                     {
                         _errorCount++;
                     }
