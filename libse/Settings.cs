@@ -838,7 +838,7 @@ $HorzAlign          =   Center
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "direct3d";
+            MpvVideoOutput = Configuration.IsRunningOnLinux ? "vaapi" : "direct3d";
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // thresshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
@@ -1626,7 +1626,7 @@ $HorzAlign          =   Center
             // General
             node = doc.DocumentElement.SelectSingleNode("General");
 
-            // Profiles            
+            // Profiles
             int profileCount = 0;
             foreach (XmlNode listNode in node.SelectNodes("Profiles/Profile"))
             {

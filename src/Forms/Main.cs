@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            if (Configuration.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux)
             {
                 NativeMethods.setlocale(NativeMethods.LC_NUMERIC, "C");
             }
@@ -18715,7 +18715,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timerAlternateTextUndo.Start();
             }
 
-            if (Configuration.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux)
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
                 numericUpDownDuration.Width += 10;
