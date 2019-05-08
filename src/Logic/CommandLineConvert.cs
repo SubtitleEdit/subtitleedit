@@ -186,7 +186,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
                 var offset = GetArgument(unconsumedArguments, "offset:");
-                var trackNumber = GetArgument(unconsumedArguments, "track-number:");
                 var resolution = GetResolution(unconsumedArguments);
                 var targetFrameRate = GetFrameRate(unconsumedArguments, "targetfps");
                 var frameRate = GetFrameRate(unconsumedArguments, "fps");
@@ -324,6 +323,15 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
+                var trackNumbers = new HashSet<string>(GetArgument(unconsumedArguments, "track-number:").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(tn => tn.Trim()).Where(tn => tn.Length > 0));
+                foreach (var trackNumber in trackNumbers)
+                {
+                    if (!int.TryParse(trackNumber, out _))
+                    {
+                        throw new FormatException($"The track number '{trackNumber}' is invalid.");
+                    }
+                }
+
                 var actions = GetArgumentActions(unconsumedArguments);
 
                 bool overwrite = GetArgument(unconsumedArguments, "overwrite").Equals("overwrite");
@@ -401,7 +409,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     {
                                         foreach (var track in tracks)
                                         {
-                                            if (string.IsNullOrEmpty(trackNumber) || track.TrackNumber.ToString(CultureInfo.InvariantCulture) == trackNumber)
+                                            if (trackNumbers.Count == 0 || trackNumbers.Contains(track.TrackNumber.ToString(CultureInfo.InvariantCulture)))
                                             {
                                                 var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
                                                 if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
@@ -515,7 +523,7 @@ namespace Nikse.SubtitleEdit.Logic
                             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                             foreach (var track in mp4SubtitleTracks)
                             {
-                                if (string.IsNullOrEmpty(trackNumber) || track.Tkhd.TrackId.ToString(CultureInfo.InvariantCulture) == trackNumber)
+                                if (trackNumbers.Count == 0 || trackNumbers.Contains(track.Tkhd.TrackId.ToString(CultureInfo.InvariantCulture)))
                                 {
                                     if (track.Mdia.IsVobSubSubtitle)
                                     {
