@@ -945,7 +945,6 @@
     <RegEx find="\Bo(log[ao]s?\b)" replaceWith="ó$1" />
     <RegEx find="\Ba(log[ao]s?\b)" replaceWith="á$1" />
     <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
-
     <RegEx find="\bIes\b" replaceWith="les" />
     <RegEx find="\bIos\b" replaceWith="los" />
   </RegularExpressions>
