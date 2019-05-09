@@ -1,4 +1,5 @@
-<ReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="varjeg" to="var jeg" />
     <Word from="omjeg" to="om jeg" />
@@ -17,6 +18,7 @@
     <Word from="forjorden" to="for jorden" />
     <Word from="avjordens" to="av jordens" />
   </WholeWords>
+  <PartialWordsAlways />
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
     <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
@@ -34,7 +36,6 @@
     <WordPart from="ii" to="tt" />
     <WordPart from="n/" to="ry" />
     <WordPart from="ae" to="æ" />
-
     <!-- "f " will be two words -->
     <WordPart from="f" to="f " />
     <WordPart from="c" to="e" />
@@ -47,12 +48,10 @@
     <WordPart from="Ã" to="Å" />
     <WordPart from="í" to="i" />
   </PartialWords>
+  <PartialLines />
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines />
-  <RemovedWholeWords />
-  <RemovedPartialLines />
-  <RemovedBeginLines />
-  <RemovedEndLines />
-  <RemovedWholeLines />
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>
