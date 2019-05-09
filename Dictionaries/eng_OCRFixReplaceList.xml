@@ -2953,7 +2953,6 @@
     <LinePart from=" hasn 't " to=" hasn't " />
     <LinePart from=" you ' re " to=" you're " />
     <LinePart from=" You ' re " to=" You're " />
-    <LinePart from=" that' s " to=" that's " />
     <LinePart from="1 2th " to="12th " />
     <LinePart from="-| " to="- I " />
     <LinePart from=" | " to=" I " />
@@ -3123,7 +3122,6 @@
     <Beginning from="She' s " to="She's " />
     <Beginning from="O kay, " to="Okay, " />
     <Beginning from="l didn't" to="I didn't" />
-    <Beginning from="l don't" to="I don't" />
     <Beginning from="-1 " to="- I" />
     <Beginning from="I'II " to="I'll " />
     <Beginning from="Do l " to="Do I " />
@@ -3180,6 +3178,6 @@
     <RegEx find="^-1t (\p{L})" replaceWith="- It $1" />
     <RegEx find="^-_\.(\p{L})" replaceWith="- ...$1" />
     <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
-    <!--    <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
+    <!-- <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
   </RegularExpressions>
 </OCRFixReplaceList>

@@ -111,7 +111,7 @@
     <RegEx find="Ĺˇ" replaceWith="š" />
     <RegEx find="Å¡" replaceWith="š" />
     <RegEx find="ÄŚ" replaceWith="Č" />
-    <RegEx find="ÄŒ" replaceWith="Č" /> 
+    <RegEx find="ÄŒ" replaceWith="Č" />
     <RegEx find="Ä†" replaceWith="Ć" />
     <RegEx find="Ĺ " replaceWith="Š" />
     <RegEx find="Å " replaceWith="Š" />

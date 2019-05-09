@@ -1,12 +1,11 @@
 ﻿<NoBreakAfterList>
-  <Item>Dr.</Item>
   <Item>Dr</Item>
-  <Item>Hr.</Item>
-  <Item>Mr.</Item>
-  <Item>Mr</Item>
-  <Item>Mrs.</Item>
-  <Item>Ms.</Item>
-  <Item>Frk.</Item>
+  <Item>Dr.</Item>
   <Item>Frk.</Item>
   <Item>Fru</Item>
+  <Item>Hr.</Item>
+  <Item>Mr</Item>
+  <Item>Mr.</Item>
+  <Item>Mrs.</Item>
+  <Item>Ms.</Item>
 </NoBreakAfterList>
