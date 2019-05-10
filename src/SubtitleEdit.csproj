@@ -1600,6 +1600,9 @@
     <Content Include="Languages\hu-HU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\id-ID.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\it-IT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
