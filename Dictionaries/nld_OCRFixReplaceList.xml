@@ -1,11 +1,113 @@
 ﻿<OCRFixReplaceList>
   <WholeWords>
-    <Word from="ls" to="Is" />
-    <Word from="ln" to="In" />
-    <Word from="lk" to="Ik" />
-    <Word from="ledereen" to="Iedereen" />
+    <Word from="aandachtmag" to="aandacht mag" />
+    <Word from="agrariers" to="agrariërs" />
+    <Word from="AIleen" to="Alleen" />
+    <Word from="AIlemaal" to="Allemaal" />
+    <Word from="AIlemachtig" to="Allemachtig" />
+    <Word from="AIles" to="Alles" />
+    <Word from="AIs" to="Als" />
+    <Word from="benje" to="ben je" />
+    <Word from="Brittannie" to="Brittannië" />
+    <Word from="cliche" to="cliché" />
+    <Word from="Dankje" to="Dank je" />
+    <Word from="dankje" to="dank je" />
+    <Word from="datnietkunnen" to="dat niet kunnen" />
+    <Word from="definanciën" to="de financiën" />
+    <Word from="Denkje" to="Denk je" />
+    <Word from="deurbeI" to="deurbel" />
+    <Word from="éen" to="één" />
+    <Word from="eindetegemoet" to="einde tegemoet" />
+    <Word from="Ervanaf" to="Ervan af" />
+    <Word from="essentiile" to="essentiële" />
+    <Word from="genant" to="gênant" />
+    <Word from="gevaI" to="geval" />
+    <Word from="Girard" to="Gérard" />
+    <Word from="goedgeinformeerde" to="goedgeïnformeerde" />
+    <Word from="Grigoire" to="Grégoire" />
+    <Word from="heefthem" to="heeft hem" />
+    <Word from="heeftme" to="heeft me" />
+    <Word from="herfraseren" to="parafraseren" />
+    <Word from="hi" to="hè" />
+    <Word from="hii" to="hij" />
+    <Word from="hiinog" to="hij nog" />
+    <Word from="Iafaard" to="lafaard" />
+    <Word from="Iafaards" to="lafaards" />
+    <Word from="Iang" to="lang" />
+    <Word from="Iangdurig" to="langdurig" />
+    <Word from="Ias" to="las" />
+    <Word from="Iaten" to="laten" />
+    <Word from="Iater" to="later" />
+    <Word from="Iees" to="lees" />
+    <Word from="Ieger" to="leger" />
+    <Word from="Ieiden" to="leiden" />
+    <Word from="Ieidt" to="leidt" />
+    <Word from="Ietterlijk" to="letterlijk" />
+    <Word from="Iezen" to="lezen" />
+    <Word from="Iicht" to="licht" />
+    <Word from="Iiever" to="liever" />
+    <Word from="Iijken" to="lijken" />
+    <Word from="iin" to="één" />
+    <Word from="Iintje" to="lintje" />
+    <Word from="ikje" to="ik je" />
+    <Word from="IntegendeeI" to="Integendeel" />
+    <Word from="Iokale" to="lokale" />
+    <Word from="Ioopt" to="loopt" />
+    <Word from="Iopen" to="lopen" />
+    <Word from="Italie" to="Italië" />
+    <Word from="Iuisteren" to="luisteren" />
+    <Word from="Iukt" to="lukt" />
+    <Word from="Jolitis" to="Jolités" />
+    <Word from="kamervragen" to="Kamervragen" />
+    <Word from="komtje" to="komt je" />
+    <Word from="Labi" to="Labé" />
+    <Word from="landd" to="land" />
     <Word from="ledere" to="Iedere" />
+    <Word from="ledereen" to="Iedereen" />
     <Word from="lemand" to="Iemand" />
+    <Word from="lerland" to="Ierland" />
+    <Word from="lerse" to="Ierse" />
+    <Word from="liht" to="licht" />
+    <Word from="lk" to="Ik" />
+    <Word from="ln" to="In" />
+    <Word from="ls" to="Is" />
+    <Word from="luisterje" to="luister je" />
+    <Word from="Luisterje" to="Luister je" />
+    <Word from="Maakje" to="Maak je" />
+    <Word from="Maarja" to="Maar ja" />
+    <Word from="metje" to="met je" />
+    <Word from="metjou" to="met jou" />
+    <Word from="metmii" to="met mij" />
+    <Word from="mii" to="mij" />
+    <Word from="nietbedrogen" to="niet bedrogen" />
+    <Word from="nietwilt" to="niet wilt" />
+    <Word from="officiele" to="officiële" />
+    <Word from="oki" to="oké" />
+    <Word from="Omdatje" to="Omdat je" />
+    <Word from="Omdatjij" to="Omdat jij" />
+    <Word from="ondrrwerp" to="onderwerp" />
+    <Word from="ondrrzoek" to="onderzoek" />
+    <Word from="ovrrheidsgeld" to="overheidsgeld" />
+    <Word from="padvinderijpunten" to="padvinderspunten" />
+    <Word from="paranoide" to="paranoïde" />
+    <Word from="patienten" to="patiënten" />
+    <Word from="próbleem" to="probleem" />
+    <Word from="Scive" to="Scève" />
+    <Word from="stillouden" to="stilhouden" />
+    <Word from="Terzake" to="Ter zake" />
+    <Word from="trgen" to="tegen" />
+    <Word from="voorje" to="voor je" />
+    <Word from="voormii" to="voor mij" />
+    <Word from="wachtje" to="wacht je" />
+    <Word from="wachtze" to="wacht ze" />
+    <Word from="wantje" to="want je" />
+    <Word from="weI" to="wel" />
+    <Word from="zeggrn" to="zeggen" />
+    <Word from="Zii" to="Zij" />
+    <Word from="Ziiheeft" to="Zij heeft" />
+    <Word from="ziin" to="zijn" />
+    <Word from="Zonderjou" to="Zonder jou" />
+    <Word from="zonderjou" to="zonder jou" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
@@ -20,5 +122,6 @@
     <RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
     <RegEx find="\beIk" replaceWith="elk" />
     <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
+    <RegEx find="comite\b" replaceWith="comité" />
   </RegularExpressions>
 </OCRFixReplaceList>
