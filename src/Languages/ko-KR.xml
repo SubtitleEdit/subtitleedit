@@ -428,7 +428,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <New>신규</New>
     <Edit>편집</Edit>
     <Delete>삭제</Delete>
-    <SaveAs>다른 이름으로 저장(&amp;A)...</SaveAs>
+    <SaveAs>새로 저장(&amp;A)...</SaveAs>
     <SaveSubtitleAs>다름 이름으로 자막 저장...</SaveSubtitleAs>
     <SubtitleExportedInCustomFormatToX>사용자 지정 형식으로 내보낸 자막: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
@@ -447,6 +447,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FontName>글꼴 이름</FontName>
     <FontSize>글꼴 크기</FontSize>
     <FontFace>글꼴 모양</FontFace>
+    <FontFaceRegular>정규식</FontFaceRegular>
     <Alignment>정렬</Alignment>
     <Baseline>기준선</Baseline>
   </ExportFcpXmlAdvanced>
@@ -455,7 +456,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ImageSettings>이미지 설정</ImageSettings>
     <FontFamily>글꼴 모양</FontFamily>
     <FontSize>글꼴 크기</FontSize>
-    <FontColor>글꼴 색상</FontColor>
+    <FontColor>색상</FontColor>
     <BorderColor>테두리 색상</BorderColor>
     <BorderWidth>테두리 폭</BorderWidth>
     <BorderStyle>테두리 모양</BorderStyle>
@@ -470,8 +471,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SimpleRendering>간단한 렌더링</SimpleRendering>
     <AntiAliasingWithTransparency>투명하게 앤티 앨리어싱</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
-    <SideBySide3D>하프-좌/우</SideBySide3D>
-    <HalfTopBottom3D>하프-상/하</HalfTopBottom3D>
+    <SideBySide3D>좌/우</SideBySide3D>
+    <HalfTopBottom3D>상/하</HalfTopBottom3D>
     <Depth>깊이</Depth>
     <ExportAllLines>모든 줄 내보내기...</ExportAllLines>
     <XImagesSavedInY>{0}개의 이미지가 {1}에 저장되었습니다.</XImagesSavedInY>
