@@ -3096,7 +3096,7 @@
     <RegEx find="([uU])radić" replaceWith="$1činit ć" />
     <RegEx find="ezuslov" replaceWith="ezuvjet" />
     <RegEx find="\b([uU])slov" replaceWith="$1vjet" />
-    <RegEx find="([uU])smer([aie])" replaceWith="$1smjer$2" />
+    <RegEx find="(?&lt;![OEoe])smer" replaceWith="smjer" />
     <RegEx find="spi?j?e(h|si)" replaceWith="spje$1" />
     <RegEx find="spi?j?eš([an]|n[aeiou])" replaceWith="spješ$1" />
     <RegEx find="\b([uU])spe([lt])" replaceWith="$1spje$2" />
