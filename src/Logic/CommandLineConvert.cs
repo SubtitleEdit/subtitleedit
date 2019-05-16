@@ -774,6 +774,51 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
+        /// Gets an offset argument from the command line
+        /// </summary>
+        /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
+        private static TimeSpan GetOffset(IList<string> commandLineArguments)
+        {
+            var offset = GetArgument(commandLineArguments, "offset:", "0");
+            if (int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.CurrentCulture, out var number) || int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out number))
+            {
+                return TimeSpan.FromMilliseconds(number);
+            }
+
+            var parts = offset.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (parts.Count > 1)
+            {
+                var result = TimeSpan.Zero;
+                if (parts.Count == 4 && (int.TryParse(parts[0], NumberStyles.AllowLeadingSign, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out number)))
+                {
+                    result = result.Add(TimeSpan.FromHours(number));
+                    parts.RemoveAt(0);
+                }
+                if (parts.Count == 3 && (int.TryParse(parts[0], NumberStyles.None, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out number)))
+                {
+                    result = result.Add(TimeSpan.FromMinutes(number));
+                    parts.RemoveAt(0);
+                }
+                if (parts.Count == 2 && (int.TryParse(parts[0], NumberStyles.None, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out number)))
+                {
+                    result = result.Add(TimeSpan.FromSeconds(number));
+                    parts.RemoveAt(0);
+                }
+                if (parts.Count == 1 && (int.TryParse(parts[0], NumberStyles.None, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out number)))
+                {
+                    result = result.Add(TimeSpan.FromMilliseconds(number));
+                    parts.RemoveAt(0);
+                }
+                if (parts.Count == 0)
+                {
+                    return result;
+                }
+            }
+
+            throw new FormatException($"The /offset value '{offset}' is invalid.");
+        }
+
+        /// <summary>
         /// Gets a resolution argument from the command line
         /// </summary>
         /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
