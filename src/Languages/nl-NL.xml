@@ -196,7 +196,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixRtlReverseStartEnd>RNL begin/einde omkeren</FixRtlReverseStartEnd>
     <SplitLongLines>Lange regels opdelen</SplitLongLines>
     <AutoBalance>Tekst automatisch uitlĳnen</AutoBalance>
-    <ScanFolder>Doorzoek de map...</ScanFolder>
+    <ScanFolder>Map doorzoeken...</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitelbestanden...</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
     <SetMinMsBetweenSubtitles>Zet min. milliseconden tussen ondertitels</SetMinMsBetweenSubtitles>
