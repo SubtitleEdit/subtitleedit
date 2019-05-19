@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var unconsumedArguments = arguments.Skip(4).Select(s => s.Trim()).Where(s => s.Length > 0).ToList();
-                var offset = GetArgument(unconsumedArguments, "offset:");
+                var offset = GetOffset(unconsumedArguments);
                 var resolution = GetResolution(unconsumedArguments);
                 var targetFrameRate = GetFrameRate(unconsumedArguments, "targetfps");
                 var frameRate = GetFrameRate(unconsumedArguments, "fps");
@@ -681,7 +681,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly, Point? resolution)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly, Point? resolution)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -705,7 +705,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
+        internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
                                               IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions = BatchAction.None,
                                               Point? resolution = null, bool autoDetectLanguage = false)
@@ -961,34 +961,9 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 // adjust offset
-                if (!string.IsNullOrWhiteSpace(offset))
+                if (offset.Ticks != 0)
                 {
-                    bool minus = offset.StartsWith('-');
-                    offset = offset.TrimStart('-');
-                    var offsetSplitChars = new[] { ':', '.', ',' };
-                    var parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                    while (parts.Length > 1 && parts.Length < 4)
-                    {
-                        offset = "0:" + offset;
-                        parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                    }
-                    if (parts.Length == 4)
-                    {
-                        try
-                        {
-                            var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-                            sub.AddTimeToAllParagraphs(minus ? ts.Negate() : ts);
-                            parts = null;
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
-                    if (parts != null)
-                    {
-                        _stdOutWriter?.Write($" (unable to read offset '{offset}')");
-                    }
+                    sub.AddTimeToAllParagraphs(offset);
                 }
 
                 // adjust frame rate
@@ -1328,6 +1303,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         _stdOutWriter?.WriteLine(" done.");
                     }
+
                     else if (BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
