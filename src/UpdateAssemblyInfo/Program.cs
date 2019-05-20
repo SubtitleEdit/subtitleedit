@@ -16,6 +16,7 @@ namespace UpdateAssemblyInfo
         private static readonly Regex ShortVersionRegex; // e.g.: 3.4.8 (w/o build number)
         private static readonly Regex TemplateFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.[REVNO]")]
         private static readonly Regex AssemblyInfoFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.226")]
+        private static readonly Regex TemplateFileCopyrightRegex; // e.g.: [assembly: AssemblyCopyright("Copyright 2001-2019, Nikse")]
         private static readonly Regex AssemblyInfoFileRevisionGuidRegex; // e.g.: [assembly: AssemblyDescription("0e82e5769c9b235383991082c0a0bba96d20c69d")]
         static Program()
         {
@@ -27,6 +28,7 @@ namespace UpdateAssemblyInfo
             options |= RegexOptions.Multiline;
             TemplateFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+)\.\[REVNO\]""\)\]", options);
             AssemblyInfoFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)""\)\]", options);
+            TemplateFileCopyrightRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyCopyright\(""Copyright 2001-(?<year>[2-9][0-9]{3})[^""]+""\)\]", options);
             AssemblyInfoFileRevisionGuidRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyDescription\(""(?<guid>[0-9A-Za-z]*)""\)\]", options);
         }
 
@@ -173,11 +175,21 @@ namespace UpdateAssemblyInfo
                 var templateMatch = TemplateFileVersionRegex.Match(templateText);
                 if (!templateMatch.Success)
                 {
-                    throw new Exception("Malformed template file: '" + templateFileName + "'");
+                    throw new FormatException($"Malformed template file: '{templateFileName}' (missing AssemblyVersion)");
                 }
                 var index = templateMatch.Groups["version"].Index;
                 var length = templateMatch.Groups["version"].Length;
                 templateText = templateText.Remove(index, length).Insert(index, newVersion.ShortVersion);
+
+                templateMatch = TemplateFileCopyrightRegex.Match(templateText);
+                if (!templateMatch.Success)
+                {
+                    throw new FormatException($"Malformed template file: '{templateFileName}' (missing AssemblyCopyright)");
+                }
+                index = templateMatch.Groups["year"].Index;
+                length = templateMatch.Groups["year"].Length;
+                templateText = templateText.Remove(index, length).Insert(index, DateTime.UtcNow.Year.ToString("D4", CultureInfo.InvariantCulture));
+
                 File.WriteAllText(templateFileName, templateText, Encoding.UTF8);
             }
 
