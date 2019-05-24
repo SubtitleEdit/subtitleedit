@@ -1596,6 +1596,7 @@
     <Word from="Trpeo" to="Trpio" />
     <Word from="tugi" to="tuzi" />
     <Word from="tvrtci" to="tvrtki" />
+    <Word from="ua" to="za" />
     <Word from="ubede" to="uvjere" />
     <Word from="Ubeđivao" to="Uvjeravao" />
     <Word from="ubeđivao" to="uvjeravao" />
@@ -3358,6 +3359,7 @@
     <RegEx find="mtić" replaceWith="mtit ć" />
     <RegEx find="napredi" replaceWith="naprijedi" />
     <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
+    <RegEx find="(?&lt;!a)nks" replaceWith="nsk" />
     <RegEx find="ngažuj" replaceWith="ngažiraj" />
     <RegEx find="nho" replaceWith="nko" />
     <RegEx find="nisa([nlot])" replaceWith="nira$1" />
