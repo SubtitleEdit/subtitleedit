@@ -123,7 +123,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         var textDics = (Dictionary<string, object>)o;
                         var res = (string)textDics["text"];
                         res = TranslationHelper.PostTranslate(res, targetLanguage);
-                        res = res.Replace("< font color = ", "<font color=");
                         results.Add(res);
                     }
                 }
