@@ -27,7 +27,23 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
                 s = s.Replace("Ked af.", "Undskyld.");
             }
-            return s;
+
+            return FixTags(s);
+        }
+
+        private static string FixTags(string s)
+        {
+            return s.Replace("< font ", "<font ")
+            .Replace(" color = ", " color=")
+            .Replace(" color =", " color=")
+            .Replace("color= \"# ", " color=\"#")
+            .Replace("color= \"#", " color=\"#")
+            .Replace("</ font >", "</font>")
+            .Replace("</ font>", "</font>")
+
+            .Replace("< i >", "<i>")
+            .Replace("< / i >", "</i>")
+            .Replace("</ i>", "</i>");
         }
 
         public static string PreTranslate(string input, string source)

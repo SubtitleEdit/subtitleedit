@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     public class Formatting
     {
         private bool Italic { get; set; }
+        private string Font { get; set; }
         private bool ItalicTwoLines { get; set; }
         private string StartTags { get; set; }
         private bool AutoBreak { get; set; }
@@ -38,6 +39,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             {
                 Italic = true;
                 text = text.Substring(3, text.Length - 7);
+            }
+
+            // font tags
+            var idxOfGt = text.IndexOf('>');
+            if (text.StartsWith("<font ", StringComparison.Ordinal) && text.EndsWith("</font>", StringComparison.Ordinal) &&
+                Utilities.CountTagInText(text, "</font>") == 1 && idxOfGt < text.IndexOf("</font>", StringComparison.Ordinal))
+            {
+                Font = text.Substring(0, idxOfGt + 1);
+                text = text.Remove(0, idxOfGt + 1);
+                text = text.Remove(text.Length - "</font>".Length);
             }
 
             // Un-break line
@@ -107,6 +118,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
             else if (Italic)
             {
                 text = "<i>" + text + "</i>";
+            }
+
+            // Font tag
+            if (!string.IsNullOrEmpty(Font))
+            {
+                text = Font + text + "</font>";
             }
 
             // SSA/ASS tags
