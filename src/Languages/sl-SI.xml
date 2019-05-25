@@ -1673,7 +1673,7 @@ popravlja en podnapis (sodelovanje)</Information>
     <Alignment>Poravnava (izbrane vrstice)</Alignment>
     <CopyTextOnly>Kopiraj besedilo edino v odložišče (izbrane vrstice)</CopyTextOnly>
     <AutoDurationSelectedLines>Samodejno trajanje (izbrane vrstice)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Povrni RTL začetek/konec</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Povrni RTL začetek/konec</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikalna povečava noter</VerticalZoom>
     <VerticalZoomOut>Vertikalna povečava ven</VerticalZoomOut>
     <WaveformSeekSilenceForward>Tiho iskanje naprej</WaveformSeekSilenceForward>

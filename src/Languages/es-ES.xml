@@ -1918,7 +1918,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <CopyTextOnly>Copia solo el texto al portapapeles (líneas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia el texto del original al actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Autoduración (líneas seleccionadas)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Invertir RTL inicio/final</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Invertir RTL inicio/final</ReverseStartAndEndingForRtl>
     <VerticalZoom>Acercamiento vertical</VerticalZoom>
     <VerticalZoomOut>Alejamiento vertical</VerticalZoomOut>
     <WaveformSeekSilenceForward>Buscar silencio hacia adelante</WaveformSeekSilenceForward>

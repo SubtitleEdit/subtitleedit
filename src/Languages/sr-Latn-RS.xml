@@ -1446,7 +1446,7 @@ određeni prevod s drugim ljudima.</Information>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u memoriju (odabrane linije)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-trajanje (odabrane linije)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Obrnuti RTL početak/kraj</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Obrnuti RTL početak/kraj</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikalno uvećanje</VerticalZoom>
     <WaveformSeekSilenceForward>Traži tišinu-napred</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Traži tišinu-nazad</WaveformSeekSilenceBack>

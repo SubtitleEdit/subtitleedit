@@ -1977,7 +1977,7 @@ can edit in same subtitle file (collaboration)</Information>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Reverse RTL start/end</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Reverse RTL start/end</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertical zoom in</VerticalZoom>
     <VerticalZoomOut>Vertical zoom out</VerticalZoomOut>
     <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>

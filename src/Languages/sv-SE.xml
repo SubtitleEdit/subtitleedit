@@ -1854,7 +1854,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <CopyTextOnly>Kopiera text till urklipp (utvalda linjer)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiera text från original till aktuell</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto längd (utvalda linjer)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Växla höger till vänster start/slut</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Växla höger till vänster start/slut</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertikal zooma in</VerticalZoom>
     <VerticalZoomOut>Vertikal zooma ut</VerticalZoomOut>
     <WaveformSeekSilenceForward>Sök tyst tills</WaveformSeekSilenceForward>

@@ -5353,8 +5353,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AutoDurationSelectedLines":
                     language.Settings.AutoDurationSelectedLines = reader.Value;
                     break;
-                case "Settings/ReverseStartAndEndingForRTL":
-                    language.Settings.ReverseStartAndEndingForRTL = reader.Value;
+                case "Settings/ReverseStartAndEndingForRtl":
+                    language.Settings.ReverseStartAndEndingForRtl = reader.Value;
                     break;
                 case "Settings/VerticalZoom":
                     language.Settings.VerticalZoom = reader.Value;
