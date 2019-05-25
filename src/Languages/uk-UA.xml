@@ -1806,7 +1806,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CopyTextOnly>Скопіювати до буферу обміну тільки текст (обрані рядки)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Скопіювати текст з оригіналу в поточний субтитр</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автоматична тривалість (вибрані рядки)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Обміняти місцями початок/кінець RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Обміняти місцями початок/кінець RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Збільшити вертикальний масштаб</VerticalZoom>
     <VerticalZoomOut>Зменшити вертикальний масштаб</VerticalZoomOut>
     <WaveformSeekSilenceForward>Шукати тишу вперед</WaveformSeekSilenceForward>

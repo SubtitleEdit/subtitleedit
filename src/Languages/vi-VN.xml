@@ -1461,7 +1461,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Alignment>Liên kết (các dòng được chọn)</Alignment>
     <CopyTextOnly>Sao chép văn bản hiển thị vào clipboard (các dòng được chọn)</CopyTextOnly>
     <AutoDurationSelectedLines>Tự động giới hạn (các dòng được chọn)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Xếp RTL bắt đầu/kết thúc</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Xếp RTL bắt đầu/kết thúc</ReverseStartAndEndingForRtl>
     <VerticalZoom>Phóng theo chiều dọc</VerticalZoom>
     <WaveformSeekSilenceForward>Tìm kiếm trong im lặng phía trước</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Tìm kiếm trong yên lặng khi quay lại</WaveformSeekSilenceBack>

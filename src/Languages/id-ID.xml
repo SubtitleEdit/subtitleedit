@@ -1919,7 +1919,7 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <CopyTextOnly>Salin teks hanya ke papan klip (baris terpilih)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Salin teks dari asli ke saat ini</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durasi oto. (baris terpilih)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Balikkan mulai/akhir RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Balikkan mulai/akhir RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Perbesar vertikal</VerticalZoom>
     <VerticalZoomOut>Perkecil vertikal</VerticalZoomOut>
     <WaveformSeekSilenceForward>Cari (durasi) hening maju</WaveformSeekSilenceForward>

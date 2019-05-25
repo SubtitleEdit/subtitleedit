@@ -1992,7 +1992,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CopyTextOnly>Копировать в буфер только текст (выделенные строки)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Копировать исходный текст в текущий</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автопродолжительность (выделенные строки)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Обратить начало/конец RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Обратить начало/конец RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Увеличить масштаб по вертикали</VerticalZoom>
     <VerticalZoomOut>Уменьшить масштаб по вертикали</VerticalZoomOut>
     <WaveformSeekSilenceForward>Поиск пауз далее</WaveformSeekSilenceForward>

@@ -1887,7 +1887,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <CopyTextOnly>Kopiatu idatzia bakarrik gakora (hautaturiko lerroak)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiatu idazki jatorrizkotik oraingora</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Berez-iraupena (hautaturiko lerroak)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Alderantzizkatu ESEZ hasiera/amaiera</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Alderantzizkatu ESEZ hasiera/amaiera</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zutikako zooma</VerticalZoom>
     <VerticalZoomOut>Zutikako zooma gutxitu</VerticalZoomOut>
     <WaveformSeekSilenceForward>Bilatu hurrengo isilunea</WaveformSeekSilenceForward>

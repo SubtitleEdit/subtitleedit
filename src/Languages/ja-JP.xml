@@ -1612,7 +1612,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Alignment>配置 (選択された行)</Alignment>
     <CopyTextOnly>クリップボードへテキストのみをコピー (選択された行)</CopyTextOnly>
     <AutoDurationSelectedLines>表示時間の自動調整 (選択された行)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>RTL の開始/終了の反転</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>RTL の開始/終了の反転</ReverseStartAndEndingForRtl>
     <VerticalZoom>垂直ズーム</VerticalZoom>
     <WaveformSeekSilenceForward>無音の前方検索</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>無音の後方検索</WaveformSeekSilenceBack>

@@ -1898,7 +1898,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <CopyTextOnly>Copiază doar textul în clipboard (linii selectate)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiază textul original în cel curent</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-durată (linii selectate)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Inversează începutul/sfârșitul RTL</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Inversează începutul/sfârșitul RTL</ReverseStartAndEndingForRtl>
     <VerticalZoom>Focalizare verticală de apropiere</VerticalZoom>
     <VerticalZoomOut>Focalizare verticală de depărtare</VerticalZoomOut>
     <WaveformSeekSilenceForward>Caută tacit înainte</WaveformSeekSilenceForward>

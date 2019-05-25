@@ -1795,7 +1795,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Alignment>對齊 (選擇的行)</Alignment>
     <CopyTextOnly>僅複製文字到剪貼簿 (選擇的行)</CopyTextOnly>
     <AutoDurationSelectedLines>自動設定持續時間 (選擇的行)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>反轉 RTL 開始/結束</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>反轉 RTL 開始/結束</ReverseStartAndEndingForRtl>
     <VerticalZoom>垂直放大</VerticalZoom>
     <VerticalZoomOut>垂直縮小</VerticalZoomOut>
     <WaveformSeekSilenceForward>向前搜尋靜音</WaveformSeekSilenceForward>

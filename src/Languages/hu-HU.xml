@@ -1971,7 +1971,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <CopyTextOnly>Szöveg másolása csak a vágólapra (kijelölt sorok)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>RTL indítás/befejezés megfordítása</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>RTL indítás/befejezés megfordítása</ReverseStartAndEndingForRtl>
     <VerticalZoom>Függőleges nagyítás</VerticalZoom>
     <VerticalZoomOut>Függőleges kicsinyítés</VerticalZoomOut>
     <WaveformSeekSilenceForward>Csend keresése előre</WaveformSeekSilenceForward>

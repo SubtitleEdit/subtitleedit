@@ -1986,7 +1986,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <CopyTextOnly>Copier du texte dans le presse-papiers (lignes sélectionnées)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copier le texte original dans le sous-titre courant</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durée automatique (lignes sélectionnées)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Rétablir RTL Start/Stop</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Rétablir RTL Start/Stop</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom vertical avant</VerticalZoom>
     <VerticalZoomOut>Zoom vertical arrière</VerticalZoomOut>
     <WaveformSeekSilenceForward>Recherche avant le silence</WaveformSeekSilenceForward>

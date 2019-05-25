@@ -1900,7 +1900,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <CopyTextOnly>Sadece metni panoya kopyala (seçilen satırlarda)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Orijinalden geçerliye metin koplala</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Otomatik süre ayarla (seçilen satırlarda))</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>RTL başlama/bitişi ters çevir</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>RTL başlama/bitişi ters çevir</ReverseStartAndEndingForRtl>
     <VerticalZoom>Dikey yakınlaştırma</VerticalZoom>
     <VerticalZoomOut>Dikey uzaklaştırma</VerticalZoomOut>
     <WaveformSeekSilenceForward>Sessizliği ileride ara</WaveformSeekSilenceForward>

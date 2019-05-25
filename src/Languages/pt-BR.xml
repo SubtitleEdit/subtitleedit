@@ -1966,7 +1966,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<CopyTextOnly>Copiar somente texto para área de transferência (linhas selecionadas)</CopyTextOnly>
 		<CopyTextOnlyFromOriginalToCurrent>Copiar texto do original para atual</CopyTextOnlyFromOriginalToCurrent>
 		<AutoDurationSelectedLines>Duração automática (linhas selecionadas)</AutoDurationSelectedLines>
-		<ReverseStartAndEndingForRTL>Reverter início/fim RTL</ReverseStartAndEndingForRTL>
+		<ReverseStartAndEndingForRtl>Reverter início/fim RTL</ReverseStartAndEndingForRtl>
 		<VerticalZoom>+ zoom vertical</VerticalZoom>
 		<VerticalZoomOut>- zoom vertical</VerticalZoomOut>
 		<WaveformSeekSilenceForward>Procurar silêncio adiante</WaveformSeekSilenceForward>

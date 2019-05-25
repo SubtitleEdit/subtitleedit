@@ -1895,7 +1895,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <CopyTextOnly>Kopioi vain teksti leikepöydälle (valitut rivit)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopioi alkuperäinen teksti</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Autom. kesto (valitut rivit)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Käänteinen RTL alku/loppu</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Käänteinen RTL alku/loppu</ReverseStartAndEndingForRtl>
     <VerticalZoom>Pystysuora lähennys</VerticalZoom>
     <VerticalZoomOut>Pystysuora loitonnus</VerticalZoomOut>
     <WaveformSeekSilenceForward>Hae hiljaisuus eteenpäin</WaveformSeekSilenceForward>

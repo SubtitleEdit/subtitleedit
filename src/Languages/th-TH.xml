@@ -1715,7 +1715,7 @@
     <Alignment>การวางแนว (บรรทัดที่เลือก)</Alignment>
     <CopyTextOnly>สำเนาข้อความไปคลิปบอร์ดเท่านั้น (บรรทัดที่เลือก)</CopyTextOnly>
     <AutoDurationSelectedLines>ระยะเวลาอัตโนมัติ (บรรทัดที่เลือก)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>กลับเริ่มต้น/สิ้นสุดซ้ายไปขวา</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>กลับเริ่มต้น/สิ้นสุดซ้ายไปขวา</ReverseStartAndEndingForRtl>
     <VerticalZoom>ซูมเข้าแนวตั้ง</VerticalZoom>
     <VerticalZoomOut>ซูมออกแนวตั้ง</VerticalZoomOut>
     <WaveformSeekSilenceForward>หาจุดเงียบไปข้างหน้า</WaveformSeekSilenceForward>

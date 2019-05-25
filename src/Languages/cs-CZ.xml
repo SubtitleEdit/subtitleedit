@@ -1962,7 +1962,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <CopyTextOnly>Kopírovat text pouze do schránky (vybrané řádky)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopírovat text z původního do aktuálního</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Obrátit začátek a konec zprava doleva</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRtl>Obrátit začátek a konec zprava doleva</ReverseStartAndEndingForRtl>
     <VerticalZoom>Svislé zvětšení</VerticalZoom>
     <VerticalZoomOut>Svislé zmenšení</VerticalZoomOut>
     <WaveformSeekSilenceForward>Tiché hledání vpřed</WaveformSeekSilenceForward>
