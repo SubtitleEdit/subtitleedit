@@ -440,13 +440,13 @@
     <WordPart from="ejag" to="e jag" />
     <WordPart from="ärp" to="är p" />
   </PartialWords>
-  <PartialLines />
+  <WholeLines />
   <PartialLinesAlways />
+  <PartialLines />
   <BeginLines>
     <Beginning from="Ln " to="In " />
     <Beginning from="U ppfattat" to="Uppfattat" />
   </BeginLines>
   <EndLines />
-  <WholeLines />
   <RegularExpressions />
 </OCRFixReplaceList>

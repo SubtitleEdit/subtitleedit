@@ -2694,6 +2694,26 @@
     <WordPart from=")'" to="y" />
     <WordPart from="a’" to="d" />
   </PartialWords>
+  <WholeLines>
+    <!-- Whole lines - including -" etc -->
+    <Line from="H ey." to="Hey." />
+    <Line from="He)’-" to="Hey." />
+    <Line from="N0." to="No." />
+    <Line from="-N0." to="-No." />
+    <Line from="Noll" to="No!!" />
+    <Line from="(G ROANS)" to="(GROANS)" />
+    <Line from="[G ROANS]" to="[GROANS]" />
+    <Line from="(M EOWS)" to="(MEOWS)" />
+    <Line from="[M EOWS]" to="[MEOWS]" />
+    <Line from="Uaughs]" to="[laughs]" />
+    <Line from="[chitte rs]" to="[chitters]" />
+    <Line from="Hil‘ it!" to="Hit it!" />
+    <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
+    <Line from="ISIGHS]" to="[SIGHS]" />
+  </WholeLines>
+  <PartialLinesAlways>
+    <LinePart from="forbest act" to="for best act" />
+  </PartialLinesAlways>
   <PartialLines>
     <LinePart from=" /be " to=" I be " />
     <LinePart from=" aren '1'" to=" aren't" />
@@ -3014,9 +3034,6 @@
     <LinePart from="you' re" to="you're" />
     <LinePart from="You' ve " to="You've " />
   </PartialLines>
-  <PartialLinesAlways>
-    <LinePart from="forbest act" to="for best act" />
-  </PartialLinesAlways>
   <BeginLines>
     <Beginning from="lgot it" to="I got it" />
     <Beginning from="Don,t " to="Don't " />
@@ -3164,23 +3181,6 @@
     <Ending from=" i..." to=" I..." />
     <Ending from=" L." to=" I." />
   </EndLines>
-  <WholeLines>
-    <!-- Whole lines - including -" etc -->
-    <Line from="H ey." to="Hey." />
-    <Line from="He)’-" to="Hey." />
-    <Line from="N0." to="No." />
-    <Line from="-N0." to="-No." />
-    <Line from="Noll" to="No!!" />
-    <Line from="(G ROANS)" to="(GROANS)" />
-    <Line from="[G ROANS]" to="[GROANS]" />
-    <Line from="(M EOWS)" to="(MEOWS)" />
-    <Line from="[M EOWS]" to="[MEOWS]" />
-    <Line from="Uaughs]" to="[laughs]" />
-    <Line from="[chitte rs]" to="[chitters]" />
-    <Line from="Hil‘ it!" to="Hit it!" />
-    <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
-    <Line from="ISIGHS]" to="[SIGHS]" />
-  </WholeLines>
   <RegularExpressions>
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
     <RegEx find=" L([,\r\n :;!?]+)" replaceWith=" I$1" />

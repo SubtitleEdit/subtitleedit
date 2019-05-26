@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names/words with specific casing - and specific to German only -->
+<!-- This list contains names with specific casing - and specific to German only -->
 <names>
+  <blacklist />
   <name>Abelard</name>
   <name>Ada</name>
   <name>Adal</name>

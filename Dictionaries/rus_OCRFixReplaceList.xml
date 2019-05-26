@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="НЄЙ" to="НЕЙ" />
     <Word from="ОРГЗНИЗМОБ" to="ОРГАНИЗМА" />
@@ -248,10 +249,10 @@
     <WordPart from="ШЗ" to="ША" />
     <WordPart from="І\/І" to="М" />
   </PartialWords>
-  <PartialLines />
+  <WholeLines />
   <PartialLinesAlways />
+  <PartialLines />
   <BeginLines />
   <EndLines />
-  <WholeLines />
   <RegularExpressions />
 </OCRFixReplaceList>

@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="aandachtmag" to="aandacht mag" />
     <Word from="agrariers" to="agrariërs" />
@@ -110,12 +111,16 @@
     <Word from="zonderjou" to="zonder jou" />
   </WholeWords>
   <PartialWordsAlways />
-  <PartialWords />
-  <PartialLines />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it is (they are) accepted -->
+    <WordPart from="ĳ" to="ij" />
+  </PartialWords>
+  <WholeLines />
   <PartialLinesAlways />
+  <PartialLines />
   <BeginLines />
   <EndLines />
-  <WholeLines />
   <RegularExpressions>
     <RegEx find="\blk(?=\p{Ll}{2})" replaceWith="Ik" />
     <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
