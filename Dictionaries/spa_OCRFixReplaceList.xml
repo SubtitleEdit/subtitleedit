@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <!-- Abreviaturas simples -->
     <Word from="KBs" to="kB" />
@@ -368,6 +369,11 @@
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
+  <WholeLines>
+    <!-- Todas las líneas -->
+    <Line from="No" to="No." />
+  </WholeLines>
+  <PartialLinesAlways />
   <PartialLines>
     <!-- Varios -->
     <LinePart from="de gratis" to="gratis" />
@@ -710,15 +716,10 @@
     <LinePart from="misterl" to="misteri" />
     <LinePart from="vivencl" to="vivenci" />
   </PartialLines>
-  <PartialLinesAlways />
   <BeginLines />
   <EndLines>
     <Ending from=".»." to="»." />
   </EndLines>
-  <WholeLines>
-    <!-- Todas las líneas -->
-    <Line from="No" to="No." />
-  </WholeLines>
   <RegularExpressions>
     <!-- Abreviaturas compuestas -->
     <RegEx find="\b[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />

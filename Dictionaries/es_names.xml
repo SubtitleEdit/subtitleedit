@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names/words with specific casing - and specific to Spanish only -->
+<!-- This list contains names with specific casing - and specific to Spanish only -->
 <names>
+  <blacklist />
   <name>Aang</name>
   <name>Aarón</name>
   <name>Abdulabri</name>
@@ -1009,7 +1010,4 @@
   <name>Zoroastro</name>
   <name>Zuko</name>
   <name>Zulú</name>
-  <blacklist>
-    <name></name>
-  </blacklist>
 </names>

@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords />
   <PartialWordsAlways />
   <PartialWords>
@@ -34,10 +35,10 @@
     <WordPart from="Ã" to="Å" />
     <WordPart from="í" to="i" />
   </PartialWords>
-  <PartialLines />
+  <WholeLines />
   <PartialLinesAlways />
+  <PartialLines />
   <BeginLines />
   <EndLines />
-  <WholeLines />
   <RegularExpressions />
 </OCRFixReplaceList>

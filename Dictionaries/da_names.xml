@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names/words with specific casing - and specific to Danish only -->
+<!-- This list contains names with specific casing - and specific to Danish only -->
 <names>
+  <blacklist>
+    <name>Rabat</name>
+  </blacklist>
   <name>Aquarium</name>
   <name>Armfeldt</name>
   <name>Asgård</name>
@@ -85,7 +88,4 @@
   <name>Wharton</name>
   <name>Wylie</name>
   <name>Yardley</name>
-  <blacklist>
-    <name>Rabat</name>
-  </blacklist>
 </names>

@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="@immatriculation" to="d'immatriculation" />
     <Word from="acquer" to="acquér" />
@@ -246,13 +247,6 @@
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
-  <PartialLines>
-    <LinePart from=" I'" to=" l'" />
-    <LinePart from=" |'" to=" l'" />
-  </PartialLines>
-  <PartialLinesAlways />
-  <BeginLines />
-  <EndLines />
   <WholeLines>
     <Line from="&quot;D'ac:c:ord.&quot;" to="&quot;D'accord.&quot;" />
     <Line from="“i QUÎ gagne, qui perd," to="ni qui gagne, qui perd," />
@@ -266,5 +260,12 @@
     <Line from="Peter H u nt." to="Peter Hunt." />
     <Line from="&quot;C'est bien mieux dans Peau. &#xD;&#xA; &#xD;&#xA; On peut sﬂéclabousser, faire du bruit.&quot;" to="&quot;C'est bien mieux dans l'eau. &#xD;&#xA; &#xD;&#xA; On peut s'éclabousser, faire du bruit.&quot;" />
   </WholeLines>
+  <PartialLinesAlways />
+  <PartialLines>
+    <LinePart from=" I'" to=" l'" />
+    <LinePart from=" |'" to=" l'" />
+  </PartialLines>
+  <BeginLines />
+  <EndLines />
   <RegularExpressions />
 </OCRFixReplaceList>

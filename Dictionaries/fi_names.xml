@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names/words with specific casing - and specific to Finnish only -->
+<!-- This list contains names with specific casing - and specific to Finnish only -->
 <names>
+  <blacklist />
   <name>AA</name>
   <name>Abbie</name>
   <name>Abbylla</name>
@@ -3072,7 +3073,4 @@
   <name>Zoye</name>
   <name>Zürichissa</name>
   <name>Åkessonin</name>
-  <blacklist>
-    <name></name>
-  </blacklist>
 </names>

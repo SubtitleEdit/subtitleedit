@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="andele" to="anđele" />
     <Word from="andeli" to="anđeli" />
@@ -1218,6 +1219,8 @@
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
+  <WholeLines />
+  <PartialLinesAlways />
   <PartialLines>
     <LinePart from="da nadjem" to="naći" />
     <LinePart from="da nadjes" to="naći" />
@@ -1255,10 +1258,8 @@
     <LinePart from="znas sto" to="znaš što" />
     <LinePart from="znaš sto" to="znaš što" />
   </PartialLines>
-  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
-  <WholeLines />
   <RegularExpressions>
     <RegEx find="adas(?!v)" replaceWith="adaš" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
@@ -1895,7 +1896,7 @@
     <RegEx find="(?&lt;![Kk]lj)učiće" replaceWith="učit će" />
     <RegEx find="udiva" replaceWith="uđiva" />
     <RegEx find="udj([aiu])" replaceWith="uđ$1" />
-    <!--ne može više zbog oportunisti i komunisti -->
+    <!-- ne može više zbog oportunisti i komunisti -->
     <RegEx find="\b([Uu])nisti" replaceWith="$1ništi" />
     <RegEx find="nistav" replaceWith="ništav" />
     <RegEx find="ujuc" replaceWith="ujuć" />

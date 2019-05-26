@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names/words with specific casing - and specific to French only -->
+<!-- This list contains names with specific casing - and specific to French only -->
 <names>
+  <blacklist />
   <name>Abdon</name>
   <name>Abdonie</name>
   <name>Abdonise</name>
@@ -808,7 +809,4 @@
   <name>Zéphir</name>
   <name>Zéphirin</name>
   <name>Zoé</name>
-  <blacklist>
-    <name></name>
-  </blacklist>
 </names>

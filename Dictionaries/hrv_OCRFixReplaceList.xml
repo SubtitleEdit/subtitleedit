@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="()d" to="Od" />
     <Word from="advokati" to="odvjetnici" />
@@ -50,7 +51,7 @@
     <Word from="bekstvo" to="bijeg" />
     <Word from="bekstvu" to="bijegu" />
     <Word from="begstvu" to="bijegu" />
-    <!--<Word from="beo" to="bijel | bio" /> ne može jer su dvije verzije! -->
+    <!-- <Word from="beo" to="bijel | bio" /> ne može jer su dvije verzije! -->
     <Word from="bes" to="bijes" />
     <Word from="besa" to="bijesa" />
     <Word from="besan" to="bijesan" />
@@ -2071,7 +2072,7 @@
     <Word from="Kolu" to="Coleu" />
     <Word from="Kolins" to="Collins" />
     <Word from="Koni" to="Connie" />
-    <Word from="Konor" to="Connor"/>
+    <Word from="Konor" to="Connor" />
     <Word from="Kortni" to="Courtney" />
     <Word from="Krejg" to="Craig" />
     <Word from="Krejga" to="Craiga" />
@@ -2228,6 +2229,8 @@
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
+  <WholeLines />
+  <PartialLinesAlways />
   <PartialLines>
     <LinePart from="Ako ej" to="Ako je" />
     <LinePart from="ako ej" to="ako je" />
@@ -2397,10 +2400,8 @@
     <LinePart from="Želi da zna" to="Želi znati" />
     <LinePart from="želi da zna" to="želi znati" />
   </PartialLines>
-  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
-  <WholeLines />
   <RegularExpressions>
     <!-- deklinacije imenica i konjugacije glagola -->
     <RegEx find="([0-9])-ogodišnj" replaceWith="$1-godišnj" />
@@ -3216,7 +3217,7 @@
     <RegEx find="žur[ck]" replaceWith="zabav" />
     <RegEx find="Žur[ck]" replaceWith="Zabav" />
     <RegEx find="([sSnNpPzZ]r?[aoi]z[vn])ać" replaceWith="$1at ć" />
-    <!-- mjeseci [\b mora biti nakon jun]-->
+    <!-- mjeseci [\b mora biti nakon jun] -->
     <RegEx find="([Ss])j?ečnj([au]|ima)" replaceWith="$1iječnj$2" />
     <RegEx find="\ba[uv]gust" replaceWith="kolovoz" />
     <RegEx find="septembr" replaceWith="rujn" />
@@ -3316,7 +3317,7 @@
     <RegEx find="efiniši" replaceWith="efiniraj" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
     <RegEx find="empton" replaceWith="ampton" />
-    <!-- bjegunac-->
+    <!-- bjegunac -->
     <RegEx find="(?&lt;!j)egun" replaceWith="jegun" />
     <RegEx find="(?&lt;!j)elokup" replaceWith="jelokup" />
     <RegEx find="enlj" replaceWith="enj" />
@@ -3442,7 +3443,7 @@
     <RegEx find="posel" replaceWith="posjel" />
     <RegEx find="produkova" replaceWith="producira" />
     <RegEx find="\bpominj" replaceWith="spominj" />
-    <!-- ignoriše / koncentriše /operiše /toleriše /-->
+    <!-- ignoriše / koncentriše /operiše /toleriše / -->
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
