@@ -288,6 +288,12 @@
     <Description>Slovak dictionary package / Slovenské slovníky</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Slovenian</EnglishName>
+    <NativeName>slovenski</NativeName>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/slovenian-dictionary-pack/2018-01.04/@@download/file/pack-sl.oxt</DownloadLink>
+    <Description>Slovenian Dictionary Pack - 2018.01.04</Description>
+  </Dictionary>  
+  <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>España</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/diccionario-espanol/1.0/@@download/file/spanish-dictionary.oxt</DownloadLink>
