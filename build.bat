@@ -11,10 +11,43 @@ IF /I "%~1" == "--help" GOTO ShowHelp
 IF /I "%~1" == "/?"     GOTO ShowHelp
 IF /I "%~1" == "-?"     GOTO ShowHelp
 
-FOR /F "usebackq tokens=1* delims=: " %%A IN (`vswhere -latest -requires Microsoft.Component.MSBuild`) DO (
-  IF /I "%%A" == "installationPath" SET "VSINSTALLDIR=%%B"
+REM Set environment variables for Visual Studio command line if necessary
+:SetVsCmdLineEnv
+IF DEFINED VSINSTALLDIR IF EXIST "%VSINSTALLDIR%" (
+  IF DEFINED VisualStudioVersion IF "%VisualStudioVersion%" GEQ "15.0" GOTO SetBuildType
+  ECHO.
+  ECHO Developer Command Prompt for Visual Studio 2017 or later required!
+  GOTO EndWithError
 )
+FOR /F "usebackq delims=" %%A IN (`vswhere -latest -requires Microsoft.Component.MSBuild -property installationPath`) DO (
+  SET "VSINSTALLDIR=%%A\"
+)
+IF DEFINED VSINSTALLDIR IF EXIST "%VSINSTALLDIR%" (
+  ECHO Visual Studio installation path: "%VSINSTALLDIR%"
+) ELSE (
+  ECHO.
+  ECHO Cannot find Visual Studio.
+  GOTO EndWithError
+)
+SET "VsDevCmd_bat=%VSINSTALLDIR%Common7\Tools\VsDevCmd.bat"
+IF NOT EXIST "%VsDevCmd_bat%" (
+  FOR /F "usebackq delims=" %%A IN (`DIR /B /S "%VSINSTALLDIR%\VsDevCmd.bat"`) DO (
+    SET "VsDevCmd_bat=%%A"
+  )
+)
+IF EXIST "%VsDevCmd_bat%" (
+  ECHO Visual Studio VsDevCmd.bat path: "%VsDevCmd_bat%"
+) ELSE (
+  ECHO.
+  ECHO Cannot find Visual Studio VsDevCmd batch file.
+  GOTO EndWithError
+)
+ECHO.
+CALL "%VsDevCmd_bat%" -startdir=none
+GOTO SetVsCmdLineEnv
 
+
+:SetBuildType
 IF "%~1" == "" (
   SET "BUILDTYPE=Build"
 ) ELSE (
@@ -45,11 +78,11 @@ DEL /F /Q SubtitleEdit-*-Setup.exe SubtitleEdit-*.zip 2>NUL
 PUSHD "src"
 ECHO.
 ECHO Visual Studio installation path: "%VSINSTALLDIR%"
-IF EXIST "%VSINSTALLDIR%\MSBuild\15.0\Bin\MSBuild.exe" (
-  SET "MSBUILD=%VSINSTALLDIR%\MSBuild\15.0\Bin\MSBuild.exe"
+IF EXIST "%VSINSTALLDIR%MSBuild\15.0\Bin\MSBuild.exe" (
+  SET "MSBUILD=%VSINSTALLDIR%MSBuild\15.0\Bin\MSBuild.exe"
 ) ELSE (
-IF EXIST "%VSINSTALLDIR%\MSBuild\Current\Bin\MSBuild.exe" (
-  SET "MSBUILD=%VSINSTALLDIR%\MSBuild\Current\Bin\MSBuild.exe"
+IF EXIST "%VSINSTALLDIR%MSBuild\Current\Bin\MSBuild.exe" (
+  SET "MSBUILD=%VSINSTALLDIR%MSBuild\Current\Bin\MSBuild.exe"
 ) ELSE (
   ECHO Cannot find Visual Studio 2017.
   GOTO EndWithError
@@ -160,10 +193,10 @@ EXIT /B
 
 :SubGetVersion
 FOR /F delims^=^"^ tokens^=2 %%A IN ('FINDSTR /R /C:"AssemblyVersion" "src\Properties\AssemblyInfo.cs.template"') DO (
-  rem 3.4.1.[REVNO]
+  REM 3.4.1.[REVNO]
   SET "VERSION=%%A"
 )
-rem 3.4.1: 0 from the left and -8 chars from the right
+REM 3.4.1: 0 from the left and -8 chars from the right
 SET "VERSION=%VERSION:~0,-8%"
 EXIT /B
 
@@ -182,6 +215,9 @@ EXIT /B
 
 
 :SubDetectInnoSetup
+FOR %%G IN (ISCC.exe) DO (SET "INNOSETUP_PATH=%%~$PATH:G")
+IF EXIST "%INNOSETUP_PATH%" (SET "INNOSETUP=%INNOSETUP_PATH%" & EXIT /B)
+
 FOR /F "tokens=5*" %%A IN (
   'REG QUERY "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 5_is1" /v "Inno Setup: App Path" 2^>NUL ^| FIND "REG_SZ" ^|^|
    REG QUERY "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 5_is1" /v "Inno Setup: App Path" 2^>NUL ^| FIND "REG_SZ"') DO SET "INNOSETUP=%%B\ISCC.exe"
