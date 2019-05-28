@@ -5729,7 +5729,7 @@ $HorzAlign          =   Center
 
                     textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
-                    if (item.VideoOffsetInMs > 0)
+                    if (item.VideoOffsetInMs != 0)
                     {
                         textWriter.WriteAttributeString("VideoOffset", item.VideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
                     }

@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             FixStartEndWithSameTimeCode();
 
-            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
@@ -819,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             buttonExport.Enabled = true;
 
-            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
