@@ -347,45 +347,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string GetPeakWaveFileName(string videofileName)
         {
-            var old = GetPeakWaveFileNameOld(videofileName);
-            if (File.Exists(old))
-            {
-                return old;
-            }
-
-            try
-            {
-                var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                var wavePeakName = MovieHasher.GenerateHash(videofileName) + ".wav";
-                return Path.Combine(dir, wavePeakName);
-            }
-            catch
-            {
-                return old;
-            }
-        }
-
-        #endregion Movie Hasher
-
-        private static string GetPeakWaveFileNameOld(string videoFileName)
-        {
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            var file = new FileInfo(videoFileName);
-            var wavePeakName = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".wav";
-            wavePeakName = wavePeakName.RemoveChar('=').RemoveChar('/').RemoveChar(',').RemoveChar('?').RemoveChar('*').RemoveChar('+').RemoveChar('\\');
-            wavePeakName = Path.Combine(dir, wavePeakName);
-            return wavePeakName;
+            var wavePeakName = MovieHasher.GenerateHash(videofileName) + ".wav";
+            return Path.Combine(dir, wavePeakName);
         }
+
+        #endregion Movie Hasher
 
         public static bool IsFileValidForVisualizer(string fileName)
         {
@@ -861,41 +833,13 @@ namespace Nikse.SubtitleEdit.Core
 
             public static string GetSpectrogramFolder(string videoFileName)
             {
-                var old = GetSpectrogramFolderOld(videoFileName);
-                if (Directory.Exists(old))
-                {
-                    return old;
-                }
-
-                try
-                {
-                    var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    return Path.Combine(dir, MovieHasher.GenerateHash(videoFileName));
-                }
-                catch
-                {
-                    return old;
-                }
-            }
-
-            public static string GetSpectrogramFolderOld(string videoFileName)
-            {
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
                 }
 
-                var file = new FileInfo(videoFileName);
-                var name = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString());
-                name = name.RemoveChar('=').RemoveChar('/').RemoveChar(',').RemoveChar('?').RemoveChar('*').RemoveChar('+').RemoveChar('\\');
-                name = Path.Combine(dir, name);
-                return name;
+                return Path.Combine(dir, MovieHasher.GenerateHash(videoFileName));
             }
 
             public SpectrogramDrawer(int nfft)

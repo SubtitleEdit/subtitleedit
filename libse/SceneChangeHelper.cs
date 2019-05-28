@@ -16,28 +16,7 @@ namespace Nikse.SubtitleEdit.Core
                 Directory.CreateDirectory(dir);
             }
 
-            var old = GetSceneChangesFileNameOld(videoFileName); // remove old file name check in 3.5.8...
-            if (File.Exists(old))
-            {
-                return old;
-            }
-
             var newFileName = MovieHasher.GenerateHash(videoFileName) + ".scenechanges";
-            newFileName = Path.Combine(dir, newFileName);
-            return newFileName;
-        }
-
-        private static string GetSceneChangesFileNameOld(string videoFileName)
-        {
-            var dir = Configuration.SceneChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-
-            var file = new FileInfo(videoFileName);
-            var newFileName = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".scenechanges";
-            newFileName = newFileName.RemoveChar('=').RemoveChar('/').RemoveChar(',').RemoveChar('?').RemoveChar('*').RemoveChar('+').RemoveChar('\\');
             newFileName = Path.Combine(dir, newFileName);
             return newFileName;
         }
