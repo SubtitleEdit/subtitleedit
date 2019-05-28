@@ -1364,7 +1364,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private string GetDisplayTime(TimeCode timeCode)
         {
-            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 return new TimeCode(timeCode.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).ToDisplayString();
             }

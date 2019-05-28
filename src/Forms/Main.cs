@@ -2105,7 +2105,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
-                if (rfe.VideoOffsetInMs > 0)
+                if (rfe.VideoOffsetInMs != 0)
                 {
                     _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                     _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
@@ -3431,7 +3431,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                     Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
-                    if (rfe.VideoOffsetInMs > 0)
+                    if (rfe.VideoOffsetInMs != 0)
                     {
                         _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                         _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
@@ -5708,7 +5708,7 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
 
-                    if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+                    if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
                     {
                         _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                     }
@@ -21614,7 +21614,7 @@ namespace Nikse.SubtitleEdit.Forms
             smpteTimeModedropFrameToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+                if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
                 {
                     setVideoOffsetToolStripMenuItem.Text = string.Format("{0} [{1}]", _language.Menu.Video.SetVideoOffset, new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs).ToShortDisplayString());
                 }
@@ -24606,7 +24606,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sub.FileName = "Untitled";
             }
 
-            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
                 sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
@@ -25192,7 +25192,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new SetVideoOffset())
             {
                 form.VideoOffset = new TimeCode(10, 0, 0, 0);
-                if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+                if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
                 {
                     form.VideoOffset = new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs);
                 }
