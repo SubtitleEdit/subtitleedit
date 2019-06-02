@@ -89,7 +89,6 @@
     <Word from="cetiri" to="četiri" />
     <Word from="Cetiri" to="Četiri" />
     <Word from="cetri" to="četiri" />
-    <Word from="cetrnaest" to="četrnaest" />
     <Word from="cetu" to="četu" />
     <Word from="ceznja" to="čežnja" />
     <Word from="ceznje" to="čežnje" />
@@ -1215,6 +1214,7 @@
     <Word from="žalis" to="žališ" />
     <Word from="želis" to="želiš" />
     <Word from="Živeo" to="Živio" />
+    <Word from="zvi" to="živi" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
@@ -1299,6 +1299,7 @@
     <RegEx find="cek" replaceWith="ček" />
     <RegEx find="Ček" replaceWith="Ček" />
     <RegEx find="ce[sš]c" replaceWith="češć" />
+    <RegEx find="cetr" replaceWith="četr" />
     <RegEx find="[cC]etvrt" replaceWith="četvrt" />
     <RegEx find="cetv" replaceWith="četv" />
     <RegEx find="Cetv" replaceWith="Četv" />
@@ -1435,6 +1436,7 @@
     <RegEx find="mjestaj" replaceWith="mještaj" />
     <RegEx find="([mMbB])oze" replaceWith="$1ože" />
     <RegEx find="([mM])racn" replaceWith="$1račn" />
+    <RegEx find="([mM])rez" replaceWith="$1rež" />
     <RegEx find="([mM])rznj" replaceWith="$1ržnj" />
     <RegEx find="rzec" replaceWith="rzit ć" />
     <RegEx find="([mM])uci([mstol])" replaceWith="$1uči$2" />
@@ -1919,6 +1921,9 @@
     <RegEx find="zitk" replaceWith="žitk" />
     <RegEx find="zgajivac" replaceWith="zgajivač" />
     <RegEx find="zogira" replaceWith="žogira" />
+    <RegEx find="zivot" replaceWith="život" />
+    <RegEx find="Život" replaceWith="Život" />
+    <RegEx find="ziveo" replaceWith="" />
     <!-- preživeo/doživeo/nadživeo etc. -->
     <RegEx find="zivj?e([lt])i" replaceWith="živje$1i" />
     <RegEx find="ziveo" replaceWith="živio" />
