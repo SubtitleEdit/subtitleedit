@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Plugin
 {
     internal class PluginController
     {
+        private const string ContractName = "IPlugin";
+
         public PluginController(string pluginDirectory)
         {
             PluginDirectory = pluginDirectory;
@@ -49,7 +51,7 @@ namespace Nikse.SubtitleEdit.Plugin
                     }
 
                     // all plugin must implement IPlugin contract
-                    Type contractType = pluginType.GetInterface("IPlugin");
+                    Type contractType = pluginType.GetInterface(ContractName);
                     if (contractType == null)
                     {
                         continue;

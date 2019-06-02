@@ -19302,7 +19302,6 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
 
                     case ActionType.Sync:
-                        //toolStripMenuItemSynchronization
                         toolStripMenuItemSynchronization.DropDownItems.Add(tsItem);
                         break;
 
@@ -19327,7 +19326,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            // clear futile separator
+            // remove extraneous  separators
             foreach (ToolStripMenuItem menuItem in new[] { toolsToolStripMenuItem, toolStripMenuItemSynchronization,
                 toolStripMenuItemSynchronization, toolStripMenuItemTranslateSelected, toolStripMenuItemSpellCheckMain })
             {
