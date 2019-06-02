@@ -620,8 +620,8 @@ namespace Nikse.SubtitleEdit.Core
 
             if (splitPos < 0)
             {
-                const string expectedChars1 = ".!?0123456789";
-                const string expectedChars2 = ".!?";
+                const string expectedChars1 = ".!?¿¡0123456789";
+                const string expectedChars2 = ".!?¿¡";
                 for (int j = 0; j < 15; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
@@ -649,12 +649,10 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            if (splitPos > maximumLength) // too long first line
+            // too long first line / allow for maxlength+1 char to be space (does not count)
+            if (splitPos > maximumLength && (splitPos != maximumLength + 1 || s[maximumLength] != ' '))
             {
-                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
-                {
-                    splitPos = -1;
-                }
+                splitPos = -1;
             }
             else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
             {
@@ -710,9 +708,9 @@ namespace Nikse.SubtitleEdit.Core
 
             if (splitPos < 0)
             {
-                const string expectedChars1 = ".!?…, ";
-                const string expectedChars2 = " .!?";
-                const string expectedChars3 = ".!?";
+                const string expectedChars1 = ".!?¿¡…, ";
+                const string expectedChars2 = " .!?¿¡";
+                const string expectedChars3 = ".!?¿¡";
                 for (int j = 0; j < 25; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
@@ -769,39 +767,25 @@ namespace Nikse.SubtitleEdit.Core
                 var firstLine = s.Substring(0, splitPos);
                 var firstSplit = firstLine.TrimEnd() + " " + Environment.NewLine + s.Substring(splitPos).TrimStart();
                 var lastSpaceIndex = firstLine.LastIndexOf(' ');
-                if (lastSpaceIndex > 10 && !firstLine.EndsWith(".") && !firstLine.EndsWith("?") && !firstLine.EndsWith("!"))
+                // store *s in *tempS to avoid adding "else"
+                string tempS = s; s = firstSplit;
+                if (lastSpaceIndex > 10 && !IsLineClosed(firstLine))
                 {
-                    var secondFirstLine = s.Substring(0, lastSpaceIndex);
-                    var secondSplit = secondFirstLine.TrimEnd() + " " + Environment.NewLine + s.Substring(lastSpaceIndex + 1).TrimStart();
+                    var secondFirstLine = tempS.Substring(0, lastSpaceIndex);
+                    var secondSplit = secondFirstLine.TrimEnd() + " " + Environment.NewLine + tempS.Substring(lastSpaceIndex + 1).TrimStart();
                     var firstLines = firstSplit.SplitToLines();
                     var secondLines = secondSplit.SplitToLines();
                     var firstLinesMax = Math.Max(firstLines[0].Trim().Length, firstLines[1].Trim().Length);
                     var secondLinesMax = Math.Max(secondLines[0].Trim().Length, secondLines[1].Trim().Length);
-                    if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
-                        secondLinesMax <= firstLinesMax)
+                    if (secondLinesMax <= maximumLength && CanBreak(tempS, lastSpaceIndex, language) && secondLinesMax <= firstLinesMax)
                     {
                         s = secondSplit;
                     }
-                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
-                             !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") &&
-                             (secondFirstLine.EndsWith(".") || secondFirstLine.EndsWith("!") || secondFirstLine.EndsWith("?")))
+                    else if (secondLinesMax <= maximumLength && CanBreak(tempS, lastSpaceIndex, language) &&
+                        !IsLineClosed(firstLine) && IsLineClosed(secondFirstLine) || secondFirstLine.EndsWith(','))
                     {
                         s = secondSplit;
                     }
-                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
-                             !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") && !firstLine.EndsWith(",") &&
-                             secondFirstLine.EndsWith(","))
-                    {
-                        s = secondSplit;
-                    }
-                    else
-                    {
-                        s = firstSplit;
-                    }
-                }
-                else
-                {
-                    s = firstSplit;
                 }
             }
 
@@ -822,6 +806,15 @@ namespace Nikse.SubtitleEdit.Core
             return s.TrimEnd();
         }
 
+        public static bool IsLineClosed(string line)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                return false;
+            }
+            char lastChar = line[line.Length - 1];
+            return lastChar == '.' || lastChar == '?' || lastChar == '!' || lastChar == '¿' || lastChar == '¡';
+        }
         public static string RemoveLineBreaks(string input)
         {
             var s = HtmlUtil.FixUpperTags(input);
