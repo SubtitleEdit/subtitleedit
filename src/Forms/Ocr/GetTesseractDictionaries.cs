@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var th in tr.Files)
                 {
-                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName));
                     th.WriteData(fn);
                 }
             }

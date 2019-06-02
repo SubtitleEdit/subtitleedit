@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class TarHeader
+    public class TarHeader : IDisposable
     {
         public const int HeaderSize = 512;
 
-        public string FileName { get; set; }
-        public bool IsFolder { get; set; }
-        public long FileSizeInBytes { get; set; }
-        public long FilePosition { get; set; }
+        public string FileName { get; }
+        public bool IsFolder { get; }
+        public long FileSizeInBytes { get; }
+        public long FilePosition { get; }
 
         private readonly Stream _stream;
 
@@ -22,10 +22,14 @@ namespace Nikse.SubtitleEdit.Core
             stream.Read(buffer, 0, HeaderSize);
             FilePosition = stream.Position;
 
-            FileName = Encoding.ASCII.GetString(buffer, 0, 100)
-                .Replace("\0", string.Empty)
-                .Replace('/', Path.DirectorySeparatorChar)
-                .Trim();
+            FileName = Encoding.ASCII.GetString(buffer, 0, 100).Replace("\0", string.Empty).Trim();
+
+            // use platform-specific directory separator
+            if (Path.DirectorySeparatorChar != '/')
+            {
+                FileName = FileName.Replace('/', Path.DirectorySeparatorChar);
+            }
+
             IsFolder = buffer[156] == 53;
 
             var sizeInBytes = Encoding.ASCII.GetString(buffer, 124, 11);
@@ -43,5 +47,9 @@ namespace Nikse.SubtitleEdit.Core
             File.WriteAllBytes(fileName, buffer);
         }
 
+        public void Dispose()
+        {
+            _stream?.Dispose();
+        }
     }
 }

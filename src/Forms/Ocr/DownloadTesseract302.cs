@@ -53,10 +53,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var th in tr.Files)
                 {
-                    string fn = Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar));
+                    string fn = Path.Combine(dictionaryFolder, th.FileName);
                     if (th.IsFolder)
                     {
-                        Directory.CreateDirectory(Path.Combine(dictionaryFolder, th.FileName.Replace('/', Path.DirectorySeparatorChar)));
+                        Directory.CreateDirectory(Path.Combine(dictionaryFolder, th.FileName));
                     }
                     else if (th.FileSizeInBytes > 0)
                     {
