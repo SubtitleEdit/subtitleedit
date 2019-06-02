@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             _stream = stream;
             var buffer = new byte[HeaderSize];
-            stream.Read(buffer, 0, HeaderSize);
             FilePosition = stream.Position;
+            stream.Read(buffer, 0, HeaderSize);
 
             FileName = Encoding.ASCII.GetString(buffer, 0, 100).Replace("\0", string.Empty).Trim();
 
