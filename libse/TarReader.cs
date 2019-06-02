@@ -6,24 +6,24 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class TarReader : IDisposable
     {
-        public List<TarHeader> Files { get; private set; }
-        private Stream _stream;
+        public List<TarHeader> Files { get; }
+        private readonly Stream _stream;
 
-        public TarReader(string fileName)
+        public TarReader(string fileName) :
+            this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            OpenTarFile(fs);
         }
 
         public TarReader(Stream stream)
         {
-            OpenTarFile(stream);
-        }
-
-        private void OpenTarFile(Stream stream)
-        {
-            _stream = stream;
             Files = new List<TarHeader>();
+
+            /// unreadable stream
+            if (!stream.CanRead)
+            {
+                return;
+            }
+
             long length = stream.Length;
             long pos = 0;
             stream.Position = 0;
@@ -38,21 +38,13 @@ namespace Nikse.SubtitleEdit.Core
                     pos += 512 - (pos % TarHeader.HeaderSize);
                 }
             }
+
+            _stream = stream;
         }
 
-        public void Close()
-        {
-            _stream.Close();
-        }
+        public void Close() => _stream.Close();
 
-        public void Dispose()
-        {
-            if (_stream != null)
-            {
-                _stream.Dispose();
-                _stream = null;
-            }
-        }
+        public void Dispose() => _stream?.Dispose();
 
     }
 }
