@@ -70,7 +70,7 @@
 #define keyApps "Software\Classes\Applications"
 #define keyRegApps "Software\RegisteredApplications"
 #define keyAppPaths "Software\Microsoft\Windows\CurrentVersion\App Paths"
-#define muiCache "\Software\Classes\Local Settings\MuiCache"
+#define keyMuiCache "Software\Classes\Local Settings\MuiCache"
 
 
 [Setup]
@@ -487,7 +487,8 @@ var
   CurrentProgId, MyProgId, KeyName: String;
 begin
   KeyName := '{#keyCl}\.' + FileType;
-  if RegQueryStringValue(HKEY_LOCAL_MACHINE, KeyName, '', CurrentProgId) then begin
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, KeyName, '', CurrentProgId) then
+  begin
     MyProgId := 'SubtitleEdit.' + FileType;
     if CompareText(CurrentProgId, MyProgId) = 0 then
       RegWriteStringValue(HKEY_LOCAL_MACHINE, KeyName, '', '');
@@ -510,19 +511,25 @@ begin
   if RegGetValueNames(HKEY_USERS, KeyName, Names) then
   begin
     for Index := Low(Names) to High(Names) do
-      if (Pos('\SubtitleEdit.resources.dll,-', Names[Index]) <> 0) then
+      if Pos('\SubtitleEdit.resources.dll,', Names[Index]) <> 0 then
         RegDeleteValue(HKEY_USERS, KeyName, Names[Index]);
   end;
 end;
+
 procedure ClearMUICache();
 var
   Users: TArrayOfString;
   Index: Integer;
+  Key: String;
 begin
   if RegGetSubkeyNames(HKEY_USERS, '', Users) then
   begin
     for Index := Low(Users) to High(Users) do
-      ClearMUICacheKey(Users[Index] + '{#muiCache}');
+    begin
+      Key := Users[Index] + '\{#keyMuiCache}';
+      if RegKeyExists(HKEY_USERS, Key) then
+        ClearMUICacheKey(Key);
+    end;
   end;
 end;
 
