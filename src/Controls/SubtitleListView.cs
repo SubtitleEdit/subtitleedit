@@ -1352,14 +1352,12 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexText].BackColor = errorColor;
                     }
                 }
-                if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
-                    item.SubItems[ColumnIndexText].BackColor != errorColor)
+                else if (_settings.Tools.ListViewSyntaxMoreThanXLines && item.SubItems[ColumnIndexText].BackColor != errorColor &&
+                    paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
                 {
-                    if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
-                    {
-                        item.SubItems[ColumnIndexText].BackColor = errorColor;
-                    }
+                    item.SubItems[ColumnIndexText].BackColor = errorColor;
                 }
+
             }
         }
 
