@@ -3397,6 +3397,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
                         UiUtil.FixFonts(reopenToolStripMenuItem.DropDownItems[reopenToolStripMenuItem.DropDownItems.Count - 1]);
+                    } 
+                }
+                // remove moved/deleted/renamed files from recent list
+                for (int i = Configuration.Settings.RecentFiles.Files.Count - 1; i >= 0; i--)
+                {
+                    if (!File.Exists(Configuration.Settings.RecentFiles.Files[i].FileName))
+                    {
+                        Configuration.Settings.RecentFiles.Files.RemoveAt(i);
                     }
                 }
             }
