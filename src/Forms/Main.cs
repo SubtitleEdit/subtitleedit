@@ -4282,7 +4282,12 @@ namespace Nikse.SubtitleEdit.Forms
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
                                     toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
-                settings.ShowDialog(this);
+
+                // settings update canceled
+                if (settings.ShowDialog(this) == DialogResult.Cancel)
+                {
+                    return;
+                }
             }
 
             try
