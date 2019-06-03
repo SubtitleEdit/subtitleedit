@@ -1251,6 +1251,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (UseSyntaxColoring && _settings != null && IsValidIndex(i))
             {
+                Color errorColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 var item = Items[i];
                 if (item.UseItemStyleForSubItems)
                 {
@@ -1263,7 +1264,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 if (ColumnIndexWpm >= 0)
                 {
-                    item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
+                    item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? errorColor : BackColor;
                 }
                 if (ColumnIndexDuration >= 0)
                 {
@@ -1277,23 +1278,23 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (ColumnIndexCps >= 0)
                         {
-                            item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            item.SubItems[ColumnIndexCps].BackColor = errorColor;
                         }
                         else if (ColumnIndexDuration >= 0)
                         {
-                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            item.SubItems[ColumnIndexDuration].BackColor = errorColor;
                         }
                     }
                     if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        item.SubItems[ColumnIndexDuration].BackColor = errorColor;
                     }
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig &&
                     paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                     ColumnIndexDuration >= 0)
                 {
-                    item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    item.SubItems[ColumnIndexDuration].BackColor = errorColor;
                 }
 
                 if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
@@ -1301,8 +1302,8 @@ namespace Nikse.SubtitleEdit.Controls
                     Paragraph prev = paragraphs[i - 1];
                     if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
                     {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = errorColor;
+                        item.SubItems[ColumnIndexStart].BackColor = errorColor;
                     }
                     else
                     {
@@ -1328,7 +1329,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
-                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            item.SubItems[ColumnIndexText].BackColor = errorColor;
                             return;
                         }
                     }
@@ -1339,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                         {
-                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            item.SubItems[ColumnIndexText].BackColor = errorColor;
                         }
                         else
                         {
@@ -1348,15 +1349,15 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        item.SubItems[ColumnIndexText].BackColor = errorColor;
                     }
                 }
                 if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
-                    item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+                    item.SubItems[ColumnIndexText].BackColor != errorColor)
                 {
                     if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
                     {
-                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        item.SubItems[ColumnIndexText].BackColor = errorColor;
                     }
                 }
             }
