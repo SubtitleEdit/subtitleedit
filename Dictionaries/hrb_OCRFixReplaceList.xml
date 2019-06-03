@@ -1922,7 +1922,7 @@
     <RegEx find="zgajivac" replaceWith="zgajivač" />
     <RegEx find="zogira" replaceWith="žogira" />
     <RegEx find="zivot" replaceWith="život" />
-    <RegEx find="Život" replaceWith="Život" />
+    <RegEx find="Zivot" replaceWith="Život" />
     <RegEx find="zivj?e([lt])i" replaceWith="živje$1i" />
     <!-- preživeo/doživeo/nadživeo etc. -->
     <RegEx find="ziveo" replaceWith="živio" />
