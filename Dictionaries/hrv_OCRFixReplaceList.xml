@@ -790,6 +790,7 @@
     <Word from="neguje" to="njeguje" />
     <Word from="neguju" to="njeguju" />
     <Word from="neito" to="nešto" />
+    <Word from="nekoč" to="nekoć" />
     <Word from="nekto" to="netko" />
     <Word from="nemi" to="nijemi" />
     <Word from="nemrem" to="ne mogu" />
@@ -2559,6 +2560,7 @@
     <RegEx find="\b([gG])rj?e([hs])" replaceWith="$1rije$2" />
     <RegEx find="\b([gG])riješn" replaceWith="$1rješn" />
     <RegEx find="([gG])rj?eši([šsmotl])" replaceWith="$1riješi$2" />
+    <RegEx find="grnič" replaceWith="granič" />
     <RegEx find="gvožđ" replaceWith="željez" />
     <RegEx find="Gvožđ" replaceWith="Željez" />
     <RegEx find="haos" replaceWith="kaos" />
