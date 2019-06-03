@@ -70,6 +70,7 @@
 #define keyApps "Software\Classes\Applications"
 #define keyRegApps "Software\RegisteredApplications"
 #define keyAppPaths "Software\Microsoft\Windows\CurrentVersion\App Paths"
+#define muiCache "\Software\Classes\Local Settings\MuiCache"
 
 
 [Setup]
@@ -269,7 +270,7 @@ Source: {#bindir}\Languages\zh-TW.xml;             DestDir: {app}\Languages;    
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindir}\SubtitleEdit.resources.dll;      DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\SubtitleEdit.resources.dll;      DestDir: {app};                                    Flags: ignoreversion; Components: main; AfterInstall: ClearMUICache
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -302,42 +303,42 @@ Type: files;      Name: {#quick_launch}\Subtitle Edit.lnk; Check: not IsTaskSele
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
 ; Remove files merged from now on with ILRepack
-Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
+Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;               Check: IsUpgrade()
 
 ; Remove old files from the {app} dir
-Type: files;      Name: {app}\Dictionaries\da_names.xml;              Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\da_DK_user.xml;            Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml; Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\en_US.aff;                 Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\en_US.dic;                 Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\en_names.xml;              Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\en_US_user.xml;            Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml; Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\names.xml;                 Check: IsUpgrade()
-Type: files;      Name: {app}\Dictionaries\no_names.xml;              Check: IsUpgrade()
-Type: dirifempty; Name: {app}\Dictionaries;                           Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.DangAmbigs;                Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.freq-dawg;                 Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.inttemp;                   Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.normproto;                 Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.pffmtable;                 Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.unicharset;                Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.user-words;                Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.word-dawg;                 Check: IsUpgrade()
-Type: dirifempty; Name: {app}\TessData;                               Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract\leptonlib.dll;                Check: IsUpgrade()
-Type: files;      Name: {app}\tessnet2_32.dll;                        Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract302\tessdata\configs\hocr;     Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract302\tessdata\eng.traineddata;  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_names.xml;               Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_DK_user.xml;             Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml;  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US.aff;                  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US.dic;                  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_names.xml;               Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US_user.xml;             Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml;  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\names.xml;                  Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\no_names.xml;               Check: IsUpgrade()
+Type: dirifempty; Name: {app}\Dictionaries;                            Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.DangAmbigs;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.freq-dawg;                  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.inttemp;                    Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.normproto;                  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.pffmtable;                  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.unicharset;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.user-words;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.word-dawg;                  Check: IsUpgrade()
+Type: dirifempty; Name: {app}\TessData;                                Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract\leptonlib.dll;                 Check: IsUpgrade()
+Type: files;      Name: {app}\tessnet2_32.dll;                         Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tessdata\configs\hocr;      Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tessdata\eng.traineddata;   Check: IsUpgrade()
 Type: files;      Name: {app}\Tesseract302\tessdata\music.traineddata; Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract302\tesseract.exe;             Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract302\msvcp90.dll;               Check: IsUpgrade()
-Type: files;      Name: {app}\Tesseract302\msvcr90.dll;               Check: IsUpgrade()
-Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;             Check: IsUpgrade()
-Type: files;      Name: {app}\DocumentIcons.dll;                      Check: IsUpgrade()
-Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
-Type: files;      Name: {app}\gpl.txt;                                Check: IsUpgrade()
-Type: files;      Name: {app}\uninstall.ico;                          Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tesseract.exe;              Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\msvcp90.dll;                Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\msvcr90.dll;                Check: IsUpgrade()
+Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;              Check: IsUpgrade()
+Type: files;      Name: {app}\DocumentIcons.dll;                       Check: IsUpgrade()
+Type: files;      Name: {app}\Settings.xml;                            Check: IsUpgrade()
+Type: files;      Name: {app}\gpl.txt;                                 Check: IsUpgrade()
+Type: files;      Name: {app}\uninstall.ico;                           Check: IsUpgrade()
 
 #ifdef localize
 ; Language files not included anymore
@@ -492,6 +493,37 @@ begin
       RegWriteStringValue(HKEY_LOCAL_MACHINE, KeyName, '', '');
   end;
   Result := IsTaskSelected('associate_' + FileType);
+end;
+
+
+// Remove cached indirect strings from MUI cache
+procedure ClearMUICacheKey(const KeyName: String);
+var
+  Names: TArrayOfString;
+  Index: Integer;
+begin
+  if RegGetSubkeyNames(HKEY_USERS, KeyName, Names) then
+  begin
+    for Index := Low(Names) to High(Names) do
+      ClearMUICacheKey(KeyName + '\' + Names[Index]);
+  end;
+  if RegGetValueNames(HKEY_USERS, KeyName, Names) then
+  begin
+    for Index := Low(Names) to High(Names) do
+      if (Pos('\SubtitleEdit.resources.dll,-', Names[Index]) <> 0) then
+        RegDeleteValue(HKEY_USERS, KeyName, Names[Index]);
+  end;
+end;
+procedure ClearMUICache();
+var
+  Users: TArrayOfString;
+  Index: Integer;
+begin
+  if RegGetSubkeyNames(HKEY_USERS, '', Users) then
+  begin
+    for Index := Low(Users) to High(Users) do
+      ClearMUICacheKey(Users[Index] + '{#muiCache}');
+  end;
 end;
 
 
