@@ -4282,7 +4282,6 @@ namespace Nikse.SubtitleEdit.Forms
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
                                     toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
-                settings.ShowDialog(this);
             }
 
             try
@@ -4450,12 +4449,9 @@ namespace Nikse.SubtitleEdit.Forms
                 OpenVideo(vfn);
             }
 
-            if (Configuration.Settings.General.AutoBackupSeconds > 0)
-            {
-                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoBackup.Start();
-            }
+            StartAutoBackup();
             SetTitle();
+
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
                 audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram;
@@ -4478,6 +4474,15 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
             UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
             mediaPlayer.VideoPlayerContainerResize(null, null);
+        }
+
+        private void StartAutoBackup()
+        {
+            if (Configuration.Settings.General.AutoSave && Configuration.Settings.General.AutoBackupSeconds > 0)
+            {
+                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds;
+                _timerAutoBackup.Start();
+            }
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls()
@@ -18684,11 +18689,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo_Click(null, null);
 
             _timerAutoBackup.Tick += TimerAutoBackupTick;
-            if (Configuration.Settings.General.AutoBackupSeconds > 0)
-            {
-                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoBackup.Start();
-            }
+            StartAutoBackup();
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUndocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUndocked");
@@ -19606,52 +19607,56 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private string _lastWrittenAutoBackup = string.Empty;
-
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
-            string currentText = string.Empty;
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
+            if (_subtitle?.Paragraphs.Count > 0)
             {
-                var saveFormat = GetCurrentSubtitleFormat();
-                if (!saveFormat.IsTextBased)
+                var backupFormat = GetCurrentSubtitleFormat();
+
+                // use default format if current format isn't text based
+                if (!backupFormat.IsTextBased)
                 {
-                    saveFormat = new SubRip();
+                    backupFormat = new SubRip();
                 }
 
-                currentText = _subtitle.ToText(saveFormat);
+                // trim both ends to ignore white-spaces changes in text
+                string currentText = _subtitle.ToText(backupFormat).Trim();
+                string currentTextHash = Utilities.MD5Hash(currentText);
+
                 if (_textAutoBackup == null)
                 {
-                    _textAutoBackup = currentText;
+                    _textAutoBackup = currentTextHash;
                 }
 
-                if ((Configuration.Settings.General.AutoSave ||
-                    !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText)) &&
-                    _lastWrittenAutoBackup != currentText)
+                if (!string.IsNullOrWhiteSpace(currentText) && currentTextHash != _textAutoBackup)
                 {
-                    if (!Directory.Exists(Configuration.AutoBackupDirectory))
+                    if (!EnsureBackupDirectory())
                     {
-                        try
-                        {
-                            Directory.CreateDirectory(Configuration.AutoBackupDirectory);
-                        }
-                        catch (Exception exception)
-                        {
-                            MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
-                            return;
-                        }
+                        return;
                     }
 
-                    string title = string.Empty;
-                    if (!string.IsNullOrEmpty(_fileName))
+                    string title = string.IsNullOrEmpty(_fileName) ? string.Empty : "_" + Path.GetFileNameWithoutExtension(_fileName);
+
+                    // generate new backup file name
+                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}",
+                        Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                        DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, backupFormat.Extension);
+
+                    // try saving backup file to disk
+                    try
                     {
-                        title = "_" + Path.GetFileNameWithoutExtension(_fileName);
+                        File.WriteAllText(fileName, currentText, Encoding.UTF8);
+                    }
+                    catch (Exception ex)
+                    {
+                        // disable timer
+                        _timerAutoBackup.Stop();
+                        Configuration.Settings.General.AutoSave = false;
+
+                        MessageBox.Show("Backup failed", ex.Message);
                     }
 
-                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
-                    File.WriteAllText(fileName, currentText);
-                    _lastWrittenAutoBackup = currentText;
-
+                    _textAutoBackup = currentTextHash;
                     // let the cleanup proccess be handled by a worker thread
                     System.Threading.Tasks.Task.Factory.StartNew(() =>
                     {
@@ -19660,8 +19665,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 }
             }
-
-            _textAutoBackup = currentText;
 
             if (_subtitleAlternateFileName != null && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -19679,20 +19682,11 @@ namespace Nikse.SubtitleEdit.Forms
                         _textAutoBackupOriginal = currentTextAlternate;
                     }
 
-                    if (Configuration.Settings.General.AutoSave ||
-                        !string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextAlternate.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
+                    if (!string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextAlternate.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
                     {
-                        if (!Directory.Exists(Configuration.AutoBackupDirectory))
+                        if (!EnsureBackupDirectory())
                         {
-                            try
-                            {
-                                Directory.CreateDirectory(Configuration.AutoBackupDirectory);
-                            }
-                            catch (Exception exception)
-                            {
-                                MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
-                                return;
-                            }
+                            return;
                         }
 
                         string title = string.Empty;
@@ -19708,6 +19702,23 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _textAutoBackupOriginal = currentTextAlternate;
             }
+        }
+
+        private bool EnsureBackupDirectory()
+        {
+            if (!Directory.Exists(Configuration.AutoBackupDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(Configuration.AutoBackupDirectory);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void DropVideoTick(object sender, EventArgs e)

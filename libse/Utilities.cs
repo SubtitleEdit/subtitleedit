@@ -2829,5 +2829,28 @@ namespace Nikse.SubtitleEdit.Core
             text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
             return text;
         }
+
+        private static StringBuilder _sbHash;
+        public static string MD5Hash(string input)
+        {
+            if (_sbHash == null)
+            {
+                _sbHash = new StringBuilder();
+            }
+            else
+            {
+                _sbHash.Clear();
+            }
+            using (var md5Hash = System.Security.Cryptography.MD5.Create())
+            {
+                var hashBytes = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+                // Convert byte array to a string   
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    _sbHash.Append(hashBytes[i].ToString("x2"));
+                }
+                return _sbHash.ToString();
+            }
+        }
     }
 }
