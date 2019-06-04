@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-                   : this()
+            : this()
         {
             _history = historyItems;
             _paragraphs = paragraphs;

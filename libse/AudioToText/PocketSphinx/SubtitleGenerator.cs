@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
 
             AddPeriods(subtitle, language);
 
-          //  subtitle = MergeShortLines(subtitle, language);
+            //  subtitle = MergeShortLines(subtitle, language);
 
             FixCasing(subtitle, language);
 
