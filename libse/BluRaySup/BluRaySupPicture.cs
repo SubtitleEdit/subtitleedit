@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 0x00,                   // 1 : window id (0..1)
                 0x00, 0x00, 0x00, 0x00, // 2 : x-ofs, y-ofs
                 0x00, 0x00, 0x00, 0x00  // 6 : width, height
-             };
+            };
             var headerOdsFirst = new byte[]
             {
                 0x00, 0x00,             // 0: object_id
@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 buf[index++] = headerWds[i];
             }
 
-            // write PDS - Palette Definition Segment 
+            // write PDS - Palette Definition Segment
             packetHeader[10] = 0x14;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
             ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
@@ -636,7 +636,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // write WDS - Window Definition Segment
             packetHeader[10] = 0x17;                                            // ID
             timestamp = pic.EndTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS 
+            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS
             ToolBox.SetDWord(packetHeader, 6, dts - windowInitTime);            // DTS
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (int i = 0; i < packetHeader.Length; i++)
