@@ -10421,41 +10421,51 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateOverlapErrors(TimeCode startTime)
         {
+            if (!Configuration.Settings.Tools.ListViewSyntaxColorOverlap || startTime == null || startTime.IsMaxTime)
+            {
+                return;
+            }
             string startTimeWarning = string.Empty;
             string durationWarning = string.Empty;
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0 && startTime != null)
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
-                var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
-                if (prevParagraph != null && !prevParagraph.EndTime.IsMaxTime && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
+                Paragraph prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
+                Paragraph paragraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+
+                // check overlaps previous paragraph
+                if (prevParagraph?.EndTime.IsMaxTime == false && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds 
+                    && prevParagraph.Number < paragraph.Number)
                 {
                     startTimeWarning = string.Format(_languageGeneral.OverlapPreviousLineX, prevParagraph.EndTime.TotalSeconds - startTime.TotalSeconds);
                 }
 
-                var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
-                if (nextParagraph != null)
+                // check overlaps next paragraph + duration
+                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+                if (nextParagraph?.StartTime.IsMaxTime == false && nextParagraph.Number > paragraph.Number)
                 {
-                    double durationMilliSeconds = GetDurationInMilliseconds();
-                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds &&
-                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
-                        !startTime.IsMaxTime)
+                    double durationMs = GetDurationInMilliseconds();
+
+                    // long duration
+                    if (startTime.TotalMilliseconds + durationMs > nextParagraph.StartTime.TotalMilliseconds)
                     {
-                        durationWarning = string.Format(_languageGeneral.OverlapX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
+                        durationWarning = string.Format(_languageGeneral.OverlapX,
+                            (startTime.TotalMilliseconds + durationMs - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     }
 
-                    if (startTimeWarning.Length == 0 &&
-                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds &&
-                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
-                        !startTime.IsMaxTime)
+                    // current start-time overlaps next start-time
+                    if (startTimeWarning.Length == 0 && startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds)
                     {
-                        double di = (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
-                        startTimeWarning = string.Format(_languageGeneral.OverlapNextX, di);
+                        startTimeWarning = string.Format(_languageGeneral.OverlapNextX,
+                            (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     }
-                    else if (numericUpDownDuration.Value < 0)
-                    {
-                        durationWarning = _languageGeneral.Negative;
-                    }
+                }
+
+                // negative time
+                if (numericUpDownDuration.Value < 0)
+                {
+                    durationWarning = _languageGeneral.Negative;
                 }
             }
             labelStartTimeWarning.Text = startTimeWarning;
