@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), int.Parse(tokens[3]));
         }
 
-        private static int GenerateBitmap(FastBitmap bmp, byte[] buf, Color[] fourColors)
+        private static void GenerateBitmap(FastBitmap bmp, byte[] buf, Color[] fourColors)
         {
             int w = bmp.Width;
             int h = bmp.Height;
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (nibbleOffset >= nibbleEnd)
                 {
-                    return -1;
+                    return;
                 }
 
                 var v = GetNibble(buf, nibbleOffset++);
@@ -92,7 +92,6 @@ namespace Nikse.SubtitleEdit.Core
                     nibbleOffset += (nibbleOffset & 1);
                 }
             }
-            return 0;
         }
 
         private static int GetNibble(byte[] buf, int nibbleOffset)
