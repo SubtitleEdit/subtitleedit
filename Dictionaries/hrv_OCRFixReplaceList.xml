@@ -1663,6 +1663,7 @@
     <Word from="Uspe" to="Uspije" />
     <Word from="uspeo" to="uspio" />
     <Word from="Uspeo" to="Uspio" />
+    <Word from="uspijela" to="uspjela" />
     <Word from="uspećeš" to="uspjet ćeš" />
     <Word from="uspjećeš" to="uspjet ćeš" />
     <Word from="uspećemo" to="uspjet ćemo" />
@@ -2996,6 +2997,7 @@
     <RegEx find="([sS])mes(?!t)" replaceWith="$1mjes" />
     <RegEx find="([sS])mesti([šmolt])" replaceWith="$1mjesti$2" />
     <RegEx find="([sS])mj?eš([en])" replaceWith="$1miješ$2" />
+    <RegEx find="snk" replaceWith="nsk" />
     <RegEx find="sopstven" replaceWith="vlastit" />
     <RegEx find="Sopstven" replaceWith="Vlastit" />
     <RegEx find="\b([sS]?)([PphH])akova" replaceWith="$1$2akira" />
