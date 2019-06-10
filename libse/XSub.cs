@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
-            var fourColors = new Color[] { background, pattern, emphasis1, emphasis2 };
+            var fourColors = new[] { background, pattern, emphasis1, emphasis2 };
             var bmp = new Bitmap(Width, Height);
             if (fourColors[0] != Color.Transparent)
             {
