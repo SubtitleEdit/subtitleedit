@@ -217,6 +217,10 @@
     <Word from="dede" to="djeda" />
     <Word from="dedi" to="djedu" />
     <Word from="dedom" to="djedom" />
+    <!--pra-->
+    <Word from="pradede" to="pradjeda" />
+    <Word from="pradedi" to="pradjedu" />
+    <Word from="pradedom" to="pradjedom" />
     <Word from="definiše" to="definira" />
     <Word from="dejstvo" to="djelovanje" />
     <Word from="Dejstvo" to="Djelovanje" />
@@ -2769,6 +2773,7 @@
     <RegEx find="([nN])ezna(?![bčlnt])" replaceWith="$1e zna" />
     <RegEx find="([nN])ežn" replaceWith="$1ježn" />
     <RegEx find="(?&lt;!d)([nN])oč" replaceWith="$1oć" />
+    <RegEx find="nošč" replaceWith="nošć" />
     <RegEx find="\b([oO])dbra" replaceWith="$1bra" />
     <RegEx find="bavj?est" replaceWith="bavijest" />
     <RegEx find="belod" replaceWith="bjelod" />
@@ -3018,6 +3023,7 @@
     <RegEx find="tavr" replaceWith="tvar" />
     <RegEx find="\b([sS])tj?en([aeu])" replaceWith="$1tijen$2" />
     <RegEx find="\b([sSuU])tica" replaceWith="$1tjeca" />
+    <RegEx find="stlan" replaceWith="staln" />
     <RegEx find="stomak" replaceWith="trbuh" />
     <RegEx find="Stomak" replaceWith="Trbuh" />
     <RegEx find="stomačn" replaceWith="trbušn" />
