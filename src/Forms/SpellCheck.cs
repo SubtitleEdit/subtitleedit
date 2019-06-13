@@ -501,11 +501,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_currentAction == Configuration.Settings.Language.SpellCheck.Change)
-            {
-                ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
-            }
-            else if (_currentAction == Configuration.Settings.Language.SpellCheck.ChangeAll)
+            if (_currentAction == Configuration.Settings.Language.SpellCheck.Change ||
+                _currentAction == Configuration.Settings.Language.SpellCheck.ChangeAll)
             {
                 ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
             }
