@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         var firstLine = newText.Remove(indexOfNewLine);
                         newText = firstLine + Environment.NewLine + second;
 
-                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') && 
+                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') &&
                             !HtmlUtil.RemoveHtmlTags(newText, true).StartsWith('-'))
                         {
                             firstLine = HtmlUtil.RemoveHtmlTags(firstLine, true);
@@ -1002,14 +1002,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text;
         }
 
-        private void AddWarning()
-        {
-            if (Warnings != null && WarningIndex >= 0)
-            {
-                Warnings.Add(WarningIndex);
-            }
-        }
-
         private static readonly HashSet<string> HiDescriptionWords = new HashSet<string>(new[]
         {
             "cackles",
@@ -1042,19 +1034,38 @@ namespace Nikse.SubtitleEdit.Core.Forms
             "whistles"
         });
 
+        private static string RemoveCommonTitles(string narrator)
+        {
+            return narrator
+              .Replace("mr. ", string.Empty)
+              .Replace("esq. ", string.Empty) // esquire
+              .Replace("mrs. ", string.Empty)
+              .Replace("hon. ", string.Empty) // honorable
+              .Replace("ms. ", string.Empty)
+              .Replace("mmes. ", string.Empty) // (plural of Mrs.)
+              .Replace("rev. ", string.Empty) // reverend
+              .Replace("sr. ", string.Empty)
+              .Replace("jr. ", string.Empty)
+              .Replace("st. ", string.Empty) // saint
+              .Replace("prof. ", string.Empty).Trim();
+        }
+
         private bool IsHIDescription(string text)
         {
-            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}').ToLowerInvariant();
-            if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(' '))
+            string textLower = text.Trim(' ', '(', ')', '[', '¿', '¡', ']', '?', '!', '{', '}').ToLowerInvariant();
+
+            // when all uppercase don't add warning
+            if (WarningIndex > 0 && textLower.ToUpperInvariant().Equals(text, StringComparison.Ordinal) == false
+                && RemoveCommonTitles(textLower).Contains(' '))
             {
-                AddWarning();
+                Warnings?.Add(WarningIndex);
             }
 
-            return (HiDescriptionWords.Contains(text) ||
-                    text.StartsWith("engine ", StringComparison.Ordinal) ||
-                    text.EndsWith("on tv", StringComparison.Ordinal) ||
-                    text.EndsWith("shatters", StringComparison.Ordinal) ||
-                    text.EndsWith("ing", StringComparison.Ordinal));
+            return (HiDescriptionWords.Contains(textLower) ||
+                    textLower.StartsWith("engine ", StringComparison.Ordinal) ||
+                    textLower.EndsWith("on tv", StringComparison.Ordinal) ||
+                    textLower.EndsWith("shatters", StringComparison.Ordinal) ||
+                    textLower.EndsWith("ing", StringComparison.Ordinal));
         }
 
         private static string GetRemovedString(string oldText, string newText)

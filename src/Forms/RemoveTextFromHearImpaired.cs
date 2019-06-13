@@ -111,7 +111,6 @@ namespace Nikse.SubtitleEdit.Forms
             _removeTextForHiLib.Warnings = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            int count = 0;
             _fixes = new Dictionary<Paragraph, string>();
             for (int index = 0; index < Subtitle.Paragraphs.Count; index++)
             {
@@ -120,20 +119,19 @@ namespace Nikse.SubtitleEdit.Forms
                 string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text);
                 if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                 {
-                    count++;
                     AddToListView(p, newText);
                     _fixes.Add(p, newText);
                 }
             }
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
+            groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, _fixes.Count);
             Cursor.Current = Cursors.Default;
         }
 
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = !_unchecked.Contains(p) };
-            if (_removeTextForHiLib.Warnings != null && _removeTextForHiLib.Warnings.Contains(_removeTextForHiLib.WarningIndex))
+            if (_removeTextForHiLib.Warnings?.Contains(_removeTextForHiLib.WarningIndex) == true)
             {
                 item.UseItemStyleForSubItems = true;
                 item.BackColor = Color.PeachPuff;
