@@ -207,18 +207,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
 
                         if (arr[0].StartsWith("-") &&
-                           !"!.?".Contains(arr[0][arr[0].Length - 1]) &&
-                           "!.?".Contains(arr[1][arr[1].Length - 1]) &&
-                           arr[2].StartsWith("-") &&
+                           "!.?".Contains(arr[0][arr[0].Length - 1]) &&
+                           arr[1].StartsWith("-") &&
+                           !"!.?".Contains(arr[1][arr[1].Length - 1]) &&
+                           !arr[2].StartsWith("-") &&
                            "!.?".Contains(arr[2][arr[2].Length - 1]))
                         {
                             if (char.IsLetterOrDigit(arr[0][1]))
                             {
                                 arr[0] = arr[0].Insert(1, " ");
                             }
-                            if (char.IsLetterOrDigit(arr[2][1]))
+                            if (char.IsLetterOrDigit(arr[1][1]))
                             {
-                                arr[2] = arr[2].Insert(1, " ");
+                                arr[1] = arr[1].Insert(1, " ");
                             }
                         }
 

@@ -1042,7 +1042,7 @@ namespace Test
                     "to speak loudly for a little white.");
                 new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("- Person one speaks." + Environment.NewLine +
-                    "-The other person starts speaking and continues" + Environment.NewLine +
+                    "- The other person starts speaking and continues" + Environment.NewLine +
                     "to speak loudly for a little white.", _subtitle.Paragraphs[0].Text);
             }
         }
