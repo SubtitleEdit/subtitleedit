@@ -22396,6 +22396,19 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.LargeDelayMilliseconds = (int)(numericUpDownSecAdjust2.Value * 1000);
         }
 
+        private string GetLineSymbolsOnOpenning()
+        {
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.NewEmptyTranslationText))
+            {
+                return Configuration.Settings.Tools.NewEmptyTranslationText;
+            }
+            if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
+            {
+                return "-";
+            }
+            return string.Empty;
+        }
+
         private void ToolStripMenuItemMakeEmptyFromCurrentClick(object sender, EventArgs e)
         {
             if (ContinueNewOrExit())
@@ -22409,21 +22422,12 @@ namespace Nikse.SubtitleEdit.Forms
                     oldIndex = 0;
                 }
 
+                string symbol = GetLineSymbolsOnOpenning();
                 foreach (var p in _subtitle.Paragraphs)
                 {
-                    if (Configuration.Settings.General.RemoveBlankLinesWhenOpening && string.IsNullOrEmpty(Configuration.Settings.Tools.NewEmptyTranslationText))
-                    {
-                        p.Text = "-";
-                    }
-                    else if (Configuration.Settings.Tools.NewEmptyTranslationText != null)
-                    {
-                        p.Text = Configuration.Settings.Tools.NewEmptyTranslationText;
-                    }
-                    else
-                    {
-                        p.Text = string.Empty;
-                    }
+                    p.Text = symbol;
                 }
+
                 SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
                 _subtitleListViewIndex = -1;
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
