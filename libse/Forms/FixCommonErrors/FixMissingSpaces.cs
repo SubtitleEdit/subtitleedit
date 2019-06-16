@@ -188,6 +188,49 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
                     }
+                    else if (arr.Count == 3 && arr[0].Length > 1 && arr[1].Length > 1 && arr[2].Length > 1)
+                    {
+                        if (arr[0].StartsWith("-") &&
+                            !"!.?".Contains(arr[0][arr[0].Length - 1]) &&
+                            "!.?".Contains(arr[1][arr[1].Length - 1]) &&
+                            arr[2].StartsWith("-") &&
+                            "!.?".Contains(arr[2][arr[2].Length - 1]))
+                        {
+                            if (char.IsLetterOrDigit(arr[0][1]))
+                            {
+                                arr[0] = arr[0].Insert(1, " ");
+                            }
+                            if (char.IsLetterOrDigit(arr[2][1]))
+                            {
+                                arr[2] = arr[2].Insert(1, " ");
+                            }
+                        }
+
+                        if (arr[0].StartsWith("-") &&
+                           !"!.?".Contains(arr[0][arr[0].Length - 1]) &&
+                           "!.?".Contains(arr[1][arr[1].Length - 1]) &&
+                           arr[2].StartsWith("-") &&
+                           "!.?".Contains(arr[2][arr[2].Length - 1]))
+                        {
+                            if (char.IsLetterOrDigit(arr[0][1]))
+                            {
+                                arr[0] = arr[0].Insert(1, " ");
+                            }
+                            if (char.IsLetterOrDigit(arr[2][1]))
+                            {
+                                arr[2] = arr[2].Insert(1, " ");
+                            }
+                        }
+
+                        string newText = arr[0] + Environment.NewLine + arr[1] + Environment.NewLine + arr[2];
+                        if (newText != p.Text && callbacks.AllowFix(p, fixAction))
+                        {
+                            missingSpaces++;
+                            string oldText = p.Text;
+                            p.Text = newText;
+                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                    }
                 }
 
                 //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
