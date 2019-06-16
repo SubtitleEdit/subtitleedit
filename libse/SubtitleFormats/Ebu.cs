@@ -839,6 +839,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("„", "\""); // lower quote
                 text = text.Replace("‚", "’"); // lower apostrophe
                 text = text.Replace("♫", "♪"); // only music single note supported
+                text = text.Replace("…", "..."); // fix Unicode ellipsis
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = text;
