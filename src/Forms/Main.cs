@@ -9089,7 +9089,7 @@ namespace Nikse.SubtitleEdit.Forms
                         next.Text = (idx > 0 ? s.Substring(idx + 1).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
-                        String endTag = string.Empty;
+                        string endTag = string.Empty;
                         if (p.Text.EndsWith('>') && p.Text.Contains('<'))
                         {
                             // Save the end tag.
@@ -9099,7 +9099,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the first subtitle ends with "...":
-                        Boolean firstSubtitleEndsWithEllipsis = p.Text.EndsWith("...", StringComparison.Ordinal);
+                        bool firstSubtitleEndsWithEllipsis = p.Text.EndsWith("...", StringComparison.Ordinal);
                         if (firstSubtitleEndsWithEllipsis)
                         {
                             // Remove "..." from first subtitle.
@@ -9107,7 +9107,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        String positionTag = string.Empty;
+                        string positionTag = string.Empty;
                         if (firstWord.StartsWith('{') && firstWord.Contains('}'))
                         {
                             // Save the start tag.
@@ -9117,7 +9117,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a tag:
-                        String startTag = string.Empty;
+                        string startTag = string.Empty;
                         if (firstWord.StartsWith('<') && firstWord.Contains('>'))
                         {
                             // Save the start tag.
@@ -9134,7 +9134,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogMarker = string.Empty;
+                        string dialogMarker = string.Empty;
                         if (firstWord.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
@@ -9144,7 +9144,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle starts with "...":
-                        Boolean nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...", StringComparison.Ordinal);
+                        bool nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...", StringComparison.Ordinal);
                         if (nextSubtitleStartsWithEllipsis)
                         {
                             // Remove "..." from the beginning of first word.

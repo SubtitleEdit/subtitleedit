@@ -1678,7 +1678,7 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        public void RemoveColonNameAfterElipseInsideLine()
+        public void RemoveColonNameAfterEllipsisInsideLine()
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;

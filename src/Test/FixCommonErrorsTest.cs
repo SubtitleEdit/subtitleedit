@@ -1017,6 +1017,36 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesDialogThreeLines()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "-Person one speaks" + Environment.NewLine +
+                    "and continues speaking some." + Environment.NewLine +
+                    "-The other person speaks and there will be no fix executed.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("- Person one speaks" + Environment.NewLine +
+                    "and continues speaking some." + Environment.NewLine +
+                    "- The other person speaks and there will be no fix executed.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesDialogThreeLines2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "-Person one speaks." + Environment.NewLine +
+                    "-The other person starts speaking and continues" + Environment.NewLine +
+                    "to speak loudly for a little white.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("- Person one speaks." + Environment.NewLine +
+                    "-The other person starts speaking and continues" + Environment.NewLine +
+                    "to speak loudly for a little white.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
