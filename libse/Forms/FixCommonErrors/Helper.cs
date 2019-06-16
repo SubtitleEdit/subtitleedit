@@ -94,42 +94,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            tag = "<i>...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
+            // remove ellipse after italic tags
+            string[] patterns = { "<i>...", "<i> ...", "- <i>...", "- <i> ...", "<i>- ..." };
+            foreach (string pattern in patterns)
             {
-                text = "<i>" + text.Substring(tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
+                if (!text.StartsWith(pattern, StringComparison.OrdinalIgnoreCase))
                 {
-                    text = "<i>" + text.Substring(4);
+                    continue;
                 }
-            }
-            tag = "<i> ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "<i>" + text.Substring(tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
-                {
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-                }
-            }
 
-            tag = "- <i>...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "- <i>" + text.Substring(tag.Length);
-                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
+                string prefix = "<i>";
+                // check if should prefix with hyphen
+                if (pattern[0] == '-' || pattern.StartsWith("<i>-", StringComparison.OrdinalIgnoreCase))
                 {
-                    text = "- <i>" + text.Substring(6);
+                    prefix = "- <i>";
                 }
-            }
-            tag = "- <i> ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "- <i>" + text.Substring(tag.Length);
-                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                {
-                    text = "- <i>" + text.Substring(6);
-                }
+
+                text = $"{prefix}{text.Substring(pattern.Length).TrimStart(' ', '.')}";
+                break;
             }
 
             // Narrator:... Hello foo!
@@ -144,14 +126,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            // <i>- ... Foo</i>
-            tag = "<i>- ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = text.Substring(tag.Length);
-                text = text.TrimStart('.', ' ');
-                text = "<i>- " + text;
-            }
             text = text.Replace("  ", " ");
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
