@@ -11203,6 +11203,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 MakeHistoryForUndo(_language.BeforeSettingColor);
+                bool alternateRelevant = _subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible;
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
@@ -11210,19 +11211,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SetFontColor(p, color);
                         SubtitleListview1.SetText(item.Index, p.Text);
-                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
-                        {
-                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                SetFontColor(original, color);
-                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
-                            }
-                        }
+                    }
+
+                    if (!alternateRelevant)
+                    {
+                        continue;
+                    }
+
+                    var prg = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                    if (prg != null)
+                    {
+                        SetFontColor(prg, color);
+                        SubtitleListview1.SetAlternateText(item.Index, prg.Text);
                     }
                 }
-                RefreshSelectedParagraph();
 
+                RefreshSelectedParagraph();
             }
         }
 
