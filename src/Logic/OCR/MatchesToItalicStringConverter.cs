@@ -256,7 +256,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static void ItalicsWord(StringBuilder line, ref StringBuilder word, ref int lettersItalics, ref int lettersNonItalics, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
         {
-            if (line.Length == 0 && !isItalic && lettersItalics == 0 && lettersNonItalics == 1 && word.ToString() == "-")
+            if (appendString == "." && lettersItalics > 0 && lettersNonItalics == 0)
+            {
+                line.Append(word);
+                line.Append(appendString);
+            }
+            else if (line.Length == 0 && !isItalic && lettersItalics == 0 && lettersNonItalics == 1 && word.ToString() == "-")
             {
                 line.Append(word);
                 word.Clear();
