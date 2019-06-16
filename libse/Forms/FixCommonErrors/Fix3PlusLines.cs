@@ -9,31 +9,33 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.Fix3PlusLine;
-            int iFixes = 0;
+            int fixCount = 0;
+
+            const int MaxLine = 2;
+            int maxLinesBak = Configuration.Settings.General.MaxNumberOfLines;
+            Configuration.Settings.General.MaxNumberOfLines = MaxLine;
+
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (Utilities.GetNumberOfLines(p.Text) > 2 && callbacks.AllowFix(p, fixAction))
+                if (callbacks.AllowFix(p, fixAction) && Utilities.GetNumberOfLines(p.Text) > MaxLine)
                 {
-                    var old = Configuration.Settings.General.MaxNumberOfLines;
-                    Configuration.Settings.General.MaxNumberOfLines = 2;
                     string oldText = p.Text;
-                    try
+                    p.Text = Utilities.AutoBreakLine(p.Text, callbacks.Language);
+                    if (!oldText.Equals(p.Text, StringComparison.Ordinal))
                     {
-                        p.Text = Utilities.AutoBreakLine(p.Text);
-                    }
-                    finally
-                    {
-                        Configuration.Settings.General.MaxNumberOfLines = old;
-                    }
-                    if (oldText != p.Text)
-                    {
-                        iFixes++;
+                        fixCount++;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                   }
+                    }
+                    else
+                    {
+                        callbacks.AddToTotalErrors(1); // unable to fix
+                    }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, language.Fix3PlusLines, language.X3PlusLinesFixed);
+
+            Configuration.Settings.General.MaxNumberOfLines = maxLinesBak;
+            callbacks.UpdateFixStatus(fixCount, language.Fix3PlusLines, language.X3PlusLinesFixed);
         }
     }
 }
