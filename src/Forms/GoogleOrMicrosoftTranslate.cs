@@ -11,6 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GoogleOrMicrosoftTranslate : Form
     {
+        private static readonly string[] _msSupportedLanguages = new[] {"ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht",
+            "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
+
         public string TranslatedText { get; set; }
 
         public GoogleOrMicrosoftTranslate()
@@ -46,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = comboBox.Items.Count - 1; i > 0; i--)
             {
                 var item = (GoogleTranslate.ComboBoxItem)comboBox.Items[i];
-                if (item.Value != FixMsLocale(item.Value))
+                if (!IsSupportedLanguage(item.Value))
                 {
                     comboBox.Items.RemoveAt(i);
                 }
@@ -136,15 +139,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string FixMsLocale(string from)
-        {
-            if ("ar bg zh-CHS zh-CHT cs da nl en et fi fr de el ht he hu id it ja ko lv lt no pl pt ro ru sk sl es sv th tr uk vi".Contains(from))
-            {
-                return from;
-            }
-
-            return "en";
-        }
+        /// <summary>
+        /// Check if language is supported by Microsoft Translate
+        /// </summary>
+        private static bool IsSupportedLanguage(string lang) => _msSupportedLanguages.Contains(lang);
 
         private void buttonTranslate_Click(object sender, EventArgs e)
         {

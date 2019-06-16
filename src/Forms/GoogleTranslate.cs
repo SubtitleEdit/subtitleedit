@@ -43,20 +43,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             public ComboBoxItem(string text, string value)
             {
-                if (text.Length > 1)
-                {
-                    text = char.ToUpper(text[0]) + text.Substring(1).ToLowerInvariant();
-                }
-
-                Text = text;
-
+                Text = text.CapitalizeFirstLetter();
                 Value = value;
             }
 
-            public override string ToString()
-            {
-                return Text;
-            }
+            public override string ToString() => Text;
         }
 
         public GoogleTranslate()

@@ -22350,16 +22350,23 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
-                    string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    string defaultFromLanguage = string.Empty;
+
                     if (_subtitleAlternate != null)
                     {
-                        var o = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleAlternate.Paragraphs);
-                        if (o != null)
+                        Paragraph pg = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleAlternate.Paragraphs);
+                        if (pg != null)
                         {
-                            p = o;
+                            p = pg;
                             defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
                         }
                     }
+
+                    if (string.IsNullOrEmpty(defaultFromLanguage))
+                    {
+                        defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    }
+
                     Cursor = Cursors.WaitCursor;
                     if (_googleOrMicrosoftTranslate == null || _googleOrMicrosoftTranslate.IsDisposed)
                     {
