@@ -256,7 +256,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static void ItalicsWord(StringBuilder line, ref StringBuilder word, ref int lettersItalics, ref int lettersNonItalics, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
         {
-            if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
+            if (line.Length == 0 && !isItalic && lettersItalics == 0 && lettersNonItalics == 1 && word.ToString() == "-")
+            {
+                line.Append(word);
+                word.Clear();
+                word.Append(appendString);
+                lettersItalics = 0;
+                lettersNonItalics = 0;
+                return;
+            }
+            else if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
             {
                 if (!isItalic)
                 {
@@ -269,13 +278,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             else
             {
-                if (isItalic)
+                if (appendString == "\"" && isItalic && !line.ToString().Contains("\"<i>"))
                 {
+                    line.Append(appendString);
                     line.Append("</i>");
                     isItalic = false;
                 }
-                line.Append(word);
-                line.Append(appendString);
+                else
+                {
+                    if (isItalic)
+                    {
+                        line.Append("</i>");
+                        isItalic = false;
+                    }
+                    line.Append(word);
+                    line.Append(appendString);
+                }
                 wordNonItalics++;
             }
             word.Clear();
