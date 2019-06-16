@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
 
-                    if (doFix && languageCode == "el" && 
+                    if (doFix && languageCode == "el" &&
                         (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("O,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("Ό,τι", StringComparison.Ordinal) ||
@@ -190,10 +190,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else if (arr.Count == 3 && arr[0].Length > 1 && arr[1].Length > 1 && arr[2].Length > 1)
                     {
-                        if (arr[0].StartsWith("-") &&
+                        if (arr[0].StartsWith("-", StringComparison.Ordinal) &&
                             !"!.?".Contains(arr[0][arr[0].Length - 1]) &&
                             "!.?".Contains(arr[1][arr[1].Length - 1]) &&
-                            arr[2].StartsWith("-") &&
+                            arr[2].StartsWith("-", StringComparison.Ordinal) &&
                             "!.?".Contains(arr[2][arr[2].Length - 1]))
                         {
                             if (char.IsLetterOrDigit(arr[0][1]))
@@ -206,11 +206,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        if (arr[0].StartsWith("-") &&
+                        if (arr[0].StartsWith("-", StringComparison.Ordinal) &&
                            "!.?".Contains(arr[0][arr[0].Length - 1]) &&
-                           arr[1].StartsWith("-") &&
+                           arr[1].StartsWith("-", StringComparison.Ordinal) &&
                            !"!.?".Contains(arr[1][arr[1].Length - 1]) &&
-                           !arr[2].StartsWith("-") &&
+                           !arr[2].StartsWith("-", StringComparison.Ordinal) &&
                            "!.?".Contains(arr[2][arr[2].Length - 1]))
                         {
                             if (char.IsLetterOrDigit(arr[0][1]))
@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                             match.Value.EndsWith(":ia", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":ien", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":iksi", StringComparison.Ordinal) ||
-                                            match.Value.EndsWith(":ille", StringComparison.Ordinal) ||                                            
+                                            match.Value.EndsWith(":ille", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":in", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":ina", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":inä", StringComparison.Ordinal) ||
