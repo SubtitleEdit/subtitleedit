@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -12,29 +13,42 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
+                if (!callbacks.AllowFix(p, fixAction))
+                {
+                    continue;
+                }
+
+                // predict
                 double maxDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 8.0;
                 if (maxDisplayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
 
-                double displayTime = p.Duration.TotalMilliseconds;
+                double oldDuration = p.Duration.TotalMilliseconds;
+                double newDuration = oldDuration;
 
-                bool allowFix = callbacks.AllowFix(p, fixAction);
-                if (allowFix && displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                // calculate
+                if (oldDuration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    string oldCurrent = p.ToString();
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                    noOfLongDisplayTimes++;
-                    callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                    newDuration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
-                else if (allowFix && maxDisplayTime < displayTime)
+                else if (oldDuration > maxDisplayTime)
+                {
+                    newDuration = maxDisplayTime / 8.0;
+                }
+
+                // update
+                if (Math.Abs(oldDuration - newDuration) > .5)
                 {
                     string oldCurrent = p.ToString();
-                    displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
-                    noOfLongDisplayTimes++;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + newDuration;
                     callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                    noOfLongDisplayTimes++;
+                }
+                else
+                {
+                    callbacks.AddToTotalErrors(1); // unable to fix
                 }
             }
 
