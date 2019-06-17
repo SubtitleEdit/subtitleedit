@@ -2463,6 +2463,7 @@
     <RegEx find="Čas([au]|om|ov[aei]|ovima)\b" replaceWith="Sat$1" />
     <RegEx find="([čČ])eka[čć]" replaceWith="$1ekat ć" />
     <RegEx find="([aeiou])čijo(?![mj])" replaceWith="$1čio" />
+    <RegEx find="čjan" replaceWith="čajn" />
     <RegEx find="([čČ])ovi?j?e([kč])" replaceWith="$1ovje$2" />
     <RegEx find="ćopa" replaceWith="šepa" />
     <RegEx find="ćuti" replaceWith="šuti" />
