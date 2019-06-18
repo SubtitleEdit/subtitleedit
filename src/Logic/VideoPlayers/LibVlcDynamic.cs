@@ -538,135 +538,153 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public static string GetVlcPath(string fileName)
         {
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnWindows)
             {
-                return null;
-            }
-
-            var path = Path.Combine(Configuration.BaseDirectory, @"VLC\" + fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
-            {
-                try
+                var path = Path.Combine(Configuration.BaseDirectory, "VLC", fileName);
+                if (File.Exists(path))
                 {
-                    if (Configuration.Settings.General.VlcLocation.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
-                    }
-
-                    if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
-                    {
-                        path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
-                        if (File.Exists(path))
-                        {
-                            return path;
-                        }
-                    }
+                    return path;
                 }
-                catch
-                {
-                    // ignored
-                }
-            }
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocationRelative))
-            {
-                try
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
                 {
-                    path = Configuration.Settings.General.VlcLocationRelative;
-                    if (path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    try
                     {
-                        path = Path.GetDirectoryName(path);
-                    }
-
-                    if (path != null)
-                    {
-                        path = Path.Combine(path, fileName);
-                        string path2 = Path.GetFullPath(path);
-                        if (File.Exists(path2))
+                        if (Configuration.Settings.General.VlcLocation.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         {
-                            return path2;
+                            Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
                         }
 
-                        while (path.StartsWith(".."))
+                        if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
                         {
-                            path = path.Remove(0, 3);
-                            path2 = Path.GetFullPath(path);
-                            if (File.Exists(path2))
+                            path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
+                            if (File.Exists(path))
                             {
-                                return path2;
+                                return path;
                             }
                         }
                     }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-                catch
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocationRelative))
                 {
-                    // ignored
+                    try
+                    {
+                        path = Configuration.Settings.General.VlcLocationRelative;
+                        if (path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            path = Path.GetDirectoryName(path);
+                        }
+
+                        if (path != null)
+                        {
+                            path = Path.Combine(path, fileName);
+                            var fullPath = Path.GetFullPath(path);
+                            if (File.Exists(fullPath))
+                            {
+                                return fullPath;
+                            }
+
+                            while (path.StartsWith(".."))
+                            {
+                                path = path.Remove(0, 3);
+                                fullPath = Path.GetFullPath(path);
+                                if (File.Exists(fullPath))
+                                {
+                                    return fullPath;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
-            }
 
-            // XP via registry path
-            path = RegistryUtil.GetValue(@"SOFTWARE\VideoLAN\VLC", "InstallDir");
-            if (path != null && Directory.Exists(path))
-            {
-                path = Path.Combine(path, fileName);
-            }
+                // XP via registry path
+                path = RegistryUtil.GetValue(@"SOFTWARE\VideoLAN\VLC", "InstallDir");
+                if (path != null && Directory.Exists(path))
+                {
+                    path = Path.Combine(path, fileName);
+                }
 
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                if (File.Exists(path))
+                {
+                    return path;
+                }
 
-            // Winows 7 via registry path
-            path = RegistryUtil.GetValue(@"SOFTWARE\Wow6432Node\VideoLAN\VLC", "InstallDir");
-            if (path != null && Directory.Exists(path))
-            {
-                path = Path.Combine(path, fileName);
-            }
+                // Windows 7 via registry path
+                path = RegistryUtil.GetValue(@"SOFTWARE\Wow6432Node\VideoLAN\VLC", "InstallDir");
+                if (path != null && Directory.Exists(path))
+                {
+                    path = Path.Combine(path, fileName);
+                }
 
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                if (File.Exists(path))
+                {
+                    return path;
+                }
 
-            path = Path.Combine(@"C:\Program Files (x86)\VideoLAN\VLC", fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var p = Path.Combine(path, "VideoLAN", "VLC", fileName);
+                    if (File.Exists(p))
+                    {
+                        return p;
+                    }
 
-            path = Path.Combine(@"C:\Program Files\VideoLAN\VLC", fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                    p = Path.Combine(path, "VLC", fileName);
+                    if (File.Exists(p))
+                    {
+                        return p;
+                    }
+                }
 
-            path = Path.Combine(@"C:\Program Files (x86)\VLC", fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var p = Path.Combine(path, "VideoLAN", "VLC", fileName);
+                    if (File.Exists(p))
+                    {
+                        return p;
+                    }
 
-            path = Path.Combine(@"C:\Program Files\VLC", fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                    p = Path.Combine(path, "VLC", fileName);
+                    if (File.Exists(p))
+                    {
+                        return p;
+                    }
+                }
 
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VideoLAN\VLC\" + fileName);
-            if (File.Exists(path))
-            {
-                return path;
-            }
+                path = Path.Combine(@"C:\Program Files (x86)\VideoLAN\VLC", fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
 
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VLC\" + fileName);
-            if (File.Exists(path))
-            {
-                return path;
+                path = Path.Combine(@"C:\Program Files\VideoLAN\VLC", fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(@"C:\Program Files (x86)\VLC", fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(@"C:\Program Files\VLC", fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
             }
 
             return null;

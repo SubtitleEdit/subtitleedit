@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         public TesseractMultiRunner()
         {
             TesseractErrors = new List<string>();
-            _runningOnWindows = !Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux();
+            _runningOnWindows = Configuration.IsRunningOnWindows;
         }
 
         private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)

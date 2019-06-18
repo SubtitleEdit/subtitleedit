@@ -63,12 +63,12 @@ namespace Nikse.SubtitleEdit.Forms
                 encoderName = "VLC";
                 string parameters = "\"" + inputVideoFile + "\" -I dummy -vvv --no-random --no-repeat --no-loop --no-sout-video --audio-track=" + audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128,samplerate=16000}:std{access=file,mux=wav,dst=" + outWaveFile + "}\" vlc://quit";
                 string exeFilePath;
-                if (Configuration.IsRunningOnLinux())
+                if (Configuration.IsRunningOnLinux)
                 {
                     exeFilePath = "cvlc";
                     parameters = "-vvv --no-random --no-repeat --no-loop --no-sout-video --audio-track=" + audioTrackNumber + " --sout '#transcode{" + encodeParamters + "}:std{mux=wav,access=file,dst=" + outWaveFile + "}' \"" + inputVideoFile + "\" vlc://quit";
                 }
-                else if (Configuration.IsRunningOnMac())
+                else if (Configuration.IsRunningOnMac)
                 {
                     exeFilePath = "VLC.app/Contents/MacOS/VLC";
                 }
