@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _converted;
         private int _errors;
         private readonly IList<SubtitleFormat> _allFormats;
+        private bool _searching;
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
         public const string BluRaySubtitle = "Blu-ray sup";
@@ -464,7 +465,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
         {
-            if (_converting)
+            if (_converting || _searching)
             {
                 e.Effect = DragDropEffects.None;
                 return;
@@ -478,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
-            if (_converting)
+            if (_converting || _searching)
             {
                 return;
             }
@@ -594,7 +595,7 @@ namespace Nikse.SubtitleEdit.Forms
             var mkvFileNames = new List<string>();
             Refresh();
             int index = 0;
-            while (index < listViewInputFiles.Items.Count && _abort == false)
+            while (index < listViewInputFiles.Items.Count && !_abort)
             {
                 ListViewItem item = listViewInputFiles.Items[index];
                 string fileName = item.Text;
@@ -1498,6 +1499,10 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Cancel = true;
                 return;
             }
+            if (_searching)
+            {
+                _abort = true;
+            }
 
             Configuration.Settings.Tools.BatchConvertFixCasing = checkBoxFixCasing.Checked;
             Configuration.Settings.Tools.BatchConvertFixCommonErrors = checkBoxFixCommonErrors.Checked;
@@ -1551,7 +1556,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonInputBrowse.Enabled = false;
                 buttonSearchFolder.Enabled = false;
                 labelStatus.Text = string.Format(Configuration.Settings.Language.BatchConvert.ScanningFolder, folderBrowserDialog1.SelectedPath);
-                _abort = false;
 
                 SearchFolder(folderBrowserDialog1.SelectedPath);
 
@@ -1570,7 +1574,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SearchFolder(string path)
         {
-            foreach (string fileName in Directory.GetFiles(path))
+            _abort = false;
+            _searching = true;
+            try
+            {
+                SearchFolderRecurse(path);
+            }
+            finally
+            {
+                _searching = false;
+            }
+        }
+
+        private void SearchFolderRecurse(string path)
+        {
+            foreach (string fileName in Directory.EnumerateFiles(path))
             {
                 try
                 {
@@ -1653,11 +1671,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (checkBoxScanFolderRecursive.Checked)
             {
-                foreach (string directory in Directory.GetDirectories(path))
+                foreach (string directory in Directory.EnumerateDirectories(path))
                 {
                     if (directory != "." && directory != "..")
                     {
-                        SearchFolder(directory);
+                        SearchFolderRecurse(directory);
                     }
 
                     if (_abort)
@@ -1679,21 +1697,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!_converting)
+            if (_converting || _searching)
             {
                 if (e.KeyCode == Keys.Escape)
                 {
-                    Close();
-                }
-                else if (e.KeyData == (Keys.Control | Keys.O)) // Open file/s
-                {
-                    buttonInputBrowse_Click(null, EventArgs.Empty);
+                    _abort = true;
+                    e.SuppressKeyPress = true;
                 }
             }
             else if (e.KeyCode == Keys.Escape)
             {
-                _abort = true;
-                e.SuppressKeyPress = true;
+                Close();
+            }
+            else if (e.KeyData == (Keys.Control | Keys.O)) // Open file/s
+            {
+                buttonInputBrowse_Click(null, EventArgs.Empty);
             }
         }
 
