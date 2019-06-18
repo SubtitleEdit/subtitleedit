@@ -20337,15 +20337,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var tb = GetFocusedTextBox();
 
-            // minimum length of valid html tag is 3
-            if (tb.SelectionLength < 3)
-            {
-                return;
-            }
-
             if (tb.SelectionLength == 0)
             {
                 tb.Text = HtmlUtil.RemoveHtmlTags(tb.Text);
+                return;
+            }
+
+            // minimum length of valid html tag is 3
+            if (tb.SelectionLength < 3)
+            {
                 return;
             }
 
