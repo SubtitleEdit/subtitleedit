@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         public TesseractRunner()
         {
             TesseractErrors = new List<string>();
-            _runningOnWindows = !Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux();
+            _runningOnWindows = Configuration.IsRunningOnWindows;
         }
 
         public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302 = false)
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 }
                 File.Delete(imageFileName);
             }
-            catch 
+            catch
             {
                 // ignored
             }

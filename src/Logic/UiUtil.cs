@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                if (Configuration.IsRunningOnLinux() || Utilities.IsRunningOnMono())
+                if (Configuration.IsRunningOnLinux || Utilities.IsRunningOnMono())
                 {
                     return File.Exists(Path.Combine(Configuration.BaseDirectory, "mplayer"));
                 }
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Logic
             int RTLD_GLOBAL = 0x0100;
             GeneralSettings gs = Configuration.Settings.General;
 
-            if (Configuration.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux)
             {
                 //TODO: Improve finding libmpv.so.*
                 var handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW | RTLD_GLOBAL);
@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Logic
             // folder as Subtitle Edit and add this to the app.config inside the
             // "configuration" element:
             // <dllmap dll="libvlc" target="VLC.app/Contents/MacOS/lib/libvlc.dylib" />
-            if (Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnMac)
             {
                 return new LibVlcMono();
             }

@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Logic
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool AttachConsole(int dwProcessId);
+        internal const int ATTACH_PARENT_PROCESS = -1;
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

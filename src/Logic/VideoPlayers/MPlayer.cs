@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _mplayer = new Process { StartInfo = { FileName = mplayerExeName } };
                 //vo options: gl, gl2, directx:noaccel
-                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
                 {
                     _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -nosub -noautosub -loop 0 -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
                 }
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
                 {
                     return "mplayer";
                 }

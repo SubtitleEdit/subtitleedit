@@ -40,21 +40,56 @@ namespace Nikse.SubtitleEdit.Core
             _settings = new Lazy<Settings>(Settings.GetSettings);
         }
 
-        public static bool IsRunningOnLinux()
+        private const int _platformWindows = 1;
+        private const int _platformLinux = 2;
+        private const int _platformMac = 3;
+        private static int _platform;
+
+        public static bool IsRunningOnWindows
         {
-            return Environment.OSVersion.Platform == PlatformID.Unix && !IsRunningOnMac();
+            get
+            {
+                if (_platform == 0)
+                {
+                    _platform = GetPlatform();
+                }
+                return _platform == _platformWindows;
+            }
         }
 
-        public static bool IsRunningOnMac()
+        public static bool IsRunningOnLinux
+        {
+            get
+            {
+                if (_platform == 0)
+                {
+                    _platform = GetPlatform();
+                }
+                return _platform == _platformLinux;
+            }
+        }
+
+        public static bool IsRunningOnMac
+        {
+            get
+            {
+                if (_platform == 0)
+                {
+                    _platform = GetPlatform();
+                }
+                return _platform == _platformMac;
+            }
+        }
+
+        private static int GetPlatform()
         {
             // Current versions of Mono report the platform as Unix
-            return Environment.OSVersion.Platform == PlatformID.MacOSX ||
-                (Environment.OSVersion.Platform == PlatformID.Unix &&
-                 Directory.Exists("/Applications") &&
-                 Directory.Exists("/System") &&
-                 Directory.Exists("/Users"));
+            return Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users"))
+                 ? _platformMac
+                 : Environment.OSVersion.Platform == PlatformID.Unix
+                 ? _platformLinux
+                 : _platformWindows;
         }
-
 
         public static Settings Settings => Instance.Value._settings.Value;
 
@@ -94,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
-            if (IsRunningOnLinux() || IsRunningOnMac())
+            if (IsRunningOnLinux || IsRunningOnMac)
             {
                 if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
                 {
@@ -143,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetTesseractDataDirectory()
         {
-            if (IsRunningOnLinux() || IsRunningOnMac())
+            if (IsRunningOnLinux || IsRunningOnMac)
             {
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                 {
@@ -165,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetTesseract302DataDirectory()
         {
-            if (IsRunningOnLinux() || IsRunningOnMac())
+            if (IsRunningOnLinux || IsRunningOnMac)
             {
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                 {
