@@ -19,7 +19,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
             for (int i = 0; i < count; i++)
             {
                 var cur = subtitle.Paragraphs[i];
-                var next = subtitle.Paragraphs[i + 1];
+                var next = subtitle.GetParagraphOrDefault(i + 1);
+
+                if (next == null)
+                {
+                    continue;
+                }
 
                 double currentGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
 
