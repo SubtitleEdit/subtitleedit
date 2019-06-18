@@ -48,6 +48,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             const int FirstLine = 0;
             const int SecondLine = 1;
 
+            int count = subtitle.Paragraphs.Count;
+
             for (int i = splittedSubtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 var oldParagraph = splittedSubtitle.Paragraphs[i];
@@ -73,12 +75,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 oldParagraph.Text = lines[FirstLine];
 
                 // use optimal time to adjust duration
-                oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * oldParagraph.Text.Length - halfMinGaps;
+                oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(oldParagraph.Text, true).Length - halfMinGaps;
 
                 // build second paragraph
                 var newParagraph = new Paragraph(oldParagraph) { Text = lines[SecondLine] };
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * newParagraph.Text.Length;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Length;
 
                 // only remove dash (if dialog) if first line is fully closed
                 if (IsTextClosed(oldParagraph.Text))
@@ -103,7 +105,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 splittedSubtitle.Paragraphs.Insert(i + 1, newParagraph);
             }
 
-            splittedSubtitle.Renumber();
+            if (count != subtitle.Paragraphs.Count)
+            {
+                splittedSubtitle.Renumber();
+            }
+
             return splittedSubtitle;
         }
 
@@ -129,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 return text.StartsWith('-');
             }
-            int closeIdx = text.IndexOf('>');
+            int closeIdx = text.IndexOf('>', 2);
             if (closeIdx + 1 == text.Length) // found in last position
             {
                 return false;
@@ -139,11 +145,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static bool IsTextClosed(string text)
         {
-            if (string.IsNullOrEmpty(text) || text.Length == 0)
+            string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+            if (string.IsNullOrEmpty(textNoTags))
             {
                 return false;
             }
-            string textNoTags = HtmlUtil.RemoveHtmlTags(text);
             char lastChar = textNoTags[textNoTags.Length - 1];
             return lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ':' || lastChar == ')' || lastChar == ']' || lastChar == '♪';
         }
