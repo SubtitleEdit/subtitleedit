@@ -26,6 +26,7 @@
     <Duration>表示時間</Duration>
     <CharsPerSec>文字/秒</CharsPerSec>
     <WordsPerMin>単語/分</WordsPerMin>
+    <Actor>俳優</Actor>
     <Gap>間隔</Gap>
     <Region>地域</Region>
     <NumberSymbol>#</NumberSymbol>
@@ -109,9 +110,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <SourceVideoFile>ソース ビデオ ファイル:</SourceVideoFile>
     <GenerateWaveformData>波形データの生成</GenerateWaveformData>
     <PleaseWait>これには数分かかる可能性があります - お待ちください</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player が見つかりません</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLC media player 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>VLC media player のホーム ページへ移動しますか?</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFoundTitle>VLCメディアプレイヤー が見つかりません</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLCメディアプレイヤー 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>VLCメディアプレイヤー のホーム ページへ移動しますか？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>ピーク ファイルを生成しています...</GeneratingPeakFile>
     <GeneratingSpectrogram>スペクトログラムを生成しています...</GeneratingSpectrogram>
     <ExtractingSeconds>オーディオの抽出中: {0:0.0} 秒</ExtractingSeconds>
@@ -147,8 +148,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <UnableToFix>修正できない行: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>選択された行の自動調整</TitleAutoBreak>
-    <TitleUnbreak>選択された行から改行を削除</TitleUnbreak>
+    <TitleAutoBreak>選択した行の自動調整</TitleAutoBreak>
+    <TitleUnbreak>選択した行から改行を削除</TitleUnbreak>
     <LinesFoundX>見つかった行: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>次より長い行を改行</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>次より長い行の改行を解除</OnlyUnbreakLinesLongerThan>
@@ -166,6 +167,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <ConvertOptions>変換オプション</ConvertOptions>
     <RemoveFormatting>整形タグを削除する</RemoveFormatting>
     <RemoveTextForHI>HI 用テキストを削除する</RemoveTextForHI>
+    <OverwriteOriginalFiles>元のファイルを上書きする (フォーマットが変更された場合は新しい拡張子)</OverwriteOriginalFiles>
     <RedoCasing>大文字と小文字をやり直す</RedoCasing>
     <Convert>変換</Convert>
     <NothingToConvert>変換するものがありません!</NothingToConvert>
@@ -265,9 +267,10 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FontEffectColor>効果色</FontEffectColor>
     <FontSize>サイズ</FontSize>
     <ChooseColor>色の選択...</ChooseColor>
+    <Generate>生成</Generate>
   </DCinemaProperties>
   <DvdSubRip>
-    <Title>ifo/vob (DVD) から字幕を抽出</Title>
+    <Title>IFO/VOB (DVD) から字幕を抽出</Title>
     <DvdGroupTitle>DVD ファイル/情報</DvdGroupTitle>
     <IfoFile>IFO ファイル</IfoFile>
     <IfoFiles>IFO ファイル</IfoFiles>
@@ -321,7 +324,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Errors>エラー</Errors>
     <ErrorsX>エラー: {0}</ErrorsX>
     <MaxLengthError>行 {0} が {2} による最大の長さ ({1}) を超えています: {3}</MaxLengthError>
-    <TextUnchangedPresentation>身変更の提示</TextUnchangedPresentation>
+    <TextUnchangedPresentation>未変更箇所の提示</TextUnchangedPresentation>
     <TextLeftJustifiedText>左揃え</TextLeftJustifiedText>
     <TextCenteredText>中央揃え</TextCenteredText>
     <TextRightJustifiedText>右揃え</TextRightJustifiedText>
@@ -573,17 +576,37 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Remove>削除</Remove>
     <RemoveAll>すべて削除</RemoveAll>
   </ImportImages>
+  <ImportSceneChanges>
+    <Title>シーンの変更を生成/インポート</Title>
+    <OpenTextFile>テキストファイルを開く...</OpenTextFile>
+    <Generate>シーンの変更を生成</Generate>
+    <Import>シーンの変更をインポート</Import>
+    <TextFiles>テキストファイル</TextFiles>
+    <TimeCodes>タイムコード</TimeCodes>
+    <Frames>フレーム</Frames>
+    <Seconds>秒</Seconds>
+    <Milliseconds>ミリ秒</Milliseconds>
+    <GetSceneChangesWithFfmpeg>FFmpeg を使用してシーンの変更を生成</GetSceneChangesWithFfmpeg>
+    <Sensitivity>感度</Sensitivity>
+    <SensitivityDescription>値が小さいほどシーンの変更が生成されます</SensitivityDescription>
+    <NoSceneChangesFound>シーンの変更は見つかりませんでした。</NoSceneChangesFound>
+  </ImportSceneChanges>
   <ImportText>
     <Title>プレーン テキストのインポート</Title>
+    <OneSubtitleIsOneFile>複数のファイル - 1つのファイルは1つの字幕</OneSubtitleIsOneFile>
     <OpenTextFile>テキスト ファイルを開く...</OpenTextFile>
+    <OpenTextFiles>テキスト ファイルを開く...</OpenTextFiles>
     <ImportOptions>インポート オプション</ImportOptions>
     <Splitting>分割</Splitting>
     <AutoSplitText>テキストを自動分割する</AutoSplitText>
-    <OneLineIsOneSubtitle>1 行 1 字幕</OneLineIsOneSubtitle>
+    <OneLineIsOneSubtitle>1行が1つの字幕</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>2行が1つの字幕</TwoLinesAreOneSubtitle>
+    <LineBreak>改行</LineBreak>
     <SplitAtBlankLines>空行で分割する</SplitAtBlankLines>
     <MergeShortLines>継続する短い行を結合する</MergeShortLines>
     <RemoveEmptyLines>空行を削除する</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>文字のない行を削除する</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>タイムコードを生成</GenerateTimeCodes>
     <GapBetweenSubtitles>字幕の間隔 (ミリ秒)</GapBetweenSubtitles>
     <Auto>自動</Auto>
     <Fixed>固定</Fixed>
@@ -763,6 +786,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <RestoreAutoBackup>自動バックアップの復元...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha のプロパティ...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha のプロパティ...</SubStationAlphaProperties>
+        <EbuProperties>EBU STL のプロパティ...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro のプロパティ...</DvdStuioProProperties>
         <OpenOriginal>翻訳前の字幕を開く (翻訳モード)...</OpenOriginal>
         <SaveOriginal>翻訳前の字幕の保存</SaveOriginal>
         <CloseOriginal>翻訳前の字幕を閉じる</CloseOriginal>
@@ -808,7 +833,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <MultipleReplace>一括置換(&amp;M)...</MultipleReplace>
         <GoToSubtitleNumber>字幕番号へ移動(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>RTL モード</RightToLeftMode>
-        <ReverseRightToLeftStartEnd>RTL の開始/終了の反転 (選択された行)</ReverseRightToLeftStartEnd>
+        <ReverseRightToLeftStartEnd>RTL の開始/終了の反転 (選択した行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>オーディオ/ビデオ プレビューにオリジナル テキストを表示</ShowOriginalTextInAudioAndVideoPreview>
       </Edit>
       <Tools>
@@ -841,6 +866,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <MakeNewEmptyTranslationFromCurrentSubtitle>現在の字幕から新規翻訳</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>一括変換...</BatchConvert>
         <GenerateTimeAsText>テキストとして時間を生成...</GenerateTimeAsText>
+        <MeasurementConverter>単位の変換...</MeasurementConverter>
         <SplitSubtitle>字幕の分割...</SplitSubtitle>
         <AppendSubtitle>字幕の追加...</AppendSubtitle>
         <JoinSubtitles>字幕の結合...</JoinSubtitles>
@@ -876,8 +902,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
       </Synchronization>
       <AutoTranslate>
         <Title>自動翻訳</Title>
-        <TranslatePoweredByGoogle>翻訳 (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>翻訳 (powered by Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByGoogle>Google 翻訳 ...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Microsoft 翻訳 ...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>スウェーデン語からデンマーク語へ翻訳 (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -943,8 +969,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <ColumnImportTextAndShiftCellsDown>テキストをインポートしてセルを下へ移動</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>クリップボードから貼り付け...</ColumnPasteFromClipboard>
         <Split>分割</Split>
-        <MergeSelectedLines>選択された行の結合</MergeSelectedLines>
-        <MergeSelectedLinesAsDialog>会話として選択された行を結合</MergeSelectedLinesAsDialog>
+        <MergeSelectedLines>選択した行の結合</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>会話として選した行を結合</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>前の行と結合</MergeWithLineBefore>
         <MergeWithLineAfter>後の行と結合</MergeWithLineAfter>
         <RemoveFormatting>整形タグを削除</RemoveFormatting>
@@ -961,18 +987,22 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <Superscript>上付き文字</Superscript>
         <Subscript>下付き文字</Subscript>
         <Alignment>配置...</Alignment>
-        <AutoBalanceSelectedLines>選択された行の自動調整...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>選択された行から改行を削除...</RemoveLineBreaksFromSelectedLines>
+        <AutoBalanceSelectedLines>選択した行の自動調整...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>選択した行から改行を削除...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>タイプライター効果...</TypewriterEffect>
         <KaraokeEffect>カラオケ効果...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>選択された行を早く/遅くする...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>選択された行の視覚同期...</VisualSyncSelectedLines>
-        <GoogleAndMicrosoftTranslateSelectedLine>翻訳前の行の Google/Microsoft 翻訳</GoogleAndMicrosoftTranslateSelectedLine>
+        <ShowSelectedLinesEarlierLater>選択した行を早く/遅くする...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>選択した行の視覚同期...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>翻訳前の行を Google/Microsoft 翻訳</GoogleAndMicrosoftTranslateSelectedLine>
         <TranslateSelectedLines>選択した行を翻訳...</TranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>選択された行の表示時間の自動調整...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>選択された行のありがちなエラーを修正...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>選択された行の大文字と小文字を変換...</ChangeCasingForSelectedLines>
-        <SaveSelectedLines>名前を付けて選択された行を保存...</SaveSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>選択した行の表示時間の自動調整...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>選択した行のありがちなエラーを修正...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>選択した行の大文字と小文字を変換...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>名前を付けて選択した行を保存...</SaveSelectedLines>
+        <WebVTTSetNewVoice>新しい音声を設定...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>音声を削除</WebVTTRemoveVoices>
+        <NewActor>新しい俳優...</NewActor>
+        <RemoveActors>俳優を削除</RemoveActors>
         <EditBookmark>ブックマークを編集</EditBookmark>
         <RemoveBookmark>ブックマークを削除</RemoveBookmark>
       </ContextMenu>
@@ -1040,10 +1070,10 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <SaveSubtitleAs>名前を付けて字幕を保存...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>名前を付けて翻訳前の字幕を保存...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>字幕が読み込まれていません</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>視覚同期 - 選択された行</VisualSyncSelectedLines>
+    <VisualSyncSelectedLines>視覚同期 - 選択した行</VisualSyncSelectedLines>
     <VisualSyncTitle>視覚同期</VisualSyncTitle>
     <BeforeVisualSync>視覚同期前</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>視覚同期が選択された行で実行されました</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformedOnSelectedLines>視覚同期が選した行で実行されました</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>視覚同期が実行されました</VisualSyncPerformed>
     <FileXIsLargerThan10MB>ファイルが 10 MB より大きいです: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>そのまま続行しますか?</ContinueAnyway>
@@ -1093,13 +1123,13 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <UnableToParseSourceView>ソース ビューのテキストを構文解析できません!</UnableToParseSourceView>
     <GoToLineNumberX>行番号 {0} へ移動します</GoToLineNumberX>
     <CreateAdjustChangesApplied>行の作成/調整の変更が適用されました</CreateAdjustChangesApplied>
-    <SelectedLines>選択された行</SelectedLines>
+    <SelectedLines>選択した行</SelectedLines>
     <BeforeDisplayTimeAdjustment>表示時間の調整前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>調整された表示時間: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>調整された表示時間: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>調整された開始時間: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>ありがちなエラーの修正前</BeforeCommonErrorFixes>
-    <CommonErrorsFixedInSelectedLines>選択された行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixedInSelectedLines>選択した行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ありがちなエラーが修正されました</CommonErrorsFixed>
     <BeforeRenumbering>番号を振り直す前</BeforeRenumbering>
     <RenumberedStartingFromX>次から番号を振り直しました: {0}</RenumberedStartingFromX>
@@ -1194,20 +1224,20 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeImportingVobSubFile>VobSub 字幕のインポート前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Blu-ray sup ファイルのインポート前</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>BDN xml ファイルのインポート前</BeforeImportingBdnXml>
-    <BeforeShowSelectedLinesEarlierLater>選択された行を早く遅くする前</BeforeShowSelectedLinesEarlierLater>
+    <BeforeShowSelectedLinesEarlierLater>選択した行を早く/遅くする前</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>すべての行を {0:0.0##} 秒前に表示します</ShowAllLinesXSecondsLinesEarlier>
     <ShowAllLinesXSecondsLinesLater>すべての行を {0:0.0##} 秒後に表示します</ShowAllLinesXSecondsLinesLater>
-    <ShowSelectedLinesXSecondsLinesEarlier>選択された行を {0:0.0##} 秒前に表示します</ShowSelectedLinesXSecondsLinesEarlier>
-    <ShowSelectedLinesXSecondsLinesLater>選択された行を {0:0.0##} 秒後に表示します</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>選択した行を {0:0.0##} 秒前に表示します</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>選択した行を {0:0.0##} 秒後に表示します</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>選択範囲以降を {0:0.0##} 秒前に表示します</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>選択範囲以降を {0:0.0##} 秒後に表示します</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>選択された行の早く/遅くするが実行されました</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>正規表現 {0} による重複語</DoubleWordsViaRegEx>
     <BeforeSortX>並べ替え前: {0}</BeforeSortX>
     <SortedByX>並べ替えました: {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>選択された行の自動調整前</BeforeAutoBalanceSelectedLines>
+    <BeforeAutoBalanceSelectedLines>選択した行の自動調整前</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>自動調整された行の数: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeRemoveLineBreaksInSelectedLines>選択された行から改行を削除する前</BeforeRemoveLineBreaksInSelectedLines>
+    <BeforeRemoveLineBreaksInSelectedLines>選択した行から改行を削除する前</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>改行が削除された行の数: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>一括置換の前</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>テキストが置換された行の数: {0}</NumberOfLinesReplacedX>
@@ -1259,7 +1289,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>行 {0} - タイム コードの読み取りエラー: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>行 {0} - 予期された字幕番号: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>タイム コードの推測前</BeforeGuessingTimeCodes>
-    <BeforeAutoDuration>選択された行の表示時間の自動調整前</BeforeAutoDuration>
+    <BeforeAutoDuration>選択した行の表示時間の自動調整前</BeforeAutoDuration>
     <BeforeColumnPaste>列の貼り付け前</BeforeColumnPaste>
     <BeforeColumnDelete>列の削除前</BeforeColumnDelete>
     <BeforeColumnImportText>列のテキストのインポート前</BeforeColumnImportText>
@@ -1274,8 +1304,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <SubtitlesJoined>字幕が結合されました</SubtitlesJoined>
     <StatusLog>ステータス ログ</StatusLog>
     <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
-    <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
-    <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
+    <PluginXExecuted>プラグイン '{0}' が実行されました。</PluginXExecuted>
+    <NotAValidXSubFile>無効な XSub ファイルです！</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
@@ -1309,6 +1339,22 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <PleaseChoose>複数の字幕が見つかりました - 選択してください</PleaseChoose>
     <TrackXLanguageYTypeZ>トラック {0} - 言語: {1} - 種類: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>単位の変換</Title>
+    <ConvertFrom>変換元</ConvertFrom>
+    <ConvertTo>変換先</ConvertTo>
+    <CopyToClipboard>クリップボードにコピー</CopyToClipboard>
+    <Celsius>摂氏</Celsius>
+    <Fahrenheit>華氏</Fahrenheit>
+    <Miles>マイル</Miles>
+    <Kilometers>キロメートル</Kilometers>
+    <Meters>メートル</Meters>
+    <Yards>ヤード</Yards>
+    <Feet>フィート</Feet>
+    <Inches>インチ</Inches>
+    <Pounds>ポンド</Pounds>
+    <Kilos>キロ</Kilos>
+  </MeasurementConverter>
   <MergedShortLines>
     <Title>短い行の結合</Title>
     <MaximumCharacters>1 段落あたりの最大文字数</MaximumCharacters>
@@ -1324,6 +1370,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Normal>通常</Normal>
     <CaseSensitive>大小文字区別</CaseSensitive>
     <RegularExpression>正規表現</RegularExpression>
+    <Description>詳細</Description>
     <LinesFoundX>見つかった行: {0}</LinesFoundX>
     <Remove>削除</Remove>
     <Add>追加(&amp;A)</Add>
@@ -1335,7 +1382,18 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Export>エクスポート...</Export>
     <ImportRulesTitle>置換規則のインポート...</ImportRulesTitle>
     <ExportRulesTitle>置換規則のエクスポート...</ExportRulesTitle>
-    <Rules>規則のエクスポート</Rules>
+    <ChooseGroupsToImport>インポートするグループを選択</ChooseGroupsToImport>
+    <ChooseGroupsToExport>エクスポートするグループを選択</ChooseGroupsToExport>
+    <Rules>ルールの検索と置換</Rules>
+    <MoveToTop>先頭に移動</MoveToTop>
+    <MoveToBottom>末尾に移動</MoveToBottom>
+    <MoveSelectedRulesToGroup>選択したルールをグループに移動</MoveSelectedRulesToGroup>
+    <Groups>グループ</Groups>
+    <RulesForGroupX>グループ "{0}" のルール</RulesForGroupX>
+    <GroupName>グループ名</GroupName>
+    <RenameGroup>グループの名前を変更...</RenameGroup>
+    <NewGroup>新しいグループ...</NewGroup>
+    <NothingToImport>インポートするものがありません</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>チャット</Title>
@@ -1527,8 +1585,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <VideoEngine>ビデオ エンジン</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 フォルダーの quartz.dll</DirectShowDescription>
-    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>VLC media player 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLCメディアプレイヤー</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>VLCメディアプレイヤー 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLCのパス (ポータブル版のVLCを使用している場合にのみ必要)</VlcBrowseToLabel>
     <ShowStopButton>停止ボタンを表示する</ShowStopButton>
     <ShowMuteButton>ミュート ボタンを表示する</ShowMuteButton>
@@ -1577,6 +1635,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ProxyUserName>ユーザー名</ProxyUserName>
     <ProxyPassword>パスワード</ProxyPassword>
     <ProxyDomain>ドメイン</ProxyDomain>
+    <NetworkSessionSettings>ネットワークセッションの設定</NetworkSessionSettings>
+    <NetworkSessionNewSound>新着メッセージが届いたときにサウンドファイルを再生する</NetworkSessionNewSound>
     <PlayXSecondsAndBack>X 秒再生して戻る</PlayXSecondsAndBack>
     <StartSceneIndex>開始シーンの段落</StartSceneIndex>
     <EndSceneIndex>終了シーンの段落</EndSceneIndex>
@@ -1593,34 +1653,67 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>キー</Key>
+    <ListViewAndTextBox>リストビューとテキストボックス</ListViewAndTextBox>
+    <ListView>リストビュー</ListView>
     <TextBox>テキストボックス</TextBox>
     <UpdateShortcut>更新</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>ビデオ コントロールのドック/ドック解除の切り替え</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>終了を設定して新規へ</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>終了位置から調整して次へ</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>開始を設定して表示時間を自動調整して次へ</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustViaEndAutoStart>終了位置で調整</AdjustViaEndAutoStart>
+    <AdjustViaEndAutoStartAndGoToNext>終了位置で調整して次へ</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>終了位置を設定して次へ</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>開始位置を設定して表示時間を自動調整して次へ</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>終了と次の開始を設定して次へ</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>キー↓=開始の設定、キー↑=終了を設定して次へ</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSelected100MsForward>選択された行を 100 ミリ秒進める</AdjustSelected100MsForward>
-    <AdjustSelected100MsBack>選択された行を 100 ミリ秒戻す</AdjustSelected100MsBack>
+    <AdjustSelected100MsForward>選択した行を 100 ミリ秒進める</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>選択した行を 100 ミリ秒戻す</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>開始位置を {0}ミリ秒 後に移動</AdjustStartXMsBack>
+    <AdjustStartXMsForward>開始位置を {0}ミリ秒 前に移動</AdjustStartXMsForward>
+    <AdjustEndXMsBack>終了位置を {0}ミリ秒 後に移動</AdjustEndXMsBack>
+    <AdjustEndXMsForward>終了位置を {0}ミリ秒 前に移動</AdjustEndXMsForward>
+    <AdjustSetStartTimeKeepDuration>開始時間を設定し、表示時間を保持する</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>終了位置を設定し、オフセットをリセット</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>終了位置を設定し、オフセットをリセットして次へ移動</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>現在の行を次の字幕または最大表示時間まで延長する</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>現在の字幕の表示時間を再計算する</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>キー↓で新規作成、キー↑で終了時間の設定</MainCreateStartDownEndUp>
     <MergeDialog>会話の結合 (ダッシュの挿入)</MergeDialog>
     <GoToNext>次の行へ移動</GoToNext>
     <GoToPrevious>前の行へ移動</GoToPrevious>
+    <GoToCurrentSubtitleStart>現在の行の先頭に移動</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>現在の行の末尾に移動</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>前の行に移動して動画の位置を設定</GoToPreviousSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>次の行に移動して動画の位置を設定</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>リスト ビューと字幕テキスト ボックス間のフォーカスの切り替え</ToggleFocus>
     <ToggleDialogDashes>会話のダッシュの切り替え</ToggleDialogDashes>
-    <Alignment>配置 (選択された行)</Alignment>
-    <CopyTextOnly>クリップボードへテキストのみをコピー (選択された行)</CopyTextOnly>
-    <AutoDurationSelectedLines>表示時間の自動調整 (選択された行)</AutoDurationSelectedLines>
+    <Alignment>配置 (選択した行)</Alignment>
+    <CopyTextOnly>クリップボードへテキストのみをコピー (選択した行)</CopyTextOnly>
+    <AutoDurationSelectedLines>表示時間の自動調整 (選択した行)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRtl>RTL の開始/終了の反転</ReverseStartAndEndingForRtl>
-    <VerticalZoom>垂直ズーム</VerticalZoom>
+    <VerticalZoom>垂直ズームイン</VerticalZoom>
+    <VerticalZoomOut>垂直ズームアウト</VerticalZoomOut>
     <WaveformSeekSilenceForward>無音の前方検索</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>無音の後方検索</WaveformSeekSilenceBack>
     <WaveformAddTextHere>ここにテキストを追加 (新しい選択)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>ここにテキストを追加 (クリップボードから新しく選択)</WaveformAddTextHereFromClipboard>
+    <WaveformPlayFirstSelectedSubtitle>最初に選択した字幕を再生</WaveformPlayFirstSelectedSubtitle>
+    <WaveformGoToPreviousSceneChange>前のシーンの変更に移動</WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSceneChange>次のシーンの変更に移動</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>シーンの変更を切り替え</WaveformToggleSceneChange>
+    <GoBack1Frame>1フレーム戻る</GoBack1Frame>
+    <GoForward1Frame>1フレーム進む</GoForward1Frame>
+    <GoBack1FrameWithPlay>1フレーム戻る (再生しながら)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>1フレーム進む (再生しながら)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ミリ秒戻る</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ミリ秒進む</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ミリ秒戻る</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ミリ秒進む</GoForward500Milliseconds>
+    <GoBack1Second>1秒戻る</GoBack1Second>
+    <GoForward1Second>1秒進む</GoForward1Second>
+    <GoBack5Seconds>5秒戻る</GoBack5Seconds>
+    <GoForward5Seconds>5秒進む</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>前の字幕に移動 (動画の位置から)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>次の字幕に移動 (動画の位置から)</WaveformGoToNextSubtitle>
     <TogglePlayPause>再生/一時停止の切り替え</TogglePlayPause>
     <Pause>一時停止</Pause>
     <Fullscreen>全画面表示</Fullscreen>
@@ -1629,7 +1722,6 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <CustomSearch3>翻訳、カスタム検索 3</CustomSearch3>
     <CustomSearch4>翻訳、カスタム検索 4</CustomSearch4>
     <CustomSearch5>翻訳、カスタム検索 5</CustomSearch5>
-    <CustomSearch6>翻訳、カスタム検索 6</CustomSearch6>
     <SyntaxColoring>構文の配色</SyntaxColoring>
     <ListViewSyntaxColoring>リスト ビューの構文の配色</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>表示時間が短すぎる場合に色を付ける</SyntaxColorDurationIfTooSmall>
@@ -1639,11 +1731,20 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <SyntaxColorOverlap>タイム コードの重複に色を付ける</SyntaxColorOverlap>
     <SyntaxErrorColor>エラーの色</SyntaxErrorColor>
     <GoToFirstSelectedLine>最初の選択された行へ</GoToFirstSelectedLine>
-    <MergeSelectedLines>選択された行の結合</MergeSelectedLines>
+    <GoToNextEmptyLine>次の空行に移動</GoToNextEmptyLine>
+    <MergeSelectedLines>選択した行の結合</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>選択した行を結合して自動で分割する</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>選択した行を結合して分割を解除</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>選択した行を結合して空白を除いて分割を解除 (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesOnlyFirstText>選択した行を結合して最初の空でないテキストだけを残す</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>選択した行をバイリンガルで結合する</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>選択した行をバイリンガルで分割する</SplitSelectedLineBilingual>
     <ToggleTranslationMode>翻訳モードの切り替え</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>翻訳元と翻訳の切り替え</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>翻訳元と翻訳の結合</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>ショートカットが既に定義されています:</ShortcutIsAlreadyDefinedX>
+    <MergeWithNext>次と結合</MergeWithNext>
+    <MergeWithPrevious>前と結合</MergeWithPrevious>
+    <ShortcutIsAlreadyDefinedX>ショートカットが既に定義されています: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>ビデオ/オーディオ プレビューにおける翻訳元と翻訳の切り替え</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>列、テキストの削除</ListViewColumnDelete>
     <ListViewColumnInsert>列、テキストの挿入</ListViewColumnInsert>
@@ -1652,9 +1753,14 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <MainTextBoxAutoBreakFromPos>カーソル位置から最初のスペースで中断</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>カーソル位置から最初のスペースで中断し、次へ進む</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainFileSaveAll>すべて保存</MainFileSaveAll>
+    <Miscellaneous>その他</Miscellaneous>
+    <GoogleTranslate>Google 翻訳</GoogleTranslate>
+    <GoogleTranslateApiKey>API key</GoogleTranslateApiKey>
+    <MicrosoftBingTranslator>Microsoft 翻訳</MicrosoftBingTranslator>
+    <HowToSignUp>ログイン方法</HowToSignUp>
   </Settings>
   <ShowEarlierLater>
-    <Title>選択された行を早く/遅くする</Title>
+    <Title>選択した行を早く/遅くする</Title>
     <TitleAll>すべての行を早く/遅くする</TitleAll>
     <ShowEarlier>早くする</ShowEarlier>
     <ShowLater>遅くする</ShowLater>
@@ -1841,7 +1947,11 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Remove>削除</Remove>
     <RemoveAll>すべて削除</RemoveAll>
     <ImportStyleFromFile>ファイルからスタイルをインポート...</ImportStyleFromFile>
+    <ExportStyleToFile>スタイルをファイルにエクスポート... (ファイルが既に存在する場合はスタイルを追加)</ExportStyleToFile>
     <ChooseStyle>インポートするスタイルの選択</ChooseStyle>
+    <StyleAlreadyExits>スタイルは既に存在します: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>スタイル '{0}' をファイル '{1}' にエクスポートしました</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>ファイル '{1}' からスタイル '{0}' をインポートしました</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>ポイント同期</Title>
@@ -1855,7 +1965,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
   </PointSync>
   <UnknownSubtitle>
     <Title>不明な字幕の種類</Title>
-    <Message>これを修正したい場合は mailto:niksedk@gmail.com へ電子メールを送信して字幕のコピーを添付してください。</Message>
+    <Message>この問題を解決したい場合は、字幕のコピーを添付して作者(mailto：niksedk@gmail.com)宛てにメールをお送りください。</Message>
     <ImportAsPlainText>プレーン テキストとしてインポート...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
@@ -1908,7 +2018,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <LoadingVobSubImages>VobSub イメージを読み込んでいます...</LoadingVobSubImages>
     <SubtitleImage>字幕イメージ</SubtitleImage>
     <SubtitleText>字幕テキスト</SubtitleText>
-    <UnableToCreateCharacterDatabaseFolder>'文字データベースフォルダーCharacter database folder' を作成することができません: {0}</UnableToCreateCharacterDatabaseFolder>
+    <UnableToCreateCharacterDatabaseFolder>'文字データベースフォルダー' を作成することができません: {0}</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>{1} の字幕イメージ {0}</SubtitleImageXofY>
     <ImagePalette>イメージ パレット</ImagePalette>
     <UseCustomColors>カスタム色を使用する</UseCustomColors>
@@ -1979,8 +2089,11 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <ShowWaveformAndSpectrogram>波形とスペクトログラムの表示</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>波形のみ表示</ShowWaveformOnly>
     <ShowSpectrogramOnly>スペクトログラムのみ表示</ShowSpectrogramOnly>
+    <AddSceneChange>シーンの変更を追加</AddSceneChange>
+    <RemoveSceneChange>シーンの変更を削除</RemoveSceneChange>
     <GuessTimeCodes>タイム コードの推測...</GuessTimeCodes>
     <SeekSilence>無音の検索...</SeekSilence>
+    <InsertSubtitleHere>ここに字幕を挿入...</InsertSubtitleHere>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>タイム コードの推測</Title>
