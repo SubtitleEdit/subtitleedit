@@ -425,10 +425,10 @@ namespace Nikse.SubtitleEdit.Logic
                                                         }
                                                     }
                                                     var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                    if (!mkvFileNames.Add(fileName))
+                                                    if (!mkvFileNames.Add(newFileName))
                                                     {
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                        mkvFileNames.Add(fileName);
+                                                        mkvFileNames.Add(newFileName);
                                                     }
                                                     BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
@@ -447,10 +447,10 @@ namespace Nikse.SubtitleEdit.Logic
                                                         }
                                                     }
                                                     var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                    if (!mkvFileNames.Add(fileName))
+                                                    if (!mkvFileNames.Add(newFileName))
                                                     {
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                        mkvFileNames.Add(fileName);
+                                                        mkvFileNames.Add(newFileName);
                                                     }
                                                     BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
@@ -461,10 +461,10 @@ namespace Nikse.SubtitleEdit.Logic
                                                     format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
 
                                                     var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                    if (!mkvFileNames.Add(fileName))
+                                                    if (!mkvFileNames.Add(newFileName))
                                                     {
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                        mkvFileNames.Add(fileName);
+                                                        mkvFileNames.Add(newFileName);
                                                     }
 
                                                     if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
