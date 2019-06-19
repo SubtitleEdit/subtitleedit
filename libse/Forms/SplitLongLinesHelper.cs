@@ -73,12 +73,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 oldParagraph.Text = lines[FirstLine];
 
                 // use optimal time to adjust duration
-                oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * oldParagraph.Text.Length - halfMinGaps;
+                oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(oldParagraph.Text, true).Length - halfMinGaps;
 
                 // build second paragraph
                 var newParagraph = new Paragraph(oldParagraph) { Text = lines[SecondLine] };
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * newParagraph.Text.Length;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Length;
 
                 // only remove dash (if dialog) if first line is fully closed
                 if (IsTextClosed(oldParagraph.Text))
@@ -139,11 +139,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static bool IsTextClosed(string text)
         {
-            if (string.IsNullOrEmpty(text) || text.Length == 0)
-            {
-                return false;
-            }
             string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+            if (string.IsNullOrEmpty(textNoTags))
+            {
+                {
+                    return false;
+                }
+            }
             char lastChar = textNoTags[textNoTags.Length - 1];
             return lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ':' || lastChar == ')' || lastChar == ']' || lastChar == '♪';
         }
