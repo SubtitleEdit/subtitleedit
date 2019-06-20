@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionUnequal = 5;
         private const int FunctionEqual = 6;
         private const int FunctionDurationLessThan = 7;
-        private const int FunctionDurationGreaterThan = 8;        
+        private const int FunctionDurationGreaterThan = 8;
         private const int FunctionStyle = 9;
 
         public ModifySelection(Subtitle subtitle, SubtitleFormat format, SubtitleListView subtitleListView)
@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxText.Visible = true;
             listViewStyles.Visible = false;
-            numericUpDownDuration.Visible = comboBoxRule.SelectedIndex == FunctionDurationLessThan;
+            numericUpDownDuration.Visible = comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan;
             if (comboBoxRule.SelectedIndex == FunctionRegEx) // regex
             {
                 textBoxText.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
