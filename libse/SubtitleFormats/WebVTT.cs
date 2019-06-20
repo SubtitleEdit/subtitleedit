@@ -365,6 +365,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
             var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
 
+            string[] nativeTags = { "v", "rt", "ruby", "span" };
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<'))
@@ -379,16 +380,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var match = regexWebVttColorMulti.Match(text);
                     while (match.Success)
                     {
-                        var tag = match.Value.Substring(3, match.Value.Length - 4);
-                        tag = FindBestColorTagOrDefault(tag);
-                        if (tag == null)
+                        string color = FindBestColorTagOrDefault(tag: match.Value.Substring(3, match.Value.Length - 4));
+                        if (color == null)
                         {
                             break;
                         }
-                        var fontString = "<font color=\"" + tag + "\">";
-                        fontString = fontString.Trim('"').Trim('\'');
+                        var fontString = "<font color=\"" + color + "\">";
                         text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                        var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
+                        var endIndex = text.IndexOf("</c>", match.Index + match.Value.Length, StringComparison.OrdinalIgnoreCase);
                         if (endIndex >= 0)
                         {
                             text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
@@ -396,10 +395,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         match = RegexWebVttColor.Match(text);
                     }
 
-                    text = RemoveTag("v", text);
-                    text = RemoveTag("rt", text);
-                    text = RemoveTag("ruby", text);
-                    text = RemoveTag("span", text);
+                    foreach (string tag in nativeTags)
+                    {
+                        text = RemoveTag(tag, text);
+                    }
+
                     text = regexRemoveCTags.Replace(text, string.Empty).Trim();
                     text = regexRemoveTimeCodes.Replace(text, string.Empty).Trim();
                     text = regexTagsPlusWhiteSpace.Replace(text, "$1");
@@ -410,17 +410,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string FindBestColorTagOrDefault(string tag)
         {
-            var tags = tag.Split('.').ToList();
-            tags.Reverse();
-            foreach (var s in tags)
+            string[] tags = tag.Split('.');
+
+            for (int i = tags.Length - 1; i >= 0; i--)
             {
-                var l = s.ToLowerInvariant();
+                string l = tags[i].ToLowerInvariant();
                 if (DefaultColorClasses.Keys.Contains(l))
                 {
                     return l;
                 }
 
-                if (l.StartsWith("color") && l.Length > 6 && Utilities.IsHex(l.Remove(0, 5))) // e.g. color008000
+                if (l.StartsWith("color", StringComparison.OrdinalIgnoreCase) && l.Length > 6 && Utilities.IsHex(l.Remove(0, 5))) // e.g. color008000
                 {
                     return "#" + l.Remove(0, 5);
                 }
