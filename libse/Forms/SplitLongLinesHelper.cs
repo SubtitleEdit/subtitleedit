@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
-            string noTagText = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
+            var noTagText = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
             if (noTagText.Length > totalLineMaxCharacters)
             {
                 return true;
@@ -25,21 +25,21 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return false;
             }
 
-            string singleLineNoTag = Utilities.UnbreakLine(noTagText);
-            int lineSplitIdx = singleLineNoTag.IndexOfAny(new[] { ". -", "! -", "? -", "] -", ") -" }, StringComparison.OrdinalIgnoreCase);
+            var noTagSingleLine = Utilities.UnbreakLine(noTagText);
+            int lineSplitIdx = noTagSingleLine.IndexOfAny(new[] { ". -", "! -", "? -", "] -", ") -" }, StringComparison.Ordinal);
             if (lineSplitIdx < 0)
             {
                 return false;
             }
 
-            int maxLineLen = Math.Max(lineSplitIdx + 1, singleLineNoTag.Length - (lineSplitIdx + 2));
+            int maxLineLen = Math.Max(lineSplitIdx + 1, noTagSingleLine.Length - (lineSplitIdx + 2));
             return maxLineLen > singleLineMaxCharacters;
         }
 
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
         {
             var splittedSubtitle = new Subtitle(subtitle);
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
 
             // calculate gaps
             var halfMinGaps = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0;
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
 
                 // calculate milliseconds per char
-                double millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
+                var millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
 
                 oldParagraph.Text = lines[FirstLine];
 
@@ -107,6 +107,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return splittedSubtitle;
         }
 
+        private const char Dash = '-'; // U+002D - HYPHEN-MINUS
+
         private static void RemoveInvalidDash(Paragraph p1, Paragraph p2)
         {
             // return if not dialog
@@ -114,7 +116,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 return;
             }
-            const char Dash = '-';
             // update first text
             int dashIdx = p1.Text.IndexOf(Dash);
             p1.Text = p1.Text.Substring(0, dashIdx) + p1.Text.Substring(dashIdx + 1).TrimStart();
@@ -127,27 +128,25 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             if (!text.LineStartsWithHtmlTag(true, true))
             {
-                return text.StartsWith('-');
+                return text.StartsWith(Dash);
             }
             int closeIdx = text.IndexOf('>');
             if (closeIdx + 1 == text.Length) // found in last position
             {
                 return false;
             }
-            return text[closeIdx + 1] == '-';
+            return text[closeIdx + 1] == Dash;
         }
 
         private static bool IsTextClosed(string text)
         {
-            string textNoTags = HtmlUtil.RemoveHtmlTags(text);
-            if (string.IsNullOrEmpty(textNoTags))
+            var noTagText = HtmlUtil.RemoveHtmlTags(text);
+            if (string.IsNullOrEmpty(noTagText))
             {
-                {
-                    return false;
-                }
+                return false;
             }
-            char lastChar = textNoTags[textNoTags.Length - 1];
-            return lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ':' || lastChar == ')' || lastChar == ']' || lastChar == '♪';
+            var lastChar = noTagText[noTagText.Length - 1];
+            return ".!?:)]♪".Contains(lastChar);
         }
 
     }
