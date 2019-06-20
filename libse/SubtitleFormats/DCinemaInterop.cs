@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var hex = s.TrimStart('#');
             for (int i = s.Length - 1; i >= 0; i--)
             {
-                if (!CharUtils.IsHexadecimal(s[i]))
+                if (!s[i].IsAsciiHexDigit())
                 {
                     return s;
                 }

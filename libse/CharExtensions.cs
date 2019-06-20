@@ -1,22 +1,22 @@
 ﻿namespace Nikse.SubtitleEdit.Core
 {
-    public static class CharUtils
+    public static class CharExtensions
     {
         /// <summary>
         /// Checks if character matches [0-9]
         /// </summary>
         /// <param name="ch"></param>
-        public static bool IsDigit(char ch) => ch >= '0' && ch <= '9';
+        public static bool IsAsciiDigit(this char ch) => '0' <= ch && ch <= '9';
 
         /// <summary>
         /// Checks if given character is hexadecimal
         /// </summary>
         /// <param name="ch"></param>
-        public static bool IsHexadecimal(char ch) => ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F';
+        public static bool IsAsciiHexDigit(this char ch) => '0' <= ch && ch <= '9' || 'a' <= ch && ch <= 'f' || 'A' <= ch && ch <= 'F';
 
         /// <summary>
         /// Checks if character is between A-Z or a-z
         /// </summary>
-        public static bool IsEnglishAlphabet(char ch) => ch >= 'A' && ch <= 'z' && (ch <= 'Z' || ch >= 'a');
+        public static bool IsAsciiLetter(this char ch) => 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z';
     }
 }

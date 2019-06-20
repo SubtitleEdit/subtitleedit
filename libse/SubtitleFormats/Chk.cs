@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = _codePage.GetString(buffer, start, end - start);
                 }
             }
-            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && CharUtils.IsDigit(text[2]) && CharUtils.IsDigit(text[3]))
+            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && text[2].IsAsciiDigit() && text[3].IsAsciiDigit())
             {
                 text = text.Remove(0, 5);
             }

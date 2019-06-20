@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var trimmedTitle = new StringBuilder();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    if (ch.IsAsciiLetter() || char.IsDigit(ch))
                     {
                         trimmedTitle.Append(ch);
                     }
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textNodes = xml.SelectNodes("//project/sequence/spine/title/text");
                     if (textNodes.Count == 0)
                     {
-                        textNodes = xml.SelectNodes("//project/sequence/spine/gap/title/text");                                     
+                        textNodes = xml.SelectNodes("//project/sequence/spine/gap/title/text");
                     }
                     foreach (XmlNode node in textNodes)
                     {

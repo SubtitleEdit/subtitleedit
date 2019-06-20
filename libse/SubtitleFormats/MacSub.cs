@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int halfLen = len / 2;
             for (int i = 1; i <= halfLen; i++) // /10.0 (Do not parse double)
             {
-                if (!(CharUtils.IsDigit(input[i]) && CharUtils.IsDigit(input[len - i])))
+                if (!(input[i].IsAsciiDigit() && input[len - i].IsAsciiDigit()))
                 {
                     return false;
                 }

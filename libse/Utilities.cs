@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             foreach (var ch in s)
             {
-                if (!CharUtils.IsHexadecimal(ch))
+                if (!ch.IsAsciiHexDigit())
                 {
                     return false;
                 }
