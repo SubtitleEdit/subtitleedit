@@ -2861,6 +2861,7 @@
     <RegEx find="pomarandž" replaceWith="naranč" />
     <RegEx find="\bpomen" replaceWith="spomen" />
     <RegEx find="\bPomen" replaceWith="Spomen" />
+    <RegEx find="onjel" replaceWith="onijel" />
     <RegEx find="pomera([mšt])" replaceWith="miče$1" />
     <RegEx find="Pomera([mšt])" replaceWith="Miče$1" />
     <RegEx find="pomeren" replaceWith="pomaknut" />
