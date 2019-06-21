@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         if (c == '"' && result[i - 1] != '\\')
                         {
                             count++;
-                            if (count % 2 == 1 && level > 2) // even numbers are original text, level > 3 is translation
+                            if (count % 2 == 1 && level > 2 && level < 5) // even numbers are original text, level 3 is translation
                             {
                                 sbAll.Append(" " + sb);
                             }
