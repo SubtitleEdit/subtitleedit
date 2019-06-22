@@ -9731,15 +9731,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetSplitTime(double? splitSeconds, Paragraph currentParagraph, Paragraph newParagraph, int firstSelectedIndex, string oldText)
         {
             double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
-            if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
+            string oldTextNoTags = HtmlUtil.RemoveHtmlTags(oldText, true);
+            if (!string.IsNullOrWhiteSpace(oldTextNoTags))
             {
-                var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
+                var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text, true).Length / oldTextNoTags.Length;
                 if (startFactor < 0.25)
                 {
                     startFactor = 0.25;
                 }
-
-                if (startFactor > 0.75)
+                else if (startFactor > 0.75)
                 {
                     startFactor = 0.75;
                 }
@@ -9765,15 +9765,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                 {
                     var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+
                     if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
-                    else
-                    {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
+                    newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
         }
