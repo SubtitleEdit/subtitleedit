@@ -9390,13 +9390,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                     {
-                        a = a + "</i>";
+                        a += "</i>";
                         b = "<i>" + b;
                     }
                     else if (oldText.TrimStart().StartsWith("<b>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</b>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
                     {
-                        a = a + "</b>";
+                        a += "</b>";
                         b = "<b>" + b;
                     }
 
@@ -9425,13 +9425,13 @@ namespace Nikse.SubtitleEdit.Forms
                         if (currentParagraph.Text.StartsWith("<i>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</i>") &&
                            newParagraph.Text.EndsWith("</i>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<i>"))
                         {
-                            currentParagraph.Text = currentParagraph.Text + "</i>";
+                            currentParagraph.Text += "</i>";
                             newParagraph.Text = "<i>" + newParagraph.Text;
                         }
                         if (currentParagraph.Text.StartsWith("<b>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</b>") &&
                            newParagraph.Text.EndsWith("</b>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<b>"))
                         {
-                            currentParagraph.Text = currentParagraph.Text + "</b>";
+                            currentParagraph.Text += "</b>";
                             newParagraph.Text = "<b>" + newParagraph.Text;
                         }
 
@@ -9519,13 +9519,13 @@ namespace Nikse.SubtitleEdit.Forms
                         if (currentParagraph.Text.StartsWith("<i>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</i>", StringComparison.Ordinal) &&
                          newParagraph.Text.EndsWith("</i>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<i>", StringComparison.Ordinal))
                         {
-                            currentParagraph.Text = currentParagraph.Text + "</i>";
+                            currentParagraph.Text += "</i>";
                             newParagraph.Text = "<i>" + newParagraph.Text;
                         }
                         if (currentParagraph.Text.StartsWith("<b>", StringComparison.Ordinal) && !currentParagraph.Text.Contains("</b>", StringComparison.Ordinal) &&
                            newParagraph.Text.EndsWith("</b>", StringComparison.Ordinal) && !newParagraph.Text.Contains("<b>"))
                         {
-                            currentParagraph.Text = currentParagraph.Text + "</b>";
+                            currentParagraph.Text += "</b>";
                             newParagraph.Text = "<b>" + newParagraph.Text;
                         }
                         if (currentParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (currentParagraph.Text.EndsWith(".</i>", StringComparison.Ordinal) || currentParagraph.Text.EndsWith("!</i>", StringComparison.Ordinal)) &&
@@ -9582,13 +9582,13 @@ namespace Nikse.SubtitleEdit.Forms
                                     originalNew.Text = originalNew.Text.TrimStart('-').Trim();
                                 }
 
-                                originalCurrent.Text = originalCurrent.Text + "</i>";
+                                originalCurrent.Text += "</i>";
                                 originalNew.Text = "<i>" + originalNew.Text;
                             }
                             if (originalCurrent.Text.StartsWith("<b>", StringComparison.Ordinal) && !originalCurrent.Text.Contains("</b>") &&
                                 originalNew.Text.EndsWith("</b>", StringComparison.Ordinal) && !originalNew.Text.Contains("<b>"))
                             {
-                                originalCurrent.Text = originalCurrent.Text + "</b>";
+                                originalCurrent.Text += "</b>";
                                 originalNew.Text = "<b>" + originalNew.Text;
                             }
 
@@ -9607,13 +9607,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                                 Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                             {
-                                a = a + "</i>";
+                                a += "</i>";
                                 b = "<i>" + b;
                             }
                             if (oldText.TrimStart().StartsWith("<b>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</b>", StringComparison.Ordinal) &&
                                 Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
                             {
-                                a = a + "</b>";
+                                a += "</b>";
                                 b = "<b>" + b;
                             }
 
@@ -9653,13 +9653,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                                 Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                             {
-                                a = a + "</i>";
+                                a += "</i>";
                                 b = "<i>" + b;
                             }
                             if (oldText.TrimStart().StartsWith("<b>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</b>", StringComparison.Ordinal) &&
                                 Utilities.CountTagInText(oldText, "<b>") == 1 && Utilities.CountTagInText(oldText, "</b>") == 1)
                             {
-                                a = a + "</b>";
+                                a += "</b>";
                                 b = "<b>" + b;
                             }
 
@@ -15332,7 +15332,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                Text = Text + separator;
+                Text += separator;
                 if (string.IsNullOrEmpty(_fileName))
                 {
                     Text = Text + _language.New + " + ";
@@ -15340,11 +15340,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                 {
-                    Text = Text + _subtitleAlternateFileName;
+                    Text += _subtitleAlternateFileName;
                 }
                 else
                 {
-                    Text = Text + _language.New;
+                    Text += _language.New;
                 }
             }
         }
@@ -17297,11 +17297,11 @@ namespace Nikse.SubtitleEdit.Forms
                     // List view
                     SubtitleListview1.InitializeTimestampColumnWidths(this);
                     const int adjustUp = 8;
-                    SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
-                    groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
-                    groupBoxEdit.Height = groupBoxEdit.Height + adjustUp;
+                    SubtitleListview1.Height -= adjustUp;
+                    groupBoxEdit.Top -= adjustUp;
+                    groupBoxEdit.Height += adjustUp;
                     numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
-                    numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
+                    numericUpDownDuration.Width += 5;
                     labelDuration.Left = numericUpDownDuration.Left - 3;
                     labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
 
@@ -20432,7 +20432,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (post.Length > 0)
                 {
-                    text = text + post;
+                    text += post;
                 }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
