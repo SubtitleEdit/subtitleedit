@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         var firstLine = newText.Remove(indexOfNewLine);
                         newText = firstLine + Environment.NewLine + second;
 
-                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') && 
+                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') &&
                             !HtmlUtil.RemoveHtmlTags(newText, true).StartsWith('-'))
                         {
                             firstLine = HtmlUtil.RemoveHtmlTags(firstLine, true);
@@ -783,15 +783,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
-            text = text.Replace("  ", " ").Trim();
-            text = text.Replace("<i></i>", string.Empty);
-            text = text.Replace("<i> </i>", " ");
-            text = text.Replace("<b></b>", string.Empty);
-            text = text.Replace("<b> </b>", " ");
-            text = text.Replace("<u></u>", string.Empty);
-            text = text.Replace("<u> </u>", " ");
-            text = RemoveEmptyFontTag(text);
-            text = text.Replace("  ", " ").Trim();
+
+            text = RemoveEmptyTags(text);
             text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearingImpairedTagsInsideLine(text);
@@ -974,8 +967,27 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text.Trim();
         }
 
-        private string RemoveEmptyFontTag(string text)
+        private string RemoveEmptyTags(string text)
         {
+            text = text.FixExtraSpaces().Trim();
+
+            if (text.Length >= 7)
+            {
+                char[] tags = { 'i', 'b', 'u', 'I', 'U', 'B' };
+
+                int lenCached = text.Length;
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    text = text.Replace($"<{tags[i]}></{tags[i]}>", string.Empty);
+                    text = text.Replace($"<{tags[i]}> </{tags[i]}>", string.Empty);
+                }
+
+                if (lenCached != text.Length)
+                {
+                    text = text.Trim();
+                }
+            }
+
             int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
             if (indexOfStartFont >= 0)
             {
