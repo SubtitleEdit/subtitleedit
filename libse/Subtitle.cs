@@ -350,6 +350,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
         {
+            if (seconds == 0)
+            {
+                return;
+            }
+
             for (int i = 0; i < _paragraphs.Count; i++)
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
@@ -368,16 +373,16 @@ namespace Nikse.SubtitleEdit.Core
 
                     if (seconds < 0)
                     {
-                        if (_paragraphs[i].StartTime.TotalMilliseconds + 100 > newEndMilliseconds)
+                        if (_paragraphs[i].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds > newEndMilliseconds)
                         {
-                            _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + 100;
+                            _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                         }
                         else
                         {
                             _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
                         }
                     }
-                    else if (newEndMilliseconds > _paragraphs[i].EndTime.TotalMilliseconds)
+                    else
                     {
                         _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
                     }
