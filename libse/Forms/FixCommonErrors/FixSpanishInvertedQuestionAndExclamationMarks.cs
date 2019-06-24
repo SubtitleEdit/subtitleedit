@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(fixCount, language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
 
-        private void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool isLastLineClosed, IFixCallbacks callbacks)
+        private static void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool isLastLineClosed, IFixCallbacks callbacks)
         {
             if (p.Text.Contains(mark))
             {
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
         }
 
-        private bool IsSpanishAbbreviation(string text, int index, IFixCallbacks callbacks)
+        private static bool IsSpanishAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
             if (text[index] != '.')
             {
