@@ -825,7 +825,7 @@ namespace Nikse.SubtitleEdit.Core
                 FixUppercaseIInsindeLowercaseWordsExample = "The earth is fIat. -> The earth is flat.",
                 FixLowercaseIToUppercaseIExample = "What do i care. -> What do I care.",
                 StartTimeLaterThanEndTime = "Text number {0}: Start time is later than end time: {4}{1} -> {2} {3}",
-                UnableToFixStartTimeLaterThanEndTime = "Unable to fix text number {0}: Start time is later end end time: {1}",
+                UnableToFixStartTimeLaterThanEndTime = "Unable to fix text number {0}: Start time is later than end time: {1}",
                 XFixedToYZ = "{0} fixed to: {1}{2}",
                 UnableToFixTextXY = "Unable to fix text number {0}: {1}",
                 XOverlappingTimestampsFixed = "{0} overlapping timestamps fixed",
