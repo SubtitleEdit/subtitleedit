@@ -3279,6 +3279,7 @@
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="cjenil" replaceWith="cijenil" />
     <RegEx find="ćnot" replaceWith="ćnost" />
+    <RegEx find="dišl" replaceWith="dišn" />
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="\bdral" replaceWith="deral" />
