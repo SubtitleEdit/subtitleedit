@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 text = string.Join("<br/>", text.SplitToLines());
                 XmlDocument paragraphContent = new XmlDocument();
-                paragraphContent.LoadXml($"<root>{text}</root>");
+                paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
                 ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
             }
             catch  // Wrong markup, clear it
