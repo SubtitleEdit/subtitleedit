@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
@@ -192,14 +192,14 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <Settings>Inställningar</Settings>
     <FixRtl>Korrigera RTL</FixRtl>
     <FixRtlAddUnicode>Korrigera RTL via Unicode-taggar</FixRtlAddUnicode>
-    <FixRtlRemoveUnicode>Ta bort RTL unicode-taggar</FixRtlRemoveUnicode>
+    <FixRtlRemoveUnicode>Ta bort RTL Unicode-taggar</FixRtlRemoveUnicode>
     <FixRtlReverseStartEnd>Omvänd RTL start/slut</FixRtlReverseStartEnd>
     <SplitLongLines>Dela långa rader</SplitLongLines>
     <AutoBalance>Autobalansera rader</AutoBalance>
     <ScanFolder>Skanna mapp...</ScanFolder>
     <ScanningFolder>Skannar {0} och undermappar för undertextfiler...</ScanningFolder>
     <Recursive>Inkludera undermappar</Recursive>
-    <SetMinMsBetweenSubtitles>Ange min. millisek mellan undertexter</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Ange min. millisek. mellan undertexter</SetMinMsBetweenSubtitles>
     <BridgeGaps>Fyll i hål</BridgeGaps>
     <PlainText>Vanlig text</PlainText>
     <Ocr>OCR...</Ocr>
@@ -233,7 +233,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Ändra skiftläge - Namn</Title>
-    <NamesFoundInSubtitleX>Namn som hittades i underext: {0}</NamesFoundInSubtitleX>
+    <NamesFoundInSubtitleX>Namn som hittades i undertext: {0}</NamesFoundInSubtitleX>
     <Enabled>Aktiverad</Enabled>
     <Name>Namn</Name>
     <LinesFoundX>Rader hittade: {0}</LinesFoundX>
@@ -371,7 +371,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <ChooseLanguageStreamId>Välj språk (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Okänt språk</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Text bild {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
-    <SubtitleImage>Undertex bild</SubtitleImage>
+    <SubtitleImage>Undertextbild</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
     <Title>EBU sparalternativ</Title>
@@ -389,7 +389,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <TranslatorsName>Översättare namn</TranslatorsName>
     <SubtitleListReferenceCode>Text referenskod</SubtitleListReferenceCode>
     <CountryOfOrigin>Ursprungsland</CountryOfOrigin>
-    <TimeCodeStatus>Tidkod status</TimeCodeStatus>
+    <TimeCodeStatus>Tidskod status</TimeCodeStatus>
     <TimeCodeStartOfProgramme>Tidskod: Start av program</TimeCodeStartOfProgramme>
     <RevisionNumber>Revisionsnummer</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# antal tecken per rad</MaxNoOfDisplayableChars>
@@ -497,7 +497,8 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <SavePremiereEdlAs>Välj Premiere EDL filnamn</SavePremiereEdlAs>
     <SaveFcpAs>Välj Final Cut Pro xml filnamn</SaveFcpAs>
     <SaveDostAs>Välj DoStudio dost filnamn</SaveDostAs>
-    <SomeLinesWereTooLongX>Vissa linjer var för långa:{0}</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>Vissa linjer var för långa:
+{0}</SomeLinesWereTooLongX>
     <LineHeight>Linjehöjd</LineHeight>
     <BoxSingleLine>Box - enkel linje</BoxSingleLine>
     <BoxMultiLine>Box - multi linje</BoxMultiLine>
@@ -1056,7 +1057,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <GenerateTextFromVideo>Skapa text från video...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Skapa/importera scenändringar...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Ta bort scenförändringar</RemoveSceneChanges>
-        <WaveformBatchGenerate>Batch generate waveforms</WaveformBatchGenerate>
+        <WaveformBatchGenerate>Batch genererar vågformdata...</WaveformBatchGenerate>
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
         <ShowHideWaveform>Visa/dölj ljudformat</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Visa/dölj ljudformat och spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1070,7 +1071,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <FindDoubleWords>Hitta dubbel ord</FindDoubleWords>
         <FindDoubleLines>Hitta dubbla rader</FindDoubleLines>
         <GetDictionaries>Hämta lexikon...</GetDictionaries>
-        <AddToNameList>Lägg ord till namn/ect</AddToNameList>
+        <AddToNameList>Lägg ord till namn</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>
@@ -1430,8 +1431,8 @@ Fortsätta?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Antal rader med borttagna radbrytningar: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Före flera ersätta</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Antal rader där text ersätts: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNameList>Namnet '{0}' lades till i namn/etc</NameXAddedToNameList>
-    <NameXNotAddedToNameList>Namnet '{0}' har INTE lagts till i namn/etc</NameXNotAddedToNameList>
+    <NameXAddedToNameList>Namnet '{0}' lades till i namn</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Namnet '{0}' har INTE lagts till i namn</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ordet '{0}' lades till i användarens ordlistan</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Namnet '{0}' har INTE lagt till i användaren ordlistan</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR ersätt lista '{0} -&gt; {1}' lades till i OCR ersätt lista</OcrReplacePairXAdded>
@@ -1623,7 +1624,7 @@ Om du har redigerat den här filen med Subtitle Edit kan du hitta en backup via 
   <NetworkJoin>
     <Title>Anslut i nätverkssession</Title>
     <Information>Anslut i befintlig session där flera personer
-kan redigera i samma undertextsfil (samarbeta)</Information>
+kan redigera i samma undertextfil (samarbeta)</Information>
     <Join>Anslut</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1634,7 +1635,7 @@ kan redigera i samma undertextsfil (samarbeta)</Information>
     <Title>Starta nätverkssessionen</Title>
     <ConnectionTo>Ansluter till {0}</ConnectionTo>
     <Information>Starta ny session där flera personer
-kan redigera i samma textningsfil (samarbete)</Information>
+kan redigera i samma undertextfil (samarbete)</Information>
     <Start>Starta</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -2323,7 +2324,9 @@ Ställa in ett teckensnitt för en undertext görs normalt i videospelaren, men 
     <FindText>Sök text</FindText>
     <GoToSubPosition>Gå till sub-position</GoToSubPosition>
     <KeepChangesTitle>Behålla ändringarna?</KeepChangesTitle>
-    <KeepChangesMessage>Ändringar har gjorts till undertext i 'Visuell synk'. Behålla ändringarna?</KeepChangesMessage>
+    <KeepChangesMessage>Ändringar har gjorts till undertext i 'Visuell synk'.
+
+Behålla ändringarna?</KeepChangesMessage>
     <SynchronizationDone>Synkronisering klar!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Startscen måste komma före slutscen!</StartSceneMustComeBeforeEndScene>
     <Tip>Tips: Använd &lt;ctrl+piltangent vänster/höger&gt; för att flytta 100 ms bakåt/framåt</Tip>
