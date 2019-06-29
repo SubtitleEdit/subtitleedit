@@ -24,10 +24,16 @@
     <StartTime>Startzeit</StartTime>
     <EndTime>Endzeit</EndTime>
     <Duration>Länge</Duration>
+    <CharsPerSec>Zeichen/Sek.</CharsPerSec>
+    <WordsPerMin>Wörter/Min.</WordsPerMin>
+    <Actor>Darsteller</Actor>
+    <Gap>Abstand</Gap>
+    <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
     <Text>Text</Text>
     <HourMinutesSecondsMilliseconds>HH:MM:SS:MS</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>HH:MM:SS:FF</HourMinutesSecondsFrames>
     <Bold>Fett</Bold>
     <Italic>Kursiv</Italic>
     <Underline>Unterstrichen</Underline>
@@ -49,7 +55,6 @@
     <OverlapNextX>Nächste Überlappung ({0:#,##0.###})</OverlapNextX>
     <Negative>Negativ</Negative>
     <RegularExpressionIsNotValid>Regulärer Ausdruck ist ungültig!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Untertitel gespeichert</SubtitleSaved>
     <CurrentSubtitle>Aktueller Untertitel</CurrentSubtitle>
     <OriginalText>Originaltext</OriginalText>
     <OpenOriginalSubtitleFile>Original Untertitel öffnen...</OpenOriginalSubtitleFile>
@@ -72,6 +77,8 @@
     <Before>Vorher</Before>
     <After>Nachher</After>
     <Size>Größe</Size>
+    <Search>Suchen</Search>
+    <DeleteCurrentLine>Diesen Text löschen</DeleteCurrentLine>
   </General>
   <About>
     <Title>Über Subtitle Edit</Title>
@@ -138,13 +145,23 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <AddSeconds>Sekunden hinzufügen</AddSeconds>
     <SetAsPercent>Als Prozent festlegen</SetAsPercent>
     <Note>Hinweis: Die Anzeigezeit wird nicht mit nächster Textstartzeit überlappen</Note>
-    <PleaseSelectAValueFromTheDropDownList>Bitte einen Wert aus der Auswahlliste wählen</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>Korrigiert</Fixed>
+    <Milliseconds>Millisekunden</Milliseconds>
+    <ExtendOnly>Nur erweitern</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Längenbegrenzungen anwenden</Title>
     <FixesAvailable>Korrekturen verfügbar: {0}</FixesAvailable>
     <UnableToFix>Keine Korrekturen verfügbar: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Sprache in Text umwandeln</Title>
+    <ExtractingAudioUsingX>Audio mit {0} extrahieren...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Text mit {0} aus Audio extrahieren...</ExtractingTextUsingX>
+    <ProgessViaXy>Fortschritt der Textextraktion mit {0}: {1}%</ProgessViaXy>
+    <ShowLess>Weniger anzeigen  ▲</ShowLess>
+    <ShowMore>Mehr anzeigen  ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Ausgewählte Texte ausbalancieren</TitleAutoBreak>
     <TitleUnbreak>Entferne Zeilenumbrüche aus ausgewählten Texten</TitleUnbreak>
@@ -161,6 +178,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <ChooseOutputFolder>Ausgabeordner wählen</ChooseOutputFolder>
     <OverwriteExistingFiles>Vorhandene Dateien überschreiben</OverwriteExistingFiles>
     <Style>Stil...</Style>
+    <UseStyleFromSource>Quellstil verwenden</UseStyleFromSource>
     <ConvertOptions>Umwandlungsoptionen</ConvertOptions>
     <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
     <RemoveTextForHI>Text für HI entfernen</RemoveTextForHI>
@@ -172,12 +190,17 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <NotConverted>Fehlgeschlagen</NotConverted>
     <Converted>Umgewandelt</Converted>
     <Settings>Einstellungen</Settings>
+    <FixRtl>RTL korrigieren</FixRtl>
+    <FixRtlAddUnicode>RTL über Unicode Steuerzeichen korrigieren</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>RTL Unicode Steuerzeichen entfernen</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>RTL Start/Ende umkehren</FixRtlReverseStartEnd>
     <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
     <AutoBalance>Zeilen automatisch ausbalancieren</AutoBalance>
     <ScanFolder>Durchsuche Ordner...</ScanFolder>
     <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Zeitabstände überbrücken</BridgeGaps>
     <PlainText>Text</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Dateifilter</Filter>
@@ -188,10 +211,16 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixCommonErrorsErrorX>Fehler korrigieren: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Mehrfach ersetzen: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Zeitstempel verschieben</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Lesezeichen bearbeiten</EditBookmark>
+    <AddBookmark>Lesezeichen hinzufügen</AddBookmark>
+    <GoToBookmark>Zum Lesezeichen</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Schreibweise ändern</Title>
     <ChangeCasingTo>Ändere Groß-/Kleinschreibung</ChangeCasingTo>
@@ -274,6 +303,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1:0.##}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
+    <IgnoreFormatting>Formatierung ignorieren</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kann bildbasierten Untertitel nicht vergleichen</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -349,6 +379,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <CodePageNumber>Codepage Nummer</CodePageNumber>
     <DiskFormatCode>Diskformat Code</DiskFormatCode>
     <DisplayStandardCode>Standard Code anzeigen</DisplayStandardCode>
+    <ColorRequiresTeletext>Farben erfordern Teletext!</ColorRequiresTeletext>
     <CharacterCodeTable>Zeichentabelle</CharacterCodeTable>
     <LanguageCode>Sprachcode</LanguageCode>
     <OriginalProgramTitle>Original Programmtitel</OriginalProgramTitle>
@@ -368,6 +399,10 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Import>Importiere...</Import>
     <TextAndTimingInformation>Text- und Zeitstempel Info</TextAndTimingInformation>
     <JustificationCode>Textformatierung</JustificationCode>
+    <VerticalPosition>Vertikale Position</VerticalPosition>
+    <MarginTop>Rand oben (für oben ausgerichtete Untertitel)</MarginTop>
+    <MarginBottom>Rand unten (für unten ausgerichtete Untertitel)</MarginBottom>
+    <NewLineRows>Durch neuer Text hinzugefügte Zeilen</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Text in einer Box darstellen</UseBox>
     <DoubleHeight>Text in doppelter Höhe darstellen</DoubleHeight>
@@ -378,6 +413,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <TextLeftJustifiedText>Blocksatz links</TextLeftJustifiedText>
     <TextCenteredText>Zentriert</TextCenteredText>
     <TextRightJustifiedText>Blocksatz rechts</TextRightJustifiedText>
+    <UseBoxForOneNewLine>"Text in einer Box darstellen" ankreuzen für einen einzigen Zeilenumbruch</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke Effekt</Title>
@@ -410,6 +446,15 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Footer>Fußzeile</Footer>
     <DoNotModify>[Nicht ändern]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Final Cut Pro XML erweitert exportieren</Title>
+    <FontName>Schriftfamilie</FontName>
+    <FontSize>Schriftgröße</FontSize>
+    <FontFace>Schriftschnitt</FontFace>
+    <FontFaceRegular>Normal</FontFaceRegular>
+    <Alignment>Ausrichtung</Alignment>
+    <Baseline>Schriftlinie</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN XML/PNG exportieren</Title>
     <ImageSettings>Bildeinstellungen</ImageSettings>
@@ -440,6 +485,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Left>Links</Left>
     <Right>Rechts</Right>
     <Center>Zentriert</Center>
+    <CenterLeftJustify>Zentriert, Blocksatz links</CenterLeftJustify>
+    <CenterTopJustify>Zentriert, Blocksatz oben</CenterTopJustify>
     <BottomMargin>Rand unten</BottomMargin>
     <LeftRightMargin>Rand links/rechts</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
@@ -448,7 +495,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Digital Cinema Interop Dateiname wählen</SaveDigitalCinemaInteropAs>
     <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
-    <SaveFcpAs>Final Cut Pro xml Dateiname wählen</SaveFcpAs>
+    <SaveFcpAs>Final Cut Pro XML Dateiname wählen</SaveFcpAs>
     <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang:
 {0}</SomeLinesWereTooLongX>
@@ -458,6 +505,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Forced>Erzwungen</Forced>
     <ChooseBackgroundColor>Hintergrundfarbe wählen</ChooseBackgroundColor>
     <SaveImageAs>Bild speichern als...</SaveImageAs>
+    <FcpUseFullPathUrl>Vollständiger Bildpfad in Final Cut Pro XML</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
@@ -520,6 +568,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <RemovedEmptyLine>Leere Zeilen entfernen</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Leere Zeilen am Anfang entfernen</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Leere Zeilen am Ende entfernen</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Leere Zeilen in der Mitte entfernen</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Entferne leere Zeilen/unbenutzte Zeilenumbrüche</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Leere Zeilen entfernt: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Überlappende Anzeigezeiten korrigieren</FixOverlappingDisplayTimes>
@@ -563,8 +612,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixesFoundX>Korrekturen gefunden: {0}</FixesFoundX>
     <XFixesApplied>Korrekturen angewendet: {0}</XFixesApplied>
     <NothingToFixBut>Nichts zu korrigieren, aber ein paar Dinge könnten verbessert werden - siehe Log für Details</NothingToFixBut>
-    <Continue>Fortsetzen</Continue>
-    <ContinueAnyway>Trotzdem fortsetzen?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Allein stehendes 'i' zu 'I' (Englisch) korrigieren" deaktiviert</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i's in Großbuchstaben geändert</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Ersten Buchstaben nach Punkt groß schreiben</FixFirstLetterToUppercaseAfterParagraph>
@@ -626,12 +673,12 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixOcrErrorExample>NIcht -&gt; Nicht</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hallo John! - Hallo Ida! -&gt; Hallo John!&lt;br /&gt;- Hallo Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Standard wählen</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Wörterbücher gesucht?</Title>
     <DescriptionLine1>Die Rechtschreibprüfung von Subtitle Edit basiert auf der NHunspell Engine,</DescriptionLine1>
     <DescriptionLine2>die Bibliotheken werden von Open Office verwendet.</DescriptionLine2>
-    <GetDictionariesHere>Hier gibt es Wörterbücher:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Sprache auswählen und auf herunterladen klicken</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öffne Wörterbuch Ordner</OpenDictionariesFolder>
     <Download>Herunterladen</Download>
@@ -655,6 +702,13 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <PleaseWait>Bitte warten... das könnte einen Moment dauern</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Übersetzer</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Übersetzer</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Zugriff auf Microsoft Translator erfordert einen Cognitive Services "Translator Text" Schlüssel von Microsoft.
+
+"Optionen -&gt; Einstellungen -&gt; Werkzeuge" öffnen zur Eingabe des Schlüssels.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Zugriff auf Google Übersetzer erfordert einen API Schlüssel von Google.
+
+"Optionen -&gt; Einstellungen -&gt; Werkzeuge" öffnen zur Eingabe des Schlüssels.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Google Übersetzer ohne API Schlüssel... (begrenzt)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Übersetzung Google gegen Microsoft</Title>
@@ -680,13 +734,17 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   <ImportSceneChanges>
     <Title>Szenenwechsel importieren</Title>
     <OpenTextFile>Textdatei öffnen...</OpenTextFile>
-    <ImportOptions>Importoptionen</ImportOptions>
+    <Generate>Szenenwechsel erstellen</Generate>
+    <Import>Szenenwechsel importieren</Import>
     <TextFiles>Textdateien</TextFiles>
     <TimeCodes>Zeitstempel</TimeCodes>
     <Frames>Bilder</Frames>
     <Seconds>Sekunden</Seconds>
     <Milliseconds>Millisekunden</Milliseconds>
     <GetSceneChangesWithFfmpeg>Szenenwechsel mit FFmpeg erstellen</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Empfindlichkeit</Sensitivity>
+    <SensitivityDescription>Ein niedriger Wert erzeugt mehr Szenen</SensitivityDescription>
+    <NoSceneChangesFound>Keine Szenen gefunden.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>Text importieren</Title>
@@ -697,6 +755,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Splitting>Trennen</Splitting>
     <AutoSplitText>Text automatisch trennen</AutoSplitText>
     <OneLineIsOneSubtitle>Eine Zeile ist ein Untertitel</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Zwei Zeilen sind ein Untertitel</TwoLinesAreOneSubtitle>
     <LineBreak>Zeilenumbruch</LineBreak>
     <SplitAtBlankLines>Bei Leerzeile trennen</SplitAtBlankLines>
     <MergeShortLines>Zusammengehörende kurze Texte verbinden</MergeShortLines>
@@ -710,6 +769,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <TextFiles>Textdateien</TextFiles>
     <PreviewLinesModifiedX>Vorschau - Änderungen: {0}</PreviewLinesModifiedX>
     <TimeCodes>Zeitstempel</TimeCodes>
+    <SplitAtEndChars>Bei Zeilenumbruch trennen</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Zwischenlaute</Title>
@@ -883,6 +943,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Erweiterte SSA Eigenschaften...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>SSA Eigenschaften...</SubStationAlphaProperties>
         <EbuProperties>EBU STL Eigenschaften...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro Eigenschaften...</DvdStuioProProperties>
+        <TimedTextProperties>Timed Text Eigenschaften...</TimedTextProperties>
         <PacProperties>PAC Eigenschaften...</PacProperties>
         <OpenOriginal>Original Untertitel öffnen (Übersetzer Modus)...</OpenOriginal>
         <SaveOriginal>Original Untertitel speichern</SaveOriginal>
@@ -901,7 +963,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <ImportImages>Importiere Bilder...</ImportImages>
         <ImportTimecodes>Importiere Zeitstempel...</ImportTimecodes>
         <Export>Exportiere</Export>
-        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBdnXml>BDN XML/PNG...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
@@ -961,6 +1023,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <SplitLongLines>Lange Texte trennen...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimale Anzeigezeit zwischen Untertitel...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortieren nach</SortBy>
+        <NetflixQualityCheck>Netflix Qualitätsprüfung...</NetflixQualityCheck>
         <Number>Nummer</Number>
         <StartTime>Startzeit</StartTime>
         <EndTime>Endzeit</EndTime>
@@ -985,12 +1048,15 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
       <Video>
         <Title>Video</Title>
         <OpenVideo>Videodatei öffnen...</OpenVideo>
+        <OpenVideoFromUrl>Video über URL öffnen...</OpenVideoFromUrl>
         <OpenDvd>DVD öffnen...</OpenDvd>
         <ChooseAudioTrack>Tonspur auswählen</ChooseAudioTrack>
         <CloseVideo>Videodatei schließen</CloseVideo>
         <SetVideoOffset>Video Ausgleich einstellen...</SetVideoOffset>
-        <ImportSceneChanges>Szenenänderungen importieren...</ImportSceneChanges>
-        <RemoveSceneChanges>Szenenänderungen entfernen</RemoveSceneChanges>
+        <SmptTimeMode>SMPTE Timing (Drop Frame)</SmptTimeMode>
+        <GenerateTextFromVideo>Text aus Video holen...</GenerateTextFromVideo>
+        <GenerateImportSceneChanges>Szenenwechsel erstellen/importieren...</GenerateImportSceneChanges>
+        <RemoveSceneChanges>Szenenwechsel entfernen</RemoveSceneChanges>
         <WaveformBatchGenerate>Wellenforme im Stapel generieren...</WaveformBatchGenerate>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
         <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
@@ -1050,26 +1116,31 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <RemoveTextForHi>Untertitel für Hörgeschädigte entfernen</RemoveTextForHi>
         <VisualSync>Anpassung</VisualSync>
         <SpellCheck>Rechtschreibung</SpellCheck>
+        <NetflixQualityCheck>Netflix Qualitätsprüfung</NetflixQualityCheck>
         <Settings>Einstellungen</Settings>
         <Help>Hilfe</Help>
         <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Alle Spalten anpassen</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Erweiterte SSA Formatierung festlegen</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA Formatierung festlegen</SubStationAlphaSetStyle>
+        <SetActor>Darsteller festlegen</SetActor>
         <SubStationAlphaStyles>SSA Formatierungen...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Erweiterte SSA Formatierungen...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Zeitlich festgelegter Textstil</TimedTextSetStyle>
-        <TimedTextStyles>Zeitlich festgelegte Textstile...</TimedTextStyles>
-        <TimedTextSetLanguage>Zeitlich festgelegte Textsprache</TimedTextSetLanguage>
-        <SamiSetStyle>Sami Klasse festlegen</SamiSetStyle>
-        <NuendoSetStyle>Nuendo Charakter festlegen</NuendoSetStyle>
+        <TimedTextSetRegion>Timed Text – Textregion</TimedTextSetRegion>
+        <TimedTextSetStyle>Timed Text – Textstil</TimedTextSetStyle>
+        <TimedTextStyles>Timed Text – Textstile...</TimedTextStyles>
+        <TimedTextSetLanguage>Timed Text – Textsprache</TimedTextSetLanguage>
+        <SamiSetStyle>Sami – Klasse festlegen</SamiSetStyle>
+        <NuendoSetStyle>Nuendo – Charakter festlegen</NuendoSetStyle>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
         <Paste>Einfügen</Paste>
         <Delete>Löschen</Delete>
         <SplitLineAtCursorPosition>Zeile beim Cursor trennen</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Zeile beim Cursor/Wellenform trennen</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto Dauer (aktuelle Zeile)</AutoDurationCurrentLine>
         <SelectAll>Alle auswählen</SelectAll>
         <InsertFirstLine>Zeile einfügen</InsertFirstLine>
@@ -1084,17 +1155,29 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Text aus Untertitel einfügen...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Text importieren und Zellen nach unten verschieben</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Aus Zwischenablage einfügen...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Text nach oben</ColumnTextUp>
+        <ColumnTextDown>Text nach unten</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Text vom Original einfügen</ColumnCopyOriginalTextToCurrent>
         <Split>Trennen</Split>
         <MergeSelectedLines>Ausgewählte Texte verbinden</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Mit vorherigen Text verbinden</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgenden Text verbinden</MergeWithLineAfter>
-        <Normal>Normal (Formatierung entfernen)</Normal>
+        <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
+        <RemoveFormattingAll>Alle</RemoveFormattingAll>
+        <RemoveFormattingBold>Fett</RemoveFormattingBold>
+        <RemoveFormattingItalic>Kursiv</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Unterstrichen</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Farbe</RemoveFormattingColor>
+        <RemoveFormattingFontName>Schriftart</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Ausrichtung</RemoveFormattingAlignment>
         <Underline>Unterstrichen</Underline>
+        <Box>Rahmen</Box>
         <Color>Farbe...</Color>
         <FontName>Schriftart...</FontName>
-        <Alignment>Anpassung...</Alignment>
+        <Superscript>Superskript</Superscript>
+        <Subscript>Subskript</Subscript>
+        <Alignment>Ausrichtung...</Alignment>
         <AutoBalanceSelectedLines>Ausgewählten Text ausbalancieren...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Zeilenumbruch vom ausgewählten Text entfernen...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Schreibmaschinen Effekt...</TypewriterEffect>
@@ -1102,13 +1185,17 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <ShowSelectedLinesEarlierLater>Ausgewählten Text früher/später anzeigen...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Ausgewählten Text visuell anpassen...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Original Text mit Google/Microsoft übersetzen</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Ausgewählten Text mit Google übersetzen...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Ausgewählten Text übersetzen...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Länge ausgewählter Texte anpassen...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Häufige Fehler im ausgewählten Text korrigieren...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Groß-/Kleinschreibung im ausgewählten Text ändern...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Ausgewählte Texte speichern als...</SaveSelectedLines>
         <WebVTTSetNewVoice>Neue Sprache...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Sprache entfernen</WebVTTRemoveVoices>
+        <NewActor>Neuer Darsteller...</NewActor>
+        <RemoveActors>Darsteller entfernen</RemoveActors>
+        <EditBookmark>Lesezeichen bearbeiten</EditBookmark>
+        <RemoveBookmark>Lesezeichen entfernen</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1124,6 +1211,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     </Controls>
     <VideoControls>
       <Translate>Übersetzen</Translate>
+      <CreateAndAdjust>Erstellen / Anpassen</CreateAndAdjust>
       <Create>Erstellen</Create>
       <Adjust>Anpassen</Adjust>
       <SelectCurrentElementWhilePlaying>Aktuellen Untertitel während des Abspielens auswählen</SelectCurrentElementWhilePlaying>
@@ -1160,17 +1248,11 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video Position:</VideoPosition>
-      <TranslateTip>Tip: Nutze &lt;Alt+Pfeil hoch/runter&gt; für vorigen/nächsten Untertitel</TranslateTip>
-      <CreateTip>Tip: Nutze &lt;Strg+Pfeil links/rechts&gt;</CreateTip>
-      <AdjustTip>Tip: Nutze &lt;Alt+Pfeil hoch/runter&gt; für vorigen/nächsten Untertitel</AdjustTip>
+      <TranslateTip>Tip: Nutze &lt;Alt+Pfeil hoch/unten&gt; für vorigen/nächsten Untertitel</TranslateTip>
       <BeforeChangingTimeInWaveformX>Vor Zeitänderung in Wellenform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Neuer Text eingefügt bei {0}</NewTextInsertAtX>
       <Center>Zentriert</Center>
       <PlayRate>Wiedergabegeschwindigkeit</PlayRate>
-      <Slow>Langsam</Slow>
-      <Normal>Normal</Normal>
-      <Fast>Schnell</Fast>
-      <VeryFast>Sehr schnell</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Änderungen an Unbenannt speichern?</SaveChangesToUntitled>
     <SaveChangesToX>Änderungen an {0} speichern?</SaveChangesToX>
@@ -1273,7 +1355,6 @@ Fortfahren?</SubtitleAppendPrompt>
     <RedoPerformed>Wiederherstellung ausgeführt</RedoPerformed>
     <NothingToUndo>Nichts rückgängig zu machen</NothingToUndo>
     <InvalidLanguageNameX>Ungültiger Sprachname: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Konnte Sprache nicht wechseln!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Diese Meldung nicht mehr anzeigen</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Korrigierte Wörter: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Übersprungene Wörter: {0}</NumberOfSkippedWords>
@@ -1296,7 +1377,6 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeInsertLine>Vor Einfügen der Zeile</BeforeInsertLine>
     <LineInserted>Zeile eingefügt</LineInserted>
     <BeforeLineUpdatedInListView>Vor Ändern des Textes in Listenansicht</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Vor Setzen der Schriftart auf Normalwert</BeforeSettingFontToNormal>
     <BeforeSplitLine>Vor Trennen des Textes</BeforeSplitLine>
     <LineSplitted>Text getrennt</LineSplitted>
     <BeforeMergeLines>Vor Verbinden von Texten</BeforeMergeLines>
@@ -1317,7 +1397,6 @@ Fortfahren?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Untertitel importiert aus Matroska Datei</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ablegen der Datei '{0}' nicht möglich - Datei ist zu groß</DropFileXNotAccepted>
     <DropOnlyOneFile>Sie können nur eine Datei ablegen</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Vor Texterstellung/Anpassung</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Untertitel öffnen...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Vor Ändern der Groß-/Kleinschreibung</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Texte mit geänderter Groß-/Kleinschreibung: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1336,7 +1415,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <XSubFiles>XSub Dateien</XSubFiles>
     <BeforeImportingVobSubFile>Vor Import eines VobSub Untertitels</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Vor Import einer Blu-ray sup Datei</BeforeImportingBluRaySupFile>
-    <BeforeImportingBdnXml>Vor Import einer BDN xml Datei</BeforeImportingBdnXml>
+    <BeforeImportingBdnXml>Vor Import einer BDN XML Datei</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Vor früher/später Anzeigen</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Alle Texte {0:0.0##} s eher anzeigen</ShowAllLinesXSecondsLinesEarlier>
     <ShowAllLinesXSecondsLinesLater>Alle Texte {0:0.0##} s später anzeigen</ShowAllLinesXSecondsLinesLater>
@@ -1344,7 +1423,6 @@ Fortfahren?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Ausgewählte Texte {0:0.0##} s später anzeigen</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Auswahl anzeigen und fortfahren {0:0.0##} s eher</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Auswahl anzeigen und fortfahren {0:0.0##} s später</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Früher/Später anzeigen ausgeführt bei ausgewählten Texten</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Doppelte Wörter mit RegEx {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Vor Sortieren: {0}</BeforeSortX>
     <SortedByX>Sortiert nach: {0}</SortedByX>
@@ -1362,11 +1440,11 @@ Fortfahren?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>OCR Korrekturlisten Paar '{0} -&gt; {1}' wurde NICHT zur OCR Korrekturliste hinzugefügt</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} Texte ausgewählt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Untertitel enthält Unicode Zeichen. Beim Speichern als ANSI gehen diese verloren. Speichern fortfahren?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Untertitel enthält Unicode Zeichen. Beim Speichern als ANSI gehen diese verloren. Speichern fortfahren?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Untertitel enthält negative Zeitstempel. Mit Speichern fortfahren?</NegativeTimeWarning>
     <BeforeMergeShortLines>Vor Verbinden kurzer Texte</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Vor Trennen langer Texte</BeforeSplitLongLines>
     <MergedShortLinesX>Verbundene Texte: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>Vor Trennen langer Texte</BeforeSplitLongLines>
+    <LongLinesSplitX>Getrennte Texte: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Vor überbrücken kurzer Zeitabstände</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Vor Setzen des Minimalabstands zwischen Text</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Texte mit geänderten Minimalabstand: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1393,10 +1471,6 @@ Fortfahren?</SubtitleAppendPrompt>
     <UserAndAction>Benutzer/Aktion</UserAndAction>
     <NetworkMode>Netzwerkmodus</NetworkMode>
     <XStartedSessionYAtZ>{0}: Sitzung {1} begonnen um {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Rechtschreibprüfung mit Word {0} - Text {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Microsoft Word starten fehlgeschlagen</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Rechtschreibprüfung abgebrochen. {0} Texte geändert.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Rechtschreibprüfung abgeschlossen. {0} Texte geändert.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Anderen Untertitel öffnen</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Vor Änderung der Dialogstriche</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Als Text exportieren</ExportPlainTextAs>
@@ -1411,6 +1485,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Vor Text Löschen</BeforeColumnDelete>
     <BeforeColumnImportText>Vor Textimport</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Vor Zellen nach unten verschieben</BeforeColumnShiftCellsDown>
+    <BeforeX>Vor: {0}</BeforeX>
+    <LinesUpdatedX>Bearbeitet: {0} Untertitel</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Ladefehler des Plugins: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Vor Ausführen des Plugins: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Untertitel Lesefehler vom Plugin!</UnableToReadPluginResult>
@@ -1418,16 +1494,24 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Vor Untertitel verbinden</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Untertitel Verbunden</SubtitlesJoined>
     <StatusLog>Status Log</StatusLog>
-    <XSceneChangesImported>{0} Szenenänderungen importiert</XSceneChangesImported>
+    <XSceneChangesImported>{0} Szenenwechsel importiert</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' ausgeführt.</PluginXExecuted>
     <NotAValidXSubFile>Keine gültige XSub Datei!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}) - Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}).
+
+Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Untersuche Transport Stream - Bitte warten...</ParsingTransportStream>
     <XPercentCompleted>{0}% vollendet</XPercentCompleted>
+    <NextX>Nächster: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Einfügen des Untertitels an Wellenformposition führt zu Überlappung.
+
+Trotzdem fortfahren?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Wiedergabegeschwindigkeit auf {0}% festlegen</SetPlayRateX>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
+    <ErrorLoad7Zip>Diese Datei ist ein 7-Zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoad7Zip>
     <ErrorLoadPng>Diese Datei ist ein PNG-Bild. Subtitle Edit kann keine PNG-Dateien öffnen.</ErrorLoadPng>
     <ErrorLoadJpg>Diese Datei ist ein JPEG-Bild. Subtitle Edit kann keine JPEG-Dateien öffnen.</ErrorLoadJpg>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
@@ -1444,6 +1528,8 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
+    <TitleMp4>Untertitel aus MP4 Datei auswählen</TitleMp4>
+    <PleaseChoose>Bitte einen der verfügbaren Untertitel auswählen</PleaseChoose>
     <TrackXLanguageYTypeZ>Spur {0} - Sprache: {1} - Typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1499,6 +1585,8 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <RegEx>Regulärer Ausdruck</RegEx>
     <UnequalLines>Ungleiche Texte</UnequalLines>
     <EqualLines>Gleiche Texte</EqualLines>
+    <DurationLessThan>Dauer unter</DurationLessThan>
+    <DurationGreaterThan>Dauer über</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Mehrfach ersetzen</Title>
@@ -1507,6 +1595,7 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <Normal>Normal</Normal>
     <CaseSensitive>Groß-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regulärer Ausdruck</RegularExpression>
+    <Description>Beschreibung</Description>
     <LinesFoundX>Gefundene Zeilen: {0}</LinesFoundX>
     <Remove>Löschen</Remove>
     <Add>Hinzufügen</Add>
@@ -1518,6 +1607,8 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <Export>Exportiere...</Export>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
     <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
+    <ChooseGroupsToImport>Textersetzungsgruppen importieren</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Textersetzungsgruppen exportieren</ChooseGroupsToExport>
     <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
@@ -1527,6 +1618,7 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <GroupName>Gruppenname</GroupName>
     <RenameGroup>Gruppenname ändern...</RenameGroup>
     <NewGroup>Neue Gruppe...</NewGroup>
+    <NothingToImport>Nichts zu importieren</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1565,7 +1657,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Version>Version</Version>
     <Date>Datum</Date>
     <Type>Typ</Type>
-    <OpenPluginsFolder>Plugin Ordner öffen</OpenPluginsFolder>
+    <OpenPluginsFolder>Plugin Ordner öffnen</OpenPluginsFolder>
     <GetPluginsInfo1>Plugins müssen im Plugin Ordner gespeichert werden</GetPluginsInfo1>
     <GetPluginsInfo2>Plugin auswählen und 'Download' klicken</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} runtergeladen</PluginXDownloaded>
@@ -1664,6 +1756,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WordLists>Wortlisten</WordLists>
     <SsaStyle>ASS/SSA Formatierung</SsaStyle>
     <Network>Netzwerk</Network>
+    <Rules>Regeln</Rules>
     <ShowToolBarButtons>Knöpfe in Symbolleiste anzeigen</ShowToolBarButtons>
     <New>Neu</New>
     <Open>Öffnen</Open>
@@ -1673,14 +1766,30 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Replace>Ersetzen</Replace>
     <VisualSync>Anpassung</VisualSync>
     <SpellCheck>Rechtschreibung</SpellCheck>
+    <NetflixQualityCheck>Netflix Qualitätsprüfung</NetflixQualityCheck>
     <SettingsName>Einstellungen</SettingsName>
     <Help>Hilfe</Help>
+    <UnbreakNoSpace>Umbrüche entfernen ohne Leerzeichen (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Lesezeichen umschalten</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Lesezeichen umschalten (mit Beschreibung)</ToggleBookmarksWithComment>
+    <ClearBookmarks>Lesezeichen löschen</ClearBookmarks>
+    <GoToBookmark>Zum Lesezeichen</GoToBookmark>
+    <GoToPreviousBookmark>Vorheriges Lesezeichen</GoToPreviousBookmark>
+    <GoToNextBookmark>Nächstes Lesezeichen</GoToNextBookmark>
+    <ChooseProfile>Profil wählen</ChooseProfile>
+    <FontInUi>Benutzeroberfläche Schriftart</FontInUi>
     <ShowFrameRate>Bildfrequenz in Symbolleiste anzeigen</ShowFrameRate>
     <DefaultFrameRate>Standard Bildfrequenz</DefaultFrameRate>
     <DefaultFileEncoding>Standard Zeichenkodierung</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI Kodierung Autoerkennung</AutoDetectAnsiEncoding>
+    <Profile>Profil</Profile>
+    <Profiles>Profile</Profiles>
+    <ImportProfiles>Profile importieren</ImportProfiles>
+    <ExportProfiles>Profile exportieren</ExportProfiles>
     <SubtitleLineMaximumLength>Max. Einzelzeilenlänge</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Max. Zeichen/s</MaximumCharactersPerSecond>
+    <OptimalCharactersPerSecond>Opt. Zeichen/Sek.</OptimalCharactersPerSecond>
+    <MaximumCharactersPerSecond>Max. Zeichen/Sek.</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Max. Wörter/Min.</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto Umbruch beim Tippen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. Länge, Millisekunden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. Länge, Millisekunden</DurationMaximumMilliseconds>
@@ -1742,6 +1851,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformAppearance>Wellenform Darstellung</WaveformAppearance>
     <WaveformGridColor>Rasterfarbe</WaveformGridColor>
     <WaveformShowGridLines>Raster anzeigen</WaveformShowGridLines>
+    <WaveformShowCps>Zeichen/Sek. anzeigen</WaveformShowCps>
+    <WaveformShowWpm>Wörter/Min. anzeigen</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Scrollen mit Mausrad umkehren</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>Fokus auf Mauseingabe setzen</WaveformFocusMouseEnter>
@@ -1761,6 +1872,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SpectrogramOneColorGradient>Einfarbiger Verlauf</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisch</SpectrogramClassic>
     <WaveformUseFFmpeg>FFmpeg für Wellenformdaten verwenden</WaveformUseFFmpeg>
+    <DownloadFFmpeg>FFmpeg herunterladen</DownloadFFmpeg>
     <WaveformFFmpegPath>FFmpeg Pfad</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>FFmpeg suchen</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC Portable suchen</WaveformBrowseToVLC>
@@ -1802,7 +1914,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <RemoveTextForHi>Text für HI entfernen</RemoveTextForHi>
     <MergeLinesShorterThan>Verbinde Texte die kürzer sind als</MergeLinesShorterThan>
     <MusicSymbol>Musik Symbol</MusicSymbol>
-    <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Zu ersetzende Musik Symbole (durch Kommas trennen)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>OCR Fehler korrigieren - auch Hardcoded Regeln anwenden</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kurze Anzeigezeit korrigieren - Startzeitanpassung zulassen</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Erster Schritt (zu korrigierende Fehler auswählen) überspringen</FixCommonErrorsSkipStepOne>
@@ -1816,6 +1928,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <UpdateShortcut>Änderung</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>Über Endposition anpassen</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ende setzen und weiter</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Start setzen, Autolänge und weiter</AdjustSetStartAutoDurationAndGoToNext>
@@ -1823,6 +1936,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AdjustStartDownEndUpAndGoToNext>Pfeil unten=Start, Pfeil hoch=Ende setzen und weiter</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Ausgewählte Texte 100 ms vor bewegen</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Ausgewählte Texte 100 ms zurück bewegen</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Startzeit {0} ms zurück bewegen</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Startzeit {0} ms vor bewegen</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Endzeit {0} ms zurück bewegen</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Endzeit {0} ms vor bewegen</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Startzeit anpassen, behalte Dauer</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1833,9 +1950,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoToPrevious>Zum vorherigen Text</GoToPrevious>
     <GoToCurrentSubtitleStart>Zum aktuellen Textstart</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Zum aktuellen Textende</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Zum vorherigen Text und Videoposition setzen</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Zum nächsten Text und Videoposition setzen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
+    <ToggleMusicSymbols>Musiksymbole umschalten</ToggleMusicSymbols>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Nur Text vom Original im aktuellen Untertitel kopieren</CopyTextOnlyFromOriginalToCurrent>
@@ -1855,6 +1974,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
     <GoForward1Frame>Ein Bild vor</GoForward1Frame>
+    <GoBack1FrameWithPlay>Ein Bild zurück (Wiedergabe)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Ein Bild vor (Wiedergabe)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms vor</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms zurück</GoBack500Milliseconds>
@@ -1871,7 +1992,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CustomSearch3>Übersetzen, definierte Suche 3</CustomSearch3>
     <CustomSearch4>Übersetzen, definierte Suche 4</CustomSearch4>
     <CustomSearch5>Übersetzen, definierte Suche 5</CustomSearch5>
-    <CustomSearch6>Übersetzen, definierte Suche 6</CustomSearch6>
     <SyntaxColoring>Syntaxhervorhebung</SyntaxColoring>
     <ListViewSyntaxColoring>Listenansicht Syntaxhervorhebung</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Farbe Dauer zu kurz</SyntaxColorDurationIfTooSmall>
@@ -1905,10 +2025,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
     <Miscellaneous>Sonstiges</Miscellaneous>
     <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
+    <GoogleTranslate>Google Übersetzer</GoogleTranslate>
+    <GoogleTranslateApiKey>API Schlüssel</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing Übersetzer</MicrosoftBingTranslator>
     <HowToSignUp>Wie anmelden?</HowToSignUp>
-    <ClientId>Anmelde-ID</ClientId>
-    <ClientSecret>Passwort</ClientSecret>
+    <MicrosoftTranslateApiKey>Schlüssel</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Mpv Einstellungen</Title>
@@ -1918,6 +2039,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
 Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <DownloadMpvOk>Nach erfolgreichem Herunterladen ist die Mpv-Programmbibliothek gebrauchsfertig.</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>FFmpeg herunterladen</Title>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Video Ausgleich</Title>
     <Description>Video Ausgleich einstellen (Falls Untertitel nicht der Videozeit folgen, z.B. +10 Sekunden)</Description>
@@ -1972,6 +2096,8 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <SpellCheckAborted>Rechtschreibprüfung abgebrochen</SpellCheckAborted>
     <UndoX>Rückgängig: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+  </NetflixQualityCheck>
   <Split>
     <Title>Trennen</Title>
     <SplitOptions>Trennoptionen</SplitOptions>
@@ -2028,12 +2154,14 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <NumberOfLinesX>Untertitel Zeilen:               {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Zeichen in {0}:   {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Zeichen im Text:              {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Gesammtdauer:               {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>Zeichen/Sekunde:          {0:0.0}</TotalCharsPerSecond>
-    <NumberOfItalicTags>Kursiv Tags:                    {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Fett Tags:                        {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Unterstrichen Tags:         {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Schrift Tags:                    {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Ausrichtung Tags:           {0}</NumberOfAlignmentTags>
+    <TotalWords>Gesammtwörter:              {0:#,##0}</TotalWords>
+    <NumberOfItalicTags>Kursiv Tags:                    {0:#,##0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Fett Tags:                        {0:#,##0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Unterstrichen Tags:         {0:#,##0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Schrift Tags:                    {0:#,##0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Ausrichtung Tags:           {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Untertitellänge - Minimum:              {0}</LineLengthMinimum>
     <LineLengthMaximum>Untertitellänge - Maximum:             {0}</LineLengthMaximum>
     <LineLengthAverage>Untertitellänge - Durchschnitt:        {0}</LineLengthAverage>
@@ -2135,6 +2263,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
   <UnknownSubtitle>
     <Title>Unbekannter Dateityp</Title>
     <Message>Wenn dieses Problem behoben werden soll, eine E-Mail an mailto:niksedk@gmail.com schicken und eine Kopie des Untertitels anhängen.</Message>
+    <ImportAsPlainText>Als Text importieren</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Anpassung</Title>
@@ -2209,10 +2338,9 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <ImportTextWithMatchingTimeCodes>Importiere Text mit passenden Zeitstempeln...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importiere neue Zeitstempel</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Untertitel Bild speichern als...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAsBdnXml>Alle Bilder speichern (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesAsBdnXml>Alle Bilder speichern (BDN XML/PNG)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Alle Bilder speichern mit HTML Index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} Bilder gespeichert als {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Microsoft MODI OCR für unbekannte Wörter versuchen</TryModiForUnknownWords>
     <DictionaryX>Wörterbuch: {0}</DictionaryX>
     <RightToLeft>Rechts nach links</RightToLeft>
     <ShowOnlyForcedSubtitles>Nur erzwungene Untertitel anzeigen</ShowOnlyForcedSubtitles>
