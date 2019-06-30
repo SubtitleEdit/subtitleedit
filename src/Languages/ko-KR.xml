@@ -625,7 +625,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>텍스트 번호 {0}: 시작 시간이 종료 시간보다 느림: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>텍스트 번호 {0}을 수정할 수 없음: 시작 시간이 종료 시간보다 느림: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>텍스트 번호 {0}을 수정할 수 없음. 시작 시간이 종료 시간 {1} 보다 느림</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 수정함: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>텍스트 번호 {0}을 수정할 수 없음: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0}개의 중복된 시간을 수정했습니다.</XOverlappingTimestampsFixed>
@@ -1973,7 +1973,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRtl>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRtl>
+    <ReverseStartAndEndingForRtl>RTL 시작/끝 반전</ReverseStartAndEndingForRtl>
     <VerticalZoom>세로 확대</VerticalZoom>
     <VerticalZoomOut>세로 축소</VerticalZoomOut>
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>
