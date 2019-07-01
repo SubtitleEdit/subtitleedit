@@ -274,11 +274,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         public static string GetMpcHcFileName()
         {
-            string path;
+            return GetMpcHcFileName("_nvo") ?? GetMpcHcFileName(string.Empty);
+        }
 
+        private static string GetMpcHcFileName(string fileNameSuffix)
+        {
             if (IntPtr.Size == 8) // 64-bit
             {
-                path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc64.exe");
+                var fileName = $"mpc-hc64{fileNameSuffix}.exe";
+                var path = Path.Combine(Configuration.BaseDirectory, "MPC-HC", fileName);
                 if (File.Exists(path))
                 {
                     return path;
@@ -287,20 +291,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Configuration.Settings.General.MpcHcLocation;
-                    if (path != null && (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase)))
+                    if (File.Exists(path) && path.EndsWith(fileName, StringComparison.OrdinalIgnoreCase))
                     {
                         return path;
                     }
 
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
-                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, "mpc-hc64.exe");
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, fileName);
                         if (File.Exists(path))
                         {
                             return path;
                         }
 
-                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc64.exe");
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, "MPC-HC", fileName);
                         if (File.Exists(path))
                         {
                             return path;
@@ -311,52 +315,53 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 path = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1", "InstallLocation");
                 if (path != null)
                 {
-                    path = Path.Combine(path, "mpc-hc64.exe");
+                    path = Path.Combine(path, fileName);
                     if (File.Exists(path))
                     {
                         return path;
                     }
                 }
 
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc64.exe");
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "MPC-HC", fileName);
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = @"C:\Program Files\MPC-HC\mpc-hc64.exe";
+                path = $@"C:\Program Files\MPC-HC\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc64.exe");
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite Codec Pack\MPC-HC\{fileName}");
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = @"C:\Program Files (x86)\K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe";
+                path = $@"C:\Program Files (x86)\K-Lite Codec Pack\MPC-HC64\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe");
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite Codec Pack\MPC-HC64\{fileName}");
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = @"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe";
+                path = $@"C:\Program Files (x86)\MPC-HC\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
                 }
             }
-            else
+            else  // 32-bit
             {
-                path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc.exe");
+                var fileName = $"mpc-hc{fileNameSuffix}.exe";
+                var path = Path.Combine(Configuration.BaseDirectory, "MPC-HC", fileName);
                 if (File.Exists(path))
                 {
                     return path;
@@ -365,20 +370,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Configuration.Settings.General.MpcHcLocation;
-                    if (path != null && File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
+                    if (File.Exists(path) && path.EndsWith(fileName, StringComparison.OrdinalIgnoreCase))
                     {
                         return path;
                     }
 
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
-                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"mpc-hc.exe");
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, fileName);
                         if (File.Exists(path))
                         {
                             return path;
                         }
 
-                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc.exe");
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, "MPC-HC", fileName);
                         if (File.Exists(path))
                         {
                             return path;
@@ -389,32 +394,32 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 path = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1", "InstallLocation");
                 if (path != null)
                 {
-                    path = Path.Combine(path, "mpc-hc.exe");
+                    path = Path.Combine(path, fileName);
                     if (File.Exists(path))
                     {
                         return path;
                     }
                 }
 
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc.exe");
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "MPC-HC", fileName);
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = @"C:\Program Files (x86)\MPC-HC\mpc-hc.exe";
+                path = $@"C:\Program Files (x86)\MPC-HC\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc.exe");
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), $@"K-Lite Codec Pack\MPC-HC\{fileName}");
                 if (File.Exists(path))
                 {
                     return path;
                 }
 
-                path = @"C:\Program Files\MPC-HC\mpc-hc.exe";
+                path = $@"C:\Program Files\MPC-HC\{fileName}";
                 if (File.Exists(path))
                 {
                     return path;
