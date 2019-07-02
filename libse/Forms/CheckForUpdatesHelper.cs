@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             HttpWebResponse response = (result.AsyncState as HttpWebRequest).EndGetResponse(result) as HttpWebResponse;
             System.IO.Stream responseStream = response.GetResponseStream();
-            byte[] buffer = new byte[5000000];
+            byte[] buffer = new byte[responseStream.Length];
             int count = 1;
             int index = 0;
             while (count > 0)
