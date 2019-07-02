@@ -38,10 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             catch (Exception exception)
             {
-                if (Error == null)
-                {
-                    Error = exception.Message;
-                }
+                Error = Error ?? exception.Message;
             }
         }
 
@@ -55,10 +52,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             catch (Exception exception)
             {
-                if (Error == null)
-                {
-                    Error = exception.Message;
-                }
+                Error = Error ?? exception.Message;
             }
         }
 
@@ -91,12 +85,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     return sb.ToString();
                 }
 
-                if (!releaseOn)
+                if (!releaseOn && !s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
                 {
-                    if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
-                    {
-                        releaseOn = true;
-                    }
+                    releaseOn = true;
                 }
 
                 if (releaseOn)
