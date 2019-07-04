@@ -8,13 +8,23 @@
    * Import scene changes from EZTitles - thx Flitskikker 
    * Add new sub format - thx Matmanamane
    * Add new sub format - thx Rob
+   * Add new sub format - thx Ketan
+   * Add new sub format - thx thehulk
    * Add "remove formating" via command line - thx JySzE
+   * Allow binary formats in compare
+   * Add download link to Slovenian spell check dictionary - thx Milenko
+   * Add some support for remove spaces and 3 lines - thx James
 * IMPROVED:
    * Update Portuguese translation - thx moob
    * Update Brazil translation - thx Igor
    * Update Korean translation - thx domdoll
    * Update Hungarian translation - thx Zityi
    * Update Japanese translation - thx ScratchBuild
+   * Update Polish translation - thx admas
+   * Update Russian translation - thx Elheym
+   * Update Dutch translation - thx xylographe
+   * Update Japanese translation - thx ScratchBuild
+   * Update Swedish translation - thx Sopor
    * Move formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
@@ -27,7 +37,10 @@
    * Add track number to cmd line convert - thx sneaker_ger
    * Include "Remove native formatting" in convert - thx Jamakmake
    * Include more Unicode spaces in "Spell check" word split - thx Greg
+   * Improve handling of font tags in auto translation - thx Martin
+   * Allow negative video offfset - thx Marcello
 * FIXED:
+   * Fix for minor change i Google translate V1
    * Fix "Change all" for whole text in OCR - thx wtester7
    * Fix  renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
@@ -54,6 +67,10 @@
    * Fix crash after going to next/prev subtitle line - thx green-pigeon
    * Fix translate shortcuts in adjust/create mode - thx OmrSi
    * Fix a few issues regarding RTF - thx Liora
+   * Fix crash in cmd line when running on Linux - thx xylographe
+   * Fix bug in "Modify selection": Show time box for "Duration greater than"
+   * Fix line-break with ampersand in TTML - thx Krystian
+   * Fix find MPC installed via K-Lite Codec Pack - thx OmrSi/xylographe
 
 
 3.5.9 (10th February 2019)
