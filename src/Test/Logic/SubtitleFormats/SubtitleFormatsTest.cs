@@ -1202,6 +1202,20 @@ and astronauts.“...""
             Assert.AreEqual(3, Utilities.CountTagInText(actual, "</div>"));
         }
 
+        [TestMethod]
+        public void TimedTextKeepReadNewLineAndAmpersand()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            var input = "You have got to do" + Environment.NewLine +
+                        "what Johnson & Johnson did.";
+            subtitle.Paragraphs.Add(new Paragraph(input, 0, 3000));
+            var raw = target.ToText(subtitle, string.Empty);
+            var subtitleNew = new Subtitle();
+            target.LoadSubtitle(subtitleNew, raw.SplitToLines(), null);
+            Assert.AreEqual(input, subtitleNew.Paragraphs[0].Text);
+        }
+
         #endregion
 
         #region JacoSub
