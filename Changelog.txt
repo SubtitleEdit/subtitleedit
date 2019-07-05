@@ -23,8 +23,8 @@
    * Update Polish translation - thx admas
    * Update Russian translation - thx Elheym
    * Update Dutch translation - thx xylographe
-   * Update Japanese translation - thx ScratchBuild
    * Update Swedish translation - thx Sopor
+   * Update Romanian translation - thx Mircea
    * Move formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
