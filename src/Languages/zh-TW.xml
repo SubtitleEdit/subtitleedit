@@ -1705,8 +1705,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <WaveformShowWpm>顯示每分鐘單字</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>反轉滑鼠捲動方向</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>允許重疊 (當 移動/調整大小 時)</WaveformAllowOverlap>
-    <WaveformSetVideoPosMoveStartEnd>
-    </WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd />
     <WaveformFocusMouseEnter>滑鼠移過後設定焦點</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>當滑鼠移過時將焦點設定到清單檢視</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>邊框標記的最短相接間隔須為</WaveformBorderHitMs1>
@@ -1838,8 +1837,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoToFirstSelectedLine>移至第一個選擇的行</GoToFirstSelectedLine>
     <GoToNextEmptyLine>移至下一個空行</GoToNextEmptyLine>
     <MergeSelectedLines>合併選擇的行</MergeSelectedLines>
-    <MergeSelectedLinesOnlyFirstText>
-    </MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesOnlyFirstText />
     <ToggleTranslationMode>切換翻譯模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切換原文和翻譯</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合併原文和翻譯</MergeOriginalAndTranslation>

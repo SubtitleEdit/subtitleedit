@@ -5,7 +5,7 @@
     <Version>3.5.9</Version>
     <TranslatedBy>Tłumaczenie: Adam Malich (https://potplayerclub.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>

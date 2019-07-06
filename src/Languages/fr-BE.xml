@@ -166,8 +166,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TitleAutoBreak>Auto-équilibrer les lignes sélectionnées</TitleAutoBreak>
     <TitleUnbreak>Supprimer les sauts de ligne dans la sélection</TitleUnbreak>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Ne scinder que les lignes > à</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Ne pas scinder que les lignes > à</OnlyUnbreakLinesLongerThan>
+    <OnlyBreakLinesLongerThan>Ne scinder que les lignes &gt; à</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Ne pas scinder que les lignes &gt; à</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
     <Title>Conversion par lots</Title>
@@ -413,8 +413,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TextLeftJustifiedText>Texte aligné à gauche</TextLeftJustifiedText>
     <TextCenteredText>Texte centré</TextCenteredText>
     <TextRightJustifiedText>Texte aligné à droite</TextRightJustifiedText>
-     <UseBoxForOneNewLine>Ne cocher 'Encadrer le texte' que pour UN saut de ligne</UseBoxForOneNewLine>
- </EbuSaveOptions>
+    <UseBoxForOneNewLine>Ne cocher 'Encadrer le texte' que pour UN saut de ligne</UseBoxForOneNewLine>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir la couleur :</ChooseColor>
@@ -1667,7 +1667,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <UpdateAll>Tout mettre à jour</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) mis à jour</XPluginsUpdated>
   </PluginsGet>
-<!-- Pierre le Lidgeu progress point by April 18, 2019 -->
+  <!-- Pierre le Lidgeu progress point by April 18, 2019 -->
   <RegularExpressionContextMenu>
     <WordBoundary>Limite de mots (\b)</WordBoundary>
     <NonWordBoundary>Sans limite de mots (\B)</NonWordBoundary>
@@ -2295,7 +2295,7 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <StyleXImportedFromFileY>Style '{0}' importé du fichier '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
-  <Title>Synchronisation par points</Title>
+    <Title>Synchronisation par points</Title>
     <TitleViaOtherSubtitle>Synchronisation par points via un autre sous-titre</TitleViaOtherSubtitle>
     <SyncHelp>Poser au moins deux points de synchro pour esquisser la synchro</SyncHelp>
     <SetSyncPoint>Définir point de synchro</SetSyncPoint>
