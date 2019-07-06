@@ -413,7 +413,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <TextLeftJustifiedText>Vänsterjusterade text</TextLeftJustifiedText>
     <TextCenteredText>Centrerad text</TextCenteredText>
     <TextRightJustifiedText>Höger justerad text</TextRightJustifiedText>
-    <UseBoxForOneNewLine></UseBoxForOneNewLine>
+    <UseBoxForOneNewLine />
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
