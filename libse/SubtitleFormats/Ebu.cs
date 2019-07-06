@@ -452,6 +452,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // convert text to bytes
                 byte[] bytes = encoding.GetBytes(TextField);
 
+                // some fixes for bytes
+                if (bytes.Length == TextField.Length)
+                {
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        if (TextField[i] == '#')
+                        {
+                            bytes[i] = 0x23;
+                        }
+                    }
+                }
+
                 // restore em-dashes (–)
                 foreach (int index in indexOfEmdash)
                 {
