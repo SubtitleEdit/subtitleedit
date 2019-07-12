@@ -1666,7 +1666,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsResize(null, null);
         }
 
-        private void SplitSelectedParagraph(double? splitSeconds)
+        private void SplitSelectedParagraph()
         {
             if (FixedSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
@@ -1694,19 +1694,20 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+
+                if (lines.Count == 2 && IsLineClosed(lines[0]))
                 {
-                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
-                    newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
+                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0], _autoDetectGoogleLanguage);
+                    newParagraph.Text = Utilities.AutoBreakLine(lines[1], _autoDetectGoogleLanguage);
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, Language);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.MergeLinesShorterThan, _autoDetectGoogleLanguage);
                     lines = s.SplitToLines();
                     if (lines.Count == 2)
                     {
-                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
-                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], _autoDetectGoogleLanguage);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], _autoDetectGoogleLanguage);
                     }
                     else if (lines.Count > 2)
                     {
@@ -1716,38 +1717,23 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             sb1.AppendLine(lines[i]);
                         }
-
                         currentParagraph.Text = Utilities.AutoBreakLine(sb1.ToString(), _autoDetectGoogleLanguage);
-                        sb1 = new StringBuilder();
+
+                        sb1.Clear();
                         for (int i = half; i < lines.Count; i++)
                         {
                             sb1.AppendLine(lines[i]);
                         }
-
                         newParagraph.Text = Utilities.AutoBreakLine(sb1.ToString(), _autoDetectGoogleLanguage);
                     }
                 }
 
-                double startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
-                if (startFactor < 0.20)
-                {
-                    startFactor = 0.20;
-                }
+                double msPerChar = currentParagraph.Duration.TotalMilliseconds / HtmlUtil.RemoveHtmlTags(oldText).Length;
+                double halfGaps = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2d;
 
-                if (startFactor > 0.80)
-                {
-                    startFactor = 0.80;
-                }
-
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
-                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                {
-                    middle = splitSeconds.Value * TimeCode.BaseUnit;
-                }
-
-                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                currentParagraph.EndTime.TotalMilliseconds = middle;
-                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+                newParagraph.EndTime.TotalMilliseconds = currentParagraph.Duration.TotalMilliseconds;
+                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.Text.Length * msPerChar - halfGaps;
+                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + halfGaps;
 
                 FixedSubtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
                 FixedSubtitle.Renumber();
@@ -1757,6 +1743,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
 
+                listViewFixes.BeginUpdate();
                 // restore de-selected fixes
                 listViewFixes.Items.Clear();
                 _onlyListFixes = true;
@@ -1768,12 +1755,23 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Checked = false;
                     }
                 }
+                listViewFixes.EndUpdate();
             }
+        }
+
+        private static bool IsLineClosed(string line)
+        {
+            string noTags = HtmlUtil.RemoveHtmlTags(line, true);
+            if (string.IsNullOrEmpty(line))
+            {
+                return true;
+            }
+            return ".?!)]¿¡".Contains(noTags[noTags.Length - 1]);
         }
 
         private void ButtonSplitLineClick(object sender, EventArgs e)
         {
-            SplitSelectedParagraph(null);
+            SplitSelectedParagraph();
         }
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
