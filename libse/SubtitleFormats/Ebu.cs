@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer[14] = JustificationCode;
                 buffer[15] = CommentFlag;
 
-                var encoding = Encoding.Default;
+                var encoding = Encoding.GetEncoding(1252);
                 if (header.LanguageCode == LanguageCodeChinese)
                 {
                     var lines = HtmlUtil.RemoveHtmlTags(TextField, true).SplitToLines();
@@ -423,16 +423,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = EncodeText(TextField, encoding, header.DisplayStandardCode);
                 TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
 
-                // save em-dash indexes (–)
-                var indexOfEmdash = new List<int>();
-                for (int j = 0; j < TextField.Length; j++)
-                {
-                    if (TextField[j] == '–')
-                    {
-                        indexOfEmdash.Add(j);
-                    }
-                }
-
                 if (header.DisplayStandardCode != "0") // 0=Open subtitling
                 {
                     if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
@@ -461,13 +451,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             bytes[i] = 0x23;
                         }
+                        else if (TextField[i] == 'Đ')
+                        {
+                            bytes[i] = 0xe2;
+                        }
+                        else if (TextField[i] == '–') // em dash
+                        {
+                            bytes[i] = 0xd0;
+                        }
                     }
-                }
-
-                // restore em-dashes (–)
-                foreach (int index in indexOfEmdash)
-                {
-                    bytes[index] = 0xd0;
                 }
 
                 for (int i = 0; i < 112; i++)
@@ -494,9 +486,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
                 {
-                    newline = "\u000a\u000a" + 
-                              string.Empty.PadLeft(Configuration.Settings.SubtitleSettings.EbuStlNewLineRows, '\u008a') + 
-                              encoding.GetString(new byte[] {  0x0b, 0x0b }); // 0a==end box, 0b==start box
+                    newline = "\u000a\u000a" +
+                              string.Empty.PadLeft(Configuration.Settings.SubtitleSettings.EbuStlNewLineRows, '\u008a') +
+                              encoding.GetString(new byte[] { 0x0b, 0x0b }); // 0a==end box, 0b==start box
                 }
                 else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
                 {
@@ -785,7 +777,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            byte[] buffer = Encoding.Default.GetBytes(header.ToString());
+            byte[] buffer = Encoding.GetEncoding(1252).GetBytes(header.ToString());
             stream.Write(buffer, 0, buffer.Length);
 
             int subtitleNumber = 0;
@@ -1020,33 +1012,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
+            var enc = Encoding.GetEncoding(1252);
             var header = new EbuGeneralSubtitleInformation
             {
-                CodePageNumber = Encoding.Default.GetString(buffer, 0, 3),
-                DiskFormatCode = Encoding.Default.GetString(buffer, 3, 8),
-                DisplayStandardCode = Encoding.Default.GetString(buffer, 11, 1),
-                CharacterCodeTableNumber = Encoding.Default.GetString(buffer, 12, 2),
-                LanguageCode = Encoding.Default.GetString(buffer, 14, 2),
-                OriginalProgrammeTitle = Encoding.Default.GetString(buffer, 16, 32),
-                OriginalEpisodeTitle = Encoding.Default.GetString(buffer, 48, 32),
-                TranslatedProgrammeTitle = Encoding.Default.GetString(buffer, 80, 32),
-                TranslatedEpisodeTitle = Encoding.Default.GetString(buffer, 112, 32),
-                TranslatorsName = Encoding.Default.GetString(buffer, 144, 32),
-                TranslatorsContactDetails = Encoding.Default.GetString(buffer, 176, 32),
-                SubtitleListReferenceCode = Encoding.Default.GetString(buffer, 208, 16),
-                CreationDate = Encoding.Default.GetString(buffer, 224, 6),
-                RevisionDate = Encoding.Default.GetString(buffer, 230, 6),
-                RevisionNumber = Encoding.Default.GetString(buffer, 236, 2),
-                TotalNumberOfTextAndTimingInformationBlocks = Encoding.Default.GetString(buffer, 238, 5),
-                TotalNumberOfSubtitles = Encoding.Default.GetString(buffer, 243, 5),
-                TotalNumberOfSubtitleGroups = Encoding.Default.GetString(buffer, 248, 3),
-                MaximumNumberOfDisplayableCharactersInAnyTextRow = Encoding.Default.GetString(buffer, 251, 2),
-                MaximumNumberOfDisplayableRows = Encoding.Default.GetString(buffer, 253, 2),
-                TimeCodeStatus = Encoding.Default.GetString(buffer, 255, 1),
-                TimeCodeStartOfProgramme = Encoding.Default.GetString(buffer, 256, 8),
-                CountryOfOrigin = Encoding.Default.GetString(buffer, 274, 3),
-                SpareBytes = Encoding.Default.GetString(buffer, 373, 75),
-                UserDefinedArea = Encoding.Default.GetString(buffer, 448, 576)
+                CodePageNumber = enc.GetString(buffer, 0, 3),
+                DiskFormatCode = enc.GetString(buffer, 3, 8),
+                DisplayStandardCode = enc.GetString(buffer, 11, 1),
+                CharacterCodeTableNumber = enc.GetString(buffer, 12, 2),
+                LanguageCode = enc.GetString(buffer, 14, 2),
+                OriginalProgrammeTitle = enc.GetString(buffer, 16, 32),
+                OriginalEpisodeTitle = enc.GetString(buffer, 48, 32),
+                TranslatedProgrammeTitle = enc.GetString(buffer, 80, 32),
+                TranslatedEpisodeTitle = enc.GetString(buffer, 112, 32),
+                TranslatorsName = enc.GetString(buffer, 144, 32),
+                TranslatorsContactDetails = enc.GetString(buffer, 176, 32),
+                SubtitleListReferenceCode = enc.GetString(buffer, 208, 16),
+                CreationDate = enc.GetString(buffer, 224, 6),
+                RevisionDate = enc.GetString(buffer, 230, 6),
+                RevisionNumber = enc.GetString(buffer, 236, 2),
+                TotalNumberOfTextAndTimingInformationBlocks = enc.GetString(buffer, 238, 5),
+                TotalNumberOfSubtitles = enc.GetString(buffer, 243, 5),
+                TotalNumberOfSubtitleGroups = enc.GetString(buffer, 248, 3),
+                MaximumNumberOfDisplayableCharactersInAnyTextRow = enc.GetString(buffer, 251, 2),
+                MaximumNumberOfDisplayableRows = enc.GetString(buffer, 253, 2),
+                TimeCodeStatus = enc.GetString(buffer, 255, 1),
+                TimeCodeStartOfProgramme = enc.GetString(buffer, 256, 8),
+                CountryOfOrigin = enc.GetString(buffer, 274, 3),
+                SpareBytes = enc.GetString(buffer, 373, 75),
+                UserDefinedArea = enc.GetString(buffer, 448, 576)
             };
             return header;
         }
