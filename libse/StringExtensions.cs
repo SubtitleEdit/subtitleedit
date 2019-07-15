@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (si.LengthInTextElements > 1)
             {
-                s += si.SubstringByTextElements(1);
+                s += si.SubstringByTextElements(1).ToLower();
             }
 
             return s;
