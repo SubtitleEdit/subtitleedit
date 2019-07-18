@@ -1078,6 +1078,9 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("  <head>");
                     sb.AppendLine("    <title>Subtitle Edit compare</title>");
                     sb.AppendLine("  </head>");
+                    sb.AppendLine("  <style>");
+                    sb.AppendLine("    td { font-family: Tahoma, Verdana, 'Noto Sans', Ubuntu }");
+                    sb.AppendLine("  </style>");
                     sb.AppendLine("  <body>");
                     sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
                     sb.AppendLine("    <table>");
