@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class HtmlSamiArray : SubtitleFormat
+    public class HtmlSamiArray : TextFormat
     {
         public override string Extension => ".html";
 

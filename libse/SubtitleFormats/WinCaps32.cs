@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class WinCaps32 : SubtitleFormat
+    public class WinCaps32 : BinaryFormat
     {
         public override string Extension => ".w32";
         public override string Name => "Wincaps W32";
@@ -27,11 +27,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -98,5 +93,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

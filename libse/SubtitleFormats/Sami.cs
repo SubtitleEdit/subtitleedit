@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Sami : SubtitleFormat
+    public class Sami : TextFormat
     {
         public override string Extension => ".smi";
 

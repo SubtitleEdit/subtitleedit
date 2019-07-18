@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Ted20 : SubtitleFormat
+    public class Ted20 : TextFormat
     {
 
         private const int TextBufferSize = 64;
@@ -15,10 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const string NameOfFormat = "TED Caption 2.0";
 
         public override string Name => NameOfFormat;
-
-        public static void Save(string fileName, Subtitle subtitle)
-        {
-        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {

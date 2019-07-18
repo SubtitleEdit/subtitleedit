@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     int index = 0;
-                    foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                    foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
                     {
                         if (saveFileDialog1.FilterIndex == index + 1)
                         {

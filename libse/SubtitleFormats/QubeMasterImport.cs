@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class QubeMasterImport : SubtitleFormat
+    public class QubeMasterImport : TextFormat
     {
         // ToText code by Tosil Velkoff, tosil@velkoff.net
         // Based on UnknownSubtitle44

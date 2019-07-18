@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class GooglePlayJson : SubtitleFormat
+    public class GooglePlayJson : TextFormat
     {
         public override string Extension => ".json";
 

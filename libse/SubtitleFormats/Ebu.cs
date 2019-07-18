@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// EBU Subtitling data exchange format
     /// </summary>
-    public class Ebu : SubtitleFormat, IBinaryPersistableSubtitle
+    public class Ebu : BinaryFormat, IBinaryPersistableSubtitle
     {
         private static readonly Regex FontTagsNoSpace1 = new Regex("[a-zA-z.!?]</font><font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
         private static readonly Regex FontTagsNoSpace2 = new Regex("[a-zA-z.!?]<font[a-zA-Z =\"']+>[a-zA-Z-]", RegexOptions.Compiled);
@@ -706,26 +706,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public bool Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
-            return Save(fileName, subtitle, false);
+            Save(fileName, subtitle, false);
         }
 
         public bool Save(string fileName, Subtitle subtitle, bool batchMode, EbuGeneralSubtitleInformation header = null)
         {
             using (var ms = new MemoryStream())
             {
-                var ok = Save(fileName, ms, subtitle, batchMode, header);
-                if (ok)
+                if (Save(fileName, ms, subtitle, batchMode, header))
                 {
                     ms.Position = 0;
                     using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                     {
                         ms.CopyTo(fs);
                     }
+                    return true;
                 }
-                return ok;
             }
+            return false;
         }
 
         public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode, EbuGeneralSubtitleInformation header)
@@ -958,11 +958,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
@@ -1699,8 +1694,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return text;
         }
-
-        public override bool IsTextBased => false;
 
         public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
         {

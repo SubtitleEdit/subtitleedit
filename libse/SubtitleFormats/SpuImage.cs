@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SpuImage : SubtitleFormat
+    public class SpuImage : TextFormat
     {
         public override string Extension => ".xml";
 

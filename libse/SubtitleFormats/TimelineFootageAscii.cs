@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// ±Viòð ir klât.
     /// ³Îí ïðèøåë.
     /// </summary>
-    public class TimeLineFootageAscii : SubtitleFormat
+    public class TimeLineFootageAscii : TextFormat
     {
 
         private static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);

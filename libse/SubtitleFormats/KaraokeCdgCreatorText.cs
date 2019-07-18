@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class KaraokeCdgCreatorText : SubtitleFormat
+    public class KaraokeCdgCreatorText : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+(:\d+){0,1}\.\d+ : \d+(:\d+){0,1}\.\d+ : .+", RegexOptions.Compiled);
 

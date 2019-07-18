@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle41 : SubtitleFormat
+    public class UnknownSubtitle41 : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+\.\d\d?$", RegexOptions.Compiled);
 

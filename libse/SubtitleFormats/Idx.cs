@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     // TODO: Working on added edit capabilities for idx files...
-    public class Idx : SubtitleFormat
+    public class Idx : TextFormat
     {
         // timestamp: 00:00:01:401, filepos: 000000000
         private static readonly Regex RegexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);

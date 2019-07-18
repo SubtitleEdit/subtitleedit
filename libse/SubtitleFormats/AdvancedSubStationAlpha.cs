@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AdvancedSubStationAlpha : SubtitleFormat
+    public class AdvancedSubStationAlpha : TextFormat
     {
         public string Errors { get; private set; }
 
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                SubtitleFormat format = new AdvancedSubStationAlpha();
+                TextFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
                 string text = format.ToText(sub, string.Empty);
                 var lines = text.SplitToLines();

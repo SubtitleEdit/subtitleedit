@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _count;
         private int _converted;
         private int _errors;
-        private readonly IList<SubtitleFormat> _allFormats;
+        private readonly IList<TextFormat> _allFormats;
         private bool _searching;
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
@@ -163,7 +163,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.FixLargeFonts(this, buttonCancel);
 
-            _allFormats = new List<SubtitleFormat> { new Pac() };
+            // remove pac from list
+            _allFormats = new List<TextFormat>();
             var formatNames = new List<string>();
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {

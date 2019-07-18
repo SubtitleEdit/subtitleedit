@@ -5,19 +5,11 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class ELRStudioClosedCaption : SubtitleFormat
+    public class ELRStudioClosedCaption : BinaryFormat
     {
         public override string Extension => ".elr";
 
         public override string Name => "ELRStudio Closed Caption";
-
-        public static void Save(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-            {
-                //...
-            }
-        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -46,11 +38,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -139,5 +126,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

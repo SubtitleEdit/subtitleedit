@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CheetahCaption : SubtitleFormat
+    public class CheetahCaption : BinaryFormat
     {
         private static readonly Dictionary<byte, char> DicCodeLatin = new Dictionary<byte, char>
         {
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public static void Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
@@ -252,8 +253,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             return false;
         }
-
-        public override string ToText(Subtitle subtitle, string title) => "Not supported!";
 
         private static TimeCode DecodeTimestamp(byte[] buffer, int index)
         {

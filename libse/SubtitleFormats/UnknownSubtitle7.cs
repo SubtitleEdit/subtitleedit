@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// Reported by dipa nuswantara
     /// </summary>
-    public class UnknownSubtitle7 : SubtitleFormat
+    public class UnknownSubtitle7 : TextFormat
     {
         private enum ExpectingLine
         {

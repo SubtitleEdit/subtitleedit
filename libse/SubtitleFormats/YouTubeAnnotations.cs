@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class YouTubeAnnotations : SubtitleFormat
+    public class YouTubeAnnotations : TextFormat
     {
         public interface IGetYouTubeAnnotationStyles
         {

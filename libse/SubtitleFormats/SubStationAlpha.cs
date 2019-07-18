@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubStationAlpha : SubtitleFormat
+    public class SubStationAlpha : TextFormat
     {
         public string Errors { get; private set; }
 

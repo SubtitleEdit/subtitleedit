@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TimeXml : SubtitleFormat
+    public class TimeXml : TextFormat
     {
         public override string Extension => ".xml";
 

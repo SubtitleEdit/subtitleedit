@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //We don't have sacred rock stars
     //that we put above others.
 
-    public class UnknownSubtitle50 : SubtitleFormat
+    public class UnknownSubtitle50 : TextFormat
     {
         private enum ExpectingLine
         {

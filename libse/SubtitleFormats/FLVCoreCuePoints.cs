@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class FLVCoreCuePoints : SubtitleFormat
+    public class FLVCoreCuePoints : TextFormat
     {
         public override string Extension => ".xml";
 

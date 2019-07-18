@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class DvdStudioProSpaceGraphic : SubtitleFormat
+    public class DvdStudioProSpaceGraphic : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+[:;]\d+ , \d+:\d+:\d+[:;]\d+ , <<Graphic>>.*$", RegexOptions.Compiled);
 

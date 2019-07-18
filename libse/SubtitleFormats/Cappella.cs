@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Cappella : SubtitleFormat
+    public class Cappella : TextFormat
     {
         public override string Extension => ".detx";
 

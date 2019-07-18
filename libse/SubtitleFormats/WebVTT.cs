@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
     /// </summary>
-    public class WebVTT : SubtitleFormat
+    public class WebVTT : TextFormat
     {
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);

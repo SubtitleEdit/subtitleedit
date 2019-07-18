@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// .CHK subtitle file format - 128 bytes blocks, first byte in block is id (01==text)
     /// </summary>
-    public class Chk : SubtitleFormat
+    public class Chk : BinaryFormat
     {
         private readonly Encoding _codePage = Encoding.GetEncoding(850);
         // private string _languageId = "DEN"; // English
@@ -26,11 +26,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return buffer.Length > 0 && buffer[0] == 0x1d;
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not implemented!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -274,5 +269,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,16 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// SubtitleNext
     /// </summary>
-    public class TSB4 : SubtitleFormat
+    public class TSB4 : BinaryFormat
     {
         public override string Extension => ".sub";
 
         public override string Name => "TSB4";
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -146,5 +141,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Eeg708 : SubtitleFormat
+    public class Eeg708 : TextFormat
     {
         public override string Extension => ".xml";
 

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class GpacTtxt : SubtitleFormat
+    public class GpacTtxt : TextFormat
     {
         public override string Extension => ".ttxt";
 

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class IsmtDfxp : SubtitleFormat
+    public class IsmtDfxp : BinaryFormat
     {
         public override string Extension => ".ismt";
 
@@ -83,9 +83,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public override void Save(string fileName, Subtitle subtitle)
         {
-            return "Not supported";
+            throw new NotImplementedException();
         }
     }
 }

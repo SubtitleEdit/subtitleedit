@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle72 : SubtitleFormat
+    public class UnknownSubtitle72 : TextFormat
     {
         //00:00:02.000
         //Junior Semifinal, part 1

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //      <p begin="00:00:15.200" end="00:00:19.700"><![CDATA[<sub>Many other properties related to fonts, sizes, colors<br/>and list properties are in style.css file</sub>]]></p>
     // </div>
     //</tt>
-    public class FlashXml : SubtitleFormat
+    public class FlashXml : TextFormat
     {
         public override string Extension => ".xml";
 

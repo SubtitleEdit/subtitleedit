@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle10 : SubtitleFormat
+    public class UnknownSubtitle10 : TextFormat
     {
         public override string Extension => ".txt";
 

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// Implementation of JacoSub. Specs: (http://unicorn.us.com/jacosub/jscripts.html)
     /// </summary>
-    public class JacoSub : SubtitleFormat
+    public class JacoSub : TextFormat
     {
         // H:MM:SS.FF H:MM:SS.FF directive {comment} text {comment} more text...
         // 0:30:57.22 0:30:59.46 vm {opening credit} A Film By Akira Kurosawa

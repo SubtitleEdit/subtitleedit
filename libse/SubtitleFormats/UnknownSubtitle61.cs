@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle61 : SubtitleFormat
+    public class UnknownSubtitle61 : TextFormat
     {
         //00:02:23.59
         //קרוליין: פשוט תשימי את זה בפייסבוק או משהו.

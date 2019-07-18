@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Tx3GTextOnly : SubtitleFormat
+    public class Tx3GTextOnly : TextFormat
     {
         public override string Extension => ".tx3g";
 

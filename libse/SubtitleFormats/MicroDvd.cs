@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class MicroDvd : SubtitleFormat
+    public class MicroDvd : TextFormat
     {
         private static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
         public string Errors { get; private set; }

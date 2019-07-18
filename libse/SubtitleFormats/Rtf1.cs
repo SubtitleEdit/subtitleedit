@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
 
-    public class Rtf1 : SubtitleFormat
+    public class Rtf1 : TextFormat
     {
         // 0001 00:00:30:10 00:00:33:11 27 (same as 86, but with "reading speed")
         private static readonly Regex RegexTimeCode1 = new Regex(@"\d+ \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d \d+", RegexOptions.Compiled);

@@ -74,9 +74,9 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
+        public static TextFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
             {
                 if (format.FriendlyName == friendlyName || format.Name == friendlyName)
                 {

@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CaptionateMs : SubtitleFormat
+    public class CaptionateMs : TextFormat
     {
         public override string Extension => ".xml";
 

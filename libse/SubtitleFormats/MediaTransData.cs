@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    internal class MediaTransData : SubtitleFormat
+    internal class MediaTransData : TextFormat
     {
         public override string Extension => ".imtpro";
 

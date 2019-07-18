@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Spruce : SubtitleFormat
+    public class Spruce : TextFormat
     {
         private const string Italic = "^I";
         private const string Bold = "^B";

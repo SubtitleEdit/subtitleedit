@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// CBTNuggets, e.g. https://portal.cbtnuggets.com/mediav2/caption/54f4cf34fcb8f7d56e0001bf_10x.json
     /// </summary>
-    public class JsonType9 : SubtitleFormat
+    public class JsonType9 : TextFormat
     {
         public override string Extension => ".json";
 

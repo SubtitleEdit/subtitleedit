@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Oresme : SubtitleFormat
+    public class Oresme : TextFormat
     {
         //00:00:00:00{BC}{W2710}
         //10:00:00:15{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}

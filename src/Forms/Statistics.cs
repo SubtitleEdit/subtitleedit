@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private readonly Subtitle _subtitle;
-        private readonly SubtitleFormat _format;
+        private readonly TextFormat _format;
         private readonly LanguageStructure.Statistics _l;
         private string _mostUsedLines;
         private string _general;
@@ -53,7 +53,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static readonly char[] ExpectedChars = { '♪', '♫', '"', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '،', '؟', '؛' };
 
-        public Statistics(Subtitle subtitle, string fileName, SubtitleFormat format)
+        public Statistics(Subtitle subtitle, string fileName, TextFormat format)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();

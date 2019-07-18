@@ -8,16 +8,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// Timeline - THE MOVIE TITRE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/ by priidu@pld.ttu.ee
     /// </summary>
-    public class TimeLineMvt : SubtitleFormat
+    public class TimeLineMvt : BinaryFormat
     {
         public override string Extension => ".mvt";
 
         public override string Name => "Timeline mvt";
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return string.Empty;
-        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -151,5 +146,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Encoding.GetEncoding(1252);
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

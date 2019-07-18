@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TMPlayer : SubtitleFormat
+    public class TMPlayer : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
 

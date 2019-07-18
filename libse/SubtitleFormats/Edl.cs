@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Edl : SubtitleFormat
+    public class Edl : TextFormat
     {
         private static readonly Regex Regex = new Regex(@"^\d+\s+[A-Z]{2}\s+[A-Z]\s+[A-Z]\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
         private const string TextPrefix = "* FROM CLIP NAME: ";

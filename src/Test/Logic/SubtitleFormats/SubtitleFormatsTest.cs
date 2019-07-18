@@ -928,9 +928,9 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
             int expected = subtitle.Paragraphs.Count;
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.GetType() != typeof(JsonType6) && format.IsTextBased)
+                if (format.GetType() != typeof(JsonType6))
                 {
                     format.BatchMode = true;
                     string text = format.ToText(subtitle, "test");
@@ -954,23 +954,20 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.IsTextBased)
-                {
-                    format.BatchMode = true;
-                    string text = format.ToText(subtitle, "test");
-                    var list = new List<string>();
-                    foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-                        list.Add(line);
-                    var s2 = new Subtitle();
-                    format.LoadSubtitle(s2, list, null);
+                format.BatchMode = true;
+                string text = format.ToText(subtitle, "test");
+                var list = new List<string>();
+                foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                    list.Add(line);
+                var s2 = new Subtitle();
+                format.LoadSubtitle(s2, list, null);
 
-                    if (s2.Paragraphs.Count == 4)
-                    {
-                        Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
-                        Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
-                    }
+                if (s2.Paragraphs.Count == 4)
+                {
+                    Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
+                    Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
                 }
             }
         }

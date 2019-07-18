@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Sptx : SubtitleFormat
+    public class Sptx : BinaryFormat
     {
         public override string Extension => ".sptx";
 
@@ -34,11 +34,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -159,5 +154,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(hour, minute, second, milliseconds);
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

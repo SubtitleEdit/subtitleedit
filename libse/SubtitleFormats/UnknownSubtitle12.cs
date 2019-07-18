@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     ///4.01     5.12
     ///Dit is de dag.
     /// </summary>
-    public class UnknownSubtitle12 : SubtitleFormat
+    public class UnknownSubtitle12 : TextFormat
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+.\d\d\t\t\d+.\d\d\t*$", RegexOptions.Compiled);
 

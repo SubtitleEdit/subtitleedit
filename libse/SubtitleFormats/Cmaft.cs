@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// CMFT - "Common Media application Format Text"
     /// </summary>
-    public class Cmaft : SubtitleFormat
+    public class Cmaft : BinaryFormat
     {
 
         public override string Extension => ".cmft";
@@ -33,11 +33,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not implemented!";
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             var parser = new CmafParser(fileName);
@@ -45,5 +40,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.AddRange(parser.Subtitle.Paragraphs);
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

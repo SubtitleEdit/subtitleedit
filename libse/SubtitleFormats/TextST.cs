@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
     }
 
-    public class TextST : SubtitleFormat
+    public class TextST : TextFormat
     {
         public class Palette
         {

@@ -196,6 +196,8 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
+    <Compile Include="Interfaces\IBinarySerilizable.cs" />
+    <Compile Include="Interfaces\ITextSerializable.cs" />
     <Compile Include="PlainTextImporter.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />

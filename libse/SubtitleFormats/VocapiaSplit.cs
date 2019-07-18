@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class VocapiaSplit : SubtitleFormat
+    public class VocapiaSplit : TextFormat
     {
         public override string Extension => ".xml";
 

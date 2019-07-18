@@ -5,17 +5,13 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class NciCaption : SubtitleFormat
+    public class NciCaption : BinaryFormat
     {
         public override string Extension => ".cap";
 
         public const string NameOfFormat = "NCI Caption";
 
         public override string Name => NameOfFormat;
-
-        public static void Save(string fileName)
-        {
-        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -48,11 +44,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         private static TimeCode DecodeTimeCode(byte[] buffer, int index)
@@ -248,5 +239,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

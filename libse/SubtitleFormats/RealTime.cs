@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class RealTime : SubtitleFormat
+    public class RealTime : TextFormat
     {
         public override string Extension => ".rt";
 

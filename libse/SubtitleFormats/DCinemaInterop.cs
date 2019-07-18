@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //  </Font>
     //</DCSubtitle>
 
-    public class DCinemaInterop : SubtitleFormat
+    public class DCinemaInterop : TextFormat
     {
         internal class SubtitleLine
         {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Wsb : SubtitleFormat
+    public class Wsb : TextFormat
     {
         public override string Extension => ".WSB";
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UtxFrames : SubtitleFormat
+    public class UtxFrames : TextFormat
     {
         public override string Extension => ".utx";
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SwiftInterchange2 : SubtitleFormat
+    public class SwiftInterchange2 : TextFormat
     {
         private const string ItalicPrefix = "<fontstyle-italic>";
         private string _fileName;

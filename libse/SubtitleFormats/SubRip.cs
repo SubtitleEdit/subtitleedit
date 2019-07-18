@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubRip : SubtitleFormat
+    public class SubRip : TextFormat
     {
         public string Errors { get; private set; }
         private StringBuilder _errors;

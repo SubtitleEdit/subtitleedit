@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// UniPac
     /// </summary>
-    public class PacUnicode : SubtitleFormat
+    public class PacUnicode : BinaryFormat
     {
 
         public override string Extension => ".fpc";
@@ -59,11 +60,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -246,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return p;
         }
 
-        public void Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {

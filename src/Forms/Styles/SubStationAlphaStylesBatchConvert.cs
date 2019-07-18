@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ResetHeader()
         {
-            SubtitleFormat format;
+            TextFormat format;
             if (_isSubStationAlpha)
             {
                 format = new SubStationAlpha();

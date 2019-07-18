@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CsvNuendo : SubtitleFormat
+    public class CsvNuendo : TextFormat
     {
         private static readonly Regex CsvLine = new Regex("^.*,[+\\d+:]+,[+\\d+:]+,\".+", RegexOptions.Compiled);
         private const string LineFormat = "{1}{0}{2}{0}{3}{0}{4}";

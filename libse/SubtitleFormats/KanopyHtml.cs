@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class KanopyHtml : SubtitleFormat
+    public class KanopyHtml : TextFormat
     {
         //<a href='#' begin="5.706" end="8.289"><span class='ts'>00:05</span> (music)</a>
         //<a href='#' begin="13.037" end="14.961"><span class='ts'>00:13</span> - A Swiss scientist</a>

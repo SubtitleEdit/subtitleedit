@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// subtitle format from www.gremots.com
     /// </summary>
-    public class Gremots : SubtitleFormat
+    public class Gremots : TextFormat
     {
         public override string Extension => ".gst";
 

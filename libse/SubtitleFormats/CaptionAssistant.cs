@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CaptionAssistant : SubtitleFormat
+    public class CaptionAssistant : TextFormat
     {
         public override string Extension => ".cac";
 

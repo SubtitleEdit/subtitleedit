@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class FinalCutProXmlGap : SubtitleFormat
+    public class FinalCutProXmlGap : TextFormat
     {
         public double FrameRate { get; set; }
 

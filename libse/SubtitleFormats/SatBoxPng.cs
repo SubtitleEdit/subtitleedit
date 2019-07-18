@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://forum.videohelp.com/threads/365786-Converting-Subtitles-%28XML-PNG%29-to-idx-sub
     /// </summary>
-    public class SatBoxPng : SubtitleFormat
+    public class SatBoxPng : TextFormat
     {
         public override string Extension => ".txt";
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// The ULTECH caption file format (ULT/ULD file) is a compact binary file that stores captions with embedded EIA-608 control codes
     /// http://en.wikipedia.org/wiki/EIA-608
     /// </summary>
-    public class Ultech130 : SubtitleFormat
+    public class Ultech130 : BinaryFormat
     {
         private const string UltechId = "ULTECH\01.30";
         public const string NameOfFormat = "Ultech 1.30 Caption";
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public static void Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
@@ -186,8 +187,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return Encoding.ASCII.GetString(buffer).Equals(UltechId, StringComparison.OrdinalIgnoreCase);
             }
         }
-
-        public override string ToText(Subtitle subtitle, string title) => "Not supported!";
 
         private static TimeCode DecodeTimestamp(byte[] buffer, int index)
         {

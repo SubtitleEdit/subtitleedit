@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://wam.inrialpes.fr/timesheets/annotations/video.html
     /// </summary>
-    public class SmilTimesheetData : SubtitleFormat
+    public class SmilTimesheetData : TextFormat
     {
         public override string Extension => ".html";
 

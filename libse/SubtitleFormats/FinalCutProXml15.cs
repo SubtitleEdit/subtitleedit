@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
     }
 
-    public class FinalCutProXml15 : SubtitleFormat
+    public class FinalCutProXml15 : TextFormat
     {
         internal string FcpXmlVersion { get; set; } = "1.5";
 

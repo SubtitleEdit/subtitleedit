@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class OgmChapters : SubtitleFormat
+    public class OgmChapters : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^CHAPTER\d+=\d\d:\d\d:\d\d[.,]\d\d\d$", RegexOptions.Compiled);
         private static readonly Regex RegexChapterNames = new Regex(@"^CHAPTER\d+NAME=[^\r\n]+$", RegexOptions.Compiled);

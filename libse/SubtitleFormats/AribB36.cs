@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// For the text decodinfg see http://www.arib.or.jp/english/html/overview/doc/6-STD-B24v5_2-1p3-E1.pdf
     /// Also see https://github.com/johnoneil/arib
     /// </summary>
-    public class AribB36 : SubtitleFormat
+    public class AribB36 : TextFormat
     {
 
         public class ProgramManagement

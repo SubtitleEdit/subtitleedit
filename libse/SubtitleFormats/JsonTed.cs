@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class JsonTed : SubtitleFormat
+    public class JsonTed : TextFormat
     {
         public override string Extension => ".json";
 

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UniversalSubtitleFormat : SubtitleFormat
+    public class UniversalSubtitleFormat : TextFormat
     {
         public override string Extension => ".usf";
 

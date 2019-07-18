@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class RhozetHarmonic : SubtitleFormat
+    public class RhozetHarmonic : TextFormat
     {
         public override string Extension => ".xml";
 

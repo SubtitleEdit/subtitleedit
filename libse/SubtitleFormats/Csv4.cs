@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Csv4 : SubtitleFormat
+    public class Csv4 : TextFormat
     {
         private const string Separator = ",";
         private static readonly Regex TimeCodeRegex = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);

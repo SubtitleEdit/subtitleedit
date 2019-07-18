@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle74 : SubtitleFormat
+    public class UnknownSubtitle74 : TextFormat
     {
         //07:02:27
         //>> GOOD MORNING AND WELCOME TO THE FALL 2014 COMMENCEMENT CEREMONY, A TIME TO RECOGNIZE OUR GRADUATING SENIORS.

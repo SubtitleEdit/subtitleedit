@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle63 : SubtitleFormat
+    public class UnknownSubtitle63 : TextFormat
     {
         //3:       00:00:09:23 00:00:16:21 06:23
         //Alustame sellest...

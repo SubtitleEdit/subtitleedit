@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle60 : SubtitleFormat
+    public class UnknownSubtitle60 : TextFormat
     {
         //01:00:31:14
         //THE PRIME MINISTER

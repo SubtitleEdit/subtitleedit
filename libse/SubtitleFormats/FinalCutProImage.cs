@@ -5,18 +5,13 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class FinalCutProImage : SubtitleFormat
+    public class FinalCutProImage : BinaryFormat
     {
         public double FrameRate { get; set; }
 
         public override string Extension => ".xml";
 
         public override string Name => "Final Cut Pro Image";
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
-        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -102,5 +97,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Csv3 : SubtitleFormat
+    public class Csv3 : TextFormat
     {
         private const string Separator = ",";
 

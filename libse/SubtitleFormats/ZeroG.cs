@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class ZeroG : SubtitleFormat
+    public class ZeroG : TextFormat
     {
         //E 1 0:50:05.42 0:50:10.06 Default NTP
         private static readonly Regex RegexTimeCodes = new Regex(@"^E 1 \d:\d\d:\d\d.\d\d \d:\d\d:\d\d.\d\d Default NTP ", RegexOptions.Compiled);

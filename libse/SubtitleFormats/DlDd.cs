@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class DlDd : SubtitleFormat
+    public class DlDd : TextFormat
     {
         public override string Extension => ".htm";
 

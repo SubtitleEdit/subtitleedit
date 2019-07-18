@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CheetahCaptionOld : SubtitleFormat
+    public class CheetahCaptionOld : BinaryFormat
     {
 
         public override string Extension => ".cap";
@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public static void Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
         }
 
@@ -38,11 +38,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         private static TimeCode DecodeTimestamp(byte[] buffer, int index)

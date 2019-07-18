@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TimedText200604Ooyala : SubtitleFormat
+    public class TimedText200604Ooyala : TextFormat
     {
         public override string Extension => ".dfxp";
 

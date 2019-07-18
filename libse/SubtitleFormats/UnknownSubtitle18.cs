@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle18 : SubtitleFormat
+    public class UnknownSubtitle18 : TextFormat
     {
         private enum ExpectingLine
         {

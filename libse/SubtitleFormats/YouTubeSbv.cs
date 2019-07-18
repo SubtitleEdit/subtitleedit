@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// YouTube "SubViewer" format... I think YouTube tried to add "SubViewer 2.0" support but instread they created their own format... nice ;)
     /// </summary>
-    public class YouTubeSbv : SubtitleFormat
+    public class YouTubeSbv : TextFormat
     {
         private enum ExpectingLine
         {

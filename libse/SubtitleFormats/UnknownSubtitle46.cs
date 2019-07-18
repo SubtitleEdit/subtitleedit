@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle46 : SubtitleFormat
+    public class UnknownSubtitle46 : TextFormat
     {
         //7:00:01:27AM
         private static readonly Regex RegexTimeCodesAm = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);

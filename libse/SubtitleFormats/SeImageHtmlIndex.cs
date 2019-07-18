@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// Export from Subtitle Edit OCR window
     /// </summary>
-    public class SeImageHtmlIndex : SubtitleFormat
+    public class SeImageHtmlIndex : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^#\d+:\d+", RegexOptions.Compiled);
 

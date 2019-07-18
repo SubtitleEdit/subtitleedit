@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //    </SubtitleItem>
     //    ...
 
-    public class TmpegEncXml : SubtitleFormat
+    public class TmpegEncXml : TextFormat
     {
         public override string Extension => ".xsubtitle";
 

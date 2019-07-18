@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Cavena890 : SubtitleFormat, IBinaryPersistableSubtitle
+    public class Cavena890 : BinaryFormat, IBinaryPersistableSubtitle
     {
         public const int LanguageIdDanish = 0x07;
         public const int LanguageIdEnglish = 0x09;
@@ -1333,11 +1333,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             const int textLength = 51;
@@ -1808,5 +1803,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

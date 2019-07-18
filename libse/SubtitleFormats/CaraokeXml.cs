@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CaraokeXml : SubtitleFormat
+    public class CaraokeXml : TextFormat
     {
         public override string Extension => ".crk";
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TmpegEncText : SubtitleFormat
+    public class TmpegEncText : TextFormat
     {
         public override string Extension => ".subtitle";
 

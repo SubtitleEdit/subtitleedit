@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// MacSub (reading/writing).
     /// http://devel.aegisub.org/wiki/SubtitleFormats/Macsub
     /// </summary>
-    public class MacSub : SubtitleFormat
+    public class MacSub : TextFormat
     {
         private enum Expecting
         {

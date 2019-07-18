@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetDefaultHeader()
         {
-            SubtitleFormat format;
+            TextFormat format;
             if (_isSubStationAlpha)
             {
                 format = new SubStationAlpha();

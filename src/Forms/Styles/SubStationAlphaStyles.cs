@@ -470,7 +470,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void ResetHeader()
         {
-            SubtitleFormat format;
+            TextFormat format;
             if (_isSubStationAlpha)
             {
                 format = new SubStationAlpha();
@@ -479,6 +479,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 format = new AdvancedSubStationAlpha();
             }
+
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();

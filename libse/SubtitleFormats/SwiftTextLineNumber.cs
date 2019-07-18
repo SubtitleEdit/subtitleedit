@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SwiftTextLineNumber : SubtitleFormat
+    public class SwiftTextLineNumber : TextFormat
     {
         private enum ExpectingLine
         {

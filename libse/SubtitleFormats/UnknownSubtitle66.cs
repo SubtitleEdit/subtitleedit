@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle66 : SubtitleFormat
+    public class UnknownSubtitle66 : TextFormat
     {
         //   24       10:08:57:17   10:08:59:15       01:23
         //The question is,

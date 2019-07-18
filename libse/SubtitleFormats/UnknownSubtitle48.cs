@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //00:01:38.609 00:01:41.471 pick up the bread, walk the dog, go thoughtless,
     //00:01:42.247 00:01:43.915 pick up the cake
 
-    public class UnknownSubtitle48 : SubtitleFormat
+    public class UnknownSubtitle48 : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d \d\d:\d\d:\d\d.\d\d\d .*$", RegexOptions.Compiled);
 

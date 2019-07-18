@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     action = Convert;
                 }
-                else if (firstArgument == "/help" || firstArgument == "-help" || firstArgument == "/?" || firstArgument == "-?" )
+                else if (firstArgument == "/help" || firstArgument == "-help" || firstArgument == "/?" || firstArgument == "-?")
                 {
                     action = Help;
                 }
@@ -674,7 +674,7 @@ namespace Nikse.SubtitleEdit.Logic
             string targetFormatNoWhiteSpace = targetFormat.RemoveChar(' ');
             foreach (SubtitleFormat sf in formats)
             {
-                if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormatNoWhiteSpace, StringComparison.OrdinalIgnoreCase))
+                if (sf.Name.RemoveChar(' ').Equals(targetFormatNoWhiteSpace, StringComparison.OrdinalIgnoreCase))
                 {
                     return sf;
                 }
@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly, Point? resolution)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<TextFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly, Point? resolution)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -706,7 +706,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<TextFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<TextFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -1042,9 +1042,11 @@ namespace Nikse.SubtitleEdit.Logic
 
                 bool targetFormatFound = false;
                 string outputFileName;
-                foreach (SubtitleFormat sf in formats)
+
+                // text formats
+                foreach (TextFormat sf in formats)
                 {
-                    if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    if (sf.Name.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         sf.BatchMode = true;
@@ -1133,6 +1135,8 @@ namespace Nikse.SubtitleEdit.Logic
                         break;
                     }
                 }
+
+                // *binary formats
                 if (!targetFormatFound)
                 {
                     var ebu = new Ebu();
@@ -1189,7 +1193,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        CheetahCaption.Save(outputFileName, sub);
+                        cheetahCaption.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
@@ -1201,7 +1205,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        ayato.Save(outputFileName, null, sub);
+                        ayato.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
@@ -1213,7 +1217,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        CapMakerPlus.Save(outputFileName, sub);
+                        capMakerPlus.Save(outputFileName, sub);
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }

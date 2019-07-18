@@ -7,7 +7,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     //  - Mom, when you were my age&#13;what did you want to do?
-    public class FinalCutProXml : SubtitleFormat
+    public class FinalCutProXml : TextFormat
     {
         public override string Extension => ".xml";
 

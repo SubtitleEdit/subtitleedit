@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// https://backlothelp.netflix.com/hc/en-us/articles/214807928-Lambda-Cap-Creation-Guide-v1-1
     /// </summary>
-    public class LambdaCap : SubtitleFormat
+    public class LambdaCap : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+[A-Z]*\s*\t\s*\d{8}/\d{8}\s*\t\s*", RegexOptions.Compiled);
 

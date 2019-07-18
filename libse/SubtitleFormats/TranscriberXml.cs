@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://trans.sourceforge.net
     /// </summary>
-    public class TranscriberXml : SubtitleFormat
+    public class TranscriberXml : TextFormat
     {
         public override string Extension => ".trs";
 

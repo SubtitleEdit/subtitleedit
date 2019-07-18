@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle8 : SubtitleFormat
+    public class UnknownSubtitle8 : TextFormat
     {
         //00:04:04.219
         //The city council of long beach

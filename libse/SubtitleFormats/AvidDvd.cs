@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AvidDvd : SubtitleFormat
+    public class AvidDvd : TextFormat
     {
         //25    10:03:20:23 10:03:23:05 some text
         //I see, on my way.|New line also.

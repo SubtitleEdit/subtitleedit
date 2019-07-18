@@ -2969,7 +2969,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 // Seungki end
 
-                textBoxSource.Text = _subtitle.ToText(format);
+                if (format is TextFormat textFormat)
+                {
+                    textBoxSource.Text = _subtitle.ToText(textFormat);
+                }
+
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (SubtitleListview1.Items.Count > 0)
                 {
@@ -3091,18 +3095,18 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
-                else if (formatType == typeof(DCinemaSmpte2007))
+                else if (format is DCinemaSmpte2007 dCinemaSmpte2007)
                 {
-                    format.ToText(_subtitle, string.Empty);
+                    dCinemaSmpte2007.ToText(_subtitle, string.Empty);
                     string errors = (format as DCinemaSmpte2007).Errors;
                     if (!string.IsNullOrEmpty(errors))
                     {
                         MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
-                else if (formatType == typeof(DCinemaSmpte2010))
+                else if (format is DCinemaSmpte2010 dCinemaSmpte2010)
                 {
-                    format.ToText(_subtitle, string.Empty);
+                    dCinemaSmpte2010.ToText(_subtitle, string.Empty);
                     string errors = (format as DCinemaSmpte2010).Errors;
                     if (!string.IsNullOrEmpty(errors))
                     {
@@ -3172,7 +3176,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
         {
-            textBoxSource.Enabled = format?.IsTextBased == true;
+            // todo: format ShowHideTextBasedFeatures!
+            textBoxSource.Enabled = format is TextFormat;
         }
 
         private void SetUndockedWindowsTitle()
@@ -3580,7 +3585,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
 
                 int index = 0;
-                foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
                 {
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
@@ -3611,7 +3616,7 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        private DialogResult SaveSubtitle(SubtitleFormat format, bool useNewLineWithOnly0A = false)
+        private DialogResult SaveSubtitle(TextFormat format, bool useNewLineWithOnly0A = false)
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
             {
@@ -3622,25 +3627,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var sub = GetSaveSubtitle(_subtitle);
 
-                if (format != null && !format.IsTextBased)
-                {
-                    var ebu = format as Ebu;
-                    if (ebu != null)
-                    {
-                        var header = new Ebu.EbuGeneralSubtitleInformation();
-                        if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
-                        {
-                            header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
-                        }
-                        if (ebu.Save(_fileName, sub, !_saveAsCalled, header))
-                        {
-                            _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                            Configuration.Settings.Save();
-                        }
-                    }
-                    return DialogResult.OK;
-                }
+                // todo: format ebu!
+                //if (format != null && !format.IsTextBased)
+                //{
+                //    var ebu = format as Ebu;
+                //    if (ebu != null)
+                //    {
+                //        var header = new Ebu.EbuGeneralSubtitleInformation();
+                //        if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+                //        {
+                //            header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                //        }
+                //        if (ebu.Save(_fileName, sub, !_saveAsCalled, header))
+                //        {
+                //            _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                //            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                //            Configuration.Settings.Save();
+                //        }
+                //    }
+                //    return DialogResult.OK;
+                //}
 
                 string allText = sub.ToText(format);
 
@@ -3785,7 +3791,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private DialogResult SaveOriginalSubtitle(SubtitleFormat format)
+        private DialogResult SaveOriginalSubtitle(TextFormat format)
         {
             try
             {
@@ -3808,23 +3814,24 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format != null && !format.IsTextBased)
-                {
-                    var ebu = format as Ebu;
-                    if (ebu != null)
-                    {
-                        if (ebu.Save(_subtitleAlternateFileName, subAlt))
-                        {
-                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                            Configuration.Settings.Save();
-                            ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleAlternateFileName));
-                            _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
-                            return DialogResult.OK;
-                        }
-                        return DialogResult.No;
-                    }
-                    MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
-                }
+                // todo: format ebu
+                //if (format != null && !format.IsTextBased)
+                //{
+                //    var ebu = format as Ebu;
+                //    if (ebu != null)
+                //    {
+                //        if (ebu.Save(_subtitleAlternateFileName, subAlt, false))
+                //        {
+                //            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                //            Configuration.Settings.Save();
+                //            ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleAlternateFileName));
+                //            _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
+                //            return DialogResult.OK;
+                //        }
+                //        return DialogResult.No;
+                //    }
+                //    MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
+                //}
 
                 string allText = subAlt.ToText(format);
                 var currentEncoding = GetCurrentEncoding();
@@ -4201,7 +4208,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private SubtitleFormat GetCurrentSubtitleFormat()
+        private TextFormat GetCurrentSubtitleFormat()
         {
             return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
         }
@@ -4210,7 +4217,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
-                SubtitleFormat format = GetCurrentSubtitleFormat();
+                TextFormat format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
                     if (format.IsFrameBased)
@@ -5673,7 +5680,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
-                    SubtitleFormat format = GetCurrentSubtitleFormat();
+                    TextFormat format = GetCurrentSubtitleFormat();
                     var list = textBoxSource.Lines.ToList();
                     format = new Subtitle().ReloadLoadSubtitle(list, null, format);
                     if (format == null)
@@ -19344,7 +19351,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 string rawText = null;
-                SubtitleFormat format = GetCurrentSubtitleFormat();
+                TextFormat format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
                     if (format.IsFrameBased)
@@ -19512,7 +19519,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 string rawText = null;
-                SubtitleFormat format = GetCurrentSubtitleFormat();
+                TextFormat format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
                     if (format.IsFrameBased)
@@ -19606,11 +19613,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
                 var saveFormat = GetCurrentSubtitleFormat();
-                if (!saveFormat.IsTextBased)
-                {
-                    saveFormat = new SubRip();
-                }
-
                 currentText = _subtitle.ToText(saveFormat);
                 if (_textAutoBackup == null)
                 {
@@ -19658,11 +19660,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleAlternateFileName != null && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 var saveFormat = GetCurrentSubtitleFormat();
-                if (!saveFormat.IsTextBased)
-                {
-                    saveFormat = new SubRip();
-                }
-
                 string currentTextAlternate = _subtitleAlternate.ToText(saveFormat);
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
@@ -21855,7 +21852,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
+            TextFormat currentFormat = GetCurrentSubtitleFormat();
             if (currentFormat == null)
             {
                 currentFormat = new SubRip();
@@ -22309,13 +22306,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (tabControlSubtitle.SelectedIndex != TabControlSourceView && textBoxSource.Text.Trim().Length > 1)
             {
-                var currentFormat = GetCurrentSubtitleFormat();
-                if (currentFormat != null && !currentFormat.IsTextBased)
-                {
-                    return;
-                }
-
-                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, GetCurrentSubtitleFormat());
                 if (format == null)
                 {
                     e.Cancel = true;
@@ -22584,44 +22575,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EBustlToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var ebu = new Ebu();
-            saveFileDialog1.Filter = ebu.Name + "|*" + ebu.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + ebu.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(ebu.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += ebu.Extension;
-                }
-                new Ebu().Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new Ebu());
         }
 
         private void ToolStripMenuItemCavena890Click(object sender, EventArgs e)
@@ -22674,128 +22628,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PacScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var pac = new Pac();
-            saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + pac.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(pac.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += pac.Extension;
-                }
-                pac.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new Pac());
         }
 
         private void uniPacExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var uniPac = new PacUnicode();
-            saveFileDialog1.Filter = uniPac.Name + "|*" + uniPac.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + uniPac.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(uniPac.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += uniPac.Extension;
-                }
-                uniPac.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new PacUnicode());
         }
 
         private void toolStripMenuItemExportAyato_Click(object sender, EventArgs e)
         {
-            var ayato = new Ayato();
-            saveFileDialog1.Filter = ayato.Name + "|*" + ayato.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + ayato.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(ayato.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += ayato.Extension;
-                }
-                ayato.Save(fileName, _videoFileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new Ayato());
         }
 
         private void TextBoxListViewTextEnter(object sender, EventArgs e)
@@ -23440,136 +23283,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemExportCapMakerPlus_Click(object sender, EventArgs e)
         {
-            var capMakerPlus = new CapMakerPlus();
-            saveFileDialog1.Filter = capMakerPlus.Name + "|*" + capMakerPlus.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + capMakerPlus.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(capMakerPlus.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += capMakerPlus.Extension;
-                }
-                CapMakerPlus.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new CapMakerPlus());
         }
 
         private void toolStripMenuItemExportCheetahCap_Click(object sender, EventArgs e)
         {
-            var cheetahCaption = new CheetahCaption();
-            saveFileDialog1.Filter = cheetahCaption.Name + "|*" + cheetahCaption.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + cheetahCaption.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(cheetahCaption.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += cheetahCaption.Extension;
-                }
-                CheetahCaption.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new CheetahCaption());
         }
 
         private void toolStripMenuItemExportCaptionInc_Click(object sender, EventArgs e)
         {
-            var captionInc = new CaptionsInc();
-            saveFileDialog1.Filter = captionInc.Name + "|*" + captionInc.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + captionInc.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(captionInc.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += captionInc.Extension;
-                }
-                CaptionsInc.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new CaptionsInc());
         }
 
         private void toolStripMenuItemExportUltech130_Click(object sender, EventArgs e)
         {
-            var ultech130 = new Ultech130();
-            saveFileDialog1.Filter = ultech130.Name + "|*" + ultech130.Extension;
+            ExportBinaryFormat(new Ultech130());
+        }
+
+        private void ExportBinaryFormat(BinaryFormat binaryFormat)
+        {
+            saveFileDialog1.Filter = binaryFormat.Name + "|*" + binaryFormat.Extension;
             saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + ultech130.Extension;
+            saveFileDialog1.DefaultExt = "*" + binaryFormat.Extension;
             saveFileDialog1.AddExtension = true;
 
             if (!string.IsNullOrEmpty(_videoFileName))
@@ -23586,23 +23322,20 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
             }
 
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(ultech130.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
+                if (!Path.GetExtension(fileName).Equals(binaryFormat.Extension, StringComparison.OrdinalIgnoreCase))
                 {
                     if (fileName.EndsWith('.'))
                     {
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     }
 
-                    fileName += ultech130.Extension;
+                    fileName += binaryFormat.Extension;
                 }
-                Ultech130.Save(fileName, GetSaveSubtitle(_subtitle));
+                binaryFormat.Save(fileName, GetSaveSubtitle(_subtitle));
             }
         }
 
@@ -24029,31 +23762,28 @@ namespace Nikse.SubtitleEdit.Forms
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int index = 0;
-                foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                foreach (TextFormat format in SubtitleFormat.AllSubtitleFormats)
                 {
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
-                        if (format.IsTextBased)
+                        // only allow current extension or ".txt"
+                        string fileName = saveFileDialog1.FileName;
+                        string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                        bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        if (!extOk)
                         {
-                            // only allow current extension or ".txt"
-                            string fileName = saveFileDialog1.FileName;
-                            string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                            bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
-                            if (!extOk)
+                            if (fileName.EndsWith('.'))
                             {
-                                if (fileName.EndsWith('.'))
-                                {
-                                    fileName = fileName.TrimEnd('.');
-                                }
-
-                                fileName += format.Extension;
+                                fileName = fileName.TrimEnd('.');
                             }
 
-                            string allText = newSub.ToText(format);
-                            File.WriteAllText(fileName, allText, GetCurrentEncoding());
-                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
-                            return;
+                            fileName += format.Extension;
                         }
+
+                        string allText = newSub.ToText(format);
+                        File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                        ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
+                        return;
                     }
                     index++;
                 }
@@ -24549,45 +24279,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAvidStl_Click(object sender, EventArgs e)
         {
-            var avidStl = new AvidStl();
-            saveFileDialog1.Filter = avidStl.Name + "|*" + avidStl.Extension;
-            saveFileDialog1.Title = _language.SaveSubtitleAs;
-            saveFileDialog1.DefaultExt = "*" + avidStl.Extension;
-            saveFileDialog1.AddExtension = true;
-
-            if (!string.IsNullOrEmpty(_videoFileName))
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            }
-            else
-            {
-                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-            }
-
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-            {
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-            }
-
-            DialogResult result = saveFileDialog1.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName);
-                bool extOk = ext.Equals(avidStl.Extension, StringComparison.OrdinalIgnoreCase);
-                if (!extOk)
-                {
-                    if (fileName.EndsWith('.'))
-                    {
-                        fileName = fileName.Substring(0, fileName.Length - 1);
-                    }
-
-                    fileName += avidStl.Extension;
-                }
-
-                AvidStl.Save(fileName, GetSaveSubtitle(_subtitle));
-            }
+            ExportBinaryFormat(new AvidStl());
         }
 
         private Subtitle GetSaveSubtitle(Subtitle subtitle)

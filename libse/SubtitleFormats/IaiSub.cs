@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class IaiSub : SubtitleFormat
+    public class IaiSub : BinaryFormat
     {
         public override string Extension => ".sub";
 
@@ -43,11 +43,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -152,5 +147,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(0, 0, 0, FramesToMilliseconds((buffer[index + 1] << 8) + buffer[index]));
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

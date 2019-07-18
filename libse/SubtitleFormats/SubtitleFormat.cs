@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -8,14 +9,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
-        private static IList<SubtitleFormat> _allSubtitleFormats;
+        private static IList<TextFormat> _allSubtitleFormats;
 
         protected static readonly char[] SplitCharColon = { ':' };
+
+        private static IList<BinaryFormat> _pluginBinaryFormats;
+        private static IList<TextFormat> _pluginTextFormats;
 
         /// <summary>
         /// Text formats supported by Subtitle Edit
         /// </summary>
-        public static IEnumerable<SubtitleFormat> AllSubtitleFormats
+        public static IEnumerable<TextFormat> AllSubtitleFormats
         {
             get
             {
@@ -24,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return _allSubtitleFormats;
                 }
 
-                _allSubtitleFormats = new List<SubtitleFormat>
+                var textFormats = new List<TextFormat>
                 {
                     new SubRip(),
                     new AbcIViewer(),
@@ -60,7 +64,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
-                    new Ebu(),
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
@@ -285,42 +288,59 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle90()
                 };
 
-                string path = Configuration.PluginsDirectory;
-                if (Directory.Exists(path))
+                LoadPluginFormats();
+
+                if (_pluginTextFormats != null)
                 {
-                    foreach (string pluginFileName in Directory.EnumerateFiles(path, "*.DLL"))
+                    textFormats.AddRange(_pluginTextFormats);
+                }
+                _allSubtitleFormats = textFormats;
+                return AllSubtitleFormats;
+            }
+        }
+
+        private static void LoadPluginFormats()
+        {
+            string path = Configuration.PluginsDirectory;
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+            foreach (string pluginFileName in Directory.EnumerateFiles(path, "*.dll"))
+            {
+                try
+                {
+                    var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
+                    if (assembly == null)
                     {
-                        try
+                        continue;
+                    }
+                    foreach (var exportedType in assembly.GetExportedTypes())
+                    {
+                        object pluginObject = Activator.CreateInstance(exportedType);
+                        if (pluginObject == null)
                         {
-                            var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                            if (assembly != null)
-                            {
-                                foreach (var exportedType in assembly.GetExportedTypes())
-                                {
-                                    try
-                                    {
-                                        object pluginObject = Activator.CreateInstance(exportedType);
-                                        var po = pluginObject as SubtitleFormat;
-                                        if (po != null)
-                                        {
-                                            _allSubtitleFormats.Insert(1, po);
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
-                                }
-                            }
+                            continue;
                         }
-                        catch
+
+                        switch (pluginObject)
                         {
-                            // ignored
+                            case BinaryFormat binaryFormat:
+                                _pluginBinaryFormats = _pluginBinaryFormats ?? new List<BinaryFormat>();
+                                _pluginBinaryFormats.Add(binaryFormat);
+                                break;
+
+                            case TextFormat textFormat:
+                                _pluginTextFormats = _pluginTextFormats ?? new List<TextFormat>();
+                                _pluginTextFormats.Add(textFormat);
+                                break;
                         }
                     }
                 }
-
-                return _allSubtitleFormats;
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -352,8 +372,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             return subtitle.Paragraphs.Count > _errorCount;
         }
-
-        public abstract string ToText(Subtitle subtitle, string title);
 
         public abstract void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
 
@@ -413,8 +431,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
-
-        public virtual bool IsTextBased => true;
 
         protected static TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
         {
@@ -507,15 +523,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
-        public static SubtitleFormat[] GetBinaryFormats(bool batchMode)
+        public static IEnumerable<BinaryFormat> GetBinaryFormats(bool batchMode)
         {
-            return new SubtitleFormat[]
+            var binaryFormats = new List<BinaryFormat>
             {
                 new Ebu { BatchMode = batchMode }, new Pac { BatchMode = batchMode }, new PacUnicode(), new Cavena890 { BatchMode = batchMode },
                 new Spt(), new CheetahCaption(), new CheetahCaptionOld(), new TSB4(), new Chk(), new Ayato(), new CapMakerPlus(), new Ultech130(),
                 new NciCaption(), new AvidStl(), new WinCaps32(),  new IsmtDfxp(), new Cavena890(), new Spt(), new Sptx(), new IaiSub(),
                 new ELRStudioClosedCaption(), new CaptionsInc(), new TimeLineMvt(), new Cmaft(), new Pns()
             };
+            // include formats from plugin
+            if (_pluginBinaryFormats != null)
+            {
+                binaryFormats.AddRange(_pluginBinaryFormats);
+            }
+            return binaryFormats;
         }
 
         public static SubtitleFormat[] GetTextOtherFormats()
@@ -528,4 +550,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             };
         }
     }
+
+    public abstract class BinaryFormat : SubtitleFormat, IBinarySerilizable
+    {
+        public abstract void Save(string fileName, Subtitle subtitle);
+    }
+
+    public abstract class TextFormat : SubtitleFormat, ITextSerializable
+    {
+        public abstract string ToText(Subtitle subtitle, string title);
+    }
+
+    public abstract class ReadOnlyFormat : TextFormat
+    {
+
+    }
+
 }

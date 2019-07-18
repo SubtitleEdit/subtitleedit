@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// Implements https://web.archive.org/web/20080213213927/http://trac.annodex.net/wiki/PJS
     /// https://github.com/SubtitleEdit/subtitleedit/pull/1964#issuecomment-249379407
     /// </summary>
-    public class PhoenixSubtitle : SubtitleFormat
+    public class PhoenixSubtitle : TextFormat
     {
         //2447,   2513, "You should come to the Drama Club, too."
         //2513,   2594, "Yeah. The Drama Club is worried|that you haven't been coming."

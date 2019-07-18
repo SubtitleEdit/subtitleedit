@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SonyDVDArchitectExplicitDuration : SubtitleFormat
+    public class SonyDVDArchitectExplicitDuration : TextFormat
     {
         private static readonly Regex Regex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+", RegexOptions.Compiled);
 

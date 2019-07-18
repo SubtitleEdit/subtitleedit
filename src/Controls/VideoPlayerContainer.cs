@@ -351,7 +351,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             try
             {
-                SubtitleFormat format = new AdvancedSubStationAlpha();
+                TextFormat format = new AdvancedSubStationAlpha();
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
                     var oldSub = subtitle;

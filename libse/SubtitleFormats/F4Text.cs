@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// #00:00:06-8#
     /// http://www.audiotranskription.de
     /// </summary>
-    public class F4Text : SubtitleFormat
+    public class F4Text : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 

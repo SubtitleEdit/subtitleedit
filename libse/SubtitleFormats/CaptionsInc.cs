@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class CaptionsInc : SubtitleFormat
+    public class CaptionsInc : BinaryFormat, IBinarySerilizable
     {
         public override string Extension => ".cin";
 
         public override string Name => "Caption Inc";
 
-        public static void Save(string fileName, Subtitle subtitle)
+        public override void Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
@@ -113,11 +114,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return base.IsMine(lines, fileName);
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         private static TimeCode DecodeTimestamp(string timeCode)

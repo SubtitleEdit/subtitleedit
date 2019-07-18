@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class OtterAi : SubtitleFormat
+    public class OtterAi : TextFormat
     {
         private static readonly Regex RegexTimeCodes1 = new Regex(@" \d{1,2}:\d\d$", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodes2 = new Regex(@" \d{1,2}:\d\d:\d\d$", RegexOptions.Compiled);

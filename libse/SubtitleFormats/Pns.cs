@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     ///|           |     |           |     |
     ///02 00 00 00 02 01 7B 00 00 00 00 01 2D 00
     /// </summary>
-    public class Pns : SubtitleFormat
+    public class Pns : BinaryFormat
     {
         public override string Extension => ".pns";
 
@@ -77,11 +77,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -160,5 +155,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
+        public override void Save(string fileName, Subtitle subtitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

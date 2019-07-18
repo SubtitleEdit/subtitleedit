@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle16 : SubtitleFormat
+    public class UnknownSubtitle16 : TextFormat
     {
         public override string Extension => ".cip";
 

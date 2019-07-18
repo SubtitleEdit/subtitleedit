@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// SoftNi - http://www.softni.com/
     /// </summary>
-    public class SoftNicolonSub : SubtitleFormat
+    public class SoftNicolonSub : TextFormat
     {
         private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 

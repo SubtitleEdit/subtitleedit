@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class FinalDraftTemplate2 : SubtitleFormat
+    public class FinalDraftTemplate2 : TextFormat
     {
         public override string Extension => ".fdx";
 

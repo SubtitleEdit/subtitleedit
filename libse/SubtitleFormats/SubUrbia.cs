@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubUrbia : SubtitleFormat
+    public class SubUrbia : TextFormat
     {
         public override string Extension => ".json";
 

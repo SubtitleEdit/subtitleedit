@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// MicroDVD with time codes...?
     /// </summary>
-    public class UnknownSubtitle11 : SubtitleFormat
+    public class UnknownSubtitle11 : TextFormat
     {
         private static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+:\d+:\d+}\{-?\d+:\d+:\d+}.*$", RegexOptions.Compiled);
 

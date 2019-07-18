@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core
             return _paragraphs.FirstOrDefault(p => p.ID == id);
         }
 
-        public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format)
+        public TextFormat ReloadLoadSubtitle(List<string> lines, string fileName, TextFormat format)
         {
             Paragraphs.Clear();
             if (format != null && format.IsMine(lines, fileName))
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core
                 OriginalFormat = format;
                 return format;
             }
-            foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+            foreach (TextFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="format">Format to output</param>
         /// <returns>Native format as text string</returns>
-        public string ToText(SubtitleFormat format)
+        public string ToText(TextFormat format)
         {
             return format.ToText(this, Path.GetFileNameWithoutExtension(FileName));
         }

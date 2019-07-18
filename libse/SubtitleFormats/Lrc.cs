@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     ///     [ti:''Lyrics(song) title'']
     ///     [ve:''version of program'']
     /// </summary>
-    public class Lrc : SubtitleFormat
+    public class Lrc : TextFormat
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
 

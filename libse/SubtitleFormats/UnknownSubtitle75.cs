@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle75 : SubtitleFormat
+    public class UnknownSubtitle75 : TextFormat
     {
 
         //BOSTA - English
