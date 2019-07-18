@@ -132,7 +132,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(630, 370);
             this.Name = "FindSubtitleLine";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find subtitle line";
