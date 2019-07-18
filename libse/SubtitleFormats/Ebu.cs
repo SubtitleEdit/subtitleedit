@@ -815,8 +815,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
+                    var numberOfLineBreaks = Math.Max(0, Utilities.GetNumberOfLines(text) - 1);
                     int startRow = rows - Configuration.Settings.SubtitleSettings.EbuStlMarginBottom -
-                                          (Utilities.GetNumberOfLines(text) - 1) * Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
+                                          (numberOfLineBreaks * Configuration.Settings.SubtitleSettings.EbuStlNewLineRows);
                     if (startRow < 0)
                     {
                         startRow = 0;
