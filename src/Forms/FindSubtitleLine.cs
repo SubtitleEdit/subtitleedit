@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.AutoSizeAllColumns(this);
             FixLargeFonts();
         }
 

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(428, 315);
+            this.buttonOK.Location = new System.Drawing.Point(453, 315);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 4;
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(509, 315);
+            this.buttonCancel.Location = new System.Drawing.Point(534, 315);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 5;
@@ -93,6 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -100,12 +101,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(12, 59);
             this.subtitleListView1.MultiSelect = false;
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(572, 250);
+            this.subtitleListView1.Size = new System.Drawing.Size(597, 250);
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;
@@ -119,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 345);
+            this.ClientSize = new System.Drawing.Size(621, 345);
             this.Controls.Add(this.buttonFindNext);
             this.Controls.Add(this.textBoxFindText);
             this.Controls.Add(this.buttonFind);
