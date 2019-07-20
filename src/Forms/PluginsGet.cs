@@ -243,9 +243,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
+            Main main = (Main)Owner;
             foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
-                Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
+                main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                 {
                     try

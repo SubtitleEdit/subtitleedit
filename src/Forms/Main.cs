@@ -19100,7 +19100,7 @@ namespace Nikse.SubtitleEdit.Forms
             helpToolStripMenuItem1.ShortcutKeys = UiUtil.HelpKeys;
         }
 
-        public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
+        public object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
         {
             name = null;
             text = null;
@@ -19127,7 +19127,16 @@ namespace Nikse.SubtitleEdit.Forms
                     return null;
                 }
 
-                object pluginObject = Activator.CreateInstance(pluginType);
+                object pluginObject;
+
+                if (pluginType.GetConstructor(new[] { typeof(Form) }) != null)
+                {
+                    pluginObject = Activator.CreateInstance(pluginType, this);
+                }
+                else
+                {
+                    pluginObject = Activator.CreateInstance(pluginType);
+                }
 
                 // IPlugin
                 var t = pluginType.GetInterface("IPlugin");
