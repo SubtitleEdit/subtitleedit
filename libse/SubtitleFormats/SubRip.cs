@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Paragraph _paragraph;
         private Paragraph _lastParagraph;
         private ExpectingLine _expecting = ExpectingLine.Number;
-        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
 
         public override string Extension => ".srt";
