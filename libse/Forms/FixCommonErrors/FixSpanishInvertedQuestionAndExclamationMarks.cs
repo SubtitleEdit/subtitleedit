@@ -22,9 +22,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                var last = p;
-                var oldLastText = oldText;
                 p = subtitle.Paragraphs[i];
+
+                var last = subtitle.GetParagraphOrDefault(i - 1);
+                if (last != null && p.StartTime.TotalMilliseconds - last.EndTime.TotalMilliseconds > 1000)
+                {
+                    last = null; // too much time
+                }
+
+                var next = subtitle.GetParagraphOrDefault(i + 1);
+                if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 1000)
+                {
+                    next = null; // to much time
+                }
+
                 oldText = p.Text;
 
                 var isLastLineClosed = last == null || last.Text.Length > 0 && ".!?:)]".Contains(last.Text[last.Text.Length - 1]);
@@ -39,39 +50,26 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     isLastLineClosed = true;
                 }
 
-                FixSpanishInvertedLetter('?', "¿", p, last, ref isLastLineClosed, callbacks);
-                FixSpanishInvertedLetter('!', "¡", p, last, ref isLastLineClosed, callbacks);
+                FixSpanishInvertedLetter('?', "¿", p, last, next, ref isLastLineClosed, callbacks);
+                FixSpanishInvertedLetter('!', "¡", p, last, next, ref isLastLineClosed, callbacks);
 
-                if (last?.Text != oldLastText)
+                if (p?.Text != oldText)
                 {
-                    if (callbacks.AllowFix(last, fixAction))
+                    if (callbacks.AllowFix(p, fixAction))
                     {
                         fixCount++;
-                        callbacks.AddFixToListView(last, fixAction, oldLastText, last.Text);
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                     else
                     {
-                        last.Text = oldLastText;
+                        p.Text = oldText;
                     }
                 }
             }
-            if (p?.Text != oldText)
-            {
-                if (callbacks.AllowFix(p, fixAction))
-                {
-                    fixCount++;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                }
-                else
-                {
-                    p.Text = oldText;
-                }
-            }
-
             callbacks.UpdateFixStatus(fixCount, language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
 
-        private static void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool isLastLineClosed, IFixCallbacks callbacks)
+        private static void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, Paragraph next, ref bool isLastLineClosed, IFixCallbacks callbacks)
         {
             if (p.Text.Contains(mark))
             {
@@ -215,14 +213,38 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
             else if (Utilities.CountTagInText(p.Text, inverseMark) == 1)
             {
+                var skipFix = next != null &&
+                              Utilities.CountTagInText(next.Text, inverseMark) == 0 &&
+                              Utilities.CountTagInText(next.Text, mark) == 1;
+                if (skipFix)
+                {
+                    return;
+                }
+
                 int idx = p.Text.IndexOf(inverseMark, StringComparison.Ordinal);
-                while (idx < p.Text.Length && !@".!?".Contains(p.Text[idx]))
+                while (idx < p.Text.Length && !@".!?…".Contains(p.Text[idx]))
                 {
                     idx++;
                 }
                 if (idx < p.Text.Length)
                 {
-                    p.Text = p.Text.Insert(idx, mark.ToString(CultureInfo.InvariantCulture));
+                    if (idx == p.Text.Length - 1 && p.Text.EndsWith('.'))
+                    {
+                        p.Text = p.Text.Substring(0, p.Text.Length - 1) + mark;
+                    }
+                    else if (idx == p.Text.Length - 3 && p.Text.EndsWith("...", StringComparison.Ordinal))
+                    {
+                        p.Text += mark;
+                    }
+                    else if (idx == p.Text.Length - 1 && p.Text.EndsWith('…'))
+                    {
+                        p.Text += mark;
+                    }
+                    else
+                    {
+                        p.Text = p.Text.Insert(idx, mark.ToString(CultureInfo.InvariantCulture));
+                    }
+
                     if (p.Text.Contains("¡¿") && p.Text.Contains("!?"))
                     {
                         p.Text = p.Text.Replace("!?", "?!");

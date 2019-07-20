@@ -1528,6 +1528,54 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixSpanishExclamationMarkAndQuestionMarkReplaceLastPeriod()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "¡Cómo estás.");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¡Cómo estás!");
+            }
+        }
+
+        [TestMethod]
+        public void FixSpanishExclamationMarkAndQuestionMarkThreePeriods()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "¿Cómo estás...");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¿Cómo estás...?");
+            }
+        }
+
+        [TestMethod]
+        public void FixSpanishExclamationMarkAndQuestionMarkEllipsis()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "¿Cómo estás…");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¿Cómo estás…?");
+            }
+        }
+
+        [TestMethod]
+        public void FixSpanishExclamationMarkAndQuestionMarkMultiLineNoChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                _subtitle = new Subtitle();
+                _subtitle.Paragraphs.Add(new Paragraph("¿Debo preguntar...", 7000, 10000));
+                _subtitle.Paragraphs.Add(new Paragraph("...otra vez?", 10100, 12000));
+                target.Initialize(_subtitle, new SubRip(), System.Text.Encoding.UTF8);
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¿Debo preguntar...");
+                Assert.AreEqual(_subtitle.Paragraphs[1].Text, "...otra vez?");
+            }
+        }
+
         #endregion Fix Spanish question and exclamation marks
 
         #region FixHyphens (remove dash)
