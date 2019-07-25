@@ -801,6 +801,10 @@
     <Word from="nemrem" to="ne mogu" />
     <Word from="nemogu" to="ne mogu" />
     <Word from="Nemogu" to="Ne mogu" />
+    <Word from="Nemože" to="Ne može" />
+    <Word from="nemože" to="ne može" />
+    <Word from="Nemožeš" to="Ne možeš" />
+    <Word from="nemožeš" to="ne možeš" />
     <Word from="nemora" to="ne mora" />
     <Word from="Nemora" to="Ne mora" />
     <Word from="nene" to="njene" />
@@ -836,6 +840,8 @@
     <Word from="njie" to="nije" />
     <Word from="njem" to="nijem" />
     <Word from="njeme" to="njene" />
+    <Word from="Nmeoj" to="Nemoj" />
+    <Word from="nmeoj" to="nemoj" />
     <Word from="nominovan" to="nominiran" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
@@ -2555,6 +2561,7 @@
     <RegEx find="([fF])orezni" replaceWith="$1orenzi" />
     <RegEx find="ejsbu" replaceWith="aceboo" />
     <RegEx find="arant(uje|ova)" replaceWith="arantira" />
+    <RegEx find="gelsk" replaceWith="glesk" />
     <RegEx find="([gGsS])luv" replaceWith="$1luh" />
     <RegEx find="([gG])nev" replaceWith="$1njev" />
     <RegEx find="\b([gG])nj?ezd" replaceWith="$1nijezd" />
@@ -3282,6 +3289,7 @@
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="cjenil" replaceWith="cijenil" />
     <RegEx find="ćnot" replaceWith="ćnost" />
+    <RegEx find="diba" replaceWith="dina" />
     <RegEx find="dišl" replaceWith="dišn" />
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
