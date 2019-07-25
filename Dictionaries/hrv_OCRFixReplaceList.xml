@@ -836,6 +836,8 @@
     <Word from="njie" to="nije" />
     <Word from="njem" to="nijem" />
     <Word from="njeme" to="njene" />
+    <Word from="Nmeoj" to="Nemoj" />
+    <Word from="nmeoj" to="nemoj" />
     <Word from="nominovan" to="nominiran" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
@@ -2555,6 +2557,7 @@
     <RegEx find="([fF])orezni" replaceWith="$1orenzi" />
     <RegEx find="ejsbu" replaceWith="aceboo" />
     <RegEx find="arant(uje|ova)" replaceWith="arantira" />
+    <RegEx find="gelsk" replaceWith="glesk" />
     <RegEx find="([gGsS])luv" replaceWith="$1luh" />
     <RegEx find="([gG])nev" replaceWith="$1njev" />
     <RegEx find="\b([gG])nj?ezd" replaceWith="$1nijezd" />
