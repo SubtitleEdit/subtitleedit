@@ -801,6 +801,10 @@
     <Word from="nemrem" to="ne mogu" />
     <Word from="nemogu" to="ne mogu" />
     <Word from="Nemogu" to="Ne mogu" />
+    <Word from="Nemože" to="Ne može" />
+    <Word from="ne može" to="ne može" />
+    <Word from="Nemožeš" to="Ne možeš" />
+    <Word from="ne možeš" to="ne možeš" />
     <Word from="nemora" to="ne mora" />
     <Word from="Nemora" to="Ne mora" />
     <Word from="nene" to="njene" />
@@ -3282,6 +3286,7 @@
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="cjenil" replaceWith="cijenil" />
     <RegEx find="ćnot" replaceWith="ćnost" />
+    <RegEx find="diba" replaceWith="dina" />
     <RegEx find="dišl" replaceWith="dišn" />
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
