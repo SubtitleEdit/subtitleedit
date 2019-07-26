@@ -786,11 +786,18 @@ namespace Nikse.SubtitleEdit.Logic
                 return TimeSpan.FromMilliseconds(number);
             }
 
+            var negate = false;
+            while (offset.StartsWith('-'))
+            {
+                offset = offset.Substring(1);
+                negate = !negate;
+            }
+
             var parts = offset.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (parts.Count > 1)
             {
                 var result = TimeSpan.Zero;
-                if (parts.Count == 4 && (int.TryParse(parts[0], NumberStyles.AllowLeadingSign, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out number)))
+                if (parts.Count == 4 && (int.TryParse(parts[0], NumberStyles.None, CultureInfo.CurrentCulture, out number) || int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out number)))
                 {
                     result = result.Add(TimeSpan.FromHours(number));
                     parts.RemoveAt(0);
@@ -812,6 +819,10 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (parts.Count == 0)
                 {
+                    if (negate)
+                    {
+                        result = result.Negate();
+                    }
                     return result;
                 }
             }
