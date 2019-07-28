@@ -37,14 +37,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                                 idx = newText.IndexOf('#', idx + 1);
                             }
-                        }                        
+                        }
                         else
                         {
                             var fix = true;
                             if (ms == "#" && newText.Contains("#") && !newText.Contains("# "))
                             {
                                 int count = Utilities.CountTagInText(newText, '#');
-                                if (count == 1 )
+                                if (count == 1)
                                 {
                                     var idx = newText.IndexOf('#');
                                     if (idx < newText.Length - 2)
@@ -78,6 +78,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
+
+                    // convert line start & ends with question marks into music symbol
+                    if (newText.Contains('?'))
+                    {
+                        newText = HandleQuestionMarks(newText);
+                    }
+
                     var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
                     if (newText != oldText && noTagsText != HtmlUtil.RemoveHtmlTags(oldText))
                     {
@@ -89,5 +96,52 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
             callbacks.UpdateFixStatus(fixCount, language.FixMusicNotation, language.XFixMusicNotation);
         }
+
+        private static string HandleQuestionMarks(string input)
+        {
+            string narrator = string.Empty;
+            string text = input;
+
+            // jump narrator
+            int colonIdx = text.IndexOf(':');
+            if (colonIdx > 0 && colonIdx + 1 < text.Length && (text[colonIdx + 1] == ' ' || text[colonIdx + 1] == '?'))
+            {
+                // jump white space
+                narrator = text.Substring(0, colonIdx + 1);
+                text = text.Substring(colonIdx + 1).TrimStart();
+            }
+
+            // be stub when looking for question marks
+            string noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
+
+            // check if text starts and ends with?
+            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?'))
+            {
+                // find correct start & end question mark position taking tags in consideration
+                int startIdx = text.IndexOf('?');
+                int endIdx = text.LastIndexOf('?');
+
+                // get pre and post text excluding question marks
+                string preText = text.Substring(0, startIdx);
+                string postText = text.Substring(endIdx + 1);
+
+                text = text.Substring(startIdx + 1, endIdx - (startIdx + 1));
+
+                // construct music text and restore preText/postText (mostly tags)
+                text = preText + WrapInMusic(text) + postText;
+
+                // add space after colon
+                if (!string.IsNullOrWhiteSpace(narrator) && text.Length > 0 && text[0] != ' ')
+                {
+                    text = " " + text;
+                }
+            }
+
+            // restore narrator
+            return narrator + text;
+        }
+
+        private static string WrapInMusic(string input) => $"{Configuration.Settings.Tools.MusicSymbol} {input.Trim()} {Configuration.Settings.Tools.MusicSymbol}";
     }
+
 }
