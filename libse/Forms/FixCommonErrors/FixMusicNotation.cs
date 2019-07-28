@@ -97,9 +97,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(fixCount, language.FixMusicNotation, language.XFixMusicNotation);
         }
 
-        private static string HandleQuestionMarks(string text)
+        private static string HandleQuestionMarks(string input)
         {
             string narrator = string.Empty;
+            string text = input;
 
             // jump narrator
             int colonIdx = text.IndexOf(':');
