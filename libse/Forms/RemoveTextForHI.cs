@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     }
                                 }
 
-                                if (remove && !DoRemove(pre))
+                                if (remove && !ShouldRemoveNarrator(pre))
                                 {
                                     remove = false;
                                 }
@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         var firstLine = newText.Remove(indexOfNewLine);
                         newText = firstLine + Environment.NewLine + second;
 
-                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') && 
+                        if (firstLine.Length > 0 && HtmlUtil.RemoveHtmlTags(text, true).StartsWith('-') &&
                             !HtmlUtil.RemoveHtmlTags(newText, true).StartsWith('-'))
                         {
                             firstLine = HtmlUtil.RemoveHtmlTags(firstLine, true);
@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return false;
         }
 
-        private bool DoRemove(string pre)
+        private bool ShouldRemoveNarrator(string pre)
         {
             // Skip these: Barry, remember: She cannot; http://google.com; Improved by: ...
             if (pre.IndexOfAny(new[] { "Previously on", "Improved by", "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -651,12 +651,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             // Okay! Narrator: Hello!
-            if (pre.IndexOfAny(new[] { '!', '?' }) > 0)
-            {
-                return false;
-            }
-
-            return true;
+            return pre.IndexOfAny(new[] { '!', '?', '¿', '¡' }) < 0;
         }
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
