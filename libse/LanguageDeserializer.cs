@@ -5452,6 +5452,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/PlayRateFaster":
                     language.Settings.PlayRateFaster = reader.Value;
                     break;
+                case "Settings/VideoResetSpeedAndZoom":
+                    language.Settings.VideoResetSpeedAndZoom = reader.Value;
+                    break;
                 case "Settings/CustomSearch1":
                     language.Settings.CustomSearch1 = reader.Value;
                     break;

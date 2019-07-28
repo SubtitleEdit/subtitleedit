@@ -1145,6 +1145,7 @@ $HorzAlign          =   Center
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
         public string MainVideoFaster { get; set; }
+        public string MainVideoReset { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
         public string MainSpellCheckAddWordToNames { get; set; }
@@ -1294,6 +1295,7 @@ $HorzAlign          =   Center
             MainVideo5000MsLeft = string.Empty;
             MainVideo5000MsRight = string.Empty;
             MainVideoFullscreen = "Alt+Return";
+            MainVideoReset = "Control+D0";
             MainSpellCheck = "Control+Shift+S";
             MainSpellCheckFindDoubleWords = "Control+Shift+D";
             MainSpellCheckAddWordToNames = "Control+Shift+L";
@@ -4934,6 +4936,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainVideoFaster = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoReset");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoReset = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                 {
@@ -6360,6 +6368,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
                 textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
                 textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
+                textWriter.WriteElementString("MainVideoReset", settings.Shortcuts.MainVideoReset);
                 textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
                 textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
                 textWriter.WriteElementString("MainSpellCheckAddWordToNames", settings.Shortcuts.MainSpellCheckAddWordToNames);

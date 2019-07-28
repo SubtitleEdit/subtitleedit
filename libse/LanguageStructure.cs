@@ -2176,6 +2176,7 @@
             public string Fullscreen { get; set; }
             public string PlayRateSlower { get; set; }
             public string PlayRateFaster { get; set; }
+            public string VideoResetSpeedAndZoom { get; set; }
             public string CustomSearch1 { get; set; }
             public string CustomSearch2 { get; set; }
             public string CustomSearch3 { get; set; }

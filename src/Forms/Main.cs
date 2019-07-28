@@ -172,6 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainVideoSlower = Keys.None;
         private Keys _mainVideoFaster = Keys.None;
+        private Keys _mainVideoReset = Keys.None;
         private Keys _mainGoToPreviousSubtitleAndFocusVideo = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
@@ -13997,6 +13998,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (e.KeyData == _mainVideoReset)
+            {
+                e.SuppressKeyPress = true;
+                if (audioVisualizer != null)
+                {
+                    audioVisualizer.ZoomFactor = 1.0;
+                    audioVisualizer.VerticalZoomFactor = 1.0;
+                }
+                if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.VideoPlayer.PlayRate = 1.0;            
+                }
+            }
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
             {
                 addParagraphHereToolStripMenuItem_Click(null, null);
@@ -18986,6 +19000,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             _mainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             _mainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);
+            _mainVideoReset = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoReset);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
