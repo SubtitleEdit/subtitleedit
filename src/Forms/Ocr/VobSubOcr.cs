@@ -287,6 +287,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
+        private const string Tesseract4Version = "4.1.0";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -434,7 +435,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add("Binary image compare");
             comboBoxOcrMethod.Items.Add("Tesseract 3.02");
-            comboBoxOcrMethod.Items.Add("Tesseract 4.00");
+            comboBoxOcrMethod.Items.Add("Tesseract " + Tesseract4Version);
             if (_modiEnabled)
             {
                 comboBoxOcrMethod.Items.Add(language.OcrViaModi);
@@ -448,7 +449,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.IndexOf("Binary image compare");
             _ocrMethodTesseract302 = comboBoxOcrMethod.Items.IndexOf("Tesseract 3.02");
-            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.IndexOf("Tesseract 4.00");
+            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.IndexOf("Tesseract " + Tesseract4Version);
             _ocrMethodModi = comboBoxOcrMethod.Items.IndexOf(language.OcrViaModi);
             _ocrMethodNocr = comboBoxOcrMethod.Items.IndexOf(language.OcrViaNOCR);
 
@@ -6876,7 +6877,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show("Download Tesseract 4.0.0", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show("Download Tesseract " + Tesseract4Version, "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         comboBoxTesseractLanguages.Items.Clear();
                         using (var form = new DownloadTesseract4())

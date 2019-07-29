@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             InitializeComponent();
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
-            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract400.tar.gz"));
+            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract410.tar.gz"));
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
             {
