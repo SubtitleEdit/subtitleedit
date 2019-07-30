@@ -451,7 +451,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Exportar Final Cut Pro XML advanced</Title>
     <FontName>Tipo de letra</FontName>
     <FontSize>Tamanho</FontSize>
-    <FontFace>Rosto de fonte</FontFace>
+    <FontFace>Estilo da letra</FontFace>
+	<FontFaceRegular>Normal</FontFaceRegular>
     <Alignment>Alinhamento</Alignment>
     <Baseline>Linha de base</Baseline>
   </ExportFcpXmlAdvanced>
@@ -501,7 +502,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <LineHeight>Espaço entre linha</LineHeight>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
-    <Forced>Forçado</Forced>
+    <Forced>Forçada</Forced>
     <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
     <SaveImageAs>Guardar imagem como...</SaveImageAs>
     <FcpUseFullPathUrl>Utilizar o caminho completo do endereço no FCP xml</FcpUseFullPathUrl>
@@ -2009,6 +2010,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Fullscreen>Ecrã inteiro</Fullscreen>
     <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
     <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
+	<VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
     <CustomSearch3>Traduzir, pesquisa personalizada 3</CustomSearch3>
