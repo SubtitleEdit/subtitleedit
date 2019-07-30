@@ -632,16 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     timerWaveform.Interval = Configuration.Settings.General.WaveformUpdateIntervalMs;
                 }
 
-                for (double zoomCounter = AudioVisualizer.ZoomMinimum; zoomCounter <= AudioVisualizer.ZoomMaximum + (0.001); zoomCounter += 0.1)
-                {
-                    int percent = (int)Math.Round((zoomCounter * 100));
-                    var item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
-                    toolStripComboBoxWaveform.Items.Add(item);
-                    if (percent == 100)
-                    {
-                        toolStripComboBoxWaveform.SelectedIndex = toolStripComboBoxWaveform.Items.Count - 1;
-                    }
-                }
+                InitializeWaveformZoomDropdown();
                 toolStripComboBoxWaveform.SelectedIndexChanged += toolStripComboBoxWaveform_SelectedIndexChanged;
 
                 FixLargeFonts();
@@ -656,6 +647,21 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
                 SeLogger.Error(exception, "Main constructor");
+            }
+        }
+
+        private void InitializeWaveformZoomDropdown()
+        {
+            toolStripComboBoxWaveform.Items.Clear();
+            for (double zoomCounter = AudioVisualizer.ZoomMinimum; zoomCounter <= AudioVisualizer.ZoomMaximum + (0.001); zoomCounter += 0.1)
+            {
+                int percent = (int)Math.Round((zoomCounter * 100));
+                var item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
+                toolStripComboBoxWaveform.Items.Add(item);
+                if (percent == 100)
+                {
+                    toolStripComboBoxWaveform.SelectedIndex = toolStripComboBoxWaveform.Items.Count - 1;
+                }
             }
         }
 
@@ -14005,10 +14011,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     audioVisualizer.ZoomFactor = 1.0;
                     audioVisualizer.VerticalZoomFactor = 1.0;
+                    InitializeWaveformZoomDropdown();
                 }
                 if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.PlayRate = 1.0;            
+                    mediaPlayer.VideoPlayer.PlayRate = 1.0;
+                    InitializePlayRateDropDown();
+                    toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
                 }
             }
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
@@ -18805,12 +18814,7 @@ namespace Nikse.SubtitleEdit.Forms
             _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
-
-            toolStripSplitButtonPlayRate.DropDownItems.Clear();
-            for (int i = 30; i <= 300; i += 10)
-            {
-                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100 });
-            }
+            InitializePlayRateDropDown();
 
             LoadPlugins();
 
@@ -18827,6 +18831,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             ShowSubtitleTimer.Start();
+        }
+
+        private void InitializePlayRateDropDown()
+        {
+            toolStripSplitButtonPlayRate.DropDownItems.Clear();
+            for (int i = 30; i <= 300; i += 10)
+            {
+                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100 });
+            }
         }
 
         private void MediaPlayer_OnEmptyPlayerClicked(object sender, EventArgs e)
