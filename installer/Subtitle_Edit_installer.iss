@@ -640,14 +640,11 @@ begin
       end;
 
       // Remove tesseract
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\gif.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\jpeg62.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\leptonica-1.74.4.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\libpng16.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\lzma.dll'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tesseract.exe'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\configs\hocr'));
+      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\*.traineddata'), False, True, False);
+      
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tesseract.exe'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tiff.dll'));
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\zlib1.dll'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\*.traineddata'), False, True, False);
 
