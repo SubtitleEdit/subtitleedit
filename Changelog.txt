@@ -1,9 +1,10 @@
 ﻿Subtitle Edit Changelog
 
-3.5.10 (xth July 2019) BETA
+3.5.10 (xth August 2019) BETA
 * NEW:
    * Profiles - thx philippwr, OmrSi, moob
    * Re-break line at cursor position shortcuts
+   * Reset video speed/waveform zoom shortcut - thx goodju
    * Optimal CPS configurable in UI - thx Flitskikker
    * Import scene changes from EZTitles - thx Flitskikker 
    * Add new sub format - thx Matmanamane
@@ -25,6 +26,7 @@
    * Update Dutch translation - thx xylographe
    * Update Swedish translation - thx Sopor
    * Update Romanian translation - thx Mircea
+   * Update Chinese translation - thx Leon
    * Move formatting split to sub items - thx Leon/OmrSi/marb99/cyberbrix
    * Auto rename after translate via plugin - thx Sopor
    * Allow dash in number for WebVTT files - thx Maksim
@@ -39,6 +41,7 @@
    * Include more Unicode spaces in "Spell check" word split - thx Greg
    * Improve handling of font tags in auto translation - thx Martin
    * Allow negative video offset - thx Marcello
+   * Update in program download of Tesseract 4.0.0 to 4.1.0
 * FIXED:
    * Fix for minor change in Google translate V1
    * Fix "Change all" for whole text in OCR - thx wtester7
@@ -71,6 +74,7 @@
    * Fix bug in "Modify selection": Show time box for "Duration greater than"
    * Fix line-break with ampersand in TTML - thx Krystian
    * Fix find MPC installed via K-Lite Codec Pack - thx OmrSi/xylographe
+   * Fix error in FCE regarding Spanish ¿? and ¡! - thx Lokotito/xylographe
 
 
 3.5.9 (10th February 2019)
