@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -767,12 +768,24 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (bluRaySubtitles.Count > 0)
                         {
-                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
-                            using (var vobSubOcr = new VobSubOcr())
+                            if ((toFormat == BdnXmlSubtitle || toFormat == BluRaySubtitle ||
+                                toFormat == VobSubSubtitle || toFormat == DostImageSubtitle) &&
+                                AllowImageToImage())
                             {
-                                vobSubOcr.FileName = Path.GetFileName(fileName);
-                                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
-                                sub = vobSubOcr.SubtitleFromOcr;
+                                foreach (var b in bluRaySubtitles)
+                                {
+                                    sub.Paragraphs.Add(new Paragraph(b.StartTimeCode, b.EndTimeCode, string.Empty));
+                                }
+                            }
+                            else
+                            {
+                                item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
+                                using (var vobSubOcr = new VobSubOcr())
+                                {
+                                    vobSubOcr.FileName = Path.GetFileName(fileName);
+                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
+                                    sub = vobSubOcr.SubtitleFromOcr;
+                                }
                             }
                         }
                         else if (isVobSub)
@@ -811,7 +824,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
                             }
 
-                            Paragraph prev = sub.Paragraphs[0];
+                            Paragraph prev = sub.GetParagraphOrDefault(0);
                             bool first = true;
                             foreach (Paragraph p in sub.Paragraphs)
                             {
@@ -844,7 +857,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 prev = p;
                             }
-                            sub.RemoveEmptyLines();
+                            if (bluRaySubtitles == null || bluRaySubtitles.Count == 0)
+                            {
+                                sub.RemoveEmptyLines(); //TODO: only for image export?
+                            }
                             if (checkBoxFixCasing.Checked)
                             {
                                 _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
@@ -919,6 +935,22 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Enabled = true;
             comboBoxFilter.Enabled = true;
             textBoxFilter.Enabled = true;
+        }
+
+        /// <summary>
+        /// Text based functions retuires text, so no image to image convert
+        /// </summary>
+        /// <returns></returns>
+        private bool AllowImageToImage()
+        {
+            return !checkBoxAutoBalance.Checked &&
+                   !checkBoxFixCasing.Checked &&
+                   !checkBoxFixCommonErrors.Checked &&
+                   !checkBoxFixRtl.Checked &&
+                   !checkBoxMultipleReplace.Checked &&
+                   !checkBoxRemoveFormatting.Checked &&
+                   !checkBoxSplitLongLines.Checked &&
+                   !checkBoxRemoveTextForHI.Checked;
         }
 
         internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Idx idx)
@@ -1218,14 +1250,18 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     bool success;
+                    List<IBinaryParagraph> binaryParagraphs = new List<IBinaryParagraph>();
+                    if (p.FileName != null && p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                        FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
+                    {
+                        binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraph>().ToList();
+                    }
+                    var dir = textBoxOutputFolder.Text;
                     if (checkBoxOverwriteOriginalFiles.Checked)
                     {
-                        success = CommandLineConvert.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, -1, null, null);
+                        dir = Path.GetDirectoryName(p.FileName);
                     }
-                    else
-                    {
-                        success = CommandLineConvert.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, -1, null, null);
-                    }
+                    success = CommandLineConvert.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, checkBoxOverwrite.Checked, -1, null, null);
                     p.Item.SubItems[3].Text = success ? Configuration.Settings.Language.BatchConvert.Converted : Configuration.Settings.Language.BatchConvert.NotConverted;
                 }
                 catch (Exception exception)

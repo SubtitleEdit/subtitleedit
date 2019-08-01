@@ -185,6 +185,7 @@
     <Compile Include="Forms\MergeLinesWithSameTimeCodes.cs" />
     <Compile Include="Forms\RemoveInterjection.cs" />
     <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
+    <Compile Include="Interfaces\IBinaryParagraph.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
     <Compile Include="Forms\FixCommonErrors\RemoveSpaceBetweenNumbers.cs" />

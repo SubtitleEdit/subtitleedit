@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     action = Convert;
                 }
-                else if (firstArgument == "/help" || firstArgument == "-help" || firstArgument == "/?" || firstArgument == "-?" )
+                else if (firstArgument == "/help" || firstArgument == "-help" || firstArgument == "/?" || firstArgument == "-?")
                 {
                     action = Help;
                 }
@@ -431,7 +432,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
                                                         mkvFileNames.Add(newFileName);
                                                     }
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
                                                 }
                                                 else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
@@ -453,7 +454,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                         newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
                                                         mkvFileNames.Add(newFileName);
                                                     }
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
                                                 }
                                                 else
@@ -484,7 +485,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                         }
                                                     }
 
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
                                                 }
                                             }
@@ -547,14 +548,14 @@ namespace Nikse.SubtitleEdit.Logic
                                         }
 
                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
-                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                         done = true;
                                     }
                                     else
                                     {
                                         var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".mp4";
                                         sub.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
-                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                        BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                         done = true;
                                     }
                                 }
@@ -634,7 +635,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
+                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
                         }
                     }
                     else
@@ -702,7 +703,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
             }
         }
 
@@ -723,7 +724,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
             }
         }
 
@@ -744,7 +745,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
             }
         }
 
@@ -965,7 +966,7 @@ namespace Nikse.SubtitleEdit.Logic
 
 
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
-                                              IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage,
+                                              IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, List<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions = BatchAction.None,
                                               Point? resolution = null, bool autoDetectLanguage = false)
         {
@@ -1288,7 +1289,15 @@ namespace Nikse.SubtitleEdit.Logic
                                 {
                                     var mp = form.MakeMakeBitmapParameter(index, width, height);
                                     mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                    if (isImageBased)
+                                    if (binaryParagraphs != null)
+                                    {
+                                        if (binaryParagraphs.Count > index)
+                                        {
+                                            mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                            mp.Forced = binaryParagraphs[index].IsForced;
+                                        }
+                                    }
+                                    else if (isImageBased)
                                     {
                                         using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                         {
@@ -1345,7 +1354,19 @@ namespace Nikse.SubtitleEdit.Logic
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
                                 {
                                     var mp = form.MakeMakeBitmapParameter(index, width, height);
-                                    if (isImageBased)
+                                    if (binaryParagraphs != null)
+                                    {
+                                        if (binaryParagraphs.Count > index)
+                                        {
+                                            var sourceBitmap = binaryParagraphs[index].GetBitmap();
+                                            var nbmp = new NikseBitmap(sourceBitmap);
+                                            nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.Black, true);
+                                            mp.Bitmap = nbmp.GetBitmap();
+                                            sourceBitmap.Dispose();
+                                            mp.Forced = binaryParagraphs[index].IsForced;
+                                        }
+                                    }
+                                    else if (isImageBased)
                                     {
                                         using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                         {
@@ -1410,7 +1431,15 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (isImageBased)
+                                if (binaryParagraphs != null)
+                                {
+                                    if (binaryParagraphs.Count > index)
+                                    {
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                    }
+                                }
+                                else if (isImageBased)
                                 {
                                     using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                     {
@@ -1465,7 +1494,15 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (isImageBased)
+                                if (binaryParagraphs != null)
+                                {
+                                    if (binaryParagraphs.Count > index)
+                                    {
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                    }
+                                }
+                                else if (isImageBased)
                                 {
                                     using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                     {
@@ -1517,7 +1554,15 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (isImageBased)
+                                if (binaryParagraphs != null)
+                                {
+                                    if (binaryParagraphs.Count > index)
+                                    {
+                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                    }
+                                }
+                                else if (isImageBased)
                                 {
                                     using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
                                     {
