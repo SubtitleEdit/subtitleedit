@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -458,6 +458,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FontName>Шрифт</FontName>
     <FontSize>Размер шрифта</FontSize>
     <FontFace>Стиль шрифта</FontFace>
+    <FontFaceRegular>Обычный</FontFaceRegular>
     <Alignment>Выравнивание</Alignment>
     <Baseline>Отступ</Baseline>
   </ExportFcpXmlAdvanced>
@@ -1938,7 +1939,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MusicSymbolsReplace>Символы на замену (разделять "запятой")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (выбрать правила исправления)</FixCommonErrorsSkipStepOne>
+    <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (сразу переходить ко 2-му шагу ‒
+    правилам исправления)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Горячие клавиши</Shortcuts>
     <Shortcut>Команда:</Shortcut>
     <Control>Ctrl</Control>
@@ -1992,7 +1994,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CopyTextOnly>Копировать в буфер только текст (выделенные строки)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Копировать исходный текст в текущий</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автопродолжительность (выделенные строки)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRtl>Обратить начало/конец RTL</ReverseStartAndEndingForRtl>
+    <ReverseStartAndEndingForRtl>Обратить RTL начало/конец</ReverseStartAndEndingForRtl>
     <VerticalZoom>Увеличить масштаб по вертикали</VerticalZoom>
     <VerticalZoomOut>Уменьшить масштаб по вертикали</VerticalZoomOut>
     <WaveformSeekSilenceForward>Поиск пауз далее</WaveformSeekSilenceForward>
@@ -2025,6 +2027,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Fullscreen>Во весь экран</Fullscreen>
     <PlayRateSlower>Замедлить скорость воспроизведения</PlayRateSlower>
     <PlayRateFaster>Ускорить скорость воспроизведения</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Сбросить скорость/масштаб</VideoResetSpeedAndZoom>
     <CustomSearch1>Перевод, пользовательский поиск 1</CustomSearch1>
     <CustomSearch2>Перевод, пользовательский поиск 2</CustomSearch2>
     <CustomSearch3>Перевод, пользовательский поиск 3</CustomSearch3>
