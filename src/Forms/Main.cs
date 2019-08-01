@@ -942,12 +942,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var idx = audioVisualizer.GetSceneChangeIndex(_audioWaveformRightClickSeconds.Value);
+            RemoveSceneChange(idx);
+        }
+
+        private void RemoveSceneChange(int idx)
+        {
             if (idx >= 0 && idx < audioVisualizer.SceneChanges.Count)
             {
                 var temp = new List<double>(audioVisualizer.SceneChanges);
                 temp.RemoveAt(idx);
                 audioVisualizer.SceneChanges = temp;
-                SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.ToList());
+                SceneChangeHelper.SaveSceneChanges(_videoFileName, temp);
             }
         }
 
@@ -6685,13 +6690,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 &&
                             _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                         {
-                            textBoxListViewTextAlternate.SelectionStart =
-                                _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
-                        }
-
-                        if (_subtitle.HistoryItems[_undoIndex].RedoFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
+                            textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
                         }
 
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
@@ -14109,12 +14108,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var cp = mediaPlayer.CurrentPosition;
                 var idx = audioVisualizer.GetSceneChangeIndex(cp);
                 if (idx >= 0)
-                { // remove scene change
-                    if (idx < audioVisualizer.SceneChanges.Count)
-                    {
-                        audioVisualizer.SceneChanges[idx] = -1;
-                        SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
-                    }
+                {
+                    RemoveSceneChange(idx);
                 }
                 else
                 { // add scene change
