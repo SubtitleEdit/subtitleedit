@@ -17,6 +17,7 @@
  * NOTE: For more info see http://blog.thescorpius.com/index.php/2017/07/15/presentation-graphic-stream-sup-files-bluray-subtitle-format/
  */
 
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -245,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
-        public class PcsData
+        public class PcsData : IBinaryParagraph
         {
             public int CompNum;
             public CompositionState CompositionState;
@@ -895,6 +896,5 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             return (uint)(buffer[index + 3] + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
         }
-
-    }
+    }    
 }
