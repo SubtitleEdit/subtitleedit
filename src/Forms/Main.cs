@@ -944,8 +944,10 @@ namespace Nikse.SubtitleEdit.Forms
             var idx = audioVisualizer.GetSceneChangeIndex(_audioWaveformRightClickSeconds.Value);
             if (idx >= 0 && idx < audioVisualizer.SceneChanges.Count)
             {
-                audioVisualizer.SceneChanges[idx] = -1;
-                SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
+                var temp = new List<double>(audioVisualizer.SceneChanges);
+                temp.RemoveAt(idx);
+                audioVisualizer.SceneChanges = temp;
+                SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.ToList());
             }
         }
 
