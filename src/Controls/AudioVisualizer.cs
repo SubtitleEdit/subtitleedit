@@ -584,8 +584,16 @@ namespace Nikse.SubtitleEdit.Controls
                         int index = 0;
                         while (index < _sceneChanges.Count)
                         {
-                            double time = _sceneChanges[index++];
-                            int pos = SecondsToXPosition(time - _startPositionSeconds);
+                            int pos = -1;
+                            try
+                            {
+                                double time = _sceneChanges[index++];
+                                pos = SecondsToXPosition(time - _startPositionSeconds);
+                            }
+                            catch
+                            {
+                                pos = -1;
+                            }
                             if (pos > 0 && pos < Width)
                             {
                                 if (currentPositionPos == pos)
