@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechanges" +
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechanges;*.xml;*.json" +
                                      "|Matroska xml chapter file|*.xml" +
                                      "|EZTitles shotchanges XML file|*.xml" +
                                      "|JSON scene changes file|*.json" +
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var sb = new StringBuilder();
-                foreach (double ms in list.OrderBy(p=>p))
+                foreach (double ms in list.OrderBy(p => p))
                 {
                     sb.AppendLine(new TimeCode(ms).ToShortStringHHMMSSFF());
                 }

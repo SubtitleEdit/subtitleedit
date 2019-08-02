@@ -576,6 +576,26 @@ namespace Nikse.SubtitleEdit.Controls
                 int currentPositionPos = SecondsToXPosition(_currentVideoPositionSeconds - _startPositionSeconds);
                 bool currentPosDone = false;
 
+                // current video position
+                if (_currentVideoPositionSeconds > 0 && !currentPosDone && currentPositionPos > 0 && currentPositionPos < Width)
+                {
+                    using (var p = new Pen(Color.Turquoise))
+                    {
+                        graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
+                    }
+                }
+
+                // paragraphs
+                var startPositionMilliseconds = _startPositionSeconds * 1000.0;
+                var endPositionMilliseconds = RelativeXPositionToSeconds(Width) * 1000.0;
+                foreach (Paragraph p in _displayableParagraphs)
+                {
+                    if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
+                    {
+                        DrawParagraph(p, graphics);
+                    }
+                }
+
                 // scene changes
                 if (_sceneChanges != null)
                 {
@@ -622,26 +642,6 @@ namespace Nikse.SubtitleEdit.Controls
                     catch (Exception)
                     {
                         // ignored
-                    }
-                }
-
-                // current video position
-                if (_currentVideoPositionSeconds > 0 && !currentPosDone && currentPositionPos > 0 && currentPositionPos < Width)
-                {
-                    using (var p = new Pen(Color.Turquoise))
-                    {
-                        graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
-                    }
-                }
-
-                // paragraphs
-                var startPositionMilliseconds = _startPositionSeconds * 1000.0;
-                var endPositionMilliseconds = RelativeXPositionToSeconds(Width) * 1000.0;
-                foreach (Paragraph p in _displayableParagraphs)
-                {
-                    if (p.EndTime.TotalMilliseconds >= startPositionMilliseconds && p.StartTime.TotalMilliseconds <= endPositionMilliseconds)
-                    {
-                        DrawParagraph(p, graphics);
                     }
                 }
 
