@@ -2871,7 +2871,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
             }
 
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
+            if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d", StringComparison.OrdinalIgnoreCase))
             {
                 labelMpvSettings.Text = "--vo=vaapi";
             }

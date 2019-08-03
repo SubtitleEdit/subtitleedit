@@ -223,13 +223,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             Debug.WriteLine("MPlayer: " + e.Data);
 
-            if (e.Data.StartsWith("Playing "))
+            if (e.Data.StartsWith("Playing ", StringComparison.Ordinal))
             {
                 _loaded = true;
                 return;
             }
 
-            if (e.Data.StartsWith("Exiting..."))
+            if (e.Data.StartsWith("Exiting...", StringComparison.Ordinal))
             {
                 _ended = true;
                 if (_loaded)
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
 
             int indexOfEqual = e.Data.IndexOf('=');
-            if (indexOfEqual > 0 && indexOfEqual + 1 < e.Data.Length && e.Data.StartsWith("ANS_"))
+            if (indexOfEqual > 0 && indexOfEqual + 1 < e.Data.Length && e.Data.StartsWith("ANS_", StringComparison.Ordinal))
             {
                 string code = e.Data.Substring(0, indexOfEqual);
                 string value = e.Data.Substring(indexOfEqual + 1);
