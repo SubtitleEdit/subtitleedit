@@ -388,6 +388,26 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
+                // show text when cursor (current pos) is on end-time (and next text too close)
+                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    var paragraph = subtitle.Paragraphs[index];
+                    var next = subtitle.GetParagraphOrDefault(index + 1);
+                    if (next == null)
+                    {
+                        paragraph.EndTime.TotalMilliseconds += 40;
+                    }
+                    else
+                    {
+                        next.StartTime.TotalMilliseconds += 5;
+                        var diff = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
+                        if (diff > 0)
+                        {
+                            paragraph.EndTime.TotalMilliseconds += Math.Min(diff, 40);
+                        }
+                    }
+                }
+
                 string text = subtitle.ToText(format);
 
                 if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
