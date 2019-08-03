@@ -1749,6 +1749,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _lastAutoSave = DateTime.UtcNow.Ticks + 1009000;
             var currentSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             if (_changeSubtitleHash != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
             {
@@ -1756,12 +1757,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return;
                 }
-                SaveSubtitle(GetCurrentSubtitleFormat());
+                SaveSubtitle(GetCurrentSubtitleFormat(), false, true);
             }
 
             if (!string.IsNullOrEmpty(_subtitleAlternateFileName) && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
-                SaveOriginalSubtitle(GetCurrentSubtitleFormat());
+                SaveOriginalSubtitle(GetCurrentSubtitleFormat(), true);
             }
 
             _lastAutoSave = DateTime.UtcNow.Ticks;
@@ -3625,7 +3626,7 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        private DialogResult SaveSubtitle(SubtitleFormat format, bool useNewLineWithOnly0A = false)
+        private DialogResult SaveSubtitle(SubtitleFormat format, bool useNewLineWithOnly0A = false, bool skipPrompts = false)
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
             {
@@ -3673,7 +3674,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.GetEncoding(12001)) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8);
-                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
+                if (!skipPrompts && !isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
@@ -3695,7 +3696,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     }
                 }
-                if (containsNegativeTime)
+                if (containsNegativeTime && !skipPrompts)
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
@@ -3703,7 +3704,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (File.Exists(_fileName))
+                if (!skipPrompts && File.Exists(_fileName))
                 {
                     var fileInfo = new FileInfo(_fileName);
                     var fileOnDisk = fileInfo.LastWriteTime;
@@ -3799,7 +3800,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private DialogResult SaveOriginalSubtitle(SubtitleFormat format)
+        private DialogResult SaveOriginalSubtitle(SubtitleFormat format, bool skipPrompts = false)
         {
             try
             {
@@ -3814,7 +3815,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     }
                 }
-                if (containsNegativeTime)
+                if (!skipPrompts && containsNegativeTime)
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
@@ -3843,7 +3844,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = subAlt.ToText(format);
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding != null && (currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8));
-                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
+                if (!skipPrompts && !isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
@@ -5603,14 +5604,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result != tb.Text)
                 {
                     var match = r.Match(string.Join(Environment.NewLine, tb.Text.SplitToLines()));
-                    if (match != null && match.Success && !_findHelper.FindText.StartsWith("^") && _findHelper.ReplaceText.Length > 0)
+                    if (match != null && match.Success && !_findHelper.FindText.StartsWith('^') && _findHelper.ReplaceText.Length > 0)
                     {
                         var add = Math.Abs(match.Length - _findHelper.ReplaceText.Length);
                         _findHelper.SelectedPosition += add;
                     }
                     tb.Text = result;
                 }
-                if (_findHelper.FindText.StartsWith("^"))
+                if (_findHelper.FindText.StartsWith('^'))
                 {
                     _findHelper.SelectedPosition++;
                 }
@@ -7480,8 +7481,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
-                toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode;
-
+                toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";                
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
                     toolStripMenuItemMergeLines.Visible = false;
@@ -7553,7 +7553,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
             toolStripMenuItemSurroundWithMusicSymbols.Text = Configuration.Settings.Tools.MusicSymbol;
-            toolStripMenuItemSurroundWithMusicSymbols.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol);
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
+            {
+                toolStripMenuItemSurroundWithMusicSymbols.Visible = false;
+            }            
         }
 
         private void tsi_Click(object sender, EventArgs e)
@@ -9919,7 +9922,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var start = tb.SelectionStart;
             var end = start + tb.SelectionLength;
-            var indexOfNewLine = tb.Text.IndexOf(Environment.NewLine);
+            var indexOfNewLine = tb.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             if (end < indexOfNewLine || start > indexOfNewLine)
             {
                 return;
@@ -14709,8 +14712,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int indexOfNewLine = newText.IndexOf(Environment.NewLine);
-            int oldIndexOfNewLine = oldText.IndexOf(Environment.NewLine);
+            int indexOfNewLine = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            int oldIndexOfNewLine = oldText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
 
             if (down)
             {
@@ -15684,7 +15687,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             tag = string.Empty;
                         }
-                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag.Replace("}", "\\")))
+                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag.Replace("}", "\\"), StringComparison.Ordinal))
                         {
                             tag = string.Empty;
                         }
@@ -23223,7 +23226,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
                 {
-                    int endFont = text.IndexOf(">");
+                    int endFont = text.IndexOf('>');
                     if (endFont > 0)
                     {
                         pre += text.Substring(0, endFont + 1);
