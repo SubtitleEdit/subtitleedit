@@ -589,7 +589,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                                 return fullPath;
                             }
 
-                            while (path.StartsWith(".."))
+                            while (path.StartsWith("..", StringComparison.Ordinal))
                             {
                                 path = path.Remove(0, 3);
                                 fullPath = Path.GetFullPath(path);

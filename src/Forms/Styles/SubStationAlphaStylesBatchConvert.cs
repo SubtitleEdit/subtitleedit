@@ -747,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
 
                 string s = line.ToLowerInvariant();
-                if (s.StartsWith(tag.ToLowerInvariant() + ":"))
+                if (s.StartsWith(tag.ToLowerInvariant() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
                     {
@@ -837,14 +837,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 foreach (string line in _header.SplitToLines())
                 {
                     string s = line.ToLowerInvariant().Trim();
-                    if (s.StartsWith("collisions:"))
+                    if (s.StartsWith("collisions:", StringComparison.Ordinal))
                     {
                         if (s.Remove(0, 11).Trim() == "reverse")
                         {
                             comboBoxCollision.SelectedIndex = 1;
                         }
                     }
-                    else if (s.StartsWith("playresx:"))
+                    else if (s.StartsWith("playresx:", StringComparison.Ordinal))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
@@ -852,7 +852,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             numericUpDownVideoWidth.Value = number;
                         }
                     }
-                    else if (s.StartsWith("playresy:"))
+                    else if (s.StartsWith("playresy:", StringComparison.Ordinal))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
@@ -860,11 +860,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             numericUpDownVideoHeight.Value = number;
                         }
                     }
-                    else if (s.StartsWith("scaledborderandshadow:"))
+                    else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
                     {
                         checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
                     }
-                    else if (s.StartsWith("wrapstyle:"))
+                    else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
                     {
                         var wrapStyle = s.Remove(0, 10).Trim();
                         for (int i = 0; i < comboBoxWrapStyle.Items.Count; i++)

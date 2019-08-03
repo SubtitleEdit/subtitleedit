@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
                 videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
                 videoPlayerContainer.EnableMouseWheelStep();
-                if (fileName != null && (fileName.StartsWith("https://") || fileName.StartsWith("http://")))
+                if (fileName != null && (fileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
                 {
                     // we don't have videoInfo for streams...
                 }
