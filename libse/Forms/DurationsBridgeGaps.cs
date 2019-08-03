@@ -21,10 +21,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var cur = subtitle.Paragraphs[i];
                 var next = subtitle.Paragraphs[i + 1];
 
-                double currentGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
+                double currentGap = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
 
-                // there shouldn't be adjustment if current gaps is shorter than minimum gaps or greater than maximum gaps
-                if (currentGaps < minMsBetweenLines || currentGaps > maxMs)
+                // there shouldn't be adjustment if current gaps is shorter or equal than minimum gap or greater than maximum gaps
+                if (currentGap <= minMsBetweenLines || currentGap > maxMs)
                 {
                     continue;
                 }
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 // next paragraph start-time will be pull to try to meet the current paragraph
                 if (divideEven)
                 {
-                    next.StartTime.TotalMilliseconds -= currentGaps / 2.0;
+                    next.StartTime.TotalMilliseconds -= currentGap / 2.0;
                 }
 
                 cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 fixedCount++;
 
                 double newGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
-                dic?.Add(cur.ID, $"{currentGaps / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
+                dic?.Add(cur.ID, $"{currentGap / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
             }
 
             return fixedCount;
