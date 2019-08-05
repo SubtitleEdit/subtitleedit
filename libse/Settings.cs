@@ -1081,6 +1081,7 @@ $HorzAlign          =   Center
         public string GeneralGoToBookmark { get; set; }
         public string GeneralGoToPreviousBookmark { get; set; }
         public string GeneralGoToNextBookmark { get; set; }
+        public string ChooseProfile { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -4564,6 +4565,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("ChooseProfile");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.ChooseProfile = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                 {
@@ -6304,6 +6311,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralClearBookmarks", settings.Shortcuts.GeneralClearBookmarks);
                 textWriter.WriteElementString("GeneralGoToBookmark", settings.Shortcuts.GeneralGoToBookmark);
                 textWriter.WriteElementString("GeneralGoToNextBookmark", settings.Shortcuts.GeneralGoToNextBookmark);
+                textWriter.WriteElementString("ChooseProfile", settings.Shortcuts.ChooseProfile);
                 textWriter.WriteElementString("GeneralGoToPreviousBookmark", settings.Shortcuts.GeneralGoToPreviousBookmark);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);

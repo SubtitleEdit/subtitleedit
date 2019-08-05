@@ -529,7 +529,7 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "Name";
-            this.columnHeaderName.Width = 170;
+            this.columnHeaderName.Width = 140;
             // 
             // columnHeaderMaxLength
             // 
@@ -544,12 +544,12 @@
             // columnHeaderMaxCps
             // 
             this.columnHeaderMaxCps.Text = "Max. CPS";
-            this.columnHeaderMaxCps.Width = 75;
+            this.columnHeaderMaxCps.Width = 80;
             // 
             // columnHeaderMinGap
             // 
             this.columnHeaderMinGap.Text = "Min. gap (ms)";
-            this.columnHeaderMinGap.Width = 95;
+            this.columnHeaderMinGap.Width = 120;
             // 
             // buttonCancel
             // 

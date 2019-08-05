@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             RulesProfiles[idx].Name = textBoxName.Text.Trim();
-            RulesProfiles[idx].SubtitleLineMaximumLength = numericUpDownSubtitleLineMaximumLength.Value;
+            RulesProfiles[idx].SubtitleLineMaximumLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
             RulesProfiles[idx].SubtitleOptimalCharactersPerSeconds = numericUpDownOptimalCharsSec.Value;
             RulesProfiles[idx].SubtitleMaximumCharactersPerSeconds = numericUpDownMaxCharsSec.Value;
             RulesProfiles[idx].SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
