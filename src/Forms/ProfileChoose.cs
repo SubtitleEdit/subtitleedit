@@ -1,0 +1,113 @@
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace Nikse.SubtitleEdit.Forms
+{
+    public partial class ProfileChoose : Form
+    {
+        private List<RulesProfile> _rulesProfiles { get; set; }
+
+        public ProfileChoose(List<RulesProfile> rulesProfiles, string name)
+        {
+            UiUtil.PreInitialize(this);
+            InitializeComponent();
+            UiUtil.FixFonts(this);
+
+            var language = Configuration.Settings.Language.Settings;
+            Text = language.Profiles;
+            listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
+            listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
+            listViewProfiles.Columns[2].Text = language.OptimalCharactersPerSecond;
+            listViewProfiles.Columns[3].Text = language.MaximumCharactersPerSecond;
+            listViewProfiles.Columns[4].Text = language.MinimumGapMilliseconds;
+
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            UiUtil.FixLargeFonts(this, buttonOK);
+
+            _rulesProfiles = rulesProfiles;
+            if (_rulesProfiles.Count == 0)
+            {
+                _rulesProfiles.AddRange(new GeneralSettings().Profiles);
+            }
+            ShowRulesProfiles(rulesProfiles.FirstOrDefault(p => p.Name == name));
+        }
+
+        private void ShowRulesProfiles(RulesProfile itemToFocus)
+        {
+            var idx = listViewProfiles.SelectedItems.Count > 0 ? listViewProfiles.SelectedItems[0].Index : -1;
+            _rulesProfiles = _rulesProfiles.OrderBy(p => p.Name).ToList();
+            listViewProfiles.BeginUpdate();
+            listViewProfiles.Items.Clear();
+            foreach (var profile in _rulesProfiles)
+            {
+                var item = new ListViewItem { Text = profile.Name };
+                item.SubItems.Add(profile.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
+                item.SubItems.Add(profile.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.CurrentCulture));
+                item.SubItems.Add(profile.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.CurrentCulture));
+                item.SubItems.Add(profile.MinimumMillisecondsBetweenLines.ToString(CultureInfo.CurrentCulture));
+                listViewProfiles.Items.Add(item);
+                if (itemToFocus == profile)
+                {
+                    listViewProfiles.Items[listViewProfiles.Items.Count - 1].Selected = true;
+                }
+            }
+            listViewProfiles.EndUpdate();
+            if (itemToFocus == null && listViewProfiles.Items.Count > 0)
+            {
+                if (idx < 0)
+                {
+                    idx = 0;
+                }
+                else if (idx >= listViewProfiles.Items.Count)
+                {
+                    idx = listViewProfiles.Items.Count - 1;
+                }
+                listViewProfiles.Items[idx].Selected = true;
+            }
+        }
+
+        private void ProfileChoose_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            var idx = listViewProfiles.SelectedIndices[0];
+            Configuration.Settings.General.CurrentProfile = _rulesProfiles[idx].Name;
+            Configuration.Settings.General.SubtitleLineMaximumLength = _rulesProfiles[idx].SubtitleLineMaximumLength;
+            Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)_rulesProfiles[idx].SubtitleOptimalCharactersPerSeconds;
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)_rulesProfiles[idx].SubtitleMaximumCharactersPerSeconds;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = _rulesProfiles[idx].SubtitleMinimumDisplayMilliseconds;
+            Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds = _rulesProfiles[idx].SubtitleMaximumDisplayMilliseconds;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = _rulesProfiles[idx].MinimumMillisecondsBetweenLines;
+            Configuration.Settings.General.MaxNumberOfLines = _rulesProfiles[idx].MaxNumberOfLines;
+            Configuration.Settings.General.SubtitleMaximumWordsPerMinute = (double)_rulesProfiles[idx].SubtitleMaximumWordsPerMinute;
+            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !_rulesProfiles[idx].CpsIncludesSpace;
+            Configuration.Settings.General.MergeLinesShorterThan = _rulesProfiles[idx].MergeLinesShorterThan;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void buttonCancel_Click(object sender, System.EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void listViewProfiles_DoubleClick(object sender, EventArgs e)
+        {
+            if (listViewProfiles.SelectedItems.Count > 0)
+            {
+                buttonOK_Click(sender, e);
+            }
+        }
+    }
+}

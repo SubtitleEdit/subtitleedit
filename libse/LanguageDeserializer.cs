@@ -4744,6 +4744,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/GoToNextBookmark":
                     language.Settings.GoToNextBookmark = reader.Value;
                     break;
+                case "Settings/ChooseProfile":
+                    language.Settings.ChooseProfile = reader.Value;
+                    break;
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
                     break;

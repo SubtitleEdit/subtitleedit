@@ -941,6 +941,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToBookmark));
             AddNode(generalNode, language.GoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark));
             AddNode(generalNode, language.GoToNextBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark));
+            AddNode(generalNode, language.ChooseProfile, nameof(Configuration.Settings.Shortcuts.ChooseProfile));
             if (generalNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(generalNode);
@@ -3054,7 +3055,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
-            _rulesProfiles[idx].SubtitleLineMaximumLength = numericUpDownSubtitleLineMaximumLength.Value;
+            _rulesProfiles[idx].SubtitleLineMaximumLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
             _rulesProfiles[idx].SubtitleOptimalCharactersPerSeconds = numericUpDownOptimalCharsSec.Value;
             _rulesProfiles[idx].SubtitleMaximumCharactersPerSeconds = numericUpDownMaxCharsSec.Value;
             _rulesProfiles[idx].SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;

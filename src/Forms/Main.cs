@@ -183,6 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralGoToBookmark = Keys.None;
         private Keys _mainGeneralGoToPreviousBookmark = Keys.None;
         private Keys _mainGeneralGoToNextBookmark = Keys.None;
+        private Keys _mainGeneralChooseProfile = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
         private Keys _mainTextBoxSplitSelectedLineBilingual = Keys.None;
@@ -4485,6 +4486,8 @@ namespace Nikse.SubtitleEdit.Forms
             Application.DoEvents();
             UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
             mediaPlayer.VideoPlayerContainerResize(null, null);
+            ShowLineInformationListView();
+            ShowSourceLineNumber();
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls()
@@ -4734,7 +4737,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
-                toolStripSelected.Text = string.Format(_language.LineNumberX, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart) + 1);
+                var profile = Configuration.Settings.General.CurrentProfile + "   ";
+                if (profile.TrimEnd() == "Default")
+                {
+                    profile = string.Empty;
+                }
+                toolStripSelected.Text = profile + string.Format(_language.LineNumberX, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart) + 1);
             }
         }
 
@@ -8417,15 +8425,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowLineInformationListView()
         {
+            var profile = Configuration.Settings.General.CurrentProfile + "   ";
+            if (profile.TrimEnd() == "Default")
+            {
+                profile = string.Empty;
+            }
             if (tabControlSubtitle.SelectedIndex == TabControlListView)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
-                    toolStripSelected.Text = string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
+                    toolStripSelected.Text = profile + string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
                 }
                 else
                 {
-                    toolStripSelected.Text = string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+                    toolStripSelected.Text = profile + string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
                 }
             }
         }
@@ -13450,6 +13463,25 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainGeneralGoToNextBookmark == e.KeyData)
             {
                 GoToNextBookmark();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralChooseProfile == e.KeyData)
+            {
+                using (var form = new ProfileChoose(Configuration.Settings.General.Profiles, Configuration.Settings.General.CurrentProfile))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        SubtitleListview1.BeginUpdate();
+                        for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                        {
+                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, _subtitle.Paragraphs[i]);
+                        }
+                        SubtitleListview1.EndUpdate();
+                        ShowLineInformationListView();
+                        ShowSourceLineNumber();
+                    }
+                }
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -19010,6 +19042,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
             _mainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
             _mainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
+            _mainGeneralChooseProfile = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ChooseProfile);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             _mainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             _mainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);

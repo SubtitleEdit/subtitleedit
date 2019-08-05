@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public decimal SubtitleLineMaximumLength { get; set; }
+        public int SubtitleLineMaximumLength { get; set; }
         public decimal SubtitleOptimalCharactersPerSeconds { get; set; }
         public decimal SubtitleMaximumWordsPerMinute { get; set; }
         public decimal SubtitleMaximumCharactersPerSeconds { get; set; }
