@@ -352,10 +352,10 @@ namespace Nikse.SubtitleEdit.Controls
             try
             {
                 SubtitleFormat format = new AdvancedSubStationAlpha();
+                var oldSub = subtitle;
+                subtitle = new Subtitle(subtitle);
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
-                    var oldSub = subtitle;
-                    subtitle = new Subtitle(subtitle);
                     if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
                     {
                         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
