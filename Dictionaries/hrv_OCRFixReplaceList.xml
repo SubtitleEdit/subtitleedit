@@ -3303,6 +3303,7 @@
     <RegEx find="dsek" replaceWith="dsjek" />
     <RegEx find="[dt]cj?en(i|jen)" replaceWith="dcijen$1" />
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
+    <RegEx find="eako" replaceWith="ekao" />
     <RegEx find="ebać" replaceWith="ebat ć" />
     <RegEx find="editov" replaceWith="editir" />
     <RegEx find="edituje" replaceWith="editira" />
