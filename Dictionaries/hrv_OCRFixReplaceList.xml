@@ -250,6 +250,7 @@
     <Word from="donijeo" to="donio" />
     <Word from="Donijeo" to="Donio" />
     <Word from="Donijeću" to="Donijet ću" />
+    <Word from="dopreti" to="doprijeti" />
     <Word from="dosledan" to="dosljedan" />
     <!-- nije za regex [ni dospeo - ni dospeju - mora ostati ovako] -->
     <Word from="dospeo" to="dospio" />
@@ -469,6 +470,8 @@
     <Word from="juče" to="jučer" />
     <Word from="Juče" to="Jučer" />
     <Word from="kakava" to="kakva" />
+    <Word from="kampovali" to="kampirali" />
+    <Word from="Kampovao" to="Kampirao" />
     <Word from="kampovao" to="kampirao" />
     <Word from="kampuje" to="kampira" />
     <Word from="kampujemo" to="kampiramo" />
@@ -1015,6 +1018,7 @@
     <Word from="Plenom" to="Plijenom" />
     <Word from="pljenom" to="plijenom" />
     <Word from="Pljenom" to="Plijenom" />
+    <Word from="pocepala" to="poderala" />
     <Word from="pocetku" to="početku" />
     <Word from="počeću" to="počet ću" />
     <Word from="poči" to="poći" />
@@ -2067,6 +2071,7 @@
     <Word from="Kolu" to="Coleu" />
     <Word from="Kolins" to="Collins" />
     <Word from="Koni" to="Connie" />
+    <Word from="Konor" to="Connor"/>
     <Word from="Kortni" to="Courtney" />
     <Word from="Krejg" to="Craig" />
     <Word from="Krejga" to="Craiga" />
@@ -3298,6 +3303,7 @@
     <RegEx find="dsek" replaceWith="dsjek" />
     <RegEx find="[dt]cj?en(i|jen)" replaceWith="dcijen$1" />
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
+    <RegEx find="eako" replaceWith="ekao" />
     <RegEx find="ebać" replaceWith="ebat ć" />
     <RegEx find="editov" replaceWith="editir" />
     <RegEx find="edituje" replaceWith="editira" />
@@ -3462,6 +3468,7 @@
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
     <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
+    <RegEx find="rpeu" replaceWith="preu" />
     <RegEx find="ršč" replaceWith="ršć" />
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
