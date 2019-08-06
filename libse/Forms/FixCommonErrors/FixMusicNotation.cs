@@ -129,16 +129,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 // construct music text and restore preText/postText (mostly tags)
                 text = preText + WrapInMusic(text) + postText;
-
-                // add space after colon
-                if (!string.IsNullOrWhiteSpace(narrator) && text.Length > 0 && text[0] != ' ')
-                {
-                    text = " " + text;
-                }
             }
 
             // restore narrator
-            return narrator + text;
+            return (narrator + " " + text).TrimStart();
         }
 
         private static string WrapInMusic(string input) => $"{Configuration.Settings.Tools.MusicSymbol} {input.Trim()} {Configuration.Settings.Tools.MusicSymbol}";

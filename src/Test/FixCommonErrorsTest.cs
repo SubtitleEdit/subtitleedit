@@ -2128,7 +2128,7 @@ namespace Test
                 InitializeFixCommonErrorsLine(target, "? Hello world?");
                 Configuration.Settings.Tools.MusicSymbol = "♫";
                 new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(string.Format("{0} Hello world {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("♫ Hello world ♫", _subtitle.Paragraphs[0].Text);
             }
         }
 
@@ -2167,6 +2167,20 @@ namespace Test
                 Configuration.Settings.Tools.MusicSymbol = "♫";
                 new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(s, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotationQuestionDoNotChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                var input = "- (whispers): like this..." + Environment.NewLine +
+                            "- Like what?";
+                InitializeFixCommonErrorsLine(target, input);
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(input, _subtitle.Paragraphs[0].Text);
             }
         }
 
