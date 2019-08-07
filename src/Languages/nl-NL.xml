@@ -1778,6 +1778,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <GoToBookmark>Naar bladwĳzer</GoToBookmark>
     <GoToPreviousBookmark>Naar vorige bladwĳzer</GoToPreviousBookmark>
     <GoToNextBookmark>Naar volgende bladwĳzer</GoToNextBookmark>
+    <ChooseProfile>Profiel kiezen</ChooseProfile>
     <FontInUi>Lettertype in gebruikersomgeving</FontInUi>
     <ShowFrameRate>Toon beeldsnelheid in de werkbalk</ShowFrameRate>
     <DefaultFrameRate>Standaard beeldsnelheid</DefaultFrameRate>
@@ -2014,6 +2015,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Fullscreen>Volledig Scherm</Fullscreen>
     <PlayRateSlower>Langzamer afspelen</PlayRateSlower>
     <PlayRateFaster>Sneller afspelen</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Snelheid en zoom terugstellen</VideoResetSpeedAndZoom>
     <CustomSearch1>Vertalen, op maat zoeken 1</CustomSearch1>
     <CustomSearch2>Vertalen, op maat zoeken 2</CustomSearch2>
     <CustomSearch3>Vertalen, op maat zoeken 3</CustomSearch3>
