@@ -1770,6 +1770,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoToBookmark>책갈피로 이동</GoToBookmark>
     <GoToPreviousBookmark>이전 책갈피로 이동</GoToPreviousBookmark>
     <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
+    <ChooseProfile>프로필 선택</ChooseProfile>
     <FontInUi>UI 글꼴</FontInUi>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
@@ -2006,6 +2007,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Fullscreen>전체 화면</Fullscreen>
     <PlayRateSlower>재생 속도 느리게</PlayRateSlower>
     <PlayRateFaster>재생 속도 빠르게</PlayRateFaster>
+    <VideoResetSpeedAndZoom>속도/줌 재설정</VideoResetSpeedAndZoom>
     <CustomSearch1>번역, 사용자 지정 검색 1</CustomSearch1>
     <CustomSearch2>번역, 사용자 지정 검색 2</CustomSearch2>
     <CustomSearch3>번역, 사용자 지정 검색 3</CustomSearch3>
