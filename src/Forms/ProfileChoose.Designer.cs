@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ProfileChoose
+    sealed partial class ProfileChoose
     {
         /// <summary>
         /// Required designer variable.
@@ -60,6 +60,7 @@
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
             this.listViewProfiles.DoubleClick += new System.EventHandler(this.listViewProfiles_DoubleClick);
+            this.listViewProfiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewProfiles_KeyDown);
             // 
             // columnHeaderName
             // 
@@ -127,6 +128,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ProfileChoose";
+            this.Shown += new System.EventHandler(this.ProfileChoose_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProfileChoose_KeyDown);
             this.ResumeLayout(false);
 
