@@ -451,6 +451,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FontName>Nazwa czcionki</FontName>
     <FontSize>Rozmiar czcionki</FontSize>
     <FontFace>Czcionka</FontFace>
+    <FontFaceRegular>Standardowa</FontFaceRegular>
     <Alignment>Wyrównanie</Alignment>
     <Baseline>Linia bazowa</Baseline>
   </ExportFcpXmlAdvanced>
@@ -629,7 +630,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixUppercaseIInsindeLowercaseWordsExample>Tam jest kIatka. -&gt; Tam jest klatka.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Numer linii tekstu {0}: Czas rozpoczęcia zachodzi na czas zakończenia: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Nie udało się poprawić linii tekstu o numerze {0}: Czas rozpoczęcia jest późniejszy, niż czas zakończenia: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Nie udało się poprawić linii tekstu o numerze {0}: Czas rozpoczęcia jest późniejszy niż czas zakończenia: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>Poprawiono {0} na: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Nie udało się poprawić linii tekstu o numerze {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Poprawiono {0} zachodzących na siebie czasów</XOverlappingTimestampsFixed>
@@ -1773,6 +1774,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToBookmark>Przejdź do zakładki</GoToBookmark>
     <GoToPreviousBookmark>Przejdź do poprzedniej zakładki</GoToPreviousBookmark>
     <GoToNextBookmark>Przejdź do następnej zakładki</GoToNextBookmark>
+    <ChooseProfile>Wybierz profil</ChooseProfile>
     <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
@@ -1976,7 +1978,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do aktualnego</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRtl>Odwróć start/koniec PDL</ReverseStartAndEndingForRtl>
+    <ReverseStartAndEndingForRtl>Odwróć PDL start/koniec</ReverseStartAndEndingForRtl>
     <VerticalZoom>Powiększ w pionie</VerticalZoom>
     <VerticalZoomOut>Pomniejsz w pionie</VerticalZoomOut>
     <WaveformSeekSilenceForward>Szukaj ciszy do przodu</WaveformSeekSilenceForward>
@@ -2009,6 +2011,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Fullscreen>Pełny ekran</Fullscreen>
     <PlayRateSlower>Odtwarzaj wolniej</PlayRateSlower>
     <PlayRateFaster>Odtwarzaj szybciej</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Resetuj szybkość/zoom</VideoResetSpeedAndZoom>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
     <CustomSearch3>Tłumaczenie, wyszukiwanie niestandardowe 3</CustomSearch3>
