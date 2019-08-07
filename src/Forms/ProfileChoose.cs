@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ProfileChoose : Form
+    public sealed partial class ProfileChoose : Form
     {
-        private List<RulesProfile> _rulesProfiles { get; set; }
+        private List<RulesProfile> RulesProfiles { get; set; }
 
         public ProfileChoose(List<RulesProfile> rulesProfiles, string name)
         {
@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
-            _rulesProfiles = rulesProfiles;
-            if (_rulesProfiles.Count == 0)
+            RulesProfiles = rulesProfiles;
+            if (RulesProfiles.Count == 0)
             {
-                _rulesProfiles.AddRange(new GeneralSettings().Profiles);
+                RulesProfiles.AddRange(new GeneralSettings().Profiles);
             }
             ShowRulesProfiles(rulesProfiles.FirstOrDefault(p => p.Name == name));
         }
@@ -41,10 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowRulesProfiles(RulesProfile itemToFocus)
         {
             var idx = listViewProfiles.SelectedItems.Count > 0 ? listViewProfiles.SelectedItems[0].Index : -1;
-            _rulesProfiles = _rulesProfiles.OrderBy(p => p.Name).ToList();
+            RulesProfiles = RulesProfiles.OrderBy(p => p.Name).ToList();
             listViewProfiles.BeginUpdate();
             listViewProfiles.Items.Clear();
-            foreach (var profile in _rulesProfiles)
+            foreach (var profile in RulesProfiles)
             {
                 var item = new ListViewItem { Text = profile.Name };
                 item.SubItems.Add(profile.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                     idx = listViewProfiles.Items.Count - 1;
                 }
                 listViewProfiles.Items[idx].Selected = true;
+                listViewProfiles.Items[idx].Focused = true;
             }
         }
 
@@ -83,21 +84,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             var idx = listViewProfiles.SelectedIndices[0];
-            Configuration.Settings.General.CurrentProfile = _rulesProfiles[idx].Name;
-            Configuration.Settings.General.SubtitleLineMaximumLength = _rulesProfiles[idx].SubtitleLineMaximumLength;
-            Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)_rulesProfiles[idx].SubtitleOptimalCharactersPerSeconds;
-            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)_rulesProfiles[idx].SubtitleMaximumCharactersPerSeconds;
-            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = _rulesProfiles[idx].SubtitleMinimumDisplayMilliseconds;
-            Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds = _rulesProfiles[idx].SubtitleMaximumDisplayMilliseconds;
-            Configuration.Settings.General.MinimumMillisecondsBetweenLines = _rulesProfiles[idx].MinimumMillisecondsBetweenLines;
-            Configuration.Settings.General.MaxNumberOfLines = _rulesProfiles[idx].MaxNumberOfLines;
-            Configuration.Settings.General.SubtitleMaximumWordsPerMinute = (double)_rulesProfiles[idx].SubtitleMaximumWordsPerMinute;
-            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !_rulesProfiles[idx].CpsIncludesSpace;
-            Configuration.Settings.General.MergeLinesShorterThan = _rulesProfiles[idx].MergeLinesShorterThan;
+            Configuration.Settings.General.CurrentProfile = RulesProfiles[idx].Name;
+            Configuration.Settings.General.SubtitleLineMaximumLength = RulesProfiles[idx].SubtitleLineMaximumLength;
+            Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)RulesProfiles[idx].SubtitleOptimalCharactersPerSeconds;
+            Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)RulesProfiles[idx].SubtitleMaximumCharactersPerSeconds;
+            Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = RulesProfiles[idx].SubtitleMinimumDisplayMilliseconds;
+            Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds = RulesProfiles[idx].SubtitleMaximumDisplayMilliseconds;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = RulesProfiles[idx].MinimumMillisecondsBetweenLines;
+            Configuration.Settings.General.MaxNumberOfLines = RulesProfiles[idx].MaxNumberOfLines;
+            Configuration.Settings.General.SubtitleMaximumWordsPerMinute = (double)RulesProfiles[idx].SubtitleMaximumWordsPerMinute;
+            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !RulesProfiles[idx].CpsIncludesSpace;
+            Configuration.Settings.General.MergeLinesShorterThan = RulesProfiles[idx].MergeLinesShorterThan;
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonCancel_Click(object sender, System.EventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
@@ -108,6 +109,27 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonOK_Click(sender, e);
             }
+        }
+
+        private void listViewProfiles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(sender, e);
+            }
+        }
+
+        private void ProfileChoose_Shown(object sender, EventArgs e)
+        {
+            if (listViewProfiles.SelectedIndices.Count == 0)
+            {
+                return;
+            }
+
+            listViewProfiles.Focus();
+            var idx = listViewProfiles.SelectedIndices[0];
+            listViewProfiles.Items[idx].Selected = true;
+            listViewProfiles.Items[idx].Focused = true;
         }
     }
 }
