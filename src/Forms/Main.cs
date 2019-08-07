@@ -4733,12 +4733,21 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
         }
 
+        private bool ShowProfileInStatusBar
+        {
+            get
+            {
+                return Configuration.Settings.General.CurrentProfile != "Default";
+            }
+
+        }
+
         private void ShowSourceLineNumber()
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
                 var profile = Configuration.Settings.General.CurrentProfile + "   ";
-                if (profile.TrimEnd() == "Default")
+                if (!ShowProfileInStatusBar)
                 {
                     profile = string.Empty;
                 }
@@ -7489,7 +7498,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
-                toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";                
+                toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode || Configuration.Settings.Tools.MusicSymbol == "#" || Configuration.Settings.Tools.MusicSymbol == "*";
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
                     toolStripMenuItemMergeLines.Visible = false;
@@ -7564,7 +7573,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol))
             {
                 toolStripMenuItemSurroundWithMusicSymbols.Visible = false;
-            }            
+            }
         }
 
         private void tsi_Click(object sender, EventArgs e)
@@ -8426,7 +8435,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowLineInformationListView()
         {
             var profile = Configuration.Settings.General.CurrentProfile + "   ";
-            if (profile.TrimEnd() == "Default")
+            if (!ShowProfileInStatusBar)
             {
                 profile = string.Empty;
             }
@@ -13468,20 +13477,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralChooseProfile == e.KeyData)
             {
-                using (var form = new ProfileChoose(Configuration.Settings.General.Profiles, Configuration.Settings.General.CurrentProfile))
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK)
-                    {
-                        SubtitleListview1.BeginUpdate();
-                        for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-                        {
-                            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, _subtitle.Paragraphs[i]);
-                        }
-                        SubtitleListview1.EndUpdate();
-                        ShowLineInformationListView();
-                        ShowSourceLineNumber();
-                    }
-                }
+                ChooseProfile();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -25365,9 +25361,44 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ChooseProfile()
+        {
+            using (var form = new ProfileChoose(Configuration.Settings.General.Profiles, Configuration.Settings.General.CurrentProfile))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SubtitleListview1.BeginUpdate();
+                    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, _subtitle.Paragraphs[i]);
+                    }
+                    SubtitleListview1.EndUpdate();
+                    ShowLineInformationListView();
+                    ShowSourceLineNumber();
+                }
+            }
+        }
+
         private void toolStripSelected_Click(object sender, EventArgs e)
         {
-            labelStatus_Click(sender, e);
+            if (!ShowProfileInStatusBar)
+            {
+                labelStatus_Click(sender, e);
+                return;
+            }
+
+            var x = statusStrip1.PointToClient(Cursor.Position).X;
+            var textWidth = TextRenderer.MeasureText(toolStripSelected.Text, toolStripSelected.Font).Width;
+            var min = statusStrip1.Width - textWidth - 20;
+            var max = min + TextRenderer.MeasureText(Configuration.Settings.General.CurrentProfile, toolStripSelected.Font).Width + 10;
+            if (x >= min && x <= max)
+            {
+                ChooseProfile(); // profile name in status bar clicked
+            }
+            else
+            {
+                labelStatus_Click(sender, e);
+            }
         }
 
         private void contextMenuStripWaveform_Closing(object sender, ToolStripDropDownClosingEventArgs e)
