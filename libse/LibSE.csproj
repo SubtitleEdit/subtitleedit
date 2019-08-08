@@ -211,6 +211,7 @@
     <Compile Include="SubtitleFormats\TimedText200604Ooyala.cs" />
     <Compile Include="SubtitleFormats\TranscriptiveJson.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle88.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle91.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle90.cs" />
     <Compile Include="TinyJsonParser.cs" />
     <Compile Include="Language.cs" />
