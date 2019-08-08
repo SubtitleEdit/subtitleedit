@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Controls
         public AudioVisualizer()
         {
             AutoScaleMode = AutoScaleMode.Dpi;
-            Font = SystemFonts.MessageBoxFont;
+            Font = UiUtil.GetDefaultFont();
             InitializeComponent();
             UiUtil.FixFonts(this);
 

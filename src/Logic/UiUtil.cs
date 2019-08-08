@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
             {
-                gs.SubtitleFontName = SystemFonts.MessageBoxFont.Name;
+                gs.SubtitleFontName = DefaultSystemFont.Name;
             }
 
             try
@@ -470,12 +470,51 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static Font GetDefaultFont()
+
+        private static Font _defaultSystemFont;
+        private static Font DefaultSystemFont
+        {
+            get
+            {
+                if (_defaultSystemFont != null)
+                {
+                    return _defaultSystemFont;
+                }
+
+                var font = SystemFonts.MessageBoxFont;
+                try
+                {
+                    // Bold + italic + regular must be present
+                    font = new Font(font.Name, 9, FontStyle.Bold);
+                    font = new Font(font.Name, 9, FontStyle.Italic);
+                    font = new Font(font.Name, 9, FontStyle.Regular);
+                }
+                catch
+                {
+                    try
+                    {
+                        font = SystemFonts.DefaultFont;
+                        font = new Font(font.Name, 9, FontStyle.Bold);
+                        font = new Font(font.Name, 9, FontStyle.Italic);
+                        font = new Font(font.Name, 9, FontStyle.Regular);
+                    }
+                    catch
+                    {
+                        font = new Font("Microsoft Sans Serif", 9F);
+                    }
+                }
+
+                _defaultSystemFont = font;
+                return font;
+            }
+        }
+
+        public static Font GetDefaultFont()
         {
             var gs = Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
             {
-                return SystemFonts.MessageBoxFont;
+                return DefaultSystemFont;
             }
 
             try
@@ -484,7 +523,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
-                return SystemFonts.MessageBoxFont;
+                return DefaultSystemFont;
             }
         }
 
@@ -971,6 +1010,5 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
         }
-
     }
 }
