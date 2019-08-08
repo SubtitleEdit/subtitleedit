@@ -1774,6 +1774,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToBookmark>Ir para o marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
+	<ChooseProfile>Escolher perfil</ChooseProfile>
     <FontInUi>Tipo de letra da Interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
