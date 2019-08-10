@@ -42,10 +42,11 @@
    * Improve handling of font tags in auto translation - thx Martin
    * Allow negative video offset - thx Marcello
    * Update in-program-download of Tesseract 4.0.0 to 4.1.0
+   * Remove dependency on font "Segoe UI" - thx MeH
 * FIXED:
    * Fix for minor change in Google translate V1
    * Fix "Change all" for whole text in OCR - thx wtester7
-   * Fix  renumber problem - thx marb99
+   * Fix renumber problem - thx marb99
    * Fix for "Split long lines" with html tags - thx moob
    * Fix minor issue with quotes in reverse RTL - thx OmrSi
    * Fix shortcut searching with "&" character - thx Leon
