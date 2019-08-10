@@ -452,7 +452,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FontName>Tipo de letra</FontName>
     <FontSize>Tamanho</FontSize>
     <FontFace>Estilo da letra</FontFace>
-	<FontFaceRegular>Normal</FontFaceRegular>
+    <FontFaceRegular>Normal</FontFaceRegular>
     <Alignment>Alinhamento</Alignment>
     <Baseline>Linha de base</Baseline>
   </ExportFcpXmlAdvanced>
@@ -1774,7 +1774,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToBookmark>Ir para o marcador</GoToBookmark>
     <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
     <GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
-	<ChooseProfile>Escolher perfil</ChooseProfile>
+    <ChooseProfile>Escolher perfil</ChooseProfile>
     <FontInUi>Tipo de letra da Interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
@@ -2011,7 +2011,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Fullscreen>Ecrã inteiro</Fullscreen>
     <PlayRateSlower>Taxa de velocidade lenta</PlayRateSlower>
     <PlayRateFaster>Taxa de velocidade rápida</PlayRateFaster>
-	<VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
+    <VideoResetSpeedAndZoom>Repor velocidade/zoom</VideoResetSpeedAndZoom>
     <CustomSearch1>Traduzir, pesquisa personalizada 1</CustomSearch1>
     <CustomSearch2>Traduzir, pesquisa personalizada 2</CustomSearch2>
     <CustomSearch3>Traduzir, pesquisa personalizada 3</CustomSearch3>
