@@ -131,10 +131,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            var gs = new GeneralSettings();
-            var profile = new RulesProfile(gs.Profiles.First()) { Name = "New", Id = Guid.NewGuid() };
-            RulesProfiles.Add(profile);
-            ShowRulesProfiles(profile, false);
+            var newProfile = GeneralSettings.GetDefaultProfiles()[0];
+            RulesProfiles.Add(newProfile);
+            ShowRulesProfiles(newProfile, false);
             textBoxName.Focus();
         }
 
@@ -250,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (RulesProfiles.Count == 0)
             {
-                RulesProfiles.AddRange(new GeneralSettings().Profiles);
+                RulesProfiles.AddRange(GeneralSettings.GetDefaultProfiles()); // reset to default profiles
             }
             DialogResult = DialogResult.OK;
         }
@@ -290,9 +289,9 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowRulesProfiles(profile, false);
                 }
             }
-            catch 
+            catch
             {
-                MessageBox.Show("Unable to import profiles");       
+                MessageBox.Show("Unable to import profiles");
             }
         }
 
@@ -311,5 +310,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
     }
 }

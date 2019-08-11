@@ -853,24 +853,47 @@ $HorzAlign          =   Center
             UseDarkTheme = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
-
-            Profiles = new List<RulesProfile>();
+            Profiles = GetDefaultProfiles();
             CurrentProfile = "Default";
-            Profiles.Add(new RulesProfile
-            {
-                Name = CurrentProfile,
-                SubtitleLineMaximumLength = SubtitleLineMaximumLength,
-                MaxNumberOfLines = MaxNumberOfLines,
-                MergeLinesShorterThan = MergeLinesShorterThan,
-                SubtitleMaximumCharactersPerSeconds = (decimal)SubtitleMaximumCharactersPerSeconds,
-                SubtitleOptimalCharactersPerSeconds = (decimal)SubtitleOptimalCharactersPerSeconds,
-                SubtitleMaximumDisplayMilliseconds = SubtitleMaximumDisplayMilliseconds,
-                SubtitleMinimumDisplayMilliseconds = SubtitleMinimumDisplayMilliseconds,
-                SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
-                CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
-                MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
-            });
             AddExtraProfiles(Profiles);
+        }
+
+
+        public static List<RulesProfile> GetDefaultProfiles()
+        {
+            var defaultProfiles = new List<RulesProfile>()
+            {
+                new RulesProfile
+                {
+                    Name = "Default",
+                    SubtitleLineMaximumLength = 43,
+                    MaxNumberOfLines = 2,
+                    MergeLinesShorterThan = 33,
+                    SubtitleMaximumCharactersPerSeconds = 25m,
+                    SubtitleOptimalCharactersPerSeconds = 15m,
+                    SubtitleMaximumDisplayMilliseconds = 8 * 1000,
+                    SubtitleMinimumDisplayMilliseconds = 1000,
+                    SubtitleMaximumWordsPerMinute = 300m,
+                    CpsIncludesSpace = true,
+                    MinimumMillisecondsBetweenLines = 24,
+                },
+                new RulesProfile
+                {
+                    Name = "Netflix (English)",
+                    SubtitleLineMaximumLength = 42,
+                    MaxNumberOfLines = 2,
+                    MergeLinesShorterThan = 42,
+                    SubtitleMaximumCharactersPerSeconds = 20,
+                    SubtitleOptimalCharactersPerSeconds = 15,
+                    SubtitleMaximumDisplayMilliseconds = 7000,
+                    SubtitleMinimumDisplayMilliseconds = 833,
+                    SubtitleMaximumWordsPerMinute = 300,
+                    CpsIncludesSpace = true,
+                    MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
+                }
+            };
+
+            return defaultProfiles;
         }
 
         internal static void AddExtraProfiles(List<RulesProfile> profiles)
