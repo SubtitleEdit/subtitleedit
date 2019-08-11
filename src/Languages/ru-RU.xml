@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1789,6 +1789,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToBookmark>Перейти в закладки</GoToBookmark>
     <GoToPreviousBookmark>Перейти к предыдущей закладке</GoToPreviousBookmark>
     <GoToNextBookmark>Перейти к следующей закладке</GoToNextBookmark>
+    <ChooseProfile>Выберите профиль</ChooseProfile>
     <FontInUi>Шрифты для Интерфейса Пользователя (UI)</FontInUi>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
@@ -1801,11 +1802,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleLineMaximumLength>Макс. число символов в строке</SubtitleLineMaximumLength>
     <OptimalCharactersPerSecond>Оптимально симв./сек</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Макс. слов/мин.</MaximumWordssPerMinute>
+    <MaximumWordssPerMinute>Макс. слов/мин</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Мин. разрыв между субтитрами в мс</MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Мин. разрыв между субти-ми в мс</MinimumGapMilliseconds>
     <MaximumLines>Макс. количество строк</MaximumLines>
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
