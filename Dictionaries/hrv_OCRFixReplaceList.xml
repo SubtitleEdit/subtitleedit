@@ -458,6 +458,7 @@
     <Word from="izvinjenja" to="isprike" />
     <Word from="izvinjenju" to="isprici" />
     <Word from="jedamput" to="jedanput" />
+    <Word from="jedbo" to="jedno" />
     <Word from="jel" to="je l'" />
     <Word from="jelda" to="jel' da" />
     <Word from="Ješćemo" to="Jest ćemo" />
@@ -1247,6 +1248,7 @@
     <Word from="Rečju" to="Riječju" />
     <Word from="rječju" to="riječju" />
     <Word from="Rječju" to="Riječju" />
+    <Word from="rješili" to="riješili" />
     <Word from="reagujte" to="reagirajte" />
     <Word from="redov" to="vojnik" />
     <Word from="redovu" to="vojniku" />
@@ -3284,6 +3286,7 @@
     <RegEx find="(?&lt;!e)bde" replaceWith="bdje" />
     <RegEx find="be[čć]aje" replaceWith="bećava" />
     <RegEx find="begl" replaceWith="bjegl" />
+    <RegEx find="bpl" replaceWith="bol" />
     <RegEx find="bs([to])" replaceWith="ps$1" />
     <RegEx find="iliše" replaceWith="ilizira" />
     <RegEx find="ilišu" replaceWith="iliziraju" />
@@ -3299,6 +3302,7 @@
     <RegEx find="dišl" replaceWith="dišn" />
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
+    <RegEx find="dnp" replaceWith="dno" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
     <RegEx find="dsek" replaceWith="dsjek" />
