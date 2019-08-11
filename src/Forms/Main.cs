@@ -4291,10 +4291,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
                                     toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
 
-                // settings update canceled
                 if (settings.ShowDialog(this) == DialogResult.Cancel)
                 {
-                    return;
+                    return;  // settings update canceled
                 }
             }
 

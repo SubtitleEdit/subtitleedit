@@ -410,6 +410,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TextLeftJustifiedText>Venstre justeret tekst</TextLeftJustifiedText>
     <TextCenteredText>Centreret tekst</TextCenteredText>
     <TextRightJustifiedText>Højre justeret tekst</TextRightJustifiedText>
+    <UseBoxForOneNewLine>Marker "Brug af boks omkring tekst" med kun et linjeskift</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
@@ -447,6 +448,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FontName>Fontnavn</FontName>
     <FontSize>Fontstørrelse</FontSize>
     <FontFace>Font face</FontFace>
+    <FontFaceRegular>Normal</FontFaceRegular>
     <Alignment>Position</Alignment>
     <Baseline>Baseline</Baseline>
   </ExportFcpXmlAdvanced>
@@ -1767,6 +1769,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToBookmark>Gå til bogmærke</GoToBookmark>
     <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
     <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
+    <ChooseProfile>Vælg profil</ChooseProfile>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
@@ -2003,6 +2006,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Fullscreen>Fuldskærm</Fullscreen>
     <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
     <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Nulstil hastighed/zoom</VideoResetSpeedAndZoom>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
