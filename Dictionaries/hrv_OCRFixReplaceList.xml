@@ -1409,6 +1409,8 @@
     <Word from="smjeo" to="smio" />
     <Word from="smrdeo" to="smrdio" />
     <Word from="smrdelo" to="smrdjelo" />
+    <Word from="Smršao" to="Smršavio" />
+    <Word from="smršao" to="smršavio" />
     <Word from="sneg" to="snijeg" />
     <Word from="Sneg" to="Snijeg" />
     <Word from="snega" to="snijega" />
@@ -1973,6 +1975,8 @@
     <Word from="Din" to="Dean" />
     <Word from="Dru" to="Drew" />
     <Word from="Đeni" to="Jenny" />
+    <Word from="Đen" to="Jen" />
+    <Word from="Đejn" to="Jane" />
     <Word from="Đina" to="Gina" />
     <Word from="Đinu" to="Ginu" />
     <Word from="Đošua" to="Joshua" />
@@ -2612,6 +2616,7 @@
     <RegEx find="([hH])te([lt])" replaceWith="$1tje$2" />
     <RegEx find="idja" replaceWith="iđa" />
     <RegEx find="\b([iI])mać" replaceWith="$1mat ć" />
+    <RegEx find="ijst" replaceWith="ojst" />
     <RegEx find="nostranstv" replaceWith="nozemstv" />
     <RegEx find="nstikt" replaceWith="nstinkt" />
     <RegEx find="interesantn" replaceWith="zanimljiv" />
