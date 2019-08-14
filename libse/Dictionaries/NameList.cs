@@ -99,23 +99,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 reader.MoveToContent();
                 while (reader.Read())
                 {
-                    if (reader.NodeType == XmlNodeType.Element)
+                    if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
                     {
-                        if (reader.Name == "blacklist")
-                        {
-                            while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
-                            {
-                                if (reader.Name == "name")
-                                {
-                                    string name = reader.ReadElementContentAsString().Trim();
-                                    if (name.Length > 0 && !_blackList.Contains(name))
-                                    {
-                                        _blackList.Add(name);
-                                    }
-                                }
-                            }
-                        }
-                        else if (reader.Name == "name")
+                        if (reader.Name == "name")
                         {
                             string name = reader.ReadElementContentAsString().Trim();
                             if (name.Length > 0)
@@ -133,10 +119,23 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                                 }
                             }
                         }
+                        else if (reader.Name == "blacklist")
+                        {
+                            while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
+                            {
+                                if (reader.Name == "name")
+                                {
+                                    string name = reader.ReadElementContentAsString().Trim();
+                                    if (name.Length > 0 && !_blackList.Contains(name))
+                                    {
+                                        _blackList.Add(name);
+                                    }
+                                }
+                            }
+                        }                        
                     }
                 }
             }
-
         }
 
         public bool Remove(string name)
