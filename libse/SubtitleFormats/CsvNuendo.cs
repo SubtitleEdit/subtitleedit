@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private TimeCode DecodeTime(string s)
         {
-            return DecodeTimeCodeFramesFourParts(s.Split(new char[] { ':' }));
+            return DecodeTimeCodeFramesFourParts(s.Split(':'));
         }
     }
 }

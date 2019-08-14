@@ -263,10 +263,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     break;
                 }
             }
-            var parts = localSb.ToString().Split(new char[] { ':', '.' });
+            var parts = localSb.ToString().Split(new [] { ':', '.' });
             if (parts != null && parts.Length == 3)
             {
-                parts = ("00:" + localSb.ToString()).Split(new char[] { ':', '.' });
+                parts = ("00:" + localSb).Split(new [] { ':', '.' });
             }
             if (parts != null && parts.Length == 4)
             {

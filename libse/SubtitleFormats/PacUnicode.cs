@@ -161,6 +161,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(Encoding.UTF8.GetString(buffer, textBegin, textIndex - textBegin - 1));
             }
             p.Text = sb.ToString().Trim();
+            if (p.Text.Length > 1 && p.Text[0] == 31 || p.Text[1] == 65279)
+            {
+                p.Text = p.Text.Remove(0, 2);
+            }
             for (int k = 0; k < p.Text.Length; k++)
             {
                 if (p.Text[k] == 65533)
