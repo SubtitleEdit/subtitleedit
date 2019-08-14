@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -15,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _onlyListFixes = true;
         private readonly Timer _refreshTimer = new Timer();
         private readonly Color _warningColor = Color.FromArgb(255, 253, 145);
+        private Subtitle _unfixables = new Subtitle();
 
         public ApplyDurationLimits()
         {
@@ -130,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixShortDisplayTimes()
         {
-            var unfixables = new Subtitle();
+            _unfixables = new Subtitle();
             double minDisplayTime = (double)numericUpDownDurationMin.Value;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
@@ -150,20 +152,20 @@ namespace Nikse.SubtitleEdit.Forms
                         if (nextBestEndMs > p.EndTime.TotalMilliseconds)
                         {
                             AddFix(p, nextBestEndMs, _warningColor);
-                            unfixables.Paragraphs.Add(new Paragraph(p) { Extra = "Warning" });
+                            _unfixables.Paragraphs.Add(new Paragraph(p) { Extra = "Warning" });
                         }
                         else
                         {
-                            unfixables.Paragraphs.Add(new Paragraph(p));
+                            _unfixables.Paragraphs.Add(new Paragraph(p));
                         }
                         _totalErrors++;
                     }
                 }
             }
-            subtitleListView1.Fill(unfixables);
-            for (int index = 0; index < unfixables.Paragraphs.Count; index++)
+            subtitleListView1.Fill(_unfixables);
+            for (int index = 0; index < _unfixables.Paragraphs.Count; index++)
             {
-                var p = unfixables.Paragraphs[index];
+                var p = _unfixables.Paragraphs[index];
                 subtitleListView1.SetBackgroundColor(index, p.Extra == "Warning" ? _warningColor : Configuration.Settings.Tools.ListViewSyntaxErrorColor);
             }
         }
@@ -219,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMinDuration.Checked)
             {
                 FixShortDisplayTimes();
-            }            
+            }
             if (checkBoxMaxDuration.Checked)
             {
                 FixLongDisplayTimes();
@@ -265,6 +267,25 @@ namespace Nikse.SubtitleEdit.Forms
         {
             numericUpDownDurationMax.Enabled = checkBoxMaxDuration.Checked;
             GeneratePreview();
+        }
+
+        private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewFixes.SelectedIndices.Count > 0)
+            {
+                int index = listViewFixes.SelectedIndices[0];
+                ListViewItem item = listViewFixes.Items[index];
+                var number = int.Parse(item.SubItems[1].Text);
+                foreach (var p in _unfixables.Paragraphs)
+                {
+                    if (p.Number == number)
+                    {
+                        index = _unfixables.GetIndex(p);
+                        subtitleListView1.SelectIndexAndEnsureVisible(index);
+                        return;
+                    }
+                }
+            }
         }
     }
 }
