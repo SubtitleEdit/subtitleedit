@@ -78,6 +78,7 @@
    * Fix error in FCE regarding Spanish ¿? and ¡! - thx Lokotito/xylographe
    * Fix go to next/prev after remove scene change - thx Ingo
    * Fix "Bridge small gaps in durations" bug - thx AlexandreMT
+   * Fix reading name list online - thx splerman
 
 
 3.5.9 (10th February 2019)
