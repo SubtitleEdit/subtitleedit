@@ -352,10 +352,10 @@ namespace Nikse.SubtitleEdit.Controls
             try
             {
                 SubtitleFormat format = new AdvancedSubStationAlpha();
-                var oldSub = subtitle;
-                subtitle = new Subtitle(subtitle);
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
+                    var oldSub = subtitle;
+                    subtitle = new Subtitle(subtitle);
                     if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
                     {
                         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -384,26 +384,6 @@ namespace Nikse.SubtitleEdit.Controls
                                 p.Extra = "Box";
                                 p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
                             }
-                        }
-                    }
-                }
-
-                // show text when cursor (current pos) is on end-time (and next text too close)
-                for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                {
-                    var paragraph = subtitle.Paragraphs[index];
-                    var next = subtitle.GetParagraphOrDefault(index + 1);
-                    if (next == null)
-                    {
-                        paragraph.EndTime.TotalMilliseconds += 40;
-                    }
-                    else
-                    {
-                        next.StartTime.TotalMilliseconds += 5;
-                        var diff = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
-                        if (diff > 0)
-                        {
-                            paragraph.EndTime.TotalMilliseconds += Math.Min(diff, 40);
                         }
                     }
                 }
@@ -1787,6 +1767,5 @@ namespace Nikse.SubtitleEdit.Controls
             SmpteMode = false;
             RefreshProgressBar();
         }
-
     }
 }
