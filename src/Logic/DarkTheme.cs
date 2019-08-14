@@ -247,18 +247,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal static void SetDarkTheme(ToolStripMenuItem item)
-        {
-            item.BackColor = BackColor;
-            item.ForeColor = ForeColor;
-        }
-
-        internal static void SetDarkTheme(ToolStripSeparator item)
-        {
-            item.BackColor = BackColor;
-            item.ForeColor = ForeColor;
-        }
-
         internal static void SetDarkTheme(ToolStripItem item)
         {
             item.BackColor = BackColor;
