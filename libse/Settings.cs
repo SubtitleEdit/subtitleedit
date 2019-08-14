@@ -434,6 +434,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public string NuendoCharacterListFile { get; set; }
 
+        public long WebVttTimescale { get; set; }
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
@@ -490,6 +492,8 @@ $HorzAlign          =   Center
             FcpFontName = "Lucida Grande";
 
             Cavena890StartOfMessage = "10:00:00:00";
+
+            WebVttTimescale = 90000;
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -3591,6 +3595,12 @@ $HorzAlign          =   Center
                 {
                     settings.SubtitleSettings.Cavena890StartOfMessage = subNode.InnerText;
                 }
+
+                subNode = node.SelectSingleNode("WebVttTimescale");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttTimescale = long.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             // Proxy
@@ -6117,6 +6127,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("TmpegEncXmlPosition", settings.SubtitleSettings.TmpegEncXmlPosition.TrimEnd());
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
+                textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Proxy", string.Empty);
