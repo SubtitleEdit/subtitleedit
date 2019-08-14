@@ -542,24 +542,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void FixFonts(ToolStripMenuItem item)
-        {
-            item.Font = GetDefaultFont();
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                DarkTheme.SetDarkTheme(item);
-            }
-        }
-
-        public static void FixFonts(ToolStripSeparator item)
-        {
-            item.Font = GetDefaultFont();
-            if (Configuration.Settings.General.UseDarkTheme)
-            {
-                DarkTheme.SetDarkTheme(item);
-            }
-        }
-
         internal static void FixFonts(ToolStripItem item)
         {
             item.Font = GetDefaultFont();
