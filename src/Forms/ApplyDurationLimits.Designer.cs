@@ -168,6 +168,7 @@
             this.listViewFixes.TabIndex = 6;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.listViewFixes_SelectedIndexChanged);
             // 
             // columnHeader4
             // 
@@ -245,6 +246,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(931, 460);
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 54;
+            this.splitContainer1.TabStop = false;
             // 
             // checkBoxMinDuration
             // 
