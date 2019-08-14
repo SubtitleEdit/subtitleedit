@@ -135,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string positionInfo = string.Empty;
             bool hadEmptyLine = false;
             int numbers = 0;
+            double addSeconds = 0;
             for (var index = 0; index < lines.Count; index++)
             {
                 string line = lines[index];
@@ -156,7 +157,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
-                if (isTimeCode && RegexTimeCodes.IsMatch(s.TrimStart()))
+                if (index == 1 && s.StartsWith("X-TIMESTAMP-MAP=", StringComparison.OrdinalIgnoreCase) &&
+                    s.IndexOf("MPEGTS:", StringComparison.OrdinalIgnoreCase) > 0)
+                {
+                    addSeconds = GetXTimeStampSeconds(s);
+                }
+                else if (isTimeCode && RegexTimeCodes.IsMatch(s.TrimStart()))
                 {
                     if (p != null)
                     {
@@ -234,8 +240,68 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
             }
-
+            subtitle.AdjustDisplayTimeUsingSeconds(addSeconds, null);
             subtitle.Renumber();
+        }
+
+        private static double GetXTimeStampSeconds(string input)
+        {
+            var s = input.RemoveChar(' ');
+
+            var subtractSeconds = 0d;
+            var startIndex = s.IndexOf("LOCAL:", StringComparison.OrdinalIgnoreCase);
+            var localSb = new StringBuilder();
+            for (int i = startIndex + 6; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (char.IsNumber(ch) || ch == ':' || ch == '.')
+                {
+                    localSb.Append(ch);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            var parts = localSb.ToString().Split(new char[] { ':', '.' });
+            if (parts != null && parts.Length == 3)
+            {
+                parts = ("00:" + localSb.ToString()).Split(new char[] { ':', '.' });
+            }
+            if (parts != null && parts.Length == 4)
+            {
+                subtractSeconds = DecodeTimeCodeMsFourParts(parts).TotalSeconds;
+            }
+
+            startIndex = s.IndexOf("MPEGTS:", StringComparison.OrdinalIgnoreCase);
+            var tsSb = new StringBuilder();
+            for (int i = startIndex + 7; i < s.Length; i++)
+            {
+                var ch = s[i];
+                if (char.IsNumber(ch))
+                {
+                    tsSb.Append(ch);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (tsSb.Length > 0)
+            {
+                long number;
+                if (long.TryParse(tsSb.ToString(), out number))
+                {
+                    var seconds = number / Configuration.Settings.SubtitleSettings.WebVttTimescale - subtractSeconds;
+                    if (seconds > 0 && seconds < 90000) // max 25 hours - or wrong timescale
+                    {
+                        return seconds;
+                    }
+                }
+            }
+
+            return 0;
         }
 
         internal static string GetPositionInfo(string s)
