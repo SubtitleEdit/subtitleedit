@@ -25377,6 +25377,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, _subtitle.Paragraphs[i]);
                     }
                     SubtitleListview1.EndUpdate();
+                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                     ShowLineInformationListView();
                     ShowSourceLineNumber();
                 }
