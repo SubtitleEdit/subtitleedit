@@ -2006,6 +2006,15 @@ namespace Test
             Assert.AreEqual(result, target);
         }
 
+        [TestMethod]
+        public void FixDialogsOnOneLine5()
+        {
+            string source = "- [Gunshot] - [Scream]";
+            string target = "- [Gunshot]" + Environment.NewLine + "- [Scream]";
+            string result = Helper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
+        }
+
         #endregion Fix dialogs on one line
 
         #region FixDoubleDash
