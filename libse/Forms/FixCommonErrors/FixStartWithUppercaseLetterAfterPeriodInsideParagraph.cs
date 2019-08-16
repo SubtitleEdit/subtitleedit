@@ -105,11 +105,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     return text; // too hard to say if uppercase after "..."
                 }
-            }                
+            }
 
             if (textBefore != null && textBefore.EndsWith(" - ", System.StringComparison.Ordinal) && !textBefore.EndsWith(". - ", System.StringComparison.Ordinal))
             {
-                return text; 
+                return text;
             }
 
             // Skip words like iPhone, iPad...

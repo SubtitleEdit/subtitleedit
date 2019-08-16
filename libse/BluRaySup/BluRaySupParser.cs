@@ -896,5 +896,5 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             return (uint)(buffer[index + 3] + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
         }
-    }    
+    }
 }

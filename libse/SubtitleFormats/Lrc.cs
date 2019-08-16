@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
     /// LRC is a format that synchronizes song lyrics with an audio/video file, [mm:ss.xx] where mm is minutes, ss is seconds and xx is hundredths of a second.
-    /// 
+    ///
     /// http://wiki.nicksoft.info/specifications:lrc-file
-    /// 
+    ///
     /// Tags:
     ///     [al:''Album where the song is from'']
     ///     [ar:''Lyrics artist'']

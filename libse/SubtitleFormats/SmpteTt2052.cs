@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             try
                             {
                                 var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-                                
+
                                 string fontStyle = "normal";
                                 if (ssaStyle.Italic)
                                 {
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
 
                                 AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
-                                convertedFromSubStationAlpha = true;                                
+                                convertedFromSubStationAlpha = true;
                             }
                             catch
                             {
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <style xml:id='basic' tts:color='white' tts:fontFamily='Arial' tts:backgroundColor='transparent' tts:fontSize='21' tts:fontWeight='normal' tts:fontStyle='normal' />
         </styling>
         <layout>
-            <region xml:id='bottom' tts:backgroundColor='transparent' tts:showBackground='whenActive' tts:origin='80% 80%' tts:extent='80% 80%' tts:displayAlign='after' />          
+            <region xml:id='bottom' tts:backgroundColor='transparent' tts:showBackground='whenActive' tts:origin='80% 80%' tts:extent='80% 80%' tts:displayAlign='after' />
         </layout>
     </head>
     <body>

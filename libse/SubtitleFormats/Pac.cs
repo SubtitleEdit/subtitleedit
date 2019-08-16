@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
     /// The PAC format was developed by Screen Electronics
-    /// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved. 
+    /// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
     /// </summary>
     public class Pac : SubtitleFormat
     {

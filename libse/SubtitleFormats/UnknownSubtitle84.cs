@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 //Var vi bedre end japanerne
-                //eller bare mere heldige? 
+                //eller bare mere heldige?
                 //<12:03:29:03> <12:03:35:06>
             }
             return sb.ToString();

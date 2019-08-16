@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core
 {
     public abstract class FilePathComparer : IEqualityComparer<string>, IComparer<string>
     {
-        private sealed class WindowsFilePathComparer: FilePathComparer
+        private sealed class WindowsFilePathComparer : FilePathComparer
         {
             public override int Compare(string path1, string path2)
             {

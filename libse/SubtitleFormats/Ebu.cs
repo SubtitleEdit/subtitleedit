@@ -909,13 +909,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case "mt": return "1C"; // Maltese
                 case "nl": return "1D"; // Dutch
                 case "nb": return "1E"; // Norwegian
-                case "oc": return "1F"; // Occitan":
-                case "pl": return "20"; // Polish": 
+                case "oc": return "1F"; // Occitan
+                case "pl": return "20"; // Polish
                 case "pt": return "21"; // Portugese
-                case "ro": return "22"; // Romanian"
-                case "rm": return "23"; // Romansh":
-                case "sr": return "24"; // Serbian":
-                case "sk": return "25"; // Slovak": 
+                case "ro": return "22"; // Romanian
+                case "rm": return "23"; // Romansh
+                case "sr": return "24"; // Serbian
+                case "sk": return "25"; // Slovak
                 case "sl": return "26"; // Slovenian
                 case "fi": return "27"; // Finnish
                 case "sv": return "28"; // Swedish
@@ -1353,7 +1353,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         /// <summary>
         /// Read Text and Timing Information (TTI) block.
-        /// Each Text and Timing Information (TTI) block consists of 128 bytes. 
+        /// Each Text and Timing Information (TTI) block consists of 128 bytes.
         /// </summary>
         private IEnumerable<EbuTextTimingInformation> ReadTextAndTiming(byte[] buffer, EbuGeneralSubtitleInformation header)
         {

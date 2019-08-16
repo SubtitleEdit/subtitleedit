@@ -427,7 +427,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             catch
             {
-                // ignored                
+                // ignored
             }
         }
 

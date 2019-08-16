@@ -46,7 +46,7 @@ SRPSKI
                     lines = Utilities.AutoBreakLine(p.Text).SplitToLines();
                 }
                 firstLine = lines[0];
-                
+
                 if (lines.Count > 1)
                 {
                     secondLine = lines[1];
