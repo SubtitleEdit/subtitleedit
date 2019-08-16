@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 return;
             }
 
-            var job = (ImageJob)j;            
+            var job = (ImageJob)j;
             job.Result = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
             lock (QueueLock)
             {

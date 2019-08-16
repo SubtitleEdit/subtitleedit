@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             try
                             {
                                 var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-                                
+
                                 string fontStyle = "normal";
                                 if (ssaStyle.Italic)
                                 {
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                 AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
                                 convertedFromSubStationAlpha = true;
-                                
+
                             }
                             catch
                             {

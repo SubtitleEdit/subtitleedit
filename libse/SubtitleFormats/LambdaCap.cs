@@ -59,10 +59,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //1	00000000/11111111	Line 1
-                //				Line 2
-                //2	11111111/22222222	AAAA Line 1
-                //				Line 2
+                // 1<HT>00000000/11111111<HT>Line 1
+                // <HT><HT><HT><HT>Line 2
+                // 2<HT>11111111/22222222<HT>AAAA Line 1
+                // <HT><HT><HT><HT>Line 2
                 var text = EncodeStyle(p.Text);
                 sb.AppendLine($"{p.Number}\t{EncodeTimeCode(p.StartTime)}/{EncodeTimeCode(p.EndTime)}\t{text}");
             }
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return time.ToHHMMSSFF().RemoveChar(':'); //HHMMSSFF without seperators, like 00031522
+            return time.ToHHMMSSFF().RemoveChar(':'); // HHMMSSFF without seperators, like 00031522
         }
 
         private static string EncodeStyle(string text)
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("ー", LongDash2);
 
             var verticalAlignTop = text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal);
-            //            var verticalAlignCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal);
+            // var verticalAlignCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal);
             var horizontalAlignLeft = text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal);
             var horizontalAlignRight = text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal);
             var s = Utilities.RemoveSsaTags(text);

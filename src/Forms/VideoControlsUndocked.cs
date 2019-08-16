@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Panel PanelContainer => panelContainer;
 
         public VideoControlsUndocked(Main mainForm)
-        {            
+        {
             AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();
             _mainForm = mainForm;

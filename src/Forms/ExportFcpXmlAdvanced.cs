@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     /// <summary>
     /// Export to FCP XML for import into other programs, like DaVinci Resolve
-    /// 
+    ///
     /// Elements from FCP XML 1.5 DTD
     // <!ATTLIST text-style ref IDREF #IMPLIED>
     // <!ATTLIST text-style font CDATA #IMPLIED>

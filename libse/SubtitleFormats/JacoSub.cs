@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case '\\':
                             {
-                                sb.Append('\\'); 
+                                sb.Append('\\');
                                 i++;
                                 break;
                             }

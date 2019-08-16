@@ -358,7 +358,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     return path;
                 }
             }
-            else  // 32-bit
+            else // 32-bit
             {
                 var fileName = $"mpc-hc{fileNameSuffix}.exe";
                 var path = Path.Combine(Configuration.BaseDirectory, "MPC-HC", fileName);
