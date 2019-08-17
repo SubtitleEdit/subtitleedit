@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Changes "\\r\\n" and "\\n" to "\n", which hopefully makes it simpler for 
+        /// Changes "\\r\\n" and "\\n" to "\n", which hopefully makes it simpler for
         /// the user who can use both "\\n" and "\\r\\n" for new line.
         /// </summary>
         public static string FixNewLine(string pattern)
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace 
+        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace
         /// and line breaks are returned as Environment.NewLine.
         /// </summary>
         /// <param name="regularExpression">Regular expression to perform replace on</param>
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace 
+        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace
         /// and line breaks are returned as Environment.NewLine.
         /// </summary>
         /// <param name="regularExpression">Regular expression to perform replace on</param>

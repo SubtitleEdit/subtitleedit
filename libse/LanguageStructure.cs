@@ -460,7 +460,7 @@
             public string TextLeftJustifiedText { get; set; }
             public string TextCenteredText { get; set; }
             public string TextRightJustifiedText { get; set; }
-            public string UseBoxForOneNewLine { get; set; }            
+            public string UseBoxForOneNewLine { get; set; }
         }
 
         public class EffectKaraoke
@@ -1294,7 +1294,7 @@
                     public string SubStationAlphaProperties { get; set; }
                     public string EbuProperties { get; set; }
                     public string DvdStuioProProperties { get; set; }
-                    public string TimedTextProperties { get; set; }                    
+                    public string TimedTextProperties { get; set; }
                     public string PacProperties { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
@@ -1407,7 +1407,7 @@
                     public string CloseVideo { get; set; }
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
-                    public string GenerateTextFromVideo { get; set; }                    
+                    public string GenerateTextFromVideo { get; set; }
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
@@ -1550,7 +1550,7 @@
                     public string ShowSelectedLinesEarlierLater { get; set; }
                     public string VisualSyncSelectedLines { get; set; }
                     public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
-                    public string TranslateSelectedLines { get; set; }                    
+                    public string TranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }

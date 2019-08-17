@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-   
+
     public class FinalCutProXml17 : FinalCutProXml15
     {
         public FinalCutProXml17()

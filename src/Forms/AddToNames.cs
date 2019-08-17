@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxDictionaries.Items.Clear();
             string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
             int selIndex = -1;
-            var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral(); 
+            var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
             for (var index = 0; index < dictionaries.Count; index++)
             {
                 string name = dictionaries[index];
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (selIndex == -1 && languageName.Length > 1 &&  name.Contains("[" + languageName.Substring(0, 2) + "]"))
                 {
                     selIndex = index;
-                }                
+                }
             }
             comboBoxDictionaries.SelectedIndex = selIndex >= 0 ? selIndex : 0;
         }

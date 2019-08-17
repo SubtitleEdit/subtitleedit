@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             UpdatePreviousAndNextButtons();
 
-            if (max > min) // color extra lines as has-difference 
+            if (max > min) // color extra lines as has-difference
             {
                 var listView = subtitleListView1.Items.Count > subtitleListView2.Items.Count ? subtitleListView1 : subtitleListView2;
                 for (int i = min; i < max; i++)

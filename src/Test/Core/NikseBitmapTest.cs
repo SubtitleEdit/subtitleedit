@@ -26,7 +26,7 @@ namespace Test.Core
             for (int y = 0; y < nbmp.Height; y++)
             {
                 for (int x = 0; x < nbmp.Width; x++)
-                {                   
+                {
                     var c = nbmp.GetPixel(x, y);
                     if (x % 2 == 0)
                         Assert.AreEqual(c1, c);

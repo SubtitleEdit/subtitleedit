@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimeCodesOnly1 : SubtitleFormat
     {
-        // 1	1:01:08:05	1:01:10:21	02:16
+        // 1<HT>1:01:08:05<HT>1:01:10:21<HT>02:16
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+\t\d+:\d\d:\d\d:\d\d\t\d+:\d\d:\d\d:\d\d\t\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";

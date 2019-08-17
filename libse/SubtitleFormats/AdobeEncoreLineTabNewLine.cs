@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("</i>", "@Italic@");
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (Utilities.CountTagInText(Environment.NewLine, text) > 1)
-                {                    
+                {
                     text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
                 }
 

@@ -357,7 +357,7 @@ namespace Test.Logic
             for (int frameRate = 0; frameRate < 100; frameRate++)
             {
                 var controller = new NetflixQualityController();
-                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1000 1001"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001' 
+                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1000 1001"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001'
                 var checker = new NetflixCheckTimedTextFrameRate();
                 if (frameRate == 24 || frameRate == 30 || frameRate == 60)
                 {
@@ -396,7 +396,7 @@ namespace Test.Logic
             for (int frameRate = 0; frameRate < 200; frameRate++)
             {
                 var controller = new NetflixQualityController();
-                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1 1"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001' 
+                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1 1"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001'
                 var checker = new NetflixCheckTimedTextFrameRate();
                 if (frameRate == 24 || frameRate == 25 || frameRate == 30 || frameRate == 50 || frameRate == 60)
                 {

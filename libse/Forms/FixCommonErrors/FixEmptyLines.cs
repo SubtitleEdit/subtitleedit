@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         callbacks.AddFixToListView(p, fixAction2, oldText, p.Text);
                     }
 
-                    if (Configuration.Settings.Tools.RemoveEmptyLinesBetweenText && 
+                    if (Configuration.Settings.Tools.RemoveEmptyLinesBetweenText &&
                         callbacks.AllowFix(p, fixAction3) && text.Contains(Environment.NewLine + Environment.NewLine))
                     {
                         int beforeLength = text.Length;

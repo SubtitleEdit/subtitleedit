@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch (Exception)
             {
-                // ignored                
+                // ignored
             }
 
             var subtitle2 = new Subtitle();
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch (Exception)
             {
-                // ignored                
+                // ignored
             }
 
             var subtitle3 = new Subtitle();
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (totalDuration / subtitle.Paragraphs.Count > 1000000 || msFound == subtitle.Paragraphs.Count)
             {
-                // Time codes were read as seconds, but they are actually milliseconds, 
+                // Time codes were read as seconds, but they are actually milliseconds,
                 // so all time codes are divided by 1000.
                 foreach (var p in subtitle.Paragraphs)
                 {
