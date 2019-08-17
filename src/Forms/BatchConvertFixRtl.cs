@@ -26,17 +26,17 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
 
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
-            switch (mode)
+            if (mode == BatchConvertFixRtl.RemoveUnicode)
             {
-                case AddUnicode:
-                    radioButtonRemoveUnicode.Checked = true;
-                    break;
-                case ReverseStartEnd:
-                    radioButtonReverseStartEnd.Checked = true;
-                    break;
-                default:
-                    radioButtonAddUnicode.Checked = true;
-                    break;
+                radioButtonRemoveUnicode.Checked = true;
+            }
+            else if (mode == BatchConvertFixRtl.ReverseStartEnd)
+            {
+                radioButtonReverseStartEnd.Checked = true;
+            }
+            else  // fix with unicode char
+            {
+                radioButtonAddUnicode.Checked = true;
             }
         }
 

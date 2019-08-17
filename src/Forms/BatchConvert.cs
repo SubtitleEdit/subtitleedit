@@ -1107,6 +1107,25 @@ namespace Nikse.SubtitleEdit.Forms
         private static void DoThreadWork(object sender, DoWorkEventArgs e)
         {
             var p = (ThreadDoWorkParameter)e.Argument;
+            var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
+
+            if (p.FixRtl && mode == BatchConvertFixRtl.RemoveUnicode)
+            {
+                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
+                {
+                    var paragraph = p.Subtitle.Paragraphs[i];
+                    paragraph.Text = paragraph.Text.Replace("\u200E", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u200F", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u202A", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u202B", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u202C", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
+                    paragraph.Text = paragraph.Text.Replace("\u00C2", string.Empty); // fixed remove space char1
+                    paragraph.Text = paragraph.Text.Replace("\u00A0", string.Empty); // fixed remove space char2
+                }
+            }
+
             if (p.FixCommonErrors)
             {
                 try
@@ -1180,30 +1199,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (p.FixRtl)
+
+            if (p.FixRtl && mode == BatchConvertFixRtl.ReverseStartEnd)
             {
-                var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
-                    if (mode == BatchConvertFixRtl.RemoveUnicode)
-                    {
-                        paragraph.Text = paragraph.Text.Replace("\u200E", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u200F", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u202A", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u202B", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u202C", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
-                        paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
-                    }
-                    else if (mode == BatchConvertFixRtl.ReverseStartEnd)
-                    {
-                        paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
-                    }
-                    else  // fix with unicode char
-                    {
-                        paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
-                    }
+                    paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
+                }
+            }
+            else if (p.FixRtl && mode == BatchConvertFixRtl.AddUnicode) // fix with unicode char
+            {
+                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
+                {
+                    var paragraph = p.Subtitle.Paragraphs[i];
+                    paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
                 }
             }
 
