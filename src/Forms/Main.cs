@@ -304,9 +304,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetCurrentFormat(string subtitleFormatName)
+        private void SetCurrentFormat(string formatName)
         {
-            SetCurrentFormat(FormatNameToFormat(subtitleFormatName));
+            SetCurrentFormat(SubtitleFormat.FromName(formatName));
         }
 
         private void SetCurrentFormat(SubtitleFormat format)
@@ -334,20 +334,6 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
             }
-        }
-
-        private SubtitleFormat FormatNameToFormat(string subtitleFormatName)
-        {
-            subtitleFormatName = subtitleFormatName.Trim();
-            foreach (var format in SubtitleFormat.AllSubtitleFormats)
-            {
-                if (format.Name.Trim().Equals(subtitleFormatName, StringComparison.OrdinalIgnoreCase) ||
-                    format.FriendlyName.Trim().Equals(subtitleFormatName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return format;
-                }
-            }
-            return new SubRip();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -1703,9 +1689,9 @@ namespace Nikse.SubtitleEdit.Forms
             DvdSubtitleLanguage.Initialize();
         }
 
-        private void SetFormatTo(string subtitleFormatName)
+        private void SetFormatTo(string formatName)
         {
-            SetFormatTo(FormatNameToFormat(subtitleFormatName));
+            SetFormatTo(SubtitleFormat.FromName(formatName));
         }
 
         private void SetFormatTo(SubtitleFormat subtitleFormat)
