@@ -1121,8 +1121,8 @@ namespace Nikse.SubtitleEdit.Forms
                     paragraph.Text = paragraph.Text.Replace("\u202C", string.Empty);
                     paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
                     paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u00C2", string.Empty); // fixed remove space char1
-                    paragraph.Text = paragraph.Text.Replace("\u00A0", string.Empty); // fixed remove space char2
+                    paragraph.Text = paragraph.Text.Replace("\u00C2", " "); // fixed remove space char1 (no break space)
+                    paragraph.Text = paragraph.Text.Replace("\u00A0", " "); // fixed remove space char2 (no break space)
                 }
             }
 
