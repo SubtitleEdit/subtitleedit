@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -110,7 +111,7 @@ https://github.com/SubtitleEdit/subtitleedit
             {
                 allText.Append(p.Text);
 
-                int len = p.Text.Replace(Environment.NewLine, string.Empty).Length;
+                int len = GetLineLength(p);
                 minimumLineLength = Math.Min(minimumLineLength, len);
                 maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
@@ -127,7 +128,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
                 foreach (string line in p.Text.SplitToLines())
                 {
-                    var l = line.Length;
+                    var l = GetSingleLineLength(line);
                     minimumSingleLineLength = Math.Min(l, minimumSingleLineLength);
                     maximumSingleLineLength = Math.Max(l, maximumSingleLineLength);
                     totalSingleLineLength += l;
@@ -151,24 +152,116 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allTextToLower, "<font ")));
             sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allTextToLower, "{\\a")));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength));
-            sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength));
+            sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
+            sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthAverage, totalLineLength / _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LinesPerSubtitleAverage, (((double)totalSingleLines) / _subtitle.Paragraphs.Count)));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength));
-            sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength));
+            sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(minimumSingleLineLength) + ")");
+            sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit));
-            sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit));
+            sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(minimumDuration) + ")");
+            sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(maximumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / TimeCode.BaseUnit));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec));
-            sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec) + " (" + GetIndicesWithCps(minimumCharsSec) + ")");
+            sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec) + " (" + GetIndicesWithCps(maximumCharsSec) + ")");
             sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
             sb.AppendLine();
             _general = sb.ToString().Trim();
+        }
+
+        private static int GetLineLength(Paragraph p)
+        {
+            return p.Text.Replace(Environment.NewLine, string.Empty).Length;
+        }
+
+        private static int GetSingleLineLength(string s)
+        {
+            return s.Length;
+        }
+
+        private const int NumberOfLinesToShow = 10;
+
+        private string GetIndicesWithDuration(double duration)
+        {
+            var indices = new List<string>();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (Math.Abs(p.Duration.TotalMilliseconds - duration) < 0.01)
+                {
+                    if (indices.Count >= NumberOfLinesToShow)
+                    {
+                        indices.Add("...");
+                        break;
+                    }
+                    indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithCps(double cps)
+        {
+            var indices = new List<string>();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (Math.Abs(Utilities.GetCharactersPerSecond(p) - cps) < 0.01)
+                {
+                    if (indices.Count >= NumberOfLinesToShow)
+                    {
+                        indices.Add("...");
+                        break;
+                    }
+                    indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithLength(int length)
+        {
+            var indices = new List<string>();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (GetLineLength(p) == length)
+                {
+                    if (indices.Count >= NumberOfLinesToShow)
+                    {
+                        indices.Add("...");
+                        break;
+                    }
+                    indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                }
+            }
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithSingleLineLength(int length)
+        {
+            var indices = new List<string>();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                foreach (var line in p.Text.SplitToLines())
+                {
+                    if (GetSingleLineLength(line) == length)
+                    {
+                        if (indices.Count >= NumberOfLinesToShow)
+                        {
+                            indices.Add("...");
+                            return string.Join(", ", indices);
+                        }
+                        indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                        break;
+                    }
+                }
+            }
+            return string.Join(", ", indices);
         }
 
         private void Statistics_KeyDown(object sender, KeyEventArgs e)
