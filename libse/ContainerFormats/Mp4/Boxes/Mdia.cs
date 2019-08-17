@@ -3,7 +3,7 @@
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     /// <summary>
-    /// Media Box 
+    /// Media Box
     /// </summary>
     public class Mdia : Box
     {

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
                             Utilities.CountTagInText(prev.Text, '"') == 2)
                         {
-                            prev = null; 
+                            prev = null;
                         }
                     }
 

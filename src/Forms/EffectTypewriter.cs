@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
                         c = ColorTranslator.FromHtml(color);
                     }
                     catch
-                    {                        
+                    {
                         try
                         {
                             c = ColorTranslator.FromHtml("#" + color.Trim('#', ' ', '"', '\''));

@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var text = Encoding.ASCII.GetString(buffer);
-                var textUtf8 = Encoding.ASCII.GetString(buffer, 3, 7); 
+                var textUtf8 = Encoding.ASCII.GetString(buffer, 3, 7);
                 return text.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal) ||
                        textUtf8.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal);
             }

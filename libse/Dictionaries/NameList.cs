@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
                 }
             }

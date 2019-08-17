@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            // remove "*" (syllable separator) and trim 
+            // remove "*" (syllable separator) and trim
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 paragraph.Text = paragraph.Text.Replace("* ", string.Empty).RemoveChar('*').Trim();

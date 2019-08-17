@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
 
-                
+
                 for (int i = 0; i < list.Count; i++)
                 {
                     var pes = list[i];
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         }
                     }
                 }
-                
+
                 foreach (var s in subtitles)
                 {
                     s.OffsetMilliseconds = firstVideoMs;

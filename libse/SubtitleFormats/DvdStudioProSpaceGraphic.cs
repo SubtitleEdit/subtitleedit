@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".STL";
 
-        public override string Name => "DVD Studio Pro with space";       
+        public override string Name => "DVD Studio Pro with space";
 
         public override string ToText(Subtitle subtitle, string title)
         {

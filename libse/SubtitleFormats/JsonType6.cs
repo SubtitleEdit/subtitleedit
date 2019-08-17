@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     sb.Append(' ');
                     sb.Append(p.Text);
-                    
+
                 }
             }
             if (sb.Length > 0)

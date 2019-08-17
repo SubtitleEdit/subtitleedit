@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
-                Word = richTextBoxParagraph.SelectedText.Trim(); 
+                Word = richTextBoxParagraph.SelectedText.Trim();
                 ActionResult = Action.AddToNamesOnly;
                 DialogResult = DialogResult.OK;
             }

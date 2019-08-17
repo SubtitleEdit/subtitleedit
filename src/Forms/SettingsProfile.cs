@@ -290,9 +290,9 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowRulesProfiles(profile, false);
                 }
             }
-            catch 
+            catch
             {
-                MessageBox.Show("Unable to import profiles");       
+                MessageBox.Show("Unable to import profiles");
             }
         }
 

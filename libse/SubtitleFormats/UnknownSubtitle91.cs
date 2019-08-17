@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //<captions>
         //<caption time_in = "0.64" time_out="4.74" action=""><![CDATA[Line 1]]></caption>
         //<caption time_in = "4.75" time_out="8.05" action=""><![CDATA[line 2]]></caption>
-        //<captions> 
+        //<captions>
 
         public override string Extension => ".xml";
 

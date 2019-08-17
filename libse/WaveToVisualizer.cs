@@ -343,7 +343,7 @@ namespace Nikse.SubtitleEdit.Core
 
     public class WavePeakGenerator : IDisposable
     {
-        #region Movie Hasher - 
+        #region Movie Hasher -
 
         public static string GetPeakWaveFileName(string videofileName)
         {

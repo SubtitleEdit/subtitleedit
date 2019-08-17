@@ -61,10 +61,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //1
-            //00:06:31 including members of the Ismaili Leaders’ \NInternational Forum, or LIF, 
+            //00:06:31 including members of the Ismaili Leaders’ \NInternational Forum, or LIF,
             //
             //2
-            //00:06:36 que é composto pelos Presidentes dos 20 Conselhos Nacionais 
+            //00:06:36 que é composto pelos Presidentes dos 20 Conselhos Nacionais
             Paragraph p = null;
             _errorCount = 0;
             var expecting = ExpectingLine.Number;

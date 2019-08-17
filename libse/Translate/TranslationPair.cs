@@ -7,7 +7,7 @@
 
         public TranslationPair()
         {
-            
+
         }
 
         public TranslationPair(string name, string code)

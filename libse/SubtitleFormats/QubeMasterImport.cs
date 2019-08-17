@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".txt";
 
         public override string Name => "QubeMasterPro Import";
-        
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();

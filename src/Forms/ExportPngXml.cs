@@ -4889,7 +4889,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             subtitleListView1_SelectedIndexChanged(null, null);
 
-            // change font            
+            // change font
             if (!comboBoxSubtitleFont.Enabled)
             {
                 return;
@@ -5642,4 +5642,3 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
     }
 
 }
-
