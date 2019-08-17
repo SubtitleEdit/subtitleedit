@@ -53,7 +53,7 @@
             // 
             this.buttonFind.Location = new System.Drawing.Point(207, 11);
             this.buttonFind.Name = "buttonFind";
-            this.buttonFind.Size = new System.Drawing.Size(75, 21);
+            this.buttonFind.Size = new System.Drawing.Size(89, 21);
             this.buttonFind.TabIndex = 1;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
@@ -64,7 +64,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(207, 67);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(89, 21);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -118,7 +118,7 @@
             // 
             this.buttonCount.Location = new System.Drawing.Point(207, 38);
             this.buttonCount.Name = "buttonCount";
-            this.buttonCount.Size = new System.Drawing.Size(75, 23);
+            this.buttonCount.Size = new System.Drawing.Size(89, 23);
             this.buttonCount.TabIndex = 2;
             this.buttonCount.Text = "Count";
             this.buttonCount.UseVisualStyleBackColor = true;
@@ -148,7 +148,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(298, 135);
+            this.ClientSize = new System.Drawing.Size(307, 135);
             this.Controls.Add(this.checkBoxWholeWord);
             this.Controls.Add(this.labelCount);
             this.Controls.Add(this.buttonCount);
