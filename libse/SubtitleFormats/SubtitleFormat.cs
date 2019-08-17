@@ -528,5 +528,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 new JsonTypeOnlyLoad1(), new TranscriptiveJson(), new KaraokeCdgCreatorText()
             };
         }
+
+        public static SubtitleFormat FromName(string formatName)
+        {
+            string trimmedFormatName = formatName.Trim();
+            foreach (SubtitleFormat format in AllSubtitleFormats)
+            {
+                if (format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
+                    format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return format;
+                }
+            }
+            return new SubRip();
+        }
     }
 }
