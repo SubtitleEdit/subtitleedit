@@ -37,10 +37,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageKorean = 9;
         public const int CodePageJapanese = 10;
 
-        private const int EncodingChineseSimplified = 936;
-        private const int EncodingChineseTraditional = 950;
-        private const int EncodingKorean = 949;
-        private const int EncodingJapanese = 932;
+        public const int EncodingChineseSimplified = 936;
+        public const int EncodingChineseTraditional = 950;
+        public const int EncodingKorean = 949;
+        public const int EncodingJapanese = 932;
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters

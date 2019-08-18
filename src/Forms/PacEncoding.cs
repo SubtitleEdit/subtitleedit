@@ -55,8 +55,36 @@ namespace Nikse.SubtitleEdit.Forms
                     Encoding encoding = Pac.GetEncoding(CodePageIndex);
                     const int feIndex = 0;
                     const int endDelimiter = 0x00;
+                    int index;
+
+                    var indexOfW16 = Encoding.ASCII.GetString(_previewBuffer).IndexOf("W16", StringComparison.Ordinal);
+                    if (indexOfW16 > 0 && indexOfW16 < _previewBuffer.Length - 5)
+                    {
+                        index = indexOfW16 + 4;
+                        if (CodePageIndex == Pac.CodePageChineseSimplified)
+                        {
+                            textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingChineseSimplified).GetString(_previewBuffer, index, _previewBuffer.Length - index);
+                            return;
+                        }
+                        else if (CodePageIndex == Pac.CodePageChineseTraditional)
+                        {
+                            textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingChineseTraditional).GetString(_previewBuffer, index, _previewBuffer.Length - index);
+                            return;
+                        }
+                        else if (CodePageIndex == Pac.CodePageKorean)
+                        {
+                            textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingKorean).GetString(_previewBuffer, index, _previewBuffer.Length - index);
+                            return;
+                        }
+                        else if (CodePageIndex == Pac.CodePageJapanese)
+                        {
+                            textBoxPreview.Text = Encoding.GetEncoding(Pac.EncodingJapanese).GetString(_previewBuffer, index, _previewBuffer.Length - index);
+                            return;
+                        }
+                    }
+
                     var sb = new StringBuilder();
-                    int index = feIndex + 3;
+                    index = feIndex + 3;
                     while (index < _previewBuffer.Length && _previewBuffer[index] != endDelimiter)
                     {
                         if (_previewBuffer[index] == 0xFE)
