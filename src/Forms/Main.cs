@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // set up UI interfaces / injections
                 YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
                 Ebu.EbuUiHelper = new UiEbuSaveHelper();
-                Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
+                Pac.GetPacEncodingImplementation = new UiGetPacEncoding(this);
                 RichTextToPlainText.NativeRtfTextConverter = new RtfTextConverterRichTextBox();
 
                 toolStripComboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
