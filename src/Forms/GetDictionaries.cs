@@ -12,14 +12,21 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GetDictionaries : Form
     {
-        private List<string> _dictionaryDownloadLinks = new List<string>();
-        private List<string> _descriptions = new List<string>();
-        private List<string> _englishNames = new List<string>();
+
+        private class OnlineDictionary
+        {
+            public string Name { get; set; }
+            public string EnglishName { get; set; }
+            public string Description { get; set; }
+            public Uri Url { get; set; }
+
+            public override string ToString() => EnglishName;
+        }
+
         private string _xmlName;
         private int _testAllIndex = -1;
 
         public string SelectedEnglishName { get; private set; }
-
 
         public GetDictionaries()
         {
@@ -45,9 +52,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadDictionaryList(string xmlRessourceName)
         {
-            _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
-            _englishNames = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             var strm = asm.GetManifestResourceStream(_xmlName);
@@ -81,11 +85,13 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             name += " - " + nativeName;
                         }
-
-                        comboBoxDictionaries.Items.Add(name);
-                        _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
-                        _englishNames.Add(englishName);
+                        comboBoxDictionaries.Items.Add(new OnlineDictionary
+                        {
+                            Name = name,
+                            EnglishName = englishName,
+                            Description = description,
+                            Url = new Uri(downloadLink)
+                        });
                     }
                 }
                 comboBoxDictionaries.SelectedIndex = 0;
@@ -141,23 +147,27 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
-                string url = _dictionaryDownloadLinks[index];
-                SelectedEnglishName = _englishNames[index];
-
+                var dictionary = (OnlineDictionary)comboBoxDictionaries.SelectedItem;
+                SelectedEnglishName = dictionary.EnglishName;
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                wc.DownloadDataAsync(dictionary.Url);
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
+                ResetControlsState();
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        private void ResetControlsState()
+        {
+            labelPleaseWait.Text = string.Empty;
+            buttonOK.Enabled = true;
+            buttonDownload.Enabled = true;
+            buttonDownloadAll.Enabled = true;
+            comboBoxDictionaries.Enabled = true;
+            Cursor = Cursors.Default;
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -167,12 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
                 LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
+                ResetControlsState();
                 return;
             }
 
@@ -219,12 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            buttonDownloadAll.Enabled = true;
-            comboBoxDictionaries.Enabled = true;
+            ResetControlsState();
             if (_testAllIndex >= 0)
             {
                 DownloadNext();
@@ -269,8 +269,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];
+            labelPleaseWait.Text = ((OnlineDictionary)comboBoxDictionaries.SelectedItem).Description;
         }
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
