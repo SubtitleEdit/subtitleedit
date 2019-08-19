@@ -148,6 +148,8 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static TimeCode Maxtime => new TimeCode(MaxTimeTotalMilliseconds);
+
         public override string ToString() => ToString(false);
 
         public string ToString(bool localize)

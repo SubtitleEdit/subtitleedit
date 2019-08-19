@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             set
             {
                 _videoOffset.TotalMilliseconds = value.TotalMilliseconds;
-                timeUpDownVideoPosition.SetTotalMilliseconds(value.TotalMilliseconds);
+                timeUpDownVideoPosition.UpdateView(value.TotalMilliseconds);
             }
         }
 

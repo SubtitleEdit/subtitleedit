@@ -17,25 +17,23 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
+        // reusable time code
+        private readonly TimeCode _timeCode = new TimeCode();
         private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-
         private const int NumericUpDownValue = 50;
 
         public EventHandler TimeCodeChanged;
 
         private bool _forceHHMMSSFF;
-
         public bool UseVideoOffset { get; set; }
+        private readonly char[] _splitChars;
 
-        private static char[] _splitChars;
-
-        private bool _dirty;
-        double _initialTotalMilliseconds;
+        private bool _shouldGetTimeFromMaskedTextBox;
 
         internal void ForceHHMMSSFF()
         {
             _forceHHMMSSFF = true;
-            maskedTextBox1.Mask = "00:00:00:00";
+            maskedTextBox1.Mask = GetFrameBasedMask(0);
         }
 
         public TimeMode Mode
@@ -51,6 +49,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        /// <summary>
+        /// Minimum value in milliseconds.
+        /// </summary>
+        public double Minimum { get; set; }
+
+        /// <summary>
+        /// Maximum value in milliseconds.
+        /// </summary>
+        public double Maximum { get; set; }
+
         public TimeUpDown()
         {
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -61,92 +69,72 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.Value = NumericUpDownValue;
             maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;
 
-            if (_splitChars == null)
+            var splitChars = new List<char> { ':', ',', '.' };
+
+            string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            if (cultureSeparator.Length == 1)
             {
-                var splitChars = new List<char> { ':', ',', '.' };
-                string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                if (cultureSeparator.Length == 1)
+                char ch = Convert.ToChar(cultureSeparator);
+                if (!splitChars.Contains(ch))
                 {
-                    char ch = Convert.ToChar(cultureSeparator);
-                    if (!splitChars.Contains(ch))
-                    {
-                        splitChars.Add(ch);
-                    }
+                    splitChars.Add(ch);
                 }
-                _splitChars = splitChars.ToArray();
             }
+            _splitChars = splitChars.ToArray();
+
+            Minimum = 0;
+            Maximum = TimeCode.MaxTimeTotalMilliseconds;
         }
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
-            _dirty = true;
-            double? milliseconds = GetTotalMilliseconds();
-            if (milliseconds.HasValue)
-            {
-                if (milliseconds.Value >= TimeCode.MaxTimeTotalMilliseconds - 0.1)
-                {
-                    milliseconds = 0;
-                }
+            double milliSeconds = TimeCode.TotalMilliseconds;
 
-                if (Mode == TimeMode.HHMMSSMS)
-                {
-                    if (numericUpDown1.Value > NumericUpDownValue)
-                    {
-                        SetTotalMilliseconds(milliseconds.Value + 100);
-                    }
-                    else if (numericUpDown1.Value < NumericUpDownValue)
-                    {
-                        SetTotalMilliseconds(milliseconds.Value - 100);
-                    }
-                }
-                else
-                {
-                    if (numericUpDown1.Value > NumericUpDownValue)
-                    {
-                        SetTotalMilliseconds(milliseconds.Value + Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
-                    }
-                    else if (numericUpDown1.Value < NumericUpDownValue)
-                    {
-                        SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
-                    }
-                }
-                TimeCodeChanged?.Invoke(this, e);
+            int delta = Mode == TimeMode.HHMMSSMS ? 100 : Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1);
+            if (numericUpDown1.Value < NumericUpDownValue)
+            {
+                delta *= -1;
             }
+
+            double updateMilliSeconds = milliSeconds + delta;
+
+            // after adding changed value, make sure that the time doesn't go above/below max/mim threshold
+            updateMilliSeconds = Math.Min(updateMilliSeconds, Maximum);
+            updateMilliSeconds = Math.Max(updateMilliSeconds, Minimum);
+
+            UpdateView(updateMilliSeconds);
+            TimeCodeChanged?.Invoke(this, e);
+
+            // unhook handler to avoid unnecessary re-invoking this method when reseting value to default
+            numericUpDown1.ValueChanged -= NumericUpDownValueChanged;
             numericUpDown1.Value = NumericUpDownValue;
+            numericUpDown1.ValueChanged += NumericUpDownValueChanged;
         }
 
         public MaskedTextBox MaskedTextBox => maskedTextBox1;
 
-        public void SetTotalMilliseconds(double milliseconds)
+        public void UpdateView(double milliseconds)
         {
-            _dirty = false;
-            _initialTotalMilliseconds = milliseconds;
+            _shouldGetTimeFromMaskedTextBox = false;
+
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
             }
+
+            // update cache
+            _timeCode.TotalMilliseconds = milliseconds;
+
             if (Mode == TimeMode.HHMMSSMS)
             {
-                maskedTextBox1.Mask = GetMask(milliseconds);
-                maskedTextBox1.Text = new TimeCode(milliseconds).ToString();
+                maskedTextBox1.Mask = GetTimeBasedMask(milliseconds);
+                maskedTextBox1.Text = _timeCode.ToString();
             }
             else
             {
-                var tc = new TimeCode(milliseconds);
-                maskedTextBox1.Mask = GetMaskFrames(milliseconds);
-                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
+                maskedTextBox1.Mask = GetFrameBasedMask(milliseconds);
+                maskedTextBox1.Text = _timeCode.ToHHMMSSFF();
             }
-            _dirty = false;
-        }
-
-        public double? GetTotalMilliseconds()
-        {
-            if (!_dirty)
-            {
-                return _initialTotalMilliseconds;
-            }
-
-            return TimeCode?.TotalMilliseconds;
         }
 
         public TimeCode TimeCode
@@ -158,135 +146,119 @@ namespace Nikse.SubtitleEdit.Controls
                     return new TimeCode();
                 }
 
-                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
+                // return cached time. No update happened by chaging the value from view manually
+                if (!_shouldGetTimeFromMaskedTextBox)
                 {
-                    return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
+                    return new TimeCode(_timeCode.TotalMilliseconds);
                 }
 
-                if (!_dirty)
+                // get time from parsing masked text box
+                string maskTime = maskedTextBox1.Text;
+
+                // check if time can be parsed
+                if (maskTime.Length > 0)
                 {
-                    return new TimeCode(_initialTotalMilliseconds);
+                    string tempMaskTime = maskTime.RemoveChar('.').RemoveChar(',').RemoveChar(':');
+                    if (!",.:".Contains(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                    {
+                        tempMaskTime = tempMaskTime.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
+                    }
+                    // return max-time if current masked-time is un-parsable
+                    if (string.IsNullOrWhiteSpace(tempMaskTime))
+                    {
+                        return TimeCode.Maxtime;
+                    }
                 }
 
-                string startTime = maskedTextBox1.Text;
-                bool isNegative = startTime.StartsWith('-');
-                startTime = startTime.TrimStart('-').Replace(' ', '0');
-                if (Mode == TimeMode.HHMMSSMS)
-                {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, StringComparison.Ordinal))
-                    {
-                        startTime += "000";
-                    }
+                TimeCode tc = GetTimeCodeFromTokens(GetTokensFromMask(maskTime));
 
-                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
+                // update cache. when the _shouldGetTimeFromMaskedTextBox is false
+                // timecode will be reconstructed from this cached timecode
+                _timeCode.TotalMilliseconds = tc.TotalMilliseconds;
 
-                    if (times.Length == 4)
-                    {
-                        int.TryParse(times[0], out var hours);
+                // time is already parsed to avoid reparsing this is set to false
+                _shouldGetTimeFromMaskedTextBox = false;
 
-                        int.TryParse(times[1], out var minutes);
-                        if (minutes > 59)
-                        {
-                            minutes = 59;
-                        }
-
-                        int.TryParse(times[2], out var seconds);
-                        if (seconds > 59)
-                        {
-                            seconds = 59;
-                        }
-
-                        int.TryParse(times[3].PadRight(3, '0'), out var milliSeconds);
-                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
-
-                        if (UseVideoOffset)
-                        {
-                            tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
-                        }
-
-                        if (isNegative)
-                        {
-                            tc.TotalMilliseconds *= -1;
-                        }
-
-                        return tc;
-                    }
-                }
-                else
-                {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, StringComparison.Ordinal) || startTime.EndsWith(':'))
-                    {
-                        startTime += "00";
-                    }
-
-                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (times.Length == 4)
-                    {
-                        int.TryParse(times[0], out var hours);
-
-                        int.TryParse(times[1], out var minutes);
-
-                        int.TryParse(times[2], out var seconds);
-
-                        if (int.TryParse(times[3], out var milliSeconds))
-                        {
-                            milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
-                        }
-
-                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
-
-                        if (UseVideoOffset)
-                        {
-                            tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
-                        }
-
-                        if (isNegative)
-                        {
-                            tc.TotalMilliseconds *= -1;
-                        }
-
-                        return tc;
-                    }
-                }
-                return null;
+                return tc;
             }
             set
             {
                 if (_designMode)
                 {
-                    return;
-                }
-
-                if (value != null)
-                {
-                    _dirty = false;
-                    _initialTotalMilliseconds = value.TotalMilliseconds;
-                }
-
-                if (value == null || value.TotalMilliseconds >= TimeCode.MaxTimeTotalMilliseconds - 0.1)
-                {
-                    maskedTextBox1.Text = string.Empty;
-                    return;
-                }
-
-                var v = new TimeCode(value.TotalMilliseconds);
-                if (UseVideoOffset)
-                {
-                    v.TotalMilliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
-                }
-
-                if (Mode == TimeMode.HHMMSSMS)
-                {
-                    maskedTextBox1.Mask = GetMask(v.TotalMilliseconds);
-                    maskedTextBox1.Text = v.ToString();
+                    _timeCode.TotalMilliseconds = 0;
                 }
                 else
                 {
-                    maskedTextBox1.Mask = GetMaskFrames(v.TotalMilliseconds);
-                    maskedTextBox1.Text = v.ToHHMMSSFF();
+                    // adjust time when overlaping threshold
+                    double totalMilliSeconds = value.TotalMilliseconds;
+                    totalMilliSeconds = Math.Max(totalMilliSeconds, Minimum); // val < 0
+                    totalMilliSeconds = Math.Min(totalMilliSeconds, Maximum); // val > max
+
+                    UpdateView(totalMilliSeconds);
                 }
             }
+        }
+
+        private string[] GetTokensFromMask(string timeStamp)
+        {
+            int len = timeStamp.Length;
+
+            // try to reconstruct time if it ends with one of the expected symbols
+            if (len > 0 && CharUtils.IsDigit(timeStamp[len - 1]))
+            {
+                // 00:00:00[.,:] => 00:00:00:0
+                if (timeStamp.LastIndexOfAny(_splitChars, len - 1, 1) >= 0)
+                {
+                    timeStamp += "0";
+                }
+                timeStamp = timeStamp.Replace(' ', '0');
+            }
+
+            return timeStamp.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private TimeCode GetTimeCodeFromTokens(string[] tokens)
+        {
+            // invalid tokens
+            if (tokens.Length < 4)
+            {
+                return new TimeCode();
+            }
+
+            int.TryParse(tokens[0], out int hours);
+            int.TryParse(tokens[1], out int minutes);
+            int.TryParse(tokens[2], out int seconds);
+
+            // handle overlaps (happens when user press key 9 in minute / seconds position from UI)
+            minutes = Math.Min(minutes, 59);
+            seconds = Math.Min(seconds, 59);
+
+            const int IndexMilliSecondsOrFrames = 3;
+
+            int millisSeconds;
+            if (Mode == TimeMode.HHMMSSMS)
+            {
+                int.TryParse(tokens[IndexMilliSecondsOrFrames].PadRight(3, '0'), out millisSeconds);
+            }
+            else if (int.TryParse(tokens[IndexMilliSecondsOrFrames], out millisSeconds)) // frame
+            {
+                millisSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(millisSeconds);
+            }
+
+            var tc = new TimeCode(Math.Abs(hours), minutes, seconds, millisSeconds);
+
+            // handle negative time
+            if (hours < 0)
+            {
+                tc.TotalMilliseconds *= -1;
+            }
+
+            if (UseVideoOffset)
+            {
+                tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
+            }
+
+            return tc;
         }
 
         private void MaskedTextBox1KeyDown(object sender, KeyEventArgs e)
@@ -311,19 +283,19 @@ namespace Nikse.SubtitleEdit.Controls
                      e.KeyData != Keys.Left &&
                      e.KeyData != Keys.Right)
             {
-                _dirty = true;
+                _shouldGetTimeFromMaskedTextBox = true;
             }
         }
 
-        private static string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
+        private static string GetTimeBasedMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
 
-        private static string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
+        private static string GetFrameBasedMask(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
 
         private void maskedTextBox1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                _dirty = true;
+                _shouldGetTimeFromMaskedTextBox = true;
             }
         }
     }

@@ -10658,7 +10658,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
+                // cache
+                var tc = timeUpDownStartTime.TimeCode;
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + tc));
 
                 int firstSelectedIndex = FirstSelectedIndex;
                 var oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -10667,7 +10669,7 @@ namespace Nikse.SubtitleEdit.Forms
                     oldParagraph = new Paragraph(oldParagraph, false);
                 }
 
-                UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
+                UpdateStartTimeInfo(tc);
 
                 UpdateOriginalTimeCodes(oldParagraph);
                 labelStatus.Text = string.Empty;
