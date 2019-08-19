@@ -64,6 +64,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             foreach (FontFamily ff in FontFamily.Families)
             {
+                if (ff.Name.Length == 0)
+                {
+                    continue;
+                }
                 comboBoxFontName.Items.Add(char.ToLower(ff.Name[0]) + ff.Name.Substring(1));
             }
 
