@@ -62,9 +62,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
-            foreach (FontFamily ff in FontFamily.Families)
+            foreach (var ff in FontFamily.Families)
             {
-                comboBoxFontName.Items.Add(char.ToLower(ff.Name[0]) + ff.Name.Substring(1));
+                if (ff.Name.Length > 0)
+                {
+                    comboBoxFontName.Items.Add(char.ToLower(ff.Name[0]) + ff.Name.Substring(1));
+                }
             }
 
             InitializeListView();
