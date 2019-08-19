@@ -44,6 +44,7 @@ namespace UpdateAssemblyInfo
 
             public string FullVersion  => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
             public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
+            public string MajorMinor => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}", Major, Minor);
 
             public VersionInfo()
             {
@@ -81,7 +82,7 @@ namespace UpdateAssemblyInfo
 
                 if (!match.Success)
                 {
-                    throw new ArgumentException("Invalid version identifier: '" + version + "'");
+                    throw new ArgumentException($"Invalid version identifier: '{version}'");
                 }
 
                 Major = int.Parse(match.Groups["major"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
@@ -150,7 +151,7 @@ namespace UpdateAssemblyInfo
             //   <language-id> "-" <script-id> ".xml"  (e.g., zh-Hans.xml)
             //   <language-id> "-" <region-id> ".xml"  (e.g., nb-NO.xml)
             var fileNamePattern = string.Format(@"[\{0}\{1}][a-z]{{2,3}}-[A-Z][A-Za-z-]+\.xml\z", Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            var fileNameRegex = new Regex(fileNamePattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+            var fileNameRegex = new Regex(fileNamePattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
             var translation = new XmlDocument { XmlResolver = null };
 
             foreach (var fileName in Directory.EnumerateFiles(languagesFolderName).Where(fn => fileNameRegex.IsMatch(fn)))
@@ -164,6 +165,27 @@ namespace UpdateAssemblyInfo
                 }
 
                 translation.Save(fileName);
+            }
+        }
+
+        private static void UpdateTmx14ToolVersion(string tmx14FileName, VersionInfo newVersion, VersionInfo oldVersion)
+        {
+            if (newVersion.MajorMinor != oldVersion.MajorMinor)
+            {
+                var headerPattern = @"<header +creationtool=\\""Subtitle Edit\\"" +creationtoolversion=\\""(?<version>[^\\]+)\\"" ";
+                var headerRegex = new Regex(headerPattern, RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
+
+                var tmx14Text = File.ReadAllText(tmx14FileName);
+                var tmx14Match = headerRegex.Match(tmx14Text);
+                if (!tmx14Match.Success)
+                {
+                    throw new FormatException($"Cannot find creationtoolversion attribute in '{tmx14FileName}'");
+                }
+                var index = tmx14Match.Groups["version"].Index;
+                var length = tmx14Match.Groups["version"].Length;
+                tmx14Text = tmx14Text.Remove(index, length).Insert(index, newVersion.MajorMinor);
+
+                File.WriteAllText(tmx14FileName, tmx14Text, Encoding.UTF8);
             }
         }
 
@@ -208,7 +230,7 @@ namespace UpdateAssemblyInfo
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
-                    throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build expected)");
+                    throw new FormatException($"Invalid Git version tag: '{clrTags.Result}' (major.minor.maintenance-build expected)");
                 }
                 currentRepositoryVersion = new VersionInfo(clrTags.Result, clrHash.Result);
             }
@@ -220,7 +242,7 @@ namespace UpdateAssemblyInfo
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
-                    throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build expected)");
+                    throw new FormatException("Invalid Git version tag: '{clrTags.Result}' (major.minor.maintenance-build expected)");
                 }
                 latestRepositoryVersion = new VersionInfo(clrTags.Result, clrHash.Result);
             }
@@ -255,7 +277,7 @@ namespace UpdateAssemblyInfo
             var versionMatch = TemplateFileVersionRegex.Match(templateText);
             if (!versionMatch.Success)
             {
-                throw new Exception("Malformed template file: '" + templateFileName + "'");
+                throw new FormatException($"Malformed template file: '{templateFileName}' (missing AssemblyVersion)");
             }
             return new VersionInfo(versionMatch.Groups["version"].Value);
         }
@@ -318,6 +340,8 @@ namespace UpdateAssemblyInfo
                         var oldVersion = GetTemplateVersion(seTemplateFileName);
                         var languagesFolderName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(seTemplateFileName)), "Languages");
                         UpdateTranslations(languagesFolderName, newVersion, oldVersion);
+                        var tmx14FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(libSeTemplateFileName)), "SubtitleFormats", "Tmx14.cs");
+                        UpdateTmx14ToolVersion(tmx14FileName, newVersion, oldVersion);
                     }
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
