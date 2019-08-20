@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -51,6 +52,7 @@ https://github.com/SubtitleEdit/subtitleedit
 {1}
 ============================= Most Used Lines =============================
 {2}";
+        private readonly string _fileName;
 
         private static readonly char[] ExpectedChars = { '♪', '♫', '"', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '،', '؟', '؛' };
 
@@ -62,6 +64,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
             _subtitle = subtitle;
             _format = format;
+            _fileName = fileName;
 
             _l = Configuration.Settings.Language.Statistics;
             Text = string.IsNullOrEmpty(fileName) ? _l.Title : string.Format(_l.TitleWithFileName, fileName);
@@ -445,11 +448,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            using (var saveFile = new SaveFileDialog { Filter = Configuration.Settings.Language.Main.TextFiles + " (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" })
+            string preViewFileName = Path.GetFileNameWithoutExtension(_fileName) + ".Stats";
+            using (var saveDialog = new SaveFileDialog { FileName = preViewFileName, Filter = Configuration.Settings.Language.Main.TextFiles + " (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" })
             {
-                if (saveFile.ShowDialog() == DialogResult.OK)
+                if (saveDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    string fileName = saveFile.FileName;
+                    string fileName = saveDialog.FileName;
                     var statistic = string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines);
                     System.IO.File.WriteAllText(fileName, statistic);
                 }
