@@ -566,22 +566,19 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = 0;
             _errors = 0;
             _abort = false;
-            var worker1 = new BackgroundWorker();
-            var worker2 = new BackgroundWorker();
-            var worker3 = new BackgroundWorker();
-            worker1.DoWork += DoThreadWork;
-            worker1.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker2.DoWork += DoThreadWork;
-            worker2.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker3.DoWork += DoThreadWork;
-            worker3.RunWorkerCompleted += ThreadWorkerCompleted;
+
+            // create workers
+            BackgroundWorker worker1 = CreateWorker();
+            BackgroundWorker worker2 = CreateWorker();
+            BackgroundWorker worker3 = CreateWorker();
+
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
                 item.SubItems[3].Text = "-";
             }
-
             listViewInputFiles.EndUpdate();
+
             var mkvFileNames = new List<string>();
             Refresh();
             int index = 0;
@@ -913,6 +910,14 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.Thread.Sleep(100);
             }
             ChangeControlStatus(false);
+        }
+
+        private BackgroundWorker CreateWorker()
+        {
+            var worker = new BackgroundWorker();
+            worker.RunWorkerCompleted += ThreadWorkerCompleted;
+            worker.DoWork += DoThreadWork;
+            return worker;
         }
 
         private void ChangeControlStatus(bool converting)
