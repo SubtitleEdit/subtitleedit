@@ -1259,19 +1259,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
-                    bool success;
-                    List<IBinaryParagraph> binaryParagraphs = new List<IBinaryParagraph>();
-                    if (p.FileName != null && p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
-                        FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
+                    var binaryParagraphs = new List<IBinaryParagraph>();
+                    if (p.FileName != null && p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
                         binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraph>().ToList();
                     }
                     var dir = textBoxOutputFolder.Text;
+                    var overwrite = checkBoxOverwrite.Checked;
                     if (checkBoxOverwriteOriginalFiles.Checked)
                     {
                         dir = Path.GetDirectoryName(p.FileName);
+                        overwrite = true;
                     }
-                    success = CommandLineConvert.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, checkBoxOverwrite.Checked, -1, null, null);
+                    var success = CommandLineConvert.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null);
                     p.Item.SubItems[3].Text = success ? Configuration.Settings.Language.BatchConvert.Converted : Configuration.Settings.Language.BatchConvert.NotConverted;
                 }
                 catch (Exception exception)
