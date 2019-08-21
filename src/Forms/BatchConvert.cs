@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string toFormat = comboBoxSubtitleFormats.Text;
-            ChangeControlStatus(true);
+            ChangeControlStates(true);
             _count = 0;
             _converted = 0;
             _errors = 0;
@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 System.Threading.Thread.Sleep(100);
             }
-            ChangeControlStatus(false);
+            ChangeControlStates(false);
         }
 
         private BackgroundWorker CreateWorker()
@@ -920,7 +920,7 @@ namespace Nikse.SubtitleEdit.Forms
             return worker;
         }
 
-        private void ChangeControlStatus(bool converting)
+        private void ChangeControlStates(bool converting)
         {
             _converting = converting;
 
