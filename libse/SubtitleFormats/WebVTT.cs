@@ -263,12 +263,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     break;
                 }
             }
-            var parts = localSb.ToString().Split(new [] { ':', '.' });
-            if (parts != null && parts.Length == 3)
+            var parts = localSb.ToString().Split(':', '.');
+            if (parts.Length == 3)
             {
-                parts = ("00:" + localSb).Split(new [] { ':', '.' });
+                parts = ("00:" + localSb).Split(':', '.');
             }
-            if (parts != null && parts.Length == 4)
+            if (parts.Length == 4)
             {
                 subtractSeconds = DecodeTimeCodeMsFourParts(parts).TotalSeconds;
             }
@@ -290,10 +290,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (tsSb.Length > 0)
             {
-                long number;
-                if (long.TryParse(tsSb.ToString(), out number))
+                if (long.TryParse(tsSb.ToString(), out var number))
                 {
-                    var seconds = number / Configuration.Settings.SubtitleSettings.WebVttTimescale - subtractSeconds;
+                    var seconds = (double)number / Configuration.Settings.SubtitleSettings.WebVttTimescale - subtractSeconds;
                     if (seconds > 0 && seconds < 90000) // max 25 hours - or wrong timescale
                     {
                         return seconds;
