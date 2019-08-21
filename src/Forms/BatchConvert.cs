@@ -559,20 +559,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            _converting = true;
-            buttonConvert.Enabled = false;
-            buttonCancel.Enabled = false;
-            progressBar1.Style = ProgressBarStyle.Blocks;
-            progressBar1.Maximum = listViewInputFiles.Items.Count;
-            progressBar1.Value = 0;
-            progressBar1.Visible = progressBar1.Maximum > 2;
+
             string toFormat = comboBoxSubtitleFormats.Text;
-            groupBoxOutput.Enabled = false;
-            groupBoxConvertOptions.Enabled = false;
-            buttonInputBrowse.Enabled = false;
-            buttonSearchFolder.Enabled = false;
-            comboBoxFilter.Enabled = false;
-            textBoxFilter.Enabled = false;
+            ChangeControlStatus(true);
             _count = 0;
             _converted = 0;
             _errors = 0;
@@ -923,18 +912,36 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 System.Threading.Thread.Sleep(100);
             }
-            _converting = false;
-            labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-            buttonConvert.Enabled = true;
-            buttonCancel.Enabled = true;
-            groupBoxOutput.Enabled = true;
-            groupBoxConvertOptions.Enabled = true;
-            buttonInputBrowse.Enabled = true;
-            buttonSearchFolder.Enabled = true;
-            comboBoxFilter.Enabled = true;
-            textBoxFilter.Enabled = true;
+            ChangeControlStatus(false);
+        }
+
+        private void ChangeControlStatus(bool converting)
+        {
+            _converting = converting;
+
+            if (converting)
+            {
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                progressBar1.Maximum = listViewInputFiles.Items.Count;
+                progressBar1.Value = 0;
+                // no need for progress bar when there are only two subtitle
+                progressBar1.Visible = progressBar1.Maximum > 2;
+            }
+            else
+            {
+                labelStatus.Text = string.Empty;
+                TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+                progressBar1.Visible = converting;
+            }
+
+            buttonConvert.Enabled = !converting;
+            buttonCancel.Enabled = !converting;
+            groupBoxOutput.Enabled = !converting;
+            groupBoxConvertOptions.Enabled = !converting;
+            buttonInputBrowse.Enabled = !converting;
+            buttonSearchFolder.Enabled = !converting;
+            comboBoxFilter.Enabled = !converting;
+            textBoxFilter.Enabled = !converting;
         }
 
         /// <summary>
