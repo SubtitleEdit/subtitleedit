@@ -11,18 +11,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Name => "Wincaps W32";
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName) && fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            if (File.Exists(fileName) && fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
             {
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                    using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-
-                        return buffer[0] == 0x46 &&  // FCX
-                               buffer[1] == 0x43 &&
-                               buffer[2] == 0x58;
+                        var buffer = new byte[3];
+                        fs.Read(buffer, 0, 3); // read id
+                        return Encoding.UTF8.GetString(buffer, 0, 3).Equals("fcx", StringComparison.OrdinalIgnoreCase);
                     }
                 }
             }
