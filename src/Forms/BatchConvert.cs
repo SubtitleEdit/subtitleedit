@@ -810,39 +810,43 @@ namespace Nikse.SubtitleEdit.Forms
                                 Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
                             }
 
-                            Paragraph prev = sub.GetParagraphOrDefault(0);
-                            bool first = true;
-                            foreach (Paragraph p in sub.Paragraphs)
-                            {
-                                if (checkBoxRemoveTextForHI.Checked)
-                                {
-                                    _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
-                                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
-                                }
-                                if (checkBoxRemoveFormatting.Checked)
-                                {
-                                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                                }
-                                if (!numericUpDownPercent.Value.Equals(100))
-                                {
-                                    double toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
-                                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
-                                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
+                            // this variable is used to check whether one of the action is guaranteed to run
+                            bool updateWarranty = checkBoxRemoveTextForHI.Checked || checkBoxRemoveFormatting.Checked ||
+                                !numericUpDownPercent.Value.Equals(100);
 
-                                    if (first)
+                            if (updateWarranty)
+                            {
+                                Paragraph prev = default;
+                                bool shouldRemoveHearingImpaired = checkBoxRemoveTextForHI.Checked;
+                                bool shouldRemoveFormatting = checkBoxRemoveFormatting.Checked;
+                                double percentage = (double)numericUpDownPercent.Value / 100.0;
+                                bool shouldUpdateTime = percentage != 100;
+                                _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
+                                foreach (Paragraph p in sub.Paragraphs)
+                                {
+                                    if (shouldRemoveHearingImpaired)
                                     {
-                                        first = false;
+                                        p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
                                     }
-                                    else
+                                    if (shouldRemoveFormatting)
                                     {
-                                        if (prev.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
+                                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                                    }
+                                    if (shouldUpdateTime)
+                                    {
+                                        p.StartTime.TotalMilliseconds *= percentage;
+                                        p.EndTime.TotalMilliseconds *= percentage;
+
+                                        // fix overlapping times
+                                        if (prev?.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
                                         {
                                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                                         }
+                                        prev = p;
                                     }
                                 }
-                                prev = p;
                             }
+
                             if (bluRaySubtitles == null || bluRaySubtitles.Count == 0)
                             {
                                 sub.RemoveEmptyLines(); //TODO: only for image export?
