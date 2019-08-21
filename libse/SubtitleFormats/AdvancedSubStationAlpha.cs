@@ -101,7 +101,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 {1}
 
 [Events]
-Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -118,7 +118,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 " + DefaultStyle + @"
 
 [Events]
-Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: {9},{0},{1},{3},{4},{5},{6},{7},{8},{2}";
@@ -130,7 +130,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (isValidAssHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine("Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text");
+                sb.AppendLine("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
                 styles = GetStylesFromHeader(subtitle.Header);
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
@@ -221,7 +221,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
             }
-            return sb.ToString().Trim();
+            return sb.ToString().Trim() + Environment.NewLine;
         }
 
         private static void LoadStylesFromSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
@@ -1128,8 +1128,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
-            int indexActor = 4;
-            int indexName = -1; // convert "Name" to "Actor" (if no "Actor") - "Name" is from SSA ?
+            int indexActor = -1;  // convert "Actor" to "Nam" (if no "Name")
+            int indexName = 4;
             int indexMarginL = 5;
             int indexMarginR = 6;
             int indexMarginV = 7;
@@ -1307,11 +1307,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             {
                                 style = splittedLine[i].Trim();
                             }
-                            else if (i == indexActor)
+                            else if (i == indexActor && indexName == -1)
                             {
                                 actor = splittedLine[i].Trim();
                             }
-                            else if (i == indexName && indexActor == -1)
+                            else if (i == indexName)
                             {
                                 actor = splittedLine[i].Trim();
                             }
