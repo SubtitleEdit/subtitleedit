@@ -35,57 +35,57 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        public void Initialize(Subtitle subtitle, string text)
+        public void Initialize(Subtitle subtitle, string nameCandidate)
         {
-            _subtitle = subtitle;
-
-            if (!string.IsNullOrEmpty(text))
-            {
-                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
-                if (textBoxAddName.Text.Length > 1)
-                {
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
-                }
-            }
-
-            comboBoxDictionaries.Items.Clear();
-            string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
-            int selIndex = -1;
-            var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral();
-            for (var index = 0; index < dictionaries.Count; index++)
-            {
-                string name = dictionaries[index];
-                comboBoxDictionaries.Items.Add(name);
-                if (selIndex == -1 && languageName.Length > 1 &&  name.Contains("[" + languageName.Substring(0, 2) + "]"))
-                {
-                    selIndex = index;
-                }
-            }
-            comboBoxDictionaries.SelectedIndex = selIndex >= 0 ? selIndex : 0;
+            string language = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, subtitle);
+            Initialize(subtitle, $"[{language}]", nameCandidate);
         }
 
-        internal void Initialize(Subtitle subtitle, string hunspellName, string text)
+        internal void Initialize(Subtitle subtitle, string selDictionaryName, string nameCandidate)
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrEmpty(nameCandidate))
             {
-                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
-                if (textBoxAddName.Text.Length > 1)
+                nameCandidate = nameCandidate.RemoveControlCharacters();
+                nameCandidate = nameCandidate.Trim().TrimEnd('.', '!', '?');
+                nameCandidate = HtmlUtil.RemoveHtmlTags(nameCandidate, true);
+
+                if (nameCandidate.ContainsLetter())
                 {
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
+                    textBoxAddName.Text = nameCandidate.CapitalizeFirstLetter();
                 }
             }
 
+            comboBoxDictionaries.BeginUpdate();
             comboBoxDictionaries.Items.Clear();
-            foreach (string name in Utilities.GetDictionaryLanguages())
+
+            // neutral dictionaries is detect using language inside brackets e.g: [en_US]
+            bool isHunspell = !selDictionaryName.StartsWith('[');
+
+            int selIndex = -1; 
+            var dictionaries = isHunspell ? Utilities.GetDictionaryLanguages() : Utilities.GetDictionaryLanguagesCultureNeutral();
+            for (int i = 0; i < dictionaries.Count; i++)
             {
-                comboBoxDictionaries.Items.Add(name);
-                if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
+                string dictionary = dictionaries[i];
+                comboBoxDictionaries.Items.Add(dictionary);
+
+                // default select index already set
+                if (selIndex >= 0 || string.IsNullOrEmpty(selDictionaryName))
                 {
-                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+                    continue;
+                }
+
+                if (isHunspell ?
+                    dictionary.Equals(selDictionaryName, StringComparison.OrdinalIgnoreCase)
+                    : dictionary.Contains($"[{selDictionaryName}]"))
+                {
+                    selIndex = i;
                 }
             }
+
+            comboBoxDictionaries.SelectedIndex = selIndex >= 0 ? selIndex : 0;
+            comboBoxDictionaries.EndUpdate();
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
