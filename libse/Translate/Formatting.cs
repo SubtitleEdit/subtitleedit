@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var text = input.Trim();
 
             // SSA/ASS tags
-            if (text.StartsWith("{\\"))
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
             {
                 var endIndex = text.IndexOf('}');
                 if (endIndex > 0)
