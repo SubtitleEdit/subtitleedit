@@ -12,7 +12,6 @@
   <name>Alojzija</name>
   <name>Alojzije</name>
   <name>Amalija</name>
-  <name>Ana</name>
   <name>Anamarija</name>
   <name>Anastazija</name>
   <name>Andrej</name>
@@ -21,8 +20,6 @@
   <name>Andrijana</name>
   <name>Andro</name>
   <name>Anica</name>
-  <name>Anita</name>
-  <name>Anja</name>
   <name>Anka</name>
   <name>Ankica</name>
   <name>Ante</name>
@@ -36,7 +33,6 @@
   <name>Bartol</name>
   <name>Bartolomej</name>
   <name>Berislav</name>
-  <name>Bernard</name>
   <name>Bernarda</name>
   <name>Biljana</name>
   <name>Biserka</name>
@@ -48,7 +44,6 @@
   <name>Bogdan</name>
   <name>Bojan</name>
   <name>Bojana</name>
-  <name>Boris</name>
   <name>Borislav</name>
   <name>Borko</name>
   <name>Borna</name>
@@ -64,9 +59,7 @@
   <name>Branka</name>
   <name>Brankica</name>
   <name>Branko</name>
-  <name>Brigita</name>
   <name>Bruna</name>
-  <name>Bruno</name>
   <name>Cecilija</name>
   <name>Cila</name>
   <name>Cvijeta</name>
@@ -80,7 +73,6 @@
   <name>Danijel</name>
   <name>Danijela</name>
   <name>Danilo</name>
-  <name>Danko</name>
   <name>Daria</name>
   <name>Darija</name>
   <name>Darijo</name>
@@ -100,7 +92,6 @@
   <name>Domagoj</name>
   <name>Dominik</name>
   <name>Dorijan</name>
-  <name>Doris</name>
   <name>Dorotea</name>
   <name>Doroteja</name>
   <name>Draga</name>
@@ -122,15 +113,11 @@
   <name>Duško</name>
   <name>Edi</name>
   <name>Edita</name>
-  <name>Elena</name>
   <name>Eleonora</name>
   <name>Elizabeta</name>
   <name>Ema</name>
   <name>Emanuela</name>
-  <name>Emil</name>
   <name>Emilija</name>
-  <name>Erik</name>
-  <name>Erika</name>
   <name>Ervin</name>
   <name>Eugen</name>
   <name>Fabijan</name>
@@ -138,7 +125,6 @@
   <name>Filipa</name>
   <name>Finka</name>
   <name>Florijan</name>
-  <name>Fran</name>
   <name>Frane</name>
   <name>Franjo</name>
   <name>Franka</name>
@@ -152,17 +138,14 @@
   <name>Gordana</name>
   <name>Grga</name>
   <name>Grgur</name>
-  <name>Henrik</name>
   <name>Hrvoje</name>
   <name>Ida</name>
-  <name>Igor</name>
   <name>Ilija</name>
   <name>Ilinka</name>
   <name>Ina</name>
   <name>Irena</name>
   <name>Iskra</name>
   <name>Iva</name>
-  <name>Ivana</name>
   <name>Ivanka</name>
   <name>Ivica</name>
   <name>Ivka</name>
@@ -204,7 +187,6 @@
   <name>Karmela</name>
   <name>Karmen</name>
   <name>Kata</name>
-  <name>Kate</name>
   <name>Katica</name>
   <name>Klaudija</name>
   <name>Klaudio</name>
@@ -219,7 +201,6 @@
   <name>Krunoslav</name>
   <name>Ksenija</name>
   <name>Ladislav</name>
-  <name>Lana</name>
   <name>Larisa</name>
   <name>Lidija</name>
   <name>Ljerka</name>
@@ -229,20 +210,16 @@
   <name>Ljubica</name>
   <name>Ljubo</name>
   <name>Ljubomir</name>
-  <name>Lorena</name>
   <name>Lovre</name>
   <name>Lovrenco</name>
   <name>Lovro</name>
   <name>Lucija</name>
   <name>Lucijan</name>
-  <name>Luka</name>
   <name>Magda</name>
-  <name>Maja</name>
   <name>Majda</name>
   <name>Manda</name>
   <name>Mandica</name>
   <name>Mare</name>
-  <name>Marica</name>
   <name>Marija</name>
   <name>Marijan</name>
   <name>Marijana</name>
@@ -251,7 +228,6 @@
   <name>Marinela</name>
   <name>Marinko</name>
   <name>Marjana</name>
-  <name>Marko</name>
   <name>Martina</name>
   <name>Maša</name>
   <name>Matea</name>
@@ -268,7 +244,6 @@
   <name>Mihovil</name>
   <name>Mijo</name>
   <name>Mila</name>
-  <name>Milan</name>
   <name>Milana</name>
   <name>Milanka</name>
   <name>Mile</name>
@@ -315,14 +290,11 @@
   <name>Nevenka</name>
   <name>Nikica</name>
   <name>Niko</name>
-  <name>Nikola</name>
   <name>Nikolina</name>
   <name>Nikša</name>
-  <name>Nina</name>
   <name>Nives</name>
   <name>Ognjan</name>
   <name>Ognjen</name>
-  <name>Olga</name>
   <name>Olgica</name>
   <name>Olivera</name>
 </names>
