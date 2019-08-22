@@ -2425,6 +2425,8 @@
     <RegEx find="ngažov" replaceWith="ngažir" />
     <RegEx find="armij" replaceWith="vojsk" />
     <RegEx find="Armij" replaceWith="Vojsk" />
+    <RegEx find="asnp" replaceWith="asno" />
+    <RegEx find="ašnp" replaceWith="ašno" />
     <RegEx find="svalt" replaceWith="sfalt" />
     <RegEx find="zbu[kc]" replaceWith="beced" />
     <RegEx find="akcil" replaceWith="acil" />
