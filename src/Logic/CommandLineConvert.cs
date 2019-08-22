@@ -1289,7 +1289,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 {
                                     var mp = form.MakeMakeBitmapParameter(index, width, height);
                                     mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                    if (binaryParagraphs != null)
+                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                     {
                                         if (binaryParagraphs.Count > index)
                                         {
@@ -1354,7 +1354,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
                                 {
                                     var mp = form.MakeMakeBitmapParameter(index, width, height);
-                                    if (binaryParagraphs != null)
+                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                     {
                                         if (binaryParagraphs.Count > index)
                                         {
@@ -1431,7 +1431,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (binaryParagraphs != null)
+                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
                                     if (binaryParagraphs.Count > index)
                                     {
@@ -1494,7 +1494,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (binaryParagraphs != null)
+                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
                                     if (binaryParagraphs.Count > index)
                                     {
@@ -1554,7 +1554,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var mp = form.MakeMakeBitmapParameter(index, width, height);
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (binaryParagraphs != null)
+                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
                                     if (binaryParagraphs.Count > index)
                                     {
