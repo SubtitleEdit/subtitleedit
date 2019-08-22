@@ -144,6 +144,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static WebProxy GetProxy()
         {
+            SetSecurityProtocol();
             if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
             {
                 var proxy = new WebProxy(Configuration.Settings.Proxy.ProxyAddress);
