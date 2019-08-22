@@ -2,20 +2,10 @@
 <!-- This list contains names with specific casing - and specific to Norwegian only -->
 <names>
   <blacklist>
-    <name>Ane</name>
     <name>Ben</name>
     <name>Bo</name>
-    <name>Dag</name>
-    <name>Fet</name>
     <name>Fred</name>
-    <name>Gro</name>
-    <name>Hem</name>
     <name>Jo</name>
-    <name>Per</name>
-    <name>Rune</name>
-    <name>Saga</name>
-    <name>Tom</name>
-    <name>Ål</name>
   </blacklist>
   <name>Aage</name>
   <name>Aagot</name>
