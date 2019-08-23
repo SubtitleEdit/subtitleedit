@@ -290,6 +290,7 @@
     <Word from="emituje" to="emitira" />
     <Word from="emitujem" to="emitiram" />
     <Word from="Emitujem" to="Emitiram" />
+    <Word from="emitujete" to="emitirate" />
     <Word from="emituju" to="emitiraju" />
     <Word from="evakuišu" to="evakuiraju" />
     <Word from="Evakuišu" to="Evakuiraju" />
@@ -841,6 +842,7 @@
     <Word from="negujem" to="njegujem" />
     <Word from="njegi" to="njezi" />
     <Word from="njenum" to="njenim" />
+    <Word from="nešta" to="nešto" />
     <Word from="neželi" to="ne želi" />
     <Word from="niej" to="nije" />
     <Word from="nili" to="niti" />
@@ -1131,7 +1133,9 @@
     <Word from="Preneo" to="Prenio" />
     <Word from="prenela" to="prenijela" />
     <Word from="prenjela" to="prenijela" />
+    <Word from="Preneli" to="Prenijeli" />
     <Word from="preneli" to="prenijeli" />
+    <Word from="Prenjeli" to="Prenijeli" />
     <Word from="prenjeli" to="prenijeli" />
     <Word from="preneti" to="prenijeti" />
     <Word from="preporuča" to="preporučuje" />
@@ -2014,6 +2018,7 @@
     <Word from="Ebi" to="Abby" />
     <Word from="Ejb" to="Abe" />
     <Word from="Ejba" to="Abea" />
+    <Word from="Ejbi" to="Abby" />
     <Word from="Ejdrijen" to="Adrian" />
     <Word from="Ejmi" to="Amy" />
     <Word from="Ejpril" to="April" />
@@ -2186,6 +2191,7 @@
     <Word from="Vins" to="Vince" />
     <Word from="Volte" to="Walte" />
     <Word from="Voren" to="Warren" />
+    <Word from="Vrajt" to="Wright" />
     <Word from="Vud" to="Wood" />
     <Word from="Žak" to="Jacques" />
     <Word from="Žil" to="Jules" />
@@ -2480,6 +2486,7 @@
     <RegEx find="\b([cC])j?el([aeiou]|o[mgj]|i[mh]|ima?|osti)\b" replaceWith="$1ijel$2" />
     <RegEx find="\b([cC])j?en([aeiou])" replaceWith="$1ijen$2" />
     <RegEx find="([cC])j?enjen" replaceWith="$1ijenjen" />
+    <RegEx find="([cC])enj" replaceWith="$1jenj" />
     <RegEx find="([cC])j?eni([lt])" replaceWith="$1ijeni$2" />
     <RegEx find="([cC])rj?ev" replaceWith="$1rijev" />
     <RegEx find="([cCsS])vj?e[ćč]([aeiou]|[oe]m|ama)\b" replaceWith="$1vijeć$2" />
