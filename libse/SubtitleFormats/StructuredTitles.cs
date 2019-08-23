@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class StructuredTitles : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d\d", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d{1,2}", RegexOptions.Compiled);
         private static readonly Regex RegexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
         private static readonly Regex RegexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
 
@@ -19,35 +19,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 0;
-            sb.AppendLine(@"Structured titles
-0000 : --:--:--:--,--:--:--:--,10
-80 80 80
-");
 
             //0001 : 01:07:25:08,01:07:29:00,10
             //80 80 80
             //C1Y00 Niemand zal je helpen ontsnappen.
             //C1Y00 - Een agent heeft me geholpen.
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                string numberOfLinesCode = "10"; // two lines
-                if (Utilities.GetNumberOfLines(p.Text) == 1)
+                string verticalAlignment = "10"; // two lines ("1" = top subtitle regardless of line count, "11"=bottom line)
+                if (p.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
                 {
-                    numberOfLinesCode = "11"; // two lines
+                    verticalAlignment = "1"; // one line
+                }
+                else if (Utilities.GetNumberOfLines(p.Text) == 1)
+                {
+                    verticalAlignment = "11"; // one line
                 }
 
-                sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{numberOfLinesCode}");
+                sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{verticalAlignment}");
                 sb.AppendLine("80 80 80");
-                for (int i = 0; i < p.Text.SplitToLines().Count; i++)
+                var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    string line = p.Text.SplitToLines()[i];
+                    string line = lines[i];
                     sb.AppendLine(GetPositionCode(i, p.Extra) + " " + line.Trim());
                 }
                 sb.AppendLine();
                 index++;
             }
-            sb.AppendLine($"{index + 1:0000}" + @" : --:--:--:--,--:--:--:--,-1
-80 80 80");
             return sb.ToString();
         }
 
@@ -93,6 +92,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), string.Empty);
+                        if (line.EndsWith(",1", StringComparison.Ordinal))
+                        {
+                            p.Text = "{\\an8}";
+                        }
                     }
                 }
                 else if (p != null && RegexText.IsMatch(line))
@@ -101,6 +104,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         p.Extra = line.Substring(0, 5);
                         p.Text = line.Substring(5).Trim();
+                    }
+                    else if (p.Text == "{\\an8}")
+                    {
+                        p.Extra = line.Substring(0, 5);
+                        p.Text += line.Substring(5).Trim();
                     }
                     else
                     {
