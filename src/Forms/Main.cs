@@ -442,6 +442,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateRecentFilesUI();
                 InitializeToolbar();
                 UpdateNetflixGlyphCheckToolsVisibility();
+                Utilities.SetSecurityProtocol(); // download from Github requires TLS 1.2
 
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
                 {
@@ -18836,7 +18837,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadPlugins();
 
-            Utilities.SetSecurityProtocol(); // Github requires TLS 1.2
             mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
             if (Configuration.Settings.General.StartInSourceView)
