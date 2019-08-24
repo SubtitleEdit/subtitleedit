@@ -842,6 +842,7 @@
     <Word from="negujem" to="njegujem" />
     <Word from="njegi" to="njezi" />
     <Word from="njenum" to="njenim" />
+    <Word from="neuspele" to="neuspjele" />
     <Word from="nešta" to="nešto" />
     <Word from="neželi" to="ne želi" />
     <Word from="niej" to="nije" />
@@ -905,6 +906,7 @@
     <Word from="Odnjete" to="Odnijete" />
     <Word from="Odnjeti" to="Odnijeti" />
     <Word from="odoliti" to="odoljeti" />
+    <Word from="odoleti" to="odoljeti" />
     <Word from="odneti" to="odnijeti" />
     <Word from="odseo" to="odsjeo" />
     <Word from="odsela" to="odsjela" />
@@ -2010,6 +2012,8 @@
     <Word from="Džes" to="Jess" />
     <Word from="Džen" to="Jen" />
     <Word from="Džej" to="Jay" />
+    <Word from="Džeja" to="Jaya" />
+    <Word from="Džeju" to="Jayu" />
     <Word from="Džejn" to="Jane" />
     <Word from="Džil" to="Jill" />
     <Word from="Džodi" to="Jody" />
@@ -3350,6 +3354,7 @@
     <RegEx find="etektov" replaceWith="etektir" />
     <RegEx find="evać" replaceWith="evat ć" />
     <RegEx find="fanziv" replaceWith="fenziv" />
+    <RegEx find="fejs" replaceWith="face" />
     <RegEx find="figurisa" replaceWith="figurira" />
     <RegEx find="(mpl|st|f)ikova([nlot])" replaceWith="$1icira$2" />
     <RegEx find="fikuj" replaceWith="ficir" />
@@ -3467,6 +3472,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="kratij" replaceWith="kracij" />
@@ -3494,6 +3500,7 @@
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
     <RegEx find="ržać" replaceWith="ržat ć" />
+    <RegEx find="sbe" replaceWith="sve" />
     <RegEx find="s([čć])" replaceWith="š$1" />
     <RegEx find="seden" replaceWith="sjeden" />
     <RegEx find="selektuj" replaceWith="odaber" />
@@ -3609,6 +3616,7 @@
     <RegEx find="Čikag" replaceWith="Chicag" />
     <RegEx find="Dajan" replaceWith="Dian" />
     <RegEx find="Dankan" replaceWith="Duncan" />
+    <RegEx find="Demijen" replaceWith="Damian" />
     <RegEx find="Dejvi([ds])" replaceWith="Davi$1" />
     <RegEx find="Dijeg" replaceWith="Dieg" />
     <RegEx find="Diznilend" replaceWith="Disneyland" />
