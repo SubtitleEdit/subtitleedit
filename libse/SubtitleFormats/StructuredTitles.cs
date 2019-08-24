@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private void FixItalics(Subtitle subtitle)
+        private static void FixItalics(Subtitle subtitle)
         {
             foreach (var p in subtitle.Paragraphs)
             {

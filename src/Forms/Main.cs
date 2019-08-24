@@ -3570,6 +3570,13 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.FileName = string.Empty;
             }
 
+            if (!string.IsNullOrEmpty(saveFileDialog1.FileName) &&
+                saveFileDialog1.FileName.Contains('.') &&
+                !saveFileDialog1.FileName.EndsWith(currentFormat.Extension, StringComparison.OrdinalIgnoreCase))
+            {
+                saveFileDialog1.FileName = saveFileDialog1.FileName + currentFormat.Extension;
+            }
+
             var result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
