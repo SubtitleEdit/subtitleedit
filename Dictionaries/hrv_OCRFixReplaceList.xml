@@ -3494,6 +3494,7 @@
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
     <RegEx find="ržać" replaceWith="ržat ć" />
+    <RegEx find="sbe" replaceWith="sve" />
     <RegEx find="s([čć])" replaceWith="š$1" />
     <RegEx find="seden" replaceWith="sjeden" />
     <RegEx find="selektuj" replaceWith="odaber" />
