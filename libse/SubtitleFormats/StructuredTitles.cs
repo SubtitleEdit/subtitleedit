@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -18,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            sb.AppendLine("Structured titles");
             int index = 0;
 
             //0001 : 01:07:25:08,01:07:29:00,10
@@ -26,23 +28,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //C1Y00 - Een agent heeft me geholpen.
             foreach (var p in subtitle.Paragraphs)
             {
-                string verticalAlignment = "10"; // two lines ("1" = top subtitle regardless of line count, "11"=bottom line)
+                // 1=first line, 11=bottom line, 10=bottom of two lines subtitle
+                string verticalAlignment;
                 if (p.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
                 {
                     verticalAlignment = "1"; // one line
                 }
-                else if (Utilities.GetNumberOfLines(p.Text) == 1)
+                else
                 {
-                    verticalAlignment = "11"; // one line
+                    verticalAlignment = (12 - Utilities.GetNumberOfLines(p.Text)).ToString(CultureInfo.InvariantCulture);
                 }
 
                 sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{verticalAlignment}");
                 sb.AppendLine("80 80 80");
+                var italic = Utilities.RemoveSsaTags(p.Text).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
+                             p.Text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase);
+                var pre = string.Empty;
+                var post = string.Empty;
+                if (italic)
+                {
+                    pre = "<";
+                    post = ">";
+                }
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string line = lines[i];
-                    sb.AppendLine(GetPositionCode(i, p.Extra) + " " + line.Trim());
+                    sb.AppendLine(GetPositionCode(i, p.Extra) + " " + pre + line.Trim() + post);
                 }
                 sb.AppendLine();
                 index++;
@@ -92,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), string.Empty);
-                        if (line.EndsWith(",1", StringComparison.Ordinal))
+                        if (line.EndsWith(",1", StringComparison.Ordinal) || line.EndsWith(",2", StringComparison.Ordinal))
                         {
                             p.Text = "{\\an8}";
                         }
@@ -147,7 +159,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             }
 
+            FixItalics(subtitle);
+
             subtitle.Renumber();
+        }
+
+        private void FixItalics(Subtitle subtitle)
+        {
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (p.Text.Contains('<') && p.Text.Contains('>'))
+                {
+                    var sb = new StringBuilder();
+                    foreach (var line in p.Text.SplitToLines())
+                    {
+                        if (line.StartsWith('<') && line.EndsWith('>'))
+                        {
+                            sb.AppendLine("<i>" + line.TrimStart('<').TrimEnd('>') + "</i>");
+                        }
+                        else
+                        {
+                            sb.AppendLine(line);
+                        }
+                    }
+                    p.Text = HtmlUtil.FixInvalidItalicTags(sb.ToString().TrimEnd());
+                }
+            }
         }
     }
 }
