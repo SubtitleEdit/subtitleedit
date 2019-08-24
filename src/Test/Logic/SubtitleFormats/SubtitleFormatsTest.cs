@@ -1459,5 +1459,44 @@ VÄLKOMMEN TILL TEXAS
         }
 
         #endregion
+
+        #region Structured Titles
+
+        [TestMethod]
+        public void StructuredTitlesLoad()
+        {
+            var format = new StructuredTitles();
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, (@"Structured titles
+0001 : 00:00:03:18,00:00:05:22,1
+80 80 81
+C1N03 Top
+
+0002 : 00:00:12:04,00:00:14:04,11
+80 80 81
+C1N03 <Italic>
+
+0003 : 00:00:14:06,00:00:16:05,10
+80 80 81
+C1N03 Line 1
+C1N03 Line 2").SplitToLines(), null);
+            Assert.AreEqual("{\\an8}Top", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("<i>Italic</i>", subtitle.Paragraphs[1].Text);
+        }
+
+        [TestMethod]
+        public void StructuredTitlesSave()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("{\\an8}Top", 0, 2000));
+            sub.Paragraphs.Add(new Paragraph("<i>Italic</i>", 3000, 5000));
+            var format = new StructuredTitles();
+            var txt = format.ToText(sub, null);
+            Assert.IsTrue(txt.Contains(",1" + Environment.NewLine));
+            Assert.IsFalse(txt.Contains("{\\an8}"));
+            Assert.IsTrue(txt.Contains("<Italic>"));
+        }
+
+        #endregion
     }
 }
