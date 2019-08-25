@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core
             return LoadSubtitle(fileName, out encoding, useThisEncoding, false);
         }
 
-        public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null)
+        public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null, bool loadSubtitle = true)
         {
             FileName = fileName;
             _paragraphs = new List<Paragraph>();
@@ -171,14 +171,14 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
-                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat);
+                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
             }
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
                 if (matchingFormats.Contains(subtitleFormat) && subtitleFormat.IsMine(lines, fileName))
                 {
-                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat);
+                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
             }
 
@@ -189,12 +189,15 @@ namespace Nikse.SubtitleEdit.Core
             return null;
         }
 
-        private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat)
+        private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle)
         {
             Header = null;
             subtitleFormat.BatchMode = batchMode;
             subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
-            subtitleFormat.LoadSubtitle(this, lines, fileName);
+            if (loadSubtitle)
+            {
+                subtitleFormat.LoadSubtitle(this, lines, fileName);
+            }
             OriginalFormat = subtitleFormat;
             WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
             if (WasLoadedWithFrameNumbers)
