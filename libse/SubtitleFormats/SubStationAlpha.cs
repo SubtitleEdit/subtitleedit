@@ -379,8 +379,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             int lineNumber = 0;
 
             var header = new StringBuilder();
-            foreach (string line in lines)
+            for (int i1 = 0; i1 < lines.Count; i1++)
             {
+                string line = lines[i1];
                 lineNumber++;
                 if (!eventsStarted)
                 {
@@ -566,6 +567,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             if (errors.Length < 2000)
                             {
                                 errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
+                            }
+                            else if (subtitle.Paragraphs.Count == 0)
+                            {
+                                break;
                             }
                         }
                     }

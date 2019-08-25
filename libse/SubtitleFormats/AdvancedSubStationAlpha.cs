@@ -1395,6 +1395,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             {
                                 errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
                             }
+                            else if (subtitle.Paragraphs.Count == 0)
+                            {
+                                break;
+                            }
                         }
                     }
                 }

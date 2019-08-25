@@ -124,9 +124,7 @@ namespace Nikse.SubtitleEdit.Core
         public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null)
         {
             FileName = fileName;
-
             _paragraphs = new List<Paragraph>();
-
             StreamReader sr;
             if (useThisEncoding != null)
             {
@@ -151,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     try
                     {
-                        Stream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                         sr = new StreamReader(fs);
                     }
                     catch (Exception exception)
@@ -167,22 +165,20 @@ namespace Nikse.SubtitleEdit.Core
             var lines = sr.ReadToEnd().SplitToLines();
             sr.Close();
 
-            foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            var matchingFormats = SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext).ToList();
+            foreach (SubtitleFormat subtitleFormat in matchingFormats)
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
-                    Header = null;
-                    subtitleFormat.BatchMode = batchMode;
-                    subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
-                    subtitleFormat.LoadSubtitle(this, lines, fileName);
-                    OriginalFormat = subtitleFormat;
-                    WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
-                    if (WasLoadedWithFrameNumbers)
-                    {
-                        CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-                    }
-
-                    return subtitleFormat;
+                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat);
+                }
+            }
+            foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (matchingFormats.Contains(subtitleFormat) && subtitleFormat.IsMine(lines, fileName))
+                {
+                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat);
                 }
             }
 
@@ -190,8 +186,22 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
             }
-
             return null;
+        }
+
+        private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat)
+        {
+            Header = null;
+            subtitleFormat.BatchMode = batchMode;
+            subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
+            subtitleFormat.LoadSubtitle(this, lines, fileName);
+            OriginalFormat = subtitleFormat;
+            WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
+            if (WasLoadedWithFrameNumbers)
+            {
+                CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+            }
+            return subtitleFormat;
         }
 
         public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition, int linePositionAlternate)

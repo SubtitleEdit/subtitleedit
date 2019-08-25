@@ -336,7 +336,6 @@ namespace Nikse.SubtitleEdit.Core
                 AutoBalance = "Auto balance lines",
                 OverwriteOriginalFiles = "Overwrite original files (new extension if format is changed)",
                 ScanFolder = "Scan folder...",
-                ScanningFolder = "Scanning {0} and subfolders for subtitle files...",
                 Recursive = "Include sub folders",
                 SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
                 BridgeGaps = "Bridge gaps",
