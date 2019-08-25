@@ -3472,6 +3472,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="kratij" replaceWith="kracij" />
