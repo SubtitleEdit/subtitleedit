@@ -11701,7 +11701,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.WasLoadedWithFrameNumbers = false;
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
-                _fileName = matroska.Path.Remove(matroska.Path.Length - 4);
+                _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + format.Extension;
                 Text = Title + " - " + _fileName;
             }
             else
