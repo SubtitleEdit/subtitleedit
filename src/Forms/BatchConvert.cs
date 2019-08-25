@@ -1632,7 +1632,14 @@ namespace Nikse.SubtitleEdit.Forms
             _searching = true;
             try
             {
-                SearchFolderRecurse(path);
+                if (checkBoxScanFolderRecursive.Checked)
+                {
+                    ScanFiles(Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories));
+                }
+                else
+                {
+                    ScanFiles(Directory.EnumerateFiles(path));
+                }
             }
             finally
             {
@@ -1640,35 +1647,39 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SearchFolderRecurse(string path)
+        private static HashSet<string> SearchExtBlackList = new HashSet<string>
         {
-            foreach (string fileName in Directory.EnumerateFiles(path))
+            ".png",
+            ".jpg",
+            ".tif",
+            ".tiff",
+            ".wav",
+            ".avi",
+            ".mpeg",
+            ".mpg",
+            ".tar",
+            ".docx",
+            ".pptx",
+            ".xlsx",
+            ".pdf",
+            ".dll",
+            ".exe",
+            ".rar",
+            ".7z",
+            ".zip"
+        };
+
+        private void ScanFiles(IEnumerable<string> fileNames)
+        {
+            foreach (string fileName in fileNames)
             {
                 labelStatus.Text = fileName;
-                labelStatus.Refresh();
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (ext != "" &&
-                        ext != ".png" &&
-                        ext != ".jpg" &&
-                        ext != ".tif" &&
-                        ext != ".tiff" &&
-                        ext != ".wav" &&
-                        ext != ".avi" &&
-                        ext != ".mpeg" &&
-                        ext != ".mpg" &&
-                        ext != ".tar" &&
-                        ext != ".docx" &&
-                        ext != ".pptx" &&
-                        ext != ".xlsx" &&
-                        ext != ".pdf" &&
-                        ext != ".dll" &&
-                        ext != ".exe" &&
-                        ext != ".rar" &&
-                        ext != ".7z" &&
-                        ext != ".zip")
+                    if (!SearchExtBlackList.Contains(ext))
                     {
+                        labelStatus.Refresh();
                         var fi = new FileInfo(fileName);
                         if (ext == ".sub" && FileUtil.IsVobSub(fileName))
                         {
@@ -1742,21 +1753,6 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     // ignored
-                }
-            }
-            if (checkBoxScanFolderRecursive.Checked)
-            {
-                foreach (string directory in Directory.EnumerateDirectories(path))
-                {
-                    if (directory != "." && directory != "..")
-                    {
-                        SearchFolderRecurse(directory);
-                    }
-
-                    if (_abort)
-                    {
-                        return;
-                    }
                 }
             }
         }
