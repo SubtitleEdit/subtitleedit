@@ -1149,7 +1149,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static Encoding GetEncodingFromFile(string fileName)
+        public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiauto = false)
         {
             var encoding = Encoding.Default;
 
@@ -1217,7 +1217,7 @@ namespace Nikse.SubtitleEdit.Core
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
-                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
+                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiauto)
                         {
                             return DetectAnsiEncoding(buffer);
                         }

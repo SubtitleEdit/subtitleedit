@@ -534,6 +534,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonConvert_Click(object sender, EventArgs e)
         {
+            if (buttonConvert.Text == Configuration.Settings.Language.General.Cancel)
+            {
+                _abort = true;
+                return;
+            }
+
             if (listViewInputFiles.Items.Count == 0)
             {
                 MessageBox.Show(Configuration.Settings.Language.BatchConvert.NothingToConvert);
@@ -560,19 +566,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _converting = true;
-            buttonConvert.Enabled = false;
-            buttonCancel.Enabled = false;
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
             progressBar1.Value = 0;
             progressBar1.Visible = progressBar1.Maximum > 2;
             string toFormat = comboBoxSubtitleFormats.Text;
-            groupBoxOutput.Enabled = false;
-            groupBoxConvertOptions.Enabled = false;
-            buttonInputBrowse.Enabled = false;
-            buttonSearchFolder.Enabled = false;
-            comboBoxFilter.Enabled = false;
-            textBoxFilter.Enabled = false;
+            SetControlState(false);
+
             _count = 0;
             _converted = 0;
             _errors = 0;
@@ -927,14 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
             progressBar1.Visible = false;
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-            buttonConvert.Enabled = true;
-            buttonCancel.Enabled = true;
-            groupBoxOutput.Enabled = true;
-            groupBoxConvertOptions.Enabled = true;
-            buttonInputBrowse.Enabled = true;
-            buttonSearchFolder.Enabled = true;
-            comboBoxFilter.Enabled = true;
-            textBoxFilter.Enabled = true;
+            SetControlState(true);
         }
 
         /// <summary>
@@ -1587,34 +1580,49 @@ namespace Nikse.SubtitleEdit.Forms
             buttonChooseFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
         }
 
+        private string _rootFolder;
         private void buttonSearchFolder_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.ShowNewFolderButton = false;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            folderBrowserDialog1.SelectedPath = _rootFolder;
+            if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 listViewInputFiles.BeginUpdate();
-                buttonConvert.Enabled = false;
-                buttonCancel.Enabled = false;
                 progressBar1.Style = ProgressBarStyle.Marquee;
                 progressBar1.Visible = true;
-                groupBoxOutput.Enabled = false;
-                groupBoxConvertOptions.Enabled = false;
-                buttonInputBrowse.Enabled = false;
-                buttonSearchFolder.Enabled = false;
-                labelStatus.Text = string.Format(Configuration.Settings.Language.BatchConvert.ScanningFolder, folderBrowserDialog1.SelectedPath);
+                SetControlState(false);
+                labelStatus.Text = string.Empty;
 
                 SearchFolder(folderBrowserDialog1.SelectedPath);
+                _rootFolder = folderBrowserDialog1.SelectedPath;
 
                 labelStatus.Text = string.Empty;
-                buttonConvert.Enabled = true;
-                buttonCancel.Enabled = true;
+
                 progressBar1.Style = ProgressBarStyle.Continuous;
                 progressBar1.Visible = true;
-                groupBoxOutput.Enabled = true;
-                groupBoxConvertOptions.Enabled = true;
-                buttonInputBrowse.Enabled = true;
-                buttonSearchFolder.Enabled = true;
+                SetControlState(true);
                 listViewInputFiles.EndUpdate();
+            }
+        }
+
+        private void SetControlState(bool enabled)
+        {
+            labelStatus.Text = string.Empty;
+            buttonCancel.Enabled = enabled;
+            groupBoxOutput.Enabled = enabled;
+            groupBoxConvertOptions.Enabled = enabled;
+            buttonInputBrowse.Enabled = enabled;
+            buttonSearchFolder.Enabled = enabled;
+            checkBoxScanFolderRecursive.Enabled = enabled;
+            comboBoxFilter.Enabled = enabled;
+
+            if (enabled)
+            {
+                buttonConvert.Text = Configuration.Settings.Language.BatchConvert.Convert;
+            }
+            else
+            {
+                buttonConvert.Text = Configuration.Settings.Language.General.Cancel;
             }
         }
 
@@ -1636,12 +1644,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (string fileName in Directory.EnumerateFiles(path))
             {
+                labelStatus.Text = fileName;
+                labelStatus.Refresh();
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLowerInvariant();
                     if (ext != "" &&
                         ext != ".png" &&
                         ext != ".jpg" &&
+                        ext != ".tif" &&
+                        ext != ".tiff" &&
+                        ext != ".wav" &&
+                        ext != ".avi" &&
+                        ext != ".mpeg" &&
+                        ext != ".mpg" &&
+                        ext != ".tar" &&
                         ext != ".docx" &&
                         ext != ".pptx" &&
                         ext != ".xlsx" &&
@@ -1661,13 +1678,25 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             AddFromSearch(fileName, fi, "Blu-ray");
                         }
+                        else if (ext == ".mkv")
+                        {
+                            // skip for now
+                        }
+                        else if (ext == ".mks")
+                        {
+                            AddFromSearch(fileName, fi, "Matroska");
+                        }
+                        else if (ext == ".mp4")
+                        {
+                            // skip for now
+                        }
                         else
                         {
                             if (fi.Length < ConvertMaxFileSize)
                             {
                                 var sub = new Subtitle();
-                                var format = sub.LoadSubtitle(fileName, out _, null);
-
+                                var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
+                                var format = sub.LoadSubtitle(fileName, out _, enc);
                                 if (format == null)
                                 {
                                     foreach (var f in SubtitleFormat.GetBinaryFormats(true))

@@ -532,9 +532,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/ScanFolder":
                     language.BatchConvert.ScanFolder = reader.Value;
                     break;
-                case "BatchConvert/ScanningFolder":
-                    language.BatchConvert.ScanningFolder = reader.Value;
-                    break;
                 case "BatchConvert/Recursive":
                     language.BatchConvert.Recursive = reader.Value;
                     break;
