@@ -193,7 +193,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SplitLongLines>긴 줄 분할</SplitLongLines>
     <AutoBalance>자동 줄맞춤</AutoBalance>
     <ScanFolder>폴더 찾아보기</ScanFolder>
-    <ScanningFolder>{0} 및 자막 파일에 대한 하위 폴더 검색...</ScanningFolder>
     <Recursive>하위 폴더 포함</Recursive>
     <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
     <BridgeGaps>브리지 간격</BridgeGaps>

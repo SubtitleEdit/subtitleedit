@@ -182,7 +182,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <SplitLongLines>Razdvoji duge linije</SplitLongLines>
     <AutoBalance>Automatska ravnoteža linija</AutoBalance>
     <ScanFolder>Pretraži mapu...</ScanFolder>
-    <ScanningFolder>Pretraživanje i podmapa za podnaslove...</ScanningFolder>
     <Recursive>Uključi i podmape</Recursive>
     <SetMinMsBetweenSubtitles>Postavi min. milisekundi između podnaslova</SetMinMsBetweenSubtitles>
     <BridgeGaps />

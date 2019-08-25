@@ -189,7 +189,6 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <SplitLongLines>Pisahkan baris yg panjang</SplitLongLines>
     <AutoBalance>Oto. seimbangkan baris</AutoBalance>
     <ScanFolder>Pindai folder...</ScanFolder>
-    <ScanningFolder>Memindai {0} dan subfolder untuk file subjudul...</ScanningFolder>
     <Recursive>Sertakan sub folder</Recursive>
     <SetMinMsBetweenSubtitles>Atur milidetik min. di antara subjudul</SetMinMsBetweenSubtitles>
     <BridgeGaps>Celah jembatan</BridgeGaps>

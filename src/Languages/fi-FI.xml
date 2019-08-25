@@ -185,7 +185,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SplitLongLines>Jaa pitkät rivit</SplitLongLines>
     <AutoBalance>Tasoita rivit automaattisesti</AutoBalance>
     <ScanFolder>Tutki kansio</ScanFolder>
-    <ScanningFolder>Etsitään tekstitystiedostoja kansiosta {0} ja sen alikansioista</ScanningFolder>
     <Recursive>Sisällytä alikansiot</Recursive>
     <SetMinMsBetweenSubtitles>Määritä pienin tekstityksien aikaväli</SetMinMsBetweenSubtitles>
     <BridgeGaps>Yhdistä välit</BridgeGaps>

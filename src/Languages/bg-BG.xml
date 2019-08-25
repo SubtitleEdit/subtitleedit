@@ -195,7 +195,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLines>Разделяне на дълги редове</SplitLongLines>
     <AutoBalance>Авт. подравняване на редовете</AutoBalance>
     <ScanFolder>Сканиране папки...</ScanFolder>
-    <ScanningFolder>Търсене на файлове със субтитри в {0} папки и подпапки.</ScanningFolder>
     <Recursive>Включително и подпапките</Recursive>
     <SetMinMsBetweenSubtitles>Задаване мин. интервал м/у субтитрите (мс.)</SetMinMsBetweenSubtitles>
     <BridgeGaps>Премахване на пропуски</BridgeGaps>

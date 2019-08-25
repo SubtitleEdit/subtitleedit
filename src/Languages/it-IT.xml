@@ -175,7 +175,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <SplitLongLines>Dividi linee lunghe</SplitLongLines>
     <AutoBalance>Blianciamento automatico linee</AutoBalance>
     <ScanFolder>Scansiona cartella...</ScanFolder>
-    <ScanningFolder>Scansiona {0} e sottocartelle per file di sottotitoli...</ScanningFolder>
     <Recursive>Includi sottocartelle</Recursive>
     <SetMinMsBetweenSubtitles>Imposta millisec. minimi tra i sottotitoli</SetMinMsBetweenSubtitles>
     <PlainText>Testo normale</PlainText>

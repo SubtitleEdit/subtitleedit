@@ -157,7 +157,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLines>Διαχωρισμός μεγάλων γραμμών</SplitLongLines>
     <AutoBalance>Αυτόματη ισορροπία των γραμμών</AutoBalance>
     <ScanFolder>Σάρωση φακέλου...</ScanFolder>
-    <ScanningFolder>Σάρωση {0} και υποφακέλων για αρχεία υποτίτλων...</ScanningFolder>
     <Recursive>Συμπερίληψη και των υποφακέλων</Recursive>
     <SetMinMsBetweenSubtitles>Καθορισμός ελάχιστων χιλιοστών δευτερολέπτου μεταξύ των υποτίτλων</SetMinMsBetweenSubtitles>
   </BatchConvert>

@@ -167,7 +167,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SplitLongLines>分割長行</SplitLongLines>
     <AutoBalance>自動均排各行</AutoBalance>
     <ScanFolder>掃描資料夾...</ScanFolder>
-    <ScanningFolder>正在掃描 {0} 及其子資料夾內的字幕檔案...</ScanningFolder>
     <Recursive>包含子資料夾</Recursive>
     <SetMinMsBetweenSubtitles>設定字幕間的最小毫秒數</SetMinMsBetweenSubtitles>
     <PlainText>純文字</PlainText>

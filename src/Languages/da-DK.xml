@@ -194,7 +194,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SplitLongLines>Split lange linjer</SplitLongLines>
     <AutoBalance>Auto-balancer linjer</AutoBalance>
     <ScanFolder>Scan mappe...</ScanFolder>
-    <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
     <Recursive>Medtag undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
     <BridgeGaps>Lap små huller</BridgeGaps>

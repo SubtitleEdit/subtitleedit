@@ -181,7 +181,6 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <SplitLongLines>Uzun satırları böl</SplitLongLines>
     <AutoBalance>Satırları otomatik dengele</AutoBalance>
     <ScanFolder>Klasör tara...</ScanFolder>
-    <ScanningFolder>Altyazı dosyası için {0} klasörü ve alt klasörler taranıyor...</ScanningFolder>
     <Recursive>Alt klasörler dahil</Recursive>
     <SetMinMsBetweenSubtitles>Altyazılar arası minimum milisaniye ayarla</SetMinMsBetweenSubtitles>
     <BridgeGaps>Köprü aralıkları</BridgeGaps>

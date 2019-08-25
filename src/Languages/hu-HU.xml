@@ -197,7 +197,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <SplitLongLines>Hosszú sorok felosztása</SplitLongLines>
     <AutoBalance>Sorok automatikus kiegyenlítése</AutoBalance>
     <ScanFolder>Mappa vizsgálata...</ScanFolder>
-    <ScanningFolder>Feliratfájlok keresése a(z) {0} mappában és almappáiban...</ScanningFolder>
     <Recursive>Tartalmazza az almappákat is</Recursive>
     <SetMinMsBetweenSubtitles>Min. ezredmásodperc beállítása a feliratok között</SetMinMsBetweenSubtitles>
     <BridgeGaps>Szünetek áthidalása</BridgeGaps>

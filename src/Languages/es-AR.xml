@@ -184,7 +184,6 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <SplitLongLines>Dividir líneas largas</SplitLongLines>
     <AutoBalance>Auto balancear líneas</AutoBalance>
     <ScanFolder>Analizar carpeta...</ScanFolder>
-    <ScanningFolder>Analizando {0} y subcarpetas por archivos de subtítulos ...</ScanningFolder>
     <Recursive>Incluir subcarpetas</Recursive>
     <SetMinMsBetweenSubtitles>Establecer milisegundos mín. entre subtitulos</SetMinMsBetweenSubtitles>
     <BridgeGaps>Intervalos de tiempo</BridgeGaps>

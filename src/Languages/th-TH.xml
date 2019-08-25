@@ -154,7 +154,6 @@
     <SplitLongLines>แยกบรรทัดยาว</SplitLongLines>
     <AutoBalance>ปรับสมดุลบรรทัด</AutoBalance>
     <ScanFolder>สแกนโฟลเดอร์...</ScanFolder>
-    <ScanningFolder>กำลังสแกน {0} และโฟลเดอร์ย่อยเพื่อหาไฟล์ซับไตเติ้ล...</ScanningFolder>
     <Recursive>รวมโฟลเดอร์ย่อย</Recursive>
     <SetMinMsBetweenSubtitles>กำหนดวินาทีต่ำสุดระหว่างซับไตเติ้ล</SetMinMsBetweenSubtitles>
     <PlainText>ข้อความล้วน</PlainText>
