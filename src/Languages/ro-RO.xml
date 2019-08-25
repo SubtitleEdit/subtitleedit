@@ -197,7 +197,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <SplitLongLines>Scindează liniile lungi</SplitLongLines>
     <AutoBalance>Auto-echilibrează liniile</AutoBalance>
     <ScanFolder>Explorare director...</ScanFolder>
-    <ScanningFolder>Explorare {0} și subdirectoare ptr. subtitrări...</ScanningFolder>
     <Recursive>Include subdirectoare</Recursive>
     <SetMinMsBetweenSubtitles>Setează minimul milisecundelor dintre subtitrări</SetMinMsBetweenSubtitles>
     <BridgeGaps>Umplerea pauzelor</BridgeGaps>

@@ -175,7 +175,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <SplitLongLines>Del opp lange linjer</SplitLongLines>
     <AutoBalance>Autobalanser linjer</AutoBalance>
     <ScanFolder>Skanner mappen...</ScanFolder>
-    <ScanningFolder>Skanner {0} og undermappene etter undertekstfiler...</ScanningFolder>
     <Recursive>Inkluder undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Sett minste antall millisekunder mellom undertekster</SetMinMsBetweenSubtitles>
     <PlainText>Ren tekst</PlainText>

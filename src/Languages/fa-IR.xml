@@ -180,7 +180,6 @@ http://soft98.ir
     <SplitLongLines>تقسیم خطوط طولانی</SplitLongLines>
     <AutoBalance>تعادل خطوط خودکار</AutoBalance>
     <ScanFolder>اسکن پوشه...</ScanFolder>
-    <ScanningFolder>در حال پایش {0} و زیرپوشه های آن برای فایل های زیرنویس...</ScanningFolder>
     <Recursive>شامل پوشه های زیر</Recursive>
     <SetMinMsBetweenSubtitles>تنظیم حداقل میلی ثانیه بین زیرنویس ها</SetMinMsBetweenSubtitles>
     <PlainText>متن ساده</PlainText>

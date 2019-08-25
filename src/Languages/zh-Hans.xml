@@ -196,7 +196,6 @@ Command line: {1} {2}
     <SplitLongLines>分割长行</SplitLongLines>
     <AutoBalance>自动均排各行</AutoBalance>
     <ScanFolder>扫描文件夹...</ScanFolder>
-    <ScanningFolder>正在扫描 {0} 及其子文件夹中的字幕文件...</ScanningFolder>
     <Recursive>包含子文件夹</Recursive>
     <SetMinMsBetweenSubtitles>设定字幕间的最小毫秒数</SetMinMsBetweenSubtitles>
     <BridgeGaps>桥接间隙</BridgeGaps>

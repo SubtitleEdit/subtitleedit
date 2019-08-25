@@ -195,7 +195,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Ajuste automático de linhas</AutoBalance>
     <ScanFolder>Analisar pasta...</ScanFolder>
-    <ScanningFolder>Analisando {0} e subpastas por legendas...</ScanningFolder>
     <Recursive>Incluir subpastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir milissegundos entre legendas</SetMinMsBetweenSubtitles>
     <BridgeGaps>Ligar intervalos</BridgeGaps>

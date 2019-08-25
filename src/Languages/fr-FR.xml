@@ -194,7 +194,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <SplitLongLines>Diviser les longues lignes</SplitLongLines>
     <AutoBalance>Equilibrer les lignes automatiquement</AutoBalance>
     <ScanFolder>Scan dossier...</ScanFolder>
-    <ScanningFolder>Scan {0} et les sous-dossiers...</ScanningFolder>
     <Recursive>Inclus les sous-dossiers</Recursive>
     <SetMinMsBetweenSubtitles>Définir mini millisec. entre les sous-titres</SetMinMsBetweenSubtitles>
     <BridgeGaps>Combler les lacunes</BridgeGaps>

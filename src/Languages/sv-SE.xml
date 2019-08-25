@@ -197,7 +197,6 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
     <SplitLongLines>Dela långa rader</SplitLongLines>
     <AutoBalance>Autobalansera rader</AutoBalance>
     <ScanFolder>Skanna mapp...</ScanFolder>
-    <ScanningFolder>Skannar {0} och undermappar för undertextfiler...</ScanningFolder>
     <Recursive>Inkludera undermappar</Recursive>
     <SetMinMsBetweenSubtitles>Ange min. millisek. mellan undertexter</SetMinMsBetweenSubtitles>
     <BridgeGaps>Fyll i hål</BridgeGaps>

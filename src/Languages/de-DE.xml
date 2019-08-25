@@ -197,7 +197,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
     <AutoBalance>Zeilen automatisch ausbalancieren</AutoBalance>
     <ScanFolder>Durchsuche Ordner...</ScanFolder>
-    <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
     <BridgeGaps>Zeitabstände überbrücken</BridgeGaps>

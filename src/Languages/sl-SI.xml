@@ -160,7 +160,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SplitLongLines>Razpolovi dolge vrstice</SplitLongLines>
     <AutoBalance>Poravnaj vrstice</AutoBalance>
     <ScanFolder>Preišči mapo...</ScanFolder>
-    <ScanningFolder>Preiskujem {0} in podmape za podnapise...</ScanningFolder>
     <Recursive>Vključi podmape</Recursive>
     <SetMinMsBetweenSubtitles>Nastavi mini. milisekund med vrsticami</SetMinMsBetweenSubtitles>
   </BatchConvert>

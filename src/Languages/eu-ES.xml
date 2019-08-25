@@ -178,7 +178,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <SplitLongLines>Banandu lerro luzeak</SplitLongLines>
     <AutoBalance>Berez orekatu lerroak</AutoBalance>
     <ScanFolder>Agiritegi mihaketa...</ScanFolder>
-    <ScanningFolder>Mihatzen {0} eta azpiagiritegiak azpidatzi agirien bila...</ScanningFolder>
     <Recursive>Barneratu azpi agiritegiak</Recursive>
     <SetMinMsBetweenSubtitles>Ezarri gutx. segmil azpidatzi artean</SetMinMsBetweenSubtitles>
     <BridgeGaps>Zubitu hutsuneak</BridgeGaps>

@@ -183,7 +183,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLines>Divideix línies llargues</SplitLongLines>
     <AutoBalance>Auto equilibra línies</AutoBalance>
     <ScanFolder>Escaneja carpeta...</ScanFolder>
-    <ScanningFolder>Escanejant {0} i subcarpetes per fitxers de subtítols...</ScanningFolder>
     <Recursive>Inclou subcarpetes</Recursive>
     <SetMinMsBetweenSubtitles>Estableix min. milisegons entre subtítols</SetMinMsBetweenSubtitles>
     <BridgeGaps>Intervals pont</BridgeGaps>

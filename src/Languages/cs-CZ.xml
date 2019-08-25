@@ -196,7 +196,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <SplitLongLines>Rozdělit dlouhé řádky</SplitLongLines>
     <AutoBalance>Automaticky vyvážit řádky</AutoBalance>
     <ScanFolder>Prohledat složku...</ScanFolder>
-    <ScanningFolder>Prohledávání {0} a podsložek pro soubory titulků...</ScanningFolder>
     <Recursive>Včetně podsložek</Recursive>
     <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
     <BridgeGaps>Překlenout mezery</BridgeGaps>

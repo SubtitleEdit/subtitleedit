@@ -176,7 +176,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLines>Розділити довгі рядки</SplitLongLines>
     <AutoBalance>Автобалансування рядків</AutoBalance>
     <ScanFolder>Сканувати теку...</ScanFolder>
-    <ScanningFolder>Скануємо {0} та підтеки на наявність файлів субтитрів...</ScanningFolder>
     <Recursive>Включаючи підтеки</Recursive>
     <SetMinMsBetweenSubtitles>Встановити мін. відстань між субтитрами</SetMinMsBetweenSubtitles>
     <PlainText>Простий текст</PlainText>

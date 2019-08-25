@@ -203,7 +203,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <SplitLongLines>Разделение длинных строк</SplitLongLines>
     <AutoBalance>Автовыравнивание строк</AutoBalance>
     <ScanFolder>Сканировать...</ScanFolder>
-    <ScanningFolder>Поиск субтитров в папке {0}...</ScanningFolder>
     <Recursive>Включая подкаталоги</Recursive>
     <SetMinMsBetweenSubtitles>Задать мин. время (мс) между субтитрами</SetMinMsBetweenSubtitles>
     <BridgeGaps>Устранить разрывы</BridgeGaps>

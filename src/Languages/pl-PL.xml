@@ -197,7 +197,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <SplitLongLines>Podziel długie linie</SplitLongLines>
     <AutoBalance>Automatycznie zrównoważ linie</AutoBalance>
     <ScanFolder>Skanuj folder...</ScanFolder>
-    <ScanningFolder>Przeskanowano {0} i podfolderów w poszukiwaniu plików napisów...</ScanningFolder>
     <Recursive>Uwzględnij podfoldery</Recursive>
     <SetMinMsBetweenSubtitles>Ustaw minimum milisekund między napisami</SetMinMsBetweenSubtitles>
     <BridgeGaps>Zmostkuj przerwy</BridgeGaps>
