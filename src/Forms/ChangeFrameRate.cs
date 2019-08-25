@@ -59,9 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
-                if (info != null && info.Success)
+                if (info?.Success == true)
                 {
-                    return info.FramesPerSecond.ToString();
+                    return Math.Round(info.FramesPerSecond, 3).ToString();
                 }
             }
             return oldFrameRate;
