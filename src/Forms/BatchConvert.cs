@@ -1653,6 +1653,10 @@ namespace Nikse.SubtitleEdit.Forms
             ".jpg",
             ".tif",
             ".tiff",
+            ".gif",
+            ".bmp",
+            ".clpi",
+            ".mpls",
             ".wav",
             ".avi",
             ".mpeg",
@@ -1661,12 +1665,15 @@ namespace Nikse.SubtitleEdit.Forms
             ".docx",
             ".pptx",
             ".xlsx",
+            ".odt",
+            ".tex",
             ".pdf",
             ".dll",
             ".exe",
             ".rar",
             ".7z",
-            ".zip"
+            ".zip",
+            ".tar"
         };
 
         private void ScanFiles(IEnumerable<string> fileNames)
@@ -1695,7 +1702,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (ext == ".mks")
                         {
-                            AddFromSearch(fileName, fi, "Matroska");
+                            // skip for now
                         }
                         else if (ext == ".mp4")
                         {
@@ -1707,7 +1714,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 var sub = new Subtitle();
                                 var enc = LanguageAutoDetect.GetEncodingFromFile(fileName, true);
-                                var format = sub.LoadSubtitle(fileName, out _, enc);
+                                var format = sub.LoadSubtitle(fileName, out _, enc, true, null, false);
                                 if (format == null)
                                 {
                                     foreach (var f in SubtitleFormat.GetBinaryFormats(true))
