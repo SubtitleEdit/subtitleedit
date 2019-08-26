@@ -577,15 +577,11 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = 0;
             _errors = 0;
             _abort = false;
-            var worker1 = new BackgroundWorker();
-            var worker2 = new BackgroundWorker();
-            var worker3 = new BackgroundWorker();
-            worker1.DoWork += DoThreadWork;
-            worker1.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker2.DoWork += DoThreadWork;
-            worker2.RunWorkerCompleted += ThreadWorkerCompleted;
-            worker3.DoWork += DoThreadWork;
-            worker3.RunWorkerCompleted += ThreadWorkerCompleted;
+
+            BackgroundWorker worker1 = SpawnWorker();
+            BackgroundWorker worker2 = SpawnWorker();
+            BackgroundWorker worker3 = SpawnWorker();
+
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
@@ -928,6 +924,14 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
+        }
+
+        private BackgroundWorker SpawnWorker()
+        {
+            var worker = new BackgroundWorker();
+            worker.DoWork += DoThreadWork;
+            worker.RunWorkerCompleted += ThreadWorkerCompleted;
+            return worker;
         }
 
         /// <summary>
