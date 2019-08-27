@@ -98,6 +98,29 @@ namespace Test.Logic.Ocr
             Assert.AreEqual("He said <i>now!</i>", result);
         }
 
+        public void TestWordInItalicSecondLine()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("J", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(":", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("\r", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("\n", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("G", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("d", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("b", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("y", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("!", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            string result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("Joe:\r\n<i>Godbye!</i>", result);
+        }
+
         [TestMethod]
         public void TestPartInItalic()
         {

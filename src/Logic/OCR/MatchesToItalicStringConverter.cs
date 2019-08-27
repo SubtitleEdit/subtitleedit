@@ -13,18 +13,114 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public static string GetStringWithItalicTags(List<VobSubOcr.CompareMatch> matches)
         {
-            var numberOfLetters = GetNumberOfLetters(matches);
-            var numberOfItalicLetters = GetNumberOfItalicLetters(matches);
-            if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 2 && numberOfLetters - numberOfItalicLetters < 2)
+            var sb = new StringBuilder();
+            foreach (var lineMatches in SplitMatchsToLines(matches))
             {
-                return "<i>" + GetRawString(matches) + "</i>";
+                var numberOfLetters = GetNumberOfLetters(lineMatches);
+                var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches);
+                if (numberOfItalicLetters == numberOfLetters || numberOfItalicLetters > 2 && numberOfLetters - numberOfItalicLetters < 2)
+                {
+                    sb.AppendLine("<i>" + GetRawString(lineMatches) + "</i>");
+                }
+                else if (numberOfItalicLetters == 0 || numberOfLetters > 2 && numberOfItalicLetters < 2)
+                {
+                    sb.AppendLine(GetRawString(lineMatches));
+                }
+                else
+                {
+                    sb.AppendLine(GetStringWithItalicTagsMixed(lineMatches));
+                }
             }
-            if (numberOfItalicLetters == 0 || numberOfLetters > 2 && numberOfItalicLetters < 2)
+            return sb.ToString().TrimEnd().Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+        }
+
+        private static string GetStringWithItalicTagsMixed(List<VobSubOcr.CompareMatch> lineMatches)
+        {
+            var sb = new StringBuilder();
+            int italicCount = 0;
+            bool italicOn = false;
+            var sbWord = new StringBuilder();
+            string prevSpace = string.Empty;
+            for (int i = 0; i < lineMatches.Count; i++)
             {
-                return GetRawString(matches);
+                var m = lineMatches[i];
+                if (m.Text == " " || m.Text == "-")
+                {
+                    if (sbWord.Length > 0)
+                    {
+                        italicOn = AddWord(sb, italicCount, italicOn, sbWord, prevSpace);
+                        prevSpace = m.Text;
+                        sbWord = new StringBuilder();
+                        italicCount = 0;
+                    }
+                }
+                else if (m.Text != null)
+                {
+                    sbWord.Append(m.Text);
+                    if (m.Italic)
+                    {
+                        italicCount += m.Text.Length;
+                    }
+                }
+            }
+            italicOn = AddWord(sb, italicCount, italicOn, sbWord, prevSpace);
+            if (italicOn)
+            {
+                sb.Append("</i>");
+            }
+            return sb.ToString().Trim();
+        }
+
+        private static bool AddWord(StringBuilder sb, int italicCount, bool italicOn, StringBuilder sbWord, string prevSpace)
+        {
+            var w = sbWord.ToString();
+            var wordIsItalic = italicCount > w.Length / 2.0;
+            if (wordIsItalic && italicOn)
+            {
+                sb.Append(prevSpace + sbWord);
+            }
+            else if (wordIsItalic)
+            {
+                sb.Append(prevSpace + "<i>" + sbWord);
+                italicOn = true;
+            }
+            else if (!wordIsItalic && italicOn)
+            {
+                sb.Append("</i>" + prevSpace + sbWord);
+                italicOn = false;
+            }
+            else
+            {
+                sb.Append(prevSpace + sbWord);
             }
 
-            return GetStringWithItalicTagsMixed(matches);
+            return italicOn;
+        }
+
+        private static List<List<VobSubOcr.CompareMatch>> SplitMatchsToLines(List<VobSubOcr.CompareMatch> matches)
+        {
+            var result = new List<List<VobSubOcr.CompareMatch>>();
+            var line = new List<VobSubOcr.CompareMatch>();
+            for (int i = 0; i < matches.Count; i++)
+            {
+                if (matches[i].Text == Environment.NewLine)
+                {
+                    if (line.Count > 0)
+                    {
+                        result.Add(line);
+                        line = new List<VobSubOcr.CompareMatch>();
+                    }
+                }
+                else
+                {
+                    line.Add(matches[i]);
+                }
+            }
+            if (line.Count > 0)
+            {
+                result.Add(line);
+            }
+            return result;
         }
 
         private static string GetRawString(List<VobSubOcr.CompareMatch> matches)
@@ -68,243 +164,5 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             return count;
         }
-
-
-        public static string GetStringWithItalicTagsMixed(List<VobSubOcr.CompareMatch> matches)
-        {
-            var paragraph = new StringBuilder();
-            var line = new StringBuilder();
-            var word = new StringBuilder();
-            int lettersItalics = 0;
-            int lettersNonItalics = 0;
-            int lineLettersNonItalics = 0;
-            int wordItalics = 0;
-            int wordNonItalics = 0;
-            bool isItalic = false;
-            bool allItalic = true;
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string text = matches[i].Text;
-                if (text != null)
-                {
-                    bool italic = matches[i].Italic;
-
-                    if (Seperators.Contains(text) && word.Length > 0)
-                    {
-                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, text);
-                    }
-                    else if (text == Environment.NewLine)
-                    {
-                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-                        ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
-                        lineLettersNonItalics = 0;
-                    }
-                    else
-                    {
-                        bool isMixedCaseWithoutDashAndAlike = IsMixedCaseWithoutDashAndAlike(matches, i, out var italicOrNot);
-                        if (Seperators.Contains(text) && !isMixedCaseWithoutDashAndAlike && word.Length > 0)
-                        {
-                            italic = italicOrNot;
-                        }
-
-                        if (italic)
-                        {
-                            word.Append(text);
-                            lettersItalics += text.Length;
-                        }
-                        else
-                        {
-                            word.Append(text);
-                            lettersNonItalics += text.Length;
-                            lineLettersNonItalics += text.Length;
-                        }
-                    }
-                }
-            }
-
-            if (word.Length > 0)
-            {
-                ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-            }
-
-            if (line.Length > 0)
-            {
-                ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "", lineLettersNonItalics);
-            }
-
-            if (allItalic && matches.Count > 0)
-            {
-                var temp = HtmlUtil.RemoveOpenCloseTags(paragraph.ToString(), HtmlUtil.TagItalic);
-                paragraph.Clear();
-                paragraph.Append("<i>");
-                paragraph.Append(temp);
-                paragraph.Append("</i>");
-            }
-
-            var result = paragraph.ToString();
-            result = result.Replace("</i>'' <i>", "'' ");
-            result = result.Replace("</i>' <i>", "' ");
-            result = result.Replace("</i>\" <i>", "\" ");
-            result = result.Replace("</i> \"<i>", " \"");
-            result = result.Replace("<i>-</i>", "-");
-            result = result.Replace("<i>.</i>", ".");
-            if (result.Contains("'</i>") || result.Contains("\"</i>"))
-            {
-                result = result.Replace(" '<i>'", " <i>''");
-            }
-            else if (result.Contains("</i>'") || result.Contains("</i>\""))
-            {
-                result = result.Replace(" '<i>'", " ''<i>");
-            }
-            if (result.StartsWith("'<i>'", StringComparison.Ordinal))
-            {
-                if (result.Contains("'</i>") || result.Contains("\"</i>"))
-                {
-                    result = "<i>''" + result.Remove(0, 5);
-                }
-                else if (result.Contains("</i>'") || result.Contains("</i>\""))
-                {
-                    result = "''<i>" + result.Remove(0, 5);
-                }
-            }
-            if (result.EndsWith("'</i>'", StringComparison.Ordinal))
-            {
-                if (result.Contains("<i>'") || result.Contains("<i>\""))
-                {
-                    result = result.Substring(0, result.Length - 6) + "''</i>";
-                }
-                else if (result.Contains("'<i>") || result.Contains("\"<i>"))
-                {
-                    result = result.Substring(0, result.Length - 6) + "</i>''";
-                }
-            }
-            result = result.Replace("  ", " ");
-
-            return result;
-        }
-
-        private static bool IsMixedCaseWithoutDashAndAlike(List<VobSubOcr.CompareMatch> matches, int startIndex, out bool italicOrNot)
-        {
-            while (startIndex > 0 && (matches[startIndex - 1].Text == " " || matches[startIndex - 1].Text == Environment.NewLine))
-            {
-                startIndex--;
-            }
-
-            int italicCount = 0;
-            int nonItalicCount = 0;
-            for (int i = startIndex; i < matches.Count; i++)
-            {
-                var m = matches[i];
-                if (m.Text != null)
-                {
-                    if (m.Text == "-" || m.Text == "—" || m.Text == "." || m.Text == "'")
-                    {
-                    }
-                    else if (m.Italic)
-                    {
-                        italicCount++;
-                    }
-                    else
-                    {
-                        nonItalicCount++;
-                    }
-                    if (m.Text == " " || m.Text == Environment.NewLine)
-                    {
-                        break;
-                    }
-                }
-            }
-            italicOrNot = italicCount > 0;
-            return italicCount > 0 && nonItalicCount > 0;
-        }
-
-        private static void ItalianLine(StringBuilder paragraph, ref StringBuilder line, ref bool allItalic, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString, int lineLettersNonItalics)
-        {
-            if (isItalic)
-            {
-                line.Append("</i>");
-                isItalic = false;
-            }
-
-            if (wordItalics > 0
-                && (wordNonItalics == 0 || wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().TrimStart().StartsWith('-')))
-            {
-                paragraph.Append("<i>");
-                paragraph.Append(HtmlUtil.RemoveOpenCloseTags(line.ToString(), HtmlUtil.TagItalic));
-                paragraph.Append("</i>");
-                paragraph.Append(appendString);
-            }
-            else
-            {
-                allItalic = false;
-
-                if (wordItalics > 0)
-                {
-                    string temp = line.ToString().Replace(" </i>", "</i> ");
-                    line.Clear();
-                    line.Append(temp);
-                }
-
-                paragraph.Append(line);
-                paragraph.Append(appendString);
-            }
-            line.Clear();
-            wordItalics = 0;
-            wordNonItalics = 0;
-        }
-
-        private static void ItalicsWord(StringBuilder line, ref StringBuilder word, ref int lettersItalics, ref int lettersNonItalics, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
-        {
-            if (appendString == "." && lettersItalics > 0 && lettersNonItalics == 0)
-            {
-                line.Append(word);
-                line.Append(appendString);
-            }
-            else if (line.Length == 0 && !isItalic && lettersItalics == 0 && lettersNonItalics == 1 && word.ToString() == "-")
-            {
-                line.Append(word);
-                word.Clear();
-                word.Append(appendString);
-                lettersItalics = 0;
-                lettersNonItalics = 0;
-                return;
-            }
-            else if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
-            {
-                if (!isItalic)
-                {
-                    line.Append("<i>");
-                }
-
-                line.Append(word + appendString);
-                wordItalics++;
-                isItalic = true;
-            }
-            else
-            {
-                if (appendString == "\"" && isItalic && !line.ToString().Contains("\"<i>"))
-                {
-                    line.Append(appendString);
-                    line.Append("</i>");
-                    isItalic = false;
-                }
-                else
-                {
-                    if (isItalic)
-                    {
-                        line.Append("</i>");
-                        isItalic = false;
-                    }
-                    line.Append(word);
-                    line.Append(appendString);
-                }
-                wordNonItalics++;
-            }
-            word.Clear();
-            lettersItalics = 0;
-            lettersNonItalics = 0;
-        }
-
     }
 }
