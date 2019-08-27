@@ -1662,6 +1662,7 @@ namespace Nikse.SubtitleEdit.Forms
             ".clpi",
             ".mpls",
             ".wav",
+            ".mp3",
             ".avi",
             ".mpeg",
             ".mpg",
