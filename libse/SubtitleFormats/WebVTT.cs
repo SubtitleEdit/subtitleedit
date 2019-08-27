@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             text = ColorHtmlToWebVtt(text);
+            text = EscapeEncodeText(text);
             return text;
         }
 
@@ -239,6 +240,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
+                paragraph.Text = EscapeDecodeText(paragraph.Text);
             }
             subtitle.AdjustDisplayTimeUsingSeconds(addSeconds, null);
             subtitle.Renumber();
@@ -646,6 +648,106 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return res;
+        }
+
+        internal static string EscapeEncodeText(string input)
+        {
+            if (!input.Contains('<') && !input.Contains('>') && !input.Contains('&'))
+            {
+                return input;
+            }
+            var sb = new StringBuilder(input.Length);
+            var max = input.Length;
+            int i = 0;
+            var tagOn = false;
+            while (i < max)
+            {
+                var ch = input[i];
+                if (ch == '<')
+                {
+                    var s = input.Substring(i);
+                    if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<c>", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<v>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append(s.Substring(0, 3));
+                        i += 3;
+                    }
+                    else if (s.StartsWith("</", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append(s.Substring(0, 2));
+                        i += 2;
+                        tagOn = true;
+                    }
+                    else if (s.StartsWith("<ruby", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<font", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<v.", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<v ", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<c.", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<c ", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<lang.", StringComparison.OrdinalIgnoreCase) ||
+                        s.StartsWith("<lang ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Append(ch);
+                        i++;
+                        tagOn = true;
+                    }
+                    else
+                    {
+                        sb.Append("&lt;");
+                        i++;
+                    }
+                }
+                else if (ch == '>')
+                {
+                    if (tagOn)
+                    {
+                        sb.Append(ch);
+                        i++;
+                        tagOn = false;
+                    }
+                    else
+                    {
+                        sb.Append("&gt;");
+                        i++;
+                    }
+                }
+                else if (ch == '&')
+                {
+                    var s = input.Substring(i);
+                    if (s.StartsWith("&lrm;", StringComparison.OrdinalIgnoreCase) ||
+                       s.StartsWith("&amp;", StringComparison.OrdinalIgnoreCase) ||
+                       s.StartsWith("&lt;", StringComparison.OrdinalIgnoreCase) ||
+                       s.StartsWith("&gt;", StringComparison.OrdinalIgnoreCase) ||
+                       s.Length > 3 && s[3] == ';' && char.IsLetter(s[2]) && char.IsLetter(s[1]) ||
+                       s.Length > 4 && s[4] == ';' && char.IsLetter(s[3]) && char.IsLetter(s[2]) && char.IsLetter(s[1]))
+                    {
+                        sb.Append(ch);
+                        i++;
+                    }
+                    else
+                    {
+                        sb.Append("&amp;");
+                        i++;
+                    }
+                }
+                else
+                {
+                    sb.Append(ch);
+                    i++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        internal static string EscapeDecodeText(string input)
+        {
+            return input
+                .Replace("&gt;", ">")
+                .Replace("&lt;", "<")
+                .Replace("&amp;", "&");
         }
 
         internal static TimeCode GetTimeCodeFromString(string time)

@@ -1422,6 +1422,53 @@ VÄLKOMMEN TILL TEXAS
             Assert.AreEqual("<font color=\"#008000\">This is hex colored</font>", subtitle.Paragraphs[2].Text);
         }
 
+        [TestMethod]
+        public void WebVttEscapeEncoding()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph(0, 0, "<i>R&D</i>"));
+            subtitle.Paragraphs.Add(new Paragraph(0, 0, "i<5"));
+            subtitle.Paragraphs.Add(new Paragraph(0, 0, "i>6"));
+            subtitle.Paragraphs.Add(new Paragraph(0, 0, "<v Viggo>Hallo"));
+            subtitle.Paragraphs.Add(new Paragraph(0, 0, "&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>"));
+            var raw = subtitle.ToText(target);
+            Assert.IsTrue(raw.Contains("<i>R&amp;D</i>"));
+            Assert.IsTrue(raw.Contains("i&lt;5"));
+            Assert.IsTrue(raw.Contains("i&gt;6"));
+            Assert.IsTrue(raw.Contains("<v Viggo>Hallo"));
+            Assert.IsTrue(raw.Contains("&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>"));
+        }
+
+        [TestMethod]
+        public void WebVttEscapeDecoding()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+
+00:00:00.000 --> 00:00:00.000
+<i>R&amp;D</i>
+
+00:00:00.000 --> 00:00:00.000
+i&lt;5
+
+00:00:00.000 --> 00:00:00.000
+i&gt;6
+
+00:00:00.000 --> 00:00:00.000
+<v Viggo>Hallo
+
+00:00:00.000 --> 00:00:00.000
+&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            Assert.AreEqual("<i>R&D</i>", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("i<5", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("i>6", subtitle.Paragraphs[2].Text);
+            Assert.AreEqual("<v Viggo>Hallo", subtitle.Paragraphs[3].Text);
+            Assert.AreEqual("&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>", subtitle.Paragraphs[4].Text);
+        }
+
         #endregion
 
         #region DvdStudioGraphics
