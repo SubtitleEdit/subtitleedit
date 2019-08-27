@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (sbWord.Length > 0)
                     {
-                        italicOn = AddWord(sb, italicCount, italicOn, sbWord, prevSpace);
+                        italicOn = AddWord(sb, italicCount, ref italicOn, sbWord, prevSpace);
                         prevSpace = m.Text;
                         sbWord = new StringBuilder();
                         italicCount = 0;
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
                 }
             }
-            italicOn = AddWord(sb, italicCount, italicOn, sbWord, prevSpace);
+            italicOn = AddWord(sb, italicCount, ref italicOn, sbWord, prevSpace);
             if (italicOn)
             {
                 sb.Append("</i>");
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return sb.ToString().Trim();
         }
 
-        private static bool AddWord(StringBuilder sb, int italicCount, bool italicOn, StringBuilder sbWord, string prevSpace)
+        private static bool AddWord(StringBuilder sb, int italicCount, ref bool italicOn, StringBuilder sbWord, string prevSpace)
         {
             var w = sbWord.ToString();
             var wordIsItalic = italicCount > w.Length / 2.0;
