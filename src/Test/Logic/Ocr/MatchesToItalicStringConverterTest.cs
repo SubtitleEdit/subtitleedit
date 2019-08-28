@@ -201,7 +201,7 @@ namespace Test.Logic.Ocr
         {
             var matches = new List<VobSubOcr.CompareMatch>
             {
-                new VobSubOcr.CompareMatch("Hi", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("Hi", false, 0, Guid.NewGuid().ToString()),
                 new VobSubOcr.CompareMatch(" ", false, 0, Guid.NewGuid().ToString()),
                 new VobSubOcr.CompareMatch("a", false, 0, Guid.NewGuid().ToString()),
                 new VobSubOcr.CompareMatch("l", false, 0, Guid.NewGuid().ToString()),
