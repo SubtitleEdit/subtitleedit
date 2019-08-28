@@ -85,12 +85,7 @@ This file is case sensitive.
   <name>Adwin</name>
   <name>Aeon</name>
   <name>Affleck</name>
-  <name>Afganistan</name>
-  <name>Afghan</name>
-  <name>Afghanistan</name>
   <name>AFIS</name>
-  <name>Africa</name>
-  <name>African</name>
   <name>Agatha</name>
   <name>Agnes</name>
   <name>Aguilera</name>
@@ -122,7 +117,6 @@ This file is case sensitive.
   <name>Alaska</name>
   <name>Alaskan</name>
   <name>Alastair</name>
-  <name>Albania</name>
   <name>Albany</name>
   <name>Albert</name>
   <name>Alberte</name>
@@ -158,7 +152,6 @@ This file is case sensitive.
   <name>Alfonso</name>
   <name>Alfred</name>
   <name>Alfredo</name>
-  <name>Algeria</name>
   <name>Algiers</name>
   <name>Aliana</name>
   <name>Alice</name>
@@ -201,8 +194,6 @@ This file is case sensitive.
   <name>Ambien</name>
   <name>Amelia</name>
   <name>Amelias</name>
-  <name>America</name>
-  <name>American Samoa</name>
   <name>Amherst</name>
   <name>Amidala</name>
   <name>Amir</name>
@@ -269,13 +260,10 @@ This file is case sensitive.
   <name>Annika</name>
   <name>Anokhi</name>
   <name>Antananarivo</name>
-  <name>Antarctica</name>
-  <name>Antarktis</name>
   <name>Anthony</name>
   <name>Anthrax</name>
   <name>Anthros</name>
   <name>Antigua</name>
-  <name>Antigua and Barbuda</name>
   <name>Antoine</name>
   <name>Anton</name>
   <name>Antonio</name>
@@ -292,14 +280,11 @@ This file is case sensitive.
   <name>Apollo</name>
   <name>April</name>
   <name>Aquaworld</name>
-  <name>Arabia</name>
   <name>Arcadius</name>
   <name>Archibald</name>
   <name>Archie</name>
   <name>Archimedes</name>
   <name>Ares</name>
-  <name>Argentina</name>
-  <name>Argentine</name>
   <name>Ari</name>
   <name>Aria</name>
   <name>Arial</name>
@@ -334,7 +319,6 @@ This file is case sensitive.
   <name>Arya</name>
   <name>Aryan</name>
   <name>Asa</name>
-  <name>Ascension Island</name>
   <name>Asher</name>
   <name>Ashgabat</name>
   <name>Ashland</name>
@@ -355,18 +339,14 @@ This file is case sensitive.
   <name>Asunción</name>
   <name>Atchinson</name>
   <name>Athena</name>
-  <name>Athens</name>
   <name>Atherton</name>
   <name>Atkinson</name>
   <name>Atlanta</name>
-  <name>Atlanten</name>
-  <name>Atlantic</name>
   <name>Atlantis</name>
   <name>Atorvastatin</name>
   <name>Atsuko</name>
   <name>Attenborough</name>
   <name>Attila</name>
-  <name>Attorney General</name>
   <name>Aubrey</name>
   <name>Aubreys</name>
   <name>Auckland</name>
@@ -382,8 +362,6 @@ This file is case sensitive.
   <name>Auschwitz</name>
   <name>Austen</name>
   <name>Austin</name>
-  <name>Australia</name>
-  <name>Austria</name>
   <name>Austyn</name>
   <name>Ava</name>
   <name>Avandia</name>
@@ -393,8 +371,6 @@ This file is case sensitive.
   <name>Avodart</name>
   <name>Axel</name>
   <name>Ayden</name>
-  <name>Azerbaijan</name>
-  <name>Azerbaijani</name>
   <name>Aziz</name>
   <name>Azkaban</name>
   <name>Azkadellia</name>
@@ -418,15 +394,12 @@ This file is case sensitive.
   <name>Bagley</name>
   <name>Baguio</name>
   <name>Bahamas</name>
-  <name>Bahamian</name>
   <name>Baharampur</name>
   <name>Bahawalnagar</name>
   <name>Bahawalpur</name>
   <name>Bahía Blanca</name>
   <name>Bahir Dar</name>
   <name>Bahraich</name>
-  <name>Bahrain</name>
-  <name>Bahraini</name>
   <name>Baia Mare</name>
   <name>Baicheng</name>
   <name>Baidoa</name>
@@ -552,7 +525,6 @@ This file is case sensitive.
   <name>Bauer</name>
   <name>Bauers</name>
   <name>Bauru</name>
-  <name>Bavaria</name>
   <name>Baxter</name>
   <name>Bayamo</name>
   <name>Bayannur</name>
@@ -606,10 +578,7 @@ This file is case sensitive.
   <name>Belford Roxo</name>
   <name>Belfort</name>
   <name>Belgaum</name>
-  <name>Belgian</name>
-  <name>Belgium</name>
   <name>Belgorod</name>
-  <name>Belgrade</name>
   <name>Belize</name>
   <name>Bella</name>
   <name>Bellary</name>
@@ -824,9 +793,6 @@ This file is case sensitive.
   <name>Boromir</name>
   <name>Borujerd</name>
   <name>Bosaso</name>
-  <name>Bosnia</name>
-  <name>Bosnia and Herzegovina</name>
-  <name>Bosnien</name>
   <name>Boston</name>
   <name>Bostons</name>
   <name>Botan</name>
@@ -892,7 +858,6 @@ This file is case sensitive.
   <name>Brayden</name>
   <name>Braydon</name>
   <name>Braze</name>
-  <name>Brazil</name>
   <name>Brazzaville</name>
   <name>Breck</name>
   <name>Breda</name>
@@ -958,7 +923,6 @@ This file is case sensitive.
   <name>Bruni</name>
   <name>Bruno</name>
   <name>Brunsky</name>
-  <name>Brussels</name>
   <name>Bryan</name>
   <name>Bryansk</name>
   <name>Bryant</name>
@@ -1010,7 +974,6 @@ This file is case sensitive.
   <name>Burkinabé</name>
   <name>Burkitt</name>
   <name>Burkowski</name>
-  <name>Burma</name>
   <name>Burnaby</name>
   <name>Burnett</name>
   <name>Burnetts</name>
@@ -1042,7 +1005,6 @@ This file is case sensitive.
   <name>C.O.</name>
   <name>C.T.</name>
   <name>Caballero</name>
-  <name>Cabo Verde</name>
   <name>Caden</name>
   <name>Cadillac</name>
   <name>Cadillacs</name>
@@ -1055,7 +1017,6 @@ This file is case sensitive.
   <name>Cagneys</name>
   <name>Caicos</name>
   <name>Cain</name>
-  <name>Cairo</name>
   <name>Caitlin</name>
   <name>Cal</name>
   <name>Calavius</name>
@@ -1066,7 +1027,6 @@ This file is case sensitive.
   <name>Caleb</name>
   <name>Calebs</name>
   <name>Calhoun</name>
-  <name>California</name>
   <name>Calixto</name>
   <name>Callaghan</name>
   <name>Callahan</name>
@@ -1077,7 +1037,6 @@ This file is case sensitive.
   <name>Callum</name>
   <name>Calvin</name>
   <name>Camaro</name>
-  <name>Cambodia</name>
   <name>Cambridge</name>
   <name>Camden</name>
   <name>Camelot</name>
@@ -1091,7 +1050,6 @@ This file is case sensitive.
   <name>Campos</name>
   <name>Camren</name>
   <name>Camron</name>
-  <name>Canada</name>
   <name>Canberra</name>
   <name>Cancun</name>
   <name>Candace</name>
@@ -1107,7 +1065,6 @@ This file is case sensitive.
   <name>Canstillã</name>
   <name>Cape Cod</name>
   <name>Cape Town</name>
-  <name>Cape Verde</name>
   <name>Capoeira</name>
   <name>Capone</name>
   <name>Capri</name>
@@ -1117,7 +1074,6 @@ This file is case sensitive.
   <name>Cardiff</name>
   <name>Cardinous</name>
   <name>Carey</name>
-  <name>Caribbean</name>
   <name>Carine</name>
   <name>Carl</name>
   <name>Carla</name>
@@ -1168,16 +1124,12 @@ This file is case sensitive.
   <name>Cathrine</name>
   <name>Cathy</name>
   <name>Catzevone</name>
-  <name>Caucasian</name>
   <name>Cavaliere</name>
   <name>Cavanaugh</name>
   <name>Cavazos</name>
   <name>Cavenaugh</name>
   <name>Cavennaugh</name>
   <name>Cayden</name>
-  <name>Cayman</name>
-  <name>Cayman Islands</name>
-  <name>Caymans</name>
   <name>CBI</name>
   <name>CBS</name>
   <name>CDC</name>
@@ -1196,8 +1148,6 @@ This file is case sensitive.
   <name>Celtic</name>
   <name>Centerville</name>
   <name>Centipedophile</name>
-  <name>Central African Republic</name>
-  <name>cents</name>
   <name>CEOs</name>
   <name>Cerberus</name>
   <name>Cerilla</name>
@@ -1277,7 +1227,6 @@ This file is case sensitive.
   <name>Christina</name>
   <name>Christine</name>
   <name>Christmas</name>
-  <name>Christmas Island</name>
   <name>Christofer</name>
   <name>Christoffer</name>
   <name>Christopher</name>
@@ -1341,7 +1290,6 @@ This file is case sensitive.
   <name>Coca-Cola</name>
   <name>Cochran</name>
   <name>Cochrane</name>
-  <name>Cocos Islands</name>
   <name>COD</name>
   <name>Cody</name>
   <name>Codys</name>
@@ -1385,11 +1333,9 @@ This file is case sensitive.
   <name>Conroy</name>
   <name>Conti</name>
   <name>Conway</name>
-  <name>Cook Islands</name>
   <name>Cooke</name>
   <name>Coop</name>
   <name>Cooper</name>
-  <name>Copenhagen</name>
   <name>Copperfield</name>
   <name>Cora</name>
   <name>Cordell</name>
@@ -1410,8 +1356,6 @@ This file is case sensitive.
   <name>Cosmopolitan</name>
   <name>Costa Rica</name>
   <name>Costanza</name>
-  <name>Côte d’Ivoire</name>
-  <name>Cote d'Ivoire</name>
   <name>Côte d'Ivoire</name>
   <name>Cottle</name>
   <name>Coulson</name>
@@ -1434,7 +1378,6 @@ This file is case sensitive.
   <name>Cristobal</name>
   <name>Cristopher</name>
   <name>Crixus</name>
-  <name>Croatia</name>
   <name>Crocker</name>
   <name>Crockett</name>
   <name>Croix</name>
@@ -1456,12 +1399,9 @@ This file is case sensitive.
   <name>Cymbalta</name>
   <name>Cynthia</name>
   <name>Cypher</name>
-  <name>Cypriot</name>
   <name>Cyprus</name>
   <name>Cyrus</name>
   <name>Cystectomy</name>
-  <name>Czech</name>
-  <name>Czech Republic</name>
   <name>D.C.</name>
   <name>D.O.A.</name>
   <name>D’Haran</name>
@@ -1497,7 +1437,6 @@ This file is case sensitive.
   <name>Danielles</name>
   <name>Daniels</name>
   <name>Danilov</name>
-  <name>Danish</name>
   <name>Danko</name>
   <name>Dankos</name>
   <name>Danny</name>
@@ -1621,7 +1560,6 @@ This file is case sensitive.
   <name>Desmond</name>
   <name>Despereaux</name>
   <name>Detroit</name>
-  <name>Deutschland</name>
   <name>Dev</name>
   <name>Devan</name>
   <name>Devaney</name>
@@ -1678,7 +1616,6 @@ This file is case sensitive.
   <name>Diovan</name>
   <name>Disney</name>
   <name>Disneyland</name>
-  <name>d'Ivoire</name>
   <name>divxsweden</name>
   <name>Dixie</name>
   <name>Dixon</name>
@@ -1709,8 +1646,6 @@ This file is case sensitive.
   <name>Domenic</name>
   <name>Domina</name>
   <name>Dominic</name>
-  <name>Dominica</name>
-  <name>Dominican Republic</name>
   <name>Dominick</name>
   <name>Dominique</name>
   <name>Dominus</name>
@@ -1789,7 +1724,6 @@ This file is case sensitive.
   <name>Duris</name>
   <name>Durmstrang</name>
   <name>Dushanbe</name>
-  <name>Dusseldorf</name>
   <name>Düsseldorf</name>
   <name>Dustin</name>
   <name>Duxbury</name>
@@ -1804,15 +1738,11 @@ This file is case sensitive.
   <name>E.R.</name>
   <name>E.R.P.</name>
   <name>Earl</name>
-  <name>East Timor</name>
-  <name>East Timor Timor-Leste</name>
   <name>EastEnders</name>
   <name>Eastwood</name>
   <name>Echelon</name>
   <name>Echolls</name>
   <name>Eckhart</name>
-  <name>Ecuador</name>
-  <name>Ecuadorian</name>
   <name>Ed Sheeran</name>
   <name>Eddard</name>
   <name>Eddie</name>
@@ -1836,8 +1766,6 @@ This file is case sensitive.
   <name>Edwin</name>
   <name>Effexor</name>
   <name>Effy</name>
-  <name>Egypt</name>
-  <name>Egyptian</name>
   <name>Ehsan</name>
   <name>Eileen</name>
   <name>Einstein</name>
@@ -1893,7 +1821,6 @@ This file is case sensitive.
   <name>Emilie</name>
   <name>Emilio</name>
   <name>Emily</name>
-  <name>Emirates</name>
   <name>Emma</name>
   <name>Emmanuel</name>
   <name>Emmeline Pankhurst</name>
@@ -1912,10 +1839,6 @@ This file is case sensitive.
   <name>Eobard Thawne</name>
   <name>Ephraim</name>
   <name>Epstein</name>
-  <name>Equatoguinean</name>
-  <name>Equatorial</name>
-  <name>Equatorial Guinea</name>
-  <name>Equatorial Guineans</name>
   <name>Eric</name>
   <name>Erica</name>
   <name>Erickson</name>
@@ -1953,19 +1876,12 @@ This file is case sensitive.
   <name>Ethans</name>
   <name>Ethel</name>
   <name>Etheridge</name>
-  <name>Ethiopia</name>
-  <name>Etiopien</name>
   <name>Eugene</name>
   <name>Eugenes</name>
   <name>Eureka</name>
   <name>Eurekas</name>
-  <name>Europe</name>
-  <name>European</name>
-  <name>Europeans</name>
   <name>Euros</name>
   <name>Evan</name>
-  <name>Evangelical</name>
-  <name>Evangelicals</name>
   <name>Evans</name>
   <name>Evas</name>
   <name>Eve</name>
@@ -1988,7 +1904,6 @@ This file is case sensitive.
   <name>Fairmont</name>
   <name>Fairview</name>
   <name>Falco</name>
-  <name>Falkland Islands</name>
   <name>Fane</name>
   <name>Fangtasia</name>
   <name>Fannings</name>
@@ -1999,7 +1914,6 @@ This file is case sensitive.
   <name>Farmingdale</name>
   <name>Farmington</name>
   <name>Farnsworth</name>
-  <name>Faroe Islands</name>
   <name>Farrel</name>
   <name>Farrell</name>
   <name>Farsi</name>
@@ -2009,9 +1923,6 @@ This file is case sensitive.
   <name>Fawn</name>
   <name>Fayed</name>
   <name>FBI</name>
-  <name>February</name>
-  <name>Federal Bureau of Investigation</name>
-  <name>Federated</name>
   <name>Felicia</name>
   <name>Felicity</name>
   <name>Felipe</name>
@@ -2033,19 +1944,16 @@ This file is case sensitive.
   <name>FIFA</name>
   <name>Fifi</name>
   <name>Figg</name>
-  <name>Fiji</name>
   <name>Filch</name>
   <name>Filipina</name>
   <name>Filipino</name>
   <name>Filippa</name>
   <name>Fillmore</name>
   <name>Finch</name>
-  <name>Finland</name>
   <name>Finlay</name>
   <name>Finlays</name>
   <name>Finley</name>
   <name>Finnegan</name>
-  <name>Finnish</name>
   <name>Fiona</name>
   <name>Fiore</name>
   <name>Fiori</name>
@@ -2107,8 +2015,6 @@ This file is case sensitive.
   <name>Francophile</name>
   <name>Frangelico</name>
   <name>Frankenstein</name>
-  <name>Frankfort</name>
-  <name>Frankfurt</name>
   <name>Frankie</name>
   <name>Franklin</name>
   <name>Franklins</name>
@@ -2138,11 +2044,6 @@ This file is case sensitive.
   <name>Freemans</name>
   <name>Freetown</name>
   <name>Freja</name>
-  <name>French</name>
-  <name>French Guiana</name>
-  <name>French Metropolitan</name>
-  <name>French Polynesia</name>
-  <name>French Southern Territories</name>
   <name>Fresno</name>
   <name>Freud</name>
   <name>Frida</name>
@@ -2166,10 +2067,6 @@ This file is case sensitive.
   <name>Gabby</name>
   <name>Gabe</name>
   <name>Gabon</name>
-  <name>Gabonais</name>
-  <name>Gabonaise</name>
-  <name>Gabonaises</name>
-  <name>Gaboneses</name>
   <name>Gaborone</name>
   <name>Gabriel</name>
   <name>Gabriella</name>
@@ -2249,7 +2146,6 @@ This file is case sensitive.
   <name>Gerri</name>
   <name>Gerry</name>
   <name>Ghana</name>
-  <name>Ghanaian</name>
   <name>Gia</name>
   <name>Gibbons</name>
   <name>Gibbs</name>
@@ -2321,14 +2217,10 @@ This file is case sensitive.
   <name>Grayson</name>
   <name>Graystone</name>
   <name>Graystones</name>
-  <name>Great Britain</name>
   <name>Great Lakes</name>
-  <name>Greece</name>
-  <name>Greek</name>
   <name>Greenberg</name>
   <name>Greene</name>
   <name>Greenes</name>
-  <name>Greenland</name>
   <name>Greenleaf</name>
   <name>Greenpeace</name>
   <name>Greens</name>
@@ -2352,7 +2244,6 @@ This file is case sensitive.
   <name>Grissom</name>
   <name>Grønland</name>
   <name>Grossman</name>
-  <name>Grote Markt</name>
   <name>Groucho</name>
   <name>Grumpzilla</name>
   <name>Gryff</name>
@@ -2375,7 +2266,6 @@ This file is case sensitive.
   <name>Guillain-Barre</name>
   <name>Guillaume</name>
   <name>Guinea</name>
-  <name>Guinea-Bissau</name>
   <name>Guinevere</name>
   <name>Gulf</name>
   <name>Gunilla</name>
@@ -2398,7 +2288,6 @@ This file is case sensitive.
   <name>Gutierrez</name>
   <name>Gutiérrez</name>
   <name>Guyana</name>
-  <name>Guyaneses</name>
   <name>Gwaine</name>
   <name>Gwen</name>
   <name>Gwendoline</name>
@@ -2493,9 +2382,6 @@ This file is case sensitive.
   <name>Hausdorff</name>
   <name>Havana</name>
   <name>Haverford</name>
-  <name>Hawaii</name>
-  <name>Hawaiian</name>
-  <name>Hawaiians</name>
   <name>Hawking</name>
   <name>Hawkins</name>
   <name>Hawkwind</name>
@@ -2514,7 +2400,6 @@ This file is case sensitive.
   <name>Hearn</name>
   <name>Heather</name>
   <name>Heathrow</name>
-  <name>Hebrew</name>
   <name>Hecatombe</name>
   <name>Hector</name>
   <name>Hedwig</name>
@@ -2562,7 +2447,6 @@ This file is case sensitive.
   <name>Hersheys</name>
   <name>Hertfordshire</name>
   <name>Herveaux</name>
-  <name>Herzegovina</name>
   <name>Hestia</name>
   <name>Hetty</name>
   <name>Hewes</name>
@@ -2604,10 +2488,7 @@ This file is case sensitive.
   <name>Hollywood Hills</name>
   <name>Hollywoods</name>
   <name>Holmes</name>
-  <name>Holy See</name>
   <name>Honda</name>
-  <name>Honduran</name>
-  <name>Honduras</name>
   <name>Hong</name>
   <name>Hong Kong</name>
   <name>Hongkong</name>
@@ -2642,8 +2523,6 @@ This file is case sensitive.
   <name>Humphrey</name>
   <name>Humphreys</name>
   <name>Humvee</name>
-  <name>Hungarian</name>
-  <name>Hungary</name>
   <name>Huntley</name>
   <name>Hurley</name>
   <name>Hussein</name>
@@ -2657,9 +2536,6 @@ This file is case sensitive.
   <name>Ibiza</name>
   <name>IBM</name>
   <name>Ibrahim</name>
-  <name>Iceland</name>
-  <name>Icelander</name>
-  <name>Icelandic</name>
   <name>ID</name>
   <name>Idaho</name>
   <name>Idris</name>
@@ -2678,8 +2554,6 @@ This file is case sensitive.
   <name>India</name>
   <name>Indiana</name>
   <name>Indianapolis</name>
-  <name>Indokina</name>
-  <name>Indonesia</name>
   <name>Ines</name>
   <name>Inez</name>
   <name>Ingalls</name>
@@ -2698,11 +2572,6 @@ This file is case sensitive.
   <name>iPods</name>
   <name>Ipswich</name>
   <name>IQ</name>
-  <name>Irak</name>
-  <name>Iran</name>
-  <name>Iraq</name>
-  <name>Iraqi</name>
-  <name>Ireland</name>
   <name>Irene</name>
   <name>Iridessa</name>
   <name>Irina</name>
@@ -2750,10 +2619,6 @@ This file is case sensitive.
   <name>Ivanova</name>
   <name>Ivanovich</name>
   <name>I've</name>
-  <name>Ivoirian</name>
-  <name>Ivorian</name>
-  <name>Ivorians</name>
-  <name>Ivory Coast</name>
   <name>Ivy</name>
   <name>Iwamoto</name>
   <name>Izabella</name>
@@ -2889,9 +2754,6 @@ This file is case sensitive.
   <name>Jester</name>
   <name>Jesus</name>
   <name>Jethro</name>
-  <name>Jew</name>
-  <name>Jewish</name>
-  <name>Jews</name>
   <name>Jiang</name>
   <name>Jigsaw</name>
   <name>Jill</name>
@@ -2948,7 +2810,6 @@ This file is case sensitive.
   <name>Jones</name>
   <name>Jonestown</name>
   <name>Jordan</name>
-  <name>Jordanian</name>
   <name>Jordans</name>
   <name>Jor-El</name>
   <name>Jor-Els</name>
@@ -3002,7 +2863,6 @@ This file is case sensitive.
   <name>Justin</name>
   <name>Justins</name>
   <name>Juvederm</name>
-  <name>Kabul</name>
   <name>Kaden</name>
   <name>Kahlan</name>
   <name>Kahlua</name>
@@ -3198,18 +3058,13 @@ This file is case sensitive.
   <name>Kuwabara-kun</name>
   <name>Kuwabara-san</name>
   <name>Kuwa-chan</name>
-  <name>Kuwait</name>
   <name>Kuwait City</name>
-  <name>Kuwaiti</name>
   <name>Kwon</name>
   <name>Kyiv</name>
   <name>Kyle</name>
   <name>Kyles</name>
   <name>Kylie</name>
   <name>Kylo Ren</name>
-  <name>Kyrgyz</name>
-  <name>Kyrgyzstan</name>
-  <name>Kyrgyzstani</name>
   <name>L.A.</name>
   <name>La Paz</name>
   <name>LaBelle</name>
@@ -3249,8 +3104,6 @@ This file is case sensitive.
   <name>Lanny</name>
   <name>Lansing</name>
   <name>Laos</name>
-  <name>Laotian</name>
-  <name>Laotians</name>
   <name>LAPD</name>
   <name>Laquisha</name>
   <name>Lara</name>
@@ -3270,7 +3123,6 @@ This file is case sensitive.
   <name>Lassie</name>
   <name>Latin</name>
   <name>Lattimer</name>
-  <name>Latvia</name>
   <name>Laura</name>
   <name>Laurel</name>
   <name>Lauren</name>
@@ -3287,7 +3139,6 @@ This file is case sensitive.
   <name>Lazarus</name>
   <name>Learjet</name>
   <name>Learjets</name>
-  <name>Lebanon</name>
   <name>LeBron</name>
   <name>Lecter</name>
   <name>Lee</name>
@@ -3347,10 +3198,7 @@ This file is case sensitive.
   <name>Lexus</name>
   <name>Leyte</name>
   <name>Liam</name>
-  <name>Libanese</name>
-  <name>Libanon</name>
   <name>Libby</name>
-  <name>Liberia</name>
   <name>Libowitz</name>
   <name>Libreville</name>
   <name>Liby</name>
@@ -3495,7 +3343,6 @@ This file is case sensitive.
   <name>Lyon</name>
   <name>Lyrica</name>
   <name>M.I.A</name>
-  <name>Maasai</name>
   <name>Mac</name>
   <name>Mac OS</name>
   <name>MacArthur</name>
@@ -3558,8 +3405,6 @@ This file is case sensitive.
   <name>Malcolm X</name>
   <name>Malcom</name>
   <name>Malden</name>
-  <name>Maldives</name>
-  <name>Maldivian</name>
   <name>Malé</name>
   <name>Malekai</name>
   <name>Malfoy</name>
@@ -3663,7 +3508,6 @@ This file is case sensitive.
   <name>Marseille</name>
   <name>Marsha</name>
   <name>Marshall</name>
-  <name>Marshall Islands</name>
   <name>Martha</name>
   <name>Marthas</name>
   <name>Martin</name>
@@ -3971,7 +3815,6 @@ This file is case sensitive.
   <name>Monegasque</name>
   <name>Mon-El</name>
   <name>Moneypenny</name>
-  <name>Mongolia</name>
   <name>Monica</name>
   <name>Monicas</name>
   <name>Monika</name>
@@ -4063,8 +3906,6 @@ This file is case sensitive.
   <name>Muslim</name>
   <name>Mussolini</name>
   <name>Mustafa</name>
-  <name>Myanmar</name>
-  <name>Myanmar, Burma</name>
   <name>Mycophenolate</name>
   <name>Myers</name>
   <name>Myka</name>
@@ -4118,8 +3959,6 @@ This file is case sensitive.
   <name>Navy</name>
   <name>Naylin</name>
   <name>Naypyidaw</name>
-  <name>Nazi</name>
-  <name>Nazis</name>
   <name>NBA</name>
   <name>NBT</name>
   <name>NCIS</name>
@@ -4146,8 +3985,6 @@ This file is case sensitive.
   <name>Netflix</name>
   <name>Netherfield</name>
   <name>Netherfields</name>
-  <name>Netherlands</name>
-  <name>Netherlands Antilles</name>
   <name>Neurontin</name>
   <name>Neuschwanstein</name>
   <name>Nevada</name>
@@ -4234,16 +4071,12 @@ This file is case sensitive.
   <name>Nokia</name>
   <name>NORAD</name>
   <name>Noras</name>
-  <name>Nordirland</name>
-  <name>Nordkorea</name>
   <name>Noreen</name>
   <name>Norfolk</name>
   <name>Norfolk Island</name>
-  <name>Norge</name>
   <name>Norma</name>
   <name>Norman</name>
   <name>Norris</name>
-  <name>North Korea</name>
   <name>Northbrook</name>
   <name>Northern Mariana Islands</name>
   <name>Northman</name>
@@ -4251,8 +4084,6 @@ This file is case sensitive.
   <name>Northwestern</name>
   <name>Norton</name>
   <name>Norvasc</name>
-  <name>Norway</name>
-  <name>Norwegian</name>
   <name>Norwich</name>
   <name>Notthingham</name>
   <name>Nottingham</name>
@@ -4372,8 +4203,6 @@ This file is case sensitive.
   <name>Palamino</name>
   <name>Palau</name>
   <name>Palchuk</name>
-  <name>Palestine</name>
-  <name>Palestinian National Authority</name>
   <name>Paley</name>
   <name>Palikir</name>
   <name>Palin</name>
@@ -4386,13 +4215,10 @@ This file is case sensitive.
   <name>Pamplona</name>
   <name>Pamplonian</name>
   <name>Panama</name>
-  <name>Panama City</name>
-  <name>Panamanian</name>
   <name>Panamas</name>
   <name>Pandoras</name>
   <name>Panettiere</name>
   <name>Papua</name>
-  <name>Papua New Guinea</name>
   <name>Paraguay</name>
   <name>Paramaribo</name>
   <name>Paramount</name>
@@ -4495,7 +4321,6 @@ This file is case sensitive.
   <name>Philip</name>
   <name>Philippa</name>
   <name>Philippe</name>
-  <name>Philippines</name>
   <name>Philips</name>
   <name>Phillies</name>
   <name>Phillip</name>
@@ -4531,10 +4356,7 @@ This file is case sensitive.
   <name>PLO</name>
   <name>Plymouth</name>
   <name>Podgorica</name>
-  <name>Poland</name>
-  <name>Polen</name>
   <name>Polidori</name>
-  <name>Polish</name>
   <name>Polly</name>
   <name>Polo</name>
   <name>Pompeii</name>
@@ -4551,7 +4373,6 @@ This file is case sensitive.
   <name>Porsche</name>
   <name>Port Louis</name>
   <name>Port Moresby</name>
-  <name>Port of Spain</name>
   <name>Port Vila</name>
   <name>Port-au-Prince</name>
   <name>Porter</name>
@@ -4570,10 +4391,8 @@ This file is case sensitive.
   <name>Pozarsky</name>
   <name>PR</name>
   <name>Prada</name>
-  <name>Praetorians</name>
   <name>Prag</name>
   <name>Pragin</name>
-  <name>Prague</name>
   <name>Praia</name>
   <name>Pratt</name>
   <name>Prescott</name>
@@ -4620,7 +4439,6 @@ This file is case sensitive.
   <name>Quantico</name>
   <name>Quatar</name>
   <name>Queen-Ingela</name>
-  <name>Queen-lngela</name>
   <name>Quentin</name>
   <name>Quidditch</name>
   <name>Quincy</name>
@@ -4713,14 +4531,10 @@ This file is case sensitive.
   <name>Renfro</name>
   <name>Reno</name>
   <name>Renshaw</name>
-  <name>Republic</name>
-  <name>Republic of the Congo</name>
-  <name>Republicans</name>
   <name>Reston</name>
   <name>Restylane</name>
   <name>Reuben</name>
   <name>Reubens</name>
-  <name>Reunion Island</name>
   <name>Rex</name>
   <name>Reykjavik</name>
   <name>Reynard</name>
@@ -4859,14 +4673,11 @@ This file is case sensitive.
   <name>Russel</name>
   <name>Russell</name>
   <name>Russellville</name>
-  <name>Russia</name>
-  <name>Russian Federation</name>
   <name>Russo</name>
   <name>Rustys</name>
   <name>Ruth</name>
   <name>Rutledge</name>
   <name>Rwanda</name>
-  <name>Rwandese</name>
   <name>Ryan</name>
   <name>Ryans</name>
   <name>Rydell</name>
@@ -4906,7 +4717,6 @@ This file is case sensitive.
   <name>Saltzman</name>
   <name>Saltzmans</name>
   <name>Salvador</name>
-  <name>Salvadorian</name>
   <name>Salvatore</name>
   <name>Salvatores</name>
   <name>Sam</name>
@@ -4946,7 +4756,6 @@ This file is case sensitive.
   <name>Santos</name>
   <name>Sao</name>
   <name>Sao Tome</name>
-  <name>Sao Tome and Principe</name>
   <name>Sara</name>
   <name>Sarah</name>
   <name>Sarahs</name>
@@ -4962,7 +4771,6 @@ This file is case sensitive.
   <name>Saturdays</name>
   <name>Saturne</name>
   <name>Saudi</name>
-  <name>Saudi Arabia</name>
   <name>Sauerkraut</name>
   <name>Saul</name>
   <name>Saunders</name>
@@ -4974,7 +4782,6 @@ This file is case sensitive.
   <name>Sayaka</name>
   <name>Sayid</name>
   <name>Sayyid</name>
-  <name>Scandinavian</name>
   <name>Scarlet</name>
   <name>Scarlett</name>
   <name>Scavo</name>
@@ -4996,7 +4803,6 @@ This file is case sensitive.
   <name>Scooby</name>
   <name>Scotland</name>
   <name>Scott</name>
-  <name>Scottish</name>
   <name>Scotts</name>
   <name>Scotty</name>
   <name>Scottys</name>
@@ -5097,9 +4903,6 @@ This file is case sensitive.
   <name>Shultz</name>
   <name>Shurshwoovski</name>
   <name>Siba</name>
-  <name>Siberia</name>
-  <name>Sibirien</name>
-  <name>Sicilien</name>
   <name>Sidious</name>
   <name>Sidney</name>
   <name>Siegel</name>
@@ -5130,10 +4933,8 @@ This file is case sensitive.
   <name>Sinatra</name>
   <name>Sinbad</name>
   <name>Sinbads</name>
-  <name>Singapore</name>
   <name>Singh</name>
   <name>Singulair</name>
-  <name>Siobbhan</name>
   <name>Siobhan</name>
   <name>Siobhán</name>
   <name>Siri</name>
@@ -5152,8 +4953,6 @@ This file is case sensitive.
   <name>Skywalker</name>
   <name>Sloan</name>
   <name>Sloans</name>
-  <name>Slovakia</name>
-  <name>Slovenia</name>
   <name>Slytherin</name>
   <name>Smallville</name>
   <name>Smith</name>
@@ -5185,20 +4984,12 @@ This file is case sensitive.
   <name>Sophia</name>
   <name>Sophie</name>
   <name>Sorenson</name>
-  <name>South Africa</name>
-  <name>South Georgia</name>
-  <name>South Korea</name>
   <name>South Sandwich Islands</name>
-  <name>South Sudan</name>
-  <name>South Tarawa</name>
-  <name>Southern</name>
   <name>Soviet</name>
   <name>Soviets</name>
   <name>Sovjet</name>
   <name>Sovjets</name>
-  <name>Spain</name>
   <name>Spangler</name>
-  <name>Spanish</name>
   <name>Spartacus</name>
   <name>Spaulding</name>
   <name>Spears</name>
@@ -5340,20 +5131,14 @@ This file is case sensitive.
   <name>SWAT</name>
   <name>Swayze</name>
   <name>Swaziland</name>
-  <name>Swede</name>
-  <name>Sweden</name>
-  <name>Swedish</name>
   <name>Sweetwater</name>
   <name>Swender</name>
   <name>Swensen</name>
   <name>SweSub</name>
   <name>SweSUB</name>
-  <name>Switzerland</name>
   <name>Sybil</name>
   <name>Sybils</name>
   <name>Syd</name>
-  <name>Sydafrika</name>
-  <name>Sydafrikas</name>
   <name>Sydney</name>
   <name>Sykes</name>
   <name>Sylar</name>
@@ -5367,8 +5152,6 @@ This file is case sensitive.
   <name>Symondses</name>
   <name>Synvisc</name>
   <name>Syracuse</name>
-  <name>Syria</name>
-  <name>Syrien</name>
   <name>Tabitha</name>
   <name>Tabula Rasa</name>
   <name>Tacoma</name>
@@ -5409,7 +5192,6 @@ This file is case sensitive.
   <name>Tash</name>
   <name>Tasha</name>
   <name>Tashkent</name>
-  <name>Tasmanien</name>
   <name>Tate</name>
   <name>Tates</name>
   <name>Tatiana</name>
@@ -5432,7 +5214,6 @@ This file is case sensitive.
   <name>Teds</name>
   <name>Teenie</name>
   <name>Tegucigalpa</name>
-  <name>Tehran</name>
   <name>Tekashi 69</name>
   <name>Tel Aviv</name>
   <name>Telia</name>
@@ -5466,8 +5247,6 @@ This file is case sensitive.
   <name>Thanksgiving</name>
   <name>Thatcher</name>
   <name>Thawne</name>
-  <name>The Bahamas</name>
-  <name>The Gambia</name>
   <name>Thelma</name>
   <name>Themyscira</name>
   <name>Theo</name>
@@ -5490,10 +5269,7 @@ This file is case sensitive.
   <name>Thracian</name>
   <name>Thraex</name>
   <name>Thuringer</name>
-  <name>Thursday</name>
-  <name>Thursdays</name>
   <name>Tibet</name>
-  <name>Tibetan</name>
   <name>Tierney</name>
   <name>Tiffany</name>
   <name>Tiffanys</name>
@@ -5510,7 +5286,6 @@ This file is case sensitive.
   <name>Timmy</name>
   <name>Timmys</name>
   <name>Timor</name>
-  <name>Timor-Leste</name>
   <name>Timothy</name>
   <name>Timur</name>
   <name>Tina</name>
@@ -5521,10 +5296,7 @@ This file is case sensitive.
   <name>Titanic</name>
   <name>Titus</name>
   <name>TiVo</name>
-  <name>Tjaikovskijs</name>
-  <name>Tjajkovskij</name>
   <name>Tjernobyl</name>
-  <name>Tjetjenien</name>
   <name>Tobago</name>
   <name>Tobbs</name>
   <name>Tobias</name>
@@ -5588,7 +5360,6 @@ This file is case sensitive.
   <name>TreyWay</name>
   <name>Tribeca</name>
   <name>Trinidad</name>
-  <name>Trinidad and Tobago</name>
   <name>Trinn</name>
   <name>Tripoli</name>
   <name>Tripp</name>
@@ -5613,10 +5384,7 @@ This file is case sensitive.
   <name>Tully</name>
   <name>Tulsa</name>
   <name>Tunis</name>
-  <name>Tunisia</name>
   <name>Tupac</name>
-  <name>Turkey</name>
-  <name>Turkmenistan</name>
   <name>Turner</name>
   <name>Tuscany</name>
   <name>Tuvalu</name>
@@ -5630,26 +5398,17 @@ This file is case sensitive.
   <name>Tyrion</name>
   <name>Tyrone</name>
   <name>Tyson</name>
-  <name>U.S.</name>
-  <name>U.S. Minor Outlying Islands</name>
-  <name>U.S.A.</name>
   <name>U.V.</name>
   <name>U2</name>
   <name>Udaipur</name>
   <name>Uganda</name>
   <name>Ugolino</name>
-  <name>Ukraine</name>
-  <name>Ukrainian</name>
   <name>Ulaanbaatar</name>
   <name>Ulla</name>
   <name>Ulric</name>
   <name>Ultram</name>
   <name>Umbridge</name>
   <name>Underwood</name>
-  <name>United Arab Emirates</name>
-  <name>United Kingdom</name>
-  <name>United States</name>
-  <name>United States of America</name>
   <name>University of Oxford</name>
   <name>Univille</name>
   <name>Upper East Side</name>
@@ -5693,9 +5452,6 @@ This file is case sensitive.
   <name>Vanuatu</name>
   <name>Vanya</name>
   <name>Varvatos</name>
-  <name>Vatican</name>
-  <name>Vatican City</name>
-  <name>Vatican City State</name>
   <name>Vaughan</name>
   <name>Vaughans</name>
   <name>Vaughn</name>
@@ -5703,7 +5459,6 @@ This file is case sensitive.
   <name>VD</name>
   <name>Vegas</name>
   <name>Velazquez</name>
-  <name>Venedig</name>
   <name>Venezuela</name>
   <name>Venezuelas</name>
   <name>Venus</name>
@@ -5728,7 +5483,6 @@ This file is case sensitive.
   <name>Victorias</name>
   <name>Victors</name>
   <name>Vidonne</name>
-  <name>Vienna</name>
   <name>Vientiane</name>
   <name>Vietcong</name>
   <name>Vietnam</name>
@@ -5749,7 +5503,6 @@ This file is case sensitive.
   <name>Violet</name>
   <name>Vioxx</name>
   <name>Virgil</name>
-  <name>Virgin Islands</name>
   <name>Virginia</name>
   <name>Virgo</name>
   <name>Vitalievich</name>
@@ -5845,7 +5598,6 @@ This file is case sensitive.
   <name>West Virginia</name>
   <name>Westchester</name>
   <name>Westen</name>
-  <name>Western Sahara</name>
   <name>Westeros</name>
   <name>Westmonte</name>
   <name>Westmore</name>
@@ -5863,7 +5615,6 @@ This file is case sensitive.
   <name>Wickerman</name>
   <name>Widmore</name>
   <name>Widmores</name>
-  <name>Wien</name>
   <name>Wienerschnitzel</name>
   <name>Wiesbaden</name>
   <name>WiFi</name>
