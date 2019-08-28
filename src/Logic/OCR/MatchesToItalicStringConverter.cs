@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public static class MatchesToItalicStringConverter
     {
-        private static readonly string[] Seperators = { "-", "—", ".", "'", "\"", " ", "!", "\r", "\n", "\r\n" };
+        private static readonly string[] Separators = { "-", "—", ".", "'", "\"", " ", "!", "\r", "\n", "\r\n" };
 
         public static string GetStringWithItalicTags(List<VobSubOcr.CompareMatch> matches)
         {
             var sb = new StringBuilder();
-            foreach (var lineMatches in SplitMatchsToLines(matches))
+            foreach (var lineMatches in SplitMatchesToLines(matches))
             {
                 var numberOfLetters = GetNumberOfLetters(lineMatches);
                 var numberOfItalicLetters = GetNumberOfItalicLetters(lineMatches);
@@ -44,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (int i = 0; i < lineMatches.Count; i++)
             {
                 var m = lineMatches[i];
-                if (m.Text == " " || m.Text == "-")
+                if (m.Text == " " || m.Text == "-" || m.Text == "'") // chars that allow change of italic
                 {
                     if (sbWord.Length > 0)
                     {
@@ -52,6 +51,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         prevSpace = m.Text;
                         sbWord = new StringBuilder();
                         italicCount = 0;
+                    }
+                    else if (m.Text != " ")
+                    {
+                        sbWord.Append(m.Text);
+                        if (m.Italic)
+                        {
+                            italicCount += m.Text.Length;
+                        }
                     }
                 }
                 else if (m.Text != null)
@@ -68,7 +75,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 sb.Append("</i>");
             }
-            return sb.ToString().Trim();
+            var text = sb.ToString().Trim();
+            text = text.Replace("<i>-</i>", "-")
+                .Replace("<i>s</i>", "s")
+                .Replace("</i>s<i>", "s")
+                .Replace("<i>!</i>", "!")
+                .Replace("</i>!<i>", "!")
+                .Replace("<i>?</i>", "?")
+                .Replace("</i>?<i>", "?")
+                .Replace("<i>'</i>", "'")
+                .Replace("<i>''</i>", "'")
+                .Replace("</i>'<i>", "'")
+                .Replace("</i>''<i>", "'")
+                .Replace("<i>:</i>", ":")
+                .Replace("</i>:<i>", ":")
+                .Replace("<i>.</i>", ".")
+                .Replace("</i>.<i>", ".")
+                .Replace("<i>...</i>", "...")
+                .Replace("</i>...<i>", "...");
+            return text;
         }
 
         private static bool AddWord(StringBuilder sb, int italicCount, ref bool italicOn, StringBuilder sbWord, string prevSpace)
@@ -84,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 sb.Append(prevSpace + "<i>" + sbWord);
                 italicOn = true;
             }
-            else if (!wordIsItalic && italicOn)
+            else if (italicOn)
             {
                 sb.Append("</i>" + prevSpace + sbWord);
                 italicOn = false;
@@ -97,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return italicOn;
         }
 
-        private static List<List<VobSubOcr.CompareMatch>> SplitMatchsToLines(List<VobSubOcr.CompareMatch> matches)
+        private static List<List<VobSubOcr.CompareMatch>> SplitMatchesToLines(List<VobSubOcr.CompareMatch> matches)
         {
             var result = new List<List<VobSubOcr.CompareMatch>>();
             var line = new List<VobSubOcr.CompareMatch>();
@@ -143,7 +168,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
-                if (text != null && !Seperators.Contains(text))
+                if (text != null && !Separators.Contains(text))
                 {
                     count++;
                 }
@@ -157,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
-                if (text != null && matches[i].Italic && !Seperators.Contains(text))
+                if (text != null && matches[i].Italic && !Separators.Contains(text))
                 {
                     count++;
                 }

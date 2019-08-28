@@ -170,5 +170,51 @@ namespace Test.Logic.Ocr
             Assert.AreEqual("Iwamoto-<i>sensai!</i>", result);
         }
 
+        [TestMethod]
+        public void TestPartInItalicWithStartDash()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("-", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("E", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("x", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("p", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("l", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("r", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(",", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("n", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("w", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("!", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            string result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("- Explore, <i>now!</i>", result);
+        }
+
+        [TestMethod]
+        public void TestPartInItalicQuote()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("Hi", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch(" ", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("l", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("l", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("'", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("s", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("t", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("ars", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("!", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            string result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("Hi all'<i>stars!</i>", result);
+        }
     }
 }
