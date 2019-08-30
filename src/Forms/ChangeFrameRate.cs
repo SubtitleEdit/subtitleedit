@@ -13,15 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            comboBoxFrameRateFrom.Items.Add(23.976);
-            comboBoxFrameRateFrom.Items.Add(24.0);
-            comboBoxFrameRateFrom.Items.Add(25.0);
-            comboBoxFrameRateFrom.Items.Add(29.97);
-
-            comboBoxFrameRateTo.Items.Add(23.976);
-            comboBoxFrameRateTo.Items.Add(24.0);
-            comboBoxFrameRateTo.Items.Add(25.0);
-            comboBoxFrameRateTo.Items.Add(29.97);
+            InitializeCombobox(comboBoxFrameRateFrom);
+            InitializeCombobox(comboBoxFrameRateTo);
 
             LanguageStructure.ChangeFrameRate language = Configuration.Settings.Language.ChangeFrameRate;
             Text = language.Title;
@@ -31,6 +24,17 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+        }
+
+        private void InitializeCombobox(ComboBox comboBox)
+        {
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            comboBox.Items.Add(23.976);
+            comboBox.Items.Add(24.0);
+            comboBox.Items.Add(25.0);
+            comboBox.Items.Add(29.97);
+            comboBox.EndUpdate();
         }
 
         private void FormChangeFrameRate_KeyDown(object sender, KeyEventArgs e)
@@ -55,9 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
-                if (info != null && info.Success)
+                if (info?.Success == true)
                 {
-                    return info.FramesPerSecond.ToString();
+                    return Math.Round(info.FramesPerSecond, 3).ToString();
                 }
             }
             return oldFrameRate;
@@ -81,8 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            double d;
-            if (double.TryParse(comboBoxFrameRateFrom.Text, out d) && double.TryParse(comboBoxFrameRateTo.Text, out d))
+            if (double.TryParse(comboBoxFrameRateFrom.Text, out _) && double.TryParse(comboBoxFrameRateTo.Text, out _))
             {
                 DialogResult = DialogResult.OK;
             }
