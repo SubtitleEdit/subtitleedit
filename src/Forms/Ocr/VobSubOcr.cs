@@ -6516,12 +6516,54 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SetButtonsEnabledAfterOcrDone();
         }
 
+        private void ChangeDelayTimerTick(object sender, EventArgs e)
+        {
+            _changeDelayTimer.Enabled = false;
+            _changeDelayTimer.Dispose();
+            _changeDelayTimer = null;
+            _slvSelIdxChangedTicks = 0;
+            if (_slvSelIdx.Key == _slvSelIdxChangedTicks)
+            {
+                _selectedIndex = _slvSelIdx.Value;
+                if (_selectedIndex < 0)
+                {
+                    textBoxCurrentText.Text = string.Empty;
+                    return;
+                }
+                SelectedIndexChangedAction();
+            }
+        }
+
+        private long _slvSelIdxChangedTicks;
+        private Timer _changeDelayTimer = null;
+        private KeyValuePair<long, int> _slvSelIdx;
         private void SubtitleListView1SelectedIndexChanged(object sender, EventArgs e)
         {
             if (subtitleListView1.SelectedItems.Count > 0)
             {
                 try
                 {
+                    if (subtitleListView1.SelectedItems.Count > 1)
+                    {
+                        if (DateTime.UtcNow.Ticks - _slvSelIdxChangedTicks < 100000)
+                        {
+                            _slvSelIdx = new KeyValuePair<long, int>(_slvSelIdxChangedTicks, subtitleListView1.SelectedItems[0].Index);
+                            if (_changeDelayTimer == null)
+                            {
+                                _changeDelayTimer = new Timer();
+                                _changeDelayTimer.Tick += ChangeDelayTimerTick;
+                                _changeDelayTimer.Interval = 200;
+                            }
+                            else
+                            {
+                                _changeDelayTimer.Stop();
+                                _changeDelayTimer.Start();
+                            }
+                            _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                            return;
+                        }
+                        _slvSelIdxChangedTicks = DateTime.UtcNow.Ticks;
+                    }
                     _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 }
                 catch
@@ -6529,25 +6571,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
-                if (_mainOcrRunning && _mainOcrBitmap != null)
-                {
-                    ShowSubtitleImage(_selectedIndex, _mainOcrBitmap);
-                }
-                else
-                {
-                    // TODO: Refactor ShowSubtitleImage
-                    var bmp = ShowSubtitleImage(_selectedIndex);
-                    bmp.Dispose();
-                }
-
-                numericUpDownStartNumber.Value = _selectedIndex + 1;
+                SelectedIndexChangedAction();
             }
             else
             {
                 _selectedIndex = -1;
                 textBoxCurrentText.Text = string.Empty;
             }
+        }
+
+        private void SelectedIndexChangedAction()
+        {
+            textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
+            if (_mainOcrRunning && _mainOcrBitmap != null)
+            {
+                ShowSubtitleImage(_selectedIndex, _mainOcrBitmap);
+            }
+            else
+            {
+                var bmp = ShowSubtitleImage(_selectedIndex);
+                bmp.Dispose();
+            }
+
+            numericUpDownStartNumber.Value = _selectedIndex + 1;
         }
 
         private void TextBoxCurrentTextTextChanged(object sender, EventArgs e)
