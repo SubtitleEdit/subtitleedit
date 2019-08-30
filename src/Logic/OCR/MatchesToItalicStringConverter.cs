@@ -100,6 +100,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             var w = sbWord.ToString();
             var wordIsItalic = italicCount > w.Length / 2.0;
+            if (!wordIsItalic && italicCount == w.Length / 2.0 && italicOn)
+            {
+                wordIsItalic = true;
+            }
             if (wordIsItalic && italicOn)
             {
                 sb.Append(prevSpace + sbWord);
