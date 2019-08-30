@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class DigiBeta : SubtitleFormat
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
+        private readonly string NewLineToken = "\t";
 
         public override string Extension => ".txt";
 
@@ -21,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, "\t")));
+                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, NewLineToken)));
             }
             return sb.ToString().Trim();
         }
@@ -29,43 +30,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-
             subtitle.Paragraphs.Clear();
+            char[] splitChar = { ' ' };
+            int lineNumber = 1;
+
             foreach (string line in lines)
             {
-                if (RegexTimeCode.IsMatch(line) && line.Length > 24)
+                if (line.Length > 24 && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(0, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    try
                     {
-                        try
-                        {
-                            var start = DecodeTimeCodeFramesFourParts(parts);
-                            parts = line.Substring(12, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            var end = DecodeTimeCodeFramesFourParts(parts);
-                            var paragraph = new Paragraph
-                            {
-                                StartTime = start,
-                                EndTime = end,
-                                Text = line.Substring(24).Trim().Replace("\t", Environment.NewLine)
-                            };
+                        string[] startTokens = line.Substring(0, 11).Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endTokens = line.Substring(12, 11).Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
 
-                            subtitle.Paragraphs.Add(paragraph);
-                        }
-                        catch
+                        subtitle.Paragraphs.Add(new Paragraph
                         {
-                            _errorCount++;
-                        }
+                            Number = lineNumber++,
+                            StartTime = DecodeTimeCodeFramesFourParts(startTokens),
+                            EndTime = DecodeTimeCodeFramesFourParts(endTokens),
+                            Text = line.Substring(24).Trim().Replace(NewLineToken, Environment.NewLine)
+                        });
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
+                else
+                {
+                    _errorCount++;
+                }
             }
-            subtitle.Renumber();
+
         }
 
-        private static string EncodeTimeCode(TimeCode time)
-        {
-            return $"{time.Hours:00} {time.Minutes:00} {time.Seconds:00} {MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
-        }
+        private static string EncodeTimeCode(TimeCode time) => $"{time.Hours:00} {time.Minutes:00} {time.Seconds:00} {MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
 
     }
 }
