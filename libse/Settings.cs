@@ -434,6 +434,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public string NuendoCharacterListFile { get; set; }
 
+        public bool WebVttUseXTimestampMap { get; set; }
         public long WebVttTimescale { get; set; }
 
         public SubtitleSettings()
@@ -494,6 +495,7 @@ $HorzAlign          =   Center
             Cavena890StartOfMessage = "10:00:00:00";
 
             WebVttTimescale = 90000;
+            WebVttUseXTimestampMap = true;
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -996,6 +998,7 @@ $HorzAlign          =   Center
         public string LastBinaryImageSpellCheck { get; set; }
         public bool BinaryAutoDetectBestDb { get; set; }
         public string LastTesseractSpellCheck { get; set; }
+        public bool CaptureTopAlign { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -3601,6 +3604,12 @@ $HorzAlign          =   Center
                 {
                     settings.SubtitleSettings.WebVttTimescale = long.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
+
+                subNode = node.SelectSingleNode("WebVttUseXTimestampMap");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.WebVttUseXTimestampMap = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             // Proxy
@@ -4334,6 +4343,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.VobSubOcr.LastTesseractSpellCheck = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("CaptureTopAlign");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.CaptureTopAlign = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
@@ -6128,6 +6143,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("Proxy", string.Empty);
@@ -6266,7 +6282,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
                 textWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
-
+                textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
+                
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
