@@ -1469,6 +1469,48 @@ i&gt;6
             Assert.AreEqual("&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>", subtitle.Paragraphs[4].Text);
         }
 
+        [TestMethod]
+        public void WebVttXTimestampHeader()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:00.000
+
+00:00:16.360 --> 00:00:20.840
+Line1
+
+00:00:30.000 --> 00:00:35.000
+Line2";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            Assert.AreEqual("Line1", subtitle.Paragraphs[0].Text);
+            Assert.IsTrue(Math.Abs(26360 - subtitle.Paragraphs[0].StartTime.TotalMilliseconds) < 0.01);
+            Assert.IsTrue(Math.Abs(30840 - subtitle.Paragraphs[0].EndTime.TotalMilliseconds) < 0.01);
+            Assert.AreEqual("Line2", subtitle.Paragraphs[1].Text);
+            Assert.IsTrue(Math.Abs(40000 - subtitle.Paragraphs[1].StartTime.TotalMilliseconds) < 0.01);
+        }
+
+        [TestMethod]
+        public void WebVttXTimestampHeader2()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+X-TIMESTAMP-MAP=MPEGTS:900000,LOCAL:00:00:10.000
+
+00:00:16.360 --> 00:00:20.840
+Line1
+
+00:00:30.000 --> 00:00:35.000
+Line2";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            Assert.AreEqual("Line1", subtitle.Paragraphs[0].Text);
+            Assert.IsTrue(Math.Abs(16360 - subtitle.Paragraphs[0].StartTime.TotalMilliseconds) < 0.01);
+            Assert.IsTrue(Math.Abs(20840 - subtitle.Paragraphs[0].EndTime.TotalMilliseconds) < 0.01);
+            Assert.AreEqual("Line2", subtitle.Paragraphs[1].Text);
+            Assert.IsTrue(Math.Abs(30000 - subtitle.Paragraphs[1].StartTime.TotalMilliseconds) < 0.01);
+        }
+
         #endregion
 
         #region DvdStudioGraphics

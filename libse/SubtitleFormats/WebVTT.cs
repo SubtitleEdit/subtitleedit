@@ -241,8 +241,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
                 paragraph.Text = EscapeDecodeText(paragraph.Text);
+                paragraph.StartTime.TotalMilliseconds += addSeconds * 1000;
+                paragraph.EndTime.TotalMilliseconds += addSeconds * 1000;
             }
-            subtitle.AdjustDisplayTimeUsingSeconds(addSeconds, null);
             subtitle.Renumber();
         }
 
