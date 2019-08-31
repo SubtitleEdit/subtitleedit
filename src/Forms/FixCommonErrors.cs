@@ -608,16 +608,19 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
                 {
                     var p = Subtitle.Paragraphs[i];
-                    string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
-                    lastLine = text;
-                    if (AllowFix(p, fixAction) && p.Text != text)
+                    if (AllowFix(p, fixAction))
                     {
-                        string oldText = p.Text;
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                        lastLine = text;
+                        if (p.Text != text)
+                        {
+                            string oldText = p.Text;
+                            p.Text = text;
+                            noOfFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                        Application.DoEvents(); 
                     }
-                    Application.DoEvents();
                 }
                 if (noOfFixes > 0)
                 {
