@@ -412,16 +412,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public string FixOcrErrors(string input, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
-            var text = input;
-            while (text.Contains(Environment.NewLine + " "))
-            {
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-            }
-
-            while (text.Contains(" " + Environment.NewLine))
-            {
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            }
+            string text = input.FixExtraSpaces();
 
             while (text.Contains(Environment.NewLine + Environment.NewLine))
             {
