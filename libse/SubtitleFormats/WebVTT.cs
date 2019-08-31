@@ -249,6 +249,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static double GetXTimeStampSeconds(string input)
         {
+            if (!Configuration.Settings.SubtitleSettings.WebVttUseXTimestampMap)
+            {
+                return 0;
+            }
+
             var s = input.RemoveChar(' ');
 
             var subtractSeconds = 0d;
