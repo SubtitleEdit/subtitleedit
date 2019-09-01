@@ -1870,6 +1870,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return _vobSubMergedPackist.Count;
         }
 
+        /// <summary>
+        /// Get top position of sub + sub height
+        /// </summary>
         private void GetSubtitleTopAndHeight(int index, out int top, out int height)
         {
             if (_mp4List != null)
@@ -1896,7 +1899,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var bmp = item.GetBitmap();
                 height = bmp.Height;
                 bmp.Dispose();
-                top = item.Size.Height - height;
+                top = item.PcsObjects.Max(p => p.Origin.Y);
                 return;
             }
             else if (_xSubList != null)
@@ -1910,7 +1913,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var item = _dvbSubtitles[index];
                 if (item.Pes != null)
                 {
-                    //TODO: top = item.Pes.GetImagePosition()
+                    //TODO: top = item.Pes...
                 }
                 top = 0;
                 height = 0;
@@ -5041,28 +5044,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            _captureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
-            if (_captureTopAlign &&
-                _captureTopAlignHeight == -1 &&
-                _subtitle.Paragraphs.Count > 2)
-            {
-                int top = 0;
-                int height = 0;
-                int maxHeight = -1;
-                var idxList = new List<int> { 0, 1, _subtitle.Paragraphs.Count / 2, _subtitle.Paragraphs.Count - 1 };
-                foreach (var idx in idxList)
-                {
-                    GetSubtitleTopAndHeight(idx, out top, out height);
-                    if (top + height > maxHeight)
-                    {
-                        maxHeight = top + height;
-                    }
-                }
-                if (maxHeight > 320)
-                {
-                    _captureTopAlignHeight = maxHeight / 4;
-                }
-            }
+            InitializeTopAlign();
 
             if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract4)
             {
@@ -5179,6 +5161,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             mainOcrTimer_Tick(null, null);
         }
 
+        private void InitializeTopAlign()
+        {
+            _captureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
+            if (_captureTopAlign && _captureTopAlignHeight == -1 && _subtitle.Paragraphs.Count > 2)
+            {
+                int top = 0;
+                int height = 0;
+                int maxHeight = -1;
+                var idxList = new List<int> { 0, 1, _subtitle.Paragraphs.Count / 2, _subtitle.Paragraphs.Count - 1 };
+                foreach (var idx in idxList)
+                {
+                    GetSubtitleTopAndHeight(idx, out top, out height);
+                    if (top + height > maxHeight)
+                    {
+                        maxHeight = top + height;
+                    }
+                }
+                if (maxHeight > 320)
+                {
+                    _captureTopAlignHeight = maxHeight / 4;
+                }
+            }
+        }
+
         private TesseractThreadRunner _tesseractThreadRunner;
 
         public void OcrDone(int index, TesseractThreadRunner.ImageJob job)
@@ -5239,17 +5245,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 text = text.Replace("  ", " ");
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
-                if (_captureTopAlign && _captureTopAlignHeight > 0)
-                {
-                    int top = 0;
-                    int height = 0;
-                    GetSubtitleTopAndHeight(index, out top, out height);
-                    if (top + height < _captureTopAlignHeight)
-                    {
-                        text = "{\\an8}" + text;
-                    }
-                }
+                text = SetTopAlign(index, text);
 
                 if (index >= subtitleListView1.Items.Count)
                 {
@@ -5401,17 +5397,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             text = text.Replace("  ", " ");
             text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
-            if (_captureTopAlign && _captureTopAlignHeight > 0)
-            {
-                int top = 0;
-                int height = 0;
-                GetSubtitleTopAndHeight(i, out top, out height);
-                if (top + height < _captureTopAlignHeight)
-                {
-                    text = "{\\an8}" + text;
-                }
-            }
+            text = SetTopAlign(i, text);
 
             Paragraph p = _subtitle.GetParagraphOrDefault(i);
             if (p != null)
@@ -5429,6 +5415,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return false;
+        }
+
+        private string SetTopAlign(int i, string text)
+        {
+            if (_captureTopAlign && _captureTopAlignHeight > 0)
+            {
+                int top = 0;
+                int height = 0;
+                GetSubtitleTopAndHeight(i, out top, out height);
+                if (top + height < _captureTopAlignHeight)
+                {
+                    text = "{\\an8}" + text;
+                }
+            }
+
+            return text;
         }
 
         private bool MainLoopTesseract(int max, int i)
