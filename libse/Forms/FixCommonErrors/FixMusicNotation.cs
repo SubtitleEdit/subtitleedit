@@ -113,6 +113,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             // be stub when looking for question marks
             string noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
+            
+            // ignore line with single character
+            if (noTagsText.Length < 2)
+            {
+                return input;
+            }
 
             // check if text starts and ends with?
             if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?'))
