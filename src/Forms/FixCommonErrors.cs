@@ -598,32 +598,38 @@ namespace Nikse.SubtitleEdit.Forms
             return _abbreviationList;
         }
 
+        OcrFixEngine _ocrFixEngine;
+        string _ocrFixEngineLanguage;
+
         public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
         {
-            using (var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this))
+            if (_ocrFixEngine == null || _ocrFixEngineLanguage != threeLetterIsoLanguageName)
             {
-                string fixAction = _language.FixCommonOcrErrors;
-                int noOfFixes = 0;
-                string lastLine = string.Empty;
-                for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
+                _ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this);
+                _ocrFixEngineLanguage = threeLetterIsoLanguageName;
+            }
+
+            string fixAction = _language.FixCommonOcrErrors;
+            int noOfFixes = 0;
+            string lastLine = string.Empty;
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
+            {
+                var p = Subtitle.Paragraphs[i];
+                string text = _ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                lastLine = text;
+                if (AllowFix(p, fixAction) && p.Text != text)
                 {
-                    var p = Subtitle.Paragraphs[i];
-                    string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
-                    lastLine = text;
-                    if (AllowFix(p, fixAction) && p.Text != text)
-                    {
-                        string oldText = p.Text;
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    Application.DoEvents();
+                    string oldText = p.Text;
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
-                if (noOfFixes > 0)
-                {
-                    _totalFixes += noOfFixes;
-                    LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
-                }
+                Application.DoEvents();
+            }
+            if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
+                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
             }
         }
 

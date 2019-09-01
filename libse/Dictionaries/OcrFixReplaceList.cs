@@ -462,40 +462,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
-            if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
+            if (GetReplaceWord(pre, word, post, out var res))
             {
-                var wordPlusPost = word + post;
-                foreach (string from in WordReplaceList.Keys)
-                {
-                    if (word.Length == from.Length)
-                    {
-                        if (word == from)
-                        {
-                            return pre + WordReplaceList[from] + post;
-                        }
-                    }
-                    else if (wordPlusPost.Length == from.Length)
-                    {
-                        if (string.CompareOrdinal(wordPlusPost, from) == 0)
-                        {
-                            return pre + WordReplaceList[from];
-                        }
-                    }
-                    if (preWordPost.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                    {
-                        return WordReplaceList[from];
-                    }
-                }
-            }
-            else
-            {
-                foreach (string from in WordReplaceList.Keys)
-                {
-                    if (word.Length == from.Length && word == from)
-                    {
-                        return pre + WordReplaceList[from] + post;
-                    }
-                }
+                return res;
             }
 
             var oldWord = word;
@@ -517,44 +486,39 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (oldWord != word)
             {
                 // Retry fromWord replace list
-                if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
+                if (GetReplaceWord(pre, word, post, out var result))
                 {
-                    var wordPlusPost = word + post;
-                    foreach (string from in WordReplaceList.Keys)
-                    {
-                        if (word.Length == from.Length)
-                        {
-                            if (string.CompareOrdinal(word, from) == 0)
-                            {
-                                return pre + WordReplaceList[from] + post;
-                            }
-                        }
-                        else if (wordPlusPost.Length == from.Length)
-                        {
-                            if (string.CompareOrdinal(wordPlusPost, from) == 0)
-                            {
-                                return pre + WordReplaceList[from];
-                            }
-                        }
-                        if (preWordPost.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                        {
-                            return WordReplaceList[from];
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (string from in WordReplaceList.Keys)
-                    {
-                        if (word.Length == from.Length && string.CompareOrdinal(word, from) == 0)
-                        {
-                            return pre + WordReplaceList[from] + post;
-                        }
-                    }
+                    return result;
                 }
             }
 
             return preWordPost;
+        }
+
+        private bool GetReplaceWord(string pre, string word, string post, out string result)
+        {
+            if (WordReplaceList.ContainsKey(pre + word + post))
+            {
+                result = WordReplaceList[pre + word + post];
+                return true;
+            }
+            if (WordReplaceList.ContainsKey(pre + word))
+            {
+                result = WordReplaceList[pre + word] + post;
+                return true;
+            }
+            if (WordReplaceList.ContainsKey(word + post))
+            {
+                result = pre + WordReplaceList[word + post];
+                return true;
+            }
+            if (WordReplaceList.ContainsKey(word))
+            {
+                result = pre + WordReplaceList[word] + post;
+                return true;
+            }
+            result = null;
+            return false;
         }
 
         public static string FixLowerCaseLInsideUpperCaseWord(string input)
@@ -774,41 +738,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return preWordPost;
             }
 
-            if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
+            if (GetReplaceWord(pre, word, post, out var res))
             {
-                var wordPlusPost = word + post;
-                foreach (string from in WordReplaceList.Keys)
-                {
-                    if (word.Length == from.Length)
-                    {
-                        if (string.CompareOrdinal(word, from) == 0)
-                        {
-                            return pre + WordReplaceList[from] + post;
-                        }
-                    }
-                    else if (wordPlusPost.Length == from.Length)
-                    {
-                        if (string.CompareOrdinal(wordPlusPost, from) == 0)
-                        {
-                            return pre + WordReplaceList[from];
-                        }
-                    }
-                    if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                    {
-                        return WordReplaceList[from];
-                    }
-                }
+                return res;
             }
-            else
-            {
-                foreach (string from in WordReplaceList.Keys)
-                {
-                    if (word.Length == from.Length && word == from)
-                    {
-                        return pre + WordReplaceList[from] + post;
-                    }
-                }
-            }
+
             return preWordPost;
         }
 
