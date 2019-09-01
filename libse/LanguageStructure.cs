@@ -2601,6 +2601,7 @@
             public string UseTimeCodesFromIdx { get; set; }
             public string NoMatch { get; set; }
             public string AutoTransparentBackground { get; set; }
+            public string CaptureTopAlign { get; set; }
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
             public string SetUnitalicFactor { get; set; }

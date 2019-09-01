@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.importTextWithMatchingTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importNewTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSaveSubtitleAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -132,7 +133,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxTransportStream = new System.Windows.Forms.GroupBox();
             this.checkBoxTransportStreamGetColorAndSplit = new System.Windows.Forms.CheckBox();
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
-            this.checkBoxAutoTransparentBackground = new System.Windows.Forms.CheckBox();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripImage = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,7 +144,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemSaveSubtitleAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripMenuItemAutoTransparentBackground = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCaptureTopAlign = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -204,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 364);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -239,6 +241,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.importNewTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.importNewTimeCodesToolStripMenuItem.Text = "Import new time codes...";
             this.importNewTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importNewTimeCodesToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemSaveSubtitleAs
+            // 
+            this.toolStripMenuItemSaveSubtitleAs.Name = "toolStripMenuItemSaveSubtitleAs";
+            this.toolStripMenuItemSaveSubtitleAs.Size = new System.Drawing.Size(305, 22);
+            this.toolStripMenuItemSaveSubtitleAs.Text = "Save subtitle as...";
+            this.toolStripMenuItemSaveSubtitleAs.Click += new System.EventHandler(this.toolStripMenuItemSaveSubtitleAs_Click);
             // 
             // toolStripSeparator2
             // 
@@ -1406,7 +1415,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxSubtitleImage.Controls.Add(this.labelMinAlpha);
             this.groupBoxSubtitleImage.Controls.Add(this.numericUpDownAutoTransparentAlphaMax);
             this.groupBoxSubtitleImage.Controls.Add(this.groupBoxTransportStream);
-            this.groupBoxSubtitleImage.Controls.Add(this.checkBoxAutoTransparentBackground);
             this.groupBoxSubtitleImage.Controls.Add(this.groupBoxImagePalette);
             this.groupBoxSubtitleImage.Controls.Add(this.pictureBoxSubtitleImage);
             this.groupBoxSubtitleImage.Location = new System.Drawing.Point(412, 6);
@@ -1420,7 +1428,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.labelMinAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelMinAlpha.AutoSize = true;
-            this.labelMinAlpha.Location = new System.Drawing.Point(184, 171);
+            this.labelMinAlpha.Location = new System.Drawing.Point(351, 171);
             this.labelMinAlpha.Name = "labelMinAlpha";
             this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
             this.labelMinAlpha.TabIndex = 40;
@@ -1431,7 +1439,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // numericUpDownAutoTransparentAlphaMax
             // 
             this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(440, 169);
+            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(607, 169);
             this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
             255,
             0,
@@ -1484,18 +1492,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTransportStreamGrayscale.UseVisualStyleBackColor = true;
             this.checkBoxTransportStreamGrayscale.CheckedChanged += new System.EventHandler(this.checkBoxTransportStreamGrayscale_CheckedChanged);
             // 
-            // checkBoxAutoTransparentBackground
-            // 
-            this.checkBoxAutoTransparentBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBoxAutoTransparentBackground.AutoSize = true;
-            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(489, 170);
-            this.checkBoxAutoTransparentBackground.Name = "checkBoxAutoTransparentBackground";
-            this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(168, 17);
-            this.checkBoxAutoTransparentBackground.TabIndex = 36;
-            this.checkBoxAutoTransparentBackground.Text = "Auto transparent background";
-            this.checkBoxAutoTransparentBackground.UseVisualStyleBackColor = true;
-            this.checkBoxAutoTransparentBackground.CheckedChanged += new System.EventHandler(this.checkBoxAutoTransparentBackground_CheckedChanged);
-            // 
             // pictureBoxSubtitleImage
             // 
             this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1513,14 +1509,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // contextMenuStripImage
             // 
             this.contextMenuStripImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItemAutoTransparentBackground,
+            this.toolStripMenuItemCaptureTopAlign,
+            this.toolStripSeparator5,
             this.toolStripMenuItemImageSaveAs});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(158, 26);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 76);
             // 
             // toolStripMenuItemImageSaveAs
             // 
             this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
-            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(230, 22);
             this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
             this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
             // 
@@ -1625,12 +1624,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
-            // toolStripMenuItemSaveSubtitleAs
+            // toolStripSeparator5
             // 
-            this.toolStripMenuItemSaveSubtitleAs.Name = "toolStripMenuItemSaveSubtitleAs";
-            this.toolStripMenuItemSaveSubtitleAs.Size = new System.Drawing.Size(305, 22);
-            this.toolStripMenuItemSaveSubtitleAs.Text = "Save subtitle as...";
-            this.toolStripMenuItemSaveSubtitleAs.Click += new System.EventHandler(this.toolStripMenuItemSaveSubtitleAs_Click);
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(227, 6);
+            // 
+            // ToolStripMenuItemAutoTransparentBackground
+            // 
+            this.ToolStripMenuItemAutoTransparentBackground.Name = "ToolStripMenuItemAutoTransparentBackground";
+            this.ToolStripMenuItemAutoTransparentBackground.Size = new System.Drawing.Size(230, 22);
+            this.ToolStripMenuItemAutoTransparentBackground.Text = "Auto transparent background";
+            // 
+            // toolStripMenuItemCaptureTopAlign
+            // 
+            this.toolStripMenuItemCaptureTopAlign.CheckOnClick = true;
+            this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
+            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(230, 22);
+            this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
             // 
             // VobSubOcr
             // 
@@ -1779,7 +1789,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorImageCompare;
         private System.Windows.Forms.ToolStripMenuItem inspectImageCompareMatchesForCurrentImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EditLastAdditionsToolStripMenuItem;
-        private System.Windows.Forms.CheckBox checkBoxAutoTransparentBackground;
         private System.Windows.Forms.SplitContainer splitContainerBottom;
         private System.Windows.Forms.CheckBox checkBoxTesseractItalicsOn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -1834,5 +1843,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ComboBox comboBoxTesseractEngineMode;
         private System.Windows.Forms.CheckBox checkBoxTesseractFallback;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSubtitleAs;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAutoTransparentBackground;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCaptureTopAlign;
     }
 }
