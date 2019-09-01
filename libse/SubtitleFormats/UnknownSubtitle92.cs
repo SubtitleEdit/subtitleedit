@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 xml.LoadXml(allText);
             }
-            catch (Exception exception)
+            catch
             {
                 _errorCount = 1;
                 return;

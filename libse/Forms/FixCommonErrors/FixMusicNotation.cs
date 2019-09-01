@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string noTagsText = HtmlUtil.RemoveHtmlTags(text, true);
 
             // check if text starts and ends with?
-            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?'))
+            if (noTagsText.StartsWith('?') && noTagsText.EndsWith('?') && text.Length > 1)
             {
                 // find correct start & end question mark position taking tags in consideration
                 int startIdx = text.IndexOf('?');
@@ -135,7 +135,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return (narrator + " " + text).TrimStart();
         }
 
-        private static string WrapInMusic(string input) => $"{Configuration.Settings.Tools.MusicSymbol} {input.Trim()} {Configuration.Settings.Tools.MusicSymbol}";
+        private static string WrapInMusic(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return Configuration.Settings.Tools.MusicSymbol + Configuration.Settings.Tools.MusicSymbol;
+            }
+            return $"{Configuration.Settings.Tools.MusicSymbol} {input.Trim()} {Configuration.Settings.Tools.MusicSymbol}";
+        }
     }
 
 }
