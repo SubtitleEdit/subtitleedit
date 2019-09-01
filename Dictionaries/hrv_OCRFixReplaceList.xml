@@ -219,7 +219,7 @@
     <Word from="dede" to="djeda" />
     <Word from="dedi" to="djedu" />
     <Word from="dedom" to="djedom" />
-    <!--pra-->
+    <!-- pra -->
     <Word from="pradede" to="pradjeda" />
     <Word from="pradedi" to="pradjedu" />
     <Word from="pradedom" to="pradjedom" />
@@ -455,6 +455,8 @@
     <Word from="izvinim" to="ispričam" />
     <Word from="izviniš" to="ispričaš" />
     <Word from="izviniti" to="ispričati" />
+    <Word from="izvinjava" to="ispričava" />
+    <Word from="izvinjavam" to="ispričavam" />
     <Word from="Izvinjavaš" to="Ispričavaš" />
     <Word from="izvinjavaš" to="ispričavaš" />
     <Word from="izvinjenje" to="isprika" />
@@ -1321,6 +1323,8 @@
     <Word from="sedi" to="sjedi" />
     <Word from="Sedi" to="Sjedi" />
     <Word from="sedite" to="sjedite" />
+    <Word from="seje" to="sije" />
+    <Word from="seješ" to="siješ" />
     <Word from="Senka" to="Sjenka" />
     <Word from="senka" to="sjenka" />
     <Word from="senke" to="sjenke" />
@@ -1462,6 +1466,9 @@
     <Word from="Spelujte" to="Sričite" />
     <Word from="spojiće" to="spojit će" />
     <Word from="spolja" to="izvana" />
+    <Word from="sportist" to="sportaš" />
+    <Word from="sportistu" to="sportašu" />
+    <Word from="sportista" to="sportaša" />
     <Word from="Srediće" to="Sredit će" />
     <Word from="Sredićemo" to="Sredit ćemo" />
     <Word from="sredićemo" to="sredit ćemo" />
@@ -1978,6 +1985,7 @@
     <Word from="Dejvu" to="Daveu" />
     <Word from="Dejvom" to="Daveom" />
     <Word from="Den" to="Dan" />
+    <Word from="Dene" to="Dane" />
     <Word from="Deni" to="Danny" />
     <Word from="Deril" to="Daryl" />
     <Word from="Dijaz" to="Diaz" />
@@ -2166,10 +2174,13 @@
     <Word from="Sejnt" to="Saint" />
     <Word from="Sendi" to="Sandy" />
     <Word from="Sesil" to="Cecil" />
+    <Word from="Set" to="Seth" />
+    <Word from="Sete" to="Sethe" />
     <Word from="Sidni" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
     <Word from="Sojer" to="Sawyer" />
     <Word from="Sojeru" to="Sawyeru" />
+    <Word from="Sola" to="Saula" />
     <Word from="Sole" to="Saule" />
     <Word from="Stajls" to="Stiles" />
     <Word from="Stejsi" to="Stacy" />
@@ -3247,7 +3258,7 @@
     <RegEx find="oktobr" replaceWith="listopad" />
     <RegEx find="decembr" replaceWith="prosinc" />
     <RegEx find="Januar(?!s)" replaceWith="Siječnj" />
-    <!--April / Marta je ime / Maja je ime-->
+    <!-- April / Marta je ime / Maja je ime -->
     <RegEx find="\bA[uv]gust(?!o)" replaceWith="Kolovoz" />
     <RegEx find="Septembr" replaceWith="Rujn" />
     <RegEx find="Oktobr" replaceWith="Listopad" />
@@ -3488,6 +3499,7 @@
     <RegEx find="(?&lt;!k)rimić" replaceWith="rimit ć" />
     <RegEx find="prostav" replaceWith="protstav" />
     <RegEx find="pulis" replaceWith="pulir" />
+    <RegEx find="riaj" replaceWith="rija" />
     <RegEx find="rićemo" replaceWith="rit ćemo" />
     <RegEx find="rčaće" replaceWith="rčat će" />
     <RegEx find="renaduvan" replaceWith="renapuhan" />
