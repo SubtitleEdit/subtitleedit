@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _nameListWithApostrophe = new HashSet<string>();
         private List<string> _nameListWithPeriods = new List<string>();
         private HashSet<string> _nameMultiWordList = new HashSet<string>(); // case sensitive phrases
+        private List<string> _nameMultiWordListAndWordsWithPeriods;
         private HashSet<string> _abbreviationList;
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
@@ -269,6 +270,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _nameListWithPeriods.Add(name);
                 }
             }
+
+            _nameMultiWordListAndWordsWithPeriods = new List<string>(_nameMultiWordList.Concat(_nameListWithPeriods));
             if (isEnglish)
             {
                 if (!_abbreviationList.Contains("a.m."))
@@ -1253,9 +1256,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             string tempLine = line;
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
-            foreach (string name in _nameMultiWordList.Concat(_nameListWithPeriods))
+            var trimChars = p.ToArray();
+            bool hasAllUpperWord = false;
+            foreach (var w in line.Split(' '))
+            {
+                var word = w.Trim(trimChars);
+                if (w.Length > 1 && w == w.ToUpperInvariant())
+                {
+                    hasAllUpperWord = true;
+                    break;
+                }
+            }
+
+            foreach (string name in _nameMultiWordListAndWordsWithPeriods)
             {
                 int start = tempLine.FastIndexOf(name);
+                if (start < 0 && hasAllUpperWord)
+                {
+                    start = tempLine.FastIndexOf(name.ToUpperInvariant());
+                }
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
                 {
                     int end = start + name.Length;
@@ -1272,8 +1291,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 minLength = 1;
             }
 
-            string[] words = tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < words.Length; i++)
+            var words = new List<string>();
+            foreach (var w in tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(' '))
+            {
+                words.Add(w.Trim(trimChars));
+            }
+
+            for (int i = 0; i < words.Count; i++)
             {
                 string word = words[i].TrimStart('\'');
                 string wordNotEndTrimmed = word;
@@ -1281,6 +1305,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
                     bool correct = word.Length > minLength && DoSpell(word);
+
                     if (!correct)
                     {
                         correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
@@ -1533,7 +1558,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return line;
         }
 
-        private static string GetDashedWordBefore(string word, string line, string[] words, int index)
+        private static string GetDashedWordBefore(string word, string line, List<string> words, int index)
         {
             if (index > 0 && line.Contains(words[index - 1] + "-" + word))
             {
@@ -1543,9 +1568,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return null;
         }
 
-        private static string GetDashedWordAfter(string word, string line, string[] words, int index)
+        private static string GetDashedWordAfter(string word, string line, List<string> words, int index)
         {
-            if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
+            if (index < words.Count - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
             {
                 return HtmlUtil.RemoveOpenCloseTags(word + "-" + words[index + 1], HtmlUtil.TagItalic);
             }
