@@ -3488,6 +3488,7 @@
     <RegEx find="(?&lt;!k)rimić" replaceWith="rimit ć" />
     <RegEx find="prostav" replaceWith="protstav" />
     <RegEx find="pulis" replaceWith="pulir" />
+    <RegEx find="riaj" replaceWith="rija" />
     <RegEx find="rićemo" replaceWith="rit ćemo" />
     <RegEx find="rčaće" replaceWith="rčat će" />
     <RegEx find="renaduvan" replaceWith="renapuhan" />
