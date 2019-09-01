@@ -6481,6 +6481,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/AutoTransparentBackground":
                     language.VobSubOcr.AutoTransparentBackground = reader.Value;
                     break;
+                case "VobSubOcr/CaptureTopAlign":
+                    language.VobSubOcr.CaptureTopAlign = reader.Value;
+                    break;
                 case "VobSubOcr/InspectCompareMatchesForCurrentImage":
                     language.VobSubOcr.InspectCompareMatchesForCurrentImage = reader.Value;
                     break;
