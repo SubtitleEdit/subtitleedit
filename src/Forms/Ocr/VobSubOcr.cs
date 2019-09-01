@@ -9055,6 +9055,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
             return bestDbName;
-        }       
+        }
     }
 }

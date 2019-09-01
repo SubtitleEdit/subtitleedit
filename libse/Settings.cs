@@ -6284,7 +6284,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
                 textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
-                
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);

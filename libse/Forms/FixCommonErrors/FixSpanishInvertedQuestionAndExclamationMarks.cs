@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int fixCount = 0;
             var language = Configuration.Settings.Language.FixCommonErrors;
             var fixAction = language.FixSpanishInvertedQuestionAndExclamationMarks;
-            var p = (Paragraph)null;
-            var oldText = (string)null;
+            Paragraph p;
+            string oldText;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
