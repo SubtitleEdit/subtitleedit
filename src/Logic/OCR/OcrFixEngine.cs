@@ -35,7 +35,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _nameList = new HashSet<string>();
         private HashSet<string> _nameListUppercase = new HashSet<string>();
         private HashSet<string> _nameListWithApostrophe = new HashSet<string>();
-        private List<string> _nameListWithPeriods = new List<string>();
         private HashSet<string> _nameMultiWordList = new HashSet<string>(); // case sensitive phrases
         private List<string> _nameMultiWordListAndWordsWithPeriods;
         private HashSet<string> _abbreviationList;
@@ -53,8 +52,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly Regex RegexLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
         private static readonly Regex RegexNumber1 = new Regex(@"(?<=\d) 1(?!/\d)", RegexOptions.Compiled);
-
-        private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n', '؟' };
 
         public bool Abort { get; set; }
         public OcrSpellCheck.Action LastAction { get; set; } = OcrSpellCheck.Action.Abort;
@@ -240,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _nameMultiWordList = _nameListObj.GetMultiNames();
             _nameListUppercase = new HashSet<string>();
             _nameListWithApostrophe = new HashSet<string>();
-            _nameListWithPeriods = new List<string>();
+            var nameListWithPeriods = new List<string>();
             _abbreviationList = new HashSet<string>();
 
             bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
@@ -267,11 +264,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 if (name.Contains("."))
                 {
-                    _nameListWithPeriods.Add(name);
+                    nameListWithPeriods.Add(name);
                 }
             }
 
-            _nameMultiWordListAndWordsWithPeriods = new List<string>(_nameMultiWordList.Concat(_nameListWithPeriods));
+            _nameMultiWordListAndWordsWithPeriods = new List<string>(_nameMultiWordList.Concat(nameListWithPeriods));
             if (isEnglish)
             {
                 if (!_abbreviationList.Contains("a.m."))
@@ -1261,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             foreach (var w in line.Split(' '))
             {
                 var word = w.Trim(trimChars);
-                if (w.Length > 1 && w == w.ToUpperInvariant())
+                if (word.Length > 1 && word == word.ToUpperInvariant())
                 {
                     hasAllUpperWord = true;
                     break;

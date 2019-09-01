@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             var w = sbWord.ToString();
             var wordIsItalic = italicCount > w.Length / 2.0;
-            if (!wordIsItalic && italicCount == w.Length / 2.0 && italicOn)
+            if (!wordIsItalic && Math.Abs(italicCount - w.Length / 2.0) < 0.3 && italicOn)
             {
                 wordIsItalic = true;
             }
