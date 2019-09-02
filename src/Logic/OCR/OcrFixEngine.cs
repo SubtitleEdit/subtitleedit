@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _abbreviationList;
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
+        private HashSet<string> _wordSpellOkList = new HashSet<string>();
         private Hunspell _hunspell;
         private Dictionary<string, string> _changeAllDictionary;
         private SpellCheckWordLists _spellCheckWordLists;
@@ -1301,22 +1302,29 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 word = word.TrimEnd('\'');
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
-                    bool correct = word.Length > minLength && DoSpell(word);
-
-                    if (!correct)
+                    var correct = false;
+                    if (word.Length > minLength)
                     {
-                        correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
-                    }
+                        if (_wordSpellOkList.Contains(word))
+                        {
+                            correct = true;
+                        }
+                        else if (DoSpell(word))
+                        {
+                            correct = true;
+                            _wordSpellOkList.Add(word);
+                        }
 
-                    if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
-                        (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
-                    {
-                        correct = DoSpell(word.TrimEnd('s'));
-                    }
+                        if (!correct)
+                        {
+                            correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
+                        }
 
-                    if (!correct)
-                    {
-                        correct = word.Length > minLength && DoSpell(word);
+                        if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
+                            (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
+                        {
+                            correct = DoSpell(word.TrimEnd('s'));
+                        }
                     }
 
                     if (!correct && _userWordList.Contains(word))
