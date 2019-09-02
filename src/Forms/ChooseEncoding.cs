@@ -37,18 +37,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-                int length = (int)file.Length;
-                if (length > 100000)
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    length = 100000;
+                    int readCount = (int)Math.Min(100000, fs.Length);
+                    _fileBuffer = new byte[readCount];
+                    fs.Read(_fileBuffer, 0, readCount);
                 }
-
-                file.Position = 0;
-                _fileBuffer = new byte[length];
-                file.Read(_fileBuffer, 0, length);
-                file.Close();
             }
             catch
             {
