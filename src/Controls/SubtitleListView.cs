@@ -117,11 +117,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int FirstVisibleIndex { get; set; } = -1;
 
+        private ListViewItem _ignoreItem;
 
         // drag selection
         private bool drag = false;
-        private Point startPoint = default;
-        private Rectangle selRectangle = default;
+        private HashSet<int> _dragSelIndex = new HashSet<int>();
 
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
@@ -398,58 +398,86 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseDown += (sender, e) =>
             {
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons)
                 {
-                    drag = true;
-                    startPoint = PointToScreen(new Point(e.X, e.Y));
+                    if (Items.Count > 0)
+                    {
+                        // this item is already selected, so keep it selected
+                        _ignoreItem = GetItemAt(e.Location.X, e.Location.Y);
+                        drag = true;
+                    }
                 }
             };
-
             MouseMove += (sender, e) =>
             {
                 if (drag)
                 {
-                    // hides the previously drew rect
-                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
-
-                    // get mouse resting position
-                    Point endPoint = PointToScreen(e.Location);
-
-                    // calculate the changes
-                    int deltaX = endPoint.X - startPoint.X;
-                    int deltaY = endPoint.Y - startPoint.Y;
-
-                    selRectangle = new Rectangle(startPoint.X, startPoint.Y, deltaX, deltaY);
-
-                    // draw new rect
-                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
-                }
-            };
-
-            MouseUp += (sender, e) =>
-            {
-                if (drag)
-                {
-                    // hides last drew rect
-                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
-
-                    // select all items that intersect
-                    BeginUpdate();
-                    foreach (ListViewItem lvi in Items)
+                    if (SelecteItemInBound(e.Location))
                     {
-                        Rectangle itemScreenRect = RectangleToScreen(lvi.GetBounds(ItemBoundsPortion.Entire));
-                        if (selRectangle.IntersectsWith(itemScreenRect))
+                        ListViewItem lvi = GetItemAt(e.Location.X, e.Location.Y);
+
+                        int lastVisibleIndex = GetLastVisibleIndex();
+
+                        // scroll down
+                        if (lvi.Index + 1 > lastVisibleIndex)
                         {
-                            lvi.Selected = true;
+                            EnsureVisible(Math.Min(lastVisibleIndex, Items.Count));
+                        }
+
+                        // scroll up
+                        if (lvi.Index - 1 < TopItem.Index)
+                        {
+                            EnsureVisible(Math.Max(lvi.Index - 1, 0));
                         }
                     }
-                    EndUpdate();
 
-                    // reset selection rect
-                    selRectangle = new Rectangle(0, 0, 0, 0);
-                    drag = false;
                 }
             };
+            MouseUp += (sender, e) =>
+            {
+                // make selection
+                BeginUpdate();
+                foreach (var index in _dragSelIndex)
+                {
+                    Items[index].Selected = !Items[index].Selected;
+                }
+                EndUpdate();
+
+                // reset state
+                drag = false;
+                _dragSelIndex.Clear();
+                _ignoreItem = null;
+            };
+        }
+
+        private bool SelecteItemInBound(Point point)
+        {
+            var lviItem = GetItemAt(point.X, point.Y);
+            if (lviItem == null || lviItem == _ignoreItem)
+            {
+                return false;
+            }
+            return _dragSelIndex.Add(lviItem.Index);
+        }
+
+        private int GetLastVisibleIndex()
+        {
+            if (Items.Count == 0)
+            {
+                return 0;
+            }
+
+            // get the distance between the header and the first visible item
+            int headerHeight = Math.Abs(TopItem.Bounds.Y - Bounds.Y);
+
+            // height of a individual item in listview
+            int itemHeight = GetItemRect(0).Height;
+
+            // calculate total visible item in listview
+            int totalVisibleItems = (Height - headerHeight) / itemHeight;
+
+            // get the last visible item index
+            return TopItem.Index + totalVisibleItems;
         }
 
         private void UpdateColumnIndexes()
