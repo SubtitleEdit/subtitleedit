@@ -398,7 +398,6 @@ namespace Nikse.SubtitleEdit.Controls
 
             MouseDown += (sender, e) =>
             {
-                // map the start point and in
                 if (e.Button == MouseButtons.Left)
                 {
                     drag = true;
@@ -410,6 +409,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (drag)
                 {
+                    // hides the previously drew rect
                     ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
 
                     // get mouse resting position
@@ -421,6 +421,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                     selRectangle = new Rectangle(startPoint.X, startPoint.Y, deltaX, deltaY);
 
+                    // draw new rect
                     ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
                 }
             };
@@ -429,8 +430,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (drag)
                 {
-                    BeginUpdate();
+                    // hides last drew rect
+                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
+
                     // select all items that intersect
+                    BeginUpdate();
                     foreach (ListViewItem lvi in Items)
                     {
                         Rectangle itemScreenRect = RectangleToScreen(lvi.GetBounds(ItemBoundsPortion.Entire));
@@ -441,11 +445,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     EndUpdate();
 
-                    // todo: only redraw the area where the rectangle was drawn
-                    //Invalidate(); // provide the area
-                    // call Update to force the redrawing
-                    // this will force the entire control to redraw itself (not optimal)
-                    Refresh(); 
+                    // reset selection rect
                     selRectangle = new Rectangle(0, 0, 0, 0);
                     drag = false;
                 }
