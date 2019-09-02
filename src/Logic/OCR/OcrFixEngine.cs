@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _abbreviationList;
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
-        private HashSet<string> _wordSpellOkList = new HashSet<string>();
+        private readonly HashSet<string> _wordSpellOkList = new HashSet<string>();
         private Hunspell _hunspell;
         private Dictionary<string, string> _changeAllDictionary;
         private SpellCheckWordLists _spellCheckWordLists;
