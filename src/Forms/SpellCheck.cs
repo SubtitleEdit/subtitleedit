@@ -705,6 +705,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
                                 }
                             }
+
+                            if (!correct && _languageName.StartsWith("ar_", StringComparison.Ordinal))
+                            {
+                                correct = DoSpell(_currentWord.Trim('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '.', ',', '،'));
+                            }
                         }
                         else
                         {
