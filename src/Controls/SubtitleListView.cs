@@ -117,6 +117,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int FirstVisibleIndex { get; set; } = -1;
 
+
+        // drag selection
+        private bool drag = false;
+        private Point startPoint = default;
+        private Rectangle selRectangle = default;
+
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
             int idx = GetColumnIndex(SubtitleColumn.Number);
@@ -388,6 +394,62 @@ namespace Nikse.SubtitleEdit.Controls
             DrawItem += SubtitleListView_DrawItem;
             DrawSubItem += SubtitleListView_DrawSubItem;
             DrawColumnHeader += SubtitleListView_DrawColumnHeader;
+
+
+            MouseDown += (sender, e) =>
+            {
+                // map the start point and in
+                if (e.Button == MouseButtons.Left)
+                {
+                    drag = true;
+                    startPoint = PointToScreen(new Point(e.X, e.Y));
+                }
+            };
+
+            MouseMove += (sender, e) =>
+            {
+                if (drag)
+                {
+                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
+
+                    // get mouse resting position
+                    Point endPoint = PointToScreen(e.Location);
+
+                    // calculate the changes
+                    int deltaX = endPoint.X - startPoint.X;
+                    int deltaY = endPoint.Y - startPoint.Y;
+
+                    selRectangle = new Rectangle(startPoint.X, startPoint.Y, deltaX, deltaY);
+
+                    ControlPaint.DrawReversibleFrame(selRectangle, BackColor, FrameStyle.Dashed);
+                }
+            };
+
+            MouseUp += (sender, e) =>
+            {
+                if (drag)
+                {
+                    BeginUpdate();
+                    // select all items that intersect
+                    foreach (ListViewItem lvi in Items)
+                    {
+                        Rectangle itemScreenRect = RectangleToScreen(lvi.GetBounds(ItemBoundsPortion.Entire));
+                        if (selRectangle.IntersectsWith(itemScreenRect))
+                        {
+                            lvi.Selected = true;
+                        }
+                    }
+                    EndUpdate();
+
+                    // todo: only redraw the area where the rectangle was drawn
+                    //Invalidate(); // provide the area
+                    // call Update to force the redrawing
+                    // this will force the entire control to redraw itself (not optimal)
+                    Refresh(); 
+                    selRectangle = new Rectangle(0, 0, 0, 0);
+                    drag = false;
+                }
+            };
         }
 
         private void UpdateColumnIndexes()
