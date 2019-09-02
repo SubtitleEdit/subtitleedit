@@ -455,6 +455,8 @@
     <Word from="izvinim" to="ispričam" />
     <Word from="izviniš" to="ispričaš" />
     <Word from="izviniti" to="ispričati" />
+    <Word from="izvinjava" to="ispričava" />
+    <Word from="izvinjavam" to="ispričavam" />
     <Word from="Izvinjavaš" to="Ispričavaš" />
     <Word from="izvinjavaš" to="ispričavaš" />
     <Word from="izvinjenje" to="isprika" />
@@ -1321,6 +1323,8 @@
     <Word from="sedi" to="sjedi" />
     <Word from="Sedi" to="Sjedi" />
     <Word from="sedite" to="sjedite" />
+    <Word from="seje" to="sije" />
+    <Word from="seješ" to="siješ" />
     <Word from="Senka" to="Sjenka" />
     <Word from="senka" to="sjenka" />
     <Word from="senke" to="sjenke" />
@@ -1462,6 +1466,9 @@
     <Word from="Spelujte" to="Sričite" />
     <Word from="spojiće" to="spojit će" />
     <Word from="spolja" to="izvana" />
+    <Word from="sportist" to="sportaš" />
+    <Word from="sportistu" to="sportašu" />
+    <Word from="sportista" to="sportaša" />
     <Word from="Srediće" to="Sredit će" />
     <Word from="Sredićemo" to="Sredit ćemo" />
     <Word from="sredićemo" to="sredit ćemo" />
