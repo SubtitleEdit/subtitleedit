@@ -333,9 +333,9 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(601, 454);
+            this.buttonOK.Location = new System.Drawing.Point(581, 454);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(112, 21);
+            this.buttonOK.Size = new System.Drawing.Size(132, 21);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "Save as...";
             this.buttonOK.UseVisualStyleBackColor = true;
