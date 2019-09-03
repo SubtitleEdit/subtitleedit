@@ -708,7 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!correct && _languageName.StartsWith("ar_", StringComparison.Ordinal))
                             {
-                                correct = DoSpell(_currentWord.Trim('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '.', ',', '،'));
+                                correct = DoSpell(_currentWord.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،'));
                             }
                         }
                         else
