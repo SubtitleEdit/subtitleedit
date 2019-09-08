@@ -668,6 +668,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 correct = DoSpell(removeUnicode);
                             }
 
+                            if (!correct && (_languageName.StartsWith("ar_", StringComparison.Ordinal) ||
+                                             _languageName == "ar"))
+                            {
+                                correct = DoSpell(_currentWord.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،'));
+                            }
+
                             // check if dash concatenated word with previous or next word is in spell check dictionary
                             if (!correct && _wordsIndex > 0 && (_currentParagraph.Text[_currentSpellCheckWord.Index - 1] == '-' || _currentParagraph.Text[_currentSpellCheckWord.Index - 1] == '‑'))
                             {
@@ -704,12 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
                                 }
-                            }
-
-                            if (!correct && _languageName.StartsWith("ar_", StringComparison.Ordinal))
-                            {
-                                correct = DoSpell(_currentWord.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،'));
-                            }
+                            }                       
                         }
                         else
                         {

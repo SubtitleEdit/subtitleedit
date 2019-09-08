@@ -135,6 +135,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripImage = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ToolStripMenuItemAutoTransparentBackground = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCaptureTopAlign = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
@@ -144,9 +147,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.ToolStripMenuItemAutoTransparentBackground = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemCaptureTopAlign = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -1516,6 +1516,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
             this.contextMenuStripImage.Size = new System.Drawing.Size(231, 76);
             // 
+            // ToolStripMenuItemAutoTransparentBackground
+            // 
+            this.ToolStripMenuItemAutoTransparentBackground.CheckOnClick = true;
+            this.ToolStripMenuItemAutoTransparentBackground.Name = "ToolStripMenuItemAutoTransparentBackground";
+            this.ToolStripMenuItemAutoTransparentBackground.Size = new System.Drawing.Size(230, 22);
+            this.ToolStripMenuItemAutoTransparentBackground.Text = "Auto transparent background";
+            // 
+            // toolStripMenuItemCaptureTopAlign
+            // 
+            this.toolStripMenuItemCaptureTopAlign.CheckOnClick = true;
+            this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
+            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(230, 22);
+            this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(227, 6);
+            // 
             // toolStripMenuItemImageSaveAs
             // 
             this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
@@ -1623,24 +1642,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(227, 6);
-            // 
-            // ToolStripMenuItemAutoTransparentBackground
-            // 
-            this.ToolStripMenuItemAutoTransparentBackground.Name = "ToolStripMenuItemAutoTransparentBackground";
-            this.ToolStripMenuItemAutoTransparentBackground.Size = new System.Drawing.Size(230, 22);
-            this.ToolStripMenuItemAutoTransparentBackground.Text = "Auto transparent background";
-            // 
-            // toolStripMenuItemCaptureTopAlign
-            // 
-            this.toolStripMenuItemCaptureTopAlign.CheckOnClick = true;
-            this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
-            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(230, 22);
-            this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
             // 
             // VobSubOcr
             // 
