@@ -26,56 +26,59 @@ namespace Nikse.SubtitleEdit.Core
     {
         private const int MaxRecentFiles = 25;
 
-        [XmlArrayItem("FileName")]
-        public List<RecentFileEntry> Files { get; set; }
-
-        public RecentFilesSettings()
-        {
-            Files = new List<RecentFileEntry>();
-        }
+        // todo: change to readonly-list (.net >= 4.5) to avoid directly adding entry without checking
+        public IList<RecentFileEntry> Files { get; private set; } = new List<RecentFileEntry>(MaxRecentFiles);
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
-            var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
-            int index = 0;
-            foreach (var oldRecentFile in Files)
+            // remove file with same name
+            for (int i = Files.Count - 1; i >= 0; i--)
             {
-                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                // remove all similar file name
+                if (Files[i].FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                 {
-                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
+                    // TODO: if this matched, copy the properties and move to the top
+                    Files.RemoveAt(i);
                 }
-
-                index++;
             }
-            Files = newList;
+
+            // make sure there is room for new recent entry
+            while (Files.Count >= MaxRecentFiles)
+            {
+                Files.RemoveAt(Files.Count - 1);
+            }
+
+            // update/insert file item at the top of the list
+            Files.Insert(0, new RecentFileEntry
+            {
+                FileName = fileName,
+                FirstVisibleIndex = firstVisibleIndex,
+                FirstSelectedIndex = firstSelectedIndex,
+                VideoFileName = videoFileName,
+                OriginalFileName = originalFileName,
+                VideoOffsetInMs = videoOffset
+            });
         }
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
-            var newList = new List<RecentFileEntry>();
-            foreach (var oldRecentFile in Files)
+            int firstVisibleIndex = -1;
+            int firstSelectedIndex = -1;
+            long videoOffsetInMs = -1;
+
+            // reuse properties
+            foreach (RecentFileEntry fileEntry in Files)
             {
-                if (fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
+                if (fileEntry.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                 {
-                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
+                    firstVisibleIndex = fileEntry.FirstVisibleIndex;
+                    firstSelectedIndex = fileEntry.FirstSelectedIndex;
+                    videoOffsetInMs = fileEntry.VideoOffsetInMs;
+                    break;
                 }
             }
-            if (newList.Count == 0)
-            {
-                newList.Add(new RecentFileEntry { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
-            }
 
-            int index = 0;
-            foreach (var oldRecentFile in Files)
-            {
-                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
-                {
-                    newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
-                }
-
-                index++;
-            }
-            Files = newList;
+            Add(fileName, firstVisibleIndex, firstSelectedIndex, videoFileName, originalFileName, videoOffsetInMs);
         }
 
     }
