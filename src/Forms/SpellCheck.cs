@@ -668,10 +668,22 @@ namespace Nikse.SubtitleEdit.Forms
                                 correct = DoSpell(removeUnicode);
                             }
 
-                            if (!correct && (_languageName.StartsWith("ar_", StringComparison.Ordinal) ||
-                                             _languageName == "ar"))
+                            if (!correct && (_languageName.StartsWith("ar_", StringComparison.Ordinal) || _languageName == "ar"))
                             {
-                                correct = DoSpell(_currentWord.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،'));
+                                var trimmed = _currentWord.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،');
+                                if (trimmed != _currentWord)
+                                {
+                                    if (_spellCheckWordLists.HasName(trimmed))
+                                    {
+                                        _noOfNames++;
+                                        correct = true;
+                                    }
+
+                                    if (!correct && (_skipAllList.Contains(trimmed.ToUpperInvariant()) || DoSpell(trimmed)))
+                                    {
+                                        correct = true;
+                                    }
+                                }
                             }
 
                             // check if dash concatenated word with previous or next word is in spell check dictionary
@@ -710,7 +722,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
                                 }
-                            }                       
+                            }
                         }
                         else
                         {
