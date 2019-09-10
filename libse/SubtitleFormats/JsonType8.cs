@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
             var avgDurSecs = subtitle.Paragraphs.Average(p => p.Duration.TotalSeconds);
-            return avgDurSecs < 60 && avgDurSecs > 0.1;
+            return avgDurSecs < 60;
         }
 
         public override string ToText(Subtitle subtitle, string title)
