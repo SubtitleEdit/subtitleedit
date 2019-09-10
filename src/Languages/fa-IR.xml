@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.10</Version>
-    <TranslatedBy>ترجمه توسط:برنامه نویس جوان، نیما</TranslatedBy>
+    <TranslatedBy>ترجمه توسط:سید مهدی حسینی، نیما</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile />
     <Ok>تائید</Ok>
@@ -27,13 +27,15 @@
     <CharsPerSec>کاراکتر/ثانیه</CharsPerSec>
     <WordsPerMin>کلمه/ثانیه</WordsPerMin>
     <Actor>بازیگر</Actor>
+    <Gap>شکاف</Gap>
     <Region>منطقه</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>شماره</Number>
     <Text>متن</Text>
     <HourMinutesSecondsMilliseconds>ساعت : دقیقه : ثانیه : میلی ثانیه</HourMinutesSecondsMilliseconds>
-    <Bold>توپر</Bold>
-    <Italic>کج</Italic>
+    <HourMinutesSecondsFrames>ساعت : دقیقه : ثانیه : فریم</HourMinutesSecondsFrames>
+    <Bold>بولد</Bold>
+    <Italic>ایتالیک</Italic>
     <Underline>زیر خط دار</Underline>
     <Visible>قابل رویت</Visible>
     <FrameRate>تعداد فریم در ثانیه</FrameRate>
@@ -53,7 +55,6 @@
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
     <Negative>منفی</Negative>
     <RegularExpressionIsNotValid>عبارت منظم معتبر نیست!</RegularExpressionIsNotValid>
-    <SubtitleSaved>زیرنویس ذخیره شد</SubtitleSaved>
     <CurrentSubtitle>زیرنویس کنونی</CurrentSubtitle>
     <OriginalText>متن اصلی</OriginalText>
     <OpenOriginalSubtitleFile>باز کردن فایل زیرنویس اصلی</OpenOriginalSubtitleFile>
@@ -63,9 +64,9 @@
     <UserNameAlreadyInUse>نام کاربری در حال حاضر در حال استفاده</UserNameAlreadyInUse>
     <WebServiceUrl>آدرس وب سرويس</WebServiceUrl>
     <IP>آی پی</IP>
-    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
-    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
-    <ControlsWindowTitle>Controls - {0}</ControlsWindowTitle>
+    <VideoWindowTitle>ویدئو - {0}</VideoWindowTitle>
+    <AudioWindowTitle>صدا - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>کنترل ها - {0}</ControlsWindowTitle>
     <Advanced>پیشرفته</Advanced>
     <Style>سبک</Style>
     <StyleLanguage>سبک / زبان</StyleLanguage>
@@ -76,27 +77,28 @@
     <Before>قبل از</Before>
     <After>پس از</After>
     <Size>اندازه</Size>
+    <Search>جستجو</Search>
+    <DeleteCurrentLine>حذف خط جاری</DeleteCurrentLine>
   </General>
   <About>
-    <Title>درباره شادوساب</Title>
-    <AboutText1>شادوساب كاملا رايگان است كه براي ساخت و ويرايش زيرنويس ايجاد شده
-و توسط مهدي حسيني برنامه نويسي شده است
+    <Title>درباره Subtitle Edit</Title>
+    <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
+You may distribute, modify and use it freely.
 
-براي دسترسي به اطلاعات بيشتر و برنامه هاي بيشتر به سايت زير وارد شويد
-http://barnamenevisjavan.com
+C# source code is available on https://github.com/SubtitleEdit/subtitleedit
 
-براي دريافت نسخه جديدتر به سايت دانلود فارسي زير وارد شويد
-http://soft98.ir
-پیشنهادات شما را پذیرا هستم.
+Visit https://www.nikse.dk for the latest version.
 
-پست الکترونیکی : mailto:hellas2012@yahoo.com</AboutText1>
+Suggestions are very welcome.
+
+Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>اضافه کردن به لیست نام/غیره</Title>
     <Description>اضافه کردن به لیست نام/صدا</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Add to OCR replace list</Title>
+    <Title>به لیست جایگزین OCR اضافه کنید</Title>
     <Description>جفت را به لیست جایگزین OCR اضافه کن (حساسیت به اندازه حروف)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
@@ -143,17 +145,27 @@ http://soft98.ir
     <AddSeconds>اضافه کردن ثانیه</AddSeconds>
     <SetAsPercent>تنظیم به عنوان درصد مدت زمان</SetAsPercent>
     <Note>توجه : زمان نمایش با زمان شروع متن بعدی نمی تواند تداخل داشته باشد.</Note>
-    <PleaseSelectAValueFromTheDropDownList>لطفا یک مقدار از لیست را انتخاب کنید</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>حل شده</Fixed>
+    <Milliseconds>میلی ثانیه</Milliseconds>
+    <ExtendOnly>تنها گسترش</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>اعمال محدودیت های زمان</Title>
     <FixesAvailable>تعمیرهای قابل انجام: {0}</FixesAvailable>
     <UnableToFix>قادر به تصحیح نبودم: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>صوت به متن</Title>
+    <ExtractingAudioUsingX>استخراج صوت توسط {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>استخراج متن از صوت توسط {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>استخراج متن توسط {0} پیشرفت: {1}%</ProgessViaXy>
+    <ShowLess>نمایش کمتر  ▲</ShowLess>
+    <ShowMore>نمایش بیشتر  ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>متعادل کردن اتوماتیک خطوط انتخاب شده</TitleAutoBreak>
     <TitleUnbreak>گزارش پرش به خط از خطوط انتخاب شده</TitleUnbreak>
-    <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <LinesFoundX>خطوط پیدا شده: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>بشکن فقط خطوط بزرگتر از</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>نشکن فقط خط های بزرگتر از</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
@@ -166,36 +178,48 @@ http://soft98.ir
     <ChooseOutputFolder>پوشه خروجی را انتخاب کنید</ChooseOutputFolder>
     <OverwriteExistingFiles>فایلهای موجود را بازنویسی کنید</OverwriteExistingFiles>
     <Style>سبک...</Style>
+    <UseStyleFromSource>استفاده سبک از منبع</UseStyleFromSource>
     <ConvertOptions>گزینه های تبدیل</ConvertOptions>
     <RemoveFormatting>حذف تگ های قالب بندی</RemoveFormatting>
     <RemoveTextForHI>حذف متن برای HI</RemoveTextForHI>
     <OverwriteOriginalFiles>بازنویسی فایل های اصلی (پسوند جدید اگر فرمت تغییر کند)</OverwriteOriginalFiles>
-    <RedoCasing>Redo casing</RedoCasing>
+    <RedoCasing>پوشش مجدد</RedoCasing>
     <Convert>تبدیل کنید</Convert>
     <NothingToConvert>چیزی برای تبدیل نبود!</NothingToConvert>
     <PleaseChooseOutputFolder>لطفا پوشه خروجی را انتخاب کنید</PleaseChooseOutputFolder>
     <NotConverted>شکست خورد</NotConverted>
     <Converted>تبدیل شده است</Converted>
     <Settings>تنظیمات</Settings>
+    <FixRtl>حل راست به چپ</FixRtl>
+    <FixRtlAddUnicode>حل راست به چپ توسط تگ های یونیکد</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>حذف تگ های  یونیکد راست به چپ</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>معکوس کردن راست به چپ شروع/پایان</FixRtlReverseStartEnd>
     <SplitLongLines>تقسیم خطوط طولانی</SplitLongLines>
     <AutoBalance>تعادل خطوط خودکار</AutoBalance>
     <ScanFolder>اسکن پوشه...</ScanFolder>
     <Recursive>شامل پوشه های زیر</Recursive>
     <SetMinMsBetweenSubtitles>تنظیم حداقل میلی ثانیه بین زیرنویس ها</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>متن ساده</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>فیلتر</Filter>
-    <FilterSkipped>Skipped by filter</FilterSkipped>
+    <FilterSkipped>توسط فیلتر رد شد</FilterSkipped>
     <FilterSrtNoUtf8BOM>فایل SubRip (.srt) بدون هدر UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>بیش از دو خط در یک زیرنویس</FilterMoreThanTwoLines>
     <FilterContains>متن حاوی...</FilterContains>
     <FixCommonErrorsErrorX>رفع خطاهای رایج: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>جایگزین چندگانه: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>تعادل خودکار: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>کدگذاری زمان افست</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>ویرایش نشانک</EditBookmark>
+    <AddBookmark>افزودن نشانک</AddBookmark>
+    <GoToBookmark>رفتن به نشانک</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>تغییر پوشش</Title>
     <ChangeCasingTo>تغییر پوشش به</ChangeCasingTo>
@@ -219,7 +243,7 @@ http://soft98.ir
     <FromFrameRate>از فریم</FromFrameRate>
     <ToFrameRate>به فریم</ToFrameRate>
     <FrameRateNotCorrect>فریم وارد شده صحیح نیست</FrameRateNotCorrect>
-    <FrameRateNotChanged>فریم ها با هم برابرند - دقت کن عزیز</FrameRateNotChanged>
+    <FrameRateNotChanged>نرخ فریم یکسان است - هیچ چیز برای تبدیل وجود ندارد</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>تنظیم سرعت به درصد</Title>
@@ -278,12 +302,13 @@ http://soft98.ir
     <XNumberOfDifferenceAndPercentLettersChanged>تعداد تفاوت ها: {0} ({1}٪ از حروف تغییر کرده است)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>فقط تفاوت ها را نمایش بده</ShowOnlyDifferences>
     <IgnoreLineBreaks>نقض خط را نادیده بگیرید</IgnoreLineBreaks>
+    <IgnoreFormatting>نادیده گرفتن فرمت بندی</IgnoreFormatting>
     <OnlyLookForDifferencesInText>فقط برای تفاوت های موجود در متن نگاه کن</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>نمیتوان با زیرنویسهای تصویری مقایسه کرد</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
-    <Title>D-Cinema properties (interop)</Title>
-    <TitleSmpte>D-Cinema properties (SMPTE)</TitleSmpte>
+    <Title>خواص D-Cinema (interop)</Title>
+    <TitleSmpte>خواص D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>شناسه زیرنویس</SubtitleId>
     <GenerateId>ایجاد شناسه</GenerateId>
     <MovieTitle>عنوان فیلم</MovieTitle>
@@ -303,7 +328,7 @@ http://soft98.ir
     <TopBottomMargin>حاشیه بالا/پایین</TopBottomMargin>
     <FadeUpTime>Fade up time</FadeUpTime>
     <FadeDownTime>Fade down time</FadeDownTime>
-    <ZPosition>Z-position</ZPosition>
+    <ZPosition>موقعیت Z</ZPosition>
     <ZPositionHelp>اعداد مثبت زیرنویس را دور میکنند و اعداد منفی آن را نزدیک میاورند، اگر z-position صفر باشدآنگاه دوبعدی است</ZPositionHelp>
     <ChooseColor>رنگ را انتخاب کنید...</ChooseColor>
     <Generate>تولید کنید</Generate>
@@ -337,7 +362,7 @@ http://soft98.ir
     <Abort>انصراف</Abort>
     <AbortedByUser>انصراف توسط کاربر</AbortedByUser>
     <ReadingSubtitleData>در حال خواندن اطلاعات</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
+    <RippingVobFileXofYZ>پر کردن پرونده vob {1} از {2} : {0}</RippingVobFileXofYZ>
     <WrongIfoType>نوعIFO '{0}' است و نه'DVDVIDEO-VTS'.{1}فایل دیگری را امتحان کنید {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
@@ -366,8 +391,8 @@ http://soft98.ir
     <TimeCodeStatus>وضعیت وضعیت کد</TimeCodeStatus>
     <TimeCodeStartOfProgramme>کد زمان: شروع برنامه</TimeCodeStartOfProgramme>
     <RevisionNumber>تجدید نظر شماره</RevisionNumber>
-    <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Max# of row</MaxNumberOfDisplayableRows>
+    <MaxNoOfDisplayableChars>حداکثر # کاراکتر در هر ردیف</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>حداکثر # ردیف</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>ترتیب شماره دیسک</DiskSequenceNumber>
     <TotalNumberOfDisks>کل شماره ها از دیسک</TotalNumberOfDisks>
     <Import>وارد کردن</Import>
@@ -387,6 +412,7 @@ http://soft98.ir
     <TextLeftJustifiedText>متن توجیه شده سمت چپ</TextLeftJustifiedText>
     <TextCenteredText>میانه متن</TextCenteredText>
     <TextRightJustifiedText>متن توجیه شده سمت راست</TextRightJustifiedText>
+    <UseBoxForOneNewLine>"استفاده از جعبه متن" را فقط برای یک خط جدید بررسی کنید</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>اثر کارائوکه</Title>
@@ -407,7 +433,7 @@ http://soft98.ir
     <Delete>حذف</Delete>
     <SaveAs>&amp;ذخیره به عنوان</SaveAs>
     <SaveSubtitleAs>ذخیره زیرنویس به عنوان...</SaveSubtitleAs>
-    <SubtitleExportedInCustomFormatToX>Subtitle exported in custom format to: {0}</SubtitleExportedInCustomFormatToX>
+    <SubtitleExportedInCustomFormatToX>زیرنویس در قالب سفارشی به: {0} صادر شد</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>الگوی قالب متن سفارشی</Title>
@@ -419,6 +445,15 @@ http://soft98.ir
     <Footer>پاورقی</Footer>
     <DoNotModify>[تغییر ندهید]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Export Final Cut Pro XML advanced</Title>
+    <FontName>نام فونت</FontName>
+    <FontSize>اندازه فونت</FontSize>
+    <FontFace>نوع فونت</FontFace>
+    <FontFaceRegular>عادی</FontFaceRegular>
+    <Alignment>چینش</Alignment>
+    <Baseline>Baseline</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN XML/PNG خروجی گرفتن به</Title>
     <ImageSettings>تنظیمات عکس</ImageSettings>
@@ -443,12 +478,14 @@ http://soft98.ir
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>عمق</Depth>
     <ExportAllLines>خروجی گرفتن تمامی خط ها</ExportAllLines>
-    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0} تصویر ذخیره شده در {1}</XImagesSavedInY>
     <VideoResolution>دقت ویدئو</VideoResolution>
     <Align>ردیف کردن</Align>
     <Left>چپ</Left>
     <Right>راست</Right>
     <Center>مرکز</Center>
+    <CenterLeftJustify>Center, left justify</CenterLeftJustify>
+    <CenterTopJustify>Center, top justify</CenterTopJustify>
     <BottomMargin>حاشیه پایین</BottomMargin>
     <LeftRightMargin>حاشیه چپ/راست</LeftRightMargin>
     <SaveBluRraySupAs>نام پرونده Blu-ray را انتخاب کنید</SaveBluRraySupAs>
@@ -466,6 +503,7 @@ http://soft98.ir
     <Forced>با اجبار</Forced>
     <ChooseBackgroundColor>رنگ پس زمینه را انتخاب کنید</ChooseBackgroundColor>
     <SaveImageAs>ذخیره تصویر به عنوان...</SaveImageAs>
+    <FcpUseFullPathUrl>از آدرس کامل مسیر تصویر در FCP xml استفاده کنید</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>صدور متن</Title>
@@ -474,7 +512,7 @@ http://soft98.ir
     <FormatText>قالب متن</FormatText>
     <None>هیچی</None>
     <MergeAllLines>ادغام تمام خطوط</MergeAllLines>
-    <UnbreakLines>Unbreak lines</UnbreakLines>
+    <UnbreakLines>پیوسته کردن خطوط</UnbreakLines>
     <RemoveStyling>حذف سبک گذاری</RemoveStyling>
     <ShowLineNumbers>نمایش شماره خط</ShowLineNumbers>
     <AddNewLineAfterLineNumber>اضافه کردن خط جدید بعد از شماره خط</AddNewLineAfterLineNumber>
@@ -528,8 +566,9 @@ http://soft98.ir
     <RemovedEmptyLine>خط خالی حذف شده</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>خط خالی حذف شده از بالا</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>خط خالی حذف شده از پایین</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>حذف خطوط خالی از وسط</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
+    <EmptyLinesRemovedX>خطوط خالی حذف شد: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>زمانهای هم پوشانی را اصلاح کن</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>اصلاح زمانهای کوتاه نمایش</FixShortDisplayTimes>
     <FixLongDisplayTimes>اصلاح زمانهای طولانی نمایش</FixLongDisplayTimes>
@@ -540,7 +579,7 @@ http://soft98.ir
     <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
     <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
     <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>"i" را در کلمات کوچک با حروف بزرگ حل کنید (خطای OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
     <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>شروع با حرف بزرگ پس از یک پاراگراف</StartWithUppercaseLetterAfterParagraph>
@@ -551,9 +590,9 @@ http://soft98.ir
     <CommonOcrErrorsFixed>اشتباهات او سی آر معمول رفع شد /پرونده OcrReplaceList استفاده می شود : {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>حذف فضای بین اعداد</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</FixDialogsOnOneLine>
-    <RemoveSpaceBetweenNumbersFixed>Remove space between numbers fixed: {0}</RemoveSpaceBetweenNumbersFixed>
+    <RemoveSpaceBetweenNumbersFixed>فاصله بین اعداد ثابت را حذف کنید: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>اصلاح حروف ANSI ترکی (ایسلندی) به یونیکد</FixTurkishAnsi>
-    <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
+    <FixDanishLetterI>رفع حرف دانمارکی "i"</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>اصلاح علامت سوال و تعجب وارونه اسپانیایی</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>اضافه کردن نقل قول فراموش شده (")</AddMissingQuote>
     <AddMissingQuotes>اضافه کردن نقل قول های فراموش شده (")</AddMissingQuotes>
@@ -565,14 +604,12 @@ http://soft98.ir
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>اصلاح زیرنویسهایی با بیش از دو خط</Fix3PlusLines>
     <Fix3PlusLine>اصلاح زیرنویسی با بیش از دو خط</Fix3PlusLine>
-    <X3PlusLinesFixed>Subtitles with more than two lines fixed: {0}</X3PlusLinesFixed>
+    <X3PlusLinesFixed>زیرنویس هایی با بیش از دو خط ثابت حل شد: {0}</X3PlusLinesFixed>
     <Analysing>در حال تجزیه و تحلیل</Analysing>
     <NothingToFix>هیچ چیز برای اصلاح یافت نشد :)</NothingToFix>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>چیزی برای تصحیح پیدا نشد اما چند چیز می تواند بهبود یابد - نوشته (log) را برای جزییات ببینید.</NothingToFixBut>
-    <Continue>ادامه</Continue>
-    <ContinueAnyway>در هر صورت ادامه میدهید؟</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>بدون کنترل "ثابت به تنهایی کوچک« من »به« من »/به انگلیسی"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} من را به تغییر بزرگ</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>نامه اول ثابت به بزرگ پس از بند</FixFirstLetterToUppercaseAfterParagraph>
@@ -613,7 +650,7 @@ http://soft98.ir
     <RefreshFixes>رفع تازه در دسترس</RefreshFixes>
     <ApplyFixes>درخواست رفع انتخاب</ApplyFixes>
     <AutoBreak>خودکار و برزیلی</AutoBreak>
-    <Unbreak>و Unbreak</Unbreak>
+    <Unbreak>پیوسته کردن</Unbreak>
     <FixDoubleDash>اصلاح '--' به '...'</FixDoubleDash>
     <FixDoubleGreaterThan>حذف &lt;&lt;</FixDoubleGreaterThan>
     <FixEllipsesStart>حذف '...'</FixEllipsesStart>
@@ -640,7 +677,6 @@ http://soft98.ir
     <Title>آیا نیازمند واژه نامه ها هسیتد؟</Title>
     <DescriptionLine1>NHunspell ویرایش نام در طلسم بررسی در موتور بر اساس</DescriptionLine1>
     <DescriptionLine2>با استفاده از طلسم چک کردن فرهنگ از باز کردن دفتر.</DescriptionLine2>
-    <GetDictionariesHere>دریافت واژه نامه اینجا هست : :</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>انتخاب زبان دانلود و کلیک</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>پوشه 'واژه نامه ها' باز</OpenDictionariesFolder>
     <Download>دانلود</Download>
@@ -664,6 +700,13 @@ http://soft98.ir
     <PleaseWait>لطفا صبر کنید... این ممکن است مدتی طول بکشد</PleaseWait>
     <PoweredByGoogleTranslate>طراحی شده توسط مترجم گوگل</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>طراحی شده توسط مایکروسافت ترجمه</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>متأسفیم ، برای استفاده از آخرین مترجم مایکروسافت ، به یک کلید "مترجم متن" خدمات شناختی نیاز دارید.
+
+برای وارد کردن کلید خود به "گزینه ها -&gt; تنظیمات -&gt; ابزارها" بروید.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>متأسفیم ، برای استفاده از جدیدترین Google Translate به یک کلید API از Google نیاز دارید.
+
+برای وارد کردن کلید API ترجمه Google خود به "گزینه ها -&gt; تنظیمات -&gt; ابزارها" بروید.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>تلاش برای ترجمه بدون کلید API ... (داده های آهسته و محدود)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>گوگل در برابر ترجمه ماکروسافت</Title>
@@ -689,13 +732,17 @@ http://soft98.ir
   <ImportSceneChanges>
     <Title>واردات صحنه های تغییر کرده</Title>
     <OpenTextFile>باز کردن فایل متنی...</OpenTextFile>
-    <ImportOptions>گزینه های واردات</ImportOptions>
+    <Generate>تغییرات صحنه ایجاد کنید</Generate>
+    <Import>تغییر صحنه وارد کنید</Import>
     <TextFiles>فایل های متنی</TextFiles>
     <TimeCodes>کد های زمان</TimeCodes>
     <Frames>فریم ها</Frames>
     <Seconds>ثانیه</Seconds>
     <Milliseconds>میلی ثانیه</Milliseconds>
     <GetSceneChangesWithFfmpeg>تغییرات صحنه را با FFmpeg بگیر</GetSceneChangesWithFfmpeg>
+    <Sensitivity>حساسیت</Sensitivity>
+    <SensitivityDescription>مقدار پایین تر باعث تغییر صحنه می شود</SensitivityDescription>
+    <NoSceneChangesFound>هیچ تغییری در صحنه یافت نشد.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>متن ساده واردات</Title>
@@ -706,6 +753,7 @@ http://soft98.ir
     <Splitting>فتق</Splitting>
     <AutoSplitText>تقسیم خودکار متن</AutoSplitText>
     <OneLineIsOneSubtitle>یک خط یک نام است</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>دو خط یک زیرنویس هستند</TwoLinesAreOneSubtitle>
     <LineBreak>شکست خط</LineBreak>
     <SplitAtBlankLines>تقسیم در خطوط خالی</SplitAtBlankLines>
     <MergeShortLines>ادغام خطوط کوتاه با ادامه</MergeShortLines>
@@ -719,9 +767,10 @@ http://soft98.ir
     <TextFiles>فایل متن</TextFiles>
     <PreviewLinesModifiedX>Preview - paragraphs modified: {0}</PreviewLinesModifiedX>
     <TimeCodes>کدهای زمان</TimeCodes>
+    <SplitAtEndChars>در کاراکترهای انتهایی تقسیم کنید</SplitAtEndChars>
   </ImportText>
   <Interjections>
-    <Title>Interjections</Title>
+    <Title>مداخلات</Title>
   </Interjections>
   <JoinSubtitles>
     <Title>شروع به زیرنویسها</Title>
@@ -892,6 +941,8 @@ http://soft98.ir
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
         <EbuProperties>EBU STL properties...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro properties...</DvdStuioProProperties>
+        <TimedTextProperties>Timed Text properties...</TimedTextProperties>
         <PacProperties>PAC properties...</PacProperties>
         <OpenOriginal>نام اصلی باز در حالت مترجم</OpenOriginal>
         <SaveOriginal>ذخیره نام اصلی</SaveOriginal>
@@ -930,7 +981,7 @@ http://soft98.ir
       </File>
       <Edit>
         <Title>ویرایش</Title>
-        <Undo>Undo</Undo>
+        <Undo>قبلی</Undo>
         <Redo>Redo</Redo>
         <ShowUndoHistory>تاریخ نمایش برای خنثی سازی</ShowUndoHistory>
         <InsertUnicodeSymbol>درج نماد یونیکد</InsertUnicodeSymbol>
@@ -970,6 +1021,7 @@ http://soft98.ir
         <SplitLongLines>خطوط تقسیم طولانی</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>حداقل زمان نمایش بین پاراگراف ها به</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>مرتب کردن بر اساس</SortBy>
+        <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <Number>شماره</Number>
         <StartTime>زمان شروع</StartTime>
         <EndTime>زمان پایان</EndTime>
@@ -994,11 +1046,14 @@ http://soft98.ir
       <Video>
         <Title>تصویری</Title>
         <OpenVideo>باز کردن فایل های ویدئویی</OpenVideo>
+        <OpenVideoFromUrl>باز کردن ویدیو از url ...</OpenVideoFromUrl>
         <OpenDvd>باز کردن دی وی دی...</OpenDvd>
         <ChooseAudioTrack>آهنگ های صوتی را انتخاب کنید</ChooseAudioTrack>
         <CloseVideo>بستن فایل تصویری</CloseVideo>
         <SetVideoOffset>تنظیم آفست ویدیو...</SetVideoOffset>
-        <ImportSceneChanges>واردات تغییر صحنه ها...</ImportSceneChanges>
+        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
+        <GenerateTextFromVideo>ایجاد متن از ویدیو ...</GenerateTextFromVideo>
+        <GenerateImportSceneChanges>ایجاد / تغییر صحنه واردات ...</GenerateImportSceneChanges>
         <RemoveSceneChanges>حذف تغییرات صحنه</RemoveSceneChanges>
         <WaveformBatchGenerate>تولید دسته ای waveform...</WaveformBatchGenerate>
         <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
@@ -1083,6 +1138,7 @@ http://soft98.ir
         <Paste>چسباندن</Paste>
         <Delete>حذف</Delete>
         <SplitLineAtCursorPosition>بریدن خط از محل موس</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>خط تقسیم در موقعیت مکان نما / ویدیو</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>مدت زمان خودکار (خط فعلی)</AutoDurationCurrentLine>
         <SelectAll>انتخاب همه</SelectAll>
         <InsertFirstLine>خط قرار دادن</InsertFirstLine>
@@ -1097,16 +1153,28 @@ http://soft98.ir
         <ColumnInsertTextFromSubtitle>درج متن از زیرنویس...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>وارد کردن متن و انتقال سلولها به پاینن</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>چسباندن از کلیپ بورد...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Text up</ColumnTextUp>
+        <ColumnTextDown>Text down</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>کپی متن از اصل به فعلی</ColumnCopyOriginalTextToCurrent>
         <Split>انشعاب</Split>
         <MergeSelectedLines>انتخاب خط ادغام</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>ترکیب کردن خط های انتخاب شده از گفتگو ها</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>قبل از ادغام با خط</MergeWithLineBefore>
         <MergeWithLineAfter>پس از ادغام با خط</MergeWithLineAfter>
-        <Normal>عادی</Normal>
+        <RemoveFormatting>قالب بندی را حذف کنید</RemoveFormatting>
+        <RemoveFormattingAll>همه قالب بندی ها را حذف کنید</RemoveFormattingAll>
+        <RemoveFormattingBold>حذف بولد</RemoveFormattingBold>
+        <RemoveFormattingItalic>حذف ایتالیک</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>حذف زیرخط</RemoveFormattingUnderline>
+        <RemoveFormattingColor>حذف رنگ</RemoveFormattingColor>
+        <RemoveFormattingFontName>نام فونت را حذف کنید</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>تراز را حذف کنید</RemoveFormattingAlignment>
         <Underline>زیر خط دار خط</Underline>
+        <Box>جعبه</Box>
         <Color>رنگ</Color>
         <FontName>نام فونت</FontName>
+        <Superscript>Superscript</Superscript>
+        <Subscript>Subscript</Subscript>
         <Alignment>تقسیم بندی...</Alignment>
         <AutoBalanceSelectedLines>خودکار تعادل انتخاب خطوط</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>گزارش خط معافیت از خطوط انتخاب شده</RemoveLineBreaksFromSelectedLines>
@@ -1115,7 +1183,7 @@ http://soft98.ir
         <ShowSelectedLinesEarlierLater>انتخاب نمایش خطوط قبل/بعد</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>همگام سازی خطوط انتخاب شده</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>ترجمه اصلی خط توسط گوگل/ماکروسافت</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>گوگل ترجمه خطوط انتخاب شده</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>ترجمه خطوط انتخاب شده ...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>تنظیم مدت زمان انتخاب شده برای خطوط</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>تعمیر خطاهای رایج در خطوط انتخاب شده</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>تغییر برای پوشش خطوط انتخاب شده</ChangeCasingForSelectedLines>
@@ -1124,6 +1192,8 @@ http://soft98.ir
         <WebVTTRemoveVoices>حذف صدای</WebVTTRemoveVoices>
         <NewActor>بازیگر جدید...</NewActor>
         <RemoveActors>حذف بازیگران</RemoveActors>
+        <EditBookmark>ویرایش نشانک</EditBookmark>
+        <RemoveBookmark>حذف نشانک</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1139,6 +1209,7 @@ http://soft98.ir
     </Controls>
     <VideoControls>
       <Translate>ترجمه کن</Translate>
+      <CreateAndAdjust>ایجاد / تنظیم کنید</CreateAndAdjust>
       <Create>ایجاد کن</Create>
       <Adjust>تنظیم کن</Adjust>
       <SelectCurrentElementWhilePlaying>انتخاب زیرنویس جاری در حال اجرا</SelectCurrentElementWhilePlaying>
@@ -1176,16 +1247,10 @@ http://soft98.ir
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>موقعیت ویدئو :</VideoPosition>
       <TranslateTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</TranslateTip>
-      <CreateTip>نکته : استفاده از &lt;ctrl+arrow left/right&gt; کلید</CreateTip>
-      <AdjustTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</AdjustTip>
       <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>متن جدید وارد شده در {0}</NewTextInsertAtX>
       <Center>مرکز</Center>
       <PlayRate>سرعت بازی (سرعت)ا</PlayRate>
-      <Slow>آرام</Slow>
-      <Normal>عادی</Normal>
-      <Fast>سریع</Fast>
-      <VeryFast>بسیار سریع</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>ذخیره تغییرات بدون عنوان؟</SaveChangesToUntitled>
     <SaveChangesToX>ذخیره تغییرات را به {0}؟</SaveChangesToX>
@@ -1199,7 +1264,7 @@ http://soft98.ir
     <BeforeVisualSync>قبل از همگام بصری</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>همگام سازی در انتخاب خطوط</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>همگام سازی انجام</VisualSyncPerformed>
-    <FileXIsLargerThan10MB>File is larger than 10 MB: {0}</FileXIsLargerThan10MB>
+    <FileXIsLargerThan10MB>پرونده بزرگتر از 10 مگابایت است: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>هر حال ادامه میدهید؟</ContinueAnyway>
     <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
     <LoadedSubtitleX>زیرنویس بارگذاری شده {0}</LoadedSubtitleX>
@@ -1235,7 +1300,7 @@ http://soft98.ir
     <SearchingForXFromLineY>جستجو برای '{0}' از شماره خط {1}</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0} در بر داشت در شماره خط {1}</XFoundAtLineNumberY>
     <XNotFound>'{0} یافت نشد</XNotFound>
-    <BeforeReplace>Before replace: {0}</BeforeReplace>
+    <BeforeReplace>قبل از تعویض: {0}</BeforeReplace>
     <MatchFoundX>Match found: {0}</MatchFoundX>
     <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
     <FoundNothingToReplace>موردی یافت نشد در بر داشت به جای</FoundNothingToReplace>
@@ -1244,7 +1309,7 @@ http://soft98.ir
     <OneReplacementMade>یک جایگزین ساخته شده است.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>قبل از اینکه تغییرات ساخته شده در نمایش مبدأ</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>قادر به تجزیه منبع متن نمایش!</UnableToParseSourceView>
-    <GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
+    <GoToLineNumberX>به شماره خط {0} بروید</GoToLineNumberX>
     <CreateAdjustChangesApplied>ساخت/تنظیم خطوط اعمال تغییرات</CreateAdjustChangesApplied>
     <SelectedLines>خطوط انتخاب شده</SelectedLines>
     <BeforeDisplayTimeAdjustment>قبل از تنظیم زمان نمایش</BeforeDisplayTimeAdjustment>
@@ -1287,7 +1352,6 @@ http://soft98.ir
     <RedoPerformed>بازسازی انجام شده است</RedoPerformed>
     <NothingToUndo>هیچ چیز به خنثی سازی</NothingToUndo>
     <InvalidLanguageNameX>نام نامعتبر زبان : {0}ا</InvalidLanguageNameX>
-    <UnableToChangeLanguage>!قادر به تغییر زبان</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>دوباره این پیام را نشان نده</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
@@ -1310,7 +1374,6 @@ http://soft98.ir
     <BeforeInsertLine>قبل از قرار دادن خط</BeforeInsertLine>
     <LineInserted>درج خط</LineInserted>
     <BeforeLineUpdatedInListView>قبل از خط در listview به روز شده</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>قبل از تنظیم فونت به حالت عادی</BeforeSettingFontToNormal>
     <BeforeSplitLine>قبل از تقسیم خط</BeforeSplitLine>
     <LineSplitted>خط پذیری</LineSplitted>
     <BeforeMergeLines>قبل از ادغام خط</BeforeMergeLines>
@@ -1331,7 +1394,6 @@ http://soft98.ir
     <SubtitleImportedFromMatroskaFile>MKV زیرنویس های وارد شده از فایل</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>اضافه کردن فایل '{0}' پذیرفته نیست -- فایل بسیار بزرگ است</DropFileXNotAccepted>
     <DropOnlyOneFile>شما فقط می توانید یک فایل انتخاب کنید</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>قبل از ایجاد/تنظیم خطوط</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>نام را باز</OpenAnsiSubtitle>
     <BeforeChangeCasing>قبل از تغییر پوشش</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Number of lines with casing changed: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1358,7 +1420,6 @@ http://soft98.ir
     <ShowSelectedLinesXSecondsLinesLater>خطوط انتخاب شده را {0:0.0##} ثانیه دیرتر نمایش بده</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>خط انتخاب شده و بعدی ها را {0:0.0##} ثانیه زودتر نمایش بده</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>خط انتخاب شده و بعدی ها را {0:0.0##} ثانیه دیرتر نمایش بده</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>نمایش قبلی/بعد در خطوط انتخاب شده انجام</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>دو واژه از طریق regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Before sort: {0}</BeforeSortX>
     <SortedByX>Sorted by: {0}</SortedByX>
@@ -1376,11 +1437,11 @@ http://soft98.ir
     <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} انتخاب خطوط</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>زیرنویس شامل حروف Unicode است. با ذخیره با استفاده از کدگذاری ANSI این حروف را از دست خواهید داد. ادامه ذخیره سازی؟</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>زیرنویس شامل حروف Unicode است. با ذخیره با استفاده از کدگذاری ANSI این حروف را از دست خواهید داد. ادامه ذخیره سازی؟</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>زیرنویس ها شامل کدهای زمان منفی است. ادامه ذخیره سازی؟</NegativeTimeWarning>
     <BeforeMergeShortLines>قبل از ادغام خطوط کوتاه</BeforeMergeShortLines>
-    <BeforeSplitLongLines>قبل از تقسیم خطوط طولانی</BeforeSplitLongLines>
     <MergedShortLinesX>تعداد خطوط ادغام شده: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>قبل از تقسیم خطوط طولانی</BeforeSplitLongLines>
+    <LongLinesSplitX>Number of lines split: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>قبل از اتصال فواصل کوتاه</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>قبل از تنظیم زمان نمایش حداقل بین پاراگراف</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>تعداد خطوط با صفحه نمایش حداقل زمان بین پاراگراف ها تغییر : {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1407,10 +1468,6 @@ http://soft98.ir
     <UserAndAction>کاربر/اکشن</UserAndAction>
     <NetworkMode>شبکه حالت</NetworkMode>
     <XStartedSessionYAtZ>{0} : در آغاز جلسه {1} در {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>چک کردن املا کلمات با استفاده از {0} -- خط {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>قادر به آغاز مایکروسافت ورد</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>بررسی املا خاتمه یافت. {0} خطوط تغییر یافتهاست.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>املا چک به پایان رسید. {0} خطوط تغییر یافتهاست.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>باز کردن زیرنویس دیگر</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>قبل ضامن از گفتگوی خط ها</BeforeToggleDialogDashes>
     <ExportPlainTextAs>خروجی گرفتن نقشه متن از</ExportPlainTextAs>
@@ -1425,6 +1482,8 @@ http://soft98.ir
     <BeforeColumnDelete>قبل از حذف ستون</BeforeColumnDelete>
     <BeforeColumnImportText>قبل از وارد کردن متن ستون</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>قبل از حرکت سلول ستون پایین</BeforeColumnShiftCellsDown>
+    <BeforeX>Before: {0}</BeforeX>
+    <LinesUpdatedX>Lines updated: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>خطا در بارگیری افزونه: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>قبل از اجرای افزونه: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>قادر به خواندن زیرنویس از پلاگین نیست!</UnableToReadPluginResult>
@@ -1439,9 +1498,15 @@ http://soft98.ir
     <ImportTimeCodesDifferentNumberOfLinesWarning>زیرنویس با کدهای زمان ({0}) دارای تعداد متفاوتی از خط های زیرنویس نسبت به زیرنویس فعلی ({1}) است - ادامه دهم؟</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>تجزیه جریان حمل و نقل - لطفا صبر کنید...</ParsingTransportStream>
     <XPercentCompleted>{0}٪ تکمیل شد</XPercentCompleted>
+    <NextX>Next: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Insert subtitle at waveform position will cause overlap!
+
+Continue anyway?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
     <ErrorLoadIdx>فایلهای .idx را نمی توانید بخوانید/ویرایش کنید. فایل های Idx بخشی از یک جفت idx/sub فایل (همچنین VobSub نامیده می شود)، و Subtitle Edit می تواند فایل .sub را باز کند.</ErrorLoadIdx>
     <ErrorLoadRar>این فایل به نظر میرسد فایل فشرده .rar باشد. Subtitle Edit نمی تواند فایل های فشرده را باز کند.</ErrorLoadRar>
     <ErrorLoadZip>این فایل به نظر می رسد فایل فشرده .zip باشد. Subtitle Edit نمی تواند فایل های فشرده را باز کند.</ErrorLoadZip>
+    <ErrorLoad7Zip>This file seems to be a compressed 7-Zip file. Subtitle Edit cannot open compressed files.</ErrorLoad7Zip>
     <ErrorLoadPng>این فایل به نظر می رسد یک فایل تصویر PNG است. زیرنویس ویرایش نمی تواند فایل های PNG باز کند.</ErrorLoadPng>
     <ErrorLoadJpg>این فایل به نظر می رسد یک فایل تصویر JPG است. زیرنویس ویرایش نمی تواند فایل های JPG باز کند.</ErrorLoadJpg>
     <ErrorLoadSrr>این فایل به نظر می رسد فایل ReScene .srr باشد نه یک فایل زیرنویس.</ErrorLoadSrr>
@@ -1459,6 +1524,7 @@ http://soft98.ir
   <MatroskaSubtitleChooser>
     <Title>زیرنویس را از فایل MKV انتخاب کنید</Title>
     <TitleMp4>زیرنویس را از فایل MP4 انتخاب کنید</TitleMp4>
+    <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
     <TrackXLanguageYTypeZ>مسیر {0} - زبان: {1} - ترک: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1514,6 +1580,8 @@ http://soft98.ir
     <RegEx>عبارات منظم</RegEx>
     <UnequalLines>خطوط با شماره فرد</UnequalLines>
     <EqualLines>خطوط با شماره زوج</EqualLines>
+    <DurationLessThan>Duration less than</DurationLessThan>
+    <DurationGreaterThan>Duration greater than</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>چند جایگزین</Title>
@@ -1522,6 +1590,7 @@ http://soft98.ir
     <Normal>عادی</Normal>
     <CaseSensitive>مورد حقوقی حساس</CaseSensitive>
     <RegularExpression>بیان منظم</RegularExpression>
+    <Description>Description</Description>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Remove>حذف</Remove>
     <Add>اضافه کردن</Add>
@@ -1533,6 +1602,8 @@ http://soft98.ir
     <Export>صادرات...</Export>
     <ImportRulesTitle>وارد کردن جایگزین کردن قانون (ها) از...</ImportRulesTitle>
     <ExportRulesTitle>صادرات جایگزین قانون (های) به...</ExportRulesTitle>
+    <ChooseGroupsToImport>Choose groups to import</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Choose groups to export</ChooseGroupsToExport>
     <Rules>قوانین پیدا کردن و جایگزینی</Rules>
     <MoveToTop>حرکت به بالا</MoveToTop>
     <MoveToBottom>حرکت به پایین</MoveToBottom>
@@ -1542,6 +1613,7 @@ http://soft98.ir
     <GroupName>نام گروه</GroupName>
     <RenameGroup>تغییر نام گروه...</RenameGroup>
     <NewGroup>گروه جدید...</NewGroup>
+    <NothingToImport>هیچ چیز برای وارد کردن نیست</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>گپ</Title>
@@ -1677,6 +1749,7 @@ http://soft98.ir
     <WordLists>لیست کلمات</WordLists>
     <SsaStyle>حالات نوشتار سبک</SsaStyle>
     <Network>شبکه</Network>
+    <Rules>Rules</Rules>
     <ShowToolBarButtons>نمایش دکمه های نوار ابزار</ShowToolBarButtons>
     <New>جدید</New>
     <Open>باز</Open>
@@ -1689,11 +1762,25 @@ http://soft98.ir
     <NetflixQualityCheck>بررسی کیفیت Netflix</NetflixQualityCheck>
     <SettingsName>تنظیمات</SettingsName>
     <Help>راهنما</Help>
+    <UnbreakNoSpace>Unbreak without space (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>تغییر نشانک ها</ToggleBookmarks>
+    <ToggleBookmarksWithComment>تغییر نشانک ها - اضافه کردن نظر</ToggleBookmarksWithComment>
+    <ClearBookmarks>نشانک ها را پاک کنید</ClearBookmarks>
+    <GoToBookmark>به نشانک بروید</GoToBookmark>
+    <GoToPreviousBookmark>به نشانک قبلی بروید</GoToPreviousBookmark>
+    <GoToNextBookmark>به نشانک بعدی بروید</GoToNextBookmark>
+    <ChooseProfile>نمایه را انتخاب کنید</ChooseProfile>
+    <FontInUi>قلم UI</FontInUi>
     <ShowFrameRate>نمایش نرخ فریم را در نوار ابزار</ShowFrameRate>
     <DefaultFrameRate>نرخ فریم پیش فرض</DefaultFrameRate>
     <DefaultFileEncoding>به طور پیش فرض پشتیبانی می کند فایل</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>خودکار تشخیص رمزگذاری مؤسسه</AutoDetectAnsiEncoding>
+    <Profile>پروفایل</Profile>
+    <Profiles>پروفایل ها</Profiles>
+    <ImportProfiles>وارد کردن پروفایل ها</ImportProfiles>
+    <ExportProfiles>خروجی گرفتن پرفایلپها</ExportProfiles>
     <SubtitleLineMaximumLength>حداکثر طول یک خط</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Optimal chars/sec</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>حداکثر کاراکتر/ثانیه</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>حداکثر کلمه/دقیقه</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>بسته بندی خودکار در حال تایپ</AutoWrapWhileTyping>
@@ -1705,6 +1792,7 @@ http://soft98.ir
     <SubtitleFontSize>اندازه قلم</SubtitleFontSize>
     <SubtitleBold>جسور</SubtitleBold>
     <VideoAutoOpen>باز کردن فایل ویدئویی به صورت خودکار هنگام باز کردن زیرنویس</VideoAutoOpen>
+    <AllowVolumeBoost>افزایش حجم مجاز است</AllowVolumeBoost>
     <SubtitleCenter>مرکز</SubtitleCenter>
     <SubtitleFontColor>رنگ قلم</SubtitleFontColor>
     <SubtitleBackgroundColor>رنگ پس زمینه</SubtitleBackgroundColor>
@@ -1716,9 +1804,9 @@ http://soft98.ir
     <StartInSourceView>در شروع نمایش مبدأ</StartInSourceView>
     <RemoveBlankLinesWhenOpening>گزارش خط خالی هنگام باز کردن زیرنویس</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>معافیت نمایش خط در لیست را به عنوان نمایش</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"ذخیره به عنوان..." از نام پرونده استفاده می کند</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>دوبار کلیک بر روی خط در پنجره اصلی listview خواهد شد</MainListViewDoubleClickAction>
-    <MainListViewColumns>List view columns</MainListViewColumns>
-    <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
+    <MainListViewColumnsInfo>ستون های نمای لیست قابل مشاهده را انتخاب کنید</MainListViewColumnsInfo>
     <MainListViewNothing>هیچ</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>برو به استانداردهای فعلی ویدیویی و مکث</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>برو به استانداردهای فعلی ویدئو و اجرا</MainListViewVideoGoToPositionAndPlay>
@@ -1727,6 +1815,8 @@ http://soft98.ir
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>برو به موقعیت ویدئو - 0.5 ثانیه و مکث</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>برو به موقعیت ویدیو - 1 ثانیه و اجرا</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>برو به ویرایش و در همان موقعیت زمانی ویدیو مکث کن</MainListViewEditTextAndPause>
+    <VideoFileName>نام پرونده ویدیویی</VideoFileName>
+    <ExistingFileName>نام پرونده موجود</ExistingFileName>
     <AutoBackup>خودکار پشتیبان</AutoBackup>
     <AutoBackupEveryMinute>هر دقیقه</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>هر 5 دقیقه</AutoBackupEveryFiveMinutes>
@@ -1736,6 +1826,7 @@ http://soft98.ir
     <AutoBackupDeleteAfterThreeMonths>3 ماه</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 ماه</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>بررسی برای به روز رسانی</CheckForUpdates>
+    <AutoSave>ذخیره خودکار</AutoSave>
     <AllowEditOfOriginalSubtitle>اجازه ویرایش از نام اصلی</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>آماده برای حذف خط ها</PromptDeleteLines>
     <TimeCodeMode>حالت کد زمان</TimeCodeMode>
@@ -1766,9 +1857,9 @@ http://soft98.ir
     <ReverseMouseWheelScrollDirection>برگرداندن چرخ موس اسکرول برای راهبری</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>اجازه همپوشانی (هنگام حرکت/تغییر اندازه)</WaveformAllowOverlap>
     <WaveformSetVideoPosMoveStartEnd>موقعیت ویدیو را هنگام حرکت شروع/پایان تنظیم کنید</WaveformSetVideoPosMoveStartEnd>
-    <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
-    <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
+    <WaveformFocusMouseEnter>تمرکز را بر روی ورود موس تنظیم کنید</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>همچنین فوکوس نمای لیست را روی ورود موس در نمای لیست تنظیم کنید</WaveformListViewFocusMouseEnter>
+    <WaveformBorderHitMs1>ضربه نشانگر مرزی باید در داخل باشد</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>میلی ثانیه</WaveformBorderHitMs2>
     <WaveformColor>رنگ</WaveformColor>
     <WaveformSelectedColor>انتخاب رنگ</WaveformSelectedColor>
@@ -1783,6 +1874,7 @@ http://soft98.ir
     <SpectrogramOneColorGradient>یک رنگ متحرک</SpectrogramOneColorGradient>
     <SpectrogramClassic>کلاسیک</SpectrogramClassic>
     <WaveformUseFFmpeg>استفاده از FFmpeg برای استخراج موج</WaveformUseFFmpeg>
+    <DownloadFFmpeg>دانلود FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>مسیر به FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>مرور به FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>مرور به VLC قابل حمل</WaveformBrowseToVLC>
@@ -1824,7 +1916,7 @@ http://soft98.ir
     <RemoveTextForHi>حذف متن برای HI</RemoveTextForHi>
     <MergeLinesShorterThan>ادغام خطوط کوتاه تر از</MergeLinesShorterThan>
     <MusicSymbol>نماد موسیقی</MusicSymbol>
-    <MusicSymbolsToReplace>نماد های موسیقی به جای -جداگانه با فضای خالی</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>نمادهای موسیقی برای جایگزینی (جدا شده با کاما)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>تعمیر خطاهای او سی آر مشترک -- همچنین hardcoded قوانین استفاده</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>تعمیر زمان نمایش کوتاه - اجازه حرکت زمان شروع</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>پرش از گام اول (انتخاب قانون های تعمیر)</FixCommonErrorsSkipStepOne>
@@ -1834,10 +1926,13 @@ http://soft98.ir
     <Alt>Alt</Alt>
     <Shift>shift</Shift>
     <Key>Key</Key>
+    <ListViewAndTextBox>List view and text box</ListViewAndTextBox>
+    <ListView>List view</ListView>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>کنترل حالت چسبان/غیرچسبان بودن کنترل های ویدئو</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>تنظیم پایان، اضافه کردن جدید و رفتن به جدید</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>میزان کردن توسط محل پایان و رفتن به ادامه</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>تنظیم پایان و رفتن به بعدی</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>تنظیم شروع،مدت اتوماتیک و رفتن به ادامه</AdjustSetStartAutoDurationAndGoToNext>
@@ -1845,6 +1940,10 @@ http://soft98.ir
     <AdjustStartDownEndUpAndGoToNext>key down=start start,key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>حرکت خط های انتخاب شده 100 میلی ثانیه به جلو</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>حرکت خط های انتخاب شده 100 میلی ثانیه به عقب</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Move start {0} ms forward</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Move end {0} ms back</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Move end {0} ms forward</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>تنظیم زمان شروع، نگه داشتن مدت زمان</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>تنظیم پایان، offset بقیه</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>تنظیم پایان، تعویض بقیه و رفتن به بعدی</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1860,7 +1959,17 @@ http://soft98.ir
     <GoToNextSubtitleAndFocusVideo>رفتن به خط بعدی و تنظیم موقعیت ویدیو</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>ضامن مرکز میان لیست ظاهری و جعبه متن زیرنویس</ToggleFocus>
     <ToggleDialogDashes>کنترل ضامن خط های گفتگوها</ToggleDialogDashes>
+    <ToggleMusicSymbols>نمادهای موسیقی را تغییر دهید</ToggleMusicSymbols>
     <Alignment>تراز (خطوط انتخاب شده)</Alignment>
+    <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>
+    <AlignmentN2>Alignment bottom center - {\an2}</AlignmentN2>
+    <AlignmentN3>Alignment bottom right - {\an3}</AlignmentN3>
+    <AlignmentN4>Alignment middle left - {\an4}</AlignmentN4>
+    <AlignmentN5>Alignment middle center - {\an5}</AlignmentN5>
+    <AlignmentN6>Alignment middle right - {\an6}</AlignmentN6>
+    <AlignmentN7>Alignment top left - {\an7}</AlignmentN7>
+    <AlignmentN8>Alignment top center - {\an8}</AlignmentN8>
+    <AlignmentN9>Alignment top right - {\an9}</AlignmentN9>
     <CopyTextOnly>کپی متن فقط به کلیپ برد (خطوط انتخاب شده)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>کپی متن از اصلی به فعلی</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>مدت زمان خودکار (خطوط انتخاب شده)</AutoDurationSelectedLines>
@@ -1874,8 +1983,8 @@ http://soft98.ir
     <WaveformPlayNewSelection>پخش انتخاب</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>پخش پایان انتخاب</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>پخش اولین زیرنویس انتخاب شده</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Focus list view</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>رفتن به زیرنویس بعدی (از موقعیت ویدئویی)</WaveformGoToNextSubtitle>
+    <WaveformFocusListView>نمایش لیست فوکوس</WaveformFocusListView>
+    <WaveformGoToPreviousSceneChange>به تغییر صحنه قبلی بروید</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>رفتن به تغییر صحنه بعدی</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>تغییر وضعیت صحنه</WaveformToggleSceneChange>
     <GoBack1Frame>یک قاب عقب</GoBack1Frame>
@@ -1890,15 +1999,19 @@ http://soft98.ir
     <GoForward1Second>یک ثانیه به جلو</GoForward1Second>
     <GoBack5Seconds>پنج ثانیه برگشت</GoBack5Seconds>
     <GoForward5Seconds>پنج ثانیه به جلو</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>رفتن به زیرنویس قبلی (از موقعیت فیلم)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>رفتن به زیرنویس بعدی (از موقعیت ویدئویی)</WaveformGoToNextSubtitle>
     <TogglePlayPause>کنترل پخش/مکث</TogglePlayPause>
     <Pause>مکث</Pause>
     <Fullscreen>تمام صفحه</Fullscreen>
+    <PlayRateSlower>Play rate slower</PlayRateSlower>
+    <PlayRateFaster>Play rate faster</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Reset speed/zoom</VideoResetSpeedAndZoom>
     <CustomSearch1>ترجمه، جستجوی سفارشی 1</CustomSearch1>
     <CustomSearch2>ترجمه، جستجوی سفارشی 2</CustomSearch2>
     <CustomSearch3>ترجمه، جستجوی سفارشی 3</CustomSearch3>
     <CustomSearch4>ترجمه، جستجوی سفارشی 4</CustomSearch4>
     <CustomSearch5>ترجمه، جستجوی سفارشی 5</CustomSearch5>
-    <CustomSearch6>ترجمه، جستجوی سفارشی 6</CustomSearch6>
     <SyntaxColoring>رنگ آمیزی نحو</SyntaxColoring>
     <ListViewSyntaxColoring>فهرست نمایش رنگ آمیزی نحو</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>رنگی کردن طول زمان در صورت کوتاه بودن</SyntaxColorDurationIfTooSmall>
@@ -1910,7 +2023,12 @@ http://soft98.ir
     <GoToFirstSelectedLine>رفتن به اولین خط انتخاب شده</GoToFirstSelectedLine>
     <GoToNextEmptyLine>رفتن به خط خالی بعدی</GoToNextEmptyLine>
     <MergeSelectedLines>ادغام خطوط انتخاب شده</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>خطوط انتخاب شده و شکست خودکار را ادغام کنید</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>خطوط انتخاب شده و ادغام شده را ادغام کنید</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>ادغام خطوط انتخاب شده و بدون شک فضای (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>ادغام خطوط انتخاب شده، فقط اولین متن غیر خالی را نگه دارید</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>خطوط انتخاب شده را به صورت دو زبانه ادغام کنید</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>خط انتخاب شده را به صورت دو زبانه تقسیم کنید</SplitSelectedLineBilingual>
     <ToggleTranslationMode>تغییر حالت ترجمه</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>تعویض اصلی و ترجمه</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>ادغام اصلی و ترجمه</MergeOriginalAndTranslation>
@@ -1919,27 +2037,37 @@ http://soft98.ir
     <ShortcutIsAlreadyDefinedX>میانبر در حال حاضر تعریف شده است: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>تغییر دادن ترجمه و اصل در پیش نمایش ویدیو/صوتی</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>ستون، حذف متن</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>ستون ، متن را حذف کنید و تغییر دهید</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>ستون، تزریق متن</ListViewColumnInsert>
     <ListViewColumnPaste>ستون، چسباندن</ListViewColumnPaste>
-    <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
+    <ListViewColumnTextUp>ستون ، متن بالا</ListViewColumnTextUp>
+    <ListViewColumnTextDown>ستون ، متن پایین</ListViewColumnTextDown>
+    <ListViewFocusWaveform>تمرکز شکل موج/طیف سنجی</ListViewFocusWaveform>
     <ListViewGoToNextError>رفتن به خطای بعدی</ListViewGoToNextError>
-    <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
+    <ShowBeamer>beamer تمام صفحه زیرنویس را شروع کنید</ShowBeamer>
     <MainTextBoxMoveLastWordDown>انتقال آخرین کلمه به خط بعدی زیرنویس</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>انتقال اولین کلمه از زیرنویس بعدی به بالا</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>تبدیل انتخاب به حروف کوچک</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>تبدیل انتخاب به حروف بزرگ</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>تغییر مدت زمان خودکار</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>شکست خودکار متن</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Break at first space from cursor position</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Break at first space from cursor position and go to next</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>عدم شکست متن</MainTextBoxUnbreak>
     <MainFileSaveAll>ذخیره همه</MainFileSaveAll>
     <Miscellaneous>متفرقه</Miscellaneous>
     <CpsIncludesSpace>کاراکتر/ثانیه شامل اسپیس باشد</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
+    <GoogleTranslate>ترجمه گوگل</GoogleTranslate>
+    <GoogleTranslateApiKey>API key</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>مترجم مایکروسافت بینگ</MicrosoftBingTranslator>
     <HowToSignUp>چگونه ثبت نام کنید</HowToSignUp>
-    <GoogleTranslateUrl>آدرس Google translate</GoogleTranslateUrl>
-    <ClientId>شناسه مشتری</ClientId>
-    <ClientSecret>Client secret</ClientSecret>
+    <MicrosoftTranslateApiKey>کلید</MicrosoftTranslateApiKey>
+    <FontNote>Note: These font settings are for the Subtitle Edit UI only.
+Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
+"Advanced Sub Station Alpha" or via export to image based formats.</FontNote>
   </Settings>
   <SettingsMpv>
     <Title>تنظیمات برای MPV</Title>
@@ -1947,6 +2075,11 @@ http://soft98.ir
     <DownloadMpvFailed>قادر به دانلود MPV نیستم- لطفا بعدا دوباره امتحان کنید!</DownloadMpvFailed>
     <DownloadMpvOk>کتابخانه mpv دانلود شد و آماده به کار است.</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>دانلود FFmpeg</Title>
+    <XDownloadFailed>{0} قابل بارگیری نیست - لطفا بعداً دوباره امتحان کنید!</XDownloadFailed>
+    <XDownloadOk>{0} بارگیری شد و برای استفاده آماده است.</XDownloadOk>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>تنظیم آفست ویدیو</Title>
     <Description>آفست ویدیو را تنظیم کنید (زیرنویسها نباید زمان ویدئو واقعی را دنبال کنند، بلکه به عنوان مثال +10 ساعت)</Description>
@@ -1993,12 +2126,15 @@ http://soft98.ir
     <EditWholeText>ویرایش کل متن</EditWholeText>
     <EditWordOnly>ویرایش واژه تنها</EditWordOnly>
     <AddXToNames>اضافه کردن '{0}' به نام/لیست و غیره</AddXToNames>
+    <AddXToUserDictionary>'{0}' را به فرهنگ لغت کاربر اضافه کنید</AddXToUserDictionary>
     <AutoFixNames>تعمیر خودکار اسامی که در آن فقط پوشش متفاوت</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>لیست "استفاده از همیشه" را به یاد داشته باشید</RememberUseAlwaysList>
     <ImageText>متن تصویر</ImageText>
     <SpellCheckCompleted>املا چک به پایان رسید.</SpellCheckCompleted>
     <SpellCheckAborted>املا بررسی سقط شده</SpellCheckAborted>
+    <SpacesNotAllowed>فاصله در یک کلمه مجاز نیست!</SpacesNotAllowed>
     <UndoX>واگرد: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2006,7 +2142,7 @@ http://soft98.ir
     <WhiteSpaceCheckReport>فضای سفارشی نامعتبر در ستون {0} یافت شد.</WhiteSpaceCheckReport>
     <ReportPrompt>لطفا گزارش کامل را اینجا ببینید: {0}.</ReportPrompt>
     <FoundXIssues>بررسی کیفیت Netflix {0} مشکل پیدا کرد</FoundXIssues>
-    <CheckOk>Netflix quality check OK :)</CheckOk>
+    <CheckOk>بررسی کیفیت Netflix خوب است :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>تقسیم</Title>
@@ -2041,9 +2177,9 @@ http://soft98.ir
     <NothingToSplit>هیچ چیز به تقسیم!</NothingToSplit>
     <SavePartOneAs>ذخیره 1 بخش به عنوان</SavePartOneAs>
     <SavePartTwoAs>بخش 2 ذخیره به عنوان</SavePartTwoAs>
-    <Part1>Part1</Part1>
-    <Part2>Part2</Part2>
-    <UnableToSaveFileX>Unable to save {0}</UnableToSaveFileX>
+    <Part1>قسمت 1</Part1>
+    <Part2>قسمت 2</Part2>
+    <UnableToSaveFileX>to 0} ذخیره نمی شود</UnableToSaveFileX>
     <OverwriteExistingFiles>بازنویسی فایل های موجود؟</OverwriteExistingFiles>
     <FolderNotFoundX>پوشه یافت نشد: {0}</FolderNotFoundX>
     <Untitled>بدون عنوان</Untitled>
@@ -2064,6 +2200,7 @@ http://soft98.ir
     <NumberOfLinesX>تعداد خطوط زیرنویس: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>تعداد کاراکترها به عنوان {0}: {1: #، ###، ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>تعداد حروف در متن: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Total duration of all subtitles: {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>کاراکتر/ثانیه کل: {0:0.0} seconds</TotalCharsPerSecond>
     <TotalWords>تعداد کل کلمات در زیرنویس: {0}</TotalWords>
     <NumberOfItalicTags>تعداد برچسبهای ایتالیک: {0}</NumberOfItalicTags>
@@ -2172,6 +2309,7 @@ http://soft98.ir
   <UnknownSubtitle>
     <Title>نوع زیرنویس نامعلوم</Title>
     <Message>اين موضوع را به ما اطلاع دهيد mailto : hellas2012@yahoo.com</Message>
+    <ImportAsPlainText>وارد کردن به عنوان متن ساده ...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>همگام سازی</Title>
@@ -2246,19 +2384,22 @@ http://soft98.ir
     <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
-    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>سعی کنید او سی آر ام اس MODI کلمات ناشناخته</TryModiForUnknownWords>
-    <DictionaryX>Dictionary: {0}</DictionaryX>
+    <XImagesSavedInY>{0} تصویر ذخیره شده در {1</XImagesSavedInY>
+    <DictionaryX>فرهنگ لغت: {0</DictionaryX>
     <RightToLeft>راست به چپ</RightToLeft>
     <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>idx استفاده از زمان‌‌‌های فایل</UseTimeCodesFromIdx>
     <NoMatch>&lt;بدون تطبیق&gt;</NoMatch>
     <AutoTransparentBackground>شفاف کردن پشت زمینه بصورت خودکار</AutoTransparentBackground>
+    <CaptureTopAlign>ضبط بالای صفحه</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>رسیدگی سنجیدن تطابق ها برای عکس جاری</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>ویرایش آخرین عکس سنجیده شده و اضافه شده</EditLastAdditions>
     <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
-    <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
-    <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
+    <DiscardTitle>از تغییرات ایجاد شده در OCR صرفنظر کنید؟</DiscardTitle>
+    <DiscardText>آیا می خواهید از تغییرات ایجاد شده در جلسه فعلی OCR صرفنظر کنید؟</DiscardText>
+    <MinLineSplitHeight>حداقل  ارتفاع خط (تقسیم)</MinLineSplitHeight>
+    <FallbackToX>بازپرداخت به {0</FallbackToX>
+    <ImagePreProcessing>پیش پردازش تصویر ...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub -- تبدیل تصویر به متن بطور دستی</Title>
@@ -2274,7 +2415,7 @@ http://soft98.ir
     <Spanish>اسپانیایی</Spanish>
     <German>آلمانی</German>
     <AutoSubmitOnFirstChar>اراده دادن خودکار بر روی&amp;اولین کاراکتر</AutoSubmitOnFirstChar>
-    <EditLastX>Edit last: {0}</EditLastX>
+    <EditLastX>ویرایش آخر: {0</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>رسیدگی سنجیدن تطابق ها برای عکس جاری</Title>
@@ -2287,7 +2428,7 @@ http://soft98.ir
     <Message>نام پوشه پایگاه داده جدید</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
-    <Title>Set un-italic factor</Title>
+    <Title>عامل غیر معلول را تنظیم کنید</Title>
     <Description>تنظیم مقدار را تا زمانی که سبک متن طبیعی است و نه ایتالیک. توجه داشته باشید که تصویر اصلی باید ایتالیک باشد</Description>
   </VobSubOcrSetItalicFactor>
   <Watermark>
