@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType6(),
                     new JsonType7(),
                     new JsonType8(),
+                    new JsonType8b(),
                     new JsonType9(),
                     new JsonType10(),
                     new JsonType11(),

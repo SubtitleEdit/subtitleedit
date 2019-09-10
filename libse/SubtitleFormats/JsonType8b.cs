@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class JsonType8 : SubtitleFormat
+    public class JsonType8b : SubtitleFormat
     {
         public override string Extension => ".json";
 
-        public override string Name => "JSON Type 8";
+        public override string Name => "JSON Type 8b";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -35,9 +35,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 sb.Append("{\"start_time\":");
-                sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"end_time\":");
-                sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"text\":\"");
                 sb.Append(Json.EncodeJsonText(p.Text));
                 sb.Append("\"}");
@@ -72,12 +72,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Json.ReadTag(s, "text");
                     if (start != null && end != null && text != null)
                     {
-                        double startSeconds;
-                        double endSeconds;
-                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                            double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
+                        double startMs;
+                        double endMs;
+                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startMs) &&
+                            double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endMs))
                         {
-                            subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
+                            subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startMs, endMs));
                         }
                         else
                         {
