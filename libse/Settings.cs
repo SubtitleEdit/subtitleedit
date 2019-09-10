@@ -1842,7 +1842,7 @@ $HorzAlign          =   Center
                 settings.General.SystemSubtitleFontSizeOverride = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("_subtitleFontName");
+            subNode = node.SelectSingleNode("SubtitleFontName");
             if (subNode != null)
             {
                 settings.General.SubtitleFontName = subNode.InnerText;
@@ -5829,7 +5829,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
+                textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
                 textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
