@@ -106,6 +106,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en_GB.dic", true);
                 return;
             }
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en-gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en-GB.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en-GB.dic", true);
+                return;
+            }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-CA"), "en_CA.dic", true);
