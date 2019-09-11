@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _testAllIndex = -1;
 
         public string SelectedEnglishName { get; private set; }
-
+        public string LastDownload { get; private set; }
 
         public GetDictionaries()
         {
@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
-        private static void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
+        private void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
         {
             foreach (ZipExtractor.ZipFileEntry entry in dir)
             {
@@ -263,6 +263,8 @@ namespace Nikse.SubtitleEdit.Forms
                     zip.ExtractFile(entry, path);
 
                     found = true;
+
+                    LastDownload = fileName;
                 }
             }
         }

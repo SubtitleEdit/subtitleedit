@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal string ChosenLanguage { get; private set; }
         private readonly List<TesseractDictionary> _dictionaries;
 
-        public GetTesseractDictionaries()
+        public GetTesseractDictionaries(bool first)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -30,21 +30,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
             _dictionaries = TesseractDictionary.List();
-            LoadDictionaryList();
+            LoadDictionaryList(first);
         }
 
-        private void LoadDictionaryList()
+        private void LoadDictionaryList(bool first)
         {
             comboBoxDictionaries.BeginUpdate();
             comboBoxDictionaries.Items.Clear();
-            foreach (var d in _dictionaries)
+            for (int i = 0; i < _dictionaries.Count; i++)
             {
+                TesseractDictionary d = _dictionaries[i];
                 if (!string.IsNullOrEmpty(d.Url))
                 {
                     comboBoxDictionaries.Items.Add(d);
+                    if (first && d.Name == "English")
+                    {
+                        comboBoxDictionaries.SelectedIndex = i;
+                    }
                 }
             }
-            comboBoxDictionaries.SelectedIndex = 0;
+            if (comboBoxDictionaries.SelectedIndex < 0)
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
+            }
             comboBoxDictionaries.EndUpdate();
             comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
@@ -210,6 +218,5 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
             }
         }
-
     }
 }
