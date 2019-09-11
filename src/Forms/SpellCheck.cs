@@ -679,7 +679,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         correct = true;
                                     }
 
-                                    if (!correct && (_skipAllList.Contains(trimmed.ToUpperInvariant()) || DoSpell(trimmed)))
+                                    if (!correct && (_skipAllList.Contains(trimmed.ToUpperInvariant()) || _spellCheckWordLists.HasUserWord(trimmed) || DoSpell(trimmed)))
                                     {
                                         correct = true;
                                     }
@@ -1110,14 +1110,27 @@ namespace Nikse.SubtitleEdit.Forms
             using (var gd = new GetDictionaries())
             {
                 gd.ShowDialog(this);
-            }
-            FillSpellCheckDictionaries(LanguageAutoDetect.AutoDetectLanguageName(null, _subtitle));
-            if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex == -1)
-            {
-                comboBoxDictionaries.SelectedIndex = 0;
-            }
 
-            ComboBoxDictionariesSelectedIndexChanged(null, null);
+                FillSpellCheckDictionaries(LanguageAutoDetect.AutoDetectLanguageName(null, _subtitle));
+                if (gd.LastDownload != null && gd.LastDownload.Length > 3 && comboBoxDictionaries.Items.Count > 0)
+                {
+                    var lc = Path.GetFileNameWithoutExtension(gd.LastDownload.Substring(0, 4).Replace('_', '-'));
+                    for (int i = 0; i < comboBoxDictionaries.Items.Count; i++)
+                    {
+                        string item = (string)comboBoxDictionaries.Items[i];
+                        if (item.Contains("[" + lc) || item.Contains(gd.SelectedEnglishName))
+                        {
+                            comboBoxDictionaries.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
+                {
+                    comboBoxDictionaries.SelectedIndex = 0;
+                }
+                ComboBoxDictionariesSelectedIndexChanged(null, null);
+            }
         }
 
         private void PushUndo(string text, SpellCheckAction action)

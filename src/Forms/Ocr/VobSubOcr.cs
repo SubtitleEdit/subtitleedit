@@ -7045,7 +7045,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxTesseractLanguages.Items.Clear();
                         using (var form = new DownloadTesseract4())
                         {
-                            form.ShowDialog(this);
+                            if (form.ShowDialog(this) == DialogResult.OK)
+                            {
+                                buttonGetTesseractDictionaries_Click(sender, e);
+                            }
                         }
                     }
                     else
@@ -8539,7 +8542,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            using (var form = new GetTesseractDictionaries())
+            using (var form = new GetTesseractDictionaries(comboBoxTesseractLanguages.Items.Count == 0))
             {
                 form.ShowDialog(this);
                 InitializeTesseract(form.ChosenLanguage);
@@ -8653,21 +8656,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 form.ShowDialog(this);
                 FillSpellCheckDictionaries();
-                if (!string.IsNullOrEmpty(form.SelectedEnglishName))
+                if (form.LastDownload != null && form.LastDownload.Length > 3 && !string.IsNullOrEmpty(form.SelectedEnglishName))
                 {
-                    for (var index = 0; index < comboBoxDictionaries.Items.Count; index++)
+                    var lc = Path.GetFileNameWithoutExtension(form.LastDownload.Substring(0, 4).Replace('_', '-'));
+                    for (int i = 0; i < comboBoxDictionaries.Items.Count; i++)
                     {
-                        var item = comboBoxDictionaries.Items[index].ToString();
-                        if (item.Contains(form.SelectedEnglishName))
+                        string item = (string)comboBoxDictionaries.Items[i];
+                        if (item.Contains("[" + lc) || item.Contains(form.SelectedEnglishName))
                         {
-                            comboBoxDictionaries.SelectedIndex = index;
-                            return;
+                            comboBoxDictionaries.SelectedIndex = i;
+                            break;
                         }
                     }
                 }
             }
 
-            if (comboBoxDictionaries.Items.Count > 0)
+            if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex < 0)
             {
                 comboBoxDictionaries.SelectedIndex = 0;
             }
