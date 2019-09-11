@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly ulong TimeScale;
         public readonly ulong Duration;
         public readonly string Iso639ThreeLetterCode;
-        public readonly int Quality;
 
         public Mdhd(Stream fs, ulong size)
         {
@@ -28,16 +27,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 ModificationTime = GetUInt(8);
                 TimeScale = GetUInt(12);
                 Duration = GetUInt(16);
-                Quality = GetWord(22);
             }
             else
             {
-                CreationTime = GetUInt64(4);
-                ModificationTime = GetUInt64(12);
-                TimeScale = GetUInt(16);
-                Duration = GetUInt64(20);
-                languageIndex = 24;
-                Quality = GetWord(26);
+                CreationTime = GetUInt64(4); // 64-bit 
+                ModificationTime = GetUInt64(12); // 64-bit 
+                TimeScale = GetUInt(20); // 32-bit
+                Duration = GetUInt64(24); // 64-bit 
+                languageIndex = 32;
             }
 
             // language code = skip first byte, 5 bytes + 5 bytes + 5 bytes (add 0x60 to get ascii value)
