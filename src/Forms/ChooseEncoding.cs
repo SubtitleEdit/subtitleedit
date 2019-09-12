@@ -37,30 +37,29 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-                int length = (int)file.Length;
-                if (length > 100000)
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    length = 100000;
+                    int readCount = (int)Math.Min(100000, fs.Length);
+                    _fileBuffer = new byte[readCount];
+                    fs.Read(_fileBuffer, 0, readCount);
                 }
-
-                file.Position = 0;
-                _fileBuffer = new byte[length];
-                file.Read(_fileBuffer, 0, length);
-                file.Close();
             }
             catch
             {
                 _fileBuffer = new byte[0];
             }
 
-            var encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
+            Encoding encoding;
             if (_fileBuffer.Length > 10 && _fileBuffer[0] == 0xef && _fileBuffer[1] == 0xbb && _fileBuffer[2] == 0xbf)
             {
                 encoding = Encoding.UTF8;
             }
+            else
+            {
+                encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
+            }
 
+            listView1.BeginUpdate();
             foreach (var enc in Configuration.AvailableEncodings)
             {
                 var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
@@ -70,8 +69,8 @@ namespace Nikse.SubtitleEdit.Forms
                     item.Selected = true;
                 }
             }
-
             listView1.ListViewItemSorter = new ListViewSorter { ColumnNumber = 0, IsNumber = true };
+            listView1.EndUpdate();
         }
 
         private void FormChooseEncoding_KeyDown(object sender, KeyEventArgs e)
