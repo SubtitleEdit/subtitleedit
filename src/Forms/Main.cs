@@ -489,6 +489,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     fileName = commandLineArgs[1];
 
+                    if (fileName.Equals("/batchconvert", StringComparison.OrdinalIgnoreCase) || fileName.Equals("-batchconvert", StringComparison.OrdinalIgnoreCase))
+                    {
+                        new BatchConvert(this.Icon).ShowDialog();
+                        Environment.Exit(0);
+                    }
+
                     var sourceLineString = GetArgumentAfterColon(commandLineArgs, "/srcline:");
                     if (!int.TryParse(sourceLineString, out srcLineNumber))
                     {
