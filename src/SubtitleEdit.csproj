@@ -1009,6 +1009,7 @@
     <Compile Include="Logic\Ocr\Tesseract\TesseractRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />
     <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
+    <Compile Include="Logic\MainShortcuts.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
     <Compile Include="Logic\SpellCheck\MacHunspell.cs" />
