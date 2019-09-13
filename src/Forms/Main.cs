@@ -128,139 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
-        private string _clearLastFindText = string.Empty;
-
-        private Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
-        private Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
-        private Keys _mainGeneralMergeSelectedLines = Keys.None;
-        private Keys _mainGeneralMergeSelectedLinesAndAutoBreak = Keys.None;
-        private Keys _mainGeneralMergeSelectedLinesAndUnbreak = Keys.None;
-        private Keys _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = Keys.None;
-        private Keys _mainGeneralMergeSelectedLinesBilingual = Keys.None;
-        private Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;
-        private Keys _mainGeneralToggleTranslationMode = Keys.None;
-        private Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
-        private Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
-        private Keys _mainGeneralMergeWithNext = Keys.None;
-        private Keys _mainGeneralMergeWithPrevious = Keys.None;
-        private Keys _mainGeneralGoToNextSubtitle = Keys.None;
-        private Keys _mainGeneralGoToPrevSubtitle = Keys.None;
-        private Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
-        private Keys _mainGeneralGoToEndOfCurrentSubtitle = Keys.None;
-        private Keys _mainGeneralFileSaveAll = Keys.None;
-        private Keys _mainToolsAutoDuration = Keys.None;
-        private Keys _mainToolsBeamer = Keys.None;
-        private Keys _toggleVideoDockUndock = Keys.None;
-        private Keys _videoPause = Keys.None;
-        private Keys _videoPlayPauseToggle = Keys.None;
-        private Keys _mainVideoPlayFromJustBefore = Keys.None;
-        private Keys _video1FrameLeft = Keys.None;
-        private Keys _video1FrameRight = Keys.None;
-        private Keys _video1FrameLeftWithPlay = Keys.None;
-        private Keys _video1FrameRightWithPlay = Keys.None;
-        private Keys _video100MsLeft = Keys.None;
-        private Keys _video100MsRight = Keys.None;
-        private Keys _video500MsLeft = Keys.None;
-        private Keys _video500MsRight = Keys.None;
-        private Keys _video1000MsLeft = Keys.None;
-        private Keys _video1000MsRight = Keys.None;
-        private Keys _video5000MsLeft = Keys.None;
-        private Keys _video5000MsRight = Keys.None;
-        private Keys _videoGoToPrevSubtitle = Keys.None;
-        private Keys _videoGoToNextSubtitle = Keys.None;
-        private Keys _videoPlayFirstSelected = Keys.None;
-        private Keys _mainVideoFullscreen = Keys.None;
-        private Keys _mainVideoSlower = Keys.None;
-        private Keys _mainVideoFaster = Keys.None;
-        private Keys _mainVideoReset = Keys.None;
-        private Keys _mainGoToPreviousSubtitleAndFocusVideo = Keys.None;
-        private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
-        private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
-        private Keys _mainAutoCalcCurrentDuration = Keys.None;
-        private Keys _mainUnbreakNoSpace = Keys.None;
-        private Keys _mainGeneralToggleBookmarks = Keys.None;
-        private Keys _mainGeneralClearBookmarks = Keys.None;
-        private Keys _mainGeneralGoToBookmark = Keys.None;
-        private Keys _mainGeneralGoToPreviousBookmark = Keys.None;
-        private Keys _mainGeneralGoToNextBookmark = Keys.None;
-        private Keys _mainGeneralChooseProfile = Keys.None;
-        private Keys _mainTextBoxSplitAtCursor = Keys.None;
-        private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
-        private Keys _mainTextBoxSplitSelectedLineBilingual = Keys.None;
-        private Keys _mainTextBoxMoveLastWordDown = Keys.None;
-        private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
-        private Keys _mainTextBoxMoveLastWordDownCurrent = Keys.None;
-        private Keys _mainTextBoxMoveFirstWordUpCurrent = Keys.None;
-        private Keys _mainTextBoxSelectionToLower = Keys.None;
-        private Keys _mainTextBoxSelectionToUpper = Keys.None;
-        private Keys _mainTextBoxToggleAutoDuration = Keys.None;
-        private Keys _mainCreateInsertSubAtVideoPos = Keys.None;
-        private Keys _mainCreateSetStart = Keys.None;
-        private Keys _mainCreateSetEnd = Keys.None;
-        private Keys _mainCreateStartDownEndUp = Keys.None;
-        private Keys _mainCreateSetEndAddNewAndGoToNew = Keys.None;
-        private Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
-        private Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
-        private Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetEndAndGotoNext = Keys.None;
-        private Keys _mainAdjustInsertViaEndAutoStart = Keys.None;
-        private Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetEndNextStartAndGoToNext = Keys.None;
-        private Keys _mainAdjustStartDownEndUpAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetStartKeepDuration = Keys.None;
-        private Keys _mainAdjustSelected100MsForward = Keys.None;
-        private Keys _mainAdjustSelected100MsBack = Keys.None;
-        private Keys _mainAdjustAdjustStartXMsBack = Keys.None;
-        private Keys _mainAdjustAdjustStartXMsForward = Keys.None;
-        private Keys _mainAdjustAdjustEndXMsBack = Keys.None;
-        private Keys _mainAdjustAdjustEndXMsForward = Keys.None;
-        private Keys _mainInsertAfter = Keys.None;
-        private Keys _mainInsertBefore = Keys.None;
-        private Keys _mainTextBoxAutoBreak = Keys.None;
-        private Keys _mainTextBoxUnbreak = Keys.None;
-        private Keys _mainTextBoxBreakAtCursorPosition = Keys.None;
-        private Keys _mainTextBoxBreakAtCursorPositionAndGoToNext = Keys.None;
-        private Keys _mainMergeDialog = Keys.None;
-        private Keys _mainToggleFocus = Keys.None;
-        private Keys _mainListViewToggleDashes = Keys.None;
-        private Keys _mainListViewToggleMusicSymbols = Keys.None;
-        private Keys _mainListViewAutoDuration = Keys.None;
-        private Keys _mainListViewAlignmentN1 = Keys.None;
-        private Keys _mainListViewAlignmentN2 = Keys.None;
-        private Keys _mainListViewAlignmentN3 = Keys.None;
-        private Keys _mainListViewAlignmentN4 = Keys.None;
-        private Keys _mainListViewAlignmentN5 = Keys.None;
-        private Keys _mainListViewAlignmentN6 = Keys.None;
-        private Keys _mainListViewAlignmentN7 = Keys.None;
-        private Keys _mainListViewAlignmentN8 = Keys.None;
-        private Keys _mainListViewAlignmentN9 = Keys.None;
-        private Keys _mainListViewFocusWaveform = Keys.None;
-        private Keys _mainListViewGoToNextError = Keys.None;
-        private Keys _mainListViewCopyText = Keys.None;
-        private Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
-        private Keys _waveformVerticalZoom = Keys.None;
-        private Keys _waveformVerticalZoomOut = Keys.None;
-        private Keys _waveformZoomIn = Keys.None;
-        private Keys _waveformZoomOut = Keys.None;
-        private Keys _waveformSplit = Keys.None;
-        private Keys _waveformPlaySelection = Keys.None;
-        private Keys _waveformPlaySelectionEnd = Keys.None;
-        private Keys _waveformSearchSilenceForward = Keys.None;
-        private Keys _waveformSearchSilenceBack = Keys.None;
-        private Keys _waveformAddTextAtHere = Keys.None;
-        private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
-        private Keys _waveformFocusListView = Keys.None;
-        private Keys _waveformGoToPreviousSceneChange = Keys.None;
-        private Keys _waveformGoToNextSceneChange = Keys.None;
-        private Keys _waveformToggleSceneChange = Keys.None;
-        private Keys _mainTranslateGoogleIt = Keys.None;
-        private Keys _mainTranslateGoogleTranslate = Keys.None;
-        private Keys _mainTranslateCustomSearch1 = Keys.None;
-        private Keys _mainTranslateCustomSearch2 = Keys.None;
-        private Keys _mainTranslateCustomSearch3 = Keys.None;
-        private Keys _mainTranslateCustomSearch4 = Keys.None;
-        private Keys _mainTranslateCustomSearch5 = Keys.None;
+        private string _clearLastFindText = string.Empty;      
         private bool _videoLoadedGoToSubPosAndPause;
         private string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
@@ -278,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _labelNextTicks = -1;
         private bool _showBookmarkLabel = true;
         private ContextMenu _bookmarkContextMenu;
+        private MainShortcuts _shortcuts = new MainShortcuts();
 
         public bool IsMenuOpen { get; private set; }
 
@@ -4737,14 +4606,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
         }
 
-        private bool ShowProfileInStatusBar
-        {
-            get
-            {
-                return Configuration.Settings.General.CurrentProfile != "Default";
-            }
-
-        }
+        private bool ShowProfileInStatusBar =>  Configuration.Settings.General.CurrentProfile != "Default";
 
         private void ShowSourceLineNumber()
         {
@@ -8897,17 +8759,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxAutoBreak)
+            else if (e.KeyData == _shortcuts.MainTextBoxAutoBreak)
             {
                 BreakUnbreakTextBox(false, textBoxListViewText);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxUnbreak)
+            else if (e.KeyData == _shortcuts.MainTextBoxUnbreak)
             {
                 BreakUnbreakTextBox(true, textBoxListViewText);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 if (text != textBoxListViewText.Text)
@@ -8922,7 +8784,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxBreakAtCursorPositionAndGoToNext)
+            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPositionAndGoToNext)
             {
                 var text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 if (text != textBoxListViewText.Text)
@@ -8956,17 +8818,17 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionLength = 0;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSplitAtCursor == e.KeyData)
+            else if (_shortcuts.MainTextBoxSplitAtCursor == e.KeyData)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSplitAtCursorAndVideoPos == e.KeyData)
+            else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPos == e.KeyData)
             {
                 toolStripMenuItemSplitViaWaveform_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSplitSelectedLineBilingual == e.KeyData)
+            else if (_shortcuts.MainTextBoxSplitSelectedLineBilingual == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
@@ -8974,71 +8836,71 @@ namespace Nikse.SubtitleEdit.Forms
                     SplitSelectedLineBilingual();
                 }
             }
-            else if (e.KeyData == _mainListViewAlignmentN1)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
             {
                 SetAlignment("{\\an1}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN2)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN2)
             {
                 SetAlignment("", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN3)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN3)
             {
                 SetAlignment("{\\an3}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN4)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN4)
             {
                 SetAlignment("{\\an4}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN5)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN5)
             {
                 SetAlignment("{\\an5}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN6)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN6)
             {
                 SetAlignment("{\\an6}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN7)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN7)
             {
                 SetAlignment("{\\an7}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN8)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN8)
             {
                 SetAlignment("{\\an8}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN9)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN9)
             {
                 SetAlignment("{\\an9}", false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewToggleMusicSymbols)
+            else if (e.KeyData == _shortcuts.MainListViewToggleMusicSymbols)
             {
                 textBoxListViewText.Text = ToogleMusicSymbols("♪", textBoxListViewText.Text);
             }
-            else if (e.KeyData == _mainInsertBefore)
+            else if (e.KeyData == _shortcuts.MainInsertBefore)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainInsertAfter)
+            else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewGoToNextError)
+            else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
+            else if (_shortcuts.MainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
             {
                 int start = textBoxListViewText.SelectionStart;
                 int length = textBoxListViewText.SelectionLength;
@@ -9047,7 +8909,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSelectionToUpper == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to uppercase
+            else if (_shortcuts.MainTextBoxSelectionToUpper == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to uppercase
             {
                 int start = textBoxListViewText.SelectionStart;
                 int length = textBoxListViewText.SelectionLength;
@@ -9056,7 +8918,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
+            else if (_shortcuts.MainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
             {
                 if (timerAutoDuration.Enabled)
                 {
@@ -13248,27 +13110,27 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _cancelWordSpellCheck = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformVerticalZoom)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoom)
             {
                 audioVisualizer.VerticalZoomFactor *= 1.1;
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformVerticalZoomOut)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoomOut)
             {
                 audioVisualizer.VerticalZoomFactor /= 1.1;
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformZoomIn)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomIn)
             {
                 audioVisualizer.ZoomIn();
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformZoomOut)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomOut)
             {
                 audioVisualizer.ZoomOut();
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformSplit)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSplit)
             {
                 if (mediaPlayer.IsPaused)
                 {
@@ -13284,48 +13146,48 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _videoPlayFirstSelected && !string.IsNullOrEmpty(_videoFileName))
+            else if (e.KeyData == _shortcuts.VideoPlayFirstSelected && !string.IsNullOrEmpty(_videoFileName))
             {
                 PlayFirstSelectedSubtitle();
             }
-            else if (audioVisualizer.Visible && (e.KeyData == _waveformPlaySelection || e.KeyData == _waveformPlaySelectionEnd))
+            else if (audioVisualizer.Visible && (e.KeyData == _shortcuts.WaveformPlaySelection || e.KeyData == _shortcuts.WaveformPlaySelectionEnd))
             {
-                WaveformPlaySelection(nearEnd: e.KeyData == _waveformPlaySelectionEnd);
+                WaveformPlaySelection(nearEnd: e.KeyData == _shortcuts.WaveformPlaySelectionEnd);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformSearchSilenceForward)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceForward)
             {
                 audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Visible && e.KeyData == _waveformSearchSilenceBack)
+            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceBack)
             {
                 audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainInsertAfter == e.KeyData && inListView)
+            else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (_mainInsertBefore == e.KeyData && inListView)
+            else if (_shortcuts.MainInsertBefore == e.KeyData && inListView)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (_mainMergeDialog == e.KeyData && inListView)
+            else if (_shortcuts.MainMergeDialog == e.KeyData && inListView)
             {
                 MergeDialogs();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainListViewToggleDashes == e.KeyData && inListView)
+            else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
             {
                 ToggleDashes();
                 e.SuppressKeyPress = true;
             }
-            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _mainEditReverseStartAndEndingForRTL == e.KeyData && inListView)
+            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRTL == e.KeyData && inListView)
             {
                 ReverseStartAndEndingForRtl();
                 e.SuppressKeyPress = true;
@@ -13365,13 +13227,13 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
-            else if (_mainGeneralGoToNextSubtitle == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToNextSubtitle == e.KeyData)
             {
                 ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
-            else if (_mainGeneralGoToPrevSubtitle == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToPrevSubtitle == e.KeyData)
             {
                 if (AutoRepeatContinueOn || AutoRepeatOn)
                 {
@@ -13385,7 +13247,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
-            else if (_mainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
                 {
@@ -13394,7 +13256,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
                 {
@@ -13403,7 +13265,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGoToPreviousSubtitleAndFocusVideo == e.KeyData)
+            else if (_shortcuts.MainGoToPreviousSubtitleAndFocusVideo == e.KeyData)
             {
                 int newIndex = _subtitleListViewIndex - 1;
                 if (newIndex >= 0)
@@ -13423,7 +13285,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_mainGoToNextSubtitleAndFocusVideo == e.KeyData)
+            else if (_shortcuts.MainGoToNextSubtitleAndFocusVideo == e.KeyData)
             {
                 int newIndex = _subtitleListViewIndex + 1;
                 if (newIndex < _subtitle.Paragraphs.Count)
@@ -13443,54 +13305,54 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_mainUnbreakNoSpace == e.KeyData)
+            else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
             {
                 Unbreak(true);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralToggleBookmarks == e.KeyData)
+            else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
             {
                 ToggleBookmarks(false);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralClearBookmarks == e.KeyData)
+            else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
             {
                 ClearBookmarks();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToBookmark == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToBookmark == e.KeyData)
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
                 GoToBookmark();
             }
-            else if (_mainGeneralGoToPreviousBookmark == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToPreviousBookmark == e.KeyData)
             {
                 GoToPrevoiusBookmark();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToNextBookmark == e.KeyData)
+            else if (_shortcuts.MainGeneralGoToNextBookmark == e.KeyData)
             {
                 GoToNextBookmark();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralChooseProfile == e.KeyData)
+            else if (_shortcuts.MainGeneralChooseProfile == e.KeyData)
             {
                 ChooseProfile();
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralFileSaveAll == e.KeyData)
+            else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainToggleFocus == e.KeyData && inListView)
+            else if (_shortcuts.MainToggleFocus == e.KeyData && inListView)
             {
                 if (SubtitleListview1.Focused)
                 {
@@ -13514,7 +13376,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
+            else if (_shortcuts.MainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
             {
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
@@ -13523,12 +13385,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToFirstEmptyLine == e.KeyData) //Go to first empty line - if any
+            else if (_shortcuts.MainGeneralGoToFirstEmptyLine == e.KeyData) //Go to first empty line - if any
             {
                 GoToFirstEmptyLine();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralMergeSelectedLines == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLines == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
                 {
@@ -13543,7 +13405,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (_mainGeneralMergeSelectedLinesAndAutoBreak == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLinesAndAutoBreak == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 if (SubtitleListview1.SelectedItems.Count == 2)
@@ -13555,7 +13417,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MergeSelectedLines(BreakMode.AutoBreak);
                 }
             }
-            else if (_mainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 if (SubtitleListview1.SelectedItems.Count == 2)
@@ -13567,7 +13429,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MergeSelectedLines(BreakMode.Unbreak);
                 }
             }
-            else if (_mainGeneralMergeSelectedLinesAndUnbreakNoSpace == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreakNoSpace == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
                 {
@@ -13582,7 +13444,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (_mainGeneralMergeSelectedLinesBilingual == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLinesBilingual == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
@@ -13590,7 +13452,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MergeSelectedLinesBilingual();
                 }
             }
-            else if (_mainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
                 {
@@ -13598,7 +13460,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MergeSelectedLinesOnlyFirstText();
                 }
             }
-            else if (_mainGeneralMergeWithNext == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeWithNext == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count >= 1)
                 {
@@ -13611,7 +13473,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (_mainGeneralMergeWithPrevious == e.KeyData)
+            else if (_shortcuts.MainGeneralMergeWithPrevious == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count >= 1)
                 {
@@ -13624,12 +13486,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (_mainGeneralToggleTranslationMode == e.KeyData)
+            else if (_shortcuts.MainGeneralToggleTranslationMode == e.KeyData)
             { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
                 toolStripMenuItemTranslationMode_Click(null, null);
             }
-            else if (e.KeyData == _videoPlayPauseToggle)
+            else if (e.KeyData == _shortcuts.VideoPlayPauseToggle)
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
@@ -13639,7 +13501,7 @@ namespace Nikse.SubtitleEdit.Forms
                     System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
             }
-            else if (e.KeyData == _videoPause)
+            else if (e.KeyData == _shortcuts.VideoPause)
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
@@ -13649,7 +13511,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.Handled = true;
                 }
             }
-            else if (_mainVideoPlayFromJustBefore == e.KeyData)
+            else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
             {
                 buttonBeforeText_Click(null, null);
                 e.SuppressKeyPress = true;
@@ -13822,7 +13684,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
                 RefreshTimeCodeMode();
             }
-            else if (_mainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
+            else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
             {
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
                 {
@@ -13862,7 +13724,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _fileDateTime = new DateTime();
                 }
             }
-            else if (_mainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
+            else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
             {
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
                 {
@@ -13905,7 +13767,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.KeyData == _toggleVideoDockUndock)
+            else if (e.KeyData == _shortcuts.ToggleVideoDockUndock)
             {
                 if (_isVideoControlsUndocked)
                 {
@@ -13916,7 +13778,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UndockVideoControlsToolStripMenuItemClick(null, null);
                 }
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
             {
                 var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
                 if (libMpv != null)
@@ -13929,7 +13791,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRight)
             {
                 var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
                 if (libMpv != null)
@@ -13942,7 +13804,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeftWithPlay)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeftWithPlay)
             {
                 double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
                 _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
@@ -13953,7 +13815,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRightWithPlay)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRightWithPlay)
             {
                 double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                 _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
@@ -13964,57 +13826,57 @@ namespace Nikse.SubtitleEdit.Forms
                 _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsLeft)
             {
                 MoveVideoSeconds(-0.1);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsRight)
             {
                 MoveVideoSeconds(0.1);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsLeft)
             {
                 MoveVideoSeconds(-0.5);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsRight)
             {
                 MoveVideoSeconds(0.5);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsLeft)
             {
                 MoveVideoSeconds(-1.0);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsRight)
             {
                 MoveVideoSeconds(1.0);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video5000MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsLeft)
             {
                 MoveVideoSeconds(-5.0);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video5000MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsRight)
             {
                 MoveVideoSeconds(5.0);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainToolsBeamer == e.KeyData)
+            else if (_shortcuts.MainToolsBeamer == e.KeyData)
             {
                 var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
                 beamer.ShowDialog(this);
             }
-            else if (e.KeyData == _mainVideoFullscreen) // fullscreen
+            else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
             {
                 GoFullscreen(false);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainVideoSlower)
+            else if (e.KeyData == _shortcuts.MainVideoSlower)
             {
                 e.SuppressKeyPress = true;
                 for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
@@ -14027,7 +13889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.KeyData == _mainVideoFaster)
+            else if (e.KeyData == _shortcuts.MainVideoFaster)
             {
                 e.SuppressKeyPress = true;
                 for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
@@ -14040,7 +13902,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.KeyData == _mainVideoReset)
+            else if (e.KeyData == _shortcuts.MainVideoReset)
             {
                 e.SuppressKeyPress = true;
                 if (audioVisualizer != null)
@@ -14056,22 +13918,22 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
                 }
             }
-            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
+            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHere)
             {
                 addParagraphHereToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHereFromClipboard)
+            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHereFromClipboard)
             {
                 addParagraphAndPasteToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.Focused && e.KeyData == _waveformFocusListView)
+            else if (audioVisualizer.Focused && e.KeyData == _shortcuts.WaveformFocusListView)
             {
                 SubtitleListview1.Focus();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _videoGoToPrevSubtitle)
+            else if (e.KeyData == _shortcuts.VideoGoToPrevSubtitle)
             {
                 var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
                 foreach (var p in _subtitle.Paragraphs)
@@ -14094,7 +13956,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _videoGoToNextSubtitle)
+            else if (e.KeyData == _shortcuts.VideoGoToNextSubtitle)
             {
                 var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
                 foreach (var p in _subtitle.Paragraphs)
@@ -14112,7 +13974,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.SceneChanges != null && e.KeyData == _waveformGoToPreviousSceneChange)
+            else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToPreviousSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition - 0.01;
                 foreach (var sceneChange in audioVisualizer.SceneChanges.Reverse<double>())
@@ -14125,7 +13987,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.SceneChanges != null && e.KeyData == _waveformGoToNextSceneChange)
+            else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToNextSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition + 0.01;
                 foreach (var sceneChange in audioVisualizer.SceneChanges)
@@ -14138,7 +14000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _waveformToggleSceneChange)
+            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformToggleSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition;
                 var idx = audioVisualizer.GetSceneChangeIndex(cp);
@@ -14161,7 +14023,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ToolStripMenuItemDeleteClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainToolsAutoDuration == e.KeyData)
+            else if (_shortcuts.MainToolsAutoDuration == e.KeyData)
             {
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
@@ -14182,27 +14044,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDown == e.KeyData)
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDown == e.KeyData)
             {
                 MoveLastWordDown();
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordFromNextUp == e.KeyData)
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordFromNextUp == e.KeyData)
             {
                 MoveFirstWordInNextUp();
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDownCurrent == e.KeyData)
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDownCurrent == e.KeyData)
             {
                 MoveWordUpDownInCurrent(true);
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordUpCurrent == e.KeyData)
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordUpCurrent == e.KeyData)
             {
                 MoveWordUpDownInCurrent(false);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAutoCalcCurrentDuration == e.KeyData)
+            else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 if (SubtitleListview1.SelectedItems.Count >= 1)
@@ -14215,7 +14077,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = false;
                 }
             }
-            else if (_mainAdjustExtendCurrentSubtitle == e.KeyData)
+            else if (_shortcuts.MainAdjustExtendCurrentSubtitle == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -14279,7 +14141,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertNewTextAtVideoPosition();
                 e.SuppressKeyPress = true;
             }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _mainCreateInsertSubAtVideoPos == e.KeyData)
+            else if (tabControlButtons.SelectedTab == tabPageCreate && (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
             {
                 var p = InsertNewTextAtVideoPosition();
                 p.Text = string.Empty;
@@ -14303,18 +14165,18 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonBeforeText_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11 || _mainCreateSetStart == e.KeyData)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11 || _shortcuts.MainCreateSetStart == e.KeyData)
             {
                 buttonSetStartTime_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12 || _mainCreateSetEnd == e.KeyData)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12 || _shortcuts.MainCreateSetEnd == e.KeyData)
             {
                 StopAutoDuration();
                 ButtonSetEndClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainCreateSetEndAddNewAndGoToNew == e.KeyData)
+            else if (_shortcuts.MainCreateSetEndAddNewAndGoToNew == e.KeyData)
             {
                 StopAutoDuration();
                 e.SuppressKeyPress = true;
@@ -14346,7 +14208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonInsertNewTextClick(null, null);
                 }
             }
-            else if (_mainCreateStartDownEndUp == e.KeyData)
+            else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
             {
                 if (_mainCreateStartDownEndUpParagraph == null)
                 {
@@ -14355,12 +14217,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustSelected100MsForward == e.KeyData)
+            else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
             {
                 ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustSelected100MsBack == e.KeyData)
+            else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
             {
                 ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
                 e.SuppressKeyPress = true;
@@ -14368,52 +14230,52 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             // adjust
-            else if (_mainAdjustSelected100MsForward == e.KeyData)
+            else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
             {
                 ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustSelected100MsBack == e.KeyData)
+            else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
             {
                 ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustAdjustStartXMsBack == e.KeyData)
+            else if (_shortcuts.MainAdjustAdjustStartXMsBack == e.KeyData)
             {
                 MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustAdjustStartXMsForward == e.KeyData)
+            else if (_shortcuts.MainAdjustAdjustStartXMsForward == e.KeyData)
             {
                 MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustAdjustEndXMsBack == e.KeyData)
+            else if (_shortcuts.MainAdjustAdjustEndXMsBack == e.KeyData)
             {
                 MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainAdjustAdjustEndXMsForward == e.KeyData)
+            else if (_shortcuts.MainAdjustAdjustEndXMsForward == e.KeyData)
             {
                 MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartAndOffsetTheRest == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData)
             {
                 ButtonSetStartAndOffsetRestClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndOffsetTheRest == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRest == e.KeyData)
             {
                 SetEndAndOffsetTheRest(false);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
             {
                 SetEndAndOffsetTheRest(true);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndGotoNext == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndGotoNext == e.KeyData)
             {
                 ShowNextSubtitleLabel();
                 ButtonSetEndAndGoToNextClick(null, null);
@@ -14430,34 +14292,34 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonSetEndAndGoToNextClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartKeepDuration == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartKeepDuration == e.KeyData)
             {
                 SetStartTime(true);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustInsertViaEndAutoStart == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStart == e.KeyData)
             {
                 SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
             {
                 ShowNextSubtitleLabel();
                 SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
             {
                 SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndNextStartAndGoToNext == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndNextStartAndGoToNext == e.KeyData)
             {
                 ShowNextSubtitleLabel();
                 SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _mainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
+            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
             {
                 ShowNextSubtitleLabel();
                 _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
@@ -14466,37 +14328,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // translate
-            else if (_mainTranslateGoogleIt == e.KeyData)
+            else if (_shortcuts.MainTranslateGoogleIt == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 buttonGoogleIt_Click(null, null);
             }
-            else if (_mainTranslateGoogleTranslate == e.KeyData)
+            else if (_shortcuts.MainTranslateGoogleTranslate == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 buttonGoogleTranslateIt_Click(null, null);
             }
-            else if (_mainTranslateCustomSearch1 == e.KeyData)
+            else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
             }
-            else if (_mainTranslateCustomSearch2 == e.KeyData)
+            else if (_shortcuts.MainTranslateCustomSearch2 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
             }
-            else if (_mainTranslateCustomSearch3 == e.KeyData)
+            else if (_shortcuts.MainTranslateCustomSearch3 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
             }
-            else if (_mainTranslateCustomSearch4 == e.KeyData)
+            else if (_shortcuts.MainTranslateCustomSearch4 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
             }
-            else if (_mainTranslateCustomSearch5 == e.KeyData)
+            else if (_shortcuts.MainTranslateCustomSearch5 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
                 RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
@@ -15427,7 +15289,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewCopyText)
+            else if (e.KeyData == _shortcuts.MainListViewCopyText)
             {
                 var sb = new StringBuilder();
                 foreach (int i in SubtitleListview1.SelectedIndices)
@@ -15444,56 +15306,56 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAutoDuration)
+            else if (e.KeyData == _shortcuts.MainListViewAutoDuration)
             {
                 MakeAutoDurationSelectedLines();
             }
-            else if (e.KeyData == _mainListViewAlignmentN1)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
             {
                 SetAlignment("{\\an1}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN2)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN2)
             {
                 SetAlignment("", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN3)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN3)
             {
                 SetAlignment("{\\an3}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN4)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN4)
             {
                 SetAlignment("{\\an4}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN5)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN5)
             {
                 SetAlignment("{\\an5}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN6)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN6)
             {
                 SetAlignment("{\\an6}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN7)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN7)
             {
                 SetAlignment("{\\an7}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN8)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN8)
             {
                 SetAlignment("{\\an8}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAlignmentN9)
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN9)
             {
                 SetAlignment("{\\an9}", true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewFocusWaveform)
+            else if (e.KeyData == _shortcuts.MainListViewFocusWaveform)
             {
                 if (audioVisualizer.CanFocus)
                 {
@@ -15501,7 +15363,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.KeyData == _mainListViewGoToNextError)
+            else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
@@ -15669,12 +15531,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ToolStripMenuItemDeleteClick(null, null);
             }
-            else if (e.KeyData == _mainInsertBefore)
+            else if (e.KeyData == _shortcuts.MainInsertBefore)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainInsertAfter)
+            else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
@@ -18951,24 +18813,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetShortcuts()
         {
-            _mainGeneralGoToFirstSelectedLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
-            _mainGeneralGoToFirstEmptyLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
-            _mainGeneralMergeSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
-            _mainGeneralMergeSelectedLinesAndAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak);
-            _mainGeneralMergeSelectedLinesAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
-            _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
-            _mainGeneralMergeSelectedLinesBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesBilingual);
-            _mainGeneralMergeSelectedLinesOnlyFirstText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
-            _mainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
-            _mainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
-            _mainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
-            _mainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
-            _mainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);
-            _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-            _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-            _mainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
-            _mainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
-
+            _shortcuts.SetShortcuts();
             newToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             toolStripMenuItemOpenKeepVideo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
@@ -18976,7 +18821,6 @@ namespace Nikse.SubtitleEdit.Forms
             saveOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
             saveOriginalAstoolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
             saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
-            _mainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             openOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenOriginal);
             removeOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileCloseOriginal);
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
@@ -19011,41 +18855,7 @@ namespace Nikse.SubtitleEdit.Forms
             openVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoOpen);
             closeVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoClose);
             showhideVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
-            _toggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
-            _videoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
-            _videoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
-            _mainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
-            _video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
-            _video1FrameRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
-            _video1FrameLeftWithPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeftWithPlay);
-            _video1FrameRightWithPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRightWithPlay);
-            _video100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
-            _video100MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
-            _video500MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
-            _video500MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
-            _video1000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
-            _video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
-            _video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
-            _video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
-            _videoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
-            _videoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
-            _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
-            _mainGoToPreviousSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
-            _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
-            _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
-            _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
-            _mainUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace);
-            _mainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
             toolStripMenuItemBookmark.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
-            _mainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
-            _mainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
-            _mainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
-            _mainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
-            _mainGeneralChooseProfile = UiUtil.GetKeys(Configuration.Settings.Shortcuts.ChooseProfile);
-            _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
-            _mainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
-            _mainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);
-            _mainVideoReset = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoReset);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
@@ -19062,26 +18872,8 @@ namespace Nikse.SubtitleEdit.Forms
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
             underlineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
-            _mainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
-            _mainToolsBeamer = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
-            _mainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
-            _mainListViewToggleMusicSymbols = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemSurroundWithMusicSymbols.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
-            _mainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
-            _mainListViewAlignmentN1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN1);
-            _mainListViewAlignmentN2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN2);
-            _mainListViewAlignmentN3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN3);
-            _mainListViewAlignmentN4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN4);
-            _mainListViewAlignmentN5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN5);
-            _mainListViewAlignmentN6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN6);
-            _mainListViewAlignmentN7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN7);
-            _mainListViewAlignmentN8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN8);
-            _mainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
-            _mainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
-            _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
-            _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            _mainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
             columnDeleteTextOnlyToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
             toolStripMenuItemColumnDeleteText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp);
@@ -19089,70 +18881,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemPasteSpecial.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
             moveTextUpToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextUp);
             moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
-            toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
+            toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-            _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
-            _mainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
-            _mainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
-            _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
-            _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
-            _mainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
-            _mainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
-            _mainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
-            _mainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
-            _mainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
-            _mainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-            _mainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
-            _mainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
-            _mainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
-            _mainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
-            _mainAdjustSetStartAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
-            _mainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
-            _mainAdjustInsertViaEndAutoStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart);
-            _mainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
-            _mainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
-            _mainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
-            _mainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-            _mainAdjustSetStartKeepDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
-            _mainAdjustSelected100MsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
-            _mainAdjustSelected100MsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
-            _mainAdjustAdjustStartXMsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartXMsBack);
-            _mainAdjustAdjustStartXMsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartXMsForward);
-            _mainAdjustAdjustEndXMsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustEndXMsBack);
-            _mainAdjustAdjustEndXMsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustEndXMsForward);
-            _mainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
-            _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
-            _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
-            _mainTextBoxBreakAtCursorPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition);
-            _mainTextBoxBreakAtCursorPositionAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
-            _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
-            _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
-            _mainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
-            _waveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
-            _waveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
-            _waveformZoomIn = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
-            _waveformZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
-            _waveformSplit = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSplit);
-            _waveformPlaySelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
-            _waveformPlaySelectionEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
-            _waveformSearchSilenceForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
-            _waveformSearchSilenceBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
-            _waveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
-            _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
-            _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
-            _waveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
-            _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
-            _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
-
-            _mainTranslateGoogleIt = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleIt);
-            _mainTranslateGoogleTranslate = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate);
-            _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
-            _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
-            _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
-            _mainTranslateCustomSearch4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
-            _mainTranslateCustomSearch5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
 
@@ -21812,17 +21542,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxAutoBreak)
+            else if (e.KeyData == _shortcuts.MainTextBoxAutoBreak)
             {
                 BreakUnbreakTextBox(false, textBoxListViewTextAlternate);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxUnbreak)
+            else if (e.KeyData == _shortcuts.MainTextBoxUnbreak)
             {
                 BreakUnbreakTextBox(true, textBoxListViewTextAlternate);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 textBoxListViewTextAlternate.Text = Utilities.ReSplit(textBoxListViewTextAlternate.Text, textBoxListViewTextAlternate.SelectionStart);
                 var lines = textBoxListViewTextAlternate.Text.SplitToLines();
@@ -21833,7 +21563,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
 
-            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            else if (e.KeyData == _shortcuts.MainTextBoxBreakAtCursorPosition)
             {
                 textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
                 ButtonNextClick(null, null);
@@ -21862,7 +21592,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewTextAlternate.SelectionLength = 0;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            else if (_shortcuts.MainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
             {
                 if (textBoxListViewTextAlternate.SelectionLength > 0)
                 {
@@ -21874,7 +21604,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            else if (_shortcuts.MainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
             {
                 if (textBoxListViewTextAlternate.SelectionLength > 0)
                 {
@@ -21886,12 +21616,12 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_mainTextBoxSplitAtCursor == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            else if (_shortcuts.MainTextBoxSplitAtCursor == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSplitAtCursorAndVideoPos == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            else if (_shortcuts.MainTextBoxSplitAtCursorAndVideoPos == e.KeyData && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
             {
                 toolStripMenuItemSplitViaWaveform_Click(null, null);
                 e.SuppressKeyPress = true;
