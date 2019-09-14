@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AQTitle(),
                     new AvidCaption(),
                     new AvidDvd(),
+                    new AwsTranscribeJson(),
                     new BelleNuitSubtitler(),
                     new Cappella(),
                     new CaptionAssistant(),
