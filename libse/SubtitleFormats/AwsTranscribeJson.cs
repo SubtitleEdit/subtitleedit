@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(',');
                 }
 
-                sb.Append("{ \"startTime\":");
+                sb.Append("{ \"start_time\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(", \"end_time\":");
                 sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
