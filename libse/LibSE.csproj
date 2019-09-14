@@ -198,9 +198,11 @@
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="PlainTextImporter.cs" />
+    <Compile Include="SeJsonParser.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />
     <Compile Include="SubtitleFormats\JsonType15.cs" />
+    <Compile Include="SubtitleFormats\AwsTranscribeJson.cs" />
     <Compile Include="SubtitleFormats\JsonType8b.cs" />
     <Compile Include="SubtitleFormats\KaraokeCdgCreatorText.cs" />
     <Compile Include="SubtitleFormats\GooglePlayJson.cs" />
