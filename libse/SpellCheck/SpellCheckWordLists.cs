@@ -13,7 +13,13 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
     public class SpellCheckWordLists
     {
 
-        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u200B\u200E\u200F\u2028\u2029\u202A\u202B\u202C\u202D\u202E\u202F\u3000\uFEFF";
+        public static readonly HashSet<char> SplitChars = new HashSet<char>
+        {
+            ' ', '-', '.', ',', '?', '!', ':', ';', '\\', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n',
+            '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟', '\u00A0', '\u1680', '\u2000', '\u2001', '\u2002', '\u2003',
+            '\u2004', '\u2005', '\u2006', '\u2007', '\u2008', '\u2009', '\u200A', '\u200B', '\u200E', '\u200F', '\u2028', '\u2029', '\u202A',
+            '\u202B', '\u202C', '\u202D', '\u202E', '\u202F', '\u3000', '\uFEFF'
+        };
 
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
