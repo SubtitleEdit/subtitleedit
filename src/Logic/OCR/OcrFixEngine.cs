@@ -62,7 +62,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public bool IsDictionaryLoaded { get; private set; }
 
         public CultureInfo DictionaryCulture { get; private set; }
-        private const string ExpectedChars = " ¡¿,.!?:;()[]{}+-£\"”„“«»#&%\r\n؟"; // removed $
+        private readonly HashSet<char> ExpectedChars = new HashSet<char> { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '\\', '"', '”', '„', '“', '«', '»', '#', '&', '%', '\r', '\n', '؟' }; // removed $
+        private readonly HashSet<char> ExpectedCharsNoComma = new HashSet<char> { ' ', '¡', '¿', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '\\', '"', '”', '„', '“', '«', '»', '#', '&', '%', '\r', '\n', '؟' }; // removed $ + comma
 
         /// <summary>
         /// Advanced OCR fixing via replace/spelling dictionaries + some hardcoded rules
@@ -691,11 +692,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             string lastWord = null;
             var sb = new StringBuilder();
-            var word = new StringBuilder();
-            var separatorCharsNoComma = ExpectedChars.Replace(",", string.Empty);
+            var word = new StringBuilder();            
             for (int i = 0; i < text.Length; i++)
             {
-                if (separatorCharsNoComma.Contains(text[i])) // fix e.g. "don,t"
+                if (ExpectedCharsNoComma.Contains(text[i])) // fix e.g. "don,t"
                 {
                     if (word.Length > 0)
                     {
