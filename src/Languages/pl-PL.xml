@@ -782,7 +782,6 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     <FileName>Nazwa pliku</FileName>
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Uwaga: Pliki muszą zawierać poprawne kody czasowe</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nie określony</NotSpecified>

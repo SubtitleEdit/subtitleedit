@@ -774,7 +774,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Име на файл</FileName>
     <Join>Обедини</Join>
     <TotalNumberOfLinesX>Общ брой редове: {0:#.###.###}</TotalNumberOfLinesX>
-    <Note>Забележка: Файловете трябва да са с коректни времеви кодове</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Не е указано</NotSpecified>

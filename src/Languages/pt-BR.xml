@@ -779,7 +779,6 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
     <FileName>Nome do arquivo</FileName>
     <Join>Juntar</Join>
     <TotalNumberOfLinesX>Número total de linhas: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Nota: Os arquivos devem ter os códigos de tempo corretos</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Não Especificado</NotSpecified>

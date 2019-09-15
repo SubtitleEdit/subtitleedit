@@ -782,7 +782,6 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <FileName>Nome do ficheiro</FileName>
     <Join>Juntar</Join>
     <TotalNumberOfLinesX>Total do número de linhas: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Nota: Os ficheiros já devem ter os tempos correctos</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Não especificado</NotSpecified>

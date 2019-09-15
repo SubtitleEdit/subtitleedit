@@ -778,7 +778,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <FileName>파일 이름</FileName>
     <Join>등록</Join>
     <TotalNumberOfLinesX>총 라인 수: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>주의: 파일이 올바른 타임코드를 가지고 있어야 합니다.</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>지정되지 않음</NotSpecified>

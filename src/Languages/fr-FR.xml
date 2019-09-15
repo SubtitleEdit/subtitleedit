@@ -767,7 +767,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <FileName>Nom</FileName>
     <Join>Créer</Join>
     <TotalNumberOfLinesX>Nombre total de lignes: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Note : Il faut ajuster les timecodes avant de fusionner les sous-titres</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Indéterminé</NotSpecified>

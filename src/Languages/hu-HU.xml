@@ -780,7 +780,6 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
     <FileName>Fájlnév</FileName>
     <Join>Egyesítés</Join>
     <TotalNumberOfLinesX>Sorok száma összesen: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Megjegyzés: A fájloknak már rendelkeznie kell megfelelő időkódokkal</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nincs megadva</NotSpecified>

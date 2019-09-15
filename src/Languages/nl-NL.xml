@@ -781,7 +781,6 @@ Open “Instellingen -&gt; Voorkeuren -&gt; Extra” voor meer informatie.</Goog
     <FileName>Bestandsnaam</FileName>
     <Join>Samenvoegen</Join>
     <TotalNumberOfLinesX>Totaal aantal regels: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Opmerking: de tĳdcodes in de bestanden moeten al juist zĳn</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Onbepaald</NotSpecified>

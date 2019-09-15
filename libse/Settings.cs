@@ -126,6 +126,8 @@ namespace Nikse.SubtitleEdit.Core
         public string SplitOutputFolder { get; set; }
         public int SplitNumberOfParts { get; set; }
         public string SplitVia { get; set; }
+        public bool JoinCorrectTimeCodes { get; set; }
+        public int JoinAddMs { get; set; }
         public string LastShowEarlierOrLaterSelection { get; set; }
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
@@ -274,6 +276,7 @@ namespace Nikse.SubtitleEdit.Core
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
+            JoinCorrectTimeCodes = true;
             NewEmptyTranslationText = string.Empty;
             BatchConvertLanguage = string.Empty;
             ModifySelectionRule = "Contains";
@@ -2732,6 +2735,18 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.SplitVia = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("JoinCorrectTimeCodes");
+            if (subNode != null)
+            {
+                settings.Tools.JoinCorrectTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("JoinAddMs");
+            if (subNode != null)
+            {
+                settings.Tools.JoinAddMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("NewEmptyTranslationText");
@@ -5988,6 +6003,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
                 textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
+                textWriter.WriteElementString("JoinCorrectTimeCodes", settings.Tools.JoinCorrectTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("JoinAddMs", settings.Tools.JoinAddMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
                 textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString());

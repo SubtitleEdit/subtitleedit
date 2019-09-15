@@ -774,7 +774,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FileName>Tiedostonimi</FileName>
     <Join>Yhdistä</Join>
     <TotalNumberOfLinesX>Rivejä yhteensä: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>HUOM! Tiedostoissa pitää olla valmiiksi kelvolliset aikakoodit</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Ei määritetty</NotSpecified>

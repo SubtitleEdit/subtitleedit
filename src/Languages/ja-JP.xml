@@ -627,7 +627,6 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <FileName>ファイル名</FileName>
     <Join>結合</Join>
     <TotalNumberOfLinesX>行の合計数: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>注意: ファイルは正しいタイムコードである必要があります</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>指定なし</NotSpecified>

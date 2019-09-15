@@ -2041,8 +2041,14 @@ namespace Nikse.SubtitleEdit.Core
                 case "JoinSubtitles/TotalNumberOfLinesX":
                     language.JoinSubtitles.TotalNumberOfLinesX = reader.Value;
                     break;
-                case "JoinSubtitles/Note":
-                    language.JoinSubtitles.Note = reader.Value;
+                case "JoinSubtitles/AlreadyCorrectTimeCodes":
+                    language.JoinSubtitles.AlreadyCorrectTimeCodes = reader.Value;
+                    break;
+                case "JoinSubtitles/AppendTimeCodes":
+                    language.JoinSubtitles.AppendTimeCodes = reader.Value;
+                    break;
+                case "JoinSubtitles/AddMs":
+                    language.JoinSubtitles.AddMs = reader.Value;
                     break;
                 case "LanguageNames/NotSpecified":
                     language.LanguageNames.NotSpecified = reader.Value;

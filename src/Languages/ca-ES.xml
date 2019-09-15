@@ -749,7 +749,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nom fitxer</FileName>
     <Join>Uneix</Join>
     <TotalNumberOfLinesX>Nombre total línies: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Nota: Fitxers deuen tenir ja el codis de temps correctes</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>No especificat</NotSpecified>

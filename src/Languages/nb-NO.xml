@@ -721,7 +721,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <FileName>Filnavn</FileName>
     <Join>Bli med</Join>
     <TotalNumberOfLinesX>Totalt antall linjer: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Bemerk: Filene må allerede ha riktige tidsangivelser</Note>
   </JoinSubtitles>
   <LanguageNames>
     <aaName>afar</aaName>

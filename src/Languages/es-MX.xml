@@ -753,7 +753,6 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <FileName>Nombre del archivo</FileName>
     <Join>Unir</Join>
     <TotalNumberOfLinesX>Total número de líneas: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Nota: Los archivos ya debe tener los códigos de tiempo correctos</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>No especificado</NotSpecified>

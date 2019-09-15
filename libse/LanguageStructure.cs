@@ -866,7 +866,9 @@
             public string FileName { get; set; }
             public string Join { get; set; }
             public string TotalNumberOfLinesX { get; set; }
-            public string Note { get; set; }
+            public string AlreadyCorrectTimeCodes { get; set; }
+            public string AppendTimeCodes { get; set; }
+            public string AddMs { get; set; }
         }
 
         public class LanguageNames
