@@ -440,9 +440,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (p.Text.Contains('<'))
+                if (p.Text.Contains('<') || p.Text.Contains('&'))
                 {
-                    var text = p.Text.Replace("&rlm;", "\u202B").Replace("&lrm;", "\u202A");
+                    var text = p.Text.Replace("&rlm;", string.Empty).Replace("&lrm;", string.Empty); // or use rlm=\u202B, lrm=\u202A ?
                     foreach (var knownLanguage in KnownLanguages)
                     {
                         text = text.Replace("<c." + knownLanguage + ">", string.Empty).Replace("</c." + knownLanguage + ">", string.Empty);
