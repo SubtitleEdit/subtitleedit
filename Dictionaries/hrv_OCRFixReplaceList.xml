@@ -3563,6 +3563,7 @@
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="tićn" replaceWith="tičn" />
     <RegEx find="tisanj" replaceWith="tiranj" />
+    <RegEx find="tks" replaceWith="tsk" />
     <RegEx find="(mo|ti|r)viš[eu]" replaceWith="$1vira" />
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
     <RegEx find="teriv" replaceWith="tjeriv" />
