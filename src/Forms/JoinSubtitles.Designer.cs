@@ -53,10 +53,10 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(709, 321);
+            this.buttonCancel.Location = new System.Drawing.Point(709, 348);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 29;
+            this.buttonCancel.TabIndex = 45;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -65,10 +65,10 @@
             // 
             this.buttonJoin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonJoin.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonJoin.Location = new System.Drawing.Point(628, 321);
+            this.buttonJoin.Location = new System.Drawing.Point(628, 348);
             this.buttonJoin.Name = "buttonJoin";
             this.buttonJoin.Size = new System.Drawing.Size(75, 21);
-            this.buttonJoin.TabIndex = 28;
+            this.buttonJoin.TabIndex = 40;
             this.buttonJoin.Text = "&Join";
             this.buttonJoin.UseVisualStyleBackColor = true;
             this.buttonJoin.Click += new System.EventHandler(this.buttonSplit_Click);
@@ -88,7 +88,7 @@
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(6, 19);
             this.listViewParts.Name = "listViewParts";
-            this.listViewParts.Size = new System.Drawing.Size(669, 229);
+            this.listViewParts.Size = new System.Drawing.Size(669, 256);
             this.listViewParts.TabIndex = 101;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
@@ -113,7 +113,7 @@
             // columnHeaderFileName
             // 
             this.columnHeaderFileName.Text = "File name";
-            this.columnHeaderFileName.Width = 463;
+            this.columnHeaderFileName.Width = 455;
             // 
             // groupBoxPreview
             // 
@@ -127,7 +127,7 @@
             this.groupBoxPreview.Controls.Add(this.listViewParts);
             this.groupBoxPreview.Location = new System.Drawing.Point(11, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(773, 270);
+            this.groupBoxPreview.Size = new System.Drawing.Size(773, 297);
             this.groupBoxPreview.TabIndex = 27;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Add subtitles to join (drop also supported)";
@@ -136,7 +136,7 @@
             // 
             this.labelTotalLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTotalLines.AutoSize = true;
-            this.labelTotalLines.Location = new System.Drawing.Point(7, 251);
+            this.labelTotalLines.Location = new System.Drawing.Point(7, 278);
             this.labelTotalLines.Name = "labelTotalLines";
             this.labelTotalLines.Size = new System.Drawing.Size(78, 13);
             this.labelTotalLines.TabIndex = 105;
@@ -181,18 +181,21 @@
             // 
             // radioButtonJoinPlain
             // 
+            this.radioButtonJoinPlain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonJoinPlain.AutoSize = true;
-            this.radioButtonJoinPlain.Location = new System.Drawing.Point(14, 291);
+            this.radioButtonJoinPlain.Location = new System.Drawing.Point(14, 318);
             this.radioButtonJoinPlain.Name = "radioButtonJoinPlain";
             this.radioButtonJoinPlain.Size = new System.Drawing.Size(200, 17);
-            this.radioButtonJoinPlain.TabIndex = 31;
+            this.radioButtonJoinPlain.TabIndex = 30;
             this.radioButtonJoinPlain.TabStop = true;
             this.radioButtonJoinPlain.Text = "Files already have correct time codes";
             this.radioButtonJoinPlain.UseVisualStyleBackColor = true;
+            this.radioButtonJoinPlain.CheckedChanged += new System.EventHandler(this.RadioButtonJoinPlain_CheckedChanged);
             // 
             // numericUpDownAddMs
             // 
-            this.numericUpDownAddMs.Location = new System.Drawing.Point(385, 314);
+            this.numericUpDownAddMs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDownAddMs.Location = new System.Drawing.Point(385, 341);
             this.numericUpDownAddMs.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -200,23 +203,26 @@
             0});
             this.numericUpDownAddMs.Name = "numericUpDownAddMs";
             this.numericUpDownAddMs.Size = new System.Drawing.Size(60, 20);
-            this.numericUpDownAddMs.TabIndex = 32;
+            this.numericUpDownAddMs.TabIndex = 34;
             // 
             // radioButtonJoinAddTime
             // 
+            this.radioButtonJoinAddTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonJoinAddTime.AutoSize = true;
-            this.radioButtonJoinAddTime.Location = new System.Drawing.Point(14, 314);
+            this.radioButtonJoinAddTime.Location = new System.Drawing.Point(14, 341);
             this.radioButtonJoinAddTime.Name = "radioButtonJoinAddTime";
             this.radioButtonJoinAddTime.Size = new System.Drawing.Size(161, 17);
-            this.radioButtonJoinAddTime.TabIndex = 33;
+            this.radioButtonJoinAddTime.TabIndex = 32;
             this.radioButtonJoinAddTime.TabStop = true;
             this.radioButtonJoinAddTime.Text = "Add end time of previous  file";
             this.radioButtonJoinAddTime.UseVisualStyleBackColor = true;
+            this.radioButtonJoinAddTime.CheckedChanged += new System.EventHandler(this.RadioButtonJoinAddTime_CheckedChanged);
             // 
             // labelAddTime
             // 
+            this.labelAddTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAddTime.AutoSize = true;
-            this.labelAddTime.Location = new System.Drawing.Point(227, 316);
+            this.labelAddTime.Location = new System.Drawing.Point(227, 343);
             this.labelAddTime.Name = "labelAddTime";
             this.labelAddTime.Size = new System.Drawing.Size(152, 13);
             this.labelAddTime.TabIndex = 34;
@@ -226,7 +232,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(796, 354);
+            this.ClientSize = new System.Drawing.Size(796, 381);
             this.Controls.Add(this.labelAddTime);
             this.Controls.Add(this.radioButtonJoinAddTime);
             this.Controls.Add(this.numericUpDownAddMs);

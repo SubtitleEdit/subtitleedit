@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.Length == 17 && regexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(new[] { ':', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 6)
