@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAddTime.Text = Configuration.Settings.Language.JoinSubtitles.AddMs;
 
             labelAddTime.Left = radioButtonJoinAddTime.Left + labelAddTime.Width + 20;
-            numericUpDownAddMs.Left = labelAddTime.Left + labelAddTime.Width + 20;
+            numericUpDownAddMs.Left = labelAddTime.Left + labelAddTime.Width + 5;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
 
@@ -168,7 +168,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _fileNamesToJoin.RemoveAt(j);
                         }
-
                         MessageBox.Show("Unkown subtitle format: " + fileName);
                         break;
                     }
@@ -194,7 +193,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _fileNamesToJoin.RemoveAt(j);
                     }
-
                     MessageBox.Show(exception.Message);
                     return;
                 }
@@ -284,6 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string fileName in openFileDialog1.FileNames)
                 {
+                    Application.DoEvents();
                     if (File.Exists(fileName))
                     {
                         var fileInfo = new FileInfo(fileName);
@@ -313,6 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(sb.ToString());
                 }
+                JoinSubtitles_Resize(sender, e);
             }
         }
 
@@ -348,6 +348,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.JoinCorrectTimeCodes = radioButtonJoinPlain.Checked;
             Configuration.Settings.Tools.JoinAddMs = (int)numericUpDownAddMs.Value;
+        }
+
+        private void RadioButtonJoinAddTime_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownAddMs.Enabled = radioButtonJoinAddTime.Checked;
+            labelAddTime.Enabled = radioButtonJoinAddTime.Checked;
+        }
+
+        private void RadioButtonJoinPlain_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownAddMs.Enabled = radioButtonJoinAddTime.Checked;
+            labelAddTime.Enabled = radioButtonJoinAddTime.Checked;
         }
     }
 }
