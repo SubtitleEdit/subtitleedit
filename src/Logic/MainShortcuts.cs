@@ -5,137 +5,137 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class MainShortcuts
     {
-        public Keys MainGeneralGoToFirstSelectedLine = Keys.None;
-        public Keys MainGeneralGoToFirstEmptyLine = Keys.None;
-        public Keys MainGeneralMergeSelectedLines = Keys.None;
-        public Keys MainGeneralMergeSelectedLinesAndAutoBreak = Keys.None;
-        public Keys MainGeneralMergeSelectedLinesAndUnbreak = Keys.None;
-        public Keys MainGeneralMergeSelectedLinesAndUnbreakNoSpace = Keys.None;
-        public Keys MainGeneralMergeSelectedLinesBilingual = Keys.None;
-        public Keys MainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;
-        public Keys MainGeneralToggleTranslationMode = Keys.None;
-        public Keys MainGeneralSwitchTranslationAndOriginal = Keys.None;
-        public Keys MainGeneralMergeTranslationAndOriginal = Keys.None;
-        public Keys MainGeneralMergeWithNext = Keys.None;
-        public Keys MainGeneralMergeWithPrevious = Keys.None;
-        public Keys MainGeneralGoToNextSubtitle = Keys.None;
-        public Keys MainGeneralGoToPrevSubtitle = Keys.None;
-        public Keys MainGeneralGoToStartOfCurrentSubtitle = Keys.None;
-        public Keys MainGeneralGoToEndOfCurrentSubtitle = Keys.None;
-        public Keys MainGeneralFileSaveAll = Keys.None;
-        public Keys MainToolsAutoDuration = Keys.None;
-        public Keys MainToolsBeamer = Keys.None;
-        public Keys ToggleVideoDockUndock = Keys.None;
-        public Keys VideoPause = Keys.None;
-        public Keys VideoPlayPauseToggle = Keys.None;
-        public Keys MainVideoPlayFromJustBefore = Keys.None;
-        public Keys Video1FrameLeft = Keys.None;
-        public Keys Video1FrameRight = Keys.None;
-        public Keys Video1FrameLeftWithPlay = Keys.None;
-        public Keys Video1FrameRightWithPlay = Keys.None;
-        public Keys Video100MsLeft = Keys.None;
-        public Keys Video100MsRight = Keys.None;
-        public Keys Video500MsLeft = Keys.None;
-        public Keys Video500MsRight = Keys.None;
-        public Keys Video1000MsLeft = Keys.None;
-        public Keys Video1000MsRight = Keys.None;
-        public Keys Video5000MsLeft = Keys.None;
-        public Keys Video5000MsRight = Keys.None;
-        public Keys VideoGoToPrevSubtitle = Keys.None;
-        public Keys VideoGoToNextSubtitle = Keys.None;
-        public Keys VideoPlayFirstSelected = Keys.None;
-        public Keys MainVideoFullscreen = Keys.None;
-        public Keys MainVideoSlower = Keys.None;
-        public Keys MainVideoFaster = Keys.None;
-        public Keys MainVideoReset = Keys.None;
-        public Keys MainGoToPreviousSubtitleAndFocusVideo = Keys.None;
-        public Keys MainGoToNextSubtitleAndFocusVideo = Keys.None;
-        public Keys MainAdjustExtendCurrentSubtitle = Keys.None;
-        public Keys MainAutoCalcCurrentDuration = Keys.None;
-        public Keys MainUnbreakNoSpace = Keys.None;
-        public Keys MainGeneralToggleBookmarks = Keys.None;
-        public Keys MainGeneralClearBookmarks = Keys.None;
-        public Keys MainGeneralGoToBookmark = Keys.None;
-        public Keys MainGeneralGoToPreviousBookmark = Keys.None;
-        public Keys MainGeneralGoToNextBookmark = Keys.None;
-        public Keys MainGeneralChooseProfile = Keys.None;
-        public Keys MainTextBoxSplitAtCursor = Keys.None;
-        public Keys MainTextBoxSplitAtCursorAndVideoPos = Keys.None;
-        public Keys MainTextBoxSplitSelectedLineBilingual = Keys.None;
-        public Keys MainTextBoxMoveLastWordDown = Keys.None;
-        public Keys MainTextBoxMoveFirstWordFromNextUp = Keys.None;
-        public Keys MainTextBoxMoveLastWordDownCurrent = Keys.None;
-        public Keys MainTextBoxMoveFirstWordUpCurrent = Keys.None;
-        public Keys MainTextBoxSelectionToLower = Keys.None;
-        public Keys MainTextBoxSelectionToUpper = Keys.None;
-        public Keys MainTextBoxToggleAutoDuration = Keys.None;
-        public Keys MainCreateInsertSubAtVideoPos = Keys.None;
-        public Keys MainCreateSetStart = Keys.None;
-        public Keys MainCreateSetEnd = Keys.None;
-        public Keys MainCreateStartDownEndUp = Keys.None;
-        public Keys MainCreateSetEndAddNewAndGoToNew = Keys.None;
-        public Keys MainAdjustSetStartAndOffsetTheRest = Keys.None;
-        public Keys MainAdjustSetEndAndOffsetTheRest = Keys.None;
-        public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
-        public Keys MainAdjustSetEndAndGotoNext = Keys.None;
-        public Keys MainAdjustInsertViaEndAutoStart = Keys.None;
-        public Keys MainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
-        public Keys MainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
-        public Keys MainAdjustSetEndNextStartAndGoToNext = Keys.None;
-        public Keys MainAdjustStartDownEndUpAndGoToNext = Keys.None;
-        public Keys MainAdjustSetStartKeepDuration = Keys.None;
-        public Keys MainAdjustSelected100MsForward = Keys.None;
-        public Keys MainAdjustSelected100MsBack = Keys.None;
-        public Keys MainAdjustAdjustStartXMsBack = Keys.None;
-        public Keys MainAdjustAdjustStartXMsForward = Keys.None;
-        public Keys MainAdjustAdjustEndXMsBack = Keys.None;
-        public Keys MainAdjustAdjustEndXMsForward = Keys.None;
-        public Keys MainInsertAfter = Keys.None;
-        public Keys MainInsertBefore = Keys.None;
-        public Keys MainTextBoxAutoBreak = Keys.None;
-        public Keys MainTextBoxUnbreak = Keys.None;
-        public Keys MainTextBoxBreakAtCursorPosition = Keys.None;
-        public Keys MainTextBoxBreakAtCursorPositionAndGoToNext = Keys.None;
-        public Keys MainMergeDialog = Keys.None;
-        public Keys MainToggleFocus = Keys.None;
-        public Keys MainListViewToggleDashes = Keys.None;
-        public Keys MainListViewToggleMusicSymbols = Keys.None;
-        public Keys MainListViewAutoDuration = Keys.None;
-        public Keys MainListViewAlignmentN1 = Keys.None;
-        public Keys MainListViewAlignmentN2 = Keys.None;
-        public Keys MainListViewAlignmentN3 = Keys.None;
-        public Keys MainListViewAlignmentN4 = Keys.None;
-        public Keys MainListViewAlignmentN5 = Keys.None;
-        public Keys MainListViewAlignmentN6 = Keys.None;
-        public Keys MainListViewAlignmentN7 = Keys.None;
-        public Keys MainListViewAlignmentN8 = Keys.None;
-        public Keys MainListViewAlignmentN9 = Keys.None;
-        public Keys MainListViewFocusWaveform = Keys.None;
-        public Keys MainListViewGoToNextError = Keys.None;
-        public Keys MainListViewCopyText = Keys.None;
-        public Keys MainEditReverseStartAndEndingForRTL = Keys.None;
-        public Keys WaveformVerticalZoom = Keys.None;
-        public Keys WaveformVerticalZoomOut = Keys.None;
-        public Keys WaveformZoomIn = Keys.None;
-        public Keys WaveformZoomOut = Keys.None;
-        public Keys WaveformSplit = Keys.None;
-        public Keys WaveformPlaySelection = Keys.None;
-        public Keys WaveformPlaySelectionEnd = Keys.None;
-        public Keys WaveformSearchSilenceForward = Keys.None;
-        public Keys WaveformSearchSilenceBack = Keys.None;
-        public Keys WaveformAddTextAtHere = Keys.None;
-        public Keys WaveformAddTextAtHereFromClipboard = Keys.None;
-        public Keys WaveformFocusListView = Keys.None;
-        public Keys WaveformGoToPreviousSceneChange = Keys.None;
-        public Keys WaveformGoToNextSceneChange = Keys.None;
-        public Keys WaveformToggleSceneChange = Keys.None;
-        public Keys MainTranslateGoogleIt = Keys.None;
-        public Keys MainTranslateGoogleTranslate = Keys.None;
-        public Keys MainTranslateCustomSearch1 = Keys.None;
-        public Keys MainTranslateCustomSearch2 = Keys.None;
-        public Keys MainTranslateCustomSearch3 = Keys.None;
-        public Keys MainTranslateCustomSearch4 = Keys.None;
-        public Keys MainTranslateCustomSearch5 = Keys.None;
+        public Keys MainGeneralGoToFirstSelectedLine { get; set; }
+        public Keys MainGeneralGoToFirstEmptyLine { get; set; }
+        public Keys MainGeneralMergeSelectedLines { get; set; }
+        public Keys MainGeneralMergeSelectedLinesAndAutoBreak { get; set; }
+        public Keys MainGeneralMergeSelectedLinesAndUnbreak { get; set; }
+        public Keys MainGeneralMergeSelectedLinesAndUnbreakNoSpace { get; set; }
+        public Keys MainGeneralMergeSelectedLinesBilingual { get; set; }
+        public Keys MainGeneralMergeSelectedLinesOnlyFirstText { get; set; }
+        public Keys MainGeneralToggleTranslationMode { get; set; }
+        public Keys MainGeneralSwitchTranslationAndOriginal { get; set; }
+        public Keys MainGeneralMergeTranslationAndOriginal { get; set; }
+        public Keys MainGeneralMergeWithNext { get; set; }
+        public Keys MainGeneralMergeWithPrevious { get; set; }
+        public Keys MainGeneralGoToNextSubtitle { get; set; }
+        public Keys MainGeneralGoToPrevSubtitle { get; set; }
+        public Keys MainGeneralGoToStartOfCurrentSubtitle { get; set; }
+        public Keys MainGeneralGoToEndOfCurrentSubtitle { get; set; }
+        public Keys MainGeneralFileSaveAll { get; set; }
+        public Keys MainToolsAutoDuration { get; set; }
+        public Keys MainToolsBeamer { get; set; }
+        public Keys ToggleVideoDockUndock { get; set; }
+        public Keys VideoPause { get; set; }
+        public Keys VideoPlayPauseToggle { get; set; }
+        public Keys MainVideoPlayFromJustBefore { get; set; }
+        public Keys Video1FrameLeft { get; set; }
+        public Keys Video1FrameRight { get; set; }
+        public Keys Video1FrameLeftWithPlay { get; set; }
+        public Keys Video1FrameRightWithPlay { get; set; }
+        public Keys Video100MsLeft { get; set; }
+        public Keys Video100MsRight { get; set; }
+        public Keys Video500MsLeft { get; set; }
+        public Keys Video500MsRight { get; set; }
+        public Keys Video1000MsLeft { get; set; }
+        public Keys Video1000MsRight { get; set; }
+        public Keys Video5000MsLeft { get; set; }
+        public Keys Video5000MsRight { get; set; }
+        public Keys VideoGoToPrevSubtitle { get; set; }
+        public Keys VideoGoToNextSubtitle { get; set; }
+        public Keys VideoPlayFirstSelected { get; set; }
+        public Keys MainVideoFullscreen { get; set; }
+        public Keys MainVideoSlower { get; set; }
+        public Keys MainVideoFaster { get; set; }
+        public Keys MainVideoReset { get; set; }
+        public Keys MainGoToPreviousSubtitleAndFocusVideo { get; set; }
+        public Keys MainGoToNextSubtitleAndFocusVideo { get; set; }
+        public Keys MainAdjustExtendCurrentSubtitle { get; set; }
+        public Keys MainAutoCalcCurrentDuration { get; set; }
+        public Keys MainUnbreakNoSpace { get; set; }
+        public Keys MainGeneralToggleBookmarks { get; set; }
+        public Keys MainGeneralClearBookmarks { get; set; }
+        public Keys MainGeneralGoToBookmark { get; set; }
+        public Keys MainGeneralGoToPreviousBookmark { get; set; }
+        public Keys MainGeneralGoToNextBookmark { get; set; }
+        public Keys MainGeneralChooseProfile { get; set; }
+        public Keys MainTextBoxSplitAtCursor { get; set; }
+        public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }
+        public Keys MainTextBoxMoveLastWordDown { get; set; }
+        public Keys MainTextBoxMoveFirstWordFromNextUp { get; set; }
+        public Keys MainTextBoxMoveLastWordDownCurrent { get; set; }
+        public Keys MainTextBoxMoveFirstWordUpCurrent { get; set; }
+        public Keys MainTextBoxSelectionToLower { get; set; }
+        public Keys MainTextBoxSelectionToUpper { get; set; }
+        public Keys MainTextBoxToggleAutoDuration { get; set; }
+        public Keys MainCreateInsertSubAtVideoPos { get; set; }
+        public Keys MainCreateSetStart { get; set; }
+        public Keys MainCreateSetEnd { get; set; }
+        public Keys MainCreateStartDownEndUp { get; set; }
+        public Keys MainCreateSetEndAddNewAndGoToNew { get; set; }
+        public Keys MainAdjustSetStartAndOffsetTheRest { get; set; }
+        public Keys MainAdjustSetEndAndOffsetTheRest { get; set; }
+        public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+        public Keys MainAdjustSetEndAndGotoNext { get; set; }
+        public Keys MainAdjustInsertViaEndAutoStart { get; set; }
+        public Keys MainAdjustInsertViaEndAutoStartAndGoToNext { get; set; }
+        public Keys MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
+        public Keys MainAdjustSetEndNextStartAndGoToNext { get; set; }
+        public Keys MainAdjustStartDownEndUpAndGoToNext { get; set; }
+        public Keys MainAdjustSetStartKeepDuration { get; set; }
+        public Keys MainAdjustSelected100MsForward { get; set; }
+        public Keys MainAdjustSelected100MsBack { get; set; }
+        public Keys MainAdjustAdjustStartXMsBack { get; set; }
+        public Keys MainAdjustAdjustStartXMsForward { get; set; }
+        public Keys MainAdjustAdjustEndXMsBack { get; set; }
+        public Keys MainAdjustAdjustEndXMsForward { get; set; }
+        public Keys MainInsertAfter { get; set; }
+        public Keys MainInsertBefore { get; set; }
+        public Keys MainTextBoxAutoBreak { get; set; }
+        public Keys MainTextBoxUnbreak { get; set; }
+        public Keys MainTextBoxBreakAtCursorPosition { get; set; }
+        public Keys MainTextBoxBreakAtCursorPositionAndGoToNext { get; set; }
+        public Keys MainMergeDialog { get; set; }
+        public Keys MainToggleFocus { get; set; }
+        public Keys MainListViewToggleDashes { get; set; }
+        public Keys MainListViewToggleMusicSymbols { get; set; }
+        public Keys MainListViewAutoDuration { get; set; }
+        public Keys MainListViewAlignmentN1 { get; set; }
+        public Keys MainListViewAlignmentN2 { get; set; }
+        public Keys MainListViewAlignmentN3 { get; set; }
+        public Keys MainListViewAlignmentN4 { get; set; }
+        public Keys MainListViewAlignmentN5 { get; set; }
+        public Keys MainListViewAlignmentN6 { get; set; }
+        public Keys MainListViewAlignmentN7 { get; set; }
+        public Keys MainListViewAlignmentN8 { get; set; }
+        public Keys MainListViewAlignmentN9 { get; set; }
+        public Keys MainListViewFocusWaveform { get; set; }
+        public Keys MainListViewGoToNextError { get; set; }
+        public Keys MainListViewCopyText { get; set; }
+        public Keys MainEditReverseStartAndEndingForRtl { get; set; }
+        public Keys WaveformVerticalZoom { get; set; }
+        public Keys WaveformVerticalZoomOut { get; set; }
+        public Keys WaveformZoomIn { get; set; }
+        public Keys WaveformZoomOut { get; set; }
+        public Keys WaveformSplit { get; set; }
+        public Keys WaveformPlaySelection { get; set; }
+        public Keys WaveformPlaySelectionEnd { get; set; }
+        public Keys WaveformSearchSilenceForward { get; set; }
+        public Keys WaveformSearchSilenceBack { get; set; }
+        public Keys WaveformAddTextAtHere { get; set; }
+        public Keys WaveformAddTextAtHereFromClipboard { get; set; }
+        public Keys WaveformFocusListView { get; set; }
+        public Keys WaveformGoToPreviousSceneChange { get; set; }
+        public Keys WaveformGoToNextSceneChange { get; set; }
+        public Keys WaveformToggleSceneChange { get; set; }
+        public Keys MainTranslateGoogleIt { get; set; }
+        public Keys MainTranslateGoogleTranslate { get; set; }
+        public Keys MainTranslateCustomSearch1 { get; set; }
+        public Keys MainTranslateCustomSearch2 { get; set; }
+        public Keys MainTranslateCustomSearch3 { get; set; }
+        public Keys MainTranslateCustomSearch4 { get; set; }
+        public Keys MainTranslateCustomSearch5 { get; set; }
 
         public void SetShortcuts()
         {
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
             MainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
-            MainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            MainEditReverseStartAndEndingForRtl = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             MainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);

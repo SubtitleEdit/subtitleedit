@@ -13187,7 +13187,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ToggleDashes();
                 e.SuppressKeyPress = true;
             }
-            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRTL == e.KeyData && inListView)
+            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
             {
                 ReverseStartAndEndingForRtl();
                 e.SuppressKeyPress = true;
