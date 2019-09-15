@@ -873,6 +873,7 @@ namespace Nikse.SubtitleEdit.Forms
           <samplecharacteristics>
             <rate>
               <timebase>25</timebase>
+              <ntsc>FALSE</ntsc>
             </rate>
             <width>1920</width>
             <height>1080</height>
@@ -966,9 +967,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void WriteBdnXmlFile(int imagesSavedCount, StringBuilder sb, string fileName)
         {
-            int resW;
-            int resH;
-            GetResolution(out resW, out resH);
+            GetResolution(out var resW, out var resH);
             string videoFormat = "1080p";
             if (resW == 1920 && resH == 1080)
             {
@@ -1615,8 +1614,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>
             <rate>
-              <ntsc>[NTSC]</ntsc>
               <timebase>[TIMEBASE]</timebase>
+              <ntsc>[NTSC]</ntsc>
             </rate>
             <in>[IN]</in>
             <out>[OUT]</out>
@@ -1632,6 +1631,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
               <pathurl>" + pathUrl + @"</pathurl>
               <rate>
                 <timebase>[TIMEBASE]</timebase>
+                <ntsc>[NTSC]</ntsc>
               </rate>
               <duration>[DURATION]</duration>
               <width>" + param.ScreenWidth + @"</width>
@@ -2286,12 +2286,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
         {
-            var nbmp = GenereateBitmapForCalc(text, parameter);
+            var nbmp = GenerateBitmapForCalc(text, parameter);
             nbmp.CropTransparentSidesAndBottom(0, true);
             return nbmp.Width;
         }
 
-        private static NikseBitmap GenereateBitmapForCalc(string text, MakeBitmapParameter parameter)
+        private static NikseBitmap GenerateBitmapForCalc(string text, MakeBitmapParameter parameter)
         {
             text = text.Trim();
             var path = new GraphicsPath();
@@ -4353,9 +4353,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var s = comboBoxBottomMargin.Text;
             if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
             {
-                int width;
-                int height;
-                GetResolution(out width, out height);
+                GetResolution(out _, out var height);
                 return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * height);
             }
 
@@ -4374,9 +4372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var s = comboBoxLeftRightMargin.Text;
             if (comboBoxLeftRightMarginUnit.SelectedIndex == 0) // %
             {
-                int width;
-                int height;
-                GetResolution(out width, out height);
+                GetResolution(out var width, out _);
                 return (int)Math.Round(int.Parse(s) / 100.0 * width);
             }
 
@@ -4657,9 +4653,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)
         {
-            int width;
-            int height;
-            GetResolution(out width, out height);
+            GetResolution(out var width, out var height);
             string res = $"{width}x{height}";
 
             if (_exportType == ExportFormats.VobSub)
@@ -5202,10 +5196,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 columnIndexText++;
             }
 
-            var setings = Configuration.Settings;
-            if (setings != null && setings.General.ListViewColumnsRememberSize && setings.General.ListViewNumberWidth > 1)
+            var settings = Configuration.Settings;
+            if (settings != null && settings.General.ListViewColumnsRememberSize && settings.General.ListViewNumberWidth > 1)
             {
-                subtitleListView1.Columns[columnIndexNumber].Width = setings.General.ListViewNumberWidth;
+                subtitleListView1.Columns[columnIndexNumber].Width = settings.General.ListViewNumberWidth;
             }
             else
             {
@@ -5322,9 +5316,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Cursor = Cursors.WaitCursor;
             try
             {
-                int width;
-                int height;
-                GetResolution(out width, out height);
+                GetResolution(out var width, out var height);
                 using (var bmp = new Bitmap(width, height))
                 {
                     using (var g = Graphics.FromImage(bmp))
