@@ -166,17 +166,16 @@ namespace Nikse.SubtitleEdit.Core
             sr.Close();
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            var matchingFormats = SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext).ToList();
-            foreach (SubtitleFormat subtitleFormat in matchingFormats)
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }
             }
-            foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
             {
-                if (matchingFormats.Contains(subtitleFormat) && subtitleFormat.IsMine(lines, fileName))
+                if (subtitleFormat.IsMine(lines, fileName))
                 {
                     return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
                 }

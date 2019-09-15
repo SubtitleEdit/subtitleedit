@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -336,7 +337,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var lineSb = new StringBuilder();
             var pre = new StringBuilder();
             char[] splitChar = { '|' };
-            foreach (string line in lines)
+            var endTrimmedLines = string.Join(Environment.NewLine, lines).TrimEnd().SplitToLines();
+            foreach (string line in endTrimmedLines)
             {
                 _lineNumber++;
                 string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
