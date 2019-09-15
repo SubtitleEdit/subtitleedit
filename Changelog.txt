@@ -1,12 +1,48 @@
 ﻿Subtitle Edit Changelog
 
+
+3.5.11 (xth October 2019) BETA
+* NEW:
+   * Join: Can now append with "add time" - thx Michael/Nickola
+   * Add format AWS JSON files - thx jaccoud
+   * Add new subtitle format - thx Zhen
+   * Add new subtitle format
+   * Run only "Batch convert" in UI via "/batchconvert" - thx 07416
+   * Fix mp4 text time codes parsing with 64-bit mdhd/mvhd box - thx DJC
+   * Add option to capture top align in OCR - thx teodargent
+   * Add support for WebVTT X-TIMESTAMP-MAP - thx laurensscheers/Nickola
+* IMPROVED:
+   * Update Finish translation - thx Teijo
+   * Update Farsi translation - thx ghost1372
+   * Improve FCP/image export frame rate compat - thx Antoine
+   * Auto-switch to just downloaded dictionary
+   * Allow letters stuck to numbers for Arabic spellcheck - thx OmrSi
+   * Improve "Binary OCR" italic detection - thx teodargent
+   * Improve WebVTT with <>& - thx lambdacore12
+   * Improve batch convert scanning speed - thx stephen147
+   * Improve handling of "Structured titles" format - thx Yamato-ua
+   * Improve of drawing scene changes - thx OmrSi
+   * Improve compatibility for ASS/SSA - thx sneaker_ger
+* FIXED:
+   * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
+   * Fix crash when using "Batch convert" txt to img - thx Alan
+   * Fix crash in "Change profile" with no sub - thx OmrSi
+   * Fix save file name when "Hide known extension" on - thx jrjordao
+   * Fix subtitle loading issues - thx admas
+   * Fix loading of "eng-GB" spell check in OCR - thx AbsenceJam
+   * Fix download via TLS issue - thx OmrSi
+   * Fix "Overwrite original files" in "Batch convert" - thx Steve
+   * Fix Timed Text styles dialog crash - thx Chion82/xylographe
+   * Fix crash in Pac Unicode - thx ivandrofly
+
+
 3.5.10 (18th August 2019)
 * NEW:
    * Profiles - thx philippwr, OmrSi, moob
    * Re-break line at cursor position shortcuts
    * Reset video speed/waveform zoom shortcut - thx goodju
    * Optimal CPS configurable in UI - thx Flitskikker
-   * Import scene changes from EZTitles - thx Flitskikker 
+   * Import scene changes from EZTitles - thx Flitskikker
    * Add new sub format - thx Matmanamane
    * Add new sub format - thx Rob
    * Add new sub format - thx Ketan
