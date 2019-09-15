@@ -1734,7 +1734,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 bool newLine = false;
                 var sb = new StringBuilder();
-                sb.Append("This is a test!");
+                sb.Append(Configuration.Settings.General.PreviewAssaText);
 
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
@@ -1762,7 +1762,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var shadowPath = new GraphicsPath();
                         sb.Clear();
-                        sb.Append("This is a test!");
+                        sb.Append(Configuration.Settings.General.PreviewAssaText);
                         int pathPointsStart2 = -1;
                         TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);

@@ -751,6 +751,7 @@ $HorzAlign          =   Center
         public bool CheckForUpdates { get; set; }
         public DateTime LastCheckForUpdates { get; set; }
         public bool AutoSave { get; set; }
+        public string PreviewAssaText { get; set; }
         public bool ShowProgress { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public bool UseDarkTheme { get; set; }
@@ -857,6 +858,7 @@ $HorzAlign          =   Center
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;
             UseDarkTheme = false;
+            PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
 
@@ -2428,6 +2430,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AutoSave = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("PreviewAssaText");
+            if (subNode != null)
+            {
+                settings.General.PreviewAssaText = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ShowProgress");
@@ -5927,6 +5935,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                 textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString());
+                textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString());
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString());
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());

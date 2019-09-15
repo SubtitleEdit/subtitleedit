@@ -138,49 +138,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
                 var path = new GraphicsPath();
-
                 bool newLine = false;
                 var sb = new StringBuilder();
-                sb.Append("This is a test!");
-
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), comboBoxFontWeight.Text == "bold") + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), comboBoxFontWeight.Text == "bold") + 1;
-
+                sb.Append(Configuration.Settings.General.PreviewAssaText);
                 const float left = 5f;
-                //if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
-                //    left = (float)numericUpDownMarginLeft.Value;
-                //else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
-                //    left = bmp.Width - (measuredWidth + ((float)numericUpDownMarginRight.Value));
-                //else
-                //    left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
-
                 const float top = 2f;
-                //if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
-                //    top = (float)numericUpDownMarginVertical.Value;
-                //else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
-                //    top = (bmp.Height - measuredHeight) / 2;
-                //else
-                //    top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
-
                 const int leftMargin = 0;
                 int pathPointsStart = -1;
-
-                //if (radioButtonOpaqueBox.Checked)
-                //{
-                //    if (_isSubStationAlpha)
-                //        g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
-                //    else
-                //        g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
-                //}
-
                 TextDraw.DrawText(font, sf, path, sb, comboBoxFontStyle.Text == "italic", comboBoxFontWeight.Text == "bold", false, left, top, ref newLine, leftMargin, ref pathPointsStart);
-
-                //int outline = 0; // (int)numericUpDownOutline.Value;
-                //if (outline > 0)
-                //{
-                //    Color outlineColor = Color.White;
-                //    g.DrawPath(new Pen(outlineColor, outline), path);
-                //}
                 g.FillPath(new SolidBrush(panelFontColor.BackColor), path);
             }
             pictureBoxPreview.Image = bmp;
