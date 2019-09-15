@@ -745,7 +745,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FileName>Naziv datoteke</FileName>
     <Join>Spoji</Join>
     <TotalNumberOfLinesX>Ukupni broj linija: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Napomena: Datoteke već imaju točne vremenske kodove</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nije specificirano</NotSpecified>

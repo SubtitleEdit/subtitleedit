@@ -758,7 +758,6 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
     <FileName>Nama file</FileName>
     <Join>Gabung</Join>
     <TotalNumberOfLinesX>Jumlah total baris: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Catatan: File harus sudah memiliki kode waktu yg benar</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Tidak Ditentukan</NotSpecified>

@@ -782,7 +782,6 @@ Du-te la "Opțiuni -&gt; Setări -&gt; Unelte" ptr. a introduce codul API al Goo
     <FileName>Numele fișierului</FileName>
     <Join>Îmbină</Join>
     <TotalNumberOfLinesX>Numărul total de linii: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Notă: Fișierele trebuie să aibă codurile de timp corecte</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nespecificată</NotSpecified>

@@ -998,7 +998,9 @@ namespace Nikse.SubtitleEdit.Core
                 FileName = "File name",
                 Join = "Join",
                 TotalNumberOfLinesX = "Total number of lines: {0:#,###,###}",
-                Note = "Note: Files must already have correct time codes",
+                AlreadyCorrectTimeCodes = "Files already have correct time codes",
+                AppendTimeCodes = "Add end time of previous  file",
+                AddMs = "Add milliseconds after each file"
             };
 
             LanguageNames = new LanguageStructure.LanguageNames

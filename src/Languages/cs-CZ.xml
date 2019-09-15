@@ -779,7 +779,6 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
     <FileName>Název souboru</FileName>
     <Join>Spojit</Join>
     <TotalNumberOfLinesX>Celkový počet řádků: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Poznámka: Soubory musí již mít správné časové kódy</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Not Specified</NotSpecified>

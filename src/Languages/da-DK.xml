@@ -779,7 +779,6 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
     <FileName>Filnavn</FileName>
     <Join>Sammensæt</Join>
     <TotalNumberOfLinesX>Total antal linjer: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Bemærk: Filer skal allerede have korrekte tidskoder</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Ikke angivet</NotSpecified>

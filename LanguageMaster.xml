@@ -782,7 +782,9 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <FileName>File name</FileName>
     <Join>Join</Join>
     <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Note: Files must already have correct time codes</Note>
+    <AlreadyCorrectTimeCodes>Files already have correct time codes</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Add end time of previous  file</AppendTimeCodes>
+    <AddMs>Add milliseconds after each file</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Not Specified</NotSpecified>

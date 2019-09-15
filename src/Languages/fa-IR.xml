@@ -781,7 +781,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>نام فایل</FileName>
     <Join>عضویت</Join>
     <TotalNumberOfLinesX>تعداد کل خطوط: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>توجه: فایلها باید کدهای زمان درست داشته باشند</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>مشخص نیست</NotSpecified>

@@ -743,7 +743,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FileName>Agiri izena</FileName>
     <Join>Batu</Join>
     <TotalNumberOfLinesX>Lerro zenbatekoa guztira: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Oharra: agiriek jadanik denbora kode zuzenak izan behar dituzte</Note>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Adierazi gabea</NotSpecified>

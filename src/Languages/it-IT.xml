@@ -708,7 +708,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <FileName>Nome file</FileName>
     <Join>Unisci</Join>
     <TotalNumberOfLinesX>Numero di linee totale: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Nota: I file devono già avere i time code corretti</Note>
   </JoinSubtitles>
   <LanguageNames>
     <aaName>afar</aaName>
