@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 bool newLine = false;
                 var sb = new StringBuilder();
-                sb.Append("This is a test!");
+                sb.Append(Configuration.Settings.General.PreviewAssaText);
 
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
@@ -219,11 +219,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
                 else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
                 {
-                    left = bmp.Width - (measuredWidth + ((float)numericUpDownMarginRight.Value));
+                    left = bmp.Width - (measuredWidth + (float)numericUpDownMarginRight.Value);
                 }
                 else
                 {
-                    left = (float)(bmp.Width - measuredWidth * 0.8 + 15) / 2;
+                    left = (bmp.Width - measuredWidth) / 2;
                 }
 
                 float top;
