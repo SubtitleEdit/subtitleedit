@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -96,21 +98,54 @@ namespace Nikse.SubtitleEdit.Core
 
                     float width = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int index = System.Math.Max(list.Length - 100, 0);
-                    for (int i = index; i < list.Length; i += 2)
+                    int max = list.Length;
+                    if (max <= 500)
+                    {
+                        for (int i = 0; i < max; i ++)
+                        {
+                            if (list[i].X > width)
+                            {
+                                width = list[i].X;
+                            }
+                        }
+                        return width;
+                    }
+
+                    int interval = 1;
+                    if (max > 1500)
+                    {
+                        interval = 5;
+                    }
+                    else if (max > 1000)
+                    {
+                        interval = 3;
+                    }
+                    else 
+                    {
+                        interval = 2;
+                    }
+                    for (int i = 0; i < max; i+= interval)
                     {
                         if (list[i].X > width)
                         {
                             width = list[i].X;
                         }
                     }
-                    int max = System.Math.Min(100, list.Length);
-                    for (int i = 0; i < max; i += 2)
+                    if (list[1].X > width)
                     {
-                        if (list[i].X > width)
-                        {
-                            width = list[i].X;
-                        }
+                        width = list[1].X;
+                    }
+                    if (list[2].X > width)
+                    {
+                        width = list[2].X;
+                    }
+                    if (list[max - 1].X > width)
+                    {
+                        width = list[max - 1].X;
+                    }
+                    if (list[max - 2].X > width)
+                    {
+                        width = list[max - 2].X;
                     }
 
                     return width;
