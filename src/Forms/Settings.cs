@@ -1739,8 +1739,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
 
-                float left = (float)(bmp.Width - measuredWidth * 0.8 + 15) / 2;
-
+                float left = (bmp.Width - measuredWidth) / 2;
                 float top = bmp.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
 
                 const int leftMargin = 0;

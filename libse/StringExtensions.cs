@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public static bool LineStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
-            if (text == null || (!threeLengthTag && !includeFont))
+            if (text == null || !threeLengthTag && !includeFont)
             {
                 return false;
             }
