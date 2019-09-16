@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly bool _oldListViewShowWpm;
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
+        private readonly bool _loading = true;
 
         private class ComboBoxLanguage
         {
@@ -285,7 +286,6 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownFontSize.Value = (decimal)ssa.SsaFontSize;
             comboBoxFontName.Text = ssa.SsaFontName;
             panelPrimaryColor.BackColor = Color.FromArgb(_ssaFontColor);
-            UpdateSsaExample();
 
             var proxy = Configuration.Settings.Proxy;
             textBoxProxyAddress.Text = proxy.ProxyAddress;
@@ -883,6 +883,9 @@ namespace Nikse.SubtitleEdit.Forms
             _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+
+            _loading = false;
+            UpdateSsaExample();
         }
 
         private Guid _oldProfileId = Guid.Empty;
@@ -1687,6 +1690,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
+            if (_loading)
+            {
+                return;
+            }
+
             pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
