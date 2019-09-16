@@ -12,18 +12,34 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// </summary>
     public class MicrosoftTranslator : ITranslator
     {
+        private const string TokenUrl = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
         public const int MaximumRequestArrayLength = 25;
         private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
         private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
-        private readonly string _ocpApimSubscriptionKey;
         private static List<TranslationPair> _translationPairs;
+        private readonly string _accessToken;
 
         public MicrosoftTranslator(string ocpApimSubscriptionKey)
         {
-            _ocpApimSubscriptionKey = ocpApimSubscriptionKey;
+            _accessToken = GetAccessToken(ocpApimSubscriptionKey);
+        }
+
+        private string GetAccessToken(string ocpApimSubscriptionKey)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(TokenUrl);
+            httpWebRequest.Proxy = Utilities.GetProxy();
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Headers.Add(SecurityHeaderName, ocpApimSubscriptionKey);
+            httpWebRequest.ContentLength = 0;
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+            {
+                return streamReader.ReadToEnd();
+            }
         }
 
         public List<TranslationPair> GetTranslationPairs()
@@ -79,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             httpWebRequest.Proxy = Utilities.GetProxy();
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-            httpWebRequest.Headers.Add(SecurityHeaderName, _ocpApimSubscriptionKey);
+            httpWebRequest.Headers.Add("Authorization", "Bearer " + _accessToken);
 
             var jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[");
