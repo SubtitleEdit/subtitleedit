@@ -50,11 +50,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var s = line.TrimEnd();
 
-                if (RegexSpeaker.IsMatch(s))
+                if (s.EndsWith(':') && RegexSpeaker.IsMatch(s))
                 {
                     speaker = s.TrimEnd(':');
                 }
-                else if (RegexTimeCodes1.IsMatch(s) || RegexTimeCodes2.IsMatch(s))
+                else if (!string.IsNullOrEmpty(s) && char.IsDigit(s[0]) && RegexTimeCodes1.IsMatch(s) || RegexTimeCodes2.IsMatch(s))
                 {
                     p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty) { Actor = speaker };
                     subtitle.Paragraphs.Add(p);
