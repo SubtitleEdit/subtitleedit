@@ -74,6 +74,10 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         state.Push(StateObjectStart);
                     }
+                    else if (ch == '}')
+                    {
+                        state.Pop();
+                    }
                     else if (ch == '[')
                     {
                         state.Push(StateArrayStart);
@@ -302,6 +306,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (start >= 0)
                             {
                                 list.Add(content.Substring(start, i - start - 1));
+                                start = -1;
                             }
                         }
                         state.Pop();
@@ -313,6 +318,10 @@ namespace Nikse.SubtitleEdit.Core
                     if (ch == '{')
                     {
                         state.Push(new StateElement { State = StateObjectStart, Name = objectName });
+                    }
+                    else if (ch == '}')
+                    {
+                        state.Pop();
                     }
                     else if (ch == ',')
                     {
@@ -438,7 +447,15 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             if (start >= 0)
                             {
-                                list.Add(content.Substring(start, i - start - 1));
+                                if (start == i)
+                                {
+                                    list.Add(string.Empty);
+                                }
+                                else
+                                {
+                                    list.Add(content.Substring(start, i - start - 1));
+                                }
+                                start = -1;
                             }
                         }
                         state.Pop();
