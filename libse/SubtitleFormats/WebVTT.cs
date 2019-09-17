@@ -313,8 +313,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string GetPositionInfo(string s)
         {
-            //position: x --- 0% = left, 100%=right (horizontal)
-            //line: x --- 0 or -16 or 0%=top, 16 or -1 or 100% = bottom (vertical)
+            //position: x --- 0% = left, 100% = right (horizontal)
+            //line: x --- 0 or -16 or 0% = top, 16 or -1 or 100% = bottom (vertical)
             var pos = GetTag(s, "position:");
             var line = GetTag(s, "line:");
             var positionInfo = string.Empty;

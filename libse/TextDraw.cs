@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core
                     int max = list.Length;
                     if (max <= 500)
                     {
-                        for (int i = 0; i < max; i ++)
+                        for (int i = 0; i < max; i++)
                         {
                             if (list[i].X > width)
                             {
@@ -120,11 +120,11 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         interval = 3;
                     }
-                    else 
+                    else
                     {
                         interval = 2;
                     }
-                    for (int i = 0; i < max; i+= interval)
+                    for (int i = 0; i < max; i += interval)
                     {
                         if (list[i].X > width)
                         {
