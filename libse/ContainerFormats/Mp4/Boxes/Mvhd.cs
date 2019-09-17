@@ -30,10 +30,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
             else
             {
-                CreationTime = GetUInt64(4); // 64-bit 
-                ModificationTime = GetUInt64(12); // 64-bit 
+                CreationTime = GetUInt64(4); // 64-bit
+                ModificationTime = GetUInt64(12); // 64-bit
                 TimeScale = GetUInt(20); // 32-bit
-                Duration = GetUInt64(24); // 64-bit 
+                Duration = GetUInt64(24); // 64-bit
             }
         }
     }

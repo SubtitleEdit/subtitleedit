@@ -692,7 +692,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             string lastWord = null;
             var sb = new StringBuilder();
-            var word = new StringBuilder();            
+            var word = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
                 if (ExpectedCharsNoComma.Contains(text[i])) // fix e.g. "don,t"

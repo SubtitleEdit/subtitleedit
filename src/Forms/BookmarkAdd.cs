@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if  (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
                 DialogResult = DialogResult.OK;
             }

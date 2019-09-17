@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
-        private string _clearLastFindText = string.Empty;      
+        private string _clearLastFindText = string.Empty;
         private bool _videoLoadedGoToSubPosAndPause;
         private string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
