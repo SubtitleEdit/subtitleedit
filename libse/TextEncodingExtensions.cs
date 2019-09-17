@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core
     public static class TextEncodingExtensions
     {
         // IANA registered EBCDIC character sets (https://www.iana.org/assignments/character-sets/character-sets.xml)
-        private static readonly HashSet<string> _ebcdicNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> EbcdicNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "IBM037", "IBM500", "IBM870", "cp875", "IBM1026", "IBM01140", "IBM01141", "IBM01142", "IBM01143", "IBM01144", "IBM01145", "IBM01146", "IBM01147", "IBM01148", "IBM01149", "IBM273", "IBM277",
             "IBM278", "IBM280", "IBM284", "IBM285", "IBM290", "IBM297", "IBM420", "IBM423", "IBM424", "x-EBCDIC-KoreanExtended", "IBM-Thai", "IBM871", "IBM880", "IBM905", "cp1025", "IBM01047", "OSD_EBCDIC_DF04_15",
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsEbcdic(this Encoding encoding)
         {
-            return _ebcdicNames.Contains(encoding.WebName);
+            return EbcdicNames.Contains(encoding.WebName);
         }
 
     }

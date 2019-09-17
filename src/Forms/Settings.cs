@@ -3017,7 +3017,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool _editProfileOn = false;
+        private bool _editProfileOn;
         private void comboBoxRulesProfileName_SelectedIndexChanged(object sender, EventArgs e)
         {
             _editProfileOn = true;
