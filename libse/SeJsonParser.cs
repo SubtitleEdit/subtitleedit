@@ -3,86 +3,128 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
+
     public class SeJsonParser
     {
+        public List<string> Errors { get; private set; } = new List<string>();
+
         public class StateElement
         {
             public int State { get; set; }
             public string Name { get; set; }
+            public int Count { get; set; }
         }
 
-        private const int StateObjectStart = 0;
-        private const int StateObjectValue = 1;
-        private const int StateObjectEnd = 2;
-        private const int StateArrayStart = 3;
-        private const int StateArrayEnd = 4;
-
-        /// <summary>
-        /// Get values as strings from tags
-        /// </summary>
+        private const int JStateObject = 0;
+        private const int JStateArray = 1;
+        private const int JStateValue = 2;
+        private readonly HashSet<char> _whiteSpace = new HashSet<char> { ' ', '\r', '\n', '\t' };
+   
         public List<string> GetAllTagsByNameAsStrings(string content, string name)
         {
+            Errors = new List<string>();
             var list = new List<string>();
             int i = 0;
             int max = content.Length;
-            var state = new Stack<int>();
+            var state = new Stack<StateElement>();
             var objectName = string.Empty;
             while (i < max)
             {
                 var ch = content[i];
-                if (state.Count == 0)
+                if (_whiteSpace.Contains(ch)) // ignore white space
+                {
+                    i++;
+                }
+
+                else if (state.Count == 0) // root
                 {
                     if (ch == '{')
                     {
-                        state.Push(StateObjectStart);
+                        state.Push(new StateElement
+                        {
+                            Name = "Root",
+                            State = JStateObject
+                        });
+                        i++;
                     }
                     else if (ch == '[')
                     {
-                        state.Push(StateArrayStart);
+                        state.Push(new StateElement
+                        {
+                            Name = "Root",
+                            State = JStateArray
+                        });
+                        i++;
                     }
-                    i++;
-                }
-                else if (state.Peek() == StateObjectEnd)
-                {
-                    if (ch == ',')
+                    else
                     {
-                        state.Pop();
-                        state.Push(StateObjectStart);
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
+                }
+
+                else if (state.Peek().State == JStateObject) // after '{'
+                {
+                    if (ch == '"')
+                    {
+                        i++;
+                        int end = content.IndexOf('"', i);
+                        objectName = content.Substring(i, end - i).Trim();
+                        int colon = content.IndexOf(':', end);
+                        if (colon < 0)
+                        {
+                            Errors.Add($"Fatal - expected char : afterposition {end}");
+                            return list;
+                        }
+
+                        i += colon - i + 1;
+                        state.Push(new StateElement
+                        {
+                            Name = objectName,
+                            State = JStateValue
+                        });
                     }
                     else if (ch == '}')
                     {
+                        i++;
                         state.Pop();
                     }
-                    i++;
+                    else if (ch == ',') // next object
+                    {
+                        i++;
+                        if (state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                    }
+                    else if (ch == ']') // next object
+                    {
+                        i++;
+                        if (state.Peek().Count > 0)
+                        {
+                            state.Pop();
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                    }
+                    else
+                    {
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
                 }
-                else if (state.Peek() == StateArrayEnd)
+
+                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
-                    if (ch == ',')
-                    {
-                        state.Pop();
-                        state.Push(StateArrayStart);
-                    }
-                    else if (ch == ']')
-                    {
-                        state.Pop();
-                    }
-                    i++;
-                }
-                else if (state.Peek() == StateObjectValue)
-                {
-                    if (ch == '{')
-                    {
-                        state.Push(StateObjectStart);
-                    }
-                    else if (ch == '}')
-                    {
-                        state.Pop();
-                    }
-                    else if (ch == '[')
-                    {
-                        state.Push(StateArrayStart);
-                    }
-                    else if (ch == '"')
+                    if (ch == '"') // string
                     {
                         i++;
                         var skip = true;
@@ -93,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core
                             end = content.IndexOf('"', endSeek);
                             if (end < 0)
                             {
+                                Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
                             skip = content[end - 1] == '\\';
@@ -102,6 +145,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                             if (endSeek >= max)
                             {
+                                Errors.Add($"Fatal - expected end tag after position {endSeek}");
                                 return list;
                             }
                         }
@@ -110,101 +154,288 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             list.Add(objectValue);
                         }
-                        i += end - i;
+                        i += end - i + 1;
                         state.Pop();
-                        state.Push(StateObjectEnd);
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                    }
+                    else if (ch == '}') // empty value
+                    {
+                        i++;
+                        var value = state.Pop();
+                        if (state.Count > 0)
+                        {
+                            if (value.State == JStateValue)
+                            {
+                                state.Pop();
+                            }
+                            else
+                            {
+                                state.Peek().Count++;
+                            }
+                        }
+                    }
+                    else if (ch == ',') // next object
+                    {
+                        i++;
+                        state.Pop();
+                        if (state.Count > 0 && state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
                     }
                     else if (ch == 'n' && max > i + 3 && content[i + 1] == 'u' && content[i + 2] == 'l' && content[i + 3] == 'l')
                     {
+                        i += 4;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
                         if (objectName == name)
                         {
-                            list.Add("null");
+                            list.Add(null);
                         }
-                        i += 3;
-                        state.Pop();
-                        state.Push(StateObjectEnd);
+
                     }
                     else if (ch == 't' && max > i + 3 && content[i + 1] == 'r' && content[i + 2] == 'u' && content[i + 3] == 'e')
                     {
+                        i += 4;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
                         if (objectName == name)
                         {
                             list.Add("true");
                         }
-                        i += 3;
-                        state.Pop();
-                        state.Push(StateObjectEnd);
                     }
                     else if (ch == 'f' && max > i + 4 && content[i + 1] == 'a' && content[i + 2] == 'l' && content[i + 3] == 's' && content[i + 4] == 'e')
                     {
+                        i += 5;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
                         if (objectName == name)
                         {
                             list.Add("false");
                         }
-                        i += 3;
-                        state.Pop();
-                        state.Push(StateObjectEnd);
                     }
-                    else if ("+-0123456789.Ee".Contains(ch))
+                    else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         var sb = new StringBuilder();
-                        while ("+-0123456789.Ee".Contains(content[i]) && i < max)
+                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
                         {
                             sb.Append(content[i]);
                             i++;
+                        }
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
                         }
                         if (objectName == name)
                         {
                             list.Add(sb.ToString());
                         }
-                        state.Pop();
-                        state.Push(StateObjectEnd);
-                        i--;
                     }
+                    else if (ch == '{')
+                    {
+                        if (state.Count > 1)
+                        {
+                            var value = state.Pop();
+                            state.Peek().Count++;
+                            state.Push(value);
+                        }
+                        state.Push(new StateElement
+                        {
+                            State = JStateObject,
+                            Name = objectName
+                        });
+                        i++;
+                    }
+                    else if (ch == '[')
+                    {
+                        if (state.Count > 1)
+                        {
+                            var value = state.Pop();
+                            state.Peek().Count++;
+                            state.Push(value);
+                        }
+                        state.Push(new StateElement
+                        {
+                            State = JStateArray,
+                            Name = objectName
+                        });
+                        i++;
+                    }
+                    else
+                    {
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
+                }
+
+                else if (state.Peek().State == JStateArray) // array, after '['
+                {
+                    if (ch == ']')
+                    {
+                        state.Pop();
+                        i++;
+                    }
+                    else if (ch == ',' && state.Peek().Count > 0)
+                    {
+                        if (state.Count > 0 && state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                        i++;
+                    }
+                    else if (ch == '{')
+                    {
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName,
+                            State = JStateObject
+                        });
+                        i++;
+                    }
+                    else
+                    {
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
+                }
+
+            }
+            return list;
+        }
+
+        public List<string> GetArrayElementsByName(string content, string name)
+        {
+            Errors = new List<string>();
+            var list = new List<string>();
+            int i = 0;
+            int max = content.Length;
+            var state = new Stack<StateElement>();
+            var objectName = string.Empty;
+            var start = -1;
+            while (i < max)
+            {
+                var ch = content[i];
+                if (_whiteSpace.Contains(ch)) // ignore white space
+                {
                     i++;
                 }
-                else if (state.Peek() == StateObjectStart)
+
+                else if (state.Count == 0) // root
+                {
+                    if (ch == '{')
+                    {
+                        state.Push(new StateElement
+                        {
+                            Name = "Root",
+                            State = JStateObject
+                        });
+                        i++;
+                    }
+                    else if (ch == '[')
+                    {
+                        state.Push(new StateElement
+                        {
+                            Name = "Root",
+                            State = JStateArray
+                        });
+                        i++;
+                    }
+                    else
+                    {
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
+                }
+
+                else if (state.Peek().State == JStateObject) // after '{'
                 {
                     if (ch == '"')
                     {
                         i++;
                         int end = content.IndexOf('"', i);
-                        if (end < 0)
-                        {
-                            return list;
-                        }
                         objectName = content.Substring(i, end - i).Trim();
                         int colon = content.IndexOf(':', end);
                         if (colon < 0)
                         {
+                            Errors.Add($"Fatal - expected char : afterposition {end}");
                             return list;
                         }
+
                         i += colon - i + 1;
+                        state.Push(new StateElement
+                        {
+                            Name = objectName,
+                            State = JStateValue
+                        });
+                    }
+                    else if (ch == '}')
+                    {
+                        i++;
                         state.Pop();
-                        state.Push(StateObjectValue);
+                    }
+                    else if (ch == ',') // next object
+                    {
+                        i++;
+                        if (state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                    }
+                    else if (ch == ']') // next object
+                    {
+                        i++;
+                        if (state.Peek().Count > 0)
+                        {
+                            state.Pop();
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
                     }
                     else
                     {
-                        i++;
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
                     }
                 }
-                else if (state.Peek() == StateArrayStart)
+
+                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
-                    if (ch == '{')
-                    {
-                        state.Push(StateObjectStart);
-                        i++;
-                    }
-                    else if (ch == '[')
-                    {
-                        state.Push(StateArrayStart);
-                        i++;
-                    }
-                    else if (ch == ']')
-                    {
-                        state.Pop();
-                        i++;
-                    }
-                    else if (ch == '"')
+                    if (ch == '"') // string
                     {
                         i++;
                         var skip = true;
@@ -215,6 +446,7 @@ namespace Nikse.SubtitleEdit.Core
                             end = content.IndexOf('"', endSeek);
                             if (end < 0)
                             {
+                                Errors.Add($"Fatal - expected char \" after position {endSeek}");
                                 return list;
                             }
                             skip = content[end - 1] == '\\';
@@ -224,276 +456,205 @@ namespace Nikse.SubtitleEdit.Core
                             }
                             if (endSeek >= max)
                             {
+                                Errors.Add($"Fatal - expected end tag after position {endSeek}");
                                 return list;
                             }
                         }
-                        i += end - i;
+                        var objectValue = content.Substring(i, end - i).Trim();
+                        if (objectName == name)
+                        {
+                            list.Add(objectValue);
+                        }
+                        i += end - i + 1;
                         state.Pop();
-                        state.Push(StateArrayEnd);
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                    }
+                    else if (ch == '}') // empty value
+                    {
+                        i++;
+                        var value = state.Pop();
+                        if (state.Count > 0)
+                        {
+                            if (value.State == JStateValue)
+                            {
+                                state.Pop();
+                            }
+                            else
+                            {
+                                state.Peek().Count++;
+                            }
+                        }
+                    }
+                    else if (ch == ',') // next object
+                    {
+                        i++;
+                        state.Pop();
+                        if (state.Count > 0 && state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                    }
+                    else if (ch == 'n' && max > i + 3 && content[i + 1] == 'u' && content[i + 2] == 'l' && content[i + 3] == 'l')
+                    {
+                        i += 4;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        if (objectName == name)
+                        {
+                            list.Add(null);
+                        }
+
+                    }
+                    else if (ch == 't' && max > i + 3 && content[i + 1] == 'r' && content[i + 2] == 'u' && content[i + 3] == 'e')
+                    {
+                        i += 4;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        if (objectName == name)
+                        {
+                            list.Add("true");
+                        }
+                    }
+                    else if (ch == 'f' && max > i + 4 && content[i + 1] == 'a' && content[i + 2] == 'l' && content[i + 3] == 's' && content[i + 4] == 'e')
+                    {
+                        i += 5;
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        if (objectName == name)
+                        {
+                            list.Add("false");
+                        }
+                    }
+                    else if ("+-0123456789".IndexOf(ch) >= 0)
+                    {
+                        var sb = new StringBuilder();
+                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        {
+                            sb.Append(content[i]);
+                            i++;
+                        }
+                        state.Pop();
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        if (objectName == name)
+                        {
+                            list.Add(sb.ToString());
+                        }
+                    }
+                    else if (ch == '{')
+                    {
+                        if (state.Count > 1)
+                        {
+                            var value = state.Pop();
+                            state.Peek().Count++;
+                            state.Push(value);
+                        }
+                        state.Push(new StateElement
+                        {
+                            State = JStateObject,
+                            Name = objectName
+                        });
+                        i++;
+                    }
+                    else if (ch == '[')
+                    {
+                        if (state.Count > 1)
+                        {
+                            var value = state.Pop();
+                            state.Peek().Count++;
+                            state.Push(value);
+                        }
+                        state.Push(new StateElement
+                        {
+                            State = JStateArray,
+                            Name = objectName
+                        });
+                        i++;
+                        if (start < 0 && objectName == name)
+                        {
+                            start = i;
+                        }
                     }
                     else
                     {
-                        i++;
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
                     }
                 }
+
+                else if (state.Peek().State == JStateArray) // array, after '['
+                {
+                    if (ch == ']')
+                    {
+                        state.Pop();
+                        i++;
+                        if (state.Peek().Name == name && start > -1)
+                        {
+                            list.Add(content.Substring(start, i - start - 1));
+                            start = -1;
+                        }
+                    }
+                    else if (ch == ',' && state.Peek().Count > 0)
+                    {
+                        if (start >= 0 && state.Peek().State == JStateArray && state.Peek().Name == name)
+                        {
+                            list.Add(content.Substring(start, i - start));
+                            start = i + 1;
+                        }
+                        if (state.Count > 0 && state.Peek().Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        else
+                        {
+                            Errors.Add($"Unexpected char {ch} as position {i}");
+                            return list;
+                        }
+                        i++;
+                    }
+                    else if (ch == '{')
+                    {
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName,
+                            State = JStateObject
+                        });
+                        i++;
+                    }
+                    else
+                    {
+                        Errors.Add($"Unexpected char {ch} as position {i}");
+                        return list;
+                    }
+                }
+
             }
             return list;
         }
 
-        /// <summary>
-        /// Get array elements by a tag name - returns json
-        /// </summary>
-        public List<string> GetArrayElementsByName(string content, string name)
-        {
-            var list = new List<string>();
-            int i = 0;
-            int max = content.Length;
-            var state = new Stack<StateElement>();
-            var start = -1;
-            var objectName = string.Empty;
-            while (i < max)
-            {
-                var ch = content[i];
-                if (state.Count == 0)
-                {
-                    if (ch == '{')
-                    {
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                    }
-                    else if (ch == '[')
-                    {
-                        state.Push(new StateElement { State = StateArrayStart, Name = objectName });
-                    }
-                    i++;
-                }
-                else if (state.Peek().State == StateObjectEnd)
-                {
-                    if (ch == ',')
-                    {
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                    }
-                    else if (ch == '}')
-                    {
-                        state.Pop();
-                        if (state.Count > 0 && state.Peek().Name == name && start >= 0)
-                        {
-                            list.Add(content.Substring(start, i - start + 1));
-                            start = -1;
-                        }
-                    }
-                    i++;
-                }
-                else if (state.Peek().State == StateArrayEnd)
-                {
-                    if (ch == ',')
-                    {
-                        if (objectName == name)
-                        {
-                            if (start >= 0)
-                            {
-                                list.Add(content.Substring(start, i - start - 1));
-                            }
-                            start = i + 1;
-                        }
-                        state.Pop();
-                        state.Push(new StateElement { State = StateArrayStart, Name = objectName });
-                    }
-                    else if (ch == ']')
-                    {
-                        if (objectName == name)
-                        {
-                            if (start >= 0)
-                            {
-                                list.Add(content.Substring(start, i - start - 1));
-                                start = -1;
-                            }
-                        }
-                        state.Pop();
-                    }
-                    i++;
-                }
-                else if (state.Peek().State == StateObjectValue)
-                {
-                    if (ch == '{')
-                    {
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                    }
-                    else if (ch == '}')
-                    {
-                        state.Pop();
-                    }
-                    else if (ch == ',')
-                    {
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                    }
-                    else if (ch == '[')
-                    {
-                        state.Push(new StateElement { State = StateArrayStart, Name = objectName });
-                        if (objectName == name)
-                        {
-                            start = i + 1;
-                        }
-                    }
-                    else if (ch == ']')
-                    {
-                        state.Pop();
-                    }
-                    else if (ch == '"')
-                    {
-                        i++;
-                        var skip = true;
-                        int end = 0;
-                        while (skip)
-                        {
-                            end = content.IndexOf('"', i);
-                            if (end < 0)
-                            {
-                                return list;
-                            }
-                            skip = content[i - 1] == '\\';
-                            if (skip)
-                            {
-                                i++;
-                            }
-                            if (i >= max)
-                            {
-                                return list;
-                            }
-                        }
-                        i += end - i;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectEnd, Name = objectName });
-                    }
-                    else if (ch == 'n' && max > i + 3 && content[i + 1] == 'u' && content[i + 2] == 'l' && content[i + 3] == 'l')
-                    {
-                        i += 3;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectEnd, Name = objectName });
-                    }
-                    else if (ch == 't' && max > i + 3 && content[i + 1] == 'r' && content[i + 2] == 'u' && content[i + 3] == 'e')
-                    {
-                        i += 3;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectEnd, Name = objectName });
-                    }
-                    else if (ch == 'f' && max > i + 4 && content[i + 1] == 'a' && content[i + 2] == 'l' && content[i + 3] == 's' && content[i + 4] == 'e')
-                    {
-                        i += 3;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectEnd, Name = objectName });
-                    }
-                    else if ("+-0123456789.Ee".Contains(ch))
-                    {
-                        while ("+-0123456789.Ee".Contains(content[i]) && i < max)
-                        {
-                            i++;
-                        }
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectEnd, Name = objectName });
-                        i--;
-                    }
-                    i++;
-                }
-                else if (state.Peek().State == StateObjectStart)
-                {
-                    if (ch == '"')
-                    {
-                        i++;
-                        int end = content.IndexOf('"', i);
-                        if (end < 0)
-                        {
-                            return list;
-                        }
-                        objectName = content.Substring(i, end - i).Trim();
-                        int colon = content.IndexOf(':', end);
-                        if (colon < 0)
-                        {
-                            return list;
-                        }
-                        i += colon - i + 1;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateObjectValue, Name = objectName });
-                        if (objectName == name)
-                        {
-                            start = i;
-                        }
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
-                else if (state.Peek().State == StateArrayStart)
-                {
-                    if (ch == '{')
-                    {
-                        if (state.Peek().Name == name)
-                        {
-                            start = i;
-                        }
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                        i++;
-                    }
-                    else if (ch == '[')
-                    {
-                        state.Push(new StateElement { State = StateObjectStart, Name = objectName });
-                        i++;
-                    }
-                    else if (ch == ']')
-                    {
-                        if (objectName == name)
-                        {
-                            if (start >= 0)
-                            {
-                                if (start == i)
-                                {
-                                    list.Add(string.Empty);
-                                }
-                                else
-                                {
-                                    list.Add(content.Substring(start, i - start - 1));
-                                }
-                                start = -1;
-                            }
-                        }
-                        state.Pop();
-                        i++;
-                    }
-                    else if (ch == '"')
-                    {
-                        i++;
-                        var skip = true;
-                        int end = 0;
-                        while (skip)
-                        {
-                            end = content.IndexOf('"', i);
-                            if (end < 0)
-                            {
-                                return list;
-                            }
-                            skip = content[i - 1] == '\\';
-                            if (skip)
-                            {
-                                i++;
-                            }
-                            if (i >= max)
-                            {
-                                return list;
-                            }
-                        }
-                        i += end - i;
-                        state.Pop();
-                        state.Push(new StateElement { State = StateArrayEnd, Name = objectName });
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
-            }
-            return list;
-        }
+
     }
 }
