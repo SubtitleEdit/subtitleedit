@@ -78,7 +78,7 @@ namespace Test.Core
         {
             var parser = new SeJsonParser();
             var result = parser.GetAllTagsByNameAsStrings("[{ \"content\" : null }]", "content");
-            Assert.AreEqual("null", result[0]);
+            Assert.AreEqual(null, result[0]);
         }
 
 
