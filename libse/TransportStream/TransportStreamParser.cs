@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                         if (sub.EndMilliseconds < sub.StartMilliseconds || sub.EndMilliseconds - sub.StartMilliseconds > (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                         {
-                            sub.EndMilliseconds = sub.StartMilliseconds + 3500;
+                            sub.EndMilliseconds = sub.StartMilliseconds + (ulong)Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                         }
 
                         subtitles.Add(sub);
