@@ -1001,7 +1001,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         foreach (var p in sub.Paragraphs)
                         {
-                            p.Text = HtmlUtil.RemoveHtmlTags(p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty), true).Trim();
+                            p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
                         }
                     }
                     if ((actions & BatchAction.FixCommonErrors) == BatchAction.FixCommonErrors)
