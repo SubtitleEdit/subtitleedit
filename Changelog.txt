@@ -4,7 +4,7 @@
 3.5.11 (xth October 2019) BETA
 * NEW:
    * Join: Can now append with "add time" - thx Michael/Nickola
-   * Add format AWS JSON files - thx jaccoud
+   * Add format AWS transcribe json - thx jaccoud
    * Add new subtitle format - thx Zhen
    * Add new subtitle format
    * Run only "Batch convert" in UI via "/batchconvert" - thx 07416

@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             var textIndex = 0;
             while (index < allTimes.Count - 1)
             {
-                if (index > 0 && SampleSizes[index + 1] == 2)
+                if (index > 0 && index + 1 < SampleSizes.Count && SampleSizes[index + 1] == 2)
                 {
                     index++;
                 }
