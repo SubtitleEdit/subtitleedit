@@ -631,7 +631,8 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp;
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
-            labelClientSecret.Text = language.MicrosoftTranslateApiKey;
+            labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
+            labelBingTokenEndpoint.Text = language.MicrosoftTranslateTokenEndpoint;
             linkLabelBingSubscribe.Text = language.HowToSignUp;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
@@ -804,6 +805,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
+            textBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -1586,6 +1588,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
+            toolsSettings.MicrosoftTranslatorTokenEndpoint = textBoxBingTokenEndpoint.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;

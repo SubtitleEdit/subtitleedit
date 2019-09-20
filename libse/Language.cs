@@ -2364,6 +2364,7 @@ can edit in same subtitle file (collaboration)",
                 MicrosoftBingTranslator = "Microsoft Translator",
                 HowToSignUp = "How to sign up",
                 MicrosoftTranslateApiKey = "Key",
+                MicrosoftTranslateTokenEndpoint = "Token endpoint",
                 FontNote = "Note: These font settings are for the Subtitle Edit UI only." + Environment.NewLine +
                            "Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like " + Environment.NewLine +
                            "\"Advanced Sub Station Alpha\" or via export to image based formats."

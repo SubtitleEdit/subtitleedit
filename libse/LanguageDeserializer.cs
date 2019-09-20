@@ -5635,6 +5635,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MicrosoftTranslateApiKey":
                     language.Settings.MicrosoftTranslateApiKey = reader.Value;
                     break;
+                case "Settings/MicrosoftTranslateTokenEndpoint":
+                    language.Settings.MicrosoftTranslateTokenEndpoint = reader.Value;
+                    break;
                 case "Settings/FontNote":
                     language.Settings.FontNote = reader.Value;
                     break;

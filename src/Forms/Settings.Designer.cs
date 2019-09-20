@@ -199,7 +199,9 @@
             this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBoxBing = new System.Windows.Forms.GroupBox();
-            this.labelClientSecret = new System.Windows.Forms.Label();
+            this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
+            this.textBoxBingTokenEndpoint = new System.Windows.Forms.TextBox();
+            this.labelBingApiKey = new System.Windows.Forms.Label();
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
@@ -2587,7 +2589,7 @@
             this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
             this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
             this.groupBoxGoogleTranslate.Controls.Add(this.label3);
-            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(422, 290);
+            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(421, 244);
             this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
             this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(404, 78);
             this.groupBoxGoogleTranslate.TabIndex = 31;
@@ -2633,31 +2635,49 @@
             // 
             this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBing.Controls.Add(this.labelClientSecret);
+            this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.textBoxBingTokenEndpoint);
+            this.groupBoxBing.Controls.Add(this.labelBingApiKey);
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(421, 374);
+            this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(404, 88);
-            this.groupBoxBing.TabIndex = 6;
+            this.groupBoxBing.Size = new System.Drawing.Size(404, 131);
+            this.groupBoxBing.TabIndex = 32;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
             // 
-            // labelClientSecret
+            // labelBingTokenEndpoint
             // 
-            this.labelClientSecret.AutoSize = true;
-            this.labelClientSecret.Location = new System.Drawing.Point(13, 47);
-            this.labelClientSecret.Name = "labelClientSecret";
-            this.labelClientSecret.Size = new System.Drawing.Size(67, 13);
-            this.labelClientSecret.TabIndex = 30;
-            this.labelClientSecret.Text = "Client secret";
+            this.labelBingTokenEndpoint.AutoSize = true;
+            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 82);
+            this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
+            this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
+            this.labelBingTokenEndpoint.TabIndex = 32;
+            this.labelBingTokenEndpoint.Text = "Token endpoint";
+            // 
+            // textBoxBingTokenEndpoint
+            // 
+            this.textBoxBingTokenEndpoint.Location = new System.Drawing.Point(10, 98);
+            this.textBoxBingTokenEndpoint.Name = "textBoxBingTokenEndpoint";
+            this.textBoxBingTokenEndpoint.Size = new System.Drawing.Size(374, 21);
+            this.textBoxBingTokenEndpoint.TabIndex = 31;
+            // 
+            // labelBingApiKey
+            // 
+            this.labelBingApiKey.AutoSize = true;
+            this.labelBingApiKey.Location = new System.Drawing.Point(6, 29);
+            this.labelBingApiKey.Name = "labelBingApiKey";
+            this.labelBingApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelBingApiKey.TabIndex = 30;
+            this.labelBingApiKey.Text = "API key";
             // 
             // textBoxBingClientSecret
             // 
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 47);
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(10, 45);
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
-            this.textBoxBingClientSecret.Size = new System.Drawing.Size(304, 21);
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(374, 21);
             this.textBoxBingClientSecret.TabIndex = 26;
             // 
             // linkLabelBingSubscribe
@@ -2686,7 +2706,7 @@
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 154);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 108);
             this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -4716,7 +4736,7 @@
         private System.Windows.Forms.LinkLabel linkLabelBingSubscribe;
         private System.Windows.Forms.Label labelUserBingApiId;
         private System.Windows.Forms.GroupBox groupBoxBing;
-        private System.Windows.Forms.Label labelClientSecret;
+        private System.Windows.Forms.Label labelBingApiKey;
         private System.Windows.Forms.TextBox textBoxBingClientSecret;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxAutoBackupDeleteAfter;
@@ -4777,5 +4797,7 @@
         private System.Windows.Forms.ComboBox comboBoxRulesProfileName;
         private System.Windows.Forms.Label labelRulesProfileName;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
+        private System.Windows.Forms.Label labelBingTokenEndpoint;
+        private System.Windows.Forms.TextBox textBoxBingTokenEndpoint;
     }
 }

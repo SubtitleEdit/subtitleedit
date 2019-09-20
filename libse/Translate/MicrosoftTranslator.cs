@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// </summary>
     public class MicrosoftTranslator : ITranslator
     {
-        private const string TokenUrl = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
         public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
         public const string GoToUrl = "https://www.bing.com/translator";
         public const int MaximumRequestArrayLength = 25;
@@ -22,18 +21,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private static List<TranslationPair> _translationPairs;
         private readonly string _accessToken;
 
-        public MicrosoftTranslator(string ocpApimSubscriptionKey)
+        public MicrosoftTranslator(string apiKey, string tokenEndpoint)
         {
-            _accessToken = GetAccessToken(ocpApimSubscriptionKey);
+            _accessToken = GetAccessToken(apiKey, tokenEndpoint);
         }
 
-        private string GetAccessToken(string ocpApimSubscriptionKey)
+        private string GetAccessToken(string apiKey, string tokenEndpoint)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(TokenUrl);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(tokenEndpoint);
             httpWebRequest.Proxy = Utilities.GetProxy();
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-            httpWebRequest.Headers.Add(SecurityHeaderName, ocpApimSubscriptionKey);
+            httpWebRequest.Headers.Add(SecurityHeaderName, apiKey);
             httpWebRequest.ContentLength = 0;
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
