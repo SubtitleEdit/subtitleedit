@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             _accessToken = GetAccessToken(apiKey, tokenEndpoint);
         }
 
-        private string GetAccessToken(string apiKey, string tokenEndpoint)
+        private static string GetAccessToken(string apiKey, string tokenEndpoint)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(tokenEndpoint);
             httpWebRequest.Proxy = Utilities.GetProxy();
