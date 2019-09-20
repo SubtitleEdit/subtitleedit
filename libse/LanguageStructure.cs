@@ -2237,6 +2237,7 @@
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
             public string MicrosoftTranslateApiKey { get; set; }
+            public string MicrosoftTranslateTokenEndpoint { get; set; }
             public string FontNote { get; set; }
         }
 
