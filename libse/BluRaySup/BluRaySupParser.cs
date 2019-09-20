@@ -427,6 +427,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static PcsData ParsePicture(byte[] buffer, SupSegment segment)
         {
+            if (buffer.Length < 11)
+            {
+                return new PcsData
+                {
+                    CompositionState = CompositionState.Invalid
+                };
+            }
+
             var sb = new StringBuilder();
             var pcs = new PcsData
             {
@@ -435,7 +443,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 CompNum = BigEndianInt16(buffer, 5),
                 CompositionState = GetCompositionState(buffer[7]),
                 StartTime = segment.PtsTimestamp,
-                PaletteUpdate = (buffer[8] == 0x80),
+                PaletteUpdate = buffer[8] == 0x80,
                 PaletteId = buffer[9]
             };
             // hi nibble: frame_rate, lo nibble: reserved
@@ -542,7 +550,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             int objId = BigEndianInt16(buffer, 0);      // 16bit object_id
             int objVer = buffer[2];     // 16bit object_id nikse - index 2 or 1???
             int objSeq = buffer[3];     // 8bit  first_in_sequence (0x80),
-            // last_in_sequence (0x40), 6bits reserved
+                                        // last_in_sequence (0x40), 6bits reserved
             bool first = (objSeq & 0x80) == 0x80 || forceFirst;
             bool last = (objSeq & 0x40) == 0x40;
 
@@ -602,159 +610,166 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
                 position += headerBuffer.Length;
 
-                // Read segment data
-                var buffer = new byte[segment.Size];
-                ms.Read(buffer, 0, buffer.Length);
-
-#if DEBUG
-                log.Append(segmentCount + ": ");
-#endif
-
-                switch (segment.Type)
+                try
                 {
-                    case 0x14: // Palette
-                        if (latestPcs != null)
-                        {
+                    // Read segment data
+                    var buffer = new byte[segment.Size];
+                    ms.Read(buffer, 0, buffer.Length);
+
 #if DEBUG
-                            log.AppendLine($"0x14 - Palette - PDS offset={position} size={segment.Size}");
+                    log.Append(segmentCount + ": ");
 #endif
-                            var pds = ParsePds(buffer, segment);
-#if DEBUG
-                            log.AppendLine(pds.Message);
-#endif
-                            if (pds.PaletteInfo != null)
+
+                    switch (segment.Type)
+                    {
+                        case 0x14: // Palette
+                            if (latestPcs != null)
                             {
-                                if (!palettes.ContainsKey(pds.PaletteId))
+#if DEBUG
+                                log.AppendLine($"0x14 - Palette - PDS offset={position} size={segment.Size}");
+#endif
+                                var pds = ParsePds(buffer, segment);
+#if DEBUG
+                                log.AppendLine(pds.Message);
+#endif
+                                if (pds.PaletteInfo != null)
                                 {
-                                    palettes[pds.PaletteId] = new List<PaletteInfo>();
-                                }
-                                else
-                                {
-                                    if (latestPcs.PaletteUpdate)
+                                    if (!palettes.ContainsKey(pds.PaletteId))
                                     {
-                                        palettes[pds.PaletteId].RemoveAt(palettes[pds.PaletteId].Count - 1);
+                                        palettes[pds.PaletteId] = new List<PaletteInfo>();
                                     }
                                     else
                                     {
+                                        if (latestPcs.PaletteUpdate)
+                                        {
+                                            palettes[pds.PaletteId].RemoveAt(palettes[pds.PaletteId].Count - 1);
+                                        }
+                                        else
+                                        {
 #if DEBUG
-                                        log.AppendLine("Extra Palette");
+                                            log.AppendLine("Extra Palette");
 #endif
+                                        }
                                     }
+                                    palettes[pds.PaletteId].Add(pds.PaletteInfo);
                                 }
-                                palettes[pds.PaletteId].Add(pds.PaletteInfo);
                             }
-                        }
-                        break;
+                            break;
 
-                    case 0x15: // Image bitmap data
-                        if (latestPcs != null)
-                        {
-#if DEBUG
-                            log.AppendLine($"0x15 - Bitmap data - ODS offset={position} size={segment.Size}");
-#endif
-                            var ods = ParseOds(buffer, segment, forceFirstOds);
-#if DEBUG
-                            log.AppendLine(ods.Message);
-#endif
-                            if (!latestPcs.PaletteUpdate)
+                        case 0x15: // Image bitmap data
+                            if (latestPcs != null)
                             {
-                                List<OdsData> odsList;
-                                if (ods.IsFirst)
+#if DEBUG
+                                log.AppendLine($"0x15 - Bitmap data - ODS offset={position} size={segment.Size}");
+#endif
+                                var ods = ParseOds(buffer, segment, forceFirstOds);
+#if DEBUG
+                                log.AppendLine(ods.Message);
+#endif
+                                if (!latestPcs.PaletteUpdate)
                                 {
-                                    odsList = new List<OdsData> { ods };
-                                    bitmapObjects[ods.ObjectId] = odsList;
-                                }
-                                else
-                                {
-                                    if (bitmapObjects.TryGetValue(ods.ObjectId, out odsList))
+                                    List<OdsData> odsList;
+                                    if (ods.IsFirst)
                                     {
-                                        odsList.Add(ods);
+                                        odsList = new List<OdsData> { ods };
+                                        bitmapObjects[ods.ObjectId] = odsList;
                                     }
                                     else
                                     {
+                                        if (bitmapObjects.TryGetValue(ods.ObjectId, out odsList))
+                                        {
+                                            odsList.Add(ods);
+                                        }
+                                        else
+                                        {
 #if DEBUG
-                                        log.AppendLine($"INVALID ObjectId {ods.ObjectId} in ODS, offset={position}");
+                                            log.AppendLine($"INVALID ObjectId {ods.ObjectId} in ODS, offset={position}");
 #endif
+                                        }
                                     }
                                 }
+                                else
+                                {
+#if DEBUG
+                                    log.AppendLine($"Bitmap Data Ignore due to PaletteUpdate offset={position}");
+#endif
+                                }
+                                forceFirstOds = false;
                             }
-                            else
+                            break;
+
+                        case 0x16: // Picture time codes
+                            if (latestPcs != null)
+                            {
+                                if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                                {
+                                    pcsList.Add(latestPcs);
+                                }
+                            }
+
+#if DEBUG
+                            log.AppendLine($"0x16 - Picture codes, offset={position} size={segment.Size}");
+#endif
+                            forceFirstOds = true;
+                            var nextPcs = ParsePicture(buffer, segment);
+#if DEBUG
+                            log.AppendLine(nextPcs.Message);
+#endif
+                            latestPcs = nextPcs;
+                            if (latestPcs.CompositionState == CompositionState.EpochStart)
+                            {
+                                bitmapObjects.Clear();
+                                palettes.Clear();
+                            }
+                            break;
+
+                        case 0x17: // Window display
+                            if (latestPcs != null)
                             {
 #if DEBUG
-                                log.AppendLine($"Bitmap Data Ignore due to PaletteUpdate offset={position}");
+                                log.AppendLine($"0x17 - Window display offset={position} size={segment.Size}");
 #endif
+                                int windowCount = buffer[0];
+                                int offset = 0;
+                                for (int nextWindow = 0; nextWindow < windowCount; nextWindow++)
+                                {
+                                    int windowId = buffer[1 + offset];
+                                    int x = BigEndianInt16(buffer, 2 + offset);
+                                    int y = BigEndianInt16(buffer, 4 + offset);
+                                    int width = BigEndianInt16(buffer, 6 + offset);
+                                    int height = BigEndianInt16(buffer, 8 + offset);
+                                    log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}",
+                                        x, y, width, height, windowId));
+                                    offset += 9;
+                                }
                             }
-                            forceFirstOds = false;
-                        }
-                        break;
+                            break;
 
-                    case 0x16: // Picture time codes
-                        if (latestPcs != null)
-                        {
-                            if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                        case 0x80:
+                            forceFirstOds = true;
+#if DEBUG
+                            log.AppendLine($"0x80 - END offset={position} size={segment.Size}");
+#endif
+                            if (latestPcs != null)
                             {
-                                pcsList.Add(latestPcs);
+                                if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                                {
+                                    pcsList.Add(latestPcs);
+                                }
+                                latestPcs = null;
                             }
-                        }
+                            break;
 
+                        default:
 #if DEBUG
-                        log.AppendLine($"0x16 - Picture codes, offset={position} size={segment.Size}");
+                            log.AppendLine($"0x?? - END offset={position} UNKNOWN SEGMENT TYPE={segment.Type}");
 #endif
-                        forceFirstOds = true;
-                        var nextPcs = ParsePicture(buffer, segment);
-#if DEBUG
-                        log.AppendLine(nextPcs.Message);
-#endif
-                        latestPcs = nextPcs;
-                        if (latestPcs.CompositionState == CompositionState.EpochStart)
-                        {
-                            bitmapObjects.Clear();
-                            palettes.Clear();
-                        }
-                        break;
-
-                    case 0x17: // Window display
-                        if (latestPcs != null)
-                        {
-#if DEBUG
-                            log.AppendLine($"0x17 - Window display offset={position} size={segment.Size}");
-#endif
-                            int windowCount = buffer[0];
-                            int offset = 0;
-                            for (int nextWindow = 0; nextWindow < windowCount; nextWindow++)
-                            {
-                                int windowId = buffer[1 + offset];
-                                int x = BigEndianInt16(buffer, 2 + offset);
-                                int y = BigEndianInt16(buffer, 4 + offset);
-                                int width = BigEndianInt16(buffer, 6 + offset);
-                                int height = BigEndianInt16(buffer, 8 + offset);
-                                log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}",
-                                    x, y, width, height, windowId));
-                                offset += 9;
-                            }
-                        }
-                        break;
-
-                    case 0x80:
-                        forceFirstOds = true;
-#if DEBUG
-                        log.AppendLine($"0x80 - END offset={position} size={segment.Size}");
-#endif
-                        if (latestPcs != null)
-                        {
-                            if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
-                            {
-                                pcsList.Add(latestPcs);
-                            }
-                            latestPcs = null;
-                        }
-                        break;
-
-                    default:
-#if DEBUG
-                        log.AppendLine($"0x?? - END offset={position} UNKOWN SEGMENT TYPE={segment.Type}");
-#endif
-                        break;
+                            break;
+                    }
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    log.Append($"Index of of range at pos {position - headerBuffer.Length}: {e.StackTrace}");
                 }
                 position += segment.Size;
                 segmentCount++;
