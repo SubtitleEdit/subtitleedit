@@ -527,6 +527,21 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownloadFfmpeg.Visible = false;
             }
 
+            if (Configuration.IsRunningOnLinux)
+            {
+                buttonMpvSettings.Visible = false;
+                radioButtonVideoPlayerDirectShow.Enabled = false;
+                radioButtonVideoPlayerMpcHc.Enabled = false;
+                radioButtonVideoPlayerVLC.Enabled = false;
+                Configuration.Settings.General.MpvVideoOutput = "x11";
+                if (LibMpvDynamic.IsInstalled)
+                {
+                    radioButtonVideoPlayerMPV.Enabled = true;
+                    radioButtonVideoPlayerMPV.Checked = true;
+                    labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
+                }
+            }
+
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
@@ -2882,14 +2897,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
             }
 
-            if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d", StringComparison.OrdinalIgnoreCase))
-            {
-                labelMpvSettings.Text = "--vo=vaapi";
-            }
-            else
-            {
-                labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
-            }
+            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
         }
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

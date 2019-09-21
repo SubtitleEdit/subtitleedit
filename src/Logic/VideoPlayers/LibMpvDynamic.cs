@@ -77,7 +77,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = NativeMethods.GetProcAddress(_libMpvDll, name);
+            IntPtr address;
+            if (Configuration.IsRunningOnLinux)
+            {
+                address = NativeMethods.dlsym(_libMpvDll, name);
+            }
+            else
+            {
+                address = NativeMethods.GetProcAddress(_libMpvDll, name);
+            }
+
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -404,6 +413,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
+                    if (Configuration.IsRunningOnLinux)
+                    {
+                        var lib = NativeMethods.dlopen("libmpv.so", NativeMethods.RTLD_NOW);
+                        if (lib != IntPtr.Zero)
+                        {
+                            NativeMethods.dlclose(lib);
+                            return true;
+                        }
+                        return false;
+                    }
                     string dllFile = GetMpvPath("mpv-1.dll");
                     return File.Exists(dllFile);
                 }
@@ -428,16 +447,34 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return null;
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        private bool LoadLib()
         {
-            string dllFile = GetMpvPath("mpv-1.dll");
-            if (File.Exists(dllFile))
+            if (Configuration.IsRunningOnLinux)
             {
+                if (_libMpvDll == IntPtr.Zero)
+                {
+                    _libMpvDll = NativeMethods.dlopen("libmpv.so", NativeMethods.RTLD_NOW);
+                }
+            }
+            else
+            {
+                string dllFile = GetMpvPath("mpv-1.dll");
+                if (!File.Exists(dllFile))
+                {
+                    return false;
+                }
                 if (_libMpvDll == IntPtr.Zero)
                 {
                     _libMpvDll = NativeMethods.LoadLibrary(dllFile);
                 }
+            }
+            return _libMpvDll != IntPtr.Zero;
+        }
 
+        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        {
+            if (LoadLib())
+            {
                 LoadLibVlcDynamic();
                 if (!IsAllMethodsLoaded())
                 {
@@ -462,7 +499,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 SetVideoOwner(ownerControl);
 
                 string videoOutput = "direct3d";
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                if (Configuration.IsRunningOnLinux)
+                {
+                    videoOutput = "x11";
+                }
+                else if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                 {
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
                 }
@@ -595,7 +636,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _mpvTerminateDestroy(_mpvHandle);
             _mpvHandle = IntPtr.Zero;
-            NativeMethods.FreeLibrary(_libMpvDll);
+            if (Configuration.IsRunningOnLinux)
+            {
+                NativeMethods.dlclose(_libMpvDll);
+            }
+            else
+            {
+                NativeMethods.FreeLibrary(_libMpvDll);
+            }
+            
             _libMpvDll = IntPtr.Zero;
         }
 
