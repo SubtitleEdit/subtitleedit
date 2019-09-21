@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -23,27 +24,15 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Gets the length in bytes of the stream.
         /// </summary>
-        public override long Length
-        {
-            get
-            {
-                return _length;
-            }
-        }
+        public override long Length => _length;
 
         /// <summary>
         /// Gets or sets the current position of the stream.
         /// </summary>
         public override long Position
         {
-            get
-            {
-                return _position;
-            }
-            set
-            {
-                Seek(value, SeekOrigin.Begin);
-            }
+            get => _position;
+            set => Seek(value, SeekOrigin.Begin);
         }
 
         /// <summary>
@@ -57,22 +46,15 @@ namespace Nikse.SubtitleEdit.Core
             switch (origin)
             {
                 case SeekOrigin.Begin:
-                    if (_position != offset)
-                    {
-                        _position = offset;
-                        base.Seek(offset, origin);
-                    }
+                    _position = offset;
+                    base.Seek(offset, SeekOrigin.Begin);
                     break;
                 case SeekOrigin.Current:
-                    if (_position != _position + offset)
-                    {
-                        _position += offset;
-                        base.Seek(offset, origin);
-                    }
+                    _position += offset;
+                    base.Seek(_position, SeekOrigin.Begin);
                     break;
                 default:
-                    _position = base.Seek(offset, origin);
-                    break;
+                    throw new NotImplementedException();
             }
             return _position;
         }
