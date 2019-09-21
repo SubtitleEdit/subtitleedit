@@ -177,6 +177,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal const int LC_NUMERIC = 1;
 
+        internal const int RTLD_NOW = 0x0001;
+        internal const int RTLD_GLOBAL = 0x0100;
+
         [DllImport("libc.so.6")]
         internal static extern IntPtr setlocale(int category, string locale);
 
@@ -185,6 +188,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libdl.so")]
         internal static extern IntPtr dlclose(IntPtr handle);
+
+        [DllImport("libdl.so")]
+        internal static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         #endregion
     }

@@ -201,33 +201,16 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static VideoPlayer GetVideoPlayer()
         {
-            int RTLD_NOW = 0x0001;
-            int RTLD_GLOBAL = 0x0100;
-            GeneralSettings gs = Configuration.Settings.General;
+            var gs = Configuration.Settings.General;
 
             if (Configuration.IsRunningOnLinux)
             {
-                //TODO: Improve finding libmpv.so.*
-                var handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW | RTLD_GLOBAL);
-                if (handle == IntPtr.Zero)
+                if (LibMpvDynamic.IsInstalled)
                 {
-                    handle = NativeMethods.dlopen("libmpv.so.1", RTLD_NOW | RTLD_GLOBAL);
+                    return new LibMpvDynamic();
                 }
-                if (handle == IntPtr.Zero)
-                {
-                    handle = NativeMethods.dlopen("libmpv.so.1.27.0", RTLD_NOW | RTLD_GLOBAL);
-                }
-                if (handle == IntPtr.Zero)
-                {
-                    handle = NativeMethods.dlopen("libmpv.so.1.26.0", RTLD_NOW | RTLD_GLOBAL);
-                }
-
-                if (handle != IntPtr.Zero)
-                {
-                    NativeMethods.dlclose(handle);
-                    return new LibMpvMono();
-                }
-                return new MPlayer();
+                //return new MPlayer();
+                throw new NotSupportedException("You need 'libmpv-dev' and X11 to use the video player on Linux!");
             }
             // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
             // folder as Subtitle Edit and add this to the app.config inside the
