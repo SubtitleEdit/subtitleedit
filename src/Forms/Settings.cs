@@ -539,6 +539,9 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonVideoPlayerMPV.Checked = true;
                     labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputLinux;
                 }
+                textBoxVlcPath.Visible = false;
+                labelVlcPath.Visible = false;
+                buttonVlcPathBrowse.Visible = false;
             }
 
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
@@ -825,7 +828,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
-            InitComboxWordListLanguages();
+            InitComboBoxWordListLanguages();
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
             checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
@@ -1343,7 +1346,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxHelp.Image = (Image)help.Clone();
         }
 
-        private void InitComboxWordListLanguages()
+        private void InitComboBoxWordListLanguages()
         {
             //Examples: da_DK_user.xml, eng_OCRFixReplaceList.xml, en_names.xml
             string dir = Utilities.DictionaryFolder;

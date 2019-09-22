@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private const string Tesseract4Version = "4.1.0";
+        private string Tesseract4Version = "4.1.0";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -436,7 +436,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add("Binary image compare");
-            comboBoxOcrMethod.Items.Add("Tesseract 3.02");
+            if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
+            {
+                Tesseract4Version = "4";
+                checkBoxTesseractMusicOn.Checked = false;
+                checkBoxTesseractMusicOn.Visible = false;
+                checkBoxTesseractFallback.Checked = false;
+                checkBoxTesseractFallback.Visible = false;
+            }
+            else
+            {
+                comboBoxOcrMethod.Items.Add("Tesseract 3.02");
+            }
             comboBoxOcrMethod.Items.Add("Tesseract " + Tesseract4Version);
             if (_modiEnabled)
             {
@@ -6925,7 +6936,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
-                var ok = File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")) &&
+                var ok = Configuration.IsRunningOnWindows &&
+                         File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")) &&
                          File.Exists(Path.Combine(Configuration.Tesseract302DataDirectory, l + ".traineddata"));
                 checkBoxTesseractFallback.Visible = ok;
                 if (!ok)
@@ -7038,7 +7050,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
                 checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
-                if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
+                if (Configuration.IsRunningOnWindows &&
+                    !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
                     if (MessageBox.Show("Download Tesseract " + Tesseract4Version, "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
