@@ -166,19 +166,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static bool IsMPlayerAvailable
-        {
-            get
-            {
-                if (Configuration.IsRunningOnLinux || Utilities.IsRunningOnMono())
-                {
-                    return File.Exists(Path.Combine(Configuration.BaseDirectory, "mplayer"));
-                }
-
-                return MPlayer.GetMPlayerFileName != null;
-            }
-        }
-
         public static bool IsMpcHcInstalled
         {
             get

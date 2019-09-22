@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -137,6 +138,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (value)
                 {
                     _pictureBoxStop.Visible = true;
+                    _pictureBoxStop.BringToFront();
                 }
                 else
                 {
@@ -153,6 +155,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (value)
                 {
                     _pictureBoxMute.Visible = true;
+                    _pictureBoxMute.BringToFront();
                 }
                 else
                 {
@@ -169,6 +172,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (value)
                 {
                     _pictureBoxFullscreen.Visible = true;
+                    _pictureBoxFullscreen.BringToFront();
                 }
                 else
                 {
@@ -188,7 +192,30 @@ namespace Nikse.SubtitleEdit.Controls
             Controls.Add(MakeSubtitlesPanel());
             Controls.Add(MakeControlsPanel());
             _panelcontrols.BringToFront();
+            _pictureBoxProgressBar.Width = 0;
 
+            ShowAllControls();
+            if (Configuration.IsRunningOnLinux)
+            {
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+                {
+                    FontSizeFactor = 1.0F;
+                    SetSubtitleFont();
+                    ShowAllControls();
+                    VideoPlayerContainerResize(this, null);
+                    ShowAllControls();
+                    Invalidate();
+                    Refresh();
+                });
+            }
+
+            VideoPlayerContainerResize(this, null);
+            Resize += VideoPlayerContainerResize;
+            PanelPlayer.MouseDown += PanelPlayerMouseDown;
+        }
+
+        private void ShowAllControls()
+        {
             HideAllPlayImages();
             HideAllPauseImages();
             _pictureBoxPlay.Visible = true;
@@ -196,25 +223,35 @@ namespace Nikse.SubtitleEdit.Controls
 
             HideAllStopImages();
             _pictureBoxStop.Visible = true;
+            _pictureBoxStop.BringToFront();
+
+            HideAllStopImages();
+            _pictureBoxStop.Visible = true;
+            _pictureBoxStop.BringToFront();
 
             HideAllFullscreenImages();
             _pictureBoxFullscreen.Visible = true;
+            _pictureBoxFullscreen.BringToFront();
 
             HideAllMuteImages();
             _pictureBoxMute.Visible = true;
+            _pictureBoxMute.BringToFront();
 
             HideAllReverseImages();
             _pictureBoxReverse.Visible = true;
+            _pictureBoxReverse.BringToFront();
 
             HideAllFastForwardImages();
             _pictureBoxFastForward.Visible = true;
+            _pictureBoxFastForward.BringToFront();
 
-            VideoPlayerContainerResize(this, null);
-            Resize += VideoPlayerContainerResize;
+            _pictureBoxProgressbarBackground.Visible = true;
+            _pictureBoxProgressbarBackground.BringToFront();
+            _pictureBoxProgressBar.Visible = true;
+            _pictureBoxProgressBar.BringToFront();
 
-            _pictureBoxProgressBar.Width = 0;
-
-            PanelPlayer.MouseDown += PanelPlayerMouseDown;
+            _labelTimeCode.Visible = true;
+            _labelTimeCode.BringToFront();
         }
 
         public void EnableMouseWheelStep()
@@ -706,6 +743,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (!_panelcontrols.Visible)
             {
                 _panelcontrols.Visible = true;
+                _panelcontrols.BringToFront();
                 _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
             }
             ShowCursor();
@@ -1161,6 +1199,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPauseImages();
                 _pictureBoxPauseOver.Visible = true;
+                _pictureBoxPauseOver.BringToFront();
             }
         }
 
@@ -1180,6 +1219,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPauseImages();
                 _pictureBoxPauseDown.Visible = true;
+                _pictureBoxPauseDown.BringToFront();
             }
             OnButtonClicked?.Invoke(sender, e);
         }
@@ -1188,6 +1228,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllPauseImages();
             _pictureBoxPlay.Visible = true;
+            _pictureBoxPlay.BringToFront();
             Pause();
         }
 
@@ -1206,6 +1247,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllStopImages();
             _pictureBoxStopOver.Visible = true;
+            _pictureBoxStopOver.BringToFront();
         }
 
         private void PictureBoxStopOverMouseLeave(object sender, EventArgs e)
@@ -1214,6 +1256,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllStopImages();
                 _pictureBoxStop.Visible = true;
+                _pictureBoxStop.BringToFront();
             }
         }
 
@@ -1223,6 +1266,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllStopImages();
                 _pictureBoxStopDown.Visible = true;
+                _pictureBoxStopDown.BringToFront();
             }
             OnButtonClicked?.Invoke(sender, e);
         }
@@ -1231,6 +1275,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllStopImages();
             _pictureBoxStop.Visible = true;
+            _pictureBoxStop.BringToFront();
             Stop();
         }
 
@@ -1263,6 +1308,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllFullscreenImages();
             _pictureBoxFullscreenOver.Visible = true;
+            _pictureBoxFullscreenOver.BringToFront();
         }
 
         private void PictureBoxFullscreenOverMouseLeave(object sender, EventArgs e)
@@ -1271,6 +1317,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllFullscreenImages();
                 _pictureBoxFullscreen.Visible = true;
+                _pictureBoxFullscreen.BringToFront();
             }
         }
 
@@ -1284,6 +1331,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllFullscreenImages();
             _pictureBoxFullscreen.Visible = true;
+            _pictureBoxFullscreen.BringToFront();
         }
 
         #endregion FullscreenButtons
@@ -1303,10 +1351,12 @@ namespace Nikse.SubtitleEdit.Controls
             if (Mute)
             {
                 _pictureBoxMuteDown.Visible = true;
+                _pictureBoxMuteDown.BringToFront();
             }
             else
             {
                 _pictureBoxMuteOver.Visible = true;
+                _pictureBoxMuteOver.BringToFront();
             }
         }
 
@@ -1316,6 +1366,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllMuteImages();
                 _pictureBoxMute.Visible = true;
+                _pictureBoxMute.BringToFront();
             }
         }
 
@@ -1325,6 +1376,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllMuteImages();
                 _pictureBoxMuteDown.Visible = true;
+                _pictureBoxMuteDown.BringToFront();
             }
             OnButtonClicked?.Invoke(sender, e);
         }
@@ -1334,6 +1386,7 @@ namespace Nikse.SubtitleEdit.Controls
             HideAllMuteImages();
             Mute = true;
             _pictureBoxMuteDown.Visible = true;
+            _pictureBoxMuteDown.BringToFront();
         }
 
         private void PictureBoxMuteDownClick(object sender, EventArgs e)
@@ -1341,6 +1394,7 @@ namespace Nikse.SubtitleEdit.Controls
             Mute = false;
             HideAllMuteImages();
             _pictureBoxMute.Visible = true;
+            _pictureBoxMute.BringToFront();
             OnButtonClicked?.Invoke(sender, e);
         }
 
@@ -1359,18 +1413,21 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllReverseImages();
             _pictureBoxReverseOver.Visible = true;
+            _pictureBoxReverseOver.BringToFront();
         }
 
         private void PictureBoxReverseOverMouseLeave(object sender, EventArgs e)
         {
             HideAllReverseImages();
             _pictureBoxReverse.Visible = true;
+            _pictureBoxReverse.BringToFront();
         }
 
         private void PictureBoxReverseOverMouseDown(object sender, MouseEventArgs e)
         {
             HideAllReverseImages();
             _pictureBoxReverseDown.Visible = true;
+            _pictureBoxReverseDown.BringToFront();
             if (VideoPlayer != null)
             {
                 var newPosition = CurrentPosition - 3.0;
@@ -1387,6 +1444,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllReverseImages();
             _pictureBoxReverse.Visible = true;
+            _pictureBoxReverse.BringToFront();
         }
 
         #endregion Reverse buttons
@@ -1404,18 +1462,21 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllFastForwardImages();
             _pictureBoxFastForwardOver.Visible = true;
+            _pictureBoxFastForwardOver.BringToFront();
         }
 
         private void PictureBoxFastForwardOverMouseLeave(object sender, EventArgs e)
         {
             HideAllFastForwardImages();
             _pictureBoxFastForward.Visible = true;
+            _pictureBoxFastForward.BringToFront();
         }
 
         private void PictureBoxFastForwardOverMouseDown(object sender, MouseEventArgs e)
         {
             HideAllFastForwardImages();
             _pictureBoxFastForwardDown.Visible = true;
+            _pictureBoxFastForwardDown.BringToFront();
 
             if (VideoPlayer != null)
             {
@@ -1433,6 +1494,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllFastForwardImages();
             _pictureBoxFastForward.Visible = true;
+            _pictureBoxFastForward.BringToFront();
         }
 
         #endregion Fast forward buttons
@@ -1580,6 +1642,7 @@ namespace Nikse.SubtitleEdit.Controls
                 VideoPlayer.CurrentPosition = 0;
                 HideAllPauseImages();
                 _pictureBoxPlay.Visible = true;
+                _pictureBoxPlay.BringToFront();
                 RefreshProgressBar();
             }
             OnButtonClicked?.Invoke(null, null);
@@ -1592,6 +1655,7 @@ namespace Nikse.SubtitleEdit.Controls
                 VideoPlayer.Pause();
                 HideAllPauseImages();
                 _pictureBoxPlay.Visible = true;
+                _pictureBoxPlay.BringToFront();
                 RefreshProgressBar();
             }
         }
