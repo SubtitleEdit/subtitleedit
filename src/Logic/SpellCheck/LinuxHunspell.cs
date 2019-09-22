@@ -17,7 +17,8 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             }
             catch
             {
-                System.Windows.Forms.MessageBox.Show("Unable to start hunspell spell checker - make sure hunspell is installed!");
+                System.Windows.Forms.MessageBox.Show("Unable to start hunspell spell checker - make sure hunspell is installed!" + Environment.NewLine +
+                                                     "E.g. install package 'libhunspell-dev' for Ubuntu, 'hunspell-devel' for Red Hat");
                 throw;
             }
         }
