@@ -533,12 +533,11 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerDirectShow.Enabled = false;
                 radioButtonVideoPlayerMpcHc.Enabled = false;
                 radioButtonVideoPlayerVLC.Enabled = false;
-                Configuration.Settings.General.MpvVideoOutput = "x11";
                 if (LibMpvDynamic.IsInstalled)
                 {
                     radioButtonVideoPlayerMPV.Enabled = true;
                     radioButtonVideoPlayerMPV.Checked = true;
-                    labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
+                    labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputLinux;
                 }
             }
 

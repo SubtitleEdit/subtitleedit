@@ -738,6 +738,7 @@ $HorzAlign          =   Center
         public string VlcLocation { get; set; }
         public string VlcLocationRelative { get; set; }
         public string MpvVideoOutput { get; set; }
+        public string MpvVideoOutputLinux { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
@@ -849,7 +850,8 @@ $HorzAlign          =   Center
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutput = Configuration.IsRunningOnLinux ? "vaapi" : "direct3d";
+            MpvVideoOutput = "direct3d";
+            MpvVideoOutputLinux = "x11";
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // thresshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
@@ -2344,6 +2346,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvVideoOutput = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("MpvVideoOutputLinux");
+            if (subNode != null)
+            {
+                settings.General.MpvVideoOutputLinux = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvHandlesPreviewText");
@@ -5941,6 +5949,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutput", settings.General.MpvVideoOutput);
+                textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString());
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
