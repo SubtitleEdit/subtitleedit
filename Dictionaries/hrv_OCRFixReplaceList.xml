@@ -2064,6 +2064,7 @@
     <Word from="Filovo" to="Philovo" />
     <Word from="Flober" to="Flaubert" />
     <Word from="Fokner" to="Faulkner" />
+    <Word from="Fredi" to="Freddie" />
     <Word from="Fren" to="Fran" />
     <Word from="Grečen" to="Gretchen" />
     <Word from="Grejs" to="Grace" />
@@ -2122,6 +2123,7 @@
     <Word from="Krejga" to="Craiga" />
     <Word from="Krejgu" to="Craigu" />
     <Word from="Kristi" to="Christie" />
+    <Word from="Kuk" to="Cook" />
     <Word from="Lajf" to="Life" />
     <Word from="Lajfu" to="Lifeu" />
     <Word from="Lajl" to="Lile" />
@@ -3563,6 +3565,7 @@
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="tićn" replaceWith="tičn" />
     <RegEx find="tisanj" replaceWith="tiranj" />
+    <RegEx find="tks" replaceWith="tsk" />
     <RegEx find="(mo|ti|r)viš[eu]" replaceWith="$1vira" />
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
     <RegEx find="teriv" replaceWith="tjeriv" />
