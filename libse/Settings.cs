@@ -3067,7 +3067,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("ExportBottomMarginPixels");
             if (subNode != null)
             {
-                settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.ExportBottomMarginPixels = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("ExportLeftRightMarginUnit");
