@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 string videoOutput = "direct3d";
                 if (Configuration.IsRunningOnLinux)
                 {
-                    videoOutput = "x11";
+                    videoOutput = Configuration.Settings.General.MpvVideoOutputLinux;
                 }
                 else if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                 {
