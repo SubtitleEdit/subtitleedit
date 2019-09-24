@@ -779,6 +779,9 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
     <FileName>Nome do arquivo</FileName>
     <Join>Juntar</Join>
     <TotalNumberOfLinesX>Número total de linhas: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>Os arquivos já possuem códigos de tempo corretos</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Adicionar hora de término do arquivo anterior</AppendTimeCodes>
+    <AddMs>Adicionar milissegundos após cada arquivo</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Não Especificado</NotSpecified>
@@ -2063,6 +2066,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <MicrosoftBingTranslator>Microsoft Translator</MicrosoftBingTranslator>
     <HowToSignUp>Como fazer login</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Ponto final do token</MicrosoftTranslateTokenEndpoint>
     <FontNote>Nota: Estas configurações de fonte são somente para a interface do Subtitle Edit.
 Definir uma fonte para a legenda geralmente é feito no player de vídeo, mas também pode ser feito ao usar um formato de legenda com informações de fonte embutidas como
 "Advanced Sub Statios Alpha" ou ao exportar para formatos baseados em imagem.</FontNote>
@@ -2391,6 +2395,7 @@ Manter as alterações?</KeepChangesMessage>
     <UseTimeCodesFromIdx>Usar códigos de tempo do arquivo .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Não há coincidências&gt;</NoMatch>
     <AutoTransparentBackground>Fundo transparente auto</AutoTransparentBackground>
+    <CaptureTopAlign>Capturar alinhamento superior</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Inspecionar coincidências para a imagem atual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir fator não-itálico...</SetUnitalicFactor>
