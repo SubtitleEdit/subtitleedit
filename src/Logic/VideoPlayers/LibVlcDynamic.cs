@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = NativeMethods.GetProcAddress(_libVlcDll, name);
+            var address = NativeMethods.CrossGetProcAddress(_libVlcDll, name);
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -709,7 +709,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 Directory.SetCurrentDirectory(dir);
             }
 
-            _libVlcDll = NativeMethods.LoadLibrary(dllFile);
+            _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
             LoadLibVlcDynamic();
             string[] initParameters = { "--no-skip-frames" };
             _libVlc = _libvlc_new(initParameters.Length, initParameters);
@@ -740,7 +740,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     Directory.SetCurrentDirectory(dir);
                 }
 
-                _libVlcDll = NativeMethods.LoadLibrary(dllFile);
+                _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
                 LoadLibVlcDynamic();
             }
             else if (!Directory.Exists(videoFileName))
@@ -896,7 +896,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                         if (_libVlcDll != IntPtr.Zero)
                         {
-                            NativeMethods.FreeLibrary(_libVlcDll);  // CRASHES in visual sync / point sync?
+                            NativeMethods.CrossFreeLibrary(_libVlcDll);  // CRASHES in visual sync / point sync?
                             _libVlcDll = IntPtr.Zero;
                         }
                     }
