@@ -28,7 +28,7 @@ NOTE=
 ");
 
             Paragraph last = null;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 sb.AppendLine($"{MakeTimeCode(p.StartTime, last)} {p.Duration.Seconds + p.Duration.Milliseconds / TimeCode.BaseUnit:0.0#}\r\n{p.Text}\r\n");
                 last = p;
@@ -55,7 +55,7 @@ NOTE=
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
-                if (RegexTimeCode1.IsMatch(s) || RegexTimeCode2.IsMatch(s) || RegexTimeCode3.IsMatch(s))
+                if (s.Length > 3 && char.IsDigit(s[0]) && (RegexTimeCode1.IsMatch(s) || RegexTimeCode2.IsMatch(s) || RegexTimeCode3.IsMatch(s)))
                 {
                     try
                     {

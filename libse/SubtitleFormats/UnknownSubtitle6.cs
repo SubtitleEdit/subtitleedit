@@ -70,7 +70,7 @@ SRPSKI
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (RegexTimeCodes.IsMatch(s))
+                if (s.Length > 2 && char.IsDigit(s[0]) && RegexTimeCodes.IsMatch(s))
                 {
                     if (!string.IsNullOrEmpty(paragraph.Text))
                     {
@@ -93,7 +93,7 @@ SRPSKI
                         }
                     }
                 }
-                else if (RegexBeforeText.IsMatch(s))
+                else if (s.Length > 2 && char.IsDigit(s[0]) && RegexBeforeText.IsMatch(s))
                 {
                     expecting = ExpectingLine.Text;
                 }

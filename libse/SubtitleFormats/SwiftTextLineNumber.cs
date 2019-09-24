@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             int count = 1;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 string startTime = $"{p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds):00}";
                 string timeOut = $"{p.EndTime.Hours:00}:{p.EndTime.Minutes:00}:{p.EndTime.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds):00}";
@@ -122,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Trim();
-            if (RegexTimeCodes.IsMatch(line))
+            if (line.Length > 20 && line.StartsWith("SUBTITLE:", StringComparison.Ordinal) && RegexTimeCodes.IsMatch(line))
             {
                 //SUBTITLE: 59  TIMEIN: 00:04:28:06 TIMEOUT: 00:04:32:12
                 string s = line.Replace("SUBTITLE:", string.Empty).Replace("TIMEIN", string.Empty).Replace("TIMEOUT", string.Empty).RemoveChar(' ').Replace("\t", string.Empty);

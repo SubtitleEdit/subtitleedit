@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Trim();
-            if (RegexTimeCodes.IsMatch(line))
+            if (line.Length > 20 && line.StartsWith("SUBTITLE:", StringComparison.Ordinal) && RegexTimeCodes.IsMatch(line))
             {
                 //SUBTITLE: 1   TIMEIN: 00:00:07:01 DURATION: 03:11 TIMEOUT: 00:00:10:12
                 string s = line.Replace("SUBTITLE:", string.Empty).Replace("TIMEIN", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).RemoveChar(' ').Replace("\t", string.Empty);
