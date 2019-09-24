@@ -4606,7 +4606,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = string.Empty;
         }
 
-        private bool ShowProfileInStatusBar =>  Configuration.Settings.General.CurrentProfile != "Default";
+        private bool ShowProfileInStatusBar => Configuration.Settings.General.CurrentProfile != "Default";
 
         private void ShowSourceLineNumber()
         {
@@ -11850,6 +11850,10 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = mergedVobSubPacks.Count - 1; i >= 0; i--)
             {
                 if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 2)
+                {
+                    mergedVobSubPacks.RemoveAt(i);
+                }
+                else if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 67 && mergedVobSubPacks[i].SubPicture.Delay.TotalMilliseconds < 35)
                 {
                     mergedVobSubPacks.RemoveAt(i);
                 }
