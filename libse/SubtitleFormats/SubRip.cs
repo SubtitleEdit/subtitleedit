@@ -255,6 +255,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private bool TryReadTimeCodesLine(string input, Paragraph paragraph)
         {
+            var s = input.TrimStart('-', ' ');
+            if (s.Length < 10 || !char.IsDigit(s[0]))
+            {
+                return false;
+            }
+
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
             var line = input.Replace('،', ',')

@@ -1390,6 +1390,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 // English is the default selected language.
                 Configuration.Settings.WordLists.LastLanguage = Configuration.Settings.WordLists.LastLanguage ?? "en-US";
+                comboBoxWordListLanguage.BeginUpdate();
                 foreach (var ci in cultures)
                 {
                     comboBoxWordListLanguage.Items.Add(new ComboBoxLanguage { CultureInfo = ci });
@@ -1402,6 +1403,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxWordListLanguage.SelectedIndex = 0;
                 }
+                comboBoxWordListLanguage.EndUpdate();
             }
             else
             {

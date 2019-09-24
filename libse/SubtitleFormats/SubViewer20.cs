@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     header.AppendLine(line);
                 }
-                else if (line.Length > 20 && RegexTimeCodes.IsMatch(line))
+                else if (line.Length > 20 && char.IsDigit(line[0]) && RegexTimeCodes.IsMatch(line))
                 {
                     var parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)
@@ -123,16 +123,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (expecting == ExpectingLine.Text && line.Length > 0)
                 {
                     string text = line.Replace("[br]", Environment.NewLine);
-                    text = text.Replace("{\\i1}", "<i>");
-                    text = text.Replace("{\\i0}", "</i>");
-                    text = text.Replace("{\\i}", "</i>");
-                    text = text.Replace("{\\b1}", "<b>");
-                    text = text.Replace("{\\b0}", "</b>");
-                    text = text.Replace("{\\b}", "</b>");
-                    text = text.Replace("{\\u1}", "<u>");
-                    text = text.Replace("{\\u0}", "</u>");
-                    text = text.Replace("{\\u}", "</u>");
-
+                    if (text.Contains("{\\", StringComparison.Ordinal))
+                    {
+                        text = text.Replace("{\\i1}", "<i>");
+                        text = text.Replace("{\\i0}", "</i>");
+                        text = text.Replace("{\\i}", "</i>");
+                        text = text.Replace("{\\b1}", "<b>");
+                        text = text.Replace("{\\b0}", "</b>");
+                        text = text.Replace("{\\b}", "</b>");
+                        text = text.Replace("{\\u1}", "<u>");
+                        text = text.Replace("{\\u0}", "</u>");
+                        text = text.Replace("{\\u}", "</u>");
+                    }
                     paragraph.Text = text;
                     subtitle.Paragraphs.Add(paragraph);
                     paragraph = new Paragraph();
