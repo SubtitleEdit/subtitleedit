@@ -192,12 +192,15 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (Configuration.IsRunningOnLinux)
             {
+                if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
+                {
+                    return new LibVlcDynamic();
+                }
                 if (LibMpvDynamic.IsInstalled)
                 {
                     return new LibMpvDynamic();
                 }
-                //return new MPlayer();
-                throw new NotSupportedException("You need 'libmpv-dev' and X11 to use the video player on Linux!");
+                throw new NotSupportedException("You need 'libmpv-dev' or 'libvlc-dev' (on Ubuntu) and X11 to use the video player on Linux!");
             }
             // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
             // folder as Subtitle Edit and add this to the app.config inside the
