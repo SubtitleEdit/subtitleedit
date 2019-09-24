@@ -14,6 +14,8 @@
 * IMPROVED:
    * Update Finish translation - thx Teijo
    * Update Farsi translation - thx ghost1372
+   * Update Bulgarian translation - thx kalin
+   * Update Brazilian translation - thx Igor
    * Improve FCP/image export frame rate compat - thx Antoine
    * Auto-switch to just downloaded dictionary
    * Allow letters stuck to numbers for Arabic spellcheck - thx OmrSi
@@ -23,6 +25,7 @@
    * Improve handling of "Structured titles" format - thx Yamato-ua
    * Improve of drawing scene changes - thx OmrSi
    * Improve compatibility for ASS/SSA - thx sneaker_ger
+   * Improve compatibility with Linux/Mono - thx shag00/JGoutin/stefano 
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan
@@ -34,6 +37,10 @@
    * Fix "Overwrite original files" in "Batch convert" - thx Steve
    * Fix Timed Text styles dialog crash - thx Chion82/xylographe
    * Fix crash in Pac Unicode - thx ivandrofly
+   * Do not remove music symb in cmd line "removeformatting" - thx Sebastien
+   * Fix remembering export buttom margin - thx Michael
+   * Skip small/short images when importing vobsub from mkv - thx Maitch
+   * Fix for reading mkv on Linux - thx JGoutin
 
 
 3.5.10 (18th August 2019)
