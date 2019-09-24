@@ -532,11 +532,16 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonMpvSettings.Visible = false;
                 radioButtonVideoPlayerDirectShow.Enabled = false;
                 radioButtonVideoPlayerMpcHc.Enabled = false;
-                radioButtonVideoPlayerVLC.Enabled = false;
+                var isLibVlcInstalled = LibVlcDynamic.IsInstalled;
+                radioButtonVideoPlayerVLC.Enabled = isLibVlcInstalled;
+                if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && isLibVlcInstalled)
+                {
+                    radioButtonVideoPlayerVLC.Checked = true;
+                }
                 if (LibMpvDynamic.IsInstalled)
                 {
                     radioButtonVideoPlayerMPV.Enabled = true;
-                    radioButtonVideoPlayerMPV.Checked = true;
+                    radioButtonVideoPlayerMPV.Checked = !(gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && isLibVlcInstalled);
                     labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutputLinux;
                 }
                 textBoxVlcPath.Visible = false;
