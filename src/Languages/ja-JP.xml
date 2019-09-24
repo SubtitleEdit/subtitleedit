@@ -38,11 +38,11 @@
     <Italic>斜体</Italic>
     <Underline>下線</Underline>
     <Visible>表示</Visible>
-    <FrameRate>フレーム レート</FrameRate>
+    <FrameRate>フレームレート</FrameRate>
     <Name>名前</Name>
     <FileNameXAndSize>ファイル名: {0} ({1})</FileNameXAndSize>
     <ResolutionX>解像度: {0}</ResolutionX>
-    <FrameRateX>フレーム レート: {0:0.0###}</FrameRateX>
+    <FrameRateX>フレームレート: {0:0.0###}</FrameRateX>
     <TotalFramesX>総フレーム数: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>ビデオ エンコード: {0}</VideoEncodingX>
     <SingleLineLengths>各行の文字数:</SingleLineLengths>
@@ -95,15 +95,15 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
   </About>
   <AddToNames>
     <Title>names/etc の一覧に追加</Title>
-    <Description>names/noise の一覧に追加 (大文字と小文字は区別されます)</Description>
+    <Description>names/noise の一覧に追加 (大文字と小文字を区別)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>OCR の置換の一覧に追加</Title>
-    <Description>OCR の置換の一覧に組み合わせを追加 (大文字と小文字は区別されます)</Description>
+    <Description>OCR の置換の一覧に組み合わせを追加 (大文字と小文字を区別)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>ユーザー辞書に追加</Title>
-    <Description>ユーザー辞書に追加 (大文字と小文字は区別されます)</Description>
+    <Description>ユーザー辞書に追加 (大文字と小文字を区別)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>波形データの生成</Title>
@@ -138,7 +138,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <AddSeconds>加算する秒数</AddSeconds>
     <SetAsPercent>表示時間のパーセンテージ</SetAsPercent>
     <Note>注意: 表示時間が次のテキストの開始時間に重複することはありません</Note>
-    <Fixed>修正されました</Fixed>
+    <Fixed>固定</Fixed>
     <Milliseconds>ミリ秒</Milliseconds>
     <ExtendOnly>延長のみ</ExtendOnly>
   </AdjustDisplayDuration>
@@ -175,6 +175,11 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <NotConverted>失敗しました</NotConverted>
     <Converted>変換されました</Converted>
     <Settings>設定</Settings>
+    <ScanFolder>フォルダーをスキャン...</ScanFolder>
+    <Recursive>サブフォルダーを含める</Recursive>
+    <Filter>フィルタ</Filter>
+    <FilterSkipped>フィルタによってスキップ</FilterSkipped>
+    <OffsetTimeCodes>タイムコードのオフセット</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>ビーマー</Title>
@@ -202,12 +207,12 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <LinesFoundX>見つかった行: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>フレーム レートの変更</Title>
-    <ConvertFrameRateOfSubtitle>字幕のフレーム レートを変換します</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>前のフレーム レート</FromFrameRate>
-    <ToFrameRate>後のフレーム レート</ToFrameRate>
-    <FrameRateNotCorrect>フレーム レートが正しくありません</FrameRateNotCorrect>
-    <FrameRateNotChanged>フレーム レートが同じです - 変換するものがありません</FrameRateNotChanged>
+    <Title>フレームレートの変更</Title>
+    <ConvertFrameRateOfSubtitle>字幕のフレームレートを変換します</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>変換前のフレームレート</FromFrameRate>
+    <ToFrameRate>変換後のフレームレート</ToFrameRate>
+    <FrameRateNotCorrect>フレームレートが正しくありません</FrameRateNotCorrect>
+    <FrameRateNotChanged>フレームレートが同じです - 変換するものがありません</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>パーセントで速度を調整</Title>
@@ -843,7 +848,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <StartNumberingFrom>番号を振り直す...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>聴覚障害者用字幕の削除...</RemoveTextForHearingImpaired>
         <ChangeCasing>大文字と小文字の変換...</ChangeCasing>
-        <ChangeFrameRate>フレーム レートの変更...</ChangeFrameRate>
+        <ChangeFrameRate>フレームレートの変更...</ChangeFrameRate>
         <ChangeSpeedInPercent>速度の変更 (パーセント)...</ChangeSpeedInPercent>
         <MergeShortLines>短い行の結合...</MergeShortLines>
         <SplitLongLines>長い行の分割...</SplitLongLines>
@@ -1136,10 +1141,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <TextingForHearingImpairedRemovedOneLine>聴覚障害者用テキストが削除されました: 1 行</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>聴覚障害者用テキストが削除されました: {0} 行</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>字幕が分割されました</SubtitleSplitted>
-    <SubtitleAppendPrompt>これは既存の字幕を現在読み込まれている既にビデオ ファイルと同期されている字幕に
-追加します。
+    <SubtitleAppendPrompt>これにより、現在読み込まれている字幕に既存の字幕が追加されます。字幕はビデオファイルと同期している必要があります。
 
-続行しますか?</SubtitleAppendPrompt>
+続行しますか？</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>字幕の追加</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>追加する字幕を開く...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>視覚同期 - 字幕の第 2 部を追加する</AppendViaVisualSyncTitle>
@@ -1211,9 +1215,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <CasingCompleteMessageNoNames>大文字と小文字が変換された行の数: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>名前の大文字と小文字が変換された行の数: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>大文字と小文字が変換された行の数: {0}/{1}、名前の大文字と小文字の変換: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>フレーム レートの変更前</BeforeChangeFrameRate>
+    <BeforeChangeFrameRate>変更前のフレームレート</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>パーセントによる速度の調整前</BeforeAdjustSpeedInPercent>
-    <FrameRateChangedFromXToY>{0} から {1} へフレーム レートが変更されました</FrameRateChangedFromXToY>
+    <FrameRateChangedFromXToY>{0} から {1} へフレームレートが変更されました</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} が見つかりません! そのまま VobSub ファイルを読み込みますか?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>ヘッダーが無効な VobSub ファイルです: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>VobSub (sub/idx) 字幕を開く...</OpenVobSubFile>
@@ -1268,7 +1272,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <BeforeSetEndAndVideoPosition>ビデオの位置に終了時間を設定して開始を自動計算する前</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>現在のスペル チェックを続行しますか?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>文字/秒: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>ビデオ ファイルからフレーム レートを取得</GetFrameRateFromVideoFile>
+    <GetFrameRateFromVideoFile>ビデオ ファイルからフレームレートを取得</GetFrameRateFromVideoFile>
     <NetworkMessage>新しいメッセージ: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>行が更新されました: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
     <NetworkInsert>行が挿入されました: {0} ({1}): Index={2}, Text={3}</NetworkInsert>
@@ -1494,6 +1498,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <PreviewLinesModifiedX>プレビュー - 変更された段落: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>変更された行のみ表示する</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>行間の最大ミリ秒数</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>フレームレート情報</FrameInfo>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>行 {0} の同期ポイントの設定</Title>
@@ -1531,10 +1536,15 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GoToBookmark>ブックマークへ移動</GoToBookmark>
     <GoToPreviousBookmark>前のブックマークへ移動</GoToPreviousBookmark>
     <GoToNextBookmark>次のブックマークへ移動</GoToNextBookmark>
-    <ShowFrameRate>ツール バーにフレーム レートを表示する</ShowFrameRate>
-    <DefaultFrameRate>既定のフレーム レート</DefaultFrameRate>
+    <ChooseProfile>プロファイルを選択</ChooseProfile>
+    <ShowFrameRate>ツール バーにフレームレートを表示する</ShowFrameRate>
+    <DefaultFrameRate>既定のフレームレート</DefaultFrameRate>
     <DefaultFileEncoding>既定のファイル エンコード</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI エンコードを自動検出する</AutoDetectAnsiEncoding>
+    <Profile>プロファイル</Profile>
+    <Profiles>プロファイル</Profiles>
+    <ImportProfiles>プロファイルをインポート</ImportProfiles>
+    <ExportProfiles>プロファイルをエクスポート</ExportProfiles>
     <SubtitleLineMaximumLength>各行の最大文字数</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>1 秒あたりの最大文字数</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>1分あたりの最大単語数</MaximumWordssPerMinute>
@@ -1544,6 +1554,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <SubtitleFont>字幕のフォント</SubtitleFont>
     <SubtitleFontSize>字幕のフォント サイズ</SubtitleFontSize>
     <SubtitleBold>太字</SubtitleBold>
+    <VideoAutoOpen>字幕を開くときにビデオファイルを自動で開く</VideoAutoOpen>
     <SubtitleCenter>中央</SubtitleCenter>
     <SubtitleFontColor>字幕のフォントの色</SubtitleFontColor>
     <SubtitleBackgroundColor>字幕の背景色</SubtitleBackgroundColor>
@@ -1555,6 +1566,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <StartInSourceView>ソース ビューで起動する</StartInSourceView>
     <RemoveBlankLinesWhenOpening>字幕を開くときに空行を削除する</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>リスト ビューにおける空行の表示</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"名前を付けて保存..."で使用するファイル名</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>メイン ウィンドウのリスト ビューにおけるダブルクリックの動作</MainListViewDoubleClickAction>
     <MainListViewNothing>何もしない</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>ビデオの位置へ移動して一時停止</MainListViewVideoGoToPositionAndPause>
@@ -1612,6 +1624,9 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <SpectrogramClassic>クラシック</SpectrogramClassic>
     <SubStationAlphaStyle>Sub Station Alpha スタイル</SubStationAlphaStyle>
     <ChooseColor>色の選択</ChooseColor>
+    <SsaOutline>縁</SsaOutline>
+    <SsaShadow>影</SsaShadow>
+    <SsaOpaqueBox>不透明なカード</SsaOpaqueBox>
     <Testing123>テスト中 123...</Testing123>
     <Language>言語</Language>
     <NamesIgnoreLists>names/ignore の一覧 (大小区別)</NamesIgnoreLists>
@@ -1787,7 +1802,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <SkipOnce>これをスキップ(&amp;O)</SkipOnce>
     <SkipAll>すべてスキップ(&amp;S)</SkipAll>
     <AddToUserDictionary>ユーザー辞書に追加</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>names/noise の一覧に追加 (大文字と小文字は区別されます)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>names/noise の一覧に追加 (大文字と小文字を区別)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>OCR の置換の一覧に組み合わせを追加</AddToOcrReplaceList>
     <Abort>中止</Abort>
     <Use>使用</Use>
