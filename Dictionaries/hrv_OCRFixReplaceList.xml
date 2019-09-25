@@ -2794,6 +2794,7 @@
     <RegEx find="([mM])lj?ek([aou])" replaceWith="$1lijek$2" />
     <RegEx find="([mM])lj?ečn" replaceWith="$1liječn" />
     <RegEx find="leven" replaceWith="ljeven" />
+    <RegEx find="mnaj" replaceWith="mnja" />
     <RegEx find="([mM])oč([iun])" replaceWith="$1oć$2" />
     <RegEx find="oguč" replaceWith="oguć" />
     <RegEx find="([mpsMPS])olić" replaceWith="$1olit ć" />
@@ -3458,6 +3459,7 @@
     <RegEx find="(?&lt;!sit)niše([mš])" replaceWith="nira$1" />
     <RegEx find="(?&lt;!sit|fi)nišu" replaceWith="niraju" />
     <RegEx find="niše(mo|te)" replaceWith="nira$1" />
+    <RegEx find="nls" replaceWith="nis" />
     <RegEx find="njaće" replaceWith="njat će" />
     <RegEx find="nspirisa([nlt])" replaceWith="nspirira$1" />
     <RegEx find="novj?eta" replaceWith="novijeta" />
