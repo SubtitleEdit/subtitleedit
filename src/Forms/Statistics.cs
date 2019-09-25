@@ -177,12 +177,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static int GetLineLength(Paragraph p)
         {
-            return p.Text.Replace(Environment.NewLine, string.Empty).Length;
+            return HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, string.Empty), true).Length;
         }
 
         private static int GetSingleLineLength(string s)
         {
-            return s.Length;
+            return HtmlUtil.RemoveHtmlTags(s, true).Length;
         }
 
         private const int NumberOfLinesToShow = 10;
