@@ -711,7 +711,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _parentForm = ownerControl.FindForm();
             }
 
-            string dllFile;
+            var dllFile = "libvlc.so";
             if (Configuration.IsRunningOnWindows)
             {
                 dllFile = GetVlcPath("libvlc.dll");
@@ -722,15 +722,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     {
                         Directory.SetCurrentDirectory(dir);
                     }
-
-                    _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
                 }
             }
-            else
-            {
-                dllFile = "libvlc.so";
-                _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
-            }
+            _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
             if (_libVlcDll == IntPtr.Zero)
             {
                 return;
