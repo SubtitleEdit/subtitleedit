@@ -860,6 +860,7 @@ $HorzAlign          =   Center
             DisableVideoAutoLoading = false;
             RightToLeftMode = false;
             LastSaveAsFormat = string.Empty;
+            SystemSubtitleFontNameOverride = string.Empty;
             CheckForUpdates = true;
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;

@@ -56,10 +56,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public override bool RightToLeftLayout
         {
-            get
-            {
-                return base.RightToLeftLayout;
-            }
+            get => base.RightToLeftLayout;
             set
             {
                 var hzAlignment = value ? HorizontalAlignment.Left : HorizontalAlignment.Right;
@@ -79,7 +76,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string SubtitleFontName
         {
-            get { return _subtitleFontName; }
+            get => _subtitleFontName;
             set
             {
                 _subtitleFontName = value;
@@ -1184,18 +1181,28 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
-            int i = 0;
-            foreach (Paragraph paragraph in paragraphs)
+            var items = new ListViewItem[paragraphs.Count];
+            for (var index = 0; index < paragraphs.Count; index++)
             {
+                var paragraph = paragraphs[index];
                 Paragraph next = null;
-                if (i + 1 < paragraphs.Count)
+                if (index + 1 < paragraphs.Count)
                 {
-                    next = paragraphs[i + 1];
+                    next = paragraphs[index + 1];
                 }
+                items[index] = MakeListViewItem(paragraph, next, null);
+            }
 
-                Add(paragraph, next, null);
-                SyntaxColorLine(paragraphs, i, paragraph);
-                i++;
+            Items.AddRange(items);
+
+            if (UseSyntaxColoring && _settings != null)
+            {
+                for (var index = 0; index < paragraphs.Count; index++)
+                {
+                    var paragraph = paragraphs[index];
+                    var item = items[index];
+                    SyntaxColorListViewItem(paragraphs, index, paragraph, item);
+                }
             }
 
             ListViewItemSorter = x;
@@ -1214,19 +1221,29 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
-            int i = 0;
-            foreach (Paragraph paragraph in paragraphs)
+            var items = new ListViewItem[paragraphs.Count];
+            for (var index = 0; index < paragraphs.Count; index++)
             {
-                Paragraph alternate = Utilities.GetOriginalParagraph(i, paragraph, paragraphsAlternate);
+                var paragraph = paragraphs[index];
+                Paragraph alternate = Utilities.GetOriginalParagraph(index, paragraph, paragraphsAlternate);
                 Paragraph next = null;
-                if (i + 1 < paragraphs.Count)
+                if (index + 1 < paragraphs.Count)
                 {
-                    next = paragraphs[i + 1];
+                    next = paragraphs[index + 1];
                 }
+                items[index] = MakeListViewItem(paragraph, next, alternate);
+            }
 
-                Add(paragraph, next, alternate);
-                SyntaxColorLine(paragraphs, i, paragraph);
-                i++;
+            Items.AddRange(items);
+
+            if (UseSyntaxColoring && _settings != null)
+            {
+                for (var index = 0; index < paragraphs.Count; index++)
+                {
+                    var paragraph = paragraphs[index];
+                    var item = items[index];
+                    SyntaxColorListViewItem(paragraphs, index, paragraph, item);
+                }
             }
 
             ListViewItemSorter = x;
@@ -1240,10 +1257,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SyntaxColorAllLines(Subtitle subtitle)
         {
-            for (int index = 0; index < subtitle.Paragraphs.Count; index++)
+            if (UseSyntaxColoring && _settings != null)
             {
-                var paragraph = subtitle.Paragraphs[index];
-                SyntaxColorLine(subtitle.Paragraphs, index, paragraph);
+                for (int index = 0; index < subtitle.Paragraphs.Count; index++)
+                {
+                    var paragraph = subtitle.Paragraphs[index];
+                    SyntaxColorListViewItem(subtitle.Paragraphs, index, paragraph, Items[index]);
+                }
             }
         }
 
@@ -1252,112 +1272,117 @@ namespace Nikse.SubtitleEdit.Controls
             if (UseSyntaxColoring && _settings != null && IsValidIndex(i))
             {
                 var item = Items[i];
-                if (item.UseItemStyleForSubItems)
-                {
-                    item.UseItemStyleForSubItems = false;
-                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
-                }
-                if (ColumnIndexCps >= 0)
-                {
-                    item.SubItems[ColumnIndexCps].BackColor = BackColor;
-                }
-                if (ColumnIndexWpm >= 0)
-                {
-                    item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
-                }
-                if (ColumnIndexDuration >= 0)
-                {
-                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
-                }
+                SyntaxColorListViewItem(paragraphs, i, paragraph, item);
+            }
+        }
 
-                if (_settings.Tools.ListViewSyntaxColorDurationSmall)
+        private void SyntaxColorListViewItem(List<Paragraph> paragraphs, int i, Paragraph paragraph, ListViewItem item)
+        {
+            if (item.UseItemStyleForSubItems)
+            {
+                item.UseItemStyleForSubItems = false;
+                item.SubItems[ColumnIndexDuration].BackColor = BackColor;
+            }
+            if (ColumnIndexCps >= 0)
+            {
+                item.SubItems[ColumnIndexCps].BackColor = BackColor;
+            }
+            if (ColumnIndexWpm >= 0)
+            {
+                item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
+            }
+            if (ColumnIndexDuration >= 0)
+            {
+                item.SubItems[ColumnIndexDuration].BackColor = BackColor;
+            }
+
+            if (_settings.Tools.ListViewSyntaxColorDurationSmall)
+            {
+                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
-                    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
-                    if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    if (ColumnIndexCps >= 0)
                     {
-                        if (ColumnIndexCps >= 0)
-                        {
-                            item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        }
-                        else if (ColumnIndexDuration >= 0)
-                        {
-                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        }
+                        item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
-                    if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
+                    else if (ColumnIndexDuration >= 0)
                     {
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-                if (_settings.Tools.ListViewSyntaxColorDurationBig &&
-                    paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
-                    ColumnIndexDuration >= 0)
+                if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds && ColumnIndexDuration >= 0)
                 {
                     item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
+            }
+            if (_settings.Tools.ListViewSyntaxColorDurationBig &&
+                paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds &&
+                ColumnIndexDuration >= 0)
+            {
+                item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+            }
 
-                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
+            if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
+            {
+                Paragraph prev = paragraphs[i - 1];
+                if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
                 {
-                    Paragraph prev = paragraphs[i - 1];
-                    if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
+                    Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                    item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+                else
+                {
+                    Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
+                    item.SubItems[ColumnIndexStart].BackColor = BackColor;
+                }
+            }
+
+            if (ColumnIndexTextAlternate >= 0 && item.SubItems.Count >= ColumnIndexTextAlternate)
+            {
+                item.SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
+            }
+
+            if (ColumnIndexText >= item.SubItems.Count)
+            {
+                return;
+            }
+
+            if (_settings.Tools.ListViewSyntaxColorLongLines)
+            {
+                string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                foreach (string line in s.SplitToLines())
+                {
+                    if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                    }
-                    else
-                    {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                        item.SubItems[ColumnIndexStart].BackColor = BackColor;
+                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        return;
                     }
                 }
-
-                if (ColumnIndexTextAlternate >= 0 && item.SubItems.Count >= ColumnIndexTextAlternate)
+                int noOfLines = paragraph.NumberOfLines;
+                // Length excluding new line characters. (\r\n)
+                int len = noOfLines > 1 ? s.Length - Environment.NewLine.Length * (noOfLines - 1) : s.Length;
+                if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                 {
-                    item.SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
-                }
-
-                if (ColumnIndexText >= item.SubItems.Count)
-                {
-                    return;
-                }
-
-                if (_settings.Tools.ListViewSyntaxColorLongLines)
-                {
-                    string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                    foreach (string line in s.SplitToLines())
-                    {
-                        if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        {
-                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                            return;
-                        }
-                    }
-                    int noOfLines = paragraph.NumberOfLines;
-                    // Length excluding new line characters. (\r\n)
-                    int len = noOfLines > 1 ? s.Length - Environment.NewLine.Length * (noOfLines - 1) : s.Length;
-                    if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
-                    {
-                        if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
-                        {
-                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        }
-                        else
-                        {
-                            item.SubItems[ColumnIndexText].BackColor = BackColor;
-                        }
-                    }
-                    else
+                    if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
-                }
-                if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
-                    item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
-                {
-                    if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
+                    else
                     {
-                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        item.SubItems[ColumnIndexText].BackColor = BackColor;
                     }
+                }
+                else
+                {
+                    item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                }
+            }
+            if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
+                item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
+            {
+                if (paragraph.NumberOfLines > Configuration.Settings.General.MaxNumberOfLines)
+                {
+                    item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }
         }
@@ -1372,7 +1397,7 @@ namespace Nikse.SubtitleEdit.Controls
             return timeCode.ToDisplayString();
         }
 
-        private void Add(Paragraph paragraph, Paragraph next, Paragraph paragraphAlternate)
+        private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphAlternate)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
             foreach (var column in SubtitleColumns)
@@ -1421,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
             item.Font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
-            Items.Add(item);
+            return item;
         }
 
         public void SelectNone()
@@ -1537,11 +1562,10 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ListViewItem item = Items[index];
                 if (item.Tag as Paragraph == p ||
-                    (
                     item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
                     (ColumnIndexStart < 0 || item.SubItems[ColumnIndexStart].Text == GetDisplayTime(p.StartTime)) &&
                     (ColumnIndexEnd < 0 || item.SubItems[ColumnIndexEnd].Text == GetDisplayTime(p.EndTime)) &&
-                    item.SubItems[ColumnIndexText].Text == p.Text))
+                    item.SubItems[ColumnIndexText].Text == p.Text)
                 {
                     RestoreFirstVisibleIndex();
                     item.Selected = true;
@@ -1591,8 +1615,7 @@ namespace Nikse.SubtitleEdit.Controls
                     item.SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
                 }
 
-                var paragraph = item.Tag as Paragraph;
-                if (paragraph != null)
+                if (item.Tag is Paragraph paragraph)
                 {
                     UpdateCpsAndWpm(item, paragraph);
                 }
