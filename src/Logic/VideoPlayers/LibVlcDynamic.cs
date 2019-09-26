@@ -730,12 +730,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 dllFile = "libvlc.so";
                 _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
-                LoadLibVlcDynamic();
             }
             if (_libVlcDll == IntPtr.Zero)
             {
                 return;
             }
+            LoadLibVlcDynamic();
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
