@@ -985,12 +985,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
-            if (buffer[timeStartIndex] == 0x60)
+            if (buffer[timeStartIndex] == 0x60 || buffer[timeStartIndex] == 0x61)
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
-            else if (buffer[timeStartIndex + 3] == 0x60)
+            else if (buffer[timeStartIndex + 3] == 0x60 || buffer[timeStartIndex + 3] == 0x61)
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);

@@ -41,6 +41,8 @@
    * Fix remembering export buttom margin - thx Michael
    * Skip small/short images when importing vobsub from mkv - thx Maitch
    * Fix for reading mkv on Linux - thx JGoutin
+   * Exclude html/ass tags in line lengts (Statistics) - thx AlexandreMT
+   * Fix PAC reading issue - thx Milenko
 
 
 3.5.10 (18th August 2019)
