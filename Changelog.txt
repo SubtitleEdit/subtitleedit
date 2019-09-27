@@ -16,6 +16,7 @@
    * Update Farsi translation - thx ghost1372
    * Update Bulgarian translation - thx kalin
    * Update Brazilian translation - thx Igor
+   * Update Catalan translation - thx juansa
    * Improve FCP/image export frame rate compat - thx Antoine
    * Auto-switch to just downloaded dictionary
    * Allow letters stuck to numbers for Arabic spellcheck - thx OmrSi
