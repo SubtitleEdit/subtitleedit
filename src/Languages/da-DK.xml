@@ -779,6 +779,9 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
     <FileName>Filnavn</FileName>
     <Join>Sammensæt</Join>
     <TotalNumberOfLinesX>Total antal linjer: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>Filer har allerede korrekte tidskoder</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Tilføj til sluttidspunkt fra forrige fil</AppendTimeCodes>
+    <AddMs>Tilføj millisekunder efter hver fil</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Ikke angivet</NotSpecified>
@@ -2064,6 +2067,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
     <MicrosoftTranslateApiKey>Nøgle</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Token endpoint</MicrosoftTranslateTokenEndpoint>
     <FontNote>Bemærk: Disse skrifttypeindstillinger er kun til undertekst Rediger brugergrænsefladen.
 Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, men det kan også gøres ved brug af et undertekstformat med indbygget skriftinformation som f.eks.
 "Advanced Sub Station Alpha" eller via eksport til billedbaserede formater.</FontNote>
@@ -2390,6 +2394,7 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <UseTimeCodesFromIdx>Brug tidskoder fra .idx fil</UseTimeCodesFromIdx>
     <NoMatch>&lt;No match&gt;</NoMatch>
     <AutoTransparentBackground>Auto gennemsigtig baggrund</AutoTransparentBackground>
+    <CaptureTopAlign>Gem topjustering</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
     <SetUnitalicFactor>Juster de-kursiv faktor...</SetUnitalicFactor>
