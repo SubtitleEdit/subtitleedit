@@ -205,6 +205,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_audio_get_track_count = (libvlc_audio_get_track_count)GetDllType(typeof(libvlc_audio_get_track_count), "libvlc_audio_get_track_count");
             _libvlc_audio_get_track_description = (libvlc_audio_get_track_description)GetDllType(typeof(libvlc_audio_get_track_description), "libvlc_audio_get_track_description");
             _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_release");
+            if (_libvlc_track_description_release == null)
+            { //TODO: libvlc 4 beta... check when final version is out
+                _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_list_release");
+            }
+
             _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
             _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
             _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
@@ -214,6 +219,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _libvlc_media_player_play = (libvlc_media_player_play)GetDllType(typeof(libvlc_media_player_play), "libvlc_media_player_play");
             _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop");
+            if (_libvlc_media_player_stop == null)
+            { //TODO: libvlc 4 beta... check when final version is out
+                _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop_async");
+            }
+
             _libvlc_media_player_set_hwnd = (libvlc_media_player_set_hwnd)GetDllType(typeof(libvlc_media_player_set_hwnd), "libvlc_media_player_set_hwnd");
             _libvlc_media_player_set_xwindow = (libvlc_media_player_set_xwindow)GetDllType(typeof(libvlc_media_player_set_xwindow), "libvlc_media_player_set_xwindow");
             _libvlc_media_player_is_playing = (libvlc_media_player_is_playing)GetDllType(typeof(libvlc_media_player_is_playing), "libvlc_media_player_is_playing");
@@ -886,7 +896,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         _mediaPlayer = IntPtr.Zero;
                     }
 
-                    if (_parentForm is Forms.Main)
+                    if (_parentForm is Main)
                     {
                         if (_libvlc_release != null && _libVlc != IntPtr.Zero)
                         {
