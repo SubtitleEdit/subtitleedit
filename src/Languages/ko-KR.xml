@@ -778,6 +778,9 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <FileName>파일 이름</FileName>
     <Join>등록</Join>
     <TotalNumberOfLinesX>총 라인 수: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>파일에 이미 올바른 타임코드가 있습니다.</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>이전 파일의 종료 시간 추가</AppendTimeCodes>
+    <AddMs>각 파일 후 밀리초 추가</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>지정되지 않음</NotSpecified>
@@ -2064,6 +2067,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MicrosoftBingTranslator>Microsoft 번역</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
     <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>토큰 끝점</MicrosoftTranslateTokenEndpoint>
     <FontNote>※ 참고 : 이 글꼴 설정은 오직 Subtitle Edit UI에만 적용됩니다.
 자막의 글꼴 설정은 일반적으로 비디오 플레이어에서 이루어지나, "Advanced Sub Station Alpha" 또는 이미지 기반 형식으로 내보내기 처럼 
 글꼴 정보가 내장된 자막 형식을 사용할 때도 가능합니다.</FontNote>
@@ -2391,6 +2395,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <UseTimeCodesFromIdx>Idx 파일의 타임코드를 사용함</UseTimeCodesFromIdx>
     <NoMatch>&lt;일치 항목 없음&gt;</NoMatch>
     <AutoTransparentBackground>투명한 배경</AutoTransparentBackground>
+    <CaptureTopAlign>상단 정렬 캡처</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>현재 이미지에 대한 일치 항목 비교 검사...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>마지막 이미지 추가 비교 편집...</EditLastAdditions>
     <SetUnitalicFactor>기울임꼴 인자 설정...</SetUnitalicFactor>
