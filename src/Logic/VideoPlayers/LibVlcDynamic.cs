@@ -366,6 +366,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Pause()
         {
+            if (_mediaPlayer == IntPtr.Zero)
+            {
+                return;
+            }
+
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
             WaitUntilReady();
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
@@ -490,7 +495,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (ownerControl != null)
                 {
-                    SetDrawableHandle(ownerControl);
+                    SetDrawableHandle(newVlc._mediaPlayer, ownerControl);
                 }
 
                 if (onVideoEnded != null)
@@ -757,7 +762,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (ownerControl != null)
                 {
-                    SetDrawableHandle(ownerControl);
+                    SetDrawableHandle(_mediaPlayer, ownerControl);
                 }
 
                 if (onVideoEnded != null)
@@ -778,11 +783,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        private void SetDrawableHandle(Control ownerControl)
+        private void SetDrawableHandle(IntPtr mediaPlayer, Control ownerControl)
         {
             if (Configuration.IsRunningOnWindows)
             {
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
+                _libvlc_media_player_set_hwnd(mediaPlayer, ownerControl.Handle); // windows
 
                 //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
                 for (int j = 0; j < 50; j++)
@@ -791,11 +796,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     Application.DoEvents();
                 }
 
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
+                _libvlc_media_player_set_hwnd(mediaPlayer, ownerControl.Handle); // windows
             }
             else
             {
-                _libvlc_media_player_set_xwindow(_mediaPlayer, ownerControl.Handle);
+                _libvlc_media_player_set_xwindow(mediaPlayer, ownerControl.Handle); // linux
             }
         }
 
