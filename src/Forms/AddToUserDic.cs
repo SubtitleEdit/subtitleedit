@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AddToUserDic : Form
+    public sealed partial class AddToUserDic : Form
     {
         public AddToUserDic()
         {
@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.AddToUserDictionary.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToUserDictionary.Description;
+            labelLanguage.Text = Configuration.Settings.General.Language;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);

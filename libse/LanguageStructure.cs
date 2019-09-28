@@ -2613,6 +2613,7 @@
             public string MinLineSplitHeight { get; set; }
             public string FallbackToX { get; set; }
             public string ImagePreProcessing { get; set; }
+            public string EditImageDb { get; set; }
         }
 
         public class VobSubOcrCharacter

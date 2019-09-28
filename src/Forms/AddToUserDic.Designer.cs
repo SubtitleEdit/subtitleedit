@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class AddToUserDic
+    sealed partial class AddToUserDic
     {
         /// <summary>
         /// Required designer variable.
