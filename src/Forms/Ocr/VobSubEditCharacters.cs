@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonUpdate.Text = Configuration.Settings.Language.VobSubEditCharacters.Update;
             buttonDelete.Text = Configuration.Settings.Language.VobSubEditCharacters.Delete;
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
+            buttonImport.Text = Configuration.Settings.Language.SubStationAlphaStyles.Import;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);

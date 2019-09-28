@@ -504,6 +504,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             toolStripMenuItemSetUnItalicFactor.Text = language.SetUnitalicFactor;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
             setForecolorThresholdToolStripMenuItem.Text = language.ImagePreProcessing;
+            toolStripMenuItemSaveSubtitleAs.Text = Configuration.Settings.Language.Main.SaveSubtitleAs;
 
             toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
             vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;

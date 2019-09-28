@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             AddToUserDictionary,
             AddToNames,
             AddToNamesOnly,
-            AllwaysUseSuggestion,
+            AlwaysUseSuggestion,
             ChangeAndSave,
             ChangeOnce,
             ChangeWholeText,
@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonEditWord.Text = Configuration.Settings.Language.SpellCheck.EditWordOnly;
             groupBoxText.Text = Configuration.Settings.Language.General.Text;
             GroupBoxEditWord.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
+            buttonEditImageDb.Text = Configuration.Settings.Language.VobSubOcr.EditImageDb;
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             groupBoxTextAsImage.Text = Configuration.Settings.Language.SpellCheck.ImageText;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 Word = listBoxSuggestions.Items[listBoxSuggestions.SelectedIndex].ToString();
-                ActionResult = Action.AllwaysUseSuggestion;
+                ActionResult = Action.AlwaysUseSuggestion;
                 DialogResult = DialogResult.OK;
             }
         }

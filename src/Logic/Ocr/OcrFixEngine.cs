@@ -1682,7 +1682,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     }
 
                     break;
-                case OcrSpellCheck.Action.AllwaysUseSuggestion:
+                case OcrSpellCheck.Action.AlwaysUseSuggestion:
                     try
                     {
                         _ocrFixReplaceList.AddWordOrPartial(word, _spellCheck.Word);

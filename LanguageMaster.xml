@@ -2409,6 +2409,7 @@ Keep changes?</KeepChangesMessage>
     <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
     <FallbackToX>Fallback to {0}</FallbackToX>
     <ImagePreProcessing>Image pre-processing...</ImagePreProcessing>
+    <EditImageDb>Edit image db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>
