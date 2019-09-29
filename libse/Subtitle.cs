@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GetAllTexts()
         {
             int max = Paragraphs.Count;
-            var sb = new StringBuilder(max * 30);
+            var sb = new StringBuilder(max * 40);
             for (var index = 0; index < max; index++)
             {
                 sb.AppendLine(Paragraphs[index].Text);

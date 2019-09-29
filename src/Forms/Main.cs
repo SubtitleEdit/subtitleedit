@@ -15085,6 +15085,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoPlayerUndocked.RedockOnFullscreenEnd = true;
                 }
             }
+            _waveformUndocked?.Hide();
+            _videoControlsUndocked?.Hide();
         }
 
         private void RefreshTimeCodeMode()
