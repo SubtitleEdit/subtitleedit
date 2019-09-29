@@ -61,7 +61,7 @@
             this.groupBoxLinesFound.Controls.Add(this.SubtitleListview1);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 65);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(832, 484);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(871, 484);
             this.groupBoxLinesFound.TabIndex = 7;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be bridged";
@@ -80,7 +80,7 @@
             this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(826, 465);
+            this.SubtitleListview1.Size = new System.Drawing.Size(865, 465);
             this.SubtitleListview1.SubtitleFontBold = false;
             this.SubtitleListview1.SubtitleFontName = "Tahoma";
             this.SubtitleListview1.SubtitleFontSize = 8;
@@ -132,7 +132,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(691, 555);
+            this.buttonOK.Location = new System.Drawing.Point(730, 555);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 8;
@@ -145,7 +145,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(772, 555);
+            this.buttonCancel.Location = new System.Drawing.Point(811, 555);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 9;
@@ -215,7 +215,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(859, 588);
+            this.ClientSize = new System.Drawing.Size(898, 588);
             this.Controls.Add(this.numericUpDownMinMsBetweenLines);
             this.Controls.Add(this.labelMinMsBetweenLines);
             this.Controls.Add(this.radioButtonDivideEven);

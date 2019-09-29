@@ -1,20 +1,19 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DurationsBridgeGaps : PositionAndSizeForm
     {
         private readonly Subtitle _subtitle;
-        private Subtitle _fixedSubtitle;
         private Dictionary<string, string> _dic;
         private readonly Timer _refreshTimer = new Timer();
-        public Subtitle FixedSubtitle => _fixedSubtitle;
+        public Subtitle FixedSubtitle { get; private set; }
         public int FixedCount { get; private set; }
         public int MinMsBetweenLines
         {
@@ -118,24 +117,29 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            _fixedSubtitle = new Subtitle(_subtitle);
+            FixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<string, string>();
-            var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
-
+            var fixedIndexes = new List<int>(FixedSubtitle.Paragraphs.Count);
             var minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
-            FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(_fixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
-
-            SubtitleListview1.Fill(_fixedSubtitle);
-            for (int i = 0; i < _fixedSubtitle.Paragraphs.Count; i++)
+            FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(FixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
+            SubtitleListview1.Fill(FixedSubtitle);
+            for (int i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
             {
-                Paragraph cur = _fixedSubtitle.Paragraphs[i];
+                Paragraph cur = FixedSubtitle.Paragraphs[i];
                 if (_dic.ContainsKey(cur.ID))
                 {
                     SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
                 }
-                else if (!string.IsNullOrEmpty(cur.Extra))
+                else
                 {
-                    SubtitleListview1.SetExtraText(i, string.Empty, SubtitleListview1.ForeColor);
+                    var info = string.Empty;
+                    var next = FixedSubtitle.GetParagraphOrDefault(i + 1);
+                    if (next != null)
+                    {
+                        var gap = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
+                        info = $"{ gap / TimeCode.BaseUnit:0.000}";
+                    }
+                    SubtitleListview1.SetExtraText(i, info, SubtitleListview1.ForeColor);
                 }
 
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
@@ -197,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1_Resize(object sender, EventArgs e)
         {
-            const int lastColumnWidth = 150;
+            const int lastColumnWidth = 165;
             var columnsCount = SubtitleListview1.Columns.Count - 1;
             var width = 0;
             for (int i = 0; i < columnsCount - 1; i++)
@@ -205,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
                 width += SubtitleListview1.Columns[i].Width;
             }
             SubtitleListview1.Columns[columnsCount - 1].Width = SubtitleListview1.Width - (width + lastColumnWidth);
-            SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
+            SubtitleListview1.Columns[columnsCount].Width = -2;
         }
 
         public void InitializeSettingsOnly()

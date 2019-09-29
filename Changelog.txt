@@ -28,11 +28,12 @@
    * Improve of drawing scene changes - thx OmrSi
    * Improve compatibility for ASS/SSA - thx sneaker_ger
    * Improve compatibility with Linux/Mono - thx shag00/JGoutin/stefano 
+   * Add some missing translations - thx Jamakmake
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan
    * Fix crash in "Change profile" with no sub - thx OmrSi
-   * Fix save file name when "Hide known extension" on - thx jrjordao
+   * Fix save file name when "Hide known extension" on - thx jrjordao/Jamakmake
    * Fix subtitle loading issues - thx admas
    * Fix loading of "eng-GB" spell check in OCR - thx AbsenceJam
    * Fix download via TLS issue - thx OmrSi
@@ -45,6 +46,7 @@
    * Fix for reading mkv on Linux - thx JGoutin
    * Exclude html/ass tags in line lengts (Statistics) - thx AlexandreMT
    * Fix PAC reading issue - thx Milenko
+   * Fix remove text for HI issue - thx teodargent
 
 
 3.5.10 (18th August 2019)
