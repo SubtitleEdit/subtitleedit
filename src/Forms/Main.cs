@@ -8617,49 +8617,50 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
         {
-            if (_subtitleListViewIndex >= 0)
+            var idx = _subtitleListViewIndex;
+            if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
             {
-
-                // Writing when text is selected gives a double event + some trouble (typed letter disappears or a crash happens).
-                // This tries to fix this - changing scrollbars is bad during this double event!?
-                // Also check https://stackoverflow.com/questions/28331672/c-sharp-textchanged-event-fires-twice-in-a-multiline-textbox
-                if (textBoxListViewText.Text == string.Empty)
-                {
-                    _subtitle.Paragraphs[_subtitleListViewIndex].Text = string.Empty;
-                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
-                    SubtitleListview1.SetText(_subtitleListViewIndex, string.Empty);
-                    _listViewTextUndoIndex = _subtitleListViewIndex;
-                    labelStatus.Text = string.Empty;
-                    StartUpdateListSyntaxColoring();
-                    return;
-                }
-
-                textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
-                if (_doAutoBreakOnTextChanged)
-                {
-                    UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
-                }
-
-                // update _subtitle + listview
-                string text = textBoxListViewText.Text.TrimEnd();
-                if (ContainsNonStandardNewLines(text))
-                {
-                    var lines = text.SplitToLines();
-                    text = string.Join(Environment.NewLine, lines);
-                    textBoxListViewText.Text = text;
-                }
-                _subtitle.Paragraphs[_subtitleListViewIndex].Text = text;
-                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
-                SubtitleListview1.SetText(_subtitleListViewIndex, text);
-
-                _listViewTextUndoIndex = _subtitleListViewIndex;
-                labelStatus.Text = string.Empty;
-
-                StartUpdateListSyntaxColoring();
-                FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
-                textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
+                return;
             }
 
+            // Writing when text is selected gives a double event + some trouble (typed letter disappears or a crash happens).
+            // This tries to fix this - changing scrollbars is bad during this double event!?
+            // Also check https://stackoverflow.com/questions/28331672/c-sharp-textchanged-event-fires-twice-in-a-multiline-textbox
+            if (textBoxListViewText.Text == string.Empty)
+            {
+                _subtitle.Paragraphs[idx].Text = string.Empty;
+                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
+                SubtitleListview1.SetText(idx, string.Empty);
+                _listViewTextUndoIndex = idx;
+                labelStatus.Text = string.Empty;
+                StartUpdateListSyntaxColoring();
+                return;
+            }
+
+            textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
+            if (_doAutoBreakOnTextChanged)
+            {
+                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
+            }
+
+            // update _subtitle + listview
+            string text = textBoxListViewText.Text.TrimEnd();
+            if (ContainsNonStandardNewLines(text))
+            {
+                var lines = text.SplitToLines();
+                text = string.Join(Environment.NewLine, lines);
+                textBoxListViewText.Text = text;
+            }
+            _subtitle.Paragraphs[idx].Text = text;
+            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
+            SubtitleListview1.SetText(idx, text);
+
+            _listViewTextUndoIndex = _subtitleListViewIndex;
+            labelStatus.Text = string.Empty;
+
+            StartUpdateListSyntaxColoring();
+            FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
+            textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
         }
 
         private bool ContainsNonStandardNewLines(string s)
