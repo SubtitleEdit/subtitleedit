@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            if (WindowState == FormWindowState.Maximized)
+            if (IsFullscreen)
             {
                 var videoScreen = Screen.FromControl(_videoPlayerContainer);
                 var mainScreen = Screen.FromControl(_mainForm);
@@ -135,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void GoFullscreen()
         {
+            IsFullscreen = true;
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             _videoPlayerContainer.FontSizeFactor = 1.5F;
@@ -144,10 +145,11 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        internal bool IsFullscreen => WindowState == FormWindowState.Maximized;
+        internal bool IsFullscreen { get; set; }
 
         internal void NoFullscreen()
         {
+            IsFullscreen = false;
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             WindowState = FormWindowState.Normal;
             _videoPlayerContainer.FontSizeFactor = 1.0F;
