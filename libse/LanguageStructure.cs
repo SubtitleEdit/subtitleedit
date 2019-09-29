@@ -2654,6 +2654,22 @@
             public string Description { get; set; }
         }
 
+        public class OcrPreprocessing
+        {
+            public string Title { get; set; }
+            public string Colors{ get; set; }
+            public string AdjustAlpha { get; set; }
+            public string OriginalImage { get; set; }
+            public string PostImage { get; set; }
+            public string BinaryThreshold { get; set; }
+            public string InvertColors { get; set; }
+            public string YellowToWhite { get; set; }
+            public string ColorToWhite { get; set; }
+            public string ColorToRemove { get; set; }
+            public string Cropping { get; set; }
+            public string CropTransparentColors { get; set; }
+        }
+
         public class Watermark
         {
             public string Title { get; set; }

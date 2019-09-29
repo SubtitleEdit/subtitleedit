@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
         public LanguageStructure.VobSubOcrSetItalicFactor VobSubOcrSetItalicFactor;
+        public LanguageStructure.OcrPreprocessing OcrPreprocessing;
         public LanguageStructure.Watermark Watermark;
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
@@ -2782,6 +2783,22 @@ Keep changes?",
             {
                 Title = "Set un-italic factor",
                 Description = "Adjust value until text style is normal and not italic. Note that original image should be italic.",
+            };
+
+            OcrPreprocessing = new LanguageStructure.OcrPreprocessing
+            {
+                Title = "OCR image preprocessing",
+                Colors = "Colors",
+                AdjustAlpha = "Adjust value until text is shown clearly (normally values between 200 and 300)",
+                BinaryThreshold = "Binary image compare threshold",
+                ColorToRemove = "Color to remove",
+                ColorToWhite = "Color to white",
+                CropTransparentColors = "Crop transparent colors",
+                Cropping = "Cropping",
+                InvertColors = "Invert colors",
+                OriginalImage = "Original image",
+                PostImage = "Image after preprocessing",
+                YellowToWhite = "Yellow to white"
             };
 
             Watermark = new LanguageStructure.Watermark

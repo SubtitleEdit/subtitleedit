@@ -13,6 +13,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+
+            labelText.Text = Configuration.Settings.Language.General.Text;
+            labelImageInfo.Text = Configuration.Settings.Language.General.Preview;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public BinaryOcrBitmap ExpandedMatch { get; set; }
@@ -29,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (matches[i].Extra != null && matches[i].Extra.Count > 0)
                 {
-                    _extraCount += matches[i].Extra.Count -1;
+                    _extraCount += matches[i].Extra.Count - 1;
                 }
             }
 

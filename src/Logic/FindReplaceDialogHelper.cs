@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         public ReplaceType FindReplaceType { get; set; }
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
+        public int ReplaceFromPosition { get; set; }
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
         public bool InProgress { get; set; }
@@ -130,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
                             MatchInOriginal = false;
                             SelectedIndex = index;
                             SelectedPosition = pos;
+                            ReplaceFromPosition = pos;
                             Success = true;
                             return true;
                         }
@@ -151,6 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 MatchInOriginal = true;
                                 SelectedIndex = index;
                                 SelectedPosition = pos;
+                                ReplaceFromPosition = pos;
                                 Success = true;
                                 return true;
                             }
@@ -196,6 +199,7 @@ namespace Nikse.SubtitleEdit.Logic
                                         MatchInOriginal = true;
                                         SelectedIndex = index;
                                         SelectedPosition = pos;
+                                        ReplaceFromPosition = pos;
                                         Success = true;
                                         return true;
                                     }
@@ -224,6 +228,7 @@ namespace Nikse.SubtitleEdit.Logic
                             MatchInOriginal = false;
                             SelectedIndex = index;
                             SelectedPosition = pos;
+                            ReplaceFromPosition = pos;
                             Success = true;
                             return true;
                         }

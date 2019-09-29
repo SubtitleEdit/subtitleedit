@@ -7,7 +7,7 @@ using Bitmap = System.Drawing.Bitmap;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class OcrPreprocessingT4 : Form
+    public sealed partial class OcrPreprocessingT4 : Form
     {
         private readonly NikseBitmap _source;
         public PreprocessingSettings PreprocessingSettings { get; }
@@ -25,11 +25,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 PreprocessingSettings = new PreprocessingSettings
                 {
-                    BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold
+                    BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold
                 };
             }
 
-            numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThresshold;
+            numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
+
+            Text = Configuration.Settings.Language.OcrPreprocessing.Title;
+            groupBoxBinaryImageCompareThreshold.Text = Configuration.Settings.Language.OcrPreprocessing.BinaryThreshold;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             RefreshImage();
         }
@@ -41,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void RefreshImage()
         {
-            PreprocessingSettings.BinaryImageCompareThresshold = (int)numericUpDownThreshold.Value;
+            PreprocessingSettings.BinaryImageCompareThreshold = (int)numericUpDownThreshold.Value;
 
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);

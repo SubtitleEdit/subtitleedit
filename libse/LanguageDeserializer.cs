@@ -6586,6 +6586,42 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcrSetItalicFactor/Description":
                     language.VobSubOcrSetItalicFactor.Description = reader.Value;
                     break;
+                case "OcrPreprocessing/Title":
+                    language.OcrPreprocessing.Title = reader.Value;
+                    break;
+                case "OcrPreprocessing/Colors":
+                    language.OcrPreprocessing.Colors = reader.Value;
+                    break;
+                case "OcrPreprocessing/AdjustAlpha":
+                    language.OcrPreprocessing.AdjustAlpha = reader.Value;
+                    break;
+                case "OcrPreprocessing/OriginalImage":
+                    language.OcrPreprocessing.OriginalImage = reader.Value;
+                    break;
+                case "OcrPreprocessing/PostImage":
+                    language.OcrPreprocessing.PostImage = reader.Value;
+                    break;
+                case "OcrPreprocessing/BinaryThreshold":
+                    language.OcrPreprocessing.BinaryThreshold = reader.Value;
+                    break;
+                case "OcrPreprocessing/InvertColors":
+                    language.OcrPreprocessing.InvertColors = reader.Value;
+                    break;
+                case "OcrPreprocessing/YellowToWhite":
+                    language.OcrPreprocessing.YellowToWhite = reader.Value;
+                    break;
+                case "OcrPreprocessing/ColorToWhite":
+                    language.OcrPreprocessing.ColorToWhite = reader.Value;
+                    break;
+                case "OcrPreprocessing/ColorToRemove":
+                    language.OcrPreprocessing.ColorToRemove = reader.Value;
+                    break;
+                case "OcrPreprocessing/Cropping":
+                    language.OcrPreprocessing.Cropping = reader.Value;
+                    break;
+                case "OcrPreprocessing/CropTransparentColors":
+                    language.OcrPreprocessing.CropTransparentColors = reader.Value;
+                    break;
                 case "Watermark/Title":
                     language.Watermark.Title = reader.Value;
                     break;
