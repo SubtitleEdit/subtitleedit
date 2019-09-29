@@ -8476,13 +8476,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
-                using (var form = new OcrPreprocessingT4(bmp, new PreprocessingSettings { BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
+                using (var form = new OcrPreprocessingT4(bmp, new PreprocessingSettings { BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         ResetTesseractThread();
                         _preprocessingSettings = form.PreprocessingSettings;
-                        Configuration.Settings.Tools.OcrTesseract4RgbThreshold = _preprocessingSettings.BinaryImageCompareThresshold;
+                        Configuration.Settings.Tools.OcrTesseract4RgbThreshold = _preprocessingSettings.BinaryImageCompareThreshold;
                         SubtitleListView1SelectedIndexChanged(null, null);
                     }
                 }
@@ -8496,7 +8496,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     ResetTesseractThread();
                     _preprocessingSettings = form.PreprocessingSettings;
-                    Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold = _preprocessingSettings.BinaryImageCompareThresshold;
+                    Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold = _preprocessingSettings.BinaryImageCompareThreshold;
                     SubtitleListView1SelectedIndexChanged(null, null);
                 }
             }

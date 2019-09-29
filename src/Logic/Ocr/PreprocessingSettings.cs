@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public int CropLeftRight { get; set; }
         public int CropTopBottom { get; set; }
 
-        public int BinaryImageCompareThresshold { get; set; }
+        public int BinaryImageCompareThreshold { get; set; }
 
         public PreprocessingSettings()
         {

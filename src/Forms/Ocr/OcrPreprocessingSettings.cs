@@ -7,7 +7,7 @@ using Bitmap = System.Drawing.Bitmap;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class OcrPreprocessingSettings : Form
+    public sealed partial class OcrPreprocessingSettings : Form
     {
         private readonly bool _isBinaryImageCompare;
         private readonly NikseBitmap _source;
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _isBinaryImageCompare = isBinaryImageCompare;
             InitializeComponent();
-            groupBoxBinaryImageCompareThresshold.Visible = isBinaryImageCompare;
+            groupBoxBinaryImageCompareThreshold.Visible = isBinaryImageCompare;
             _source = new NikseBitmap(bitmap);
             pictureBoxSubtitleImage.Image = bitmap;
             if (preprocessingSettings != null)
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 PreprocessingSettings = new PreprocessingSettings
                 {
-                    BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold
+                    BinaryImageCompareThreshold = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold
                 };
             }
 
@@ -37,7 +37,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             panelColorToRemove.BackColor = PreprocessingSettings.ColorToRemove;
             checkBoxCropTransparent.Checked = PreprocessingSettings.CropTransparentColors;
             checkBoxYellowToWhite.Checked = PreprocessingSettings.YellowToWhite;
-            numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThresshold;
+            numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
+
+            Text = Configuration.Settings.Language.OcrPreprocessing.Title;
+            groupBoxColors.Text = Configuration.Settings.Language.OcrPreprocessing.Colors;
+            checkBoxInvertColors.Text = Configuration.Settings.Language.OcrPreprocessing.InvertColors;
+            checkBoxYellowToWhite.Text = Configuration.Settings.Language.OcrPreprocessing.YellowToWhite;
+            buttonColorToWhite.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToWhite;
+            buttonColorToRemove.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToRemove;
+            buttonColorToRemove.Text = Configuration.Settings.Language.OcrPreprocessing.ColorToRemove;
+            groupBoxBinaryImageCompareThreshold.Text = Configuration.Settings.Language.OcrPreprocessing.BinaryThreshold;
+            labelThresholdDescription.Text = Configuration.Settings.Language.OcrPreprocessing.AdjustAlpha;
+            groupBoxCropping.Text = Configuration.Settings.Language.OcrPreprocessing.Cropping;
+            checkBoxCropTransparent.Text = Configuration.Settings.Language.OcrPreprocessing.CropTransparentColors;
+            labelOriginalImage.Text = Configuration.Settings.Language.OcrPreprocessing.OriginalImage;
+            labelPostImage.Text = Configuration.Settings.Language.OcrPreprocessing.PostImage;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             RefreshImage();
         }
@@ -54,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             PreprocessingSettings.ColorToWhite = buttonColorToWhite.Enabled ? panelColorToWhite.BackColor : Color.Transparent;
             PreprocessingSettings.ColorToRemove = buttonColorToRemove.Enabled ? panelColorToRemove.BackColor : Color.Transparent;
             PreprocessingSettings.CropTransparentColors = checkBoxCropTransparent.Checked;
-            PreprocessingSettings.BinaryImageCompareThresshold = (int)numericUpDownThreshold.Value;
+            PreprocessingSettings.BinaryImageCompareThreshold = (int)numericUpDownThreshold.Value;
 
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);

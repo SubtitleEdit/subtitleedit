@@ -40,7 +40,7 @@
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.groupBoxGenerateSceneChanges = new System.Windows.Forms.GroupBox();
-            this.labelThressholdDescription = new System.Windows.Forms.Label();
+            this.labelThresholdDescription = new System.Windows.Forms.Label();
             this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
             this.labelFfmpegThreshold = new System.Windows.Forms.Label();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
@@ -195,7 +195,7 @@
             this.groupBoxGenerateSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelThressholdDescription);
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelThresholdDescription);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.labelFfmpegThreshold);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonDownloadFfmpeg);
@@ -210,13 +210,13 @@
             // 
             // labelThressholdDescription
             // 
-            this.labelThressholdDescription.AutoSize = true;
-            this.labelThressholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelThressholdDescription.Location = new System.Drawing.Point(115, 384);
-            this.labelThressholdDescription.Name = "labelThressholdDescription";
-            this.labelThressholdDescription.Size = new System.Drawing.Size(195, 13);
-            this.labelThressholdDescription.TabIndex = 5;
-            this.labelThressholdDescription.Text = "Lower value gives more scene changes";
+            this.labelThresholdDescription.AutoSize = true;
+            this.labelThresholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelThresholdDescription.Location = new System.Drawing.Point(115, 384);
+            this.labelThresholdDescription.Name = "labelThresholdDescription";
+            this.labelThresholdDescription.Size = new System.Drawing.Size(195, 13);
+            this.labelThresholdDescription.TabIndex = 5;
+            this.labelThresholdDescription.Text = "Lower value gives more scene changes";
             // 
             // numericUpDownThreshold
             // 
@@ -357,7 +357,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
         private System.Windows.Forms.TextBox textBoxIImport;
-        private System.Windows.Forms.Label labelThressholdDescription;
+        private System.Windows.Forms.Label labelThresholdDescription;
         private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
         private System.Windows.Forms.Label labelFfmpegThreshold;
         private System.Windows.Forms.TextBox textBoxLog;

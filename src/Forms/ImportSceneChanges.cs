@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
             buttonImportWithFfmpeg.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             labelFfmpegThreshold.Text = Configuration.Settings.Language.ImportSceneChanges.Sensitivity;
-            labelThressholdDescription.Text = Configuration.Settings.Language.ImportSceneChanges.SensitivityDescription;
+            labelThresholdDescription.Text = Configuration.Settings.Language.ImportSceneChanges.SensitivityDescription;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -57,11 +57,11 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownThreshold.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
-            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var thresshold) &&
-                thresshold >= numericUpDownThreshold.Minimum &&
-                thresshold <= numericUpDownThreshold.Maximum)
+            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var threshold) &&
+                threshold >= numericUpDownThreshold.Minimum &&
+                threshold <= numericUpDownThreshold.Maximum)
             {
-                numericUpDownThreshold.Value = thresshold;
+                numericUpDownThreshold.Value = threshold;
             }
             _log = new StringBuilder();
             textBoxLog.Visible = false;

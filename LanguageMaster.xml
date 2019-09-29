@@ -2441,6 +2441,20 @@ Keep changes?</KeepChangesMessage>
     <Title>Set un-italic factor</Title>
     <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR image preprocessing</Title>
+    <Colors>Colors</Colors>
+    <AdjustAlpha>Adjust value until text is shown clearly (normally values between 200 and 300)</AdjustAlpha>
+    <OriginalImage>Original image</OriginalImage>
+    <PostImage>Image after preprocessing</PostImage>
+    <BinaryThreshold>Binary image compare threshold</BinaryThreshold>
+    <InvertColors>Invert colors</InvertColors>
+    <YellowToWhite>Yellow to white</YellowToWhite>
+    <ColorToWhite>Color to white</ColorToWhite>
+    <ColorToRemove>Color to remove</ColorToRemove>
+    <Cropping>Cropping</Cropping>
+    <CropTransparentColors>Crop transparent colors</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Watermark</Title>
     <WatermarkX>Watermark: {0}</WatermarkX>

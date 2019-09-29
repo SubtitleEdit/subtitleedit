@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class OcrPreprocessingT4
+    sealed partial class OcrPreprocessingT4
     {
         /// <summary>
         /// Required designer variable.
@@ -37,11 +37,11 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBoxBinaryImageCompareThresshold = new System.Windows.Forms.GroupBox();
+            this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.groupBoxBinaryImageCompareThresshold.SuspendLayout();
+            this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelDescription
@@ -143,22 +143,22 @@
             // 
             // groupBoxBinaryImageCompareThresshold
             // 
-            this.groupBoxBinaryImageCompareThresshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxBinaryImageCompareThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBinaryImageCompareThresshold.Controls.Add(this.numericUpDownThreshold);
-            this.groupBoxBinaryImageCompareThresshold.Controls.Add(this.labelDescription);
-            this.groupBoxBinaryImageCompareThresshold.Location = new System.Drawing.Point(15, 12);
-            this.groupBoxBinaryImageCompareThresshold.Name = "groupBoxBinaryImageCompareThresshold";
-            this.groupBoxBinaryImageCompareThresshold.Size = new System.Drawing.Size(801, 216);
-            this.groupBoxBinaryImageCompareThresshold.TabIndex = 29;
-            this.groupBoxBinaryImageCompareThresshold.TabStop = false;
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownThreshold);
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.labelDescription);
+            this.groupBoxBinaryImageCompareThreshold.Location = new System.Drawing.Point(15, 12);
+            this.groupBoxBinaryImageCompareThreshold.Name = "groupBoxBinaryImageCompareThreshold";
+            this.groupBoxBinaryImageCompareThreshold.Size = new System.Drawing.Size(801, 216);
+            this.groupBoxBinaryImageCompareThreshold.TabIndex = 29;
+            this.groupBoxBinaryImageCompareThreshold.TabStop = false;
             // 
             // OcrPreprocessingT4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(828, 591);
-            this.Controls.Add(this.groupBoxBinaryImageCompareThresshold);
+            this.Controls.Add(this.groupBoxBinaryImageCompareThreshold);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox1);
@@ -177,8 +177,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.groupBoxBinaryImageCompareThresshold.ResumeLayout(false);
-            this.groupBoxBinaryImageCompareThresshold.PerformLayout();
+            this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
+            this.groupBoxBinaryImageCompareThreshold.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -195,6 +195,6 @@
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThresshold;
+        private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThreshold;
     }
 }
