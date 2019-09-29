@@ -8651,6 +8651,10 @@ namespace Nikse.SubtitleEdit.Forms
                 text = string.Join(Environment.NewLine, lines);
                 textBoxListViewText.Text = text;
             }
+            if (idx < 0 || idx >= _subtitle.Paragraphs.Count)
+            {
+                return;
+            }
             _subtitle.Paragraphs[idx].Text = text;
             UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
             SubtitleListview1.SetText(idx, text);
