@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Enter)
             {
-                if (WindowState == FormWindowState.Maximized)
+                if (IsFullscreen)
                 {
                     e.SuppressKeyPress = true;
                     NoFullscreen();
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Escape && WindowState == FormWindowState.Maximized)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Escape && IsFullscreen)
             {
                 e.SuppressKeyPress = true;
                 NoFullscreen();
@@ -90,12 +90,12 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && WindowState == FormWindowState.Maximized)
+            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && IsFullscreen)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();
                 e.Handled = true;
             }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && WindowState == FormWindowState.Maximized)
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && IsFullscreen)
             {
                 _mainForm.GotoNextSubPosFromVideoPos();
                 e.Handled = true;

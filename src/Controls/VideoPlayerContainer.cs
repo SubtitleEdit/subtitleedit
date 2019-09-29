@@ -199,12 +199,16 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
                 {
+                    if (string.IsNullOrEmpty(_labelVideoPlayerName.Text))
+                    {
+                        _labelVideoPlayerName.Text = "...";
+                    }
                     FontSizeFactor = 1.0F;
                     SetSubtitleFont();
+                    _labelTimeCode.Text = $"{new TimeCode().ToDisplayString()} / ?";
                     ShowAllControls();
                     VideoPlayerContainerResize(this, null);
                     ShowAllControls();
-                    _labelTimeCode.BringToFront();
                     Invalidate();
                     Refresh();
                 });
