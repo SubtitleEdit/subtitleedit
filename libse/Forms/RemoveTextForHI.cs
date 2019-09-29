@@ -859,11 +859,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = st.Pre + text + st.Post;
             }
 
-            if (input.TrimStart().StartsWith("- ", StringComparison.Ordinal) &&
+            if ((input.TrimStart().StartsWith("-", StringComparison.Ordinal) || input.TrimStart().StartsWith("<i>-", StringComparison.Ordinal)) &&
                 text != null && !text.Contains(Environment.NewLine) &&
-                (input.Contains(Environment.NewLine + "- ") ||
+                (input.Contains(Environment.NewLine + "-") ||
                  input.Contains(Environment.NewLine + " - ") ||
-                 input.Contains(Environment.NewLine + "<i>- ") ||
+                 input.Contains(Environment.NewLine + "<i>-") ||
                  input.Contains(Environment.NewLine + "<i> - ")))
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
@@ -1267,6 +1267,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     text = text.Remove(0, 1).TrimStart();
                 }
+                else if (text.Substring(0, start).EndsWith(", ") && text.Remove(0, start).TrimStart().StartsWith(','))
+                {
+                    text = text.Substring(0, start).TrimEnd() + " " + text.Remove(0, start).TrimStart(' ', ',');
+                    text = text.Trim();
+                }
+
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
             }
             while (start >= 0 && text.Length - start - startTag.Length >= endTag.Length);
