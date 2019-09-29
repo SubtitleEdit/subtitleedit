@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Test.Logic.Forms
 {
@@ -1784,6 +1783,28 @@ namespace Test.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = true;
             string actual = target.RemoveColon("<i>SAURON:</i>");
             Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveHiSecondLineHiDialog()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.OnlyIfInSeparateLine = true;
+            string actual = target.RemoveTextFromHearImpaired("<i>-Era stato avveritito.</i>" + Environment.NewLine + "-(PARLA IN SPANOLO)");
+            Assert.AreEqual("<i>Era stato avveritito.</i>", actual);
+        }
+
+        [TestMethod]
+        public void RemoveHiRemoveInLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.OnlyIfInSeparateLine = true;
+            string actual = target.RemoveTextFromHearImpaired("Senti, [si schiarisce la voce]," + Environment.NewLine + "dille semplicemente che ti e mancata.");
+            Assert.AreEqual("Senti," + Environment.NewLine + "dille semplicemente che ti e mancata.", actual);
         }
 
         #region Additional test attributes
