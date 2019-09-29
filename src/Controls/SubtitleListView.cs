@@ -1164,7 +1164,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal void Fill(Subtitle subtitle, Subtitle subtitleAlternate = null)
         {
-            if (subtitleAlternate == null)
+            if (subtitleAlternate == null || subtitleAlternate.Paragraphs.Count == 0)
             {
                 Fill(subtitle.Paragraphs);
             }
