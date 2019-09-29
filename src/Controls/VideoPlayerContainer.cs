@@ -204,6 +204,7 @@ namespace Nikse.SubtitleEdit.Controls
                     ShowAllControls();
                     VideoPlayerContainerResize(this, null);
                     ShowAllControls();
+                    _labelTimeCode.BringToFront();
                     Invalidate();
                     Refresh();
                 });
