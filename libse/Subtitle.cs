@@ -717,7 +717,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Concatenates all the Paragraph its Text property from Paragraphs, using the default line terminator between each Text.
+        /// Concatenates all Paragraphs Text property, using the default line terminator between each Text.
         /// </summary>
         /// <returns>Concatenated Text property of all Paragraph present in Paragraphs property.</returns>
         public string GetAllTexts()
