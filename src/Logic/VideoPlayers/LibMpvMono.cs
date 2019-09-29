@@ -331,11 +331,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose();
         }
 
+        private readonly object _lockObj = new object();
+
         private void ReleaseUnmanagedResources()
         {
             try
             {
-                lock (this)
+                lock (_lockObj)
                 {
                     if (_mpvHandle != IntPtr.Zero)
                     {

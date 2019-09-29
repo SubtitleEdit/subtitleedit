@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void audioVisualizer_PasteAtVideoPosition(object sender, EventArgs e)
         {
             double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
-            if (_subtitle.GetFirstParagrapOrDefaultByTime(videoPositionInMilliseconds) == null)
+            if (_subtitle.GetFirstParagraphOrDefaultByTime(videoPositionInMilliseconds) == null)
             {
                 PastFromClipboard(videoPositionInMilliseconds);
             }
@@ -5848,7 +5848,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 foreach (int index in SubtitleListview1.SelectedIndices)
                                 {
                                     var pOld = _subtitle.Paragraphs[index];
-                                    var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
+                                    var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.Id);
                                     if (p == null)
                                     {
                                         deletes.Add(index);
@@ -5867,7 +5867,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     var idx = SubtitleListview1.SelectedIndices[index];
                                     var pOld = _subtitle.Paragraphs[idx];
-                                    var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
+                                    var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.Id);
                                     if (p == null)
                                     {
                                         _subtitle.Paragraphs.RemoveAt(idx);
@@ -10575,7 +10575,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph o1 = null;
                 if (currentPargraphBeforeChange != null)
                 {
-                    p1 = _subtitle.GetParagraphOrDefaultById(currentPargraphBeforeChange.ID);
+                    p1 = _subtitle.GetParagraphOrDefaultById(currentPargraphBeforeChange.Id);
                     if (p1 != null)
                     {
                         o1 = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p1), currentPargraphBeforeChange, _subtitleAlternate.Paragraphs);
@@ -10586,7 +10586,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph o2 = null;
                 if (p2Before != null)
                 {
-                    p2 = _subtitle.GetParagraphOrDefaultById(p2Before.ID);
+                    p2 = _subtitle.GetParagraphOrDefaultById(p2Before.Id);
                     if (p2 != null)
                     {
                         o2 = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p2), p2Before, _subtitleAlternate.Paragraphs);
@@ -13156,7 +13156,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.IsPaused)
                 {
                     var pos = mediaPlayer.VideoPlayer.CurrentPosition;
-                    var paragraph = _subtitle.GetFirstParagrapOrDefaultByTime(pos * TimeCode.BaseUnit);
+                    var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
                     if (paragraph != null &&
                         pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
                         pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
@@ -15892,9 +15892,9 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
                         var p = _subtitle.GetParagraphOrDefault(index);
-                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.ID))
+                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.Id))
                         {
-                            p.Text = autoBreakUnbreakLines.FixedText[p.ID];
+                            p.Text = autoBreakUnbreakLines.FixedText[p.Id];
                             SubtitleListview1.SetText(index, p.Text);
                             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }
@@ -15933,9 +15933,9 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
                         var p = _subtitle.GetParagraphOrDefault(index);
-                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.ID))
+                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.Id))
                         {
-                            p.Text = autoBreakUnbreakLines.FixedText[p.ID];
+                            p.Text = autoBreakUnbreakLines.FixedText[p.Id];
                             SubtitleListview1.SetText(index, p.Text);
                             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }

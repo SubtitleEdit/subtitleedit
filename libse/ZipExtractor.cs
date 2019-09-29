@@ -53,23 +53,16 @@ namespace Nikse.SubtitleEdit.Core
             public DateTime ModifyTime;
             /// <summary>User comment for file</summary>
             public string Comment;
-            /// <summary>True if UTF8 encoding for filename and comments, false if default (CP 437)</summary>
-            public bool EncodeUTF8;
 
             /// <summary>Overriden method</summary>
             /// <returns>Filename in Zip</returns>
             public override string ToString()
             {
-                return this.FilenameInZip;
+                return FilenameInZip;
             }
         }
 
         #region Public fields
-
-        /// <summary>True if UTF8 encoding for filename and comments, false if default (CP 437)</summary>
-        public bool EncodeUTF8 = false;
-        /// <summary>Force deflate algotithm even if it inflates the stored file. Off by default.</summary>
-        public bool ForceDeflating = false;
 
         #endregion Public fields
 
@@ -78,9 +71,9 @@ namespace Nikse.SubtitleEdit.Core
         // Stream object of storage file
         private Stream ZipFileStream;
         // Central dir image
-        private byte[] CentralDirImage = null;
+        private byte[] CentralDirImage;
         // Static CRC32 Table
-        private static UInt32[] CrcTable = null;
+        private static UInt32[] CrcTable;
         // Default filename encoder
         private static Encoding DefaultEncoding = Encoding.GetEncoding(437);
 
@@ -138,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core
                 return zip;
             }
 
-            throw new System.IO.InvalidDataException();
+            throw new InvalidDataException();
         }
 
         /// <summary>
@@ -176,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 }
 
-                bool encodeUTF8 = (BitConverter.ToUInt16(CentralDirImage, pointer + 8) & 0x0800) != 0;
+                bool encodeUtf8 = (BitConverter.ToUInt16(CentralDirImage, pointer + 8) & 0x0800) != 0;
                 ushort method = BitConverter.ToUInt16(CentralDirImage, pointer + 10);
                 uint modifyTime = BitConverter.ToUInt32(CentralDirImage, pointer + 12);
                 uint crc32 = BitConverter.ToUInt32(CentralDirImage, pointer + 16);
@@ -188,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core
                 uint headerOffset = BitConverter.ToUInt32(CentralDirImage, pointer + 42);
                 uint headerSize = (uint)(46 + filenameSize + extraSize + commentSize);
 
-                Encoding encoder = encodeUTF8 ? Encoding.UTF8 : DefaultEncoding;
+                Encoding encoder = encodeUtf8 ? Encoding.UTF8 : DefaultEncoding;
 
                 ZipFileEntry zfe = new ZipFileEntry();
                 zfe.Method = (Compression)method;
@@ -222,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExtractFile(ZipFileEntry zfe, string filename)
         {
             // Make sure the parent directory exist
-            string path = System.IO.Path.GetDirectoryName(filename);
+            string path = Path.GetDirectoryName(filename);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -234,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             }
 
-            bool result = false;
+            bool result;
             using (Stream output = new FileStream(filename, FileMode.Create, FileAccess.Write))
             {
                 result = ExtractFile(zfe, output);
@@ -313,10 +306,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             byte[] buffer = new byte[2];
 
-            this.ZipFileStream.Seek(headerOffset + 26, SeekOrigin.Begin);
-            this.ZipFileStream.Read(buffer, 0, 2);
+            ZipFileStream.Seek(headerOffset + 26, SeekOrigin.Begin);
+            ZipFileStream.Read(buffer, 0, 2);
             ushort filenameSize = BitConverter.ToUInt16(buffer, 0);
-            this.ZipFileStream.Read(buffer, 0, 2);
+            ZipFileStream.Read(buffer, 0, 2);
             ushort extraSize = BitConverter.ToUInt16(buffer, 0);
 
             return (uint)(30 + filenameSize + extraSize + headerOffset);
@@ -404,47 +397,48 @@ namespace Nikse.SubtitleEdit.Core
         // Reads the end-of-central-directory record
         private bool ReadFileInfo()
         {
-            if (this.ZipFileStream.Length < 22)
+            if (ZipFileStream.Length < 22)
             {
                 return false;
             }
 
             try
             {
-                this.ZipFileStream.Seek(-17, SeekOrigin.End);
-                BinaryReader br = new BinaryReader(this.ZipFileStream);
+                ZipFileStream.Seek(-17, SeekOrigin.End);
+                var br = new BinaryReader(this.ZipFileStream);
                 do
                 {
-                    this.ZipFileStream.Seek(-5, SeekOrigin.Current);
-                    UInt32 sig = br.ReadUInt32();
+                    ZipFileStream.Seek(-5, SeekOrigin.Current);
+                    var sig = br.ReadUInt32();
                     if (sig == 0x06054b50)
                     {
-                        this.ZipFileStream.Seek(6, SeekOrigin.Current);
+                        ZipFileStream.Seek(6, SeekOrigin.Current);
 
-                        UInt16 entries = br.ReadUInt16();
-                        Int32 centralSize = br.ReadInt32();
-                        UInt32 centralDirOffset = br.ReadUInt32();
-                        UInt16 commentSize = br.ReadUInt16();
+                        br.ReadUInt16();
+                        var centralSize = br.ReadInt32();
+                        var centralDirOffset = br.ReadUInt32();
+                        var commentSize = br.ReadUInt16();
 
                         // check if comment field is the very last data in file
-                        if (this.ZipFileStream.Position + commentSize != this.ZipFileStream.Length)
+                        if (ZipFileStream.Position + commentSize != this.ZipFileStream.Length)
                         {
                             return false;
                         }
 
                         // Copy entire central directory to a memory buffer
-                        this.CentralDirImage = new byte[centralSize];
-                        this.ZipFileStream.Seek(centralDirOffset, SeekOrigin.Begin);
-                        this.ZipFileStream.Read(this.CentralDirImage, 0, centralSize);
+                        CentralDirImage = new byte[centralSize];
+                        ZipFileStream.Seek(centralDirOffset, SeekOrigin.Begin);
+                        ZipFileStream.Read(this.CentralDirImage, 0, centralSize);
 
-                        // Leave the pointer at the begining of central dir, to append new files
-                        this.ZipFileStream.Seek(centralDirOffset, SeekOrigin.Begin);
+                        // Leave the pointer at the beginning of central dir, to append new files
+                        ZipFileStream.Seek(centralDirOffset, SeekOrigin.Begin);
                         return true;
                     }
-                } while (this.ZipFileStream.Position > 0);
+                } while (ZipFileStream.Position > 0);
             }
             catch
             {
+                // ignored
             }
 
             return false;
@@ -464,7 +458,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (disposing)
             {
-                this.Close();
+                Close();
             }
         }
 

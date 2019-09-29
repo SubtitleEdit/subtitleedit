@@ -68,7 +68,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
         private double? _pausePosition; // Hack to hold precise seeking when paused
-        //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -557,20 +556,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Pause();
         }
 
-        //private void VideoEndedTimer_Tick(object sender, EventArgs e)
-        //{
-        //}
-
         public override void DisposeVideoPlayer()
         {
             Dispose();
         }
 
+        private readonly object _lockObj = new object();
         private void ReleaseUnmanagedResources()
         {
             try
             {
-                lock (this)
+                lock (_lockObj)
                 {
                     if (_mpvHandle != IntPtr.Zero)
                     {

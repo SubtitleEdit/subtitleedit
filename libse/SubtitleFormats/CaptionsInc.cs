@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                string name = Path.GetFileNameWithoutExtension(fileName) ?? string.Empty;
+                string name = Path.GetFileNameWithoutExtension(fileName);
                 byte[] buffer = Encoding.ASCII.GetBytes(name);
                 for (int i = 0; i < buffer.Length && i < 8; i++)
                 {
@@ -42,14 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     // styles
                     var text = new List<byte> { 0x14, 0x20, 0x14, 0x2E, 0x14, 0x54, 0x17 };
                     int noOfLines = Utilities.GetNumberOfLines(p.Text);
-                    if (noOfLines == 1)
-                    {
-                        text.Add(0x22); // 1 line?
-                    }
-                    else
-                    {
-                        text.Add(0x21); // 2 lines?
-                    }
+                    text.Add(noOfLines == 1 ? (byte)0x22 : (byte)0x21);
 
                     var lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.None);
                     foreach (string line in lines)
@@ -58,19 +51,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             text.Add(Encoding.GetEncoding(1252).GetBytes(new[] { ch })[0]);
                         }
-
-                        // new line
-                        //text.Add(0x14); // y? 0x14 was lower!? 0x17 is higher??? 12=little top 11=top, 13=most buttom?, 15=little over middle
-                        //text.Add(0x72);
-
                         text.Add(0x14);
                         text.Add(0x74);
-                        //text.Add(0x17);
-                        //text.Add(0x21);
                     }
 
                     // codes+text length
-                    buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
+                    buffer = Encoding.ASCII.GetBytes($"{text.Count:000}");
                     fs.Write(buffer, 0, buffer.Length);
 
                     WriteTime(fs, p.StartTime, true);
@@ -84,7 +70,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
                     fs.Write(buffer, 0, buffer.Length);
                     WriteTime(fs, p.EndTime, true);
-                    //buffer = new byte[] { 0x14, 0x2C };
                 }
             }
         }

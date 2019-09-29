@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Paragraph GetParagraphOrDefaultById(string id)
         {
-            return _paragraphs.FirstOrDefault(p => p.ID == id);
+            return _paragraphs.FirstOrDefault(p => p.Id == id);
         }
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format)
@@ -497,12 +497,12 @@ namespace Nikse.SubtitleEdit.Core
 
             for (int i = 0; i < _paragraphs.Count; i++)
             {
-                if (p.ID == _paragraphs[i].ID)
+                if (p.Id == _paragraphs[i].Id)
                 {
                     return i;
                 }
 
-                if (i < _paragraphs.Count - 1 && p.ID == _paragraphs[i + 1].ID)
+                if (i < _paragraphs.Count - 1 && p.Id == _paragraphs[i + 1].Id)
                 {
                     return i + 1;
                 }
@@ -608,7 +608,7 @@ namespace Nikse.SubtitleEdit.Core
         public int RemoveParagraphsByIds(IEnumerable<string> ids)
         {
             int beforeCount = _paragraphs.Count;
-            _paragraphs = _paragraphs.Where(p => !ids.Contains(p.ID)).ToList();
+            _paragraphs = _paragraphs.Where(p => !ids.Contains(p.Id)).ToList();
             return beforeCount - _paragraphs.Count;
         }
 
@@ -674,7 +674,7 @@ namespace Nikse.SubtitleEdit.Core
             return Paragraphs.Count - 1;
         }
 
-        public Paragraph GetFirstParagrapOrDefaultByTime(double milliseconds)
+        public Paragraph GetFirstParagraphOrDefaultByTime(double milliseconds)
         {
             foreach (var p in Paragraphs)
             {

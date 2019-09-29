@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 fixedCount++;
 
                 double newGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
-                dic?.Add(cur.ID, $"{currentGap / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
+                dic?.Add(cur.Id, $"{currentGap / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
             }
 
             return fixedCount;

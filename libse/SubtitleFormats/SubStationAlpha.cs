@@ -307,7 +307,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             color = node.Attributes["tts:color"].Value.Trim();
                         }
 
-                        var c = Color.White;
+                        Color c;
                         try
                         {
                             if (color.StartsWith("rgb(", StringComparison.Ordinal))
@@ -322,6 +322,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         }
                         catch
                         {
+                            c = Color.White;
                         }
 
                         string fontSize = "20";
@@ -330,8 +331,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
                         }
 
-                        int fSize;
-                        if (!int.TryParse(fontSize, out fSize))
+                        if (!int.TryParse(fontSize, out var fSize))
                         {
                             fSize = 20;
                         }
