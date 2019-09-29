@@ -3874,13 +3874,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SetUnknownWordsColor(index, wordsNotFound, line);
 
             var p = _subtitle.GetParagraphOrDefault(index);
-            if (p != null && _unknownWordsDictionary.ContainsKey(p.ID))
+            if (p != null && _unknownWordsDictionary.ContainsKey(p.Id))
             {
-                _unknownWordsDictionary[p.ID] = wordsNotFound;
+                _unknownWordsDictionary[p.Id] = wordsNotFound;
             }
             else if (p != null)
             {
-                _unknownWordsDictionary.Add(p.ID, wordsNotFound);
+                _unknownWordsDictionary.Add(p.Id, wordsNotFound);
             }
         }
 
@@ -5199,11 +5199,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private TesseractThreadRunner _tesseractThreadRunner;
 
+        private readonly object _lockObj = new object();
         public void OcrDone(int index, TesseractThreadRunner.ImageJob job)
         {
             _tesseractAsyncStrings[index] = job.Result;
             Application.DoEvents();
-            lock (this)
+            lock (_lockObj)
             {
                 var text = OcrViaTesseract(job.Bitmap, index);
                 _lastLine = text;
@@ -8301,9 +8302,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             subtitleListView1.BeginUpdate();
             foreach (var p in _subtitle.Paragraphs)
             {
-                if (_unknownWordsDictionary.ContainsKey(p.ID))
+                if (_unknownWordsDictionary.ContainsKey(p.Id))
                 {
-                    SetUnknownWordsColor(_subtitle.Paragraphs.IndexOf(p), _unknownWordsDictionary[p.ID], p.Text);
+                    SetUnknownWordsColor(_subtitle.Paragraphs.IndexOf(p), _unknownWordsDictionary[p.Id], p.Text);
                 }
             }
 
@@ -8351,7 +8352,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
-                if (_unknownWordsDictionary.ContainsKey(p.ID))
+                if (_unknownWordsDictionary.ContainsKey(p.Id))
                 {
                     string text = " " + HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, " ") + " ";
                     int start = 0;
@@ -8364,7 +8365,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     if (count > 0)
                     {
-                        ColorLineByNumberOfUnknownWords(i, _unknownWordsDictionary[p.ID] - count, p.Text);
+                        ColorLineByNumberOfUnknownWords(i, _unknownWordsDictionary[p.Id] - count, p.Text);
                     }
                 }
             }

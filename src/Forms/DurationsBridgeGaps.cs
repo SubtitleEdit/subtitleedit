@@ -126,9 +126,9 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
             {
                 Paragraph cur = FixedSubtitle.Paragraphs[i];
-                if (_dic.ContainsKey(cur.ID))
+                if (_dic.ContainsKey(cur.Id))
                 {
-                    SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
+                    SubtitleListview1.SetExtraText(i, _dic[cur.Id], SubtitleListview1.ForeColor);
                 }
                 else
                 {

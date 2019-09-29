@@ -13,7 +13,6 @@ namespace Nikse.SubtitleEdit.Core
         public static string TagItalic => "i";
         public static string TagBold => "b";
         public static string TagUnderline => "u";
-        public static string TagParagraph => "p";
         public static string TagFont => "font";
         public static string TagCyrillicI => "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
@@ -39,9 +38,7 @@ namespace Nikse.SubtitleEdit.Core
             // < /tag*>
             // </ tag*>
             // < / tag*>
-            return TagOpenRegex.Replace(
-                source,
-                m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
+            return TagOpenRegex.Replace(source, m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
         }
 
         /// <summary>
@@ -389,7 +386,11 @@ namespace Nikse.SubtitleEdit.Core
                 s = FixInvalidItalicTags(s);
             }
 
-            s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+            if (s.IndexOf('x') > 0)
+            {
+                s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+            }
+
             return RemoveCommonHtmlTags(s);
         }
 

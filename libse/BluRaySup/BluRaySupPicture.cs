@@ -324,15 +324,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             int numAddPackets;
             if (rleBuf.Length <= 0xffe4)
             {
-                numAddPackets = 0; // no additional packets needed;
+                numAddPackets = 0; // no additional packets needed
             }
             else
             {
                 numAddPackets = 1 + (rleBuf.Length - 0xffe4) / 0xffeb;
             }
 
-            // a typical frame consists of 8 packets. It can be enlonged by additional
-            // object frames
+            // a typical frame consists of 8 packets. It can be elongated by additional object frames
             int palSize = colorPalette.Count;
 
             var packetHeader = new byte[]

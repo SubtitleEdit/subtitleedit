@@ -1115,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem lvi in subtitleListView1.Items)
                 {
                     var p2 = lvi.Tag as Paragraph;
-                    if (p2 != null && p.ID == p2.ID)
+                    if (p2 != null && p.Id == p2.Id)
                     {
                         var index = lvi.Index;
                         if (index - 1 > 0)

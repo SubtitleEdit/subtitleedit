@@ -20,7 +20,7 @@ namespace Test.Core
             sub.Paragraphs.Add(p2);
             sub.Paragraphs.Add(p3);
 
-            int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.ID });
+            int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.Id });
             Assert.AreEqual(removedCount, 1);
             Assert.AreEqual(sub.Paragraphs.Count, 2);
             Assert.AreEqual(sub.Paragraphs[0], p1);
@@ -38,7 +38,7 @@ namespace Test.Core
             sub.Paragraphs.Add(p2);
             sub.Paragraphs.Add(p3);
 
-            int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.ID, p3.ID });
+            int removedCount = sub.RemoveParagraphsByIds(new List<string> { p2.Id, p3.Id });
             Assert.AreEqual(removedCount, 2);
             Assert.AreEqual(sub.Paragraphs.Count, 1);
             Assert.AreEqual(sub.Paragraphs[0], p1);
