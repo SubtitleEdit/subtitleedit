@@ -18931,7 +18931,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return null;
             }
-            string objectName = Utilities.GetFileNameWithoutExtension(pluginFileName);
+            // note: *objectName must not include path or file extension
+            string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
             if (assembly != null)
             {
                 Type pluginType = assembly.GetType("Nikse.SubtitleEdit.PluginLogic." + objectName);
