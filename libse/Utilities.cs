@@ -2795,7 +2795,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ReSplit(string text, int selectionStart)
         {
-            if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
+            if (selectionStart == 0 || string.IsNullOrWhiteSpace(text) || !text.Contains(" "))
             {
                 return text;
             }
@@ -2820,7 +2820,6 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return text;
             }
-
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
