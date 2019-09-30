@@ -2779,18 +2779,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string GetFileNameWithoutExtension(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
+            if (!Path.IsPathRooted(fileName))
             {
                 return fileName;
             }
 
-            var idx = fileName.LastIndexOf('.');
-            if (idx > 0)
+            if (!Path.HasExtension(fileName))
             {
-                return fileName.Substring(0, idx);
+                return fileName;
             }
 
-            return fileName;
+            return fileName.Substring(0, fileName.LastIndexOf('.'));
         }
 
         public static string ReSplit(string text, int selectionStart)
