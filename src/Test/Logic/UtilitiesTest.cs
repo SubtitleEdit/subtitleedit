@@ -751,5 +751,33 @@ namespace Test.Logic
             var result = Utilities.ReverseStartAndEndingForRightToLeft("♫Hey...♫");
             Assert.AreEqual("♫...Hey♫", result);
         }
+
+        [TestMethod]
+        public void GetPathAndFileNameWithoutExtension1()
+        {
+            var result = Utilities.GetPathAndFileNameWithoutExtension("file.srt");
+            Assert.AreEqual("file", result);
+        }
+
+        [TestMethod]
+        public void GetPathAndFileNameWithoutExtension2()
+        {
+            var result = Utilities.GetPathAndFileNameWithoutExtension("how.are.you[eng].srt");
+            Assert.AreEqual("how.are.you[eng]", result);
+        }
+
+        [TestMethod]
+        public void GetPathAndFileNameWithoutExtension3()
+        {
+            var result = Utilities.GetPathAndFileNameWithoutExtension("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1");
+            Assert.AreEqual("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1", result);
+        }
+
+        [TestMethod]
+        public void GetPathAndFileNameWithoutExtension4()
+        {
+            var result = Utilities.GetPathAndFileNameWithoutExtension("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1.srt");
+            Assert.AreEqual("C:" + System.IO.Path.DirectorySeparatorChar + "my.files" + System.IO.Path.DirectorySeparatorChar + "file1", result);
+        }
     }
 }
