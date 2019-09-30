@@ -2140,7 +2140,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle = new Subtitle();
                         var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
                         SetCurrentFormat(mxfFormat);
-                        _fileName = Utilities.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                         SetTitle();
                         ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                         _sourceViewChange = false;
@@ -2879,7 +2879,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
                         {
-                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Utilities.GetFileNameWithoutExtension(fileName)));
+                            TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(fileName));
                         }
 
                         if (_videoFileName == null)
@@ -3058,7 +3058,7 @@ namespace Nikse.SubtitleEdit.Forms
             string title = _languageGeneral.NoVideoLoaded;
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                title = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                title = Path.GetFileNameWithoutExtension(_videoFileName);
             }
 
             if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
@@ -3414,7 +3414,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrWhiteSpace(_fileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
@@ -3425,19 +3425,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                    saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
                 }
 
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }
             else if (!string.IsNullOrWhiteSpace(_fileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }
             else
@@ -11413,7 +11413,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
-                                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(matroska.Path), Utilities.GetFileNameWithoutExtension(matroska.Path)));
+                                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(matroska.Path), Path.GetFileNameWithoutExtension(matroska.Path)));
                                     }
                                 }
                             }
@@ -11806,7 +11806,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
-                    _fileName = Utilities.GetFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
                     Text = Title;
 
@@ -11901,7 +11901,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
-                    _fileName = Utilities.GetFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
                     Text = Title;
 
@@ -12130,7 +12130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(formSubOcr.FileName))
                     {
                         var currentFormat = GetCurrentSubtitleFormat();
-                        _fileName = Utilities.GetFileNameWithoutExtension(formSubOcr.FileName) + currentFormat.Extension;
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(formSubOcr.FileName) + currentFormat.Extension;
                         _converted = true;
                     }
                     Text = Title;
@@ -12410,7 +12410,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
-                    _fileName = Utilities.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                    _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
                     Text = Title;
 
@@ -12474,7 +12474,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.FirstVisibleIndex = -1;
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
-                        _fileName = Utilities.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                         _converted = true;
                         Text = Title;
 
@@ -12856,7 +12856,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return true;
                     }
 
-                    var idxFileName = Path.Combine(Path.GetDirectoryName(subFileName), Utilities.GetFileNameWithoutExtension(subFileName) + ".idx");
+                    var idxFileName = Utilities.GetPathAndFileNameWithoutExtension(subFileName) + ".idx";
                     if (File.Exists(idxFileName))
                     {
                         return true;
@@ -17139,7 +17139,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
             {
-                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Utilities.GetFileNameWithoutExtension(_fileName)));
+                TryToFindAndOpenVideoFile(Utilities.GetPathAndFileNameWithoutExtension(_fileName));
             }
 
             Main_Resize(null, null);
@@ -19211,7 +19211,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(s);
                         if (language != null && !string.IsNullOrEmpty(_fileName))
                         {
-                            _fileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                            _fileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
                             var oldLang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
                             if (oldLang.Length == 3 && _fileName.EndsWith(oldLang, StringComparison.OrdinalIgnoreCase))
                             {
@@ -19451,7 +19451,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string title = string.Empty;
                     if (!string.IsNullOrEmpty(_fileName))
                     {
-                        title = "_" + Utilities.GetFileNameWithoutExtension(_fileName);
+                        title = "_" + Path.GetFileNameWithoutExtension(_fileName);
                     }
 
                     string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
@@ -19504,7 +19504,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string title = string.Empty;
                         if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                         {
-                            title = "_" + Utilities.GetFileNameWithoutExtension(_subtitleAlternateFileName);
+                            title = "_" + Path.GetFileNameWithoutExtension(_subtitleAlternateFileName);
                         }
 
                         string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, "_Original" + title, saveFormat.Extension);
@@ -21683,11 +21683,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_subtitleAlternateFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_subtitleAlternateFileName);
             }
             else
             {
@@ -22406,11 +22406,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -22448,11 +22448,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -22496,11 +22496,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -22538,11 +22538,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -22580,11 +22580,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -23262,11 +23262,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -23304,11 +23304,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -23346,11 +23346,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -23388,11 +23388,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -24371,11 +24371,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
             }
             else
             {
-                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
             }
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
@@ -25200,7 +25200,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReloadFromSourceView();
 
-            string fileName = string.IsNullOrEmpty(_fileName) ? "UntitledSubtitle" : Utilities.GetFileNameWithoutExtension(_fileName);
+            string fileName = string.IsNullOrEmpty(_fileName) ? "UntitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             var messages = new List<string>();
             var reportFiles = new List<string>();

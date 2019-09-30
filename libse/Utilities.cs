@@ -2777,17 +2777,17 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-        public static string GetFileNameWithoutExtension(string fileName)
+        public static string GetPathAndFileNameWithoutExtension(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
             {
                 return fileName;
             }
 
-            var idx = fileName.LastIndexOf('.');
-            if (idx > 0)
+            var indexOfPeriod = fileName.LastIndexOf('.');
+            if (indexOfPeriod > 0 && fileName.LastIndexOf(Path.DirectorySeparatorChar) < indexOfPeriod)
             {
-                return fileName.Substring(0, idx);
+                return fileName.Substring(0, indexOfPeriod);
             }
 
             return fileName;
