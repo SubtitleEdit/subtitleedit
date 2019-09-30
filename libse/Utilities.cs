@@ -2800,7 +2800,7 @@ namespace Nikse.SubtitleEdit.Core
                 return text;
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = default;
             var isFixed = false;
             for (int i = 0; i < text.Length; i++)
             {
@@ -2808,6 +2808,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (!isFixed && ch == ' ' && (i > 0 && i + 1 == selectionStart || i >= selectionStart && ch == ' '))
                 {
+                    sb = sb ?? new StringBuilder();
                     sb.Append(Environment.NewLine);
                     isFixed = true;
                 }
@@ -2819,6 +2820,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return text;
             }
+
             return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
