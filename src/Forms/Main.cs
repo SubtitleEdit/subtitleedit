@@ -19413,6 +19413,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private string _lastWrittenAutoBackup = string.Empty;
+        private bool _showAutoBackupError = true;
 
         private void TimerAutoBackupTick(object sender, EventArgs e)
         {
@@ -19455,8 +19456,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
-                    File.WriteAllText(fileName, currentText);
-                    _lastWrittenAutoBackup = currentText;
+                    try
+                    {
+                        File.WriteAllText(fileName, currentText);
+                        _lastWrittenAutoBackup = currentText;
+                    }
+                    catch (Exception exception)
+                    {
+                        if (_showAutoBackupError)
+                        {
+                            MessageBox.Show("Unable to save auto-backup to file: " + fileName + Environment.NewLine +
+                                            Environment.NewLine +
+                                            exception.Message + Environment.NewLine + exception.StackTrace);
+                            _showAutoBackupError = false;
+                        }
+                    }
 
                     // let the cleanup proccess be handled by a worker thread
                     System.Threading.Tasks.Task.Factory.StartNew(() =>
