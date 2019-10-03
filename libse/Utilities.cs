@@ -2793,6 +2793,29 @@ namespace Nikse.SubtitleEdit.Core
             return fileName;
         }
 
+        public static string GetFileNameWithoutExtension(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return fileName;
+            }
+
+            var indexOfDirectorySeparatorChar = fileName.LastIndexOf(Path.DirectorySeparatorChar);
+            if (indexOfDirectorySeparatorChar >= 0)
+            {
+                fileName = fileName.Remove(0, indexOfDirectorySeparatorChar).TrimStart(Path.DirectorySeparatorChar);
+            }
+
+            var indexOfPeriod = fileName.LastIndexOf('.');
+            if (indexOfPeriod > 0)
+            {
+                return fileName.Substring(0, indexOfPeriod);
+            }
+
+            return fileName;
+        }
+
+
         public static string ReSplit(string text, int selectionStart)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)

@@ -3414,7 +3414,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrWhiteSpace(_fileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
-                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
@@ -3425,19 +3425,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
+                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
                 }
 
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }
             else if (!string.IsNullOrWhiteSpace(_fileName))
             {
-                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName))
             {
-                saveFileDialog1.FileName = Utilities.GetPathAndFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_videoFileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }
             else
