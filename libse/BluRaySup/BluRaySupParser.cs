@@ -305,6 +305,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return mergedBmp;
             }
 
+            public Position GetPosition()
+            {
+                if (PcsObjects.Count > 0)
+                {
+                    return new Position(PcsObjects[0].Origin.X, PcsObjects[0].Origin.X);
+                }
+                return new Position(0,0);
+            }
+
             public TimeCode StartTimeCode => new TimeCode(StartTime / 90.0);
             public TimeCode EndTimeCode => new TimeCode(EndTime / 90.0);
         }

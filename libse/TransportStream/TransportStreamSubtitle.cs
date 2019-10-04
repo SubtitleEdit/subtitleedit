@@ -1,8 +1,11 @@
 ﻿using System.Drawing;
+using System.Linq.Expressions;
+using System.Runtime.Remoting.Messaging;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
-    public class TransportStreamSubtitle
+    public class TransportStreamSubtitle 
     {
         private ulong _startMilliseconds;
 
@@ -68,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         /// Gets full image if 'ActiveImageIndex' not set, otherwise only gets image by index
         /// </summary>
         /// <returns></returns>
-        public Bitmap GetActiveImage()
+        public Bitmap GetBitmap()
         {
             if (_bdSup != null)
             {
@@ -82,6 +85,28 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             return Pes.GetImageFull();
         }
+
+        public bool IsForced
+        {
+            get
+            {
+                if (_bdSup != null)
+                {
+                    return _bdSup.IsForced;
+                }
+                return false;
+            }
+        }
+
+        public Position GetPosition()
+        {
+            if (_bdSup != null)
+            {
+                return _bdSup.GetPosition();
+            }
+            return new Position(0, 0);
+        }
+
 
         public int NumberOfImages
         {

@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             int pid = _tsParser.SubtitlePacketIds[listBoxTracks.SelectedIndex];
             var list = _tsParser.GetDvbSubtitles(pid);
 
-            var dvbBmp = list[idx].GetActiveImage();
+            var dvbBmp = list[idx].GetBitmap();
             var nDvbBmp = new NikseBitmap(dvbBmp);
             nDvbBmp.CropTopTransparent(2);
             nDvbBmp.CropTransparentSidesAndBottom(2, true);

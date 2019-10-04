@@ -113,6 +113,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         {
             var sb = new StringBuilder();
             var lineStart = html.IndexOf("<span class='ocr_line'", StringComparison.InvariantCulture);
+            var alternateLineStart = html.IndexOf("<span class='ocr_header'", StringComparison.InvariantCulture);
+            if (alternateLineStart > 0)
+            {
+                lineStart = Math.Min(lineStart, alternateLineStart);
+            }
+
             while (lineStart > 0)
             {
                 var wordStart = html.IndexOf("<span class='ocrx_word'", lineStart, StringComparison.InvariantCulture);

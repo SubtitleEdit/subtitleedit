@@ -41,7 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
             public string FileName { get; set; }
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            public List<IBinaryParagraph> BinaryParagraphs { get; set; }
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat, List<IBinaryParagraph> binaryParagraphs)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
@@ -57,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                 FileName = fileName;
                 ToFormat = toFormat;
                 SourceFormat = sourceFormat;
+                BinaryParagraphs = binaryParagraphs;
             }
         }
 
@@ -308,6 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var mkvSsa = new List<string>();
                 var mkvAss = new List<string>();
                 int mkvCount = 0;
+                var isTs = false;
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
@@ -394,6 +397,11 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                         }
                     }
+                    else if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
+                    {
+                        isTs = true;
+                    }
                     else
                     {
                         item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
@@ -452,6 +460,14 @@ namespace Nikse.SubtitleEdit.Forms
                         item.SubItems.Add("Matroska/ASS - " + lang);
                         item.SubItems.Add("-");
                     }
+                }
+                else if (isTs)
+                {
+                    item = new ListViewItem(fileName);
+                    item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                    listViewInputFiles.Items.Add(item);
+                    item.SubItems.Add("Transport Stream");
+                    item.SubItems.Add("-");
                 }
                 else
                 {
@@ -578,9 +594,9 @@ namespace Nikse.SubtitleEdit.Forms
             _errors = 0;
             _abort = false;
 
-            BackgroundWorker worker1 = SpawnWorker();
-            BackgroundWorker worker2 = SpawnWorker();
-            BackgroundWorker worker3 = SpawnWorker();
+            var worker1 = SpawnWorker();
+            var worker2 = SpawnWorker();
+            var worker3 = SpawnWorker();
 
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
@@ -598,6 +614,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = item.Text;
                 try
                 {
+                    var binaryParagraphs = new List<IBinaryParagraph>();
                     SubtitleFormat format = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
@@ -646,8 +663,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     s = rtb.Text;
                                 }
                             }
-                            var uknownFormatImporter = new UknownFormatImporter { UseFrames = true };
-                            var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                            var unknownFormatImporter = new UknownFormatImporter { UseFrames = true };
+                            var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines());
                             if (genericParseSubtitle.Paragraphs.Count > 1)
                             {
                                 sub = genericParseSubtitle;
@@ -672,6 +689,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
                     bool isVobSub = false;
                     bool isMatroska = false;
+                    bool isTs = false;
                     if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
@@ -685,13 +703,18 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isMatroska = true;
                     }
-                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska)
+                    else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
+                    {
+                        isTs = true;
+                    }
+                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
                     {
                         IncrementAndShowProgress();
                     }
                     else
                     {
-                        if (isMatroska && (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
+                        var ext = Path.GetExtension(fileName);
+                        if (isMatroska && (ext.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                         {
                             using (var matroska = new MatroskaFile(fileName))
                             {
@@ -820,9 +843,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
                             }
 
-                            Paragraph prev = sub.GetParagraphOrDefault(0);
-                            bool first = true;
-                            foreach (Paragraph p in sub.Paragraphs)
+                            var prev = sub.GetParagraphOrDefault(0);
+                            var first = true;
+                            foreach (var p in sub.Paragraphs)
                             {
                                 if (checkBoxRemoveTextForHI.Checked)
                                 {
@@ -835,7 +858,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (!numericUpDownPercent.Value.Equals(100))
                                 {
-                                    double toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
+                                    var toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
                                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
                                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
 
@@ -884,7 +907,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 Application.DoEvents();
                                 System.Threading.Thread.Sleep(100);
                             }
-                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxFixRtl.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+
+                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxFixRtl.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format, binaryParagraphs);
                             if (!worker1.IsBusy)
                             {
                                 worker1.RunWorkerAsync(parameter);
@@ -1240,6 +1264,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p.SourceFormat == null)
                 {
+                    var ext = Path.GetExtension(p.FileName);
+                    if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                        (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
+                    {
+                        p.Item.SubItems[3].Text = Configuration.Settings.Language.General.PleaseWait;
+                    }
                     p.SourceFormat = new SubRip();
                 }
 

@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.TransportStream;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -93,6 +94,7 @@ namespace Nikse.SubtitleEdit.Logic
                 _stdOutWriter.WriteLine("- For DOST/image .dost/image output use: '" + BatchConvert.DostImageSubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For BDN/XML .xml/image output use: '" + BatchConvert.BdnXmlSubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For FCP/image .xml/image output use: '" + BatchConvert.FcpImageSubtitle.RemoveChar(' ') + "'");
+                _stdOutWriter.WriteLine("- For plain text only output use: '" + Configuration.Settings.Language.BatchConvert.PlainText.RemoveChar(' ') + "'");
             }
             else
             {
@@ -386,7 +388,7 @@ namespace Nikse.SubtitleEdit.Logic
                     throw new Exception(string.Empty);
                 }
 
-                var formats = SubtitleFormat.AllSubtitleFormats;
+                var formats = SubtitleFormat.AllSubtitleFormats.ToList();
                 foreach (var fileName in files)
                 {
                     count++;
@@ -561,6 +563,13 @@ namespace Nikse.SubtitleEdit.Logic
                                 }
                             }
                         }
+
+                        if (!done && (Path.GetExtension(fileName).Equals(".ts", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) && (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
+                        {
+                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                            done = true;
+                        }
+
 
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
                         {
@@ -1260,64 +1269,73 @@ namespace Nikse.SubtitleEdit.Logic
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sup", outputFolder, overwrite);
-                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        using (var form = new ExportPngXml())
+                        var ext = Path.GetExtension(fileName);
+                        if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                            (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
-                            int width = 1920;
-                            int height = 1080;
-                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, format, _stdOutWriter);
+                        }
+                        else
+                        {
+                            outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sup", outputFolder, overwrite);
+                            _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                            using (var form = new ExportPngXml())
                             {
-                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
-                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
+                                int width = 1920;
+                                int height = 1080;
+                                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                                 {
-                                    width = int.Parse(parts[0]);
-                                    height = int.Parse(parts[1]);
+                                    var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                    if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                    {
+                                        width = int.Parse(parts[0]);
+                                        height = int.Parse(parts[1]);
+                                    }
+                                    if (resolution != null)
+                                    {
+                                        width = resolution.Value.X;
+                                        height = resolution.Value.Y;
+                                    }
                                 }
-                                if (resolution != null)
-                                {
-                                    width = resolution.Value.X;
-                                    height = resolution.Value.Y;
-                                }
-                            }
 
-                            using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
-                            {
-                                var isImageBased = IsImageBased(format);
-                                for (int index = 0; index < sub.Paragraphs.Count; index++)
+                                using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                                 {
-                                    var mp = form.MakeMakeBitmapParameter(index, width, height);
-                                    mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
+                                    var isImageBased = IsImageBased(format);
+                                    for (int index = 0; index < sub.Paragraphs.Count; index++)
                                     {
-                                        if (binaryParagraphs.Count > index)
+                                        var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                        mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                        if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                         {
-                                            mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                            mp.Forced = binaryParagraphs[index].IsForced;
+                                            if (binaryParagraphs.Count > index)
+                                            {
+                                                mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                                mp.Forced = binaryParagraphs[index].IsForced;
+                                            }
                                         }
-                                    }
-                                    else if (isImageBased)
-                                    {
-                                        using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                        else if (isImageBased)
                                         {
-                                            mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                            using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                            {
+                                                mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                            }
                                         }
-                                    }
-                                    else
-                                    {
-                                        mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                                    }
-                                    ExportPngXml.MakeBluRaySupImage(mp);
-                                    binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
-                                    if (mp.Bitmap != null)
-                                    {
-                                        mp.Bitmap.Dispose();
-                                        mp.Bitmap = null;
-                                    }
-                                    if (index % 50 == 0)
-                                    {
-                                        System.Windows.Forms.Application.DoEvents();
+                                        else
+                                        {
+                                            mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                        }
+                                        ExportPngXml.MakeBluRaySupImage(mp);
+                                        binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
+                                        if (mp.Bitmap != null)
+                                        {
+                                            mp.Bitmap.Dispose();
+                                            mp.Bitmap = null;
+                                        }
+                                        if (index % 50 == 0)
+                                        {
+                                            System.Windows.Forms.Application.DoEvents();
+                                        }
                                     }
                                 }
                             }
@@ -1626,6 +1644,61 @@ namespace Nikse.SubtitleEdit.Logic
             finally
             {
                 Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+            }
+        }
+
+        private static void ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, SubtitleFormat format, StreamWriter stdOutWriter)
+        {
+            var tsParser = new TransportStreamParser();
+            tsParser.Parse(fileName, (position, total) =>
+            {
+                var percent = (int)Math.Round(position * 100.0 / total);
+                stdOutWriter?.Write("\rParsing transport stream: {0}%", percent);
+            });
+            stdOutWriter?.Write("\r".PadRight(32, ' '));
+            stdOutWriter?.Write("\r");
+            var videoInfo = UiUtil.GetVideoInfo(fileName);
+            int width = 720;
+            int height = 576;
+            if (videoInfo.Success && videoInfo.Width > 0 && videoInfo.Height > 0)
+            {
+                width = videoInfo.Width;
+                height = videoInfo.Height;
+            }
+            foreach (int pid in tsParser.SubtitlePacketIds)
+            {
+                var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "-" + pid + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
+                stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
+                var sub = tsParser.GetDvbSubtitles(pid);
+                using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
+                {
+                    for (int index = 0; index < sub.Count; index++)
+                    {
+                        var p = sub[index];
+                        var pos = p.GetPosition();
+                        var bmp = sub[index].GetBitmap();
+                        var nbmp = new NikseBitmap(bmp);
+                        pos.Top += nbmp.CropTopTransparent(0);
+                        pos.Left += nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                        bmp.Dispose();
+                        bmp = nbmp.GetBitmap();
+                        var mp = new ExportPngXml.MakeBitmapParameter
+                        {
+                            Bitmap = bmp,
+                            P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds),
+                            ScreenWidth = width,
+                            ScreenHeight = height,
+                            OverridePosition = new Point(pos.Left, pos.Top)
+                        };
+                        ExportPngXml.MakeBluRaySupImage(mp);
+                        binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
+                        if (mp.Bitmap != null)
+                        {
+                            mp.Bitmap.Dispose();
+                            mp.Bitmap = null;
+                        }
+                    }
+                }
             }
         }
 
