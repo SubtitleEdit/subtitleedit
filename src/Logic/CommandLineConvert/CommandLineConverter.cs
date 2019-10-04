@@ -1,22 +1,22 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Forms.Ocr;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class CommandLineConverter
     {
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static string _currentFolder;
         private static bool _consoleAttached;
 
-        [FlagsAttribute]
+        [Flags]
         internal enum BatchAction
         {
             None = 0,

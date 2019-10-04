@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 
 namespace Nikse.SubtitleEdit.Forms
 {
