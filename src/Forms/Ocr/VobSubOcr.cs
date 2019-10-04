@@ -1600,7 +1600,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (index >= 0 && index < _dvbSubtitles.Count)
                 {
-                    var dvbBmp = _dvbSubtitles[index].GetActiveImage();
+                    var dvbBmp = _dvbSubtitles[index].GetBitmap();
                     var nDvbBmp = new NikseBitmap(dvbBmp);
                     nDvbBmp.CropTopTransparent(2);
                     nDvbBmp.CropTransparentSidesAndBottom(2, true);
@@ -8837,7 +8837,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         bool allAlike = true;
                         foreach (var item in tempList)
                         {
-                            var dvbBmp = item.GetActiveImage();
+                            var dvbBmp = item.GetBitmap();
                             var nDvbBmp = new NikseBitmap(dvbBmp);
                             var color = nDvbBmp.GetBrightestColor();
                             if (lastColor != Color.Transparent && (Math.Abs(color.R - lastColor.R) > 10 || Math.Abs(color.G - lastColor.G) > 10 || Math.Abs(color.B - lastColor.B) > 10))
