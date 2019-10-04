@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, format, _stdOutWriter);
+                            ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter);
                         }
                         else
                         {
@@ -1647,7 +1647,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, SubtitleFormat format, StreamWriter stdOutWriter)
+        private static void ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter)
         {
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, (position, total) =>
