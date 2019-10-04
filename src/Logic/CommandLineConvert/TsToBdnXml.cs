@@ -45,9 +45,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     var subtitle = new Subtitle();
-                    for (int index = 0; index < sub.Count; index++)
+                    foreach (var p in sub)
                     {
-                        var p = sub[index];
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds));
                     }
                     form.Initialize(subtitle, new SubRip(), BatchConvert.BdnXmlSubtitle, fileName, videoInfo, fileName);

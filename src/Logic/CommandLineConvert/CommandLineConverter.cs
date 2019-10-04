@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
@@ -738,7 +737,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -1665,7 +1664,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
         {
             string outputFileName = Path.ChangeExtension(fileName, extension);
-            if (!string.IsNullOrEmpty(outputFolder))
+            if (!string.IsNullOrEmpty(outputFolder) && Path.GetFileName(outputFileName) != null)
             {
                 outputFileName = Path.Combine(outputFolder, Path.GetFileName(outputFileName));
             }
@@ -1677,6 +1676,5 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             return outputFileName;
         }
-
     }
 }

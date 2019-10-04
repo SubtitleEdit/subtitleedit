@@ -1132,6 +1132,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
             labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+
+            if (progressBar1.Value == progressBar1.Maximum)
+            {
+                labelStatus.Text = string.Empty;
+            }
         }
 
         private static void DoThreadWork(object sender, DoWorkEventArgs e)
@@ -1277,7 +1282,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                         (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
                     {
-                        p.Item.SubItems[3].Text = Configuration.Settings.Language.General.PleaseWait;
+                        if (p.ToFormat == BluRaySubtitle || p.ToFormat == BdnXmlSubtitle)
+                        {
+                            p.Item.SubItems[3].Text = Configuration.Settings.Language.General.PleaseWait;
+                        }
+                        else
+                        {
+                            p.Item.SubItems[3].Text = $"Only {BluRaySubtitle} or {BdnXmlSubtitle}";
+                            IncrementAndShowProgress();
+                            return;
+                        }
                     }
                     p.SourceFormat = new SubRip();
                 }
@@ -1317,10 +1331,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 IncrementAndShowProgress();
-                if (progressBar1.Value == progressBar1.Maximum)
-                {
-                    labelStatus.Text = string.Empty;
-                }
             }
         }
 
