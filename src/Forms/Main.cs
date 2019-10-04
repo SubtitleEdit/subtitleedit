@@ -30,6 +30,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms.Networking;
+using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 
 namespace Nikse.SubtitleEdit.Forms
 {

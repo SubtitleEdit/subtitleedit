@@ -977,7 +977,7 @@
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
-    <Compile Include="Logic\CommandLineConverter.cs">
+    <Compile Include="Logic\CommandLineConvert\CommandLineConverter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Logic\DarkTheme.cs" />
@@ -1833,9 +1833,7 @@
       <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logic\CommandLineConvert\" />
-  </ItemGroup>
+  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
