@@ -728,7 +728,8 @@ namespace Nikse.SubtitleEdit.Core
             return leftStart;
         }
 
-        public void CropSidesAndBottom(int maximumCropping, Color transparentColor, bool bottom)
+        /// <returns>Pixels cropped left</returns>
+        public int CropSidesAndBottom(int maximumCropping, Color transparentColor, bool bottom)
         {
             int leftStart = 0;
             bool done = false;
@@ -808,13 +809,13 @@ namespace Nikse.SubtitleEdit.Core
 
             if (leftStart < 2 && rightEnd >= Width - 3)
             {
-                return;
+                return 0;
             }
 
             int newWidth = rightEnd - leftStart + 1;
             if (newWidth <= 0)
             {
-                return;
+                return 0;
             }
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
@@ -829,6 +830,7 @@ namespace Nikse.SubtitleEdit.Core
             Width = newWidth;
             Height = newHeight;
             _bitmapData = newBitmapData;
+            return leftStart;
         }
 
         public void CropTop(int maximumCropping, Color transparentColor)
