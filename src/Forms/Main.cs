@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (commandLineArgs.Length > 1)
                 {
                     // ConvertOrReturn() shall not return if a command line conversion has been requested
-                    CommandLineConvert.ConvertOrReturn(Title, commandLineArgs);
+                    CommandLineConverter.ConvertOrReturn(Title, commandLineArgs);
 
                     fileName = commandLineArgs[1];
 
