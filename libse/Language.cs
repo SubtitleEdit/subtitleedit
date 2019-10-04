@@ -351,6 +351,7 @@ namespace Nikse.SubtitleEdit.Core
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",
                 OffsetTimeCodes = "Offset time codes",
+                TransportStreamSettings = "Transport Stream settings"
             };
 
             Beamer = new LanguageStructure.Beamer

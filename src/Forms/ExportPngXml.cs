@@ -356,6 +356,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
+                if (param.OverridePosition != null &&
+                    param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.ScreenWidth &&
+                    param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.ScreenHeight)
+                {
+                    param.LeftMargin = param.OverridePosition.Value.X;
+                    param.BottomMargin = param.ScreenHeight - param.OverridePosition.Value.Y - param.Bitmap.Height;
+                }
+
                 param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftMargin, param.Alignment, param.OverridePosition);
             }
         }

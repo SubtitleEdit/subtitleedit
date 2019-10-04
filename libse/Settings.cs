@@ -151,6 +151,11 @@ namespace Nikse.SubtitleEdit.Core
         public string BatchConvertSsaStyles { get; set; }
         public bool BatchConvertUseStyleFromSource { get; set; }
         public string BatchConvertExportCustomTextTemplate { get; set; }
+        public bool BatchConvertTsOverridePosition { get; set; }
+        public int BatchConvertTsOverrideBottomMargin { get; set; }
+        public bool BatchConvertTsOverrideScreenSize { get; set; }
+        public int BatchConvertTsScreenWidth { get; set; }
+        public int BatchConvertTsScreenHeight { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -280,6 +285,9 @@ namespace Nikse.SubtitleEdit.Core
             JoinCorrectTimeCodes = true;
             NewEmptyTranslationText = string.Empty;
             BatchConvertLanguage = string.Empty;
+            BatchConvertTsOverrideBottomMargin = 20;
+            BatchConvertTsScreenWidth = 1920;
+            BatchConvertTsScreenHeight = 1080;
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";

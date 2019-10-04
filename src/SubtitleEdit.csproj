@@ -86,6 +86,12 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BatchConvertTsSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchConvertTsSettings.Designer.cs">
+      <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BookmarkAdd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -980,6 +986,8 @@
     <Compile Include="Logic\CommandLineConvert\CommandLineConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\CommandLineConvert\TsToBdnXml.cs" />
+    <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
@@ -1061,6 +1069,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchConvertTsSettings.resx">
+      <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BookmarkAdd.resx">
       <DependentUpon>BookmarkAdd.cs</DependentUpon>

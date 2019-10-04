@@ -221,6 +221,7 @@
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }
             public string OffsetTimeCodes { get; set; }
+            public string TransportStreamSettings { get; set; }
         }
 
         public class Beamer

@@ -211,6 +211,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Offset time codes</OffsetTimeCodes>
+    <TransportStreamSettings>Transport Stream settings</TransportStreamSettings>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>

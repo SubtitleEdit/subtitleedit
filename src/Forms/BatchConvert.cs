@@ -251,6 +251,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             _bridgeGaps = new DurationsBridgeGaps(null);
             _bridgeGaps.InitializeSettingsOnly();
+            toolStripSeparatorTs.Visible = false;
+            transportStreamSettingsToolStripMenuItem.Visible = false;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -473,6 +475,12 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     listViewInputFiles.Items.Add(item);
+                }
+
+                if (isTs)
+                {
+                    toolStripSeparatorTs.Visible = true;
+                    transportStreamSettingsToolStripMenuItem.Visible = true;
                 }
             }
             catch
@@ -1853,6 +1861,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonFixRtlSettings_Click(object sender, EventArgs e)
         {
             using (var form = new BatchConvertFixRtl())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void TransportStreamSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new BatchConvertTsSettings())
             {
                 form.ShowDialog(this);
             }

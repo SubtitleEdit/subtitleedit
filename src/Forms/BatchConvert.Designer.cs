@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -93,6 +93,8 @@
             this.contextMenuStripFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorTs = new System.Windows.Forms.ToolStripSeparator();
+            this.transportStreamSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -459,14 +461,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode2;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -795,24 +797,38 @@
             // 
             this.contextMenuStripFiles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeToolStripMenuItem,
-            this.removeAllToolStripMenuItem});
+            this.removeAllToolStripMenuItem,
+            this.toolStripSeparatorTs,
+            this.transportStreamSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(133, 48);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(217, 98);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItemClick);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.removeAllToolStripMenuItem.Text = "Remove all";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.RemoveAllToolStripMenuItemClick);
+            // 
+            // toolStripSeparatorTs
+            // 
+            this.toolStripSeparatorTs.Name = "toolStripSeparatorTs";
+            this.toolStripSeparatorTs.Size = new System.Drawing.Size(213, 6);
+            // 
+            // transportStreamSettingsToolStripMenuItem
+            // 
+            this.transportStreamSettingsToolStripMenuItem.Name = "transportStreamSettingsToolStripMenuItem";
+            this.transportStreamSettingsToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.transportStreamSettingsToolStripMenuItem.Text = "Transport Stream settings...";
+            this.transportStreamSettingsToolStripMenuItem.Click += new System.EventHandler(this.TransportStreamSettingsToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -944,5 +960,7 @@
         private System.Windows.Forms.Button buttonBridgeGapsSettings;
         private System.Windows.Forms.Button buttonFixRtlSettings;
         private System.Windows.Forms.CheckBox checkBoxFixRtl;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorTs;
+        private System.Windows.Forms.ToolStripMenuItem transportStreamSettingsToolStripMenuItem;
     }
 }
