@@ -782,6 +782,9 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     <FileName>Nazwa pliku</FileName>
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>Pliki mają już poprawne kody czasowe</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Dodaj czas zakończenia poprzedniego pliku</AppendTimeCodes>
+    <AddMs>Dodaj milisekundy po każdym pliku</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nie określony</NotSpecified>
@@ -2068,6 +2071,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MicrosoftBingTranslator>Tłumacz Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
     <MicrosoftTranslateApiKey>Klucz</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Punkt końcowy tokena</MicrosoftTranslateTokenEndpoint>
     <FontNote>Uwaga: Te ustawienia czcionek dotyczą tylko interfejsu użytkownika Subtitle Edit.
 Ustawienie czcionki napisów zwykle wykonywane jest w odtwarzaczu wideo, ale można to również zrobić w przypadku używania formatu napisów 
 z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha" lub poprzez eksport do formatów opartych na obrazie.</FontNote>
@@ -2396,6 +2400,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <UseTimeCodesFromIdx>Użyj kodów czasowych z pliku .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Brak zgodności&gt;</NoMatch>
     <AutoTransparentBackground>Auto przezroczyste tło</AutoTransparentBackground>
+    <CaptureTopAlign>Przechwyć wyrównanie do góry</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Sprawdź porównane zgodności dla bieżącego obrazu...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edytuj ostatnio dodane porównania obrazów...</EditLastAdditions>
     <SetUnitalicFactor>Ustaw faktor nie kursywy...</SetUnitalicFactor>
@@ -2404,6 +2409,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <MinLineSplitHeight>Min. wysokość linii (podział)</MinLineSplitHeight>
     <FallbackToX>Powrót do {0}</FallbackToX>
     <ImagePreProcessing>Wstępne przetwarzanie obrazu...</ImagePreProcessing>
+    <EditImageDb>Edytuj obraz db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
@@ -2435,6 +2441,20 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Ustaw faktor nie kursywy</Title>
     <Description>Dostosuj wartość tak, że styl tekstu jest normalny, a nie kursywą. Należy pamiętać, że oryginalny obraz powinien być kursywą.</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>Wstępne przetwarzanie obrazu OCR</Title>
+    <Colors>Kolory</Colors>
+    <AdjustAlpha>Dostosuj wartość, aż tekst będzie wyraźnie wyświetlany (zwykle są to wartości od 200 do 300)</AdjustAlpha>
+    <OriginalImage>Oryginalny obraz</OriginalImage>
+    <PostImage>Obraz po wstępnym przetworzeniu</PostImage>
+    <BinaryThreshold>Próg porównania obrazu binarnego</BinaryThreshold>
+    <InvertColors>Odwróć kolory</InvertColors>
+    <YellowToWhite>Żółty na biały</YellowToWhite>
+    <ColorToWhite>Kolor na biel</ColorToWhite>
+    <ColorToRemove>Kolor do usunięcia</ColorToRemove>
+    <Cropping>Przycinanie</Cropping>
+    <CropTransparentColors>Przytnij przezroczyste kolory</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Znak wodny</Title>
     <WatermarkX>Znak wodny: {0}</WatermarkX>
