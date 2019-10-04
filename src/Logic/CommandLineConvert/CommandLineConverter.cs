@@ -18,6 +18,7 @@ using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
+
     public static class CommandLineConverter
     {
         private static StreamWriter _stdOutWriter;
@@ -1273,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter);
+                            TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter);
                         }
                         else
                         {
@@ -1483,62 +1484,71 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     else if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
-                        _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        using (var form = new ExportPngXml())
+                        var ext = Path.GetExtension(fileName);
+                        if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                            (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BdnXml, fileName, null, null);
-                            int width = 1920;
-                            int height = 1080;
-                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter);
+                        }
+                        else
+                        {
+                            outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
+                            _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                            using (var form = new ExportPngXml())
                             {
-                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
-                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                form.Initialize(sub, format, ExportPngXml.ExportFormats.BdnXml, fileName, null, null);
+                                int width = 1920;
+                                int height = 1080;
+                                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                                 {
-                                    width = int.Parse(parts[0]);
-                                    height = int.Parse(parts[1]);
-                                }
-                            }
-                            if (resolution != null)
-                            {
-                                width = resolution.Value.X;
-                                height = resolution.Value.Y;
-                            }
-
-                            var sb = new StringBuilder();
-                            var imagesSavedCount = 0;
-                            var isImageBased = IsImageBased(format);
-                            for (int index = 0; index < sub.Paragraphs.Count; index++)
-                            {
-                                var mp = form.MakeMakeBitmapParameter(index, width, height);
-                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
-                                if (binaryParagraphs != null && binaryParagraphs.Count > 0)
-                                {
-                                    if (binaryParagraphs.Count > index)
+                                    var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                    if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
                                     {
-                                        mp.Bitmap = binaryParagraphs[index].GetBitmap();
-                                        mp.Forced = binaryParagraphs[index].IsForced;
+                                        width = int.Parse(parts[0]);
+                                        height = int.Parse(parts[1]);
                                     }
                                 }
-                                else if (isImageBased)
+                                if (resolution != null)
                                 {
-                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    width = resolution.Value.X;
+                                    height = resolution.Value.Y;
+                                }
+
+                                var sb = new StringBuilder();
+                                var imagesSavedCount = 0;
+                                var isImageBased = IsImageBased(format);
+                                for (int index = 0; index < sub.Paragraphs.Count; index++)
+                                {
+                                    var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                    mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                    if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                     {
-                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                        if (binaryParagraphs.Count > index)
+                                        {
+                                            mp.Bitmap = binaryParagraphs[index].GetBitmap();
+                                            mp.Forced = binaryParagraphs[index].IsForced;
+                                        }
+                                    }
+                                    else if (isImageBased)
+                                    {
+                                        using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                        {
+                                            mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                    }
+                                    imagesSavedCount = form.WriteBdnXmlParagraph(width, sb, form.GetBottomMarginInPixels(sub.Paragraphs[index]), height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
+
+                                    if (index % 50 == 0)
+                                    {
+                                        System.Windows.Forms.Application.DoEvents();
                                     }
                                 }
-                                else
-                                {
-                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
-                                }
-                                imagesSavedCount = form.WriteBdnXmlParagraph(width, sb, form.GetBottomMarginInPixels(sub.Paragraphs[index]), height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
-
-                                if (index % 50 == 0)
-                                {
-                                    System.Windows.Forms.Application.DoEvents();
-                                }
+                                form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
                             }
-                            form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
                         }
                         _stdOutWriter?.WriteLine(" done.");
                     }
@@ -1647,67 +1657,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter)
-        {
-            var tsParser = new TransportStreamParser();
-            tsParser.Parse(fileName, (position, total) =>
-            {
-                var percent = (int)Math.Round(position * 100.0 / total);
-                stdOutWriter?.Write("\rParsing transport stream: {0}%", percent);
-            });
-            stdOutWriter?.Write("\r".PadRight(32, ' '));
-            stdOutWriter?.Write("\r");
-            var videoInfo = UiUtil.GetVideoInfo(fileName);
-            int width = 720;
-            int height = 576;
-            if (videoInfo.Success && videoInfo.Width > 0 && videoInfo.Height > 0)
-            {
-                width = videoInfo.Width;
-                height = videoInfo.Height;
-            }
-            foreach (int pid in tsParser.SubtitlePacketIds)
-            {
-                var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "-" + pid + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
-                stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
-                var sub = tsParser.GetDvbSubtitles(pid);
-                using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
-                {
-                    for (int index = 0; index < sub.Count; index++)
-                    {
-                        var p = sub[index];
-                        var pos = p.GetPosition();
-                        var bmp = sub[index].GetBitmap();
-                        var nbmp = new NikseBitmap(bmp);
-                        pos.Top += nbmp.CropTopTransparent(0);
-                        pos.Left += nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
-                        bmp.Dispose();
-                        bmp = nbmp.GetBitmap();
-                        var mp = new ExportPngXml.MakeBitmapParameter
-                        {
-                            Bitmap = bmp,
-                            P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds),
-                            ScreenWidth = width,
-                            ScreenHeight = height,
-                            OverridePosition = new Point(pos.Left, pos.Top)
-                        };
-                        ExportPngXml.MakeBluRaySupImage(mp);
-                        binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
-                        if (mp.Bitmap != null)
-                        {
-                            mp.Bitmap.Dispose();
-                            mp.Bitmap = null;
-                        }
-                    }
-                }
-            }
-        }
-
-        private static bool IsImageBased(SubtitleFormat format)
+        internal static bool IsImageBased(SubtitleFormat format)
         {
             return format is TimedTextImage || format is FinalCutProImage || format is SpuImage || format is Dost || format is SeImageHtmlIndex || format is BdnXml;
         }
 
-        private static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
+        internal static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
         {
             string outputFileName = Path.ChangeExtension(fileName, extension);
             if (!string.IsNullOrEmpty(outputFolder))

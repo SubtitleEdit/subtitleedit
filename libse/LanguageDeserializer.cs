@@ -574,6 +574,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/OffsetTimeCodes":
                     language.BatchConvert.OffsetTimeCodes = reader.Value;
                     break;
+                case "BatchConvert/TransportStreamSettings":
+                    language.BatchConvert.TransportStreamSettings = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
