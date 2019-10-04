@@ -912,6 +912,20 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
             });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Arte (German/English)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 20,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 10000,
+                SubtitleMinimumDisplayMilliseconds = 1000,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
+            });
         }
     }
 
