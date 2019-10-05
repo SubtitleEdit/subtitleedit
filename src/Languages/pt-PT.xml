@@ -212,6 +212,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
+	<TransportStreamSettings>Configurações de Transport Stream</TransportStreamSettings>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -782,9 +783,9 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <FileName>Nome do ficheiro</FileName>
     <Join>Juntar</Join>
     <TotalNumberOfLinesX>Total do número de linhas: {0:#,###,###}</TotalNumberOfLinesX>
-    <AlreadyCorrectTimeCodes>Os ficheiros já devem ter os tempos correctos</AlreadyCorrectTimeCodes>
-    <AppendTimeCodes>Adicionar tempo final do ficheiro anterior</AppendTimeCodes>
-    <AddMs>Adicionar milissegundos após cada ficheiro</AddMs>
+	<AlreadyCorrectTimeCodes>Os ficheiros já devem ter os tempos correctos</AlreadyCorrectTimeCodes>
+	<AppendTimeCodes>Adicionar tempo final do ficheiro anterior</AppendTimeCodes>
+	<AddMs>Adicionar milissegundos após cada ficheiro</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Não especificado</NotSpecified>
@@ -2071,7 +2072,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MicrosoftBingTranslator>Tradutor Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
-    <MicrosoftTranslateTokenEndpoint>Terminal Token</MicrosoftTranslateTokenEndpoint>
+	<MicrosoftTranslateTokenEndpoint>Terminal Token</MicrosoftTranslateTokenEndpoint>
     <FontNote>Nota: Estas configurações do tipo de letra são apenas para a Interface da edição de legendas.
 Definir um tipo de letra para uma legenda normalmente é feito no leitor de vídeo,
 mas também pode ser feito ao usar um formato de legenda com informações do tipo de letra incorporadas
@@ -2401,7 +2402,7 @@ Manter as alterações?</KeepChangesMessage>
     <UseTimeCodesFromIdx>Usar os tempos do ficheiro (.idx)</UseTimeCodesFromIdx>
     <NoMatch>&lt;Sem correspondências&gt;</NoMatch>
     <AutoTransparentBackground>Fundo auto transparente</AutoTransparentBackground>
-    <CaptureTopAlign>Capturar alinhamento superior</CaptureTopAlign>
+	<CaptureTopAlign>Capturar alinhamento superior</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Inspeccionar correspondências na imagem actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
@@ -2410,7 +2411,7 @@ Manter as alterações?</KeepChangesMessage>
     <MinLineSplitHeight>Altura mínima da linha (dividida)</MinLineSplitHeight>
     <FallbackToX>Voltar para {0}</FallbackToX>
     <ImagePreProcessing>Pré-processamento de imagem...</ImagePreProcessing>
-    <EditImageDb>Editar imagem db</EditImageDb>
+	<EditImageDb>Editar imagem db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
@@ -2443,18 +2444,18 @@ Manter as alterações?</KeepChangesMessage>
     <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
   </VobSubOcrSetItalicFactor>
   <OcrPreprocessing>
-    <Title>Pré-processamento de imagens OCR</Title>
-    <Colors>Cores</Colors>
-    <AdjustAlpha>Ajustar o valor até que o texto seja mostrado claramente (normalmente valores entre 200 e 300)</AdjustAlpha>
-    <OriginalImage>Imagem original</OriginalImage>
-    <PostImage>Imagem após pré-processamento</PostImage>
-    <BinaryThreshold>Imagem binária comparar limiar</BinaryThreshold>
-    <InvertColors>Inverter cores</InvertColors>
-    <YellowToWhite>Amarelo para branco</YellowToWhite>
-    <ColorToWhite>Cor para branco</ColorToWhite>
-    <ColorToRemove>Cor a excluir</ColorToRemove>
-    <Cropping>Cortar</Cropping>
-    <CropTransparentColors>Cortar cores transparentes</CropTransparentColors>
+	<Title>Pré-processamento de imagens OCR</Title>
+	<Colors>Cores</Colors>
+	<AdjustAlpha>Ajustar o valor até que o texto seja mostrado claramente (normalmente valores entre 200 e 300)</AdjustAlpha>
+	<OriginalImage>Imagem original</OriginalImage>
+	<PostImage>Imagem após pré-processamento</PostImage>
+	<BinaryThreshold>Imagem binária comparar limiar</BinaryThreshold>
+	<InvertColors>Inverter cores</InvertColors>
+	<YellowToWhite>Amarelo para branco</YellowToWhite>
+	<ColorToWhite>Cor para branco</ColorToWhite>
+	<ColorToRemove>Cor a excluir</ColorToRemove>
+	<Cropping>Cortar</Cropping>
+	<CropTransparentColors>Cortar cores transparentes</CropTransparentColors>
   </OcrPreprocessing>
   <Watermark>
     <Title>Marca d'água</Title>
