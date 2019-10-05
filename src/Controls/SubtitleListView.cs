@@ -1496,9 +1496,18 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
-            if (!IsValidIndex(index) || TopItem == null)
+            if (!IsValidIndex(index))
             {
                 return;
+            }
+
+            if (TopItem == null)
+            {
+                EnsureVisible(index);
+                if (focus)
+                {
+                    Items[index].Focused = true;
+                }
             }
 
             int bottomIndex = TopItem.Index + (Height - 25) / 16;
@@ -1529,7 +1538,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Items[index].Focused = true;
                 }
-
+                EnsureVisible(index);
                 return;
             }
 
@@ -1543,6 +1552,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[index].Focused = true;
             }
+            EnsureVisible(index);
         }
 
         public void SelectIndexAndEnsureVisible(int index)

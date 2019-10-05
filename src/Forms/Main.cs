@@ -15435,12 +15435,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.BeginUpdate();
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex + 1, true);
                         foreach (var selectIndex in selectIndices)
                         {
                             SubtitleListview1.Items[selectIndex].Selected = true;
                         }
                         SubtitleListview1.EndUpdate();
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex + 1, true);
                     }
                     else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
                     { // insert into empty subtitle
