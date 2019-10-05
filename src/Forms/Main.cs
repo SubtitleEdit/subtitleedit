@@ -3422,7 +3422,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_converted && !string.IsNullOrEmpty(_fileName) && !File.Exists(_fileName))
                 {
-                    saveFileDialog1.FileName = _fileName;
+                    saveFileDialog1.FileName = Utilities.GetFileNameWithoutExtension(_fileName);
                 }
                 else
                 {
