@@ -292,6 +292,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/DeleteCurrentLine":
                     language.General.DeleteCurrentLine = reader.Value;
                     break;
+                case "General/Width":
+                    language.General.Width = reader.Value;
+                    break;
+                case "General/Height":
+                    language.General.Height = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -576,6 +582,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "BatchConvert/TransportStreamSettings":
                     language.BatchConvert.TransportStreamSettings = reader.Value;
+                    break;
+                case "BatchConvert/TransportStreamOverridePosition":
+                    language.BatchConvert.TransportStreamOverridePosition = reader.Value;
+                    break;
+                case "BatchConvert/TransportStreamOverrideVideoSize":
+                    language.BatchConvert.TransportStreamOverrideVideoSize = reader.Value;
                     break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;

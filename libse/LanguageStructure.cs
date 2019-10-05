@@ -83,6 +83,8 @@
             public string Size { get; set; }
             public string Search { get; set; }
             public string DeleteCurrentLine { get; set; }
+            public string Width { get; set; }
+            public string Height { get; set; }
         }
 
         public class About
@@ -222,6 +224,8 @@
             public string AutoBalanceErrorX { get; set; }
             public string OffsetTimeCodes { get; set; }
             public string TransportStreamSettings { get; set; }
+            public string TransportStreamOverridePosition { get; set; }
+            public string TransportStreamOverrideVideoSize { get; set; }
         }
 
         public class Beamer
