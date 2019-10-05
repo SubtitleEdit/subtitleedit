@@ -47,7 +47,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(231, 145);
+            this.buttonOK.Location = new System.Drawing.Point(287, 145);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 8;
@@ -60,7 +60,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(312, 145);
+            this.buttonCancel.Location = new System.Drawing.Point(368, 145);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 9;
@@ -114,7 +114,7 @@
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
             this.numericUpDownWidth.Size = new System.Drawing.Size(62, 20);
-            this.numericUpDownWidth.TabIndex = 15;
+            this.numericUpDownWidth.TabIndex = 16;
             this.numericUpDownWidth.Value = new decimal(new int[] {
             1920,
             0,
@@ -136,7 +136,7 @@
             this.checkBoxOverrideVideoSize.Location = new System.Drawing.Point(244, 24);
             this.checkBoxOverrideVideoSize.Name = "checkBoxOverrideVideoSize";
             this.checkBoxOverrideVideoSize.Size = new System.Drawing.Size(116, 17);
-            this.checkBoxOverrideVideoSize.TabIndex = 16;
+            this.checkBoxOverrideVideoSize.TabIndex = 15;
             this.checkBoxOverrideVideoSize.Text = "Override video size";
             this.checkBoxOverrideVideoSize.UseVisualStyleBackColor = true;
             this.checkBoxOverrideVideoSize.CheckedChanged += new System.EventHandler(this.CheckBoxOverrideVideoSize_CheckedChanged);
@@ -156,7 +156,7 @@
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
             this.numericUpDownHeight.Size = new System.Drawing.Size(62, 20);
-            this.numericUpDownHeight.TabIndex = 18;
+            this.numericUpDownHeight.TabIndex = 17;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             1080,
             0,
@@ -176,7 +176,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(399, 178);
+            this.ClientSize = new System.Drawing.Size(455, 178);
             this.Controls.Add(this.numericUpDownHeight);
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.checkBoxOverrideVideoSize);

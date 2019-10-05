@@ -196,7 +196,9 @@ namespace Nikse.SubtitleEdit.Core
                 After = "After",
                 Size = "Size",
                 Search = "Search",
-                DeleteCurrentLine = "Delete current line"
+                DeleteCurrentLine = "Delete current line",
+                Width = "Width",
+                Height = "Height"
             };
 
             About = new LanguageStructure.About
@@ -351,7 +353,9 @@ namespace Nikse.SubtitleEdit.Core
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",
                 OffsetTimeCodes = "Offset time codes",
-                TransportStreamSettings = "Transport Stream settings"
+                TransportStreamSettings = "Transport Stream settings",
+                TransportStreamOverridePosition = "Override original position",
+                TransportStreamOverrideVideoSize = "Override original video size"
             };
 
             Beamer = new LanguageStructure.Beamer

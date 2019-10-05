@@ -79,6 +79,8 @@
     <Size>Size</Size>
     <Search>Search</Search>
     <DeleteCurrentLine>Delete current line</DeleteCurrentLine>
+    <Width>Width</Width>
+    <Height>Height</Height>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -212,6 +214,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Offset time codes</OffsetTimeCodes>
     <TransportStreamSettings>Transport Stream settings</TransportStreamSettings>
+    <TransportStreamOverridePosition>Override original position</TransportStreamOverridePosition>
+    <TransportStreamOverrideVideoSize>Override original video size</TransportStreamOverrideVideoSize>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
