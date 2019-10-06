@@ -753,7 +753,6 @@ namespace Nikse.SubtitleEdit.Forms
                                                             listViewInputFiles.Refresh();
                                                         };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
-
                                                         vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
                                                         sub = vobSubOcr.SubtitleFromOcr;
                                                     }
