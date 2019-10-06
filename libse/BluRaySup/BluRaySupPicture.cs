@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="bm">Bitmap to compress</param>
         /// <param name="palette">Palette used for bitmap encoding</param>
         /// <returns>RLE buffer</returns>
-        private static byte[] EncodeImage(NikseBitmap bm, Dictionary<Color, int> palette)
+        private static byte[] EncodeImage(NikseBitmap bm, List<Color> palette)
         {
             var bytes = new List<byte>();
             for (int y = 0; y < bm.Height; y++)
@@ -107,9 +107,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     Color c = bm.GetPixel(x, y);
                     byte color;
-                    if (palette.ContainsKey(c))
+                    var idx = palette.IndexOf(c);
+                    if (idx >= 0)
                     {
-                        color = (byte)palette[c];
+                        color = (byte)idx;
                     }
                     else
                     {
@@ -190,27 +191,31 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return retval;
         }
 
-        private static byte FindBestMatch(Color color, Dictionary<Color, int> palette)
+        private static byte FindBestMatch(Color color, List<Color> palette)
         {
             int smallestDiff = 1000;
             int smallestDiffIndex = -1;
-            foreach (var kvp in palette)
+            int max = palette.Count;
+            for (int i = 0; i < max; i++)
             {
-                int diff = Math.Abs(kvp.Key.A - color.A) + Math.Abs(kvp.Key.R - color.R) + Math.Abs(kvp.Key.G - color.G) + Math.Abs(kvp.Key.B - color.B);
+                var c = palette[i];
+                int diff = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
                 if (diff < smallestDiff)
                 {
                     smallestDiff = diff;
-                    smallestDiffIndex = kvp.Value;
+                    smallestDiffIndex = i;
                 }
             }
             return (byte)smallestDiffIndex;
         }
 
-        private static bool HasCloseColor(Color color, Dictionary<Color, int> palette, int maxDifference)
+        private static bool HasCloseColor(Color color, List<Color> palette, int maxDifference)
         {
-            foreach (var kvp in palette)
+            var max = palette.Count;
+            for (int i = 0; i < max; i++)
             {
-                int difference = Math.Abs(kvp.Key.A - color.A) + Math.Abs(kvp.Key.R - color.R) + Math.Abs(kvp.Key.G - color.G) + Math.Abs(kvp.Key.B - color.B);
+                var c = palette[i];
+                int difference = Math.Abs(c.A - color.A) + Math.Abs(c.R - color.R) + Math.Abs(c.G - color.G) + Math.Abs(c.B - color.B);
                 if (difference < maxDifference)
                 {
                     return true;
@@ -219,9 +224,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             return false;
         }
 
-        private static Dictionary<Color, int> GetBitmapPalette(NikseBitmap bitmap)
+        private static List<Color> GetBitmapPalette(NikseBitmap bitmap)
         {
-            var pal = new Dictionary<Color, int>();
+            var pal = new List<Color>();
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
@@ -233,24 +238,24 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         {
                             if (!HasCloseColor(c, pal, 1))
                             {
-                                pal.Add(c, pal.Count);
+                                pal.Add(c);
                             }
                         }
                         else if (pal.Count < 240)
                         {
                             if (!HasCloseColor(c, pal, 5))
                             {
-                                pal.Add(c, pal.Count);
+                                pal.Add(c);
                             }
                         }
                         else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
                         {
-                            pal.Add(c, pal.Count);
+                            pal.Add(c);
                         }
                     }
                 }
             }
-            pal.Add(Color.Transparent, pal.Count); // last entry must be transparent
+            pal.Add(Color.Transparent); // last entry must be transparent
             return pal;
         }
 
@@ -305,11 +310,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var bm = new NikseBitmap(bmp);
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
-            int k = 0;
-            foreach (var kvp in colorPalette)
+            for (int i = 0; i < colorPalette.Count; i++)
             {
-                pal.SetColor(k, kvp.Key);
-                k++;
+                pal.SetColor(i, colorPalette[i]);
             }
 
             byte[] rleBuf = EncodeImage(bm, colorPalette);

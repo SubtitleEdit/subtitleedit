@@ -164,10 +164,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var yCbCr = Rgb2YCbCr(0, 0, 0, _useBt601);
             for (int i = 0; i < palSize; i++)
             {
-                _a[i] = 0;
-                _r[i] = 0;
-                _g[i] = 0;
-                _b[i] = 0;
                 _y[i] = (byte)yCbCr[0];
                 _cb[i] = (byte)yCbCr[1];
                 _cr[i] = (byte)yCbCr[2];
