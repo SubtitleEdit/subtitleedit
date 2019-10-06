@@ -2998,6 +2998,7 @@
     <RegEx find="([pP])rotiv([adkoprstz])" replaceWith="$1rotu$2" />
     <RegEx find="rovid([an])" replaceWith="rozir$1" />
     <RegEx find="rovj?erić" replaceWith="rovjerit ć" />
+    <RegEx find="psoli" replaceWith="posli" />
     <RegEx find="punić" replaceWith="punit ć" />
     <RegEx find="ustić(?!i)" replaceWith="ustit ć" />
     <RegEx find="put[ae]?r" replaceWith="maslac" />
@@ -3509,6 +3510,7 @@
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
     <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
+    <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
@@ -3582,6 +3584,7 @@
     <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="uisa" replaceWith="uira" />
     <RegEx find="uzt" replaceWith="ust" />
+    <RegEx find="tkp" replaceWith="tko" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="tvra" replaceWith="tvar" />
     <RegEx find="tvrn" replaceWith="tvarn" />
