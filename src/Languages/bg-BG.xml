@@ -80,6 +80,8 @@
     <Size>Размер</Size>
     <Search>Търсене</Search>
     <DeleteCurrentLine>Изтриване на текущия ред</DeleteCurrentLine>
+    <Width>Широчина</Width>
+    <Height>Височина</Height>
   </General>
   <About>
     <Title>Относно Subtitle Edit</Title>
@@ -213,6 +215,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MultipleReplaceErrorX>Множествено заместване: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Автоматичен баланс: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Изместване на времевите кодове</OffsetTimeCodes>
+    <TransportStreamSettings>Настройки на транспортния поток</TransportStreamSettings>
+    <TransportStreamOverridePosition>Замяна на оригиналната позиция</TransportStreamOverridePosition>
+    <TransportStreamOverrideVideoSize>Замяна на оригиналния размер на видеото</TransportStreamOverrideVideoSize>
   </BatchConvert>
   <Beamer>
     <Title>Проектор</Title>
@@ -788,7 +793,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalNumberOfLinesX>Общ брой редове: {0:#.###.###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Файловете вече имат правилни времеви кодове</AlreadyCorrectTimeCodes>
     <AppendTimeCodes>Добавяне краен час на предишния файл</AppendTimeCodes>
-    <AddMs>Добавяне на милисекунди след всеки файл</AddMs>	
+    <AddMs>Добавяне на милисекунди след всеки файл</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Не е указано</NotSpecified>
@@ -2070,7 +2075,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Прекъсване първо място от позицията на курсора</MainTextBoxAutoBreakFromPos>
     <MainTextBoxAutoBreakFromPosAndGoToNext>Прекъсване първо място от позицията на курсора и преминаване към следващото</MainTextBoxAutoBreakFromPosAndGoToNext>
-    <MainTextBoxUnbreak>Непрекъсване на текст</MainTextBoxUnbreak>
+    <MainTextBoxUnbreak>Без прекъсване на текста</MainTextBoxUnbreak>
     <MainFileSaveAll>Запис на всички</MainFileSaveAll>
     <Miscellaneous>Разни</Miscellaneous>
     <CpsIncludesSpace>Символи/сек (CPS-Chars per Second), включително интервалите</CpsIncludesSpace>
@@ -2080,6 +2085,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftBingTranslator>Microsoft Bing преводач</MicrosoftBingTranslator>
     <HowToSignUp>Как да се регистрирате</HowToSignUp>
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Крайна точка на токена</MicrosoftTranslateTokenEndpoint>
     <FontNote>Забележка: Тези настройки на шрифта са само за потребителския интерфейс за редактиране на субтитрите.
 Настройването на шрифта за субтитрите обикновено се извършва във видеоплеъра, но може да бъде направено и при използване на формат на субтитрите с вградена информация за шрифта, като
 "Advanced Sub Station Alpha" или чрез експортиране на формати, базирани на изображения.</FontNote>
@@ -2407,7 +2413,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseTimeCodesFromIdx>Използване на кодовете за време от .idx файла</UseTimeCodesFromIdx>
     <NoMatch>&lt;Няма съответствие&gt;</NoMatch>
     <AutoTransparentBackground>Автоматичен прозрачен фон</AutoTransparentBackground>
-    <CaptureTopAlign>Заснемане отгоре подравняване</CaptureTopAlign>	
+    <CaptureTopAlign>Заснемане отгоре подравняване</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Проверка за съответствия за текущото изображение...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Редактиране на последното изображение сравнено с допълнителните...</EditLastAdditions>
     <SetUnitalicFactor>Задаване на НЕ наклонен фактор</SetUnitalicFactor>
@@ -2416,6 +2422,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MinLineSplitHeight>Мин. височина на ред (разделител)</MinLineSplitHeight>
     <FallbackToX>Резервен вариант {0}</FallbackToX>
     <ImagePreProcessing>Предварителна обработка на изображения...</ImagePreProcessing>
+    <EditImageDb>Редактиране на изображение db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
@@ -2448,6 +2455,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Настройте стойността, докато стила на текста не стане нормален, не курсив(НЕ-наклонен).
 Обърнете внимание, че оригиналното изображение трябва да бъде изцяло в курсив(наклонен)</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>Предварителна обработка на OCR изображение</Title>
+    <Colors>Цветове</Colors>
+    <AdjustAlpha>Регулирайте стойността, докато текстът не се покаже ясно (обикновено стойности между 200 и 300)</AdjustAlpha>
+    <OriginalImage>Оригинално изображение</OriginalImage>
+    <PostImage>Изображение след предварителна обработка</PostImage>
+    <BinaryThreshold>Праг за сравнение на двоично изображение</BinaryThreshold>
+    <InvertColors>Обръщане на цветовете</InvertColors>
+    <YellowToWhite>Жълто до бяло</YellowToWhite>
+    <ColorToWhite>Цвят до бял</ColorToWhite>
+    <ColorToRemove>Цвят за премахване</ColorToRemove>
+    <Cropping>Изрязване</Cropping>
+    <CropTransparentColors>Изрязване прозрачни цветове</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Воден знак</Title>
     <WatermarkX>Водни знаци: {0}</WatermarkX>
