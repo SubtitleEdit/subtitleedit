@@ -439,8 +439,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             if (overridePosition != null &&
-                overridePosition.Value.X >= 0 && overridePosition.Value.X < bm.Width &&
-                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < bm.Height)
+                overridePosition.Value.X >= 0 && overridePosition.Value.X < pic.Width &&
+                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < pic.Height)
             {
                 pic.WindowXOffset = overridePosition.Value.X;
                 pic.WindowYOffset = overridePosition.Value.Y;
