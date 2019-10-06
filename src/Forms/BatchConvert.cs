@@ -747,7 +747,13 @@ namespace Nikse.SubtitleEdit.Forms
                                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                                                     using (var vobSubOcr = new VobSubOcr())
                                                     {
+                                                        vobSubOcr.ProgressCallback = progress =>
+                                                        {
+                                                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
+                                                            listViewInputFiles.Refresh();
+                                                        };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
+
                                                         vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
                                                         sub = vobSubOcr.SubtitleFromOcr;
                                                     }
@@ -766,6 +772,11 @@ namespace Nikse.SubtitleEdit.Forms
                                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                                                     using (var vobSubOcr = new VobSubOcr())
                                                     {
+                                                        vobSubOcr.ProgressCallback = progress =>
+                                                        {
+                                                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
+                                                            listViewInputFiles.Refresh();
+                                                        };
                                                         vobSubOcr.FileName = Path.GetFileName(fileName);
                                                         vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
                                                         sub = vobSubOcr.SubtitleFromOcr;
@@ -810,6 +821,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                                 using (var vobSubOcr = new VobSubOcr())
                                 {
+                                    vobSubOcr.ProgressCallback = progress =>
+                                    {
+                                        item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
+                                        listViewInputFiles.Refresh();
+                                    };
                                     vobSubOcr.FileName = Path.GetFileName(fileName);
                                     vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
                                     sub = vobSubOcr.SubtitleFromOcr;
@@ -821,6 +837,11 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
                             {
+                                vobSubOcr.ProgressCallback = progress =>
+                                {
+                                    item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
+                                    listViewInputFiles.Refresh();
+                                };
                                 vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
@@ -1260,6 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            CommandLineConverter.BatchConvertProgress progressCallback = null;
             var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
             {
@@ -1279,12 +1301,16 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.SourceFormat == null)
                 {
                     var ext = Path.GetExtension(p.FileName);
-                    if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                    if (ext != null && (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                         (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
                     {
                         if (p.ToFormat == BluRaySubtitle || p.ToFormat == BdnXmlSubtitle)
                         {
-                            p.Item.SubItems[3].Text = Configuration.Settings.Language.General.PleaseWait;
+                            progressCallback = progress =>
+                            {
+                                p.Item.SubItems[3].Text = progress;
+                                listViewInputFiles.Refresh();
+                            };
                         }
                         else
                         {
@@ -1321,8 +1347,15 @@ namespace Nikse.SubtitleEdit.Forms
                         dir = Path.GetDirectoryName(p.FileName);
                         overwrite = true;
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null);
-                    p.Item.SubItems[3].Text = success ? Configuration.Settings.Language.BatchConvert.Converted : Configuration.Settings.Language.BatchConvert.NotConverted;
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, CommandLineConverter.BatchAction.None, null, false, progressCallback);
+                    if (success)
+                    {
+                        p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
+                    }
+                    else
+                    {
+                        p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.NotConverted + "  " + p.Item.SubItems[3].Text.Trim('-').Trim();
+                    }
                 }
                 catch (Exception exception)
                 {

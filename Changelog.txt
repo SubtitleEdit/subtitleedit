@@ -7,10 +7,11 @@
    * Add format AWS transcribe json - thx jaccoud
    * Add new subtitle format - thx Zhen
    * Add new subtitle format
-   * Run only "Batch convert" in UI via "/batchconvert" - thx 07416
+   * Run only "Batch convert" in UI via "/batchconvertui" - thx 07416
    * Fix mp4 text time codes parsing with 64-bit mdhd/mvhd box - thx DJC
    * Add option to capture top align in OCR - thx teodargent
    * Add support for WebVTT X-TIMESTAMP-MAP - thx laurensscheers/Nickola
+   * Add cmd-line/batch-convert-ui of TS to Bluray sup or BDN/XML
 * IMPROVED:
    * Update Finish translation - thx Teijo
    * Update Farsi translation - thx ghost1372
@@ -18,6 +19,8 @@
    * Update Brazilian translation - thx Igor
    * Update Catalan translation - thx juansa
    * Update Korean translation - thx domddol
+   * Update Portuguese translation - thx moob
+   * Update Polish translation - thx admas
    * Improve FCP/image export frame rate compat - thx Antoine
    * Auto-switch to just downloaded dictionary
    * Allow letters stuck to numbers for Arabic spellcheck - thx OmrSi
@@ -29,6 +32,7 @@
    * Improve compatibility for ASS/SSA - thx sneaker_ger
    * Improve compatibility with Linux/Mono - thx shag00/JGoutin/stefano 
    * Add some missing translations - thx Jamakmake
+   * Add progress when using ocr in "Batch convert" or cmd-line
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan

@@ -10,13 +10,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsToBluRaySup
     {
-        public static void ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter)
+        public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
         {
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, (position, total) =>
             {
                 var percent = (int)Math.Round(position * 100.0 / total);
                 stdOutWriter?.Write("\rParsing transport stream: {0}%", percent);
+                progressCallback?.Invoke($"{percent}%");
             });
             stdOutWriter?.Write("\r".PadRight(32, ' '));
             stdOutWriter?.Write("\r");
@@ -38,11 +39,19 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
             using (var form = new ExportPngXml())
             {
+                if (tsParser.SubtitlePacketIds.Count == 0)
+                {
+                    stdOutWriter?.WriteLine($"No subtitles found");
+                    progressCallback?.Invoke($"No subtitles found");
+                    return false;
+                }
                 form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, videoInfo, fileName);
                 foreach (int pid in tsParser.SubtitlePacketIds)
                 {
                     var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "-" + pid + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
                     stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
+                    progressCallback?.Invoke($"Save PID {pid}");
+
                     var sub = tsParser.GetDvbSubtitles(pid);
                     using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                     {
@@ -84,6 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     }
                 }
             }
+            return true;
         }
     }
 }
