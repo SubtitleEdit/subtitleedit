@@ -613,6 +613,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _abort = false;
             for (int i = 0; i < max; i++)
             {
+                if (ProgressCallback != null)
+                {
+                    var percent = (int)Math.Round((i + 1) * 100.0 / max);
+                    ProgressCallback?.Invoke($"{percent}%");
+                }
+
                 _selectedIndex = i;
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
 
@@ -1931,12 +1937,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (_dvbSubtitles != null)
             {
                 var item = _dvbSubtitles[index];
-                if (item.Pes != null)
-                {
-                    //TODO: top = item.Pes...
-                }
-                top = 0;
-                height = 0;
+                var pos = item.GetPosition();
+                var bmp = item.GetBitmap();
+                var nbmp = new NikseBitmap(bmp);
+                top = pos.Top + nbmp.CropTopTransparent(0);
+                nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                height = nbmp.Height;
+                bmp.Dispose();
                 return;
             }
             else if (_dvbPesSubtitles != null)

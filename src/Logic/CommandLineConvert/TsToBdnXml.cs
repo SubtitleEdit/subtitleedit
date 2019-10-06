@@ -65,12 +65,27 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         var p = sub[index];
                         var pos = p.GetPosition();
                         var bmp = sub[index].GetBitmap();
+                        var tsWidth = bmp.Width;
+                        var tsHeight = bmp.Height;
                         var nbmp = new NikseBitmap(bmp);
                         pos.Top += nbmp.CropTopTransparent(0);
                         pos.Left += nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
                         bmp.Dispose();
                         bmp = nbmp.GetBitmap();
                         var mp = form.MakeMakeBitmapParameter(index, width, height);
+
+                        if (tsWidth < width && tsHeight < height) // is resizing needed
+                        {
+                            var widthFactor = (double)width / tsWidth;
+                            var heightFactor = (double)height / tsHeight;
+                            var resizeBmp = ResizeBitmap(bmp, (int)Math.Round(bmp.Width * widthFactor), (int)Math.Round(bmp.Height * heightFactor));
+                            bmp.Dispose();
+                            bmp = resizeBmp;
+                            pos.Left = (int)Math.Round(pos.Left * widthFactor);
+                            pos.Top = (int)Math.Round(pos.Top * heightFactor);
+                            progressCallback?.Invoke($"Save PID {pid}: {(index + 1) * 100 / sub.Count}%");
+                        }
+
                         mp.Bitmap = bmp;
                         mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
                         mp.ScreenWidth = width;
@@ -101,6 +116,17 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
             return true;
+        }
+
+        private static Bitmap ResizeBitmap(Bitmap b, int width, int height)
+        {
+            var result = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(result))
+            {
+                g.DrawImage(b, 0, 0, width, height);
+            }
+
+            return result;
         }
     }
 }
