@@ -212,7 +212,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 FreeLibrary(handle);
             }
-            dlclose(handle);
+            else
+            {
+                dlclose(handle);
+            }
         }
 
         internal static IntPtr CrossGetProcAddress(IntPtr handle, string name)
