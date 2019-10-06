@@ -3509,6 +3509,7 @@
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
     <RegEx find="pdg" replaceWith="odg" />
     <RegEx find="pendov" replaceWith="pendir" />
+    <RegEx find="pisho" replaceWith="psiho" />
     <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
@@ -3582,6 +3583,7 @@
     <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="uisa" replaceWith="uira" />
     <RegEx find="uzt" replaceWith="ust" />
+    <RegEx find="tkp" replaceWith="tko" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="tvra" replaceWith="tvar" />
     <RegEx find="tvrn" replaceWith="tvarn" />
