@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
+            long callBackTicks = 0;
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -170,13 +171,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                             //}
                         }
-                        if (callback != null)
-                        {
-                            callback.Invoke(ms.Position, transportStreamLength);
-                        }
                     }
                     TotalNumberOfPackets++;
                     position += packetLength;
+
+                    if (callback != null && DateTime.UtcNow.Ticks - 10000 * 500 > callBackTicks) // call back every half second
+                    {
+                        callback.Invoke(ms.Position, transportStreamLength);
+                        callBackTicks = DateTime.UtcNow.Ticks;
+                    }
                 }
                 else
                 {

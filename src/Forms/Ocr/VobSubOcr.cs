@@ -226,6 +226,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public int Language { get; set; }
         }
 
+        public delegate void ProgressCallbackDelegate(string progress);
+        public ProgressCallbackDelegate ProgressCallback { get; set; }
+
         private Main _main;
         public string FileName { get; set; }
         private Subtitle _subtitle = new Subtitle();
@@ -842,6 +845,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     SetButtonsEnabledAfterOcrDone();
                     return;
+                }
+                if (ProgressCallback != null)
+                {
+                    var percent = (int)Math.Round((i + 1) * 100.0 / max);
+                    ProgressCallback?.Invoke($"{percent}%");
                 }
 
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
@@ -5288,6 +5296,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 GetSubtitleTime(index, out var startTime, out var endTime);
                 labelStatus.Text = $"{index + 1} / {max}: {startTime} - {endTime}";
                 progressBar1.Value = index + 1;
+                if (ProgressCallback != null)
+                {
+                    var percent = (int)Math.Round((index + 1) * 100.0 / max);
+                    ProgressCallback?.Invoke($"{percent}%");
+                }
                 labelStatus.Refresh();
                 progressBar1.Refresh();
 
@@ -5318,6 +5331,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             GetSubtitleTime(i, out startTime, out endTime);
             labelStatus.Text = $"{i + 1} / {max}: {startTime} - {endTime}";
             progressBar1.Value = i + 1;
+            if (ProgressCallback != null)
+            {
+                var percent = (int)Math.Round((i + 1) * 100.0 / max);
+                ProgressCallback?.Invoke($"{percent}%");
+            }
             labelStatus.Refresh();
             progressBar1.Refresh();
             if (_abort)

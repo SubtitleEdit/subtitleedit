@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     fileName = commandLineArgs[1];
 
-                    if (fileName.Equals("/batchconvert", StringComparison.OrdinalIgnoreCase) || fileName.Equals("-batchconvert", StringComparison.OrdinalIgnoreCase))
+                    if (fileName.Equals("/batchconvertui", StringComparison.OrdinalIgnoreCase) || fileName.Equals("-batchconvertui", StringComparison.OrdinalIgnoreCase))
                     {
                         new BatchConvert(this.Icon).ShowDialog();
                         Environment.Exit(0);

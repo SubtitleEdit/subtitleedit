@@ -24,6 +24,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         private static string _currentFolder;
         private static bool _consoleAttached;
 
+        public delegate void BatchConvertProgress(string progress);
+
         [Flags]
         internal enum BatchAction
         {
@@ -423,8 +425,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                                         using (var vobSubOcr = new VobSubOcr())
                                                         {
+                                                            vobSubOcr.ProgressCallback = progress =>
+                                                            {
+                                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                            };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                                             vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                            _stdOutWriter?.WriteLine();
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -445,8 +452,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                         _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                                         using (var vobSubOcr = new VobSubOcr())
                                                         {
+                                                            vobSubOcr.ProgressCallback = progress =>
+                                                            {
+                                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                            };
                                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                                             vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                            _stdOutWriter?.WriteLine();
                                                             sub = vobSubOcr.SubtitleFromOcr;
                                                         }
                                                     }
@@ -544,8 +556,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         _stdOutWriter.WriteLine("Using OCR to extract subtitles");
                                         using (var vobSubOcr = new VobSubOcr())
                                         {
+                                            vobSubOcr.ProgressCallback = progress =>
+                                            {
+                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                            };
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
                                             vobSubOcr.InitializeBatch(subPicturesWithTimeCodes, fileName);
+                                            _stdOutWriter?.WriteLine();
                                             sub = vobSubOcr.SubtitleFromOcr;
                                         }
 
@@ -703,8 +720,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             using (var vobSubOcr = new VobSubOcr())
             {
                 _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                vobSubOcr.ProgressCallback = progress =>
+                {
+                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                };
                 vobSubOcr.FileName = Path.GetFileName(fileName);
                 vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, forcedOnly);
+                _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
             }
@@ -725,7 +747,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             using (var vobSubOcr = new VobSubOcr())
             {
                 _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                vobSubOcr.ProgressCallback = progress =>
+                {
+                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                };
                 vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, forcedOnly);
+                _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
             }
@@ -746,7 +773,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             using (var vobSubOcr = new VobSubOcr())
             {
                 _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                vobSubOcr.ProgressCallback = progress =>
+                {
+                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                };
                 vobSubOcr.InitializeBatch(subtitle, Configuration.Settings.VobSubOcr, GetTargetformat(targetFormat, formats).Name == new Son().Name);
+                _stdOutWriter?.WriteLine();
                 sub = vobSubOcr.SubtitleFromOcr;
                 _stdOutWriter?.WriteLine($"Extracted subtitles from file \"{fileName}\"");
             }
@@ -977,11 +1009,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
                                               IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, List<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions = BatchAction.None,
-                                              Point? resolution = null, bool autoDetectLanguage = false)
+                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             try
             {
+                var success = true;
+
                 // adjust offset
                 if (offset.Ticks != 0)
                 {
@@ -1273,7 +1307,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter);
+                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback);
                         }
                         else
                         {
@@ -1487,7 +1521,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter);
+                            success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback);
                         }
                         else
                         {
@@ -1648,7 +1682,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     return false;
                 }
                 converted++;
-                return true;
+                return success;
             }
             finally
             {
