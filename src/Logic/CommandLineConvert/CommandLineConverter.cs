@@ -402,7 +402,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         SubtitleFormat format = null;
                         bool done = false;
 
-                        if (fileInfo.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || fileInfo.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
+
+                        if (targetFormat != BatchConvert.BluRaySubtitle && targetFormat != BatchConvert.BdnXmlSubtitle && (Path.GetExtension(fileName).Equals(".ts", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) && (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
+                        {
+                            _stdOutWriter.WriteLine($"{Path.GetFileName(fileName)} - Can only convert transport streams to Bluray-sup or BDN/XML");
+                            break;
+                        }
+                        else if (fileInfo.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || fileInfo.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                         {
                             using (var matroska = new MatroskaFile(fileName))
                             {
