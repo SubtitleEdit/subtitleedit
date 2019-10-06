@@ -2913,6 +2913,36 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BatchConvertTsOverridePosition");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverridePosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideBottomMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverrideBottomMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideScreenSize");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverrideScreenSize = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsScreenWidth");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsScreenWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsScreenHeight");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsScreenHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
             {
@@ -6066,6 +6096,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
                 textWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString());
                 textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
+                textWriter.WriteElementString("BatchConvertTsOverridePosition", settings.Tools.BatchConvertTsOverridePosition.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsOverrideBottomMargin", settings.Tools.BatchConvertTsOverrideBottomMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsOverrideScreenSize", settings.Tools.BatchConvertTsOverrideScreenSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());

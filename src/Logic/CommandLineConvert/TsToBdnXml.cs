@@ -91,10 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         mp.ScreenWidth = width;
                         mp.ScreenHeight = height;
                         int bottomMarginInPixels;
-                        if (Configuration.Settings.Tools.BatchConvertTsOverridePosition ||
-                            Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
-                            Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                            Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0)
+                        if (Configuration.Settings.Tools.BatchConvertTsOverridePosition)
                         {
                             mp.BottomMargin = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;
                             bottomMarginInPixels = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;

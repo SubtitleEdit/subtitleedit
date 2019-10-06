@@ -85,10 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
                             mp.ScreenWidth = width;
                             mp.ScreenHeight = height;
-                            if (Configuration.Settings.Tools.BatchConvertTsOverridePosition ||
-                                Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
-                                Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                                Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0)
+                            if (Configuration.Settings.Tools.BatchConvertTsOverridePosition)
                             {
                                 mp.BottomMargin = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;
                                 mp.Alignment = ContentAlignment.BottomCenter;

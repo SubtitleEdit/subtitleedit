@@ -49,13 +49,6 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Enabled = checkBoxOverrideVideoSize.Checked;
             labelHeight.Enabled = checkBoxOverrideVideoSize.Checked;
             numericUpDownHeight.Enabled = checkBoxOverrideVideoSize.Checked;
-
-            if (checkBoxOverrideVideoSize.Checked && !checkBoxOverrideOriginalPosition.Checked)
-            {
-                checkBoxOverrideOriginalPosition.Checked = true;
-            }
-            checkBoxOverrideOriginalPosition.Enabled = !checkBoxOverrideVideoSize.Checked;
-            CheckBoxOverrideOriginalPosition_CheckedChanged(null, null);
         }
 
         private void BatchConvertTsSettings_KeyDown(object sender, KeyEventArgs e)
