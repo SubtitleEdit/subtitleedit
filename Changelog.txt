@@ -4,6 +4,7 @@
 3.5.11 (xth October 2019) BETA
 * NEW:
    * Join: Can now append with "add time" - thx Michael/Nickola
+   * Add cmd-line/batch-convert-ui of TS files to Bluray sup or BDN/XML
    * Add format AWS transcribe json - thx jaccoud
    * Add new subtitle format - thx Zhen
    * Add new subtitle format
@@ -11,7 +12,6 @@
    * Fix mp4 text time codes parsing with 64-bit mdhd/mvhd box - thx DJC
    * Add option to capture top align in OCR - thx teodargent
    * Add support for WebVTT X-TIMESTAMP-MAP - thx laurensscheers/Nickola
-   * Add cmd-line/batch-convert-ui of TS to Bluray sup or BDN/XML
 * IMPROVED:
    * Update Finish translation - thx Teijo
    * Update Farsi translation - thx ghost1372
@@ -45,7 +45,7 @@
    * Fix Timed Text styles dialog crash - thx Chion82/xylographe
    * Fix crash in Pac Unicode - thx ivandrofly
    * Do not remove music symb in cmd line "removeformatting" - thx Sebastien
-   * Fix remembering export buttom margin - thx Michael
+   * Fix remembering export buttom margin - thx Saxtus
    * Skip small/short images when importing vobsub from mkv - thx Maitch
    * Fix for reading mkv on Linux - thx JGoutin
    * Exclude html/ass tags in line lengts (Statistics) - thx AlexandreMT
