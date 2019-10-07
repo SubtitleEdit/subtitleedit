@@ -224,7 +224,8 @@
             public string AutoBalanceErrorX { get; set; }
             public string OffsetTimeCodes { get; set; }
             public string TransportStreamSettings { get; set; }
-            public string TransportStreamOverridePosition { get; set; }
+            public string TransportStreamOverrideXPosition { get; set; }
+            public string TransportStreamOverrideYPosition { get; set; }
             public string TransportStreamOverrideVideoSize { get; set; }
         }
 
