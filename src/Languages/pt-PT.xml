@@ -80,6 +80,8 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Size>Tamanho</Size>
     <Search>Procurar</Search>
     <DeleteCurrentLine>Eliminar a linha actual</DeleteCurrentLine>
+	<Width>Largura</Width>
+	<Height>Altura</Height>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -213,6 +215,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
 	<TransportStreamSettings>Configurações de Transport Stream</TransportStreamSettings>
+	<TransportStreamOverridePosition>Substituir a posição original</TransportStreamOverridePosition>
+	<TransportStreamOverrideVideoSize>Substituir o tamanho original do vídeo</TransportStreamOverrideVideoSize>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
