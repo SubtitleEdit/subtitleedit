@@ -56,7 +56,7 @@
             this.buttonOK.Location = new System.Drawing.Point(307, 176);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 8;
+            this.buttonOK.TabIndex = 90;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
@@ -69,7 +69,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(388, 176);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 100;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -88,7 +88,7 @@
             this.checkBoxOverrideOriginalYPosition.Location = new System.Drawing.Point(16, 114);
             this.checkBoxOverrideOriginalYPosition.Name = "checkBoxOverrideOriginalYPosition";
             this.checkBoxOverrideOriginalYPosition.Size = new System.Drawing.Size(151, 17);
-            this.checkBoxOverrideOriginalYPosition.TabIndex = 12;
+            this.checkBoxOverrideOriginalYPosition.TabIndex = 40;
             this.checkBoxOverrideOriginalYPosition.Text = "Override original Y position";
             this.checkBoxOverrideOriginalYPosition.UseVisualStyleBackColor = true;
             this.checkBoxOverrideOriginalYPosition.CheckedChanged += new System.EventHandler(this.CheckBoxOverrideOriginalYPosition_CheckedChanged);
@@ -103,7 +103,7 @@
             0});
             this.numericUpDownBottomMargin.Name = "numericUpDownBottomMargin";
             this.numericUpDownBottomMargin.Size = new System.Drawing.Size(62, 20);
-            this.numericUpDownBottomMargin.TabIndex = 13;
+            this.numericUpDownBottomMargin.TabIndex = 50;
             // 
             // numericUpDownWidth
             // 
@@ -120,7 +120,7 @@
             0});
             this.numericUpDownWidth.Name = "numericUpDownWidth";
             this.numericUpDownWidth.Size = new System.Drawing.Size(62, 20);
-            this.numericUpDownWidth.TabIndex = 16;
+            this.numericUpDownWidth.TabIndex = 70;
             this.numericUpDownWidth.Value = new decimal(new int[] {
             1920,
             0,
@@ -142,7 +142,7 @@
             this.checkBoxOverrideVideoSize.Location = new System.Drawing.Point(286, 24);
             this.checkBoxOverrideVideoSize.Name = "checkBoxOverrideVideoSize";
             this.checkBoxOverrideVideoSize.Size = new System.Drawing.Size(149, 17);
-            this.checkBoxOverrideVideoSize.TabIndex = 15;
+            this.checkBoxOverrideVideoSize.TabIndex = 60;
             this.checkBoxOverrideVideoSize.Text = "Override output video size";
             this.checkBoxOverrideVideoSize.UseVisualStyleBackColor = true;
             this.checkBoxOverrideVideoSize.CheckedChanged += new System.EventHandler(this.CheckBoxOverrideVideoSize_CheckedChanged);
@@ -162,7 +162,7 @@
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
             this.numericUpDownHeight.Size = new System.Drawing.Size(62, 20);
-            this.numericUpDownHeight.TabIndex = 17;
+            this.numericUpDownHeight.TabIndex = 80;
             this.numericUpDownHeight.Value = new decimal(new int[] {
             1080,
             0,
@@ -196,7 +196,7 @@
             this.checkBoxOverrideOriginalXPosition.Location = new System.Drawing.Point(16, 24);
             this.checkBoxOverrideOriginalXPosition.Name = "checkBoxOverrideOriginalXPosition";
             this.checkBoxOverrideOriginalXPosition.Size = new System.Drawing.Size(151, 17);
-            this.checkBoxOverrideOriginalXPosition.TabIndex = 19;
+            this.checkBoxOverrideOriginalXPosition.TabIndex = 10;
             this.checkBoxOverrideOriginalXPosition.Text = "Override original X position";
             this.checkBoxOverrideOriginalXPosition.UseVisualStyleBackColor = true;
             this.checkBoxOverrideOriginalXPosition.CheckedChanged += new System.EventHandler(this.checkBoxOverrideOriginalXPosition_CheckedChanged);
@@ -231,7 +231,7 @@
             this.comboBoxHAlign.Location = new System.Drawing.Point(95, 73);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(123, 21);
-            this.comboBoxHAlign.TabIndex = 22;
+            this.comboBoxHAlign.TabIndex = 30;
             // 
             // BatchConvertTsSettings
             // 

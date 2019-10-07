@@ -151,8 +151,11 @@ namespace Nikse.SubtitleEdit.Core
         public string BatchConvertSsaStyles { get; set; }
         public bool BatchConvertUseStyleFromSource { get; set; }
         public string BatchConvertExportCustomTextTemplate { get; set; }
-        public bool BatchConvertTsOverridePosition { get; set; }
+        public bool BatchConvertTsOverrideXPosition { get; set; }
+        public bool BatchConvertTsOverrideYPosition { get; set; }
         public int BatchConvertTsOverrideBottomMargin { get; set; }
+        public string BatchConvertTsOverrideHAlign { get; set; }
+        public int BatchConvertTsOverrideHMargin { get; set; }
         public bool BatchConvertTsOverrideScreenSize { get; set; }
         public int BatchConvertTsScreenWidth { get; set; }
         public int BatchConvertTsScreenHeight { get; set; }
@@ -288,6 +291,8 @@ namespace Nikse.SubtitleEdit.Core
             BatchConvertTsOverrideBottomMargin = 20;
             BatchConvertTsScreenWidth = 1920;
             BatchConvertTsScreenHeight = 1080;
+            BatchConvertTsOverrideHAlign = "center";
+            BatchConvertTsOverrideHMargin = 15;
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
@@ -2913,16 +2918,34 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("BatchConvertTsOverridePosition");
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideXPosition");
             if (subNode != null)
             {
-                settings.Tools.BatchConvertTsOverridePosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.BatchConvertTsOverrideXPosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideYPosition");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverrideXPosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertTsOverrideBottomMargin");
             if (subNode != null)
             {
                 settings.Tools.BatchConvertTsOverrideBottomMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideHAlign");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverrideHAlign = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsOverrideHMargin");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsOverrideHMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertTsOverrideScreenSize");
@@ -6096,8 +6119,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
                 textWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString());
                 textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
-                textWriter.WriteElementString("BatchConvertTsOverridePosition", settings.Tools.BatchConvertTsOverridePosition.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsOverrideXPosition", settings.Tools.BatchConvertTsOverrideXPosition.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsOverrideYPosition", settings.Tools.BatchConvertTsOverrideYPosition.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsOverrideBottomMargin", settings.Tools.BatchConvertTsOverrideBottomMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsOverrideHAlign", settings.Tools.BatchConvertTsOverrideHAlign);
+                textWriter.WriteElementString("BatchConvertTsOverrideHMargin", settings.Tools.BatchConvertTsOverrideHMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsOverrideScreenSize", settings.Tools.BatchConvertTsOverrideScreenSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
