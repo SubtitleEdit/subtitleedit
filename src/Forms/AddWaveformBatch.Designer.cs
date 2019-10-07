@@ -136,6 +136,7 @@
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
             this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
             this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
+            this.listViewInputFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewInputFiles_KeyDown);
             // 
             // columnHeaderFName
             // 

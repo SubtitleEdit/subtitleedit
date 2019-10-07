@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveSelectedFiles()
         {
-            if (_converting)
+            if (_converting || listViewInputFiles.SelectedIndices.Count == 0)
             {
                 return;
             }
@@ -410,5 +410,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ListViewInputFiles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                RemoveSelectedFiles();
+            }
+        }
     }
 }
