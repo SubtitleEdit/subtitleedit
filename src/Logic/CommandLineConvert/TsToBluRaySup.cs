@@ -30,11 +30,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 height = videoInfo.Height;
             }
 
-            var overrideScrenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
-                                    Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                                    Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
+            var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
+                                     Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
+                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
 
-            if (overrideScrenSize)
+            if (overrideScreenSize)
             {
                 width = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
                 height = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var p = sub[index];
                             var pos = p.GetPosition();
                             var bmp = sub[index].GetBitmap();
-                            if (!overrideScrenSize)
+                            if (!overrideScreenSize)
                             {
                                 width = bmp.Width;
                                 height = bmp.Height;
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             bmp = nbmp.GetBitmap();
                             var mp = form.MakeMakeBitmapParameter(index, width, height);
 
-                            if (overrideScrenSize)
+                            if (overrideScreenSize)
                             {
                                 var widthFactor = (double)width / tsWidth;
                                 var heightFactor = (double)height / tsHeight;
