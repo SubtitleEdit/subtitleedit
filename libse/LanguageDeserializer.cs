@@ -583,8 +583,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/TransportStreamSettings":
                     language.BatchConvert.TransportStreamSettings = reader.Value;
                     break;
-                case "BatchConvert/TransportStreamOverridePosition":
-                    language.BatchConvert.TransportStreamOverridePosition = reader.Value;
+                case "BatchConvert/TransportStreamOverrideXPosition":
+                    language.BatchConvert.TransportStreamOverrideXPosition = reader.Value;
+                    break;
+                case "BatchConvert/TransportStreamOverrideYPosition":
+                    language.BatchConvert.TransportStreamOverrideYPosition = reader.Value;
                     break;
                 case "BatchConvert/TransportStreamOverrideVideoSize":
                     language.BatchConvert.TransportStreamOverrideVideoSize = reader.Value;

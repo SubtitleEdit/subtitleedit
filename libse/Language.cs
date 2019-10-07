@@ -354,7 +354,8 @@ namespace Nikse.SubtitleEdit.Core
                 AutoBalanceErrorX = "Auto balance: {0}",
                 OffsetTimeCodes = "Offset time codes",
                 TransportStreamSettings = "Transport Stream settings",
-                TransportStreamOverridePosition = "Override original position",
+                TransportStreamOverrideXPosition = "Override original X position",
+                TransportStreamOverrideYPosition = "Override original Y position",
                 TransportStreamOverrideVideoSize = "Override original video size"
             };
 
