@@ -3997,7 +3997,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
             comboBoxBottomMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportBottomMarginUnit == "%" ? 0 : 1;
-
             comboBoxLeftRightMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginUnit == "%" ? 0 : 1;
 
             _allowCustomBottomMargin = _exportType == ExportFormats.BluraySup || _exportType == ExportFormats.VobSub || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fab || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName;
@@ -4010,6 +4009,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxLeftRightMarginUnit.Visible = true;
                 comboBoxLeftRightMargin.Visible = true;
                 labelLeftRightMargin.Visible = true;
+                comboBoxBottomMarginUnit_SelectedIndexChanged(null, null);
             }
             else
             {

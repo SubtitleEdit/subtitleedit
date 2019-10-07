@@ -1407,7 +1407,23 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var cfg = Configuration.Settings.Tools;
                             var language = DvdSubtitleLanguage.GetLanguageOrNull(LanguageAutoDetect.AutoDetectGoogleLanguage(sub)) ?? DvdSubtitleLanguage.English;
                             var isImageBased = IsImageBased(format);
-                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, (int)Math.Round(cfg.ExportBottomMarginPercent / 100.0 * width), (int)Math.Round(cfg.ExportBottomMarginPercent / 100.0 * height), 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
+                            var bottomMarginPixels = 15;
+                            var leftRightMarginPixels = 15;
+                            if (resolution != null && resolution.Value.X > 0 && resolution.Value.Y > 0)
+                            {
+                                width = resolution.Value.X;
+                                height = resolution.Value.Y;
+                            }
+                            if (sub.Paragraphs.Count > 0)
+                            {
+                                var param = form.MakeMakeBitmapParameter(0, width, height);
+                                width = param.ScreenWidth;
+                                height = param.ScreenHeight;
+                                bottomMarginPixels = param.BottomMargin;
+                                leftRightMarginPixels = param.LeftMargin;
+                            }
+                            
+                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, bottomMarginPixels, leftRightMarginPixels, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
                             {
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
                                 {
