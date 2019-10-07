@@ -43,6 +43,10 @@
             this.labelXMargin = new System.Windows.Forms.Label();
             this.labelXAlignment = new System.Windows.Forms.Label();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
+            this.labelXMarginPercent = new System.Windows.Forms.Label();
+            this.labelBottomMarginPercent = new System.Windows.Forms.Label();
+            this.buttonChooseResolution = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -233,11 +237,46 @@
             this.comboBoxHAlign.Size = new System.Drawing.Size(123, 21);
             this.comboBoxHAlign.TabIndex = 30;
             // 
+            // labelXMarginPercent
+            // 
+            this.labelXMarginPercent.AutoSize = true;
+            this.labelXMarginPercent.Location = new System.Drawing.Point(161, 48);
+            this.labelXMarginPercent.Name = "labelXMarginPercent";
+            this.labelXMarginPercent.Size = new System.Drawing.Size(15, 13);
+            this.labelXMarginPercent.TabIndex = 101;
+            this.labelXMarginPercent.Text = "%";
+            // 
+            // labelBottomMarginPercent
+            // 
+            this.labelBottomMarginPercent.AutoSize = true;
+            this.labelBottomMarginPercent.Location = new System.Drawing.Point(161, 138);
+            this.labelBottomMarginPercent.Name = "labelBottomMarginPercent";
+            this.labelBottomMarginPercent.Size = new System.Drawing.Size(15, 13);
+            this.labelBottomMarginPercent.TabIndex = 102;
+            this.labelBottomMarginPercent.Text = "%";
+            // 
+            // buttonChooseResolution
+            // 
+            this.buttonChooseResolution.Location = new System.Drawing.Point(332, 102);
+            this.buttonChooseResolution.Name = "buttonChooseResolution";
+            this.buttonChooseResolution.Size = new System.Drawing.Size(27, 23);
+            this.buttonChooseResolution.TabIndex = 82;
+            this.buttonChooseResolution.Text = "...";
+            this.buttonChooseResolution.UseVisualStyleBackColor = true;
+            this.buttonChooseResolution.Click += new System.EventHandler(this.ButtonChooseResolution_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // BatchConvertTsSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(475, 209);
+            this.Controls.Add(this.buttonChooseResolution);
+            this.Controls.Add(this.labelBottomMarginPercent);
+            this.Controls.Add(this.labelXMarginPercent);
             this.Controls.Add(this.comboBoxHAlign);
             this.Controls.Add(this.labelXAlignment);
             this.Controls.Add(this.numericUpDownXMargin);
@@ -289,5 +328,9 @@
         private System.Windows.Forms.Label labelXMargin;
         private System.Windows.Forms.Label labelXAlignment;
         private System.Windows.Forms.ComboBox comboBoxHAlign;
+        private System.Windows.Forms.Label labelXMarginPercent;
+        private System.Windows.Forms.Label labelBottomMarginPercent;
+        private System.Windows.Forms.Button buttonChooseResolution;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

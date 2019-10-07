@@ -31,8 +31,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
 
             numericUpDownXMargin.Left = labelXMargin.Left + labelXMargin.Width + 5;
+            labelXMarginPercent.Left = numericUpDownXMargin.Left + numericUpDownXMargin.Width + 1;
             comboBoxHAlign.Left = labelXAlignment.Left + labelXAlignment.Width + 5;
             numericUpDownBottomMargin.Left = labelBottomMargin.Left + labelBottomMargin.Width + 5;
+            labelBottomMarginPercent.Left = numericUpDownBottomMargin.Left + numericUpDownBottomMargin.Width + 1;
             var widthAndHeightLeft = Math.Max(labelWidth.Left + labelWidth.Width, labelHeight.Left + labelHeight.Width) + 5;
             numericUpDownWidth.Left = widthAndHeightLeft;
             numericUpDownHeight.Left = widthAndHeightLeft;
@@ -52,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxHAlign.SelectedIndex = 2;
             }
-            else  
+            else
             {
                 comboBoxHAlign.SelectedIndex = 1;
             }
@@ -73,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Enabled = checkBoxOverrideVideoSize.Checked;
             labelHeight.Enabled = checkBoxOverrideVideoSize.Checked;
             numericUpDownHeight.Enabled = checkBoxOverrideVideoSize.Checked;
+            buttonChooseResolution.Enabled = checkBoxOverrideVideoSize.Checked;
         }
 
         private void BatchConvertTsSettings_KeyDown(object sender, KeyEventArgs e)
@@ -100,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "right";
             }
-            else 
+            else
             {
                 Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "center";
             }
@@ -113,6 +116,23 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownXMargin.Enabled = checkBoxOverrideOriginalXPosition.Checked;
             labelXAlignment.Enabled = checkBoxOverrideOriginalXPosition.Checked;
             comboBoxHAlign.Enabled = checkBoxOverrideOriginalXPosition.Checked;
+        }
+
+        private void ButtonChooseResolution_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
+            openFileDialog1.FileName = string.Empty;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                if (info != null && info.Success)
+                {
+                    numericUpDownWidth.Value = info.Width;
+                    numericUpDownHeight.Value = info.Height;
+                }
+            }
         }
     }
 }

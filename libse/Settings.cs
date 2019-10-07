@@ -288,11 +288,11 @@ namespace Nikse.SubtitleEdit.Core
             JoinCorrectTimeCodes = true;
             NewEmptyTranslationText = string.Empty;
             BatchConvertLanguage = string.Empty;
-            BatchConvertTsOverrideBottomMargin = 20;
+            BatchConvertTsOverrideBottomMargin = 5; // pct
             BatchConvertTsScreenWidth = 1920;
             BatchConvertTsScreenHeight = 1080;
-            BatchConvertTsOverrideHAlign = "center";
-            BatchConvertTsOverrideHMargin = 15;
+            BatchConvertTsOverrideHAlign = "center"; // left center right
+            BatchConvertTsOverrideHMargin = 5; // pct
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
