@@ -30,9 +30,11 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 height = videoInfo.Height;
             }
 
-            if (Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
-                Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0)
+            var overrideScrenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
+                                    Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
+                                    Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
+
+            if (overrideScrenSize)
             {
                 width = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
                 height = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
@@ -59,6 +61,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var p = sub[index];
                             var pos = p.GetPosition();
                             var bmp = sub[index].GetBitmap();
+                            if (!overrideScrenSize)
+                            {
+                                width = bmp.Width;
+                                height = bmp.Height;
+                                videoInfo.Width = bmp.Width;
+                                videoInfo.Height = bmp.Height;
+                            }
                             var tsWidth = bmp.Width;
                             var tsHeight = bmp.Height;
                             var nbmp = new NikseBitmap(bmp);
@@ -68,8 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             bmp = nbmp.GetBitmap();
                             var mp = form.MakeMakeBitmapParameter(index, width, height);
 
-
-                            if (tsWidth < width && tsHeight < height) // is resizing needed
+                            if (overrideScrenSize)
                             {
                                 var widthFactor = (double)width / tsWidth;
                                 var heightFactor = (double)height / tsHeight;
@@ -87,36 +95,38 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             mp.ScreenHeight = height;
                             if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition || Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                             {
+                                var overrideMarginX = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideHMargin * width / 100.0);
+                                var overrideMarginY = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin * width / 100.0);
                                 if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition && Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                                 {
                                     var x = (int)Math.Round((width / 2.0) - mp.Bitmap.Width / 2.0);
                                     if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
+                                        x = overrideMarginX;
                                     }
                                     else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
+                                        x = width - overrideMarginX - mp.Bitmap.Width;
                                     }
-                                    var y = height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                                    var y = height - overrideMarginY - mp.Bitmap.Height;
                                     mp.OverridePosition = new Point(x, y);
                                 }
                                 else if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition)
                                 {
-                                    var x = (int)Math.Round((width / 2.0)  - mp.Bitmap.Width / 2.0);
+                                    var x = (int)Math.Round((width / 2.0) - mp.Bitmap.Width / 2.0);
                                     if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
+                                        x = overrideMarginX;
                                     }
                                     else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
+                                        x = width - overrideMarginX - mp.Bitmap.Width;
                                     }
                                     mp.OverridePosition = new Point(x, pos.Top);
                                 }
                                 else
                                 {
-                                    var y = height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                                    var y = height - overrideMarginY - mp.Bitmap.Height;
                                     mp.OverridePosition = new Point(pos.Left, y);
                                 }
                             }
