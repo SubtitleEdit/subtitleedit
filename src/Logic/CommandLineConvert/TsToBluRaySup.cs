@@ -85,14 +85,44 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
                             mp.ScreenWidth = width;
                             mp.ScreenHeight = height;
-                            if (Configuration.Settings.Tools.BatchConvertTsOverridePosition)
+                            if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition || Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                             {
-                                mp.BottomMargin = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;
-                                mp.Alignment = ContentAlignment.BottomCenter;
+                                if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition && Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
+                                {
+                                    var x = (int)Math.Round((width / 2.0) - mp.Bitmap.Width / 2.0);
+                                    if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
+                                    }
+                                    else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        x = width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
+                                    }
+                                    var y = height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                                    mp.OverridePosition = new Point(x, y);
+                                }
+                                else if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition)
+                                {
+                                    var x = (int)Math.Round((width / 2.0)  - mp.Bitmap.Width / 2.0);
+                                    if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
+                                    }
+                                    else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        x = width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
+                                    }
+                                    mp.OverridePosition = new Point(x, pos.Top);
+                                }
+                                else
+                                {
+                                    var y = height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                                    mp.OverridePosition = new Point(pos.Left, y);
+                                }
                             }
                             else
                             {
-                                mp.OverridePosition = new Point(pos.Left, pos.Top); // use original position
+                                mp.OverridePosition = new Point(pos.Left, pos.Top); // use original position (can be scaled)
                             }
                             ExportPngXml.MakeBluRaySupImage(mp);
                             binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);

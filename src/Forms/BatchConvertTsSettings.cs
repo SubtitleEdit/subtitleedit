@@ -25,6 +25,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            comboBoxHAlign.Items.Clear();
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+
             numericUpDownXMargin.Left = labelXMargin.Left + labelXMargin.Width + 5;
             comboBoxHAlign.Left = labelXAlignment.Left + labelXAlignment.Width + 5;
             numericUpDownBottomMargin.Left = labelBottomMargin.Left + labelBottomMargin.Width + 5;
@@ -32,12 +37,25 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownWidth.Left = widthAndHeightLeft;
             numericUpDownHeight.Left = widthAndHeightLeft;
 
-            checkBoxOverrideOriginalYPosition.Checked = Configuration.Settings.Tools.BatchConvertTsOverridePosition;
+            checkBoxOverrideOriginalXPosition.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideXPosition;
+            checkBoxOverrideOriginalYPosition.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideYPosition;
+            numericUpDownXMargin.Value = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
             numericUpDownBottomMargin.Value = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;
             checkBoxOverrideVideoSize.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize;
             numericUpDownWidth.Value = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
             numericUpDownHeight.Value = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
-
+            if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
+            {
+                comboBoxHAlign.SelectedIndex = 0;
+            }
+            else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
+            {
+                comboBoxHAlign.SelectedIndex = 2;
+            }
+            else  
+            {
+                comboBoxHAlign.SelectedIndex = 1;
+            }
             checkBoxOverrideOriginalXPosition_CheckedChanged(null, null);
             CheckBoxOverrideOriginalYPosition_CheckedChanged(null, null);
             CheckBoxOverrideVideoSize_CheckedChanged(null, null);
@@ -67,11 +85,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOK_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.BatchConvertTsOverridePosition = checkBoxOverrideOriginalYPosition.Checked;
+            Configuration.Settings.Tools.BatchConvertTsOverrideXPosition = checkBoxOverrideOriginalXPosition.Checked;
+            Configuration.Settings.Tools.BatchConvertTsOverrideYPosition = checkBoxOverrideOriginalYPosition.Checked;
             Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin = (int)numericUpDownBottomMargin.Value;
             Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize = checkBoxOverrideVideoSize.Checked;
             Configuration.Settings.Tools.BatchConvertTsScreenWidth = (int)numericUpDownWidth.Value;
             Configuration.Settings.Tools.BatchConvertTsScreenHeight = (int)numericUpDownHeight.Value;
+            Configuration.Settings.Tools.BatchConvertTsOverrideHMargin = (int)numericUpDownXMargin.Value;
+            if (comboBoxHAlign.SelectedIndex == 0)
+            {
+                Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "left";
+            }
+            else if (comboBoxHAlign.SelectedIndex == 2)
+            {
+                Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "right";
+            }
+            else 
+            {
+                Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "center";
+            }
             DialogResult = DialogResult.OK;
         }
 
