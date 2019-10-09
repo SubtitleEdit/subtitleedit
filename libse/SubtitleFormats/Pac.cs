@@ -174,7 +174,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE763, new SpecialCharacter("č")},
             { 0xAE, new SpecialCharacter("đ")},
             { 0xEC75, new SpecialCharacter("ű")},
-            { 0xEC6F, new SpecialCharacter("ő")},            
+            { 0xEC55, new SpecialCharacter("Ű")},
+            { 0xEC6F, new SpecialCharacter("ő")},
+            { 0xEC4F, new SpecialCharacter("Ő")},
 
             { 0xA8,  new SpecialCharacter("¿")},
             { 0xAD,  new SpecialCharacter("¡")},
@@ -190,8 +192,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x19, new SpecialCharacter("’")},
             { 0x13, new SpecialCharacter("–")},
             { 0x14, new SpecialCharacter("—")}
-
-            
         };
 
         private static readonly Dictionary<int, SpecialCharacter> HebrewCodes = new Dictionary<int, SpecialCharacter>
