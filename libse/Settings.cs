@@ -1056,7 +1056,7 @@ $HorzAlign          =   Center
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
             BinaryAutoDetectBestDb = true;
-            CaptureTopAlign = true;
+            CaptureTopAlign = false;
         }
     }
 
