@@ -16,6 +16,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public ProgramAssociationTable(byte[] packetBuffer, int index)
         {
+            var pointer = packetBuffer[index];
+            if (pointer > 0)
+            {
+                index += pointer;
+            }
+            else
+            {
+                index++;
+            }
             TableId = packetBuffer[index];
             SectionLength = (packetBuffer[index + 1] & Helper.B00000011) * 256 + packetBuffer[index + 2];
             TransportStreamId = packetBuffer[index + 3] * 256 + packetBuffer[index + 4];
@@ -23,7 +32,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             CurrentNextIndicator = packetBuffer[index + 5] & 1;
             SectionNumber = packetBuffer[index + 6];
             LastSectionNumber = packetBuffer[index + 7];
-
             ProgramNumbers = new List<int>();
             ProgramIds = new List<int>();
             index = index + 8;

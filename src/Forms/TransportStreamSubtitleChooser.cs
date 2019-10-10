@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private TransportStreamParser _tsParser;
         private string _fileName;
+        private ProgramMapTableParser _programMapTableParser;
 
         public TransportStreamSubtitleChooser()
         {
@@ -50,13 +51,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(TransportStreamParser tsParser, string fileName)
         {
+            _programMapTableParser = new ProgramMapTableParser();
+            _programMapTableParser.Parse(fileName); // get languages
             _tsParser = tsParser;
             _fileName = fileName;
             Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
 
             foreach (int id in tsParser.SubtitlePacketIds)
             {
-                listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
+                var language = _programMapTableParser.GetSubtitleLanguage(id);
+                if (!string.IsNullOrEmpty(language))
+                {
+                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id + "=" + language, tsParser.GetDvbSubtitles(id).Count));
+                }
+                else
+                {
+                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
+                }
             }
             listBoxTracks.SelectedIndex = 0;
         }
@@ -121,6 +132,18 @@ namespace Nikse.SubtitleEdit.Forms
             return _tsParser.GetDvbSubtitles(pid);
         }
 
+        private string GetSelectedLanguage()
+        {
+            int idx = listBoxSubtitles.SelectedIndex;
+            if (idx < 0)
+            {
+                return null;
+            }
+
+            int pid = _tsParser.SubtitlePacketIds[listBoxTracks.SelectedIndex];
+            return _programMapTableParser.GetSubtitleLanguage(pid);
+        }
+
         private void BluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportTo(ExportPngXml.ExportFormats.BluraySup);
@@ -151,10 +174,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName, GetSelectedLanguage());
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
-                    exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, null);
+                    exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, GetSelectedLanguage());
                     exportBdnXmlPng.ShowDialog(this);
                 }
             }
@@ -171,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName, GetSelectedLanguage());
                 formSubOcr.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(sender, e);
             }
         }

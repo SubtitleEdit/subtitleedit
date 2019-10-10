@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -12,6 +13,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
     {
         public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
         {
+            var programMapTableParser = new ProgramMapTableParser();
+            programMapTableParser.Parse(fileName); // get languages
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, (position, total) =>
             {
@@ -50,7 +53,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, videoInfo, fileName);
                 foreach (int pid in tsParser.SubtitlePacketIds)
                 {
-                    var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "-" + pid + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
+                    var language = programMapTableParser.GetSubtitleLanguageTwoLetter(pid);
+                    if (string.IsNullOrEmpty(language))
+                    {
+                        language = pid.ToString(CultureInfo.InvariantCulture);
+                    }
+                    var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "." + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
                     stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     progressCallback?.Invoke($"Save PID {pid}");
