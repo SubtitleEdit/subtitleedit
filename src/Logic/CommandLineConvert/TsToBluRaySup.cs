@@ -25,8 +25,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             stdOutWriter?.Write("\r".PadRight(32, ' '));
             stdOutWriter?.Write("\r");
             var videoInfo = UiUtil.GetVideoInfo(fileName);
-            int width = 720;
-            int height = 576;
+            int width = DvbSubPes.DefaultScreenWidth;
+            int height = DvbSubPes.DefaultScreenHeight;
             if (videoInfo.Success && videoInfo.Width > 0 && videoInfo.Height > 0)
             {
                 width = videoInfo.Width;

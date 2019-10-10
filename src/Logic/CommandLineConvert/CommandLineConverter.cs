@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
@@ -1391,8 +1392,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         using (var form = new ExportPngXml())
                         {
                             form.Initialize(sub, format, ExportPngXml.ExportFormats.VobSub, fileName, null, null);
-                            int width = 720;
-                            int height = 576;
+                            int width = DvbSubPes.DefaultScreenWidth;
+                            int height = DvbSubPes.DefaultScreenHeight;
 
                             if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
                             {

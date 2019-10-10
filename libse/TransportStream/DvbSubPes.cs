@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
     {
         public const int HeaderLength = 6;
         public const int Mpeg2HeaderLength = 14;
+        public const int DefaultScreenWidth = 720;
+        public const int DefaultScreenHeight = 576;
 
         public readonly UInt32 StartCode;
         public readonly int StreamId;
@@ -360,8 +362,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 ParseSegments();
             }
 
-            int width = 720;
-            int height = 576;
+            int width = DefaultScreenWidth;
+            int height = DefaultScreenHeight;
 
             var segments = SubtitleSegments;
             foreach (SubtitleSegment ss in segments)

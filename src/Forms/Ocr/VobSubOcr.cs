@@ -8549,6 +8549,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _fromMenuItem = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), exportType, FileName, this, _importLanguageString);
+
+                if (_dvbPesSubtitles != null && _dvbPesSubtitles.Count > 0)
+                {
+                    using (var bmp = _dvbPesSubtitles[0].GetImageFull())
+                    {
+                        exportBdnXmlPng.SetResolution(new Point(bmp.Width, bmp.Height));
+                    }
+                }
+                else if (_dvbSubtitles != null && _dvbSubtitles.Count > 0)
+                {
+                    using (var bmp = _dvbSubtitles[0].GetBitmap())
+                    {
+                        exportBdnXmlPng.SetResolution(new Point(bmp.Width, bmp.Height));
+                    }
+                }
+
                 exportBdnXmlPng.ShowDialog(this);
                 _fromMenuItem = false;
             }
