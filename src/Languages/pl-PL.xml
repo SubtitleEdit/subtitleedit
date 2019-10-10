@@ -677,7 +677,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Potrzebujesz słowników?</Title>
     <DescriptionLine1>Subtitle Edit sprawdza pisownię w oparciu o silnik NHunspell,</DescriptionLine1>
-    <DescriptionLine2>który korzysta ze słowników sprawdzania pisowni Open Office.</DescriptionLine2>
+    <DescriptionLine2>który korzysta ze słowników sprawdzania pisowni LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Wybierz swój język i kliknij "Pobierz"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otwórz folder "Dictionaries"</OpenDictionariesFolder>
     <Download>Pobierz</Download>

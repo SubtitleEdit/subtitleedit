@@ -680,7 +680,7 @@ Napomena: Proverite slobodan prostor na disku.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Preuzimanje rečnika</Title>
     <DescriptionLine1>Provera pravopisa je bazirana na NHunspell dodatku</DescriptionLine1>
-    <DescriptionLine2>koji je koristio rečnike iz paketa Open Office.</DescriptionLine2>
+    <DescriptionLine2>koji je koristio rečnike iz paketa LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Izaberi jezik i klikni na dugme Preuzimanje</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvori folder sa rečnicima</OpenDictionariesFolder>
     <Download>Preuzimanje</Download>

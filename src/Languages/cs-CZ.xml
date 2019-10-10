@@ -674,7 +674,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Potřebujete slovníky?</Title>
     <DescriptionLine1>Kontrola pravopisu programu Subtitle Edit je založena na jádru programu NHunspell,</DescriptionLine1>
-    <DescriptionLine2>který používá slovníky kontroly pravopisu z programu Open Office.</DescriptionLine2>
+    <DescriptionLine2>který používá slovníky kontroly pravopisu z programu LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Zvolte svůj jazyk a klikněte na Stáhnout</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otevřít složku 'Dictionaries'</OpenDictionariesFolder>
     <Download>Stáhnout</Download>

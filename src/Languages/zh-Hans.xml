@@ -676,7 +676,7 @@ Command line: {1} {2}
   <GetDictionaries>
     <Title>是否使用词典？</Title>
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
-    <DescriptionLine2>使用的是 Open Office 的拼写检查词典。</DescriptionLine2>
+    <DescriptionLine2>使用的是 LibreOffice 的拼写检查词典。</DescriptionLine2>
     <ChooseLanguageAndClickDownload>选择您的语言并点击「下载」</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>打开 'Dictionaries' 文件夹</OpenDictionariesFolder>
     <Download>下载</Download>

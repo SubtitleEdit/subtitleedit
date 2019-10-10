@@ -482,7 +482,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
   <GetDictionaries>
     <Title>Cần từ điển?</Title>
     <DescriptionLine1>Kiểm tra chính tả của Subtitle Edit được dựa trên các công cụ NHunspell</DescriptionLine1>
-    <DescriptionLine2>Sử dụng từ điển để kiểm tra chính tả từ Open Office.</DescriptionLine2>
+    <DescriptionLine2>Sử dụng từ điển để kiểm tra chính tả từ LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Lấy từ điển ở đây:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Chọn ngôn ngữ của bạn và bấm vào nút tải về</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Mở thư mục chứa 'Từ điển'</OpenDictionariesFolder>

@@ -662,7 +662,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Butuh kamus?</Title>
     <DescriptionLine1>Pemeriksaan ejaan Subtitle Edit berdasarkan mesin NHunspell</DescriptionLine1>
-    <DescriptionLine2>yg menggunakan kamus pemeriksaan ejaan dari Open Office.</DescriptionLine2>
+    <DescriptionLine2>yg menggunakan kamus pemeriksaan ejaan dari LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Dapatkan kamus di sini:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Pilih bahasa Anda dan klik unduh</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Buka folder 'Kamus'</OpenDictionariesFolder>

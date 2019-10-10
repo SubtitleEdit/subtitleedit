@@ -650,7 +650,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Hiztegiak behar dituzu?</Title>
     <DescriptionLine1>Subtitle Edit-en idaz-egiaztapena NHunspell motorean ohinarriturik dago.</DescriptionLine1>
-    <DescriptionLine2>Erabili idaz egiaztapen hiztegiak Open Officetik.</DescriptionLine2>
+    <DescriptionLine2>Erabili idaz egiaztapen hiztegiak LibreOfficetik.</DescriptionLine2>
     <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Hautatu zure hizkuntza eta klikatu jeitsi</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ireki 'Hiztegi' agiritegia</OpenDictionariesFolder>

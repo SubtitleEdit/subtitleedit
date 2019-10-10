@@ -577,7 +577,7 @@
   <GetDictionaries>
     <Title>ต้องการพจนานุกรมหรือไม่</Title>
     <DescriptionLine1>ระบบตรวจคำของ Subtitle Edit มาจากกลไกของ NHunspell ซึ่ง</DescriptionLine1>
-    <DescriptionLine2>ใช้พจนานุกรมตรวจคำจาก Open Office</DescriptionLine2>
+    <DescriptionLine2>ใช้พจนานุกรมตรวจคำจาก LibreOffice</DescriptionLine2>
     <GetDictionariesHere>โหลดพจนานุกรมที่นี่:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>เลือกภาษาของคุณและคลิกดาวน์โหลด</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries'</OpenDictionariesFolder>

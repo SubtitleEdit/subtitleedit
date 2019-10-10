@@ -57,7 +57,7 @@
             this.labelDescription2.Name = "labelDescription2";
             this.labelDescription2.Size = new System.Drawing.Size(263, 13);
             this.labelDescription2.TabIndex = 1;
-            this.labelDescription2.Text = "uses the spell checking dictionaries from Open Office.";
+            this.labelDescription2.Text = "uses the spell checking dictionaries from LibreOffice.";
             // 
             // linkLabelOpenDictionaryFolder
             // 

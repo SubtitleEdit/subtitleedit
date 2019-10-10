@@ -677,7 +677,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Ai nevoie de dicționare?</Title>
     <DescriptionLine1>Verif. ortografiei în SE este bazată pe motorul NHunspell</DescriptionLine1>
-    <DescriptionLine2>care folosește ortografierea din dicționarele Open Office.</DescriptionLine2>
+    <DescriptionLine2>care folosește ortografierea din dicționarele LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Alege-ți limba și clic pe Descărcare</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Deschide directorul 'Dicționare'</OpenDictionariesFolder>
     <Download>Descărcare</Download>

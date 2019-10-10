@@ -684,7 +684,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <GetDictionaries>
     <Title>Необходимы словари?</Title>
     <DescriptionLine1>Subtitle Edit's для проверки орфографии использует движок NHunspell,</DescriptionLine1>
-    <DescriptionLine2>который применяется в проектах Open Office.</DescriptionLine2>
+    <DescriptionLine2>который применяется в проектах LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Выберите ваш язык и нажмите кнопку "Загрузить":</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Открыть папку со словарями</OpenDictionariesFolder>
     <Download>Загрузить</Download>

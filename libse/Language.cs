@@ -882,7 +882,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 Title = "Need dictionaries?",
                 DescriptionLine1 = "Subtitle Edit's spell check is based on the NHunspell engine which",
-                DescriptionLine2 = "uses the spell checking dictionaries from Open Office.",
+                DescriptionLine2 = "uses the spell checking dictionaries from LibreOffice.",
                 OpenDictionariesFolder = "Open 'Dictionaries' folder",
                 Download = "Download",
                 ChooseLanguageAndClickDownload = "Choose your language and click download",

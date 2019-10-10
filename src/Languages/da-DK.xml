@@ -674,7 +674,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
-    <DescriptionLine2>bruger ordbøger fra Open Office.</DescriptionLine2>
+    <DescriptionLine2>bruger ordbøger fra LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Vælg sprog og klik på download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Åbn 'Dictionaries' mappen</OpenDictionariesFolder>
     <Download>Download</Download>

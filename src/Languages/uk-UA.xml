@@ -622,7 +622,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <GetDictionaries>
     <Title>Потрібні словники?</Title>
     <DescriptionLine1>Перевірка правопису Subtitle Edit базується на рушії NHunspell, який</DescriptionLine1>
-    <DescriptionLine2>використовує правописні словники від Open Office.</DescriptionLine2>
+    <DescriptionLine2>використовує правописні словники від LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Отримати словники тут:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Оберіть мову і натисніть "Звантажити"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Відкрити теку зі словниками</OpenDictionariesFolder>

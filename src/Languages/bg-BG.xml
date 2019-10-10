@@ -684,7 +684,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
     <DescriptionLine1>Проверката на правопис в Subtitle Edit е базирана на обработчика NHunspell,</DescriptionLine1>
-    <DescriptionLine2> който използва проверката на правопис от речниците за Open Office.</DescriptionLine2>
+    <DescriptionLine2> който използва проверката на правопис от речниците за LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Изберете вашият език и щракнете «Изтегляне»</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Отваряне на папката с речници</OpenDictionariesFolder>
     <Download>Изтегляне</Download>

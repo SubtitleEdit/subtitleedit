@@ -551,7 +551,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   <GetDictionaries>
     <Title>Potrebuješ slovarje?</Title>
     <DescriptionLine1>Slovar v Subtitle Edit sloni na NHunspell pogonu, kateri</DescriptionLine1>
-    <DescriptionLine2>uporablja slovarje iz Open Office.</DescriptionLine2>
+    <DescriptionLine2>uporablja slovarje iz LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Tukaj dobiš slovarje:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Izberi svoj jezik in klikni Prenesi (Download)</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Odpri mapo "Slovarji"</OpenDictionariesFolder>

@@ -652,7 +652,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Preuzimanje rječnika</Title>
     <DescriptionLine1>Provjera pisanja zasnovana je na dodatku NHunspell</DescriptionLine1>
-    <DescriptionLine2>koji koristi rječnike iz paketa Open office.</DescriptionLine2>
+    <DescriptionLine2>koji koristi rječnike iz paketa LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Preuzmi rječnike ovdje:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Izaberi jezik i klikni na gumb za preuzimanje.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvori mapu sa rječnicima</OpenDictionariesFolder>

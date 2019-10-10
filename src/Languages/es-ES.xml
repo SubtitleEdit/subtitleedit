@@ -657,7 +657,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
   <GetDictionaries>
     <Title>¿Necesita diccionarios?</Title>
     <DescriptionLine1>La revisión ortográfica de Subtitle Edit está basada en al motor NHunspell</DescriptionLine1>
-    <DescriptionLine2>que usa los diccionarios de Open Office.</DescriptionLine2>
+    <DescriptionLine2>que usa los diccionarios de LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Consiga diccionarios aquí:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Seleccione el idioma y haga clic en descargar</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Carpeta de los «Diccionarios»</OpenDictionariesFolder>

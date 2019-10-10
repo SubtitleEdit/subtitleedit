@@ -682,7 +682,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
-    <DescriptionLine2>que usa os dicionários do Open Office.</DescriptionLine2>
+    <DescriptionLine2>que usa os dicionários do LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Seleccione o idioma e clique em transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta dos 'Dicionários'</OpenDictionariesFolder>
     <Download>Transferir</Download>

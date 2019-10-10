@@ -671,7 +671,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </FixCommonErrors>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
-    <DescriptionLine1>Subtitle Edit 맞춤법 검사는 Open Office의 맞춤법 검사용 엔진인</DescriptionLine1>
+    <DescriptionLine1>Subtitle Edit 맞춤법 검사는 LibreOffice의 맞춤법 검사용 엔진인</DescriptionLine1>
     <DescriptionLine2>"NHunspell" 엔진을 기반으로 하고 있습니다.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>언어를 선택하고 다운로드를 클릭하십시오!</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' 폴더 열기</OpenDictionariesFolder>

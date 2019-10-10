@@ -654,7 +654,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Sözlüklere ihtiyacınız mı var?</Title>
     <DescriptionLine1>Altyazı düzenleme yazım denetimi Hunspell motoru üzerine kuruludur</DescriptionLine1>
-    <DescriptionLine2>Yazım denetimi sözlükleri Open Office kullanır.</DescriptionLine2>
+    <DescriptionLine2>Yazım denetimi sözlükleri LibreOffice kullanır.</DescriptionLine2>
     <GetDictionariesHere>Sözlükleri buradan alın:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Dilinizi seçin ve indirin</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Sözlükler' klasörünü aç</OpenDictionariesFolder>

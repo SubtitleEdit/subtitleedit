@@ -651,7 +651,7 @@
    * Added "Custom text format" in "Batch convert" - thx Chamallow
    * "EBU stl" now only prompt for settings in "Save as..." - thx Debora
 * FIXED:
-   * Fixed libre office spell checking urls - thx Massaguana
+   * Fixed LibreOffice spell checking urls - thx Massaguana
    * Fixed possible crash when generating scene changes - thx Leemet
    * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
    * Fixed list view issues regarding remember selected position - thx darnn
