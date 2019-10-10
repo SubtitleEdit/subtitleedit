@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -164,6 +165,26 @@ namespace Nikse.SubtitleEdit.Forms
             ExportTo(ExportPngXml.ExportFormats.Dost);
         }
 
+        private Point GetResolution()
+        {
+            int idx = listBoxTracks.SelectedIndex;
+            if (idx < 0)
+            {
+                return new Point(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+            }
+
+            int pid = _tsParser.SubtitlePacketIds[idx];
+            var list = _tsParser.GetDvbSubtitles(pid);
+            if (list.Count > 0)
+            {
+                using (var bmp = list[0].GetBitmap())
+                { 
+                    return new Point(bmp.Width, bmp.Height);
+                }
+            }
+            return new Point(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+        }
+
         private void ExportTo(string exportType)
         {
             var subtitles = GetSelectedSubtitles();
@@ -178,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
                     exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, GetSelectedLanguage());
+                    exportBdnXmlPng.SetResolution(GetResolution());
                     exportBdnXmlPng.ShowDialog(this);
                 }
             }

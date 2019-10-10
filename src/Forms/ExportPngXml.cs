@@ -4261,6 +4261,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
+        internal void SetResolution(Point resolution)
+        {
+            comboBoxResolution.Items.Add(resolution.X + "x" + resolution.Y);
+            comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
+        }
+
         internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
