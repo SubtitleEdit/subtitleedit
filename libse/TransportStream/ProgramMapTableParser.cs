@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         private const int MaxScanSize = 5000000;
 
         /// <summary>
-        /// Get Program Map Tables for a Transport Stream
+        /// Get Program Map Tables for a Transport Stream, especially language for subtitle tracks
         /// </summary>
         /// <param name="ms">Input stream</param>
         public void Parse(Stream ms)
