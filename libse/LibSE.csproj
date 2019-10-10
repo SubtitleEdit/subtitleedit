@@ -197,6 +197,7 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
+    <Compile Include="IsoCountryCodes.cs" />
     <Compile Include="PlainTextImporter.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="SeJsonValidator.cs" />
@@ -593,6 +594,10 @@
     <Compile Include="TransportStream\PageCompositionSegemnt.cs" />
     <Compile Include="TransportStream\PageCompositionSegmentRegion.cs" />
     <Compile Include="TransportStream\ProgramAssociationTable.cs" />
+    <Compile Include="TransportStream\ProgramMapTable.cs" />
+    <Compile Include="TransportStream\ProgramMapTableDescriptor.cs" />
+    <Compile Include="TransportStream\ProgramMapTableParser.cs" />
+    <Compile Include="TransportStream\ProgramMapTableStream.cs" />
     <Compile Include="TransportStream\RegionClutSegmentEntry.cs" />
     <Compile Include="TransportStream\RegionCompositionSegment.cs" />
     <Compile Include="TransportStream\RegionCompositionSegmentObject.cs" />

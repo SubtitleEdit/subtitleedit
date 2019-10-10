@@ -8740,8 +8740,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        // TODO: Get language from ts file
-        internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, string language)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -8757,7 +8756,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
 
-            InitializeTesseract();
+            InitializeTesseract(language);
+            SetTesseractLanguageFromLanguageString(language);
             LoadImageCompareCharacterDatabaseList();
 
             SetOcrMethod();

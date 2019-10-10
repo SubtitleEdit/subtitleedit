@@ -20,10 +20,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
-
-        //        public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
-
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
@@ -51,10 +48,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             TotalNumberOfPrivateStream1Continuation0 = 0;
             SubtitlePacketIds = new List<int>();
             SubtitlePackets = new List<Packet>();
-            //            ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
             const int packetLength = 188;
-            DetectFormat(ms);
+            IsM2TransportStream = IsM3TransportStream(ms);
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
@@ -76,7 +72,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 if (IsM2TransportStream)
                 {
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
-                    //var tc = (m2tsTimeCodeBuffer[0]<< 24) | (m2tsTimeCodeBuffer[1] << 16) | (m2tsTimeCodeBuffer[2] << 8) | (m2tsTimeCodeBuffer[3]);
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
@@ -109,38 +104,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
                     else if (packet.IsProgramAssociationTable)
                     {
-                        //var sb = new StringBuilder();
-                        //sb.AppendLine("PacketNo: " + TotalNumberOfPackets + 1);
-                        //sb.AppendLine("PacketId: " + packet.PacketId);
-                        //sb.AppendLine();
-                        //sb.AppendLine("TransportErrorIndicator: " + packet.TransportErrorIndicator);
-                        //sb.AppendLine("PayloadUnitStartIndicator: " + packet.PayloadUnitStartIndicator);
-                        //sb.AppendLine("TransportPriority: " + packet.TransportPriority);
-                        //sb.AppendLine("ScramblingControl: " + packet.ScramblingControl);
-                        //sb.AppendLine("AdaptationFieldExist: " + packet.AdaptationFieldControl);
-                        //sb.AppendLine("ContinuityCounter: " + packet.ContinuityCounter);
-                        //sb.AppendLine();
-                        //if (packet.AdaptationField != null)
-                        //{
-                        //sb.AppendLine("AdaptationFieldLength: " + packet.AdaptationField.Length);
-                        //sb.AppendLine("DiscontinuityIndicator: " + packet.AdaptationField.DiscontinuityIndicator);
-                        //sb.AppendLine("RandomAccessIndicator: " + packet.AdaptationField.RandomAccessIndicator);
-                        //sb.AppendLine("ElementaryStreamPriorityIndicator: " + packet.AdaptationField.ElementaryStreamPriorityIndicator);
-                        //sb.AppendLine("PcrFlag: " + packet.AdaptationField.PcrFlag);
-                        //sb.AppendLine("OpcrFlag: " + packet.AdaptationField.OpcrFlag);
-                        //sb.AppendLine("SplicingPointFlag: " + packet.AdaptationField.SplicingPointFlag);
-                        //sb.AppendLine("TransportPrivateDataFlag: " + packet.AdaptationField.TransportPrivateDataFlag);
-                        //sb.AppendLine("AdaptationFieldExtensionFlag: " + packet.AdaptationField.AdaptationFieldExtensionFlag);
-                        //sb.AppendLine();
-                        //}
-                        //sb.AppendLine("TableId: " + packet.ProgramAssociationTable.TableId);
-                        //sb.AppendLine("SectionLength: " + packet.ProgramAssociationTable.SectionLength);
-                        //sb.AppendLine("TransportStreamId: " + packet.ProgramAssociationTable.TransportStreamId);
-                        //sb.AppendLine("VersionNumber: " + packet.ProgramAssociationTable.VersionNumber);
-                        //sb.AppendLine("CurrentNextIndicator: " + packet.ProgramAssociationTable.CurrentNextIndicator);
-                        //sb.AppendLine("SectionNumber: " + packet.ProgramAssociationTable.SectionNumber);
-                        //sb.AppendLine("LastSectionNumber: " + packet.ProgramAssociationTable.LastSectionNumber);
-                        //ProgramAssociationTables.Add(packet);
+
                     }
                     else if (packet.IsPrivateStream1 || SubtitlePacketIds.Contains(packet.PacketId))
                     {
@@ -434,7 +398,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             list.Add(pes);
         }
 
-        internal void DetectFormat(Stream ms)
+        public static bool IsM3TransportStream(Stream ms)
         {
             if (ms.Length > 192 + 192 + 5)
             {
@@ -443,14 +407,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 ms.Read(buffer, 0, buffer.Length);
                 if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
                 {
-                    return;
+                    return false;
                 }
 
                 if (buffer[4] == Packet.SynchronizationByte && buffer[192 + 4] == Packet.SynchronizationByte && buffer[192 + 192 + 4] == Packet.SynchronizationByte)
                 {
-                    IsM2TransportStream = true;
+                    return true;
                 }
             }
+            return false;
         }
 
         public static bool IsDvbSup(string fileName)

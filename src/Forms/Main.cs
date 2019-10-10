@@ -12044,8 +12044,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var formSubOcr = new VobSubOcr())
             {
+                string language = null;
+                var programMapTableParser = new ProgramMapTableParser();
+                programMapTableParser.Parse(fileName); // get languages
+                if (programMapTableParser.GetSubtitlePacketIds().Count > 0)
+                {
+                    language = programMapTableParser.GetSubtitleLanguageTwoLetter(programMapTableParser.GetSubtitlePacketIds().First());
+                }
+
                 var subtitles = TransportStreamParser.GetDvbSup(fileName);
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName, language);
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
@@ -12107,7 +12115,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
+                string language = null;
+                var programMapTableParser = new ProgramMapTableParser();
+                programMapTableParser.Parse(fileName); // get languages
+                if (programMapTableParser.GetSubtitlePacketIds().Count > 0)
+                {
+                    language = programMapTableParser.GetSubtitleLanguage(packedId);
+                }
+
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName, language);
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);

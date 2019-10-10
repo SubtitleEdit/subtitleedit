@@ -221,9 +221,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var tsp = new TransportStreamParser();
-                tsp.DetectFormat(fs);
-                return tsp.IsM2TransportStream;
+                return TransportStreamParser.IsM3TransportStream(fs);
             }
         }
 
@@ -540,7 +538,7 @@ namespace Nikse.SubtitleEdit.Core
             return info;
         }
 
-        public static string GetTempFileName (string extension)
+        public static string GetTempFileName(string extension)
         {
             return Path.GetTempPath() + Guid.NewGuid() + extension;
         }
