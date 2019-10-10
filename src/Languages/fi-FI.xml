@@ -672,7 +672,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
     <DescriptionLine1>Oikeinkirjoituksen tarkistus perustuu NHunspell-moottoriin,</DescriptionLine1>
-    <DescriptionLine2>joka käyttää Open Office:n oikeinkirjoitussanastoja.</DescriptionLine2>
+    <DescriptionLine2>joka käyttää LibreOffice:n oikeinkirjoitussanastoja.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Valitse kieli ja napsauta 'Lataa'</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Avaa sanastokansio</OpenDictionariesFolder>
     <Download>Lataa</Download>

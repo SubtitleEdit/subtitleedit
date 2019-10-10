@@ -666,7 +666,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Besoin de dictionnaires ?</Title>
     <DescriptionLine1>Le correcteur d'orthographe de Subtitle Edit est basé sur le moteur</DescriptionLine1>
-    <DescriptionLine2>NHunspell qui utilise les dictionnaires d'Open Office.</DescriptionLine2>
+    <DescriptionLine2>NHunspell qui utilise les dictionnaires d'LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Choisir sa langue et cliquer sur télécharger</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ouvrir le dossier 'Dictionaries'</OpenDictionariesFolder>
     <Download>Télécharger</Download>

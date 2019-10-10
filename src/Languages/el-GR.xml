@@ -576,7 +576,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <GetDictionaries>
     <Title>Χρειάζεστε λεξικά;</Title>
     <DescriptionLine1>Ο ορθογραφικός έλεγχος του Subtitle Edit βασίζεται στον κινητήρα NHunspell</DescriptionLine1>
-    <DescriptionLine2>που χρησιμοποιεί τα λεξικά ορθογραφικού ελέγχου του Open Office.</DescriptionLine2>
+    <DescriptionLine2>που χρησιμοποιεί τα λεξικά ορθογραφικού ελέγχου του LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Αποκτήστε λεξικά εδώ:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Επιλέξτε τη γλώσσα σας και κάντε κλικ στο κουμπί Λήψη</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ανοίξτε το φάκελο 'Dictionaries' (Λεξικά)</OpenDictionariesFolder>

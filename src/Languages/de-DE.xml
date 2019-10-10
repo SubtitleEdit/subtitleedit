@@ -677,7 +677,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   <GetDictionaries>
     <Title>Wörterbücher gesucht?</Title>
     <DescriptionLine1>Die Rechtschreibprüfung von Subtitle Edit basiert auf der NHunspell Engine,</DescriptionLine1>
-    <DescriptionLine2>die Bibliotheken werden von Open Office verwendet.</DescriptionLine2>
+    <DescriptionLine2>die Bibliotheken werden von LibreOffice verwendet.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Sprache auswählen und auf herunterladen klicken</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öffne Wörterbuch Ordner</OpenDictionariesFolder>
     <Download>Herunterladen</Download>

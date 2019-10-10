@@ -675,7 +675,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Szüksége van szótárakra?</Title>
     <DescriptionLine1>A Subtitle Edit helyesírás ellenőrzése a NHunspell modulon alapul,</DescriptionLine1>
-    <DescriptionLine2>amely az Open Office helyesírás-ellenőrző szótárait használja.</DescriptionLine2>
+    <DescriptionLine2>amely az LibreOffice helyesírás-ellenőrző szótárait használja.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Válasszon nyelvet és kattintson a letöltésre</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Szótár' mappa megnyitása</OpenDictionariesFolder>
     <Download>Letöltés</Download>

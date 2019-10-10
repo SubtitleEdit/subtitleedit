@@ -610,7 +610,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <GetDictionaries>
     <Title>是否需要字典？</Title>
     <DescriptionLine1>Subtitle Edit 的拼寫檢查基於 NHunspell 引擎，它</DescriptionLine1>
-    <DescriptionLine2>使用的是 Open Office 的拼寫檢查字典。</DescriptionLine2>
+    <DescriptionLine2>使用的是 LibreOffice 的拼寫檢查字典。</DescriptionLine2>
     <GetDictionariesHere>在此處取得字典:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>選擇您的語言並點選「下載」</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>開啟 'Dictionaries' 資料夾</OpenDictionariesFolder>

@@ -618,7 +618,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Servono dizionari?</Title>
     <DescriptionLine1>Il controllo ortografico di Subtitle Edit è basato sul motore NHunspell</DescriptionLine1>
-    <DescriptionLine2>che utilizza i dizionari di controllo ortografico di Open Office.</DescriptionLine2>
+    <DescriptionLine2>che utilizza i dizionari di controllo ortografico di LibreOffice.</DescriptionLine2>
     <GetDictionariesHere>Scarica i dizionari qui:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Scegli la tua lingua e clicca su scarica</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Apri cartella 'Dizionari'</OpenDictionariesFolder>

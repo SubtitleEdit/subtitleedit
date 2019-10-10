@@ -535,7 +535,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
   <GetDictionaries>
     <Title>辞書が必要ですか？</Title>
     <DescriptionLine1>Subtitle Edit のスペルチェックは、NHunspell エンジンに基づいています。</DescriptionLine1>
-    <DescriptionLine2>Open Officeのスペルチェック辞書を使用します。</DescriptionLine2>
+    <DescriptionLine2>LibreOfficeのスペルチェック辞書を使用します。</DescriptionLine2>
     <ChooseLanguageAndClickDownload>言語を選択してダウンロードをクリックします</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' フォルダーを開く</OpenDictionariesFolder>
     <Download>ダウンロード</Download>

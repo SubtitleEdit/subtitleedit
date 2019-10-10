@@ -677,7 +677,7 @@ Obs: Kontrollera ledigt utrymme.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Behövs ordböcker?</Title>
     <DescriptionLine1>Subtitle Edits stavningskontroll är baserad på NHunspell-motorn som</DescriptionLine1>
-    <DescriptionLine2>använder ordböcker från Open Office.</DescriptionLine2>
+    <DescriptionLine2>använder ordböcker från LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Välj ditt språk och klicka på ladda ner</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öppna mappen 'ordböcker'</OpenDictionariesFolder>
     <Download>Ladda ner</Download>

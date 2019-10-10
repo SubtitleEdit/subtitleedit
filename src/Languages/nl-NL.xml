@@ -676,7 +676,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   <GetDictionaries>
     <Title>Woordenboek nodig?</Title>
     <DescriptionLine1>De spellingcontrole in Subtitle Edit is gebaseerd op de NHunspell engine,</DescriptionLine1>
-    <DescriptionLine2>die gebruik maakt van de spellingcontrole-woordenboeken van Open Office.</DescriptionLine2>
+    <DescriptionLine2>die gebruik maakt van de spellingcontrole-woordenboeken van LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Kies uw taal en klik op ‘Download’</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open woordenboekenmap</OpenDictionariesFolder>
     <Download>Download</Download>
