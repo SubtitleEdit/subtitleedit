@@ -14,11 +14,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public byte[] PrivateDataBytes { get; set; }
         public byte[] Content { get; set; }
         public string ContentAsString { get; set; }
+        public int Size { get; set; }
 
         public ProgramMapTableDescriptor(byte[] data, int index)
         {
             Tag = data[index];
             var length = data[index + 1];
+            Size = length + 2;
             if (Tag == TagCaDescriptor)
             {
                 Buffer.BlockCopy(data, index + 2, CaSystemId, 0, 2);
@@ -41,21 +43,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
         }
 
-        public int Length
-        {
-            get
-            {
-                if (Tag == TagCaDescriptor)
-                {
-                    return PrivateDataBytes.Length + 4;
-                }
-
-                return Content.Length;
-            }
-        }
-
-        public int Size => Length + 2;
-
         public static List<ProgramMapTableDescriptor> ReadDescriptors(byte[] data, int size, int index)
         {
             var total = 0;
@@ -65,10 +52,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var descriptor = new ProgramMapTableDescriptor(data, total + index);
                 descriptors.Add(descriptor);
                 total += descriptor.Size;
-                if (total != size)
-                {
-                    break; // Excepted {size} bytes of descriptors, but got {total} bytes of descriptors.
-                }
             }
             return descriptors;
         }

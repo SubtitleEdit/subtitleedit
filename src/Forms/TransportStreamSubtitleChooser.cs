@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var language = _programMapTableParser.GetSubtitleLanguage(id);
                 if (!string.IsNullOrEmpty(language))
                 {
-                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id + "=" + language, tsParser.GetDvbSubtitles(id).Count));
+                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id + ", " + language, tsParser.GetDvbSubtitles(id).Count));
                 }
                 else
                 {
