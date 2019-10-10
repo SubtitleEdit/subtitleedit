@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core
             { "DOM", "DO" },
             { "ECU", "EC" },
             { "EGY", "EG" },
+            { "ENG", "EN" },
             { "SLV", "SV" },
             { "GNQ", "GQ" },
             { "ERI", "ER" },
