@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -14,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
         {
             var programMapTableParser = new ProgramMapTableParser();
-            programMapTableParser.Parse(fileName); // get languages
+            programMapTableParser.Parse(fileName); // get languages from PMT if possible
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, (position, total) =>
             {
@@ -24,33 +25,20 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             });
             stdOutWriter?.Write("\r".PadRight(32, ' '));
             stdOutWriter?.Write("\r");
-            var videoInfo = UiUtil.GetVideoInfo(fileName);
-            int width = DvbSubPes.DefaultScreenWidth;
-            int height = DvbSubPes.DefaultScreenHeight;
-            if (videoInfo.Success && videoInfo.Width > 0 && videoInfo.Height > 0)
-            {
-                width = videoInfo.Width;
-                height = videoInfo.Height;
-            }
 
             var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
 
-            if (overrideScreenSize)
-            {
-                width = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
-                height = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
-            }
             using (var form = new ExportPngXml())
             {
                 if (tsParser.SubtitlePacketIds.Count == 0)
                 {
-                    stdOutWriter?.WriteLine($"No subtitles found");
-                    progressCallback?.Invoke($"No subtitles found");
+                    stdOutWriter?.WriteLine("No subtitles found");
+                    progressCallback?.Invoke("No subtitles found");
                     return false;
                 }
-                form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, videoInfo, fileName);
+                form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
                 foreach (int pid in tsParser.SubtitlePacketIds)
                 {
                     var language = programMapTableParser.GetSubtitleLanguageTwoLetter(pid);
@@ -62,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     progressCallback?.Invoke($"Save PID {pid}");
+                    var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize);
                     using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                     {
                         for (int index = 0; index < sub.Count; index++)
@@ -69,26 +58,19 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var p = sub[index];
                             var pos = p.GetPosition();
                             var bmp = sub[index].GetBitmap();
-                            if (!overrideScreenSize)
-                            {
-                                width = bmp.Width;
-                                height = bmp.Height;
-                                videoInfo.Width = bmp.Width;
-                                videoInfo.Height = bmp.Height;
-                            }
                             var tsWidth = bmp.Width;
                             var tsHeight = bmp.Height;
-                            var nbmp = new NikseBitmap(bmp);
-                            pos.Top += nbmp.CropTopTransparent(0);
-                            pos.Left += nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                            var nBmp = new NikseBitmap(bmp);
+                            pos.Top += nBmp.CropTopTransparent(0);
+                            pos.Left += nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
                             bmp.Dispose();
-                            bmp = nbmp.GetBitmap();
-                            var mp = form.MakeMakeBitmapParameter(index, width, height);
+                            bmp = nBmp.GetBitmap();
+                            var mp = form.MakeMakeBitmapParameter(index, subtitleScreenSize.X, subtitleScreenSize.Y);
 
                             if (overrideScreenSize)
                             {
-                                var widthFactor = (double)width / tsWidth;
-                                var heightFactor = (double)height / tsHeight;
+                                var widthFactor = (double)subtitleScreenSize.X / tsWidth;
+                                var heightFactor = (double)subtitleScreenSize.Y / tsHeight;
                                 var resizeBmp = ResizeBitmap(bmp, (int)Math.Round(bmp.Width * widthFactor), (int)Math.Round(bmp.Height * heightFactor));
                                 bmp.Dispose();
                                 bmp = resizeBmp;
@@ -99,42 +81,42 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                             mp.Bitmap = bmp;
                             mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
-                            mp.ScreenWidth = width;
-                            mp.ScreenHeight = height;
+                            mp.ScreenWidth = subtitleScreenSize.X;
+                            mp.ScreenHeight = subtitleScreenSize.Y;
                             if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition || Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                             {
-                                var overrideMarginX = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideHMargin * width / 100.0);
-                                var overrideMarginY = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin * width / 100.0);
+                                var overrideMarginX = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideHMargin * subtitleScreenSize.X / 100.0);
+                                var overrideMarginY = (int)Math.Round(Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin * subtitleScreenSize.Y / 100.0);
                                 if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition && Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                                 {
-                                    var x = (int)Math.Round((width / 2.0) - mp.Bitmap.Width / 2.0);
+                                    var x = (int)Math.Round(subtitleScreenSize.X / 2.0 - mp.Bitmap.Width / 2.0);
                                     if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
                                     {
                                         x = overrideMarginX;
                                     }
                                     else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = width - overrideMarginX - mp.Bitmap.Width;
+                                        x = subtitleScreenSize.X - overrideMarginX - mp.Bitmap.Width;
                                     }
-                                    var y = height - overrideMarginY - mp.Bitmap.Height;
+                                    var y = subtitleScreenSize.Y - overrideMarginY - mp.Bitmap.Height;
                                     mp.OverridePosition = new Point(x, y);
                                 }
                                 else if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition)
                                 {
-                                    var x = (int)Math.Round((width / 2.0) - mp.Bitmap.Width / 2.0);
+                                    var x = (int)Math.Round(subtitleScreenSize.X / 2.0 - mp.Bitmap.Width / 2.0);
                                     if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
                                     {
                                         x = overrideMarginX;
                                     }
                                     else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        x = width - overrideMarginX - mp.Bitmap.Width;
+                                        x = subtitleScreenSize.X - overrideMarginX - mp.Bitmap.Width;
                                     }
                                     mp.OverridePosition = new Point(x, pos.Top);
                                 }
                                 else
                                 {
-                                    var y = height - overrideMarginY - mp.Bitmap.Height;
+                                    var y = subtitleScreenSize.Y - overrideMarginY - mp.Bitmap.Height;
                                     mp.OverridePosition = new Point(pos.Left, y);
                                 }
                             }
@@ -154,6 +136,24 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
             return true;
+        }
+
+        public static Point GetSubtitleScreenSize(List<TransportStreamSubtitle> sub, bool overrideScreenSize)
+        {
+            if (overrideScreenSize)
+            {
+                return new Point(Configuration.Settings.Tools.BatchConvertTsScreenWidth, Configuration.Settings.Tools.BatchConvertTsScreenHeight);
+            }
+
+            if (sub.Count < 1)
+            {
+                return new Point(DvbSubPes.DefaultScreenWidth, DvbSubPes.DefaultScreenHeight);
+            }
+
+            using (var bmp = sub[0].GetBitmap())
+            {
+                return new Point(bmp.Width, bmp.Height);
+            }
         }
 
         private static Bitmap ResizeBitmap(Bitmap b, int width, int height)
