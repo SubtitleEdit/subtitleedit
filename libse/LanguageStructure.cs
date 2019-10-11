@@ -227,6 +227,8 @@
             public string TransportStreamOverrideXPosition { get; set; }
             public string TransportStreamOverrideYPosition { get; set; }
             public string TransportStreamOverrideVideoSize { get; set; }
+            public string TransportStreamFileNameEnding { get; set; }
+            public string TransportStreamSettingsButton { get; set; }
         }
 
         public class Beamer

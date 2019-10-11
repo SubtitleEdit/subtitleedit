@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelBottomMargin = new System.Windows.Forms.Label();
@@ -47,17 +48,26 @@
             this.labelBottomMarginPercent = new System.Windows.Forms.Label();
             this.buttonChooseResolution = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelFileNameEnding = new System.Windows.Forms.Label();
+            this.textBoxFielNameAppend = new System.Windows.Forms.TextBox();
+            this.contextMenuStripFileNameAppend = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.twolettercountrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.threelettercontrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twolettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelFileEndingSample = new System.Windows.Forms.Label();
+            this.threelettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXMargin)).BeginInit();
+            this.contextMenuStripFileNameAppend.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(307, 176);
+            this.buttonOK.Location = new System.Drawing.Point(403, 278);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 90;
@@ -70,7 +80,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(388, 176);
+            this.buttonCancel.Location = new System.Drawing.Point(484, 278);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 100;
@@ -111,7 +121,7 @@
             // 
             // numericUpDownWidth
             // 
-            this.numericUpDownWidth.Location = new System.Drawing.Point(333, 50);
+            this.numericUpDownWidth.Location = new System.Drawing.Point(65, 218);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -134,7 +144,7 @@
             // labelWidth
             // 
             this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(283, 52);
+            this.labelWidth.Location = new System.Drawing.Point(15, 220);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(35, 13);
             this.labelWidth.TabIndex = 14;
@@ -143,7 +153,7 @@
             // checkBoxOverrideVideoSize
             // 
             this.checkBoxOverrideVideoSize.AutoSize = true;
-            this.checkBoxOverrideVideoSize.Location = new System.Drawing.Point(286, 24);
+            this.checkBoxOverrideVideoSize.Location = new System.Drawing.Point(18, 192);
             this.checkBoxOverrideVideoSize.Name = "checkBoxOverrideVideoSize";
             this.checkBoxOverrideVideoSize.Size = new System.Drawing.Size(149, 17);
             this.checkBoxOverrideVideoSize.TabIndex = 60;
@@ -153,7 +163,7 @@
             // 
             // numericUpDownHeight
             // 
-            this.numericUpDownHeight.Location = new System.Drawing.Point(333, 76);
+            this.numericUpDownHeight.Location = new System.Drawing.Point(65, 244);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             50000,
             0,
@@ -176,7 +186,7 @@
             // labelHeight
             // 
             this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(283, 78);
+            this.labelHeight.Location = new System.Drawing.Point(15, 246);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(38, 13);
             this.labelHeight.TabIndex = 17;
@@ -257,7 +267,7 @@
             // 
             // buttonChooseResolution
             // 
-            this.buttonChooseResolution.Location = new System.Drawing.Point(332, 102);
+            this.buttonChooseResolution.Location = new System.Drawing.Point(64, 270);
             this.buttonChooseResolution.Name = "buttonChooseResolution";
             this.buttonChooseResolution.Size = new System.Drawing.Size(27, 23);
             this.buttonChooseResolution.TabIndex = 82;
@@ -269,11 +279,81 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelFileNameEnding
+            // 
+            this.labelFileNameEnding.AutoSize = true;
+            this.labelFileNameEnding.Location = new System.Drawing.Point(267, 24);
+            this.labelFileNameEnding.Name = "labelFileNameEnding";
+            this.labelFileNameEnding.Size = new System.Drawing.Size(174, 13);
+            this.labelFileNameEnding.TabIndex = 103;
+            this.labelFileNameEnding.Text = "File name ending (before extension)";
+            // 
+            // textBoxFielNameAppend
+            // 
+            this.textBoxFielNameAppend.ContextMenuStrip = this.contextMenuStripFileNameAppend;
+            this.textBoxFielNameAppend.Location = new System.Drawing.Point(270, 40);
+            this.textBoxFielNameAppend.Name = "textBoxFielNameAppend";
+            this.textBoxFielNameAppend.Size = new System.Drawing.Size(289, 20);
+            this.textBoxFielNameAppend.TabIndex = 84;
+            this.textBoxFielNameAppend.Text = ".{two-letter-country-code}";
+            this.textBoxFielNameAppend.TextChanged += new System.EventHandler(this.TextBoxFileNameAppendTextChanged);
+            // 
+            // contextMenuStripFileNameAppend
+            // 
+            this.contextMenuStripFileNameAppend.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.twolettercountrycodeToolStripMenuItem,
+            this.threelettercontrycodeToolStripMenuItem,
+            this.twolettercountrycodeuppercaseToolStripMenuItem,
+            this.threelettercountrycodeuppercaseToolStripMenuItem});
+            this.contextMenuStripFileNameAppend.Name = "contextMenuStripFileNameAppend";
+            this.contextMenuStripFileNameAppend.Size = new System.Drawing.Size(278, 114);
+            // 
+            // twolettercountrycodeToolStripMenuItem
+            // 
+            this.twolettercountrycodeToolStripMenuItem.Name = "twolettercountrycodeToolStripMenuItem";
+            this.twolettercountrycodeToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.twolettercountrycodeToolStripMenuItem.Text = "{two-letter-country-code}";
+            this.twolettercountrycodeToolStripMenuItem.Click += new System.EventHandler(this.TwoLetterCountryCodeToolStripMenuItemClick);
+            // 
+            // threelettercontrycodeToolStripMenuItem
+            // 
+            this.threelettercontrycodeToolStripMenuItem.Name = "threelettercontrycodeToolStripMenuItem";
+            this.threelettercontrycodeToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.threelettercontrycodeToolStripMenuItem.Text = "{three-letter-contry-code}";
+            this.threelettercontrycodeToolStripMenuItem.Click += new System.EventHandler(this.ThreeLetterCountryCodeToolStripMenuItemClick);
+            // 
+            // twolettercountrycodeuppercaseToolStripMenuItem
+            // 
+            this.twolettercountrycodeuppercaseToolStripMenuItem.Name = "twolettercountrycodeuppercaseToolStripMenuItem";
+            this.twolettercountrycodeuppercaseToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.twolettercountrycodeuppercaseToolStripMenuItem.Text = "{two-letter-country-code-uppercase}";
+            this.twolettercountrycodeuppercaseToolStripMenuItem.Click += new System.EventHandler(this.TwoLetterCountryCodeUppercaseToolStripMenuItemClick);
+            // 
+            // labelFileEndingSample
+            // 
+            this.labelFileEndingSample.AutoSize = true;
+            this.labelFileEndingSample.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelFileEndingSample.Location = new System.Drawing.Point(267, 63);
+            this.labelFileEndingSample.Name = "labelFileEndingSample";
+            this.labelFileEndingSample.Size = new System.Drawing.Size(174, 13);
+            this.labelFileEndingSample.TabIndex = 104;
+            this.labelFileEndingSample.Text = "File name ending (before extension)";
+            // 
+            // threelettercountrycodeuppercaseToolStripMenuItem
+            // 
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Name = "threelettercountrycodeuppercaseToolStripMenuItem";
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Text = "{three-letter-country-code-uppercase}";
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Click += new System.EventHandler(this.ThreeLetterCountryCodeUppercaseToolStripMenuItemClick);
+            // 
             // BatchConvertTsSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(475, 209);
+            this.ClientSize = new System.Drawing.Size(571, 311);
+            this.Controls.Add(this.labelFileEndingSample);
+            this.Controls.Add(this.textBoxFielNameAppend);
+            this.Controls.Add(this.labelFileNameEnding);
             this.Controls.Add(this.buttonChooseResolution);
             this.Controls.Add(this.labelBottomMarginPercent);
             this.Controls.Add(this.labelXMarginPercent);
@@ -306,6 +386,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownXMargin)).EndInit();
+            this.contextMenuStripFileNameAppend.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -332,5 +413,13 @@
         private System.Windows.Forms.Label labelBottomMarginPercent;
         private System.Windows.Forms.Button buttonChooseResolution;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelFileNameEnding;
+        private System.Windows.Forms.TextBox textBoxFielNameAppend;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripFileNameAppend;
+        private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem threelettercontrycodeToolStripMenuItem;
+        private System.Windows.Forms.Label labelFileEndingSample;
+        private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeuppercaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem threelettercountrycodeuppercaseToolStripMenuItem;
     }
 }

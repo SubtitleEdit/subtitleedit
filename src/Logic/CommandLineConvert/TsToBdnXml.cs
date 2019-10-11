@@ -40,11 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
                 foreach (int pid in tsParser.SubtitlePacketIds)
                 {
-                    var language = programMapTableParser.GetSubtitleLanguageTwoLetter(pid);
-                    if (string.IsNullOrEmpty(language))
-                    {
-                        language = pid.ToString(CultureInfo.InvariantCulture);
-                    }
+                    var language = TsToBluRaySup.GetFileNameEnding(programMapTableParser, pid);
                     var nameNoExt = Utilities.GetFileNameWithoutExtension(fileName) + "." + language;
                     var folder = Path.Combine(outputFolder, nameNoExt);
                     if (!Directory.Exists(folder))

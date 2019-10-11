@@ -41,12 +41,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 form.Initialize(new Subtitle(), new SubRip(), BatchConvert.BluRaySubtitle, fileName, null, fileName);
                 foreach (int pid in tsParser.SubtitlePacketIds)
                 {
-                    var language = programMapTableParser.GetSubtitleLanguageTwoLetter(pid);
-                    if (string.IsNullOrEmpty(language))
-                    {
-                        language = pid.ToString(CultureInfo.InvariantCulture);
-                    }
-                    var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + "." + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
+                    var language = GetFileNameEnding(programMapTableParser, pid);
+                    var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
                     stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     progressCallback?.Invoke($"Save PID {pid}");
@@ -136,6 +132,27 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
             return true;
+        }
+
+        public static string GetFileNameEnding(ProgramMapTableParser pmt, int pid)
+        {
+            var twoLetter = pmt.GetSubtitleLanguageTwoLetter(pid);
+            var threeLetter = pmt.GetSubtitleLanguage(pid);
+            if (string.IsNullOrEmpty(twoLetter))
+            {
+                twoLetter = threeLetter;
+            }
+            if (string.IsNullOrEmpty(threeLetter))
+            {
+                twoLetter = pid.ToString(CultureInfo.InvariantCulture);
+                threeLetter = pid.ToString(CultureInfo.InvariantCulture);
+            }
+
+            return Configuration.Settings.Tools.BatchConvertTsFileNameAppend
+                .Replace("{two-letter-country-code}", twoLetter)
+                .Replace("{two-letter-country-code-uppercase}", twoLetter.ToUpperInvariant())
+                .Replace("{three-letter-country-code}", threeLetter)
+                .Replace("{three-letter-country-code-uppercase}", threeLetter);
         }
 
         public static Point GetSubtitleScreenSize(List<TransportStreamSubtitle> sub, bool overrideScreenSize)

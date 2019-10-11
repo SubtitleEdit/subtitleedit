@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Ok;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
-
+            buttonTransportStreamSettings.Text = l.TransportStreamSettingsButton;
             groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
             groupBoxOffsetTimeCodes.Text = l.OffsetTimeCodes;
             groupBoxSpeed.Text = Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort;
@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSubtitleFormats.Left = comboBoxEncoding.Left;
             }
             buttonStyles.Left = comboBoxSubtitleFormats.Left + comboBoxSubtitleFormats.Width + 5;
+            buttonTransportStreamSettings.Left = buttonStyles.Left;
 
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 
@@ -251,8 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _bridgeGaps = new DurationsBridgeGaps(null);
             _bridgeGaps.InitializeSettingsOnly();
-            toolStripSeparatorTs.Visible = false;
-            transportStreamSettingsToolStripMenuItem.Visible = false;
+            buttonTransportStreamSettings.Visible = false;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -479,8 +479,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (isTs)
                 {
-                    toolStripSeparatorTs.Visible = true;
-                    transportStreamSettingsToolStripMenuItem.Visible = true;
+                    buttonTransportStreamSettings.Visible = true;
                 }
             }
             catch
@@ -1908,7 +1907,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TransportStreamSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
         {
             using (var form = new BatchConvertTsSettings())
             {

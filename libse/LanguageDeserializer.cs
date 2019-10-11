@@ -592,6 +592,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/TransportStreamOverrideVideoSize":
                     language.BatchConvert.TransportStreamOverrideVideoSize = reader.Value;
                     break;
+                case "BatchConvert/TransportStreamFileNameEnding":
+                    language.BatchConvert.TransportStreamFileNameEnding = reader.Value;
+                    break;
+                case "BatchConvert/TransportStreamSettingsButton":
+                    language.BatchConvert.TransportStreamSettingsButton = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
