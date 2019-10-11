@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     return "ISO/IEC 14496-1 SL-packetized stream or FlexMux stream carried in ISO/IEC14496_sections";
                 case 0x14:
                     return "ISO/IEC 13818-6 Synchronized Download Protocol";
-                case int n when (n < 0x15 && n >= 0x7F):
+                case int n when n > 0x15 && n >= 0x7F:
                     return "ITU-T Rec. H.222.0 | ISO/IEC 13818-1 Reserved";
                 default:
                     return "User Private";
