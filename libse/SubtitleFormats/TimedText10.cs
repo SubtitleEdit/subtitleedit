@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument { XmlResolver = null };
+            var xml = new XmlDocument { XmlResolver = null, PreserveWhitespace = true };
             try
             {
                 xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.Region = regionP;
                     }
 
-                    // Saving attibutes
+                    // Saving attributes
                     var effectsToSave = new List<string>
                     {
                         "xml:space",
@@ -1053,6 +1053,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (child.Name == "br" || child.Name == "tt:br")
                 {
                     pText.AppendLine();
+                }
+                else if (child.Name == "#significant-whitespace" || child.Name == "tt:#significant-whitespace")
+                {
+                    pText.Append(child.InnerText);
                 }
                 else if (child.Name == "span" || child.Name == "tt:span")
                 {

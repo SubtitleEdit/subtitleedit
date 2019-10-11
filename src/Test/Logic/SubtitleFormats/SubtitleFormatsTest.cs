@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -1214,6 +1215,36 @@ and astronauts.“...""
             var subtitleNew = new Subtitle();
             target.LoadSubtitle(subtitleNew, raw.SplitToLines(), null);
             Assert.AreEqual(input, subtitleNew.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void TimedTextKeepSpaces()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            string raw = @"
+<?xml version = '1.0' encoding='UTF-8' standalone='no'?>
+<tt xmlns:tt='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:tts='http://www.w3.org/ns/ttml#styling' ttp:tickRate='10000000' ttp:timeBase='media' xmlns='http://www.w3.org/ns/ttml'>
+    <head>
+        <ttp:profile use='http://netflix.com/ttml/profile/dfxp-ls-sdh'/>
+        <styling>
+            <style tts:color='white' tts:fontSize='100%' tts:fontWeight='normal' tts:textAlign='center' xml:id='normal'/>
+            <style tts:color='white' tts:fontSize='100%' tts:fontStyle='italic' tts:fontWeight='normal' tts:textAlign='center' xml:id='normal_1'/>
+        </styling>
+        <layout>
+            <region tts:displayAlign='after' tts:extent='80.00% 40.00%' tts:origin='10.00% 50.00%' xml:id='bottom'/>
+            <region tts:displayAlign='before' tts:extent='80.00% 40.00%' tts:origin='10.00% 10.00%' xml:id='top'/>
+        </layout>
+    </head>
+    <body region='bottom'>
+        <div xml:space='preserve'>
+            <p begin='1116782332t' end='1134466666t' style='normal' xml:id='subtitle2'><span style='normal_1'>AAA</span> <span style='normal_1'>BBB</span></p>
+        </div>
+    </body>
+</tt>".Replace("'", "\"");
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            var actual = subtitle.Paragraphs.First().Text;
+            Assert.AreEqual("AAA BBB", actual);
         }
 
         #endregion
