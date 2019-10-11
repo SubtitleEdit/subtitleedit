@@ -5707,7 +5707,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (tabControlSubtitle.SelectedIndex == TabControlListView)
                     {
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                         SubtitleListview1.SelectNone();
+                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
 
                         SubtitleListview1.Items[goToLine.LineNumber - 1].Selected = true;
                         SubtitleListview1.Items[goToLine.LineNumber - 1].EnsureVisible();
