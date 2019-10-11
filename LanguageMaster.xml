@@ -683,7 +683,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
-    <DescriptionLine2>uses the spell checking dictionaries from Open Office.</DescriptionLine2>
+    <DescriptionLine2>uses the spell checking dictionaries from LibreOffice.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
     <Download>Download</Download>
