@@ -356,7 +356,9 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamSettings = "Transport Stream settings",
                 TransportStreamOverrideXPosition = "Override original X position",
                 TransportStreamOverrideYPosition = "Override original Y position",
-                TransportStreamOverrideVideoSize = "Override original video size"
+                TransportStreamOverrideVideoSize = "Override original video size",
+                TransportStreamFileNameEnding = "File name ending",
+                TransportStreamSettingsButton = "TS settings..."
             };
 
             Beamer = new LanguageStructure.Beamer

@@ -217,6 +217,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamOverrideXPosition>Override original X position</TransportStreamOverrideXPosition>
     <TransportStreamOverrideYPosition>Override original Y position</TransportStreamOverrideYPosition>
     <TransportStreamOverrideVideoSize>Override original video size</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>

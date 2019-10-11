@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertTsOverrideScreenSize { get; set; }
         public int BatchConvertTsScreenWidth { get; set; }
         public int BatchConvertTsScreenHeight { get; set; }
+        public string BatchConvertTsFileNameAppend { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -293,6 +294,7 @@ namespace Nikse.SubtitleEdit.Core
             BatchConvertTsScreenHeight = 1080;
             BatchConvertTsOverrideHAlign = "center"; // left center right
             BatchConvertTsOverrideHMargin = 5; // pct
+            BatchConvertTsFileNameAppend = ".{two-letter-country-code}";
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
@@ -2964,6 +2966,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertTsScreenHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertTsFileNameAppend");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertTsFileNameAppend = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("ModifySelectionRule");
@@ -6127,6 +6135,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsOverrideScreenSize", settings.Tools.BatchConvertTsOverrideScreenSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());

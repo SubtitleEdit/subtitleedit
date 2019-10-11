@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelXAlignment.Text = Configuration.Settings.Language.ExportPngXml.Align;
             labelWidth.Text = Configuration.Settings.Language.General.Width;
             labelHeight.Text = Configuration.Settings.Language.General.Height;
+            labelFileNameEnding.Text = Configuration.Settings.Language.BatchConvert.TransportStreamFileNameEnding;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -46,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOverrideVideoSize.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize;
             numericUpDownWidth.Value = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
             numericUpDownHeight.Value = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
+            textBoxFielNameAppend.Text = Configuration.Settings.Tools.BatchConvertTsFileNameAppend;
             if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
             {
                 comboBoxHAlign.SelectedIndex = 0;
@@ -61,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOverrideOriginalXPosition_CheckedChanged(null, null);
             CheckBoxOverrideOriginalYPosition_CheckedChanged(null, null);
             CheckBoxOverrideVideoSize_CheckedChanged(null, null);
+            TextBoxFileNameAppendTextChanged(null, null);
         }
 
         private void CheckBoxOverrideOriginalYPosition_CheckedChanged(object sender, EventArgs e)
@@ -95,6 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertTsScreenWidth = (int)numericUpDownWidth.Value;
             Configuration.Settings.Tools.BatchConvertTsScreenHeight = (int)numericUpDownHeight.Value;
             Configuration.Settings.Tools.BatchConvertTsOverrideHMargin = (int)numericUpDownXMargin.Value;
+            Configuration.Settings.Tools.BatchConvertTsFileNameAppend = textBoxFielNameAppend.Text;
             if (comboBoxHAlign.SelectedIndex == 0)
             {
                 Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "left";
@@ -133,6 +137,35 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownHeight.Value = info.Height;
                 }
             }
+        }
+
+        private void TwoLetterCountryCodeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{two-letter-country-code}");
+        }
+
+        private void ThreeLetterCountryCodeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{three-letter-country-code}");
+        }
+
+        private void TwoLetterCountryCodeUppercaseToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{two-letter-country-code-uppercase}");
+        }
+
+        private void ThreeLetterCountryCodeUppercaseToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{three-letter-country-code-uppercase}");
+        }
+
+        private void TextBoxFileNameAppendTextChanged(object sender, EventArgs e)
+        {
+            labelFileEndingSample.Text = ("MyVideoFile" + textBoxFielNameAppend.Text + ".sup")
+                .Replace("{two-letter-country-code}", "en")
+                .Replace("{two-letter-country-code-uppercase}", "EN")
+                .Replace("{three-letter-country-code}", "eng")
+                .Replace("{three-letter-country-code-uppercase}", "ENG");
         }
     }
 }
