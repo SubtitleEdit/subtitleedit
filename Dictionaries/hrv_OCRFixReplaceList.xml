@@ -2998,6 +2998,7 @@
     <RegEx find="([pP])rotiv([adkoprstz])" replaceWith="$1rotu$2" />
     <RegEx find="rovid([an])" replaceWith="rozir$1" />
     <RegEx find="rovj?erić" replaceWith="rovjerit ć" />
+    <RegEx find="psoli" replaceWith="posli" />
     <RegEx find="punić" replaceWith="punit ć" />
     <RegEx find="ustić(?!i)" replaceWith="ustit ć" />
     <RegEx find="put[ae]?r" replaceWith="maslac" />
