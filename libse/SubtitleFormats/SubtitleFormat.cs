@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Edl(),
                     new Eeg708(),
                     new ElrPrint(),
+                    new ESubXf(),
                     new F4Text(),
                     new F4Rtf(),
                     new F4Xml(),
@@ -297,23 +298,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         try
                         {
                             var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                            if (assembly != null)
+                            foreach (var exportedType in assembly.GetExportedTypes())
                             {
-                                foreach (var exportedType in assembly.GetExportedTypes())
+                                try
                                 {
-                                    try
+                                    object pluginObject = Activator.CreateInstance(exportedType);
+                                    if (pluginObject is SubtitleFormat po)
                                     {
-                                        object pluginObject = Activator.CreateInstance(exportedType);
-                                        var po = pluginObject as SubtitleFormat;
-                                        if (po != null)
-                                        {
-                                            _allSubtitleFormats.Insert(1, po);
-                                        }
+                                        _allSubtitleFormats.Insert(1, po);
                                     }
-                                    catch
-                                    {
-                                        // ignored
-                                    }
+                                }
+                                catch
+                                {
+                                    // ignored
                                 }
                             }
                         }
@@ -433,21 +430,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return new TimeCode(0, 0, int.Parse(tokens[0]), FramesToMillisecondsMax999(int.Parse(tokens[1])));
-        }
-
-        protected static TimeCode DecodeTimeCodeFramesThreeParts(string[] tokens)
-        {
-            if (tokens == null)
-            {
-                return new TimeCode();
-            }
-
-            if (tokens.Length != 3)
-            {
-                throw new InvalidOperationException();
-            }
-
-            return new TimeCode(0, int.Parse(tokens[0]), int.Parse(tokens[1]), FramesToMillisecondsMax999(int.Parse(tokens[2])));
         }
 
         protected static TimeCode DecodeTimeCodeFramesFourParts(string[] tokens)

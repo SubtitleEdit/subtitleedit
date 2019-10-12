@@ -204,6 +204,7 @@
     <Compile Include="SeJsonParser.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />
+    <Compile Include="SubtitleFormats\ESubXf.cs" />
     <Compile Include="SubtitleFormats\JsonType15.cs" />
     <Compile Include="SubtitleFormats\AwsTranscribeJson.cs" />
     <Compile Include="SubtitleFormats\JsonType8b.cs" />
