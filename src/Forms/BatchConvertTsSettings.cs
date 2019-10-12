@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOverrideVideoSize.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize;
             numericUpDownWidth.Value = Configuration.Settings.Tools.BatchConvertTsScreenWidth;
             numericUpDownHeight.Value = Configuration.Settings.Tools.BatchConvertTsScreenHeight;
-            textBoxFielNameAppend.Text = Configuration.Settings.Tools.BatchConvertTsFileNameAppend;
+            textBoxFileNameAppend.Text = Configuration.Settings.Tools.BatchConvertTsFileNameAppend;
             if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
             {
                 comboBoxHAlign.SelectedIndex = 0;
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertTsScreenWidth = (int)numericUpDownWidth.Value;
             Configuration.Settings.Tools.BatchConvertTsScreenHeight = (int)numericUpDownHeight.Value;
             Configuration.Settings.Tools.BatchConvertTsOverrideHMargin = (int)numericUpDownXMargin.Value;
-            Configuration.Settings.Tools.BatchConvertTsFileNameAppend = textBoxFielNameAppend.Text;
+            Configuration.Settings.Tools.BatchConvertTsFileNameAppend = textBoxFileNameAppend.Text;
             if (comboBoxHAlign.SelectedIndex == 0)
             {
                 Configuration.Settings.Tools.BatchConvertTsOverrideHAlign = "left";
@@ -141,27 +141,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TwoLetterCountryCodeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{two-letter-country-code}");
+            textBoxFileNameAppend.Text = textBoxFileNameAppend.Text.Insert(textBoxFileNameAppend.SelectionStart, "{two-letter-country-code}");
         }
 
         private void ThreeLetterCountryCodeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{three-letter-country-code}");
+            textBoxFileNameAppend.Text = textBoxFileNameAppend.Text.Insert(textBoxFileNameAppend.SelectionStart, "{three-letter-country-code}");
         }
 
         private void TwoLetterCountryCodeUppercaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{two-letter-country-code-uppercase}");
+            textBoxFileNameAppend.Text = textBoxFileNameAppend.Text.Insert(textBoxFileNameAppend.SelectionStart, "{two-letter-country-code-uppercase}");
         }
 
         private void ThreeLetterCountryCodeUppercaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            textBoxFielNameAppend.Text = textBoxFielNameAppend.Text.Insert(textBoxFielNameAppend.SelectionStart, "{three-letter-country-code-uppercase}");
+            textBoxFileNameAppend.Text = textBoxFileNameAppend.Text.Insert(textBoxFileNameAppend.SelectionStart, "{three-letter-country-code-uppercase}");
         }
 
         private void TextBoxFileNameAppendTextChanged(object sender, EventArgs e)
         {
-            labelFileEndingSample.Text = ("MyVideoFile" + textBoxFielNameAppend.Text + ".sup")
+            labelFileEndingSample.Text = ("MyVideoFile" + textBoxFileNameAppend.Text + ".sup")
                 .Replace("{two-letter-country-code}", "en")
                 .Replace("{two-letter-country-code-uppercase}", "EN")
                 .Replace("{three-letter-country-code}", "eng")
