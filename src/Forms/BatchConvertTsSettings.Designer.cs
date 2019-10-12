@@ -49,7 +49,7 @@
             this.buttonChooseResolution = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelFileNameEnding = new System.Windows.Forms.Label();
-            this.textBoxFielNameAppend = new System.Windows.Forms.TextBox();
+            this.textBoxFileNameAppend = new System.Windows.Forms.TextBox();
             this.contextMenuStripFileNameAppend = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.twolettercountrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.threelettercontrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -288,15 +288,15 @@
             this.labelFileNameEnding.TabIndex = 103;
             this.labelFileNameEnding.Text = "File name ending (before extension)";
             // 
-            // textBoxFielNameAppend
+            // textBoxFileNameAppend
             // 
-            this.textBoxFielNameAppend.ContextMenuStrip = this.contextMenuStripFileNameAppend;
-            this.textBoxFielNameAppend.Location = new System.Drawing.Point(270, 40);
-            this.textBoxFielNameAppend.Name = "textBoxFielNameAppend";
-            this.textBoxFielNameAppend.Size = new System.Drawing.Size(289, 20);
-            this.textBoxFielNameAppend.TabIndex = 84;
-            this.textBoxFielNameAppend.Text = ".{two-letter-country-code}";
-            this.textBoxFielNameAppend.TextChanged += new System.EventHandler(this.TextBoxFileNameAppendTextChanged);
+            this.textBoxFileNameAppend.ContextMenuStrip = this.contextMenuStripFileNameAppend;
+            this.textBoxFileNameAppend.Location = new System.Drawing.Point(270, 40);
+            this.textBoxFileNameAppend.Name = "textBoxFileNameAppend";
+            this.textBoxFileNameAppend.Size = new System.Drawing.Size(289, 20);
+            this.textBoxFileNameAppend.TabIndex = 84;
+            this.textBoxFileNameAppend.Text = ".{two-letter-country-code}";
+            this.textBoxFileNameAppend.TextChanged += new System.EventHandler(this.TextBoxFileNameAppendTextChanged);
             // 
             // contextMenuStripFileNameAppend
             // 
@@ -352,7 +352,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(571, 311);
             this.Controls.Add(this.labelFileEndingSample);
-            this.Controls.Add(this.textBoxFielNameAppend);
+            this.Controls.Add(this.textBoxFileNameAppend);
             this.Controls.Add(this.labelFileNameEnding);
             this.Controls.Add(this.buttonChooseResolution);
             this.Controls.Add(this.labelBottomMarginPercent);
@@ -414,7 +414,7 @@
         private System.Windows.Forms.Button buttonChooseResolution;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelFileNameEnding;
-        private System.Windows.Forms.TextBox textBoxFielNameAppend;
+        private System.Windows.Forms.TextBox textBoxFileNameAppend;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFileNameAppend;
         private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem threelettercontrycodeToolStripMenuItem;
