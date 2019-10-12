@@ -2929,7 +2929,7 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BatchConvertTsOverrideYPosition");
             if (subNode != null)
             {
-                settings.Tools.BatchConvertTsOverrideXPosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.Tools.BatchConvertTsOverrideYPosition = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("BatchConvertTsOverrideBottomMargin");
