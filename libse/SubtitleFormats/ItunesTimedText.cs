@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/10/ttml#parameter");
-            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/10/ttml#style");
+            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/ttml#styling");
             nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
 
             string frameRate = ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString();
@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             styles.Push(currentStyle);
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
-                            XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                            XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
                             attr.InnerText = "italic";
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
-                            XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
+                            XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/ttml#styling");
                             attr.InnerText = "bold";
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
                                         currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                                         paragraph.AppendChild(currentStyle);
-                                        XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
+                                        XmlAttribute attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/ttml#styling");
                                         attr.InnerText = fontColor;
                                         currentStyle.Attributes.Append(attr);
                                     }
@@ -343,11 +343,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 styles.Push(currentStyle);
                                 currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                                 paragraph.AppendChild(currentStyle);
-                                XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                                XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
                                 attr.InnerText = "italic";
                                 currentStyle.Attributes.Append(attr);
                             }
-                            currentStyle.InnerText = currentStyle.InnerText + line[i];
+                            currentStyle.InnerText += line[i];
                         }
                     }
                     first = false;
@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 div.AppendChild(paragraph);
             }
-            string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
+            string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace("<br />", "<br/>");
             if (subtitle.Header == null)
             {
                 subtitle.Header = xmlString;

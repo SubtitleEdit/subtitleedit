@@ -1508,6 +1508,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Items[index].Focused = true;
                 }
+                return;
             }
 
             int bottomIndex = TopItem.Index + (Height - 25) / 16;

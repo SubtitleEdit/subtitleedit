@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -131,5 +132,12 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void SettingsMpv_Load(object sender, EventArgs e)
+        {
+            if (Configuration.IsRunningOnWindows && !LibMpvDynamic.IsInstalled)
+            {
+                ButtonDownloadClick(null, null);
+            }
+        }
     }
 }
