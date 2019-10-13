@@ -894,6 +894,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             AddExtension(sb, ".son");
+            AddExtension(sb, ".m2ts");
 
             sb.Append('|');
             sb.Append(Configuration.Settings.Language.General.AllFiles);
