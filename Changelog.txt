@@ -8,6 +8,7 @@
    * Add format AWS transcribe json - thx jaccoud
    * Add new subtitle format - thx Zhen
    * Add new subtitle format
+   * Add new subtitle format ESUB-XF - thx Bernard
    * Run only "Batch convert" in UI via "/batchconvertui" - thx 07416
    * Fix mp4 text time codes parsing with 64-bit mdhd/mvhd box - thx DJC
    * Add option to capture top align in OCR - thx teodargent
@@ -33,6 +34,7 @@
    * Improve compatibility with Linux/Mono - thx shag00/JGoutin/stefano 
    * Add some missing translations - thx Jamakmake
    * Add progress when using ocr in "Batch convert" or cmd-line
+   * Include language (if exists) in TS track picker
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan
@@ -49,8 +51,9 @@
    * Skip small/short images when importing vobsub from mkv - thx Maitch
    * Fix for reading mkv on Linux - thx JGoutin
    * Exclude html/ass tags in line lengts (Statistics) - thx AlexandreMT
-   * Fix PAC reading issue - thx Milenko
+   * Fix PAC reading issues - thx Milenko
    * Fix remove text for HI issue - thx teodargent
+   * Fix time code for bd in m2ts - thx Jack1789
 
 
 3.5.10 (18th August 2019)
