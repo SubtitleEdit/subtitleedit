@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 threeLetterLanguage = ci.ThreeLetterISOLanguageName;
                 languageDisplay = ci.EnglishName;
             }
-            catch 
+            catch
             {
                 threeLetterLanguage = "eng";
                 languageDisplay = "English";
@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             bool italicOn = false;
             bool boldOn = false;
+            bool underlineOn = false;
             var currentColor = string.Empty;
             var currentText = new StringBuilder();
             foreach (var line in text.SplitToLines())
@@ -115,31 +116,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         italicOn = true;
                         i += 3;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         italicOn = false;
                         i += 4;
                     }
                     else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         boldOn = true;
                         i += 3;
                     }
                     else if (line.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         boldOn = false;
+                        i += 4;
+                    }
+                    else if (line.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
+                        underlineOn = true;
+                        i += 3;
+                    }
+                    else if (line.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
+                        underlineOn = false;
                         i += 4;
                     }
                     else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         currentColor = string.Empty;
                         var end = line.IndexOf('>', i);
                         if (end > 0)
@@ -167,7 +180,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
-                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
                         currentColor = string.Empty;
                         i += 7;
                     }
@@ -177,11 +190,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         i++;
                     }
                 }
-                AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                AppendText(currentText, italicOn, boldOn, underlineOn, currentColor, xml, lineNode);
             }
         }
 
-        private static void AppendText(StringBuilder currentText, bool italicOn, bool boldOn, string currentColor, XmlDocument xml, XmlElement lineNode)
+        private static void AppendText(StringBuilder currentText, bool italicOn, bool boldOn, bool underlineOn, string currentColor, XmlDocument xml, XmlElement lineNode)
         {
             if (currentText.Length == 0)
             {
@@ -206,6 +219,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var bold = xml.CreateAttribute("bold");
                 bold.Value = "on";
                 span.Attributes.Append(bold);
+            }
+            if (underlineOn)
+            {
+                var underline = xml.CreateAttribute("underline");
+                underline.Value = "on";
+                span.Attributes.Append(underline);
             }
 
             span.InnerText = currentText.ToString();
@@ -293,7 +312,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     sb.Append(" "); // put space between all spans
                                 }
-                                sb.Append(GetTextWithStyle(spanChild.InnerText, spanChild.Attributes["italic"]?.Value == "on", spanChild.Attributes["bold"]?.Value == "on", GetColor(spanChild)));
+                                sb.Append(GetTextWithStyle(spanChild.InnerText, spanChild.Attributes["italic"]?.Value == "on", spanChild.Attributes["bold"]?.Value == "on", spanChild.Attributes["underline"]?.Value == "on", GetColor(spanChild)));
                                 first = false;
                             }
                             sb.AppendLine();
@@ -320,7 +339,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private string GetTextWithStyle(string text, bool italic, bool bold, string color)
+        private string GetTextWithStyle(string text, bool italic, bool bold, bool underline, string color)
         {
             if (italic)
             {
@@ -329,6 +348,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (bold)
             {
                 text = "<b>" + text + "</b>";
+            }
+            if (underline)
+            {
+                text = "<u>" + text + "</u>";
             }
 
             if (string.IsNullOrEmpty(color))
