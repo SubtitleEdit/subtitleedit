@@ -17,6 +17,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private const string NameSpaceUri = "urn:esub-xf";
 
+        private static readonly Dictionary<string, string> ColorDictionary = new Dictionary<string, string>()
+        {
+            {"white", "FFFFFF"},
+            {"green", "72FD59"},
+            {"cyan", "91FFFF"},
+            {"purple", "F55FF5"},
+            {"red", "FF2D34"},
+            {"blue", "4545FF"},
+            {"yellow", "E8E858"},
+            {"violet", "8505FD"}
+        };
+
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
@@ -80,9 +92,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
-            char[] timeCodeSeparators = new[] { ':' };
+            char[] timeCodeSeparators = { ':' };
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("esub-xf", NameSpaceUri);
+            var isTimebaseSmtp = xml.DocumentElement.Attributes["timebase"]?.Value != "msec"; // "msec" or "smtp"
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//esub-xf:subtitlelist/esub-xf:subtitle", ns))
             {
                 try
@@ -92,9 +105,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb = new StringBuilder();
                     foreach (XmlNode lineNode in node.SelectNodes("esub-xf:hregion/esub-xf:line", ns))
                     {
-                        sb.AppendLine(lineNode.InnerText);
+                        var spanNodes = lineNode.SelectNodes("esub-xf:span", ns);
+                        if (spanNodes.Count > 0)
+                        {
+                            var first = true;
+                            foreach (XmlNode spanChild in spanNodes)
+                            {
+                                if (!first)
+                                {
+                                    sb.Append(" "); // put space between all spans
+                                }
+                                if (spanChild.Attributes["italic"]?.Value == "on")
+                                {
+                                    sb.Append(GetTextWithColor("<i>" + spanChild.InnerText + "</i>", GetColor(spanChild)));
+                                }
+                                else
+                                {
+                                    sb.Append(GetTextWithColor(spanChild.InnerText, GetColor(spanChild)));
+                                }
+                                first = false;
+                            }
+                            sb.AppendLine();
+                        }
+                        else
+                        {
+                            sb.AppendLine(lineNode.InnerText);
+                        }
                     }
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, timeCodeSeparators), DecodeTimeCodeFrames(end, timeCodeSeparators), sb.ToString().TrimEnd()));
+                    var text = sb.ToString().Trim();
+                    text = HtmlUtil.FixInvalidItalicTags(text);
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, timeCodeSeparators, isTimebaseSmtp), DecodeTimeCodeFrames(end, timeCodeSeparators, isTimebaseSmtp), text));
                 }
                 catch (Exception ex)
                 {
@@ -103,6 +143,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
+        }
+
+        private string GetTextWithColor(string text, string color)
+        {
+            if (string.IsNullOrEmpty(color))
+            {
+                return text;
+            }
+            return "<font color=\"" + color + "\">" + text + "</font>";
+        }
+
+        private string GetColor(XmlNode spanChild)
+        {
+            if (spanChild.Attributes?["textcolor"] == null)
+            {
+                return null;
+            }
+
+            var colorName = spanChild.Attributes["textcolor"].InnerText;
+            if (colorName == "white")
+            {
+                return null;
+            }
+            return ColorDictionary.ContainsKey(colorName) ? colorName : null;
+        }
+
+        protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars, bool isTimebaseSmtp)
+        {
+            if (isTimebaseSmtp)
+            {
+                return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+            }
+            return new TimeCode(Convert.ToInt32(timestamp));
         }
     }
 }
