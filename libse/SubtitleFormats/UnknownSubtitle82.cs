@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p");
-                paragraph.InnerText = p.Text.Replace(Environment.NewLine, " ");
+                paragraph.InnerText = p.Text;//.Replace(Environment.NewLine, " ");
 
                 XmlAttribute tAttribute = xml.CreateAttribute("t");
                 tAttribute.InnerText = Convert.ToInt64(p.StartTime.TotalMilliseconds).ToString();
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var timeCodeIn = new TimeCode(Convert.ToDouble(node.Attributes["t"].InnerText));
                         var timeCodeOut = new TimeCode(timeCodeIn.TotalMilliseconds + Convert.ToDouble(node.Attributes["d"].InnerText));
-                        var p = new Paragraph(timeCodeIn, timeCodeOut, Utilities.AutoBreakLine(node.InnerText));
+                        var p = new Paragraph(timeCodeIn, timeCodeOut, node.InnerText);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception ex)
