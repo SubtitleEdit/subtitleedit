@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         end = end.Replace(',', '.');
                     }
 
-                    string text = node.InnerText;
+                    string text = node.InnerText.Replace("&quot;", "\"");
 
                     subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) * TimeCode.BaseUnit, TimeCode.BaseUnit * (Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) + Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture))));
                 }
