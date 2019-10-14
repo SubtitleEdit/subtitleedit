@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -31,10 +32,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            string threeLetterLanguage;
+            string languageDisplay;
+            try
+            {
+                CultureInfo ci = new CultureInfo(LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+                threeLetterLanguage = ci.ThreeLetterISOLanguageName;
+                languageDisplay = ci.EnglishName;
+            }
+            catch 
+            {
+                threeLetterLanguage = "eng";
+                languageDisplay = "English";
+            }
+
             string xmlStructure =
                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                 "<esub-xf xmlns=\"" + NameSpaceUri + "\" framerate=\"" + Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture) + "\" timebase=\"smpte\">" + Environment.NewLine +
-                "  <subtitlelist language=\"eng\" langname=\"English\" type=\"translation\">" + Environment.NewLine +
+                "  <subtitlelist language=\"" + threeLetterLanguage + "\" langname=\"" + languageDisplay + "\" type=\"translation\">" + Environment.NewLine +
                 "  </subtitlelist>" + Environment.NewLine +
                 "</esub-xf>";
 
@@ -45,6 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var subtitleList = xml.DocumentElement.SelectSingleNode("//esub-xf:subtitlelist", ns);
             foreach (var p in subtitle.Paragraphs)
             {
+                var text = p.Text;
                 var paragraph = xml.CreateElement("subtitle", NameSpaceUri);
 
                 var start = xml.CreateAttribute("display");
@@ -56,18 +72,177 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(end);
 
                 var hRegion = xml.CreateElement("hregion", NameSpaceUri);
+                if (text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
+                {
+                    var vpos = xml.CreateAttribute("vposition");
+                    vpos.Value = "top";
+                    hRegion.Attributes.Append(vpos);
+                }
                 paragraph.AppendChild(hRegion);
 
-                foreach (var line in p.Text.SplitToLines())
+                text = Utilities.RemoveSsaTags(text);
+                if (text.Contains("<i>") || text.Contains("<b>") || text.Contains("<font"))
                 {
-                    var lineNode = xml.CreateElement("line", NameSpaceUri);
-                    hRegion.AppendChild(lineNode);
-                    lineNode.InnerText = line;
+                    GenerateLineWithSpan(text, xml, hRegion);
+                }
+                else
+                {
+                    foreach (var line in text.SplitToLines())
+                    {
+                        var lineNode = xml.CreateElement("line", NameSpaceUri);
+                        hRegion.AppendChild(lineNode);
+                        lineNode.InnerText = line;
+                    }
                 }
                 subtitleList.AppendChild(paragraph);
             }
 
             return ToUtf8XmlString(xml);
+        }
+
+        private static void GenerateLineWithSpan(string text, XmlDocument xml, XmlElement hRegion)
+        {
+            bool italicOn = false;
+            bool boldOn = false;
+            var currentColor = string.Empty;
+            var currentText = new StringBuilder();
+            foreach (var line in text.SplitToLines())
+            {
+                var lineNode = xml.CreateElement("line", NameSpaceUri);
+                hRegion.AppendChild(lineNode);
+                int i = 0;
+                while (i < line.Length)
+                {
+                    if (line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        italicOn = true;
+                        i += 3;
+                    }
+                    else if (line.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        italicOn = false;
+                        i += 4;
+                    }
+                    else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        boldOn = true;
+                        i += 3;
+                    }
+                    else if (line.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        boldOn = false;
+                        i += 4;
+                    }
+                    else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        currentColor = string.Empty;
+                        var end = line.IndexOf('>', i);
+                        if (end > 0)
+                        {
+                            string tag = line.Substring(i, end - i + 1);
+                            if (tag.Contains(" color="))
+                            {
+                                int colorStart = tag.IndexOf(" color=", StringComparison.Ordinal);
+                                int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
+                                if (colorEnd > 0)
+                                {
+                                    string color = tag.Substring(colorStart, colorEnd - colorStart);
+                                    color = color.Remove(0, " color=".Length);
+                                    color = color.Trim('"');
+                                    color = color.Trim('\'');
+                                    currentColor = color;
+                                }
+                            }
+                            i = end + 1;
+                        }
+                        else
+                        {
+                            i = int.MaxValue;
+                        }
+                    }
+                    else if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+                        currentColor = string.Empty;
+                        i += 7;
+                    }
+                    else
+                    {
+                        currentText.Append(line[i]);
+                        i++;
+                    }
+                }
+                AppendText(currentText, italicOn, boldOn, currentColor, xml, lineNode);
+            }
+        }
+
+        private static void AppendText(StringBuilder currentText, bool italicOn, bool boldOn, string currentColor, XmlDocument xml, XmlElement lineNode)
+        {
+            if (currentText.Length == 0)
+            {
+                return;
+            }
+
+            var span = xml.CreateElement("span", NameSpaceUri);
+            if (!string.IsNullOrEmpty(currentColor))
+            {
+                var textColor = xml.CreateAttribute("textcolor");
+                textColor.Value = GetAllowedColor(currentColor);
+                span.Attributes.Append(textColor);
+            }
+            if (italicOn)
+            {
+                var italic = xml.CreateAttribute("italic");
+                italic.Value = "on";
+                span.Attributes.Append(italic);
+            }
+            if (boldOn)
+            {
+                var bold = xml.CreateAttribute("bold");
+                bold.Value = "on";
+                span.Attributes.Append(bold);
+            }
+
+            span.InnerText = currentText.ToString();
+            lineNode.AppendChild(span);
+            currentText.Clear();
+        }
+
+        private static string GetAllowedColor(string c)
+        {
+            if (ColorDictionary.ContainsKey(c))
+            {
+                return c;
+            }
+
+            try
+            {
+                var color = ColorTranslator.FromHtml(c);
+                var minDiff = 1000;
+                var minDiffColor = string.Empty;
+                int index = 0;
+                foreach (var kvp in ColorDictionary)
+                {
+                    var cd = ColorTranslator.FromHtml("#" + kvp.Value);
+                    int difference = Math.Abs(Math.Abs(cd.R - color.R) + Math.Abs(cd.G - color.G) + Math.Abs(cd.B - color.B));
+                    if (difference < minDiff)
+                    {
+                        minDiffColor = kvp.Key;
+                        minDiff = difference;
+                    }
+                    index++;
+                }
+                return minDiffColor;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -92,6 +267,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
+            subtitle.Header = xmlString;
             char[] timeCodeSeparators = { ':' };
             var ns = new XmlNamespaceManager(xml.NameTable);
             ns.AddNamespace("esub-xf", NameSpaceUri);
@@ -103,6 +279,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = node.Attributes["display"].InnerText;
                     string end = node.Attributes["clear"].InnerText;
                     sb = new StringBuilder();
+                    var hregion = node.SelectSingleNode("esub-xf:hregion", ns);
+                    var topAlign = hregion.Attributes["vposition"]?.Value == "top";
                     foreach (XmlNode lineNode in node.SelectNodes("esub-xf:hregion/esub-xf:line", ns))
                     {
                         var spanNodes = lineNode.SelectNodes("esub-xf:span", ns);
@@ -115,14 +293,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     sb.Append(" "); // put space between all spans
                                 }
-                                if (spanChild.Attributes["italic"]?.Value == "on")
-                                {
-                                    sb.Append(GetTextWithColor("<i>" + spanChild.InnerText + "</i>", GetColor(spanChild)));
-                                }
-                                else
-                                {
-                                    sb.Append(GetTextWithColor(spanChild.InnerText, GetColor(spanChild)));
-                                }
+                                sb.Append(GetTextWithStyle(spanChild.InnerText, spanChild.Attributes["italic"]?.Value == "on", spanChild.Attributes["bold"]?.Value == "on", GetColor(spanChild)));
                                 first = false;
                             }
                             sb.AppendLine();
@@ -134,6 +305,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     var text = sb.ToString().Trim();
                     text = HtmlUtil.FixInvalidItalicTags(text);
+                    if (topAlign)
+                    {
+                        text = "{\\an8}" + text;
+                    }
                     subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, timeCodeSeparators, isTimebaseSmtp), DecodeTimeCodeFrames(end, timeCodeSeparators, isTimebaseSmtp), text));
                 }
                 catch (Exception ex)
@@ -145,8 +320,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private string GetTextWithColor(string text, string color)
+        private string GetTextWithStyle(string text, bool italic, bool bold, string color)
         {
+            if (italic)
+            {
+                text = "<i>" + text + "</i>";
+            }
+            if (bold)
+            {
+                text = "<b>" + text + "</b>";
+            }
+
             if (string.IsNullOrEmpty(color))
             {
                 return text;
