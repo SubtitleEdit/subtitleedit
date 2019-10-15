@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (end > 0)
                         {
                             string f = s.Substring(0, end);
-                            int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                            int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
 
                             if (colorStart > 0)
                             {

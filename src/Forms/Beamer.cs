@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = Color.Black;
             _borderWidth = 2.0f;
 
-            LanguageStructure.Beamer language = Configuration.Settings.Language.Beamer;
+            var language = Configuration.Settings.Language.Beamer;
             Text = language.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 var bmp = GenerateImageFromTextWithStyle(text);
                 pictureBox1.Top = groupBoxImageSettings.Top + groupBoxImageSettings.Height + 5;
-                // Aligment direction.
+                // Alignment direction.
                 switch (comboBoxHAlign.SelectedIndex)
                 {
                     case 0: // Left.
@@ -337,16 +337,16 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         string fontContent = text.Substring(i, endIndex);
-                        if (fontContent.Contains(" color="))
+                        if (fontContent.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                         {
-                            var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.OrdinalIgnoreCase) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
                                 try
                                 {
                                     colorStack.Push(c); // save old color
-                                    if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
+                                    if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                                     {
                                         arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                         c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
+                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Replace("</FONT>", string.Empty).Length > 0)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {

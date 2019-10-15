@@ -1861,7 +1861,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (end > 0)
                 {
                     string f = s.Substring(start, end - start);
-                    if (f.Contains(" color="))
+                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
                         int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                         if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
@@ -1874,7 +1874,7 @@ namespace Nikse.SubtitleEdit.Core
                         s = s.Trim('\'').Trim('"').Trim('\'');
                         try
                         {
-                            if (s.StartsWith("rgb(", StringComparison.Ordinal))
+                            if (s.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                             {
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));

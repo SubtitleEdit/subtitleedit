@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -170,15 +169,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             s = s.Remove(0, 3);
                         }
 
-                        if (s.StartsWith("<font ", StringComparison.Ordinal))
+                        if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
                             var end = s.IndexOf('>');
                             if (end > 0)
                             {
                                 string tag = s.Substring(0, end);
-                                if (tag.Contains(" color="))
+                                if (tag.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    int colorStart = tag.IndexOf(" color=", StringComparison.Ordinal);
+                                    int colorStart = tag.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                                     int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
                                     if (colorEnd > 0)
                                     {
@@ -189,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         color = color.TrimStart('#');
                                         if (color.Length == 6)
                                         {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            if (s.Contains(Environment.NewLine, StringComparison.Ordinal) && s.Contains("</font>" + Environment.NewLine, StringComparison.OrdinalIgnoreCase))
                                             {
                                                 pre.Append("{c:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
                                             }
@@ -200,9 +199,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         }
                                     }
                                 }
-                                if (tag.Contains(" face="))
+                                if (tag.Contains(" face=", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    var faceStart = tag.IndexOf(" face=", StringComparison.Ordinal);
+                                    var faceStart = tag.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
                                     var faceEnd = tag.IndexOf('"', faceStart + " face=".Length + 1);
                                     if (faceEnd > 0)
                                     {
@@ -212,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         fontName = fontName.Trim('\'');
                                         if (fontName.Length > 0)
                                         {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            if (s.Contains(Environment.NewLine, StringComparison.Ordinal) && s.Contains("</font>" + Environment.NewLine, StringComparison.OrdinalIgnoreCase))
                                             {
                                                 pre.Append("{f:" + fontName + "}");
                                             }
@@ -223,9 +222,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         }
                                     }
                                 }
-                                if (tag.Contains(" size="))
+                                if (tag.Contains(" size=", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    var sizeStart = tag.IndexOf(" size=", StringComparison.Ordinal);
+                                    var sizeStart = tag.IndexOf(" size=", StringComparison.OrdinalIgnoreCase);
                                     var sizeEnd = tag.IndexOf('"', sizeStart + " size=".Length + 1);
                                     if (sizeEnd > 0)
                                     {
@@ -235,7 +234,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         fontSize = fontSize.Trim('\'');
                                         if (fontSize.Length > 0)
                                         {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            if (s.Contains(Environment.NewLine, StringComparison.Ordinal) && s.Contains("</font>" + Environment.NewLine, StringComparison.OrdinalIgnoreCase))
                                             {
                                                 pre.Append("{s:" + fontSize + "}");
                                             }
@@ -251,17 +250,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    if (s.Contains("</i>"))
+                    if (s.Contains("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         italicOn = false;
                     }
 
-                    if (s.Contains("</b>"))
+                    if (s.Contains("</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         boldOn = false;
                     }
 
-                    if (s.Contains("</u>"))
+                    if (s.Contains("</u>", StringComparison.OrdinalIgnoreCase))
                     {
                         underlineOn = false;
                     }

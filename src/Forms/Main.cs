@@ -11152,22 +11152,22 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Remove(0, endIndex);
             }
             string s = p.Text;
-            if (s.StartsWith("<font ", StringComparison.Ordinal))
+            if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
             {
                 int end = s.IndexOf('>');
                 if (end > 0)
                 {
                     string f = s.Substring(0, end);
 
-                    if (f.Contains(" face=") && !f.Contains(" color="))
+                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
-                        var start = s.IndexOf(" face=", StringComparison.Ordinal);
+                        var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
                         s = s.Insert(start, string.Format(" color=\"{0}\"", color));
                         p.Text = pre + s;
                         return;
                     }
 
-                    var colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                    var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                     if (colorStart >= 0)
                     {
                         if (s.IndexOf('"', colorStart + 8) > 0)
@@ -11235,22 +11235,22 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Remove(0, endIndex);
             }
             string s = p.Text;
-            if (s.StartsWith("<font ", StringComparison.Ordinal))
+            if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
             {
                 var end = s.IndexOf('>');
                 if (end > 0)
                 {
                     var f = s.Substring(0, end);
 
-                    if (f.Contains(" color=") && !f.Contains(" face="))
+                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" face=", StringComparison.OrdinalIgnoreCase))
                     {
-                        var start = s.IndexOf(" color=", StringComparison.Ordinal);
+                        var start = s.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                         p.Text = pre + s.Insert(start, string.Format(" face=\"{0}\"", fontName));
                         return;
                     }
 
-                    var faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
-                    if (f.Contains(" face="))
+                    var faceStart = f.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
+                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase))
                     {
                         if (s.IndexOf('"', faceStart + 7) > 0)
                         {
@@ -20340,22 +20340,22 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Remove(0, endIndex);
             }
             string s = text;
-            if (s.StartsWith("<font ", StringComparison.Ordinal))
+            if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
             {
                 int end = s.IndexOf('>');
                 if (end > 0)
                 {
                     string f = s.Substring(0, end);
-                    if (f.Contains(" face=") && !f.Contains(" color="))
+                    if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
-                        var start = s.IndexOf(" face=", StringComparison.Ordinal);
+                        var start = s.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
                         s = s.Insert(start, string.Format(" color=\"{0}\"", color));
                         text = s;
                         done = true;
                     }
-                    else if (f.Contains(" color="))
+                    else if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
-                        int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                        int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                         if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
                         {
                             end = s.IndexOf('"', colorStart + " color=".Length + 1);
@@ -20403,21 +20403,21 @@ namespace Nikse.SubtitleEdit.Forms
                         pre = text.Substring(0, endIndex);
                         text = text.Remove(0, endIndex);
                     }
-                    if (text.StartsWith("<font ", StringComparison.Ordinal))
+                    if (text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         int end = text.IndexOf('>');
                         if (end > 0)
                         {
                             string f = text.Substring(0, end);
-                            if (f.Contains(" color=") && !f.Contains(" face="))
+                            if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase) && !f.Contains(" face=", StringComparison.OrdinalIgnoreCase))
                             {
-                                var start = text.IndexOf(" color=", StringComparison.Ordinal);
+                                var start = text.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                                 text = text.Insert(start, string.Format(" face=\"{0}\"", form.FontName));
                                 done = true;
                             }
-                            else if (f.Contains(" face="))
+                            else if (f.Contains(" face=", StringComparison.OrdinalIgnoreCase))
                             {
-                                int faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
+                                int faceStart = f.IndexOf(" face=", StringComparison.OrdinalIgnoreCase);
                                 if (text.IndexOf('"', faceStart + " face=".Length + 1) > 0)
                                 {
                                     end = text.IndexOf('"', faceStart + " face=".Length + 1);

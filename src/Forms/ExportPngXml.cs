@@ -2370,16 +2370,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     else
                     {
                         string fontContent = text.Substring(i, endIndex);
-                        if (fontContent.Contains(" color="))
+                        if (fontContent.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                         {
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.OrdinalIgnoreCase) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
                                 try
                                 {
                                     colorStack.Push(c); // save old color
-                                    if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
+                                    if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                                     {
                                         arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                         c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -2395,18 +2395,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                             }
                         }
-                        if (fontContent.Contains(" face=") || fontContent.Contains(" size="))
+                        if (fontContent.Contains(" face=", StringComparison.OrdinalIgnoreCase) || fontContent.Contains(" size=", StringComparison.OrdinalIgnoreCase))
                         {
                             float fontSize = parameter.SubtitleFontSize;
                             string fontFace = parameter.SubtitleFontName;
 
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
                             }
 
-                            arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -2432,7 +2432,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
+                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Replace("</FONT>", string.Empty).Length > 0)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
@@ -3065,16 +3065,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 else
                                 {
                                     string fontContent = text.Substring(i, endIndex);
-                                    if (fontContent.Contains(" color="))
+                                    if (fontContent.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.OrdinalIgnoreCase) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                         if (arr.Length > 0)
                                         {
                                             string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
                                             try
                                             {
                                                 colorStack.Push(c); // save old color
-                                                if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
+                                                if (fontColor.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
                                                 {
                                                     arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                                     c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -3090,18 +3090,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             }
                                         }
                                     }
-                                    if (fontContent.Contains(" face=") || fontContent.Contains(" size="))
+                                    if (fontContent.Contains(" face=", StringComparison.OrdinalIgnoreCase) || fontContent.Contains(" size=", StringComparison.OrdinalIgnoreCase))
                                     {
                                         float fontSize = parameter.SubtitleFontSize;
                                         string fontFace = parameter.SubtitleFontName;
 
-                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                         if (arr.Length > 0)
                                         {
                                             fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
                                         }
 
-                                        arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.OrdinalIgnoreCase) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                         if (arr.Length > 0)
                                         {
                                             string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -3129,7 +3129,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
+                                if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Replace("</FONT>", string.Empty).Length > 0)
                                 {
                                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                                     {

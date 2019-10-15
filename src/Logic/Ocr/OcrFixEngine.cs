@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _abbreviationList.Add(name);
                 }
 
-                if (name.Contains("."))
+                if (name.Contains(".", StringComparison.Ordinal))
                 {
                     nameListWithPeriods.Add(name);
                 }
@@ -420,17 +420,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public string FixOcrErrors(string input, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
             var text = input;
-            while (text.Contains(Environment.NewLine + " "))
+            while (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
             {
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
             }
 
-            while (text.Contains(" " + Environment.NewLine))
+            while (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
             }
 
-            while (text.Contains(Environment.NewLine + Environment.NewLine))
+            while (text.Contains(Environment.NewLine + Environment.NewLine, StringComparison.Ordinal))
             {
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             }
@@ -798,7 +798,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 text = text.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
 
-                if (text.Length < 10 && text.Length > 4 && !text.Contains(Environment.NewLine) && text.StartsWith("II", StringComparison.Ordinal) && text.EndsWith("II", StringComparison.Ordinal))
+                if (text.Length < 10 && text.Length > 4 && !text.Contains(Environment.NewLine, StringComparison.Ordinal) && text.StartsWith("II", StringComparison.Ordinal) && text.EndsWith("II", StringComparison.Ordinal))
                 {
                     text = "\"" + text.Substring(2, text.Length - 4) + "\"";
                 }
@@ -914,7 +914,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Remove(0, 1);
             }
 
-            bool hasDotDot = text.Contains("..") || text.Contains(". .");
+            bool hasDotDot = text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal);
             if (hasDotDot)
             {
                 if (text.Length > 5 && text.StartsWith("..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[2]))
@@ -937,12 +937,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = "<i>..." + text.Remove(0, 6);
                 }
 
-                if (text.Contains(Environment.NewLine + ".. "))
+                if (text.Contains(Environment.NewLine + ".. ", StringComparison.Ordinal))
                 {
                     text = text.Replace(Environment.NewLine + ".. ", Environment.NewLine + "...");
                 }
 
-                if (text.Contains(Environment.NewLine + "<i>.. "))
+                if (text.Contains(Environment.NewLine + "<i>.. ", StringComparison.Ordinal))
                 {
                     text = text.Replace(Environment.NewLine + "<i>.. ", Environment.NewLine + "<i>...");
                 }
@@ -1068,12 +1068,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace("....", "...");
                 text = text.Replace("....", "...");
 
-                if (text.StartsWith("- ...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(text.Contains(Environment.NewLine + "-")))
+                if (text.StartsWith("- ...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !text.Contains(Environment.NewLine + "-", StringComparison.Ordinal))
                 {
                     text = text.Remove(0, 2);
                 }
 
-                if (text.StartsWith("-...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(text.Contains(Environment.NewLine + "-")))
+                if (text.StartsWith("-...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !text.Contains(Environment.NewLine + "-", StringComparison.Ordinal))
                 {
                     text = text.Remove(0, 1);
                 }
@@ -1337,7 +1337,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true;
                     }
 
-                    if (!correct && !line.Contains(word))
+                    if (!correct && !line.Contains(word, StringComparison.Ordinal))
                     {
                         correct = true; // already fixed
                     }
@@ -1383,7 +1383,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     }
 
-                    if (!correct && word.Contains('/') && !word.Contains("//"))
+                    if (!correct && word.Contains('/') && !word.Contains("//", StringComparison.Ordinal))
                     {
                         correct = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
                             .All(w => w.Length > 2 && (DoSpell(w) || IsWordKnownOrNumber(word, line)));
@@ -1570,7 +1570,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static string GetDashedWordBefore(string word, string line, List<string> words, int index)
         {
-            if (index > 0 && line.Contains(words[index - 1] + "-" + word))
+            if (index > 0 && line.Contains(words[index - 1] + "-" + word, StringComparison.Ordinal))
             {
                 return HtmlUtil.RemoveOpenCloseTags(words[index - 1] + "-" + word, HtmlUtil.TagItalic);
             }
@@ -1580,7 +1580,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static string GetDashedWordAfter(string word, string line, List<string> words, int index)
         {
-            if (index < words.Count - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
+            if (index < words.Count - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty), StringComparison.Ordinal))
             {
                 return HtmlUtil.RemoveOpenCloseTags(word + "-" + words[index + 1], HtmlUtil.TagItalic);
             }
