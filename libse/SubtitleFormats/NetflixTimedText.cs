@@ -8,7 +8,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// Nexflix version of timed text - time code is "00:00:04.000", tag <br /> is converted to <br/>
+    /// Netflix version of timed text - time code is "00:00:04.000", tag <br /> is converted to <br/>
     /// See https://backlothelp.netflix.com/hc/en-us/articles/215758617-Timed-Text-Style-Guide-General-Requirements
     ///     https://backlothelp.netflix.com/hc/en-us/articles/115001869828-Announcement-Additional-TTML-Schema-Inspections
     /// </summary>
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         <div style='s1' xml:id='d1'></div>
     </body>
 </tt>";
-           xml.LoadXml(xmlStructure);
+            xml.LoadXml(xmlStructure);
             if (!string.IsNullOrWhiteSpace(title))
             {
                 var headNode = xml.DocumentElement.SelectSingleNode("//ttml:head", nsmgr);
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             skipCount--;
                         }
-                        else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
+                        else if (line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                         {
                             styles.Push(currentStyle);
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             skipCount = 2;
                             italicOn = true;
                         }
-                        else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
+                        else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                         {
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
@@ -247,14 +247,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
                         }
-                        else if (line.Substring(i).StartsWith("<font ", StringComparison.Ordinal))
+                        else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
                             int endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
                             {
                                 skipCount = endIndex + 1;
                                 string fontContent = line.Substring(i, skipCount);
-                                if (fontContent.Contains(" color="))
+                                if (fontContent.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                                 {
                                     var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 skipCount = line.Length;
                             }
                         }
-                        else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                        else if (line.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) || line.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) || line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
                             currentStyle = xml.CreateTextNode(string.Empty);
                             if (styles.Count > 0)
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 currentStyle.InnerText = string.Empty;
                             }
                             paragraph.AppendChild(currentStyle);
-                            if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                            if (line.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                             {
                                 skipCount = 6;
                             }
@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            if (i == 0 && italicOn && !(line.Substring(i).StartsWith("<i>", StringComparison.Ordinal)))
+                            if (i == 0 && italicOn && !line.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                             {
                                 styles.Push(currentStyle);
                                 currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);

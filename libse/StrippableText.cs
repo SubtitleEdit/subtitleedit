@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core
                                 }
                             }
                         }
-                        else if (s == '-' && Pre.Contains("-"))
+                        else if (s == '-' && Pre.Contains('-'))
                         {
                             if (sb.ToString().EndsWith(Environment.NewLine + "-"))
                             {
@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // shouldn't capitalize current line not closed
-            if (Pre.Contains("...") || Pre.Contains("…"))
+            if (Pre.Contains("...", StringComparison.Ordinal) || Pre.Contains("…", StringComparison.Ordinal))
             {
                 return false;
             }

@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string underlineOff = encoding.GetString(new byte[] { 0x83 });
                 string boxingOn = encoding.GetString(new byte[] { 0x84 });
                 string boxingOff = encoding.GetString(new byte[] { 0x85 });
-                if (Utilities.CountTagInText(TextField, "<i>") == 1 && TextField.StartsWith("<i>") && TextField.EndsWith("</i>")) // italic on all lines
+                if (Utilities.CountTagInText(TextField, "<i>") == 1 && TextField.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && TextField.EndsWith("</i>", StringComparison.OrdinalIgnoreCase)) // italic on all lines
                 {
                     TextField = TextField.Replace(Environment.NewLine, Environment.NewLine + "<i>");
                 }
@@ -514,7 +514,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     while (i < line.Length)
                     {
                         var newStart = line.Substring(i);
-                        if (newStart.StartsWith("<font ", StringComparison.Ordinal))
+                        if (newStart.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
                             int end = line.IndexOf('>', i);
                             if (end > 0)
@@ -531,7 +531,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             i += "</font>".Length;
                         }
-                        else if (newStart.StartsWith("</font>", StringComparison.Ordinal))
+                        else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
                             if (displayStandardCode != "0")
                             {
@@ -562,9 +562,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end > 0)
                 {
                     string f = line.Substring(i, end - i);
-                    if (f.Contains(" color="))
+                    if (f.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                     {
-                        var colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                        var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                         if (line.IndexOf('"', colorStart + " color=".Length + 1) > 0)
                         {
                             int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);

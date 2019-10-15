@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(hRegion);
 
                 text = Utilities.RemoveSsaTags(text);
-                if (text.Contains("<i>") || text.Contains("<b>") || text.Contains("<font"))
+                if (text.Contains("<i>", StringComparison.OrdinalIgnoreCase) || text.Contains("<b>", StringComparison.OrdinalIgnoreCase) || text.Contains("<font", StringComparison.OrdinalIgnoreCase))
                 {
                     GenerateLineWithSpan(text, xml, hRegion);
                 }
@@ -158,9 +158,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (end > 0)
                         {
                             string tag = line.Substring(i, end - i + 1);
-                            if (tag.Contains(" color="))
+                            if (tag.Contains(" color=", StringComparison.OrdinalIgnoreCase))
                             {
-                                int colorStart = tag.IndexOf(" color=", StringComparison.Ordinal);
+                                int colorStart = tag.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
                                 int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
                                 if (colorEnd > 0)
                                 {
