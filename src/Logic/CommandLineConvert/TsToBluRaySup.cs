@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsToBluRaySup
     {
-        public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
+        public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, int count, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
         {
             var programMapTableParser = new ProgramMapTableParser();
             programMapTableParser.Parse(fileName); // get languages from PMT if possible
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     var language = GetFileNameEnding(programMapTableParser, pid);
                     var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(fileName) + language + Path.GetExtension(fileName), ".sup", outputFolder, overwrite);
-                    stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
+                    stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     progressCallback?.Invoke($"Save PID {pid}");
                     var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize);
@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             }
                         }
                     }
+                    stdOutWriter?.WriteLine(" done.");
                 }
             }
             return true;
