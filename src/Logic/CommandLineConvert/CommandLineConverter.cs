@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = NetflixTimedText.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
-                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray")
+                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray" || targetFormat == "bluraysup")
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
                 }
@@ -403,13 +403,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         SubtitleFormat format = null;
                         bool done = false;
 
-
-                        if (targetFormat != BatchConvert.BluRaySubtitle && targetFormat != BatchConvert.BdnXmlSubtitle && (Path.GetExtension(fileName).Equals(".ts", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) && (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
+                        if (targetFormat.RemoveChar(' ').ToLowerInvariant() != BatchConvert.BluRaySubtitle.RemoveChar(' ').ToLowerInvariant() &&
+                            targetFormat.RemoveChar(' ').ToLowerInvariant() != BatchConvert.BdnXmlSubtitle.RemoveChar(' ').ToLowerInvariant() &&
+                            (Path.GetExtension(fileName).Equals(".ts", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) && (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
                             _stdOutWriter.WriteLine($"{Path.GetFileName(fileName)} - Can only convert transport streams to Bluray-sup or BDN/XML");
                             break;
                         }
-                        else if (fileInfo.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || fileInfo.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
+
+                        if (fileInfo.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || fileInfo.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                         {
                             using (var matroska = new MatroskaFile(fileName))
                             {
@@ -456,26 +458,37 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                                     var bluRaySubtitles = BatchConvert.LoadBluRaySupFromMatroska(track, matroska, IntPtr.Zero);
                                                     if (bluRaySubtitles.Count > 0)
                                                     {
-                                                        _stdOutWriter.WriteLine("Using OCR to extract subtitles");
-                                                        using (var vobSubOcr = new VobSubOcr())
+                                                        var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                        if (targetFormat.RemoveChar(' ').ToLowerInvariant() == BatchConvert.BluRaySubtitle.RemoveChar(' ').ToLowerInvariant())
                                                         {
-                                                            vobSubOcr.ProgressCallback = progress =>
+                                                            var outputFileName = FormatOutputFileNameForBatchConvert(Utilities.GetPathAndFileNameWithoutExtension(newFileName) + Path.GetExtension(newFileName), ".sup", outputFolder, overwrite);
+                                                            converted++;
+                                                            _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                                                            BluRaySupToBluRaySup.ConvertFromBluRaySupToBluRaySup(outputFileName, bluRaySubtitles, resolution);
+                                                            _stdOutWriter?.WriteLine(" done.");
+                                                        }
+                                                        else
+                                                        {
+                                                            _stdOutWriter.WriteLine("Using OCR to extract subtitles");
+                                                            using (var vobSubOcr = new VobSubOcr())
                                                             {
-                                                                _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
-                                                            };
-                                                            vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
-                                                            _stdOutWriter?.WriteLine();
-                                                            sub = vobSubOcr.SubtitleFromOcr;
+                                                                vobSubOcr.ProgressCallback = progress =>
+                                                                {
+                                                                    _stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                                                };
+                                                                vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                                _stdOutWriter?.WriteLine();
+                                                                sub = vobSubOcr.SubtitleFromOcr;
+                                                            }
+                                                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                        }
+                                                        if (!mkvFileNames.Add(newFileName))
+                                                        {
+                                                            newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                            mkvFileNames.Add(newFileName);
                                                         }
                                                     }
-                                                    var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
-                                                    if (!mkvFileNames.Add(newFileName))
-                                                    {
-                                                        newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
-                                                        mkvFileNames.Add(newFileName);
-                                                    }
-                                                    BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                     done = true;
                                                 }
                                                 else
@@ -1314,7 +1327,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback);
+                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, _stdOutWriter, progressCallback);
                         }
                         else
                         {
@@ -1380,8 +1393,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     }
                                 }
                             }
+                            _stdOutWriter?.WriteLine(" done.");
                         }
-                        _stdOutWriter?.WriteLine(" done.");
                     }
 
                     else if (BatchConvert.VobSubSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
@@ -1423,7 +1436,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 bottomMarginPixels = param.BottomMargin;
                                 leftRightMarginPixels = param.LeftMargin;
                             }
-                            
+
                             using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, bottomMarginPixels, leftRightMarginPixels, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
                             {
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
