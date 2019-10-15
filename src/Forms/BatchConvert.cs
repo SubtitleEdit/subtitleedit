@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _customTextTemplate;
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
+        private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup =new Dictionary<string, List<BluRaySupParser.PcsData>>();
 
         public BatchConvert(Icon icon)
         {
@@ -765,22 +766,38 @@ namespace Nikse.SubtitleEdit.Forms
                                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                                             {
                                                 bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska, Handle);
-                                                if (bluRaySubtitles.Count > 0)
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + track.Language + ".mkv";
+                                                if ((toFormat == BdnXmlSubtitle || toFormat == BluRaySubtitle ||
+                                                     toFormat == VobSubSubtitle || toFormat == DostImageSubtitle) &&
+                                                    AllowImageToImage())
                                                 {
-                                                    item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
-                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    foreach (var b in bluRaySubtitles)
                                                     {
-                                                        vobSubOcr.ProgressCallback = progress =>
-                                                        {
-                                                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
-                                                            listViewInputFiles.Refresh();
-                                                        };
-                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                        vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
-                                                        sub = vobSubOcr.SubtitleFromOcr;
+                                                        sub.Paragraphs.Add(new Paragraph(b.StartTimeCode, b.EndTimeCode, string.Empty));
+                                                    }
+                                                    if (!_bdLookup.ContainsKey(fileName))
+                                                    {
+                                                        _bdLookup.Add(fileName, bluRaySubtitles);
                                                     }
                                                 }
-                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + track.Language + ".mkv";
+                                                else
+                                                {
+                                                    if (bluRaySubtitles.Count > 0)
+                                                    {
+                                                        item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
+                                                        using (var vobSubOcr = new VobSubOcr())
+                                                        {
+                                                            vobSubOcr.ProgressCallback = progress =>
+                                                            {
+                                                                item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
+                                                                listViewInputFiles.Refresh();
+                                                            };
+                                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
+                                                            sub = vobSubOcr.SubtitleFromOcr;
+                                                        }
+                                                    }
+                                                }
                                                 break;
                                             }
                                         }
@@ -976,6 +993,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
+            _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
         }
 
         private BackgroundWorker SpawnWorker()
@@ -1337,6 +1355,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.FileName != null && p.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(p.FileName) && AllowImageToImage())
                     {
                         binaryParagraphs = BluRaySupParser.ParseBluRaySup(p.FileName, new StringBuilder()).Cast<IBinaryParagraph>().ToList();
+                    }
+                    else if (p.FileName != null && _bdLookup.ContainsKey(p.FileName))
+                    {
+                        binaryParagraphs = _bdLookup[p.FileName].Cast<IBinaryParagraph>().ToList();
                     }
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
