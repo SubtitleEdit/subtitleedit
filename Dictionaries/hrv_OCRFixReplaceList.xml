@@ -161,6 +161,7 @@
     <Word from="ćebe" to="deku" />
     <Word from="ćebetu" to="deki" />
     <Word from="čk" to="čak" />
+    <Word from="ćr" to="će" />
     <Word from="ćš" to="ćeš" />
     <Word from="ćale" to="tata" />
     <Word from="ćaletom" to="ocem" />
@@ -867,6 +868,8 @@
     <Word from="nominovan" to="nominiran" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
+    <Word from="nwmaš" to="nemaš" />
+    <Word from="nwmš" to="nemaš" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
