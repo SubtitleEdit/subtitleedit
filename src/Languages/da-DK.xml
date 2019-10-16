@@ -79,6 +79,8 @@
     <Size>Størrelse</Size>
     <Search>Søg</Search>
     <DeleteCurrentLine>Slet aktuelle linje</DeleteCurrentLine>
+    <Width>Bredde</Width>
+    <Height>Højde</Height>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -208,6 +210,12 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Offset tidskoder</OffsetTimeCodes>
+    <TransportStreamSettings>Transport strømindstillinger</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Overstyr original X-position</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Overstyr den oprindelige Y-position</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Overstyr den originale videostørrelse</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Filnavn slutter</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>TS-indstillinger...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -2403,6 +2411,7 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <MinLineSplitHeight>Min. linje højde (split)</MinLineSplitHeight>
     <FallbackToX>Falder tilbage til {0}</FallbackToX>
     <ImagePreProcessing>Billede pre-processering...</ImagePreProcessing>
+    <EditImageDb>Rediger billede db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
@@ -2434,6 +2443,20 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <Title>Juster de-kursiv faktor</Title>
     <Description>Juster værdi indtil tekst stil er normalt og ikke kursiv. Bemærk, at det oprindelige billede skal være kursiv.</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR-billedforbehandling</Title>
+    <Colors>Farver</Colors>
+    <AdjustAlpha>Juster værdien, indtil teksten vises tydeligt (normalt værdier mellem 200 og 300)</AdjustAlpha>
+    <OriginalImage>Originalbillede</OriginalImage>
+    <PostImage>Billede efter forbehandling</PostImage>
+    <BinaryThreshold>Binært billede sammenlign tærskel</BinaryThreshold>
+    <InvertColors>Inverter farver</InvertColors>
+    <YellowToWhite>Gul til hvid</YellowToWhite>
+    <ColorToWhite>Farve til hvid</ColorToWhite>
+    <ColorToRemove>Farve, der skal fjernes</ColorToRemove>
+    <Cropping>Beskæring</Cropping>
+    <CropTransparentColors>Beskær gennemsigtige farver</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Vandmærke</Title>
     <WatermarkX>Vandmærke: {0}</WatermarkX>
