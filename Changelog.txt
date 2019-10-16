@@ -54,6 +54,7 @@
    * Fix PAC reading issues - thx Milenko
    * Fix remove text for HI issue - thx teodargent
    * Fix time code for bd in m2ts - thx Jack1789
+   * Fix "Find next" in "Replace dialog" - thx Maiki0
 
 
 3.5.10 (18th August 2019)
