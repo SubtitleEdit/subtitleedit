@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Regex _regEx;
         private bool _userAction;
+        private bool _findNext;
+        private FindReplaceDialogHelper _findHelper;
 
         public ReplaceDialog()
         {
@@ -76,7 +78,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
         {
+            _findHelper = findHelper;
             textBoxFind.Text = selectedText;
+            if (FindOnly && !string.IsNullOrEmpty(selectedText))
+            {
+                _findNext = true;
+            }
+
             //if we are searching for the same thing, then keep the replace text the same.
             if (selectedText == findHelper.FindText)
             {
@@ -151,6 +159,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindClick(object sender, EventArgs e)
         {
+            if (_findNext && _findHelper != null)
+            {
+                _findHelper.ReplaceFromPosition++;
+            }
+
             ReplaceAll = false;
             FindOnly = true;
 
@@ -193,6 +206,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void textBoxFind_TextChanged(object sender, EventArgs e)
+        {
+            _findNext = false;
         }
     }
 }
