@@ -83,7 +83,7 @@ $ColorIndex4    = 3
             text = HtmlUtil.RemoveHtmlTags(text, true);
             if (allItalic)
             {
-                return text.Replace(Environment.NewLine, "|^I");
+                return text.Replace(Environment.NewLine, "^I|^I");
             }
 
             return text.Replace(Environment.NewLine, "|");
