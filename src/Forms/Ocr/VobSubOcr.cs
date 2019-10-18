@@ -950,12 +950,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (fileName.Length > 40)
-                {
-                    fileName = Path.GetFileName(fileName);
-                }
-
-                Text += " - " + fileName;
+                Text += " - " + Path.GetFileName(fileName);
                 FileName = fileName;
                 _subtitle.FileName = fileName;
             }
