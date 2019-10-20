@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using Nikse.SubtitleEdit.Core;
@@ -12,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsToBdnXml
     {
-        public static bool ConvertFromTsToBdnXml(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
+        public static bool ConvertFromTsToBdnXml(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution)
         {
             var programMapTableParser = new ProgramMapTableParser();
             programMapTableParser.Parse(fileName); // get languages from PMT if possible
@@ -28,7 +27,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
+                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0 ||
+                                     resolution.HasValue;
 
             using (var form = new ExportPngXml())
             {
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds));
                     }
 
-                    var res = TsToBluRaySup.GetSubtitleScreenSize(sub, overrideScreenSize);
+                    var res = TsToBluRaySup.GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
                     var videoInfo = new VideoInfo { Success = true, Width = res.X, Height = res.Y };
                     form.Initialize(subtitle, new SubRip(), BatchConvert.BdnXmlSubtitle, fileName, videoInfo, fileName);
                     var sb = new StringBuilder();

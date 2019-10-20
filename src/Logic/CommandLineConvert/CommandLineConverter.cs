@@ -1327,7 +1327,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, _stdOutWriter, progressCallback);
+                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, _stdOutWriter, progressCallback, resolution);
                         }
                         else
                         {
@@ -1557,7 +1557,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback);
+                            success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback, resolution);
                         }
                         else
                         {

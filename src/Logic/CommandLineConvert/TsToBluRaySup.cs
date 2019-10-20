@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsToBluRaySup
     {
-        public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, int count, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback)
+        public static bool ConvertFromTsToBluRaySup(string fileName, string outputFolder, bool overwrite, int count, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution)
         {
             var programMapTableParser = new ProgramMapTableParser();
             programMapTableParser.Parse(fileName); // get languages from PMT if possible
@@ -28,7 +28,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0;
+                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0 ||
+                                     resolution.HasValue;
 
             using (var form = new ExportPngXml())
             {
@@ -46,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> PID {pid} to {outputFileName}...");
                     var sub = tsParser.GetDvbSubtitles(pid);
                     progressCallback?.Invoke($"Save PID {pid}");
-                    var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize);
+                    var subtitleScreenSize = GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
                     using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
                     {
                         for (int index = 0; index < sub.Count; index++)
@@ -156,8 +157,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 .Replace("{three-letter-country-code-uppercase}", threeLetter);
         }
 
-        public static Point GetSubtitleScreenSize(List<TransportStreamSubtitle> sub, bool overrideScreenSize)
+        public static Point GetSubtitleScreenSize(List<TransportStreamSubtitle> sub, bool overrideScreenSize, Point? resolution)
         {
+            if (resolution.HasValue)
+            {
+                return new Point(resolution.Value.X, resolution.Value.Y);
+            }
+
             if (overrideScreenSize)
             {
                 return new Point(Configuration.Settings.Tools.BatchConvertTsScreenWidth, Configuration.Settings.Tools.BatchConvertTsScreenHeight);
