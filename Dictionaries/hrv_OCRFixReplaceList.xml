@@ -1326,6 +1326,7 @@
     <Word from="Samnom" to="Sa mnom" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
+    <Word from="Sci" to="Svi" />
     <Word from="secka" to="sjecka" />
     <Word from="seckam" to="sjeckam" />
     <Word from="seče" to="siječe" />
@@ -1595,6 +1596,8 @@
     <Word from="Svjest" to="Svijest" />
     <Word from="svjesti" to="svijesti" />
     <Word from="Svjesti" to="Svijesti" />
+    <Word from="svjet" to="svijet" />
+    <Word from="svjeta" to="svijeta" />
     <Word from="svetova" to="svjetova" />
     <Word from="svetove" to="svjetove" />
     <Word from="svugde" to="svugdje" />
