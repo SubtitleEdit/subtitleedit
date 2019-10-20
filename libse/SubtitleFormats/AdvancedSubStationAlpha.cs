@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var ssa = Configuration.Settings.SubtitleSettings;
                 return "Style: Default," + ssa.SsaFontName + "," +
-                       (int)ssa.SsaFontSize + "," +
+                       ssa.SsaFontSize.ToString(CultureInfo.InvariantCulture)  + "," +
                        GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
                        "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
                        Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
@@ -403,8 +403,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
                         }
 
-                        int fSize;
-                        if (!int.TryParse(fontSize, out fSize))
+                        if (!float.TryParse(fontSize, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fSize))
                         {
                             fSize = 20;
                         }
@@ -551,7 +550,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
                         }
 
-                        if (!int.TryParse(fontSize, out var fSize))
+                        if (!float.TryParse(fontSize, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fSize))
                         {
                             fSize = 20;
                         }
@@ -824,7 +823,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             string fontSize = text.Substring(start + 4, end - (start + 4));
                             string extraTags = string.Empty;
                             CheckAndAddSubTags(ref fontSize, ref extraTags, out var unknownTags, out italic);
-                            if (Utilities.IsInteger(fontSize))
+                            if (float.TryParse(fontSize, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _))
                             {
                                 text = text.Remove(start, end - start + 1);
                                 if (italic)
@@ -1747,7 +1746,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                                 }
                                 else if (i == fontsizeIndex)
                                 {
-                                    if (!int.TryParse(f, out _) || f.StartsWith('-'))
+                                    if (!float.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture , out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Fontsize' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -2048,9 +2047,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == fontsizeIndex)
                             {
-                                if (int.TryParse(f, out var number))
+                                if (float.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fOut))
                                 {
-                                    style.FontSize = number;
+                                    style.FontSize = fOut;
                                 }
                             }
                             else if (i == primaryColourIndex)
