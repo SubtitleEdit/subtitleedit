@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
             long callBackTicks = 0;
+            SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -111,12 +112,40 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     {
                         TotalNumberOfPrivateStream1++;
 
-                        SubtitlePackets.Add(packet);
-
                         if (!SubtitlePacketIds.Contains(packet.PacketId))
                         {
                             SubtitlePacketIds.Add(packet.PacketId);
                         }
+
+                        if (!IsM2TransportStream && packet.PayloadUnitStartIndicator)
+                        {
+                            var list = MakeSubtitlePesPackets(packet.PacketId, SubtitlePackets);
+                            bool hasImageSubtitles = false;
+                            foreach (var item in list)
+                            {
+                                if (item.IsDvbSubpicture)
+                                {
+                                    hasImageSubtitles = true;
+                                    break;
+                                }
+                            }
+                            if (hasImageSubtitles)
+                            {
+                                if (SubtitlesLookup.ContainsKey(packet.PacketId))
+                                {
+                                    SubtitlesLookup[packet.PacketId].AddRange(list);
+                                }
+                                else
+                                {
+                                    SubtitlesLookup.Add(packet.PacketId, list);
+                                }
+                            }
+
+                            SubtitlePackets.RemoveAll(p => p.PacketId == packet.PacketId);
+                        }
+                        SubtitlePackets.Add(packet);
+
+
                         if (packet.ContinuityCounter == 0)
                         {
                             TotalNumberOfPrivateStream1Continuation0++;
@@ -196,7 +225,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
 
             // check for SubPictureStreamId = 32
-            SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
             foreach (int pid in SubtitlePacketIds)
             {
                 var list = MakeSubtitlePesPackets(pid, SubtitlePackets);
@@ -211,9 +239,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
                 if (hasImageSubtitles)
                 {
-                    SubtitlesLookup.Add(pid, list);
+                    if (SubtitlesLookup.ContainsKey(pid))
+                    {
+                        SubtitlesLookup[pid].AddRange(list);
+                    }
+                    else
+                    {
+                        SubtitlesLookup.Add(pid, list);
+                    }
                 }
+                SubtitlePackets.RemoveAll(p => p.PacketId == pid);
             }
+
             SubtitlePacketIds.Clear();
             foreach (int key in SubtitlesLookup.Keys)
             {
