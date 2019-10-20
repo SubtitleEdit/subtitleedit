@@ -677,6 +677,7 @@
             // 
             // numericUpDownFontSize
             // 
+            this.numericUpDownFontSize.DecimalPlaces = 1;
             this.numericUpDownFontSize.Location = new System.Drawing.Point(100, 44);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             200,

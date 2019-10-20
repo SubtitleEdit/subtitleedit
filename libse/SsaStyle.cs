@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -9,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public string Name { get; set; }
         public string FontName { get; set; }
-        public int FontSize { get; set; }
+        public float FontSize { get; set; }
         public bool Italic { get; set; }
         public bool Bold { get; set; }
         public bool Underline { get; set; }
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core
         public SsaStyle()
         {
             FontName = Configuration.Settings.SubtitleSettings.SsaFontName;
-            FontSize = (int)Configuration.Settings.SubtitleSettings.SsaFontSize;
+            FontSize = (float)Configuration.Settings.SubtitleSettings.SsaFontSize;
             Primary = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             Secondary = Color.Yellow;
             Outline = Color.Black;
@@ -99,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 else if (f == "fontsize")
                 {
-                    sb.Append(FontSize);
+                    sb.Append(FontSize.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "primarycolour")
                 {
@@ -206,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 else if (f == "fontsize")
                 {
-                    sb.Append(FontSize);
+                    sb.Append(FontSize.ToString(CultureInfo.InvariantCulture));
                 }
                 else if (f == "primarycolour")
                 {

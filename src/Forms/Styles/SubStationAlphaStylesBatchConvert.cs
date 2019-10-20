@@ -886,9 +886,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontBold.Checked = style.Bold;
             checkBoxFontUnderline.Checked = style.Underline;
 
-            if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
+            if (style.FontSize > 0 && style.FontSize <= (float) numericUpDownFontSize.Maximum)
             {
-                numericUpDownFontSize.Value = style.FontSize;
+                numericUpDownFontSize.Value = (decimal) style.FontSize;
             }
             else
             {
