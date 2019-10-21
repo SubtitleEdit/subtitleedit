@@ -329,13 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.ForEach(p => p.Text = Regex.Replace(p.Text, @"^({\\an[1-7,9]})", string.Empty));
         }
 
-        public override bool HasStyleSupport
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool HasStyleSupport => false;
 
     }
 }
