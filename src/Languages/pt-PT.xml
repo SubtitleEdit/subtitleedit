@@ -215,8 +215,11 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
 	<TransportStreamSettings>Configurações de Transport Stream</TransportStreamSettings>
-	<TransportStreamOverridePosition>Substituir a posição original</TransportStreamOverridePosition>
+	<TransportStreamOverrideXPosition>Substituir a posição original X</TransportStreamOverrideXPosition>
+	<TransportStreamOverrideYPosition>Substituir a posição original Y</TransportStreamOverrideYPosition>
 	<TransportStreamOverrideVideoSize>Substituir o tamanho original do vídeo</TransportStreamOverrideVideoSize>
+	<TransportStreamFileNameEnding>Fim do nome do ficheiro</TransportStreamFileNameEnding>
+	<TransportStreamSettingsButton>Configurações de TS...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
