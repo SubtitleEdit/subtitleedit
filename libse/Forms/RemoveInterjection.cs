@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 temp = temp.Remove(index - 2, 1).Replace("  ", " ");
                             }
-                            else if (index > 3 && temp.Length == index +1 && ".!?".Contains(temp.Substring(index)) && ".!?".Contains(temp[index]))
+                            else if (index > 3 && temp.Length == index + 1 && ".!?".Contains(temp[index - 2]) && temp[index - 1] == ' ' && ".!?".Contains(temp[index]))
                             {
                                 temp = temp.Remove(index, 1).TrimEnd();
                             }
