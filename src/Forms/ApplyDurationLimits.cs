@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -140,9 +139,9 @@ namespace Nikse.SubtitleEdit.Forms
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
-                    Paragraph next = _working.GetParagraphOrDefault(i + 1);
+                    var next = _working.GetParagraphOrDefault(i + 1);
                     var wantedEndMs = p.StartTime.TotalMilliseconds + minDisplayTime;
-                    if (next == null || (wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines) && AllowFix(p))
+                    if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines && AllowFix(p))
                     {
                         AddFix(p, wantedEndMs, DefaultBackColor);
                     }
