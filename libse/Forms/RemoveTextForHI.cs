@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 // reusable context
                 _interjectionRemoveContext.Text = text;
-                _interjectionRemoveContext.OnlySeparetedLines = Settings.RemoveInterjectionsOnlySeparateLine;
+                _interjectionRemoveContext.OnlySeparatedLines = Settings.RemoveInterjectionsOnlySeparateLine;
                 _interjectionRemoveContext.Interjections = _interjections;
                 text = _removeInterjection.Invoke(_interjectionRemoveContext);
             }
