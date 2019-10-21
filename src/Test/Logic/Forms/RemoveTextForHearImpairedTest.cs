@@ -1807,6 +1807,13 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Senti," + Environment.NewLine + "dille semplicemente che ti e mancata.", actual);
         }
 
+        [TestMethod]
+        public void RemoveInterjectionsRemovePeriod()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey. Uh.", onlyInSeparatedLine: false));
+            Assert.AreEqual("Hey.", actual);
+        }
+
         #region Additional test attributes
 
         //
