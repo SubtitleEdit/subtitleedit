@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = NetflixTimedText.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
-                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray" || targetFormat == "bluraysup")
+                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray" || targetFormat == "bluraysup" || targetFormat == "bluray-sup")
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
                 }
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             targetFormat.RemoveChar(' ').ToLowerInvariant() != BatchConvert.BdnXmlSubtitle.RemoveChar(' ').ToLowerInvariant() &&
                             (Path.GetExtension(fileName).Equals(".ts", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) && (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            _stdOutWriter.WriteLine($"{Path.GetFileName(fileName)} - Can only convert transport streams to Bluray-sup or BDN/XML");
+                            _stdOutWriter.WriteLine($"{Path.GetFileName(fileName)} - Can only convert transport streams to '{BatchConvert.BluRaySubtitle}' or '{BatchConvert.BdnXmlSubtitle}'");
                             break;
                         }
 
@@ -1327,7 +1327,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, _stdOutWriter, progressCallback);
+                            success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, _stdOutWriter, progressCallback, resolution);
                         }
                         else
                         {
@@ -1557,7 +1557,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
                             (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                         {
-                            success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback);
+                            success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, _stdOutWriter, progressCallback, resolution);
                         }
                         else
                         {
