@@ -343,11 +343,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return "ARIB"; }
         }
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
