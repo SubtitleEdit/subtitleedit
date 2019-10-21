@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
     public class InterjectionRemoveContext
     {
         /// <summary>
-        /// True if interjection should be removed only if exists in separeted line otherwise false.
+        /// True if interjection should be removed only if exists in separated line otherwise false.
         /// </summary>
-        public bool OnlySeparetedLines { get; set; }
+        public bool OnlySeparatedLines { get; set; }
 
         /// <summary>
         /// The check list that will be used to check interjections.
@@ -426,7 +426,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
 
-                if (context.OnlySeparetedLines)
+                if (context.OnlySeparatedLines)
                 {
                     if (string.IsNullOrEmpty(text))
                     {

@@ -26,9 +26,9 @@ namespace Test.Logic.Forms
 
         private static InterjectionRemoveContext GetRemoveInterjectionContext(string text, bool onlyInSeparatedLine)
         {
-            return new InterjectionRemoveContext()
+            return new InterjectionRemoveContext
             {
-                OnlySeparetedLines = onlyInSeparatedLine,
+                OnlySeparatedLines = onlyInSeparatedLine,
                 Interjections = RemoveTextForHI.GetInterjectionList(),
                 Text = text,
             };
