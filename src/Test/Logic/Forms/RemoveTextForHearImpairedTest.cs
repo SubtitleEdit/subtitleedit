@@ -26,9 +26,9 @@ namespace Test.Logic.Forms
 
         private static InterjectionRemoveContext GetRemoveInterjectionContext(string text, bool onlyInSeparatedLine)
         {
-            return new InterjectionRemoveContext()
+            return new InterjectionRemoveContext
             {
-                OnlySeparetedLines = onlyInSeparatedLine,
+                OnlySeparatedLines = onlyInSeparatedLine,
                 Interjections = RemoveTextForHI.GetInterjectionList(),
                 Text = text,
             };
@@ -1805,6 +1805,13 @@ namespace Test.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = true;
             string actual = target.RemoveTextFromHearImpaired("Senti, [si schiarisce la voce]," + Environment.NewLine + "dille semplicemente che ti e mancata.");
             Assert.AreEqual("Senti," + Environment.NewLine + "dille semplicemente che ti e mancata.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsRemovePeriod()
+        {
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey. Uh.", onlyInSeparatedLine: false));
+            Assert.AreEqual("Hey.", actual);
         }
 
         #region Additional test attributes

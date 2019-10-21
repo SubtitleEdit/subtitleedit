@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             break;
                         }
                     }
-                    return sb.ToString();
+                    return sb.ToString().TrimEnd(' ', '$');
                 }
             }
             return string.Empty;
