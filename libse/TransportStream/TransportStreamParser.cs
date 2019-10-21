@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
-            long callBackTicks = 0;
             SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
 
             // check for Topfield .rec file
@@ -169,10 +168,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     TotalNumberOfPackets++;
                     position += packetLength;
 
-                    if (callback != null && DateTime.UtcNow.Ticks - 10000 * 500 > callBackTicks) // call back every half second
+                    if (TotalNumberOfPackets % 100000 == 0)
                     {
                         callback.Invoke(ms.Position, transportStreamLength);
-                        callBackTicks = DateTime.UtcNow.Ticks;
                     }
                 }
                 else
