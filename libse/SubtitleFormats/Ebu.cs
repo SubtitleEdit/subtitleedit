@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public override string ToString()
             {
-                string result =
+                var result =
                           CodePageNumber +
                           DiskFormatCode +
                           DisplayStandardCode +
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private class EbuTextTimingInformation
         {
             public byte SubtitleGroupNumber { get; set; }
-            public UInt16 SubtitleNumber { get; set; }
+            public ushort SubtitleNumber { get; set; }
             public byte ExtensionBlockNumber { get; set; }
             public byte CumulativeStatus { get; set; }
             public int TimeCodeInHours { get; set; }
@@ -499,7 +499,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
                 }
 
-
+                var lastColor = string.Empty;
                 var sb = new StringBuilder();
                 var list = text.SplitToLines();
                 for (var index = 0; index < list.Count; index++)
@@ -507,6 +507,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (index > 0)
                     {
                         sb.Append(newline);
+                        if (displayStandardCode != "0" && !string.IsNullOrEmpty(lastColor))
+                        {
+                            sb.Append(lastColor);
+                        }
                     }
 
                     string line = list[index];
@@ -521,7 +525,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 if (displayStandardCode != "0")
                                 {
-                                    sb.Append(GetColor(encoding, line, i));
+                                    lastColor = GetColor(encoding, line, i);
+                                    sb.Append(lastColor);
                                 }
 
                                 i = end + 1;
@@ -530,6 +535,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (newStart == "</font>")
                         {
                             i += "</font>".Length;
+                            lastColor = string.Empty;
                         }
                         else if (newStart.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
@@ -732,8 +738,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (header == null)
             {
-                header = new EbuGeneralSubtitleInformation();
-                header.LanguageCode = AutoDetectLanguageCode(subtitle);
+                header = new EbuGeneralSubtitleInformation { LanguageCode = AutoDetectLanguageCode(subtitle) };
             }
 
             if (EbuUiHelper == null)
@@ -785,8 +790,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var tti = new EbuTextTimingInformation();
 
-                int rows;
-                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out var rows))
                 {
                     rows = 23;
                 }
@@ -817,7 +821,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var numberOfLineBreaks = Math.Max(0, Utilities.GetNumberOfLines(text) - 1);
                     int startRow = rows - Configuration.Settings.SubtitleSettings.EbuStlMarginBottom -
-                                          (numberOfLineBreaks * Configuration.Settings.SubtitleSettings.EbuStlNewLineRows);
+                                          numberOfLineBreaks * Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
                     if (startRow < 0)
                     {
                         startRow = 0;
@@ -947,7 +951,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             header.DiskFormatCode.StartsWith("STL48", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL50", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal) ||
-                            ("012 ".Contains(header.DisplayStandardCode) && "437|850|860|863|865".Contains(header.CodePageNumber)))
+                            "012 ".Contains(header.DisplayStandardCode) && "437|850|860|863|865".Contains(header.CodePageNumber))
                         {
                             return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase);
                         }
@@ -1416,8 +1420,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (b >= 0x20 && b <= 0x7f) // Both - Character codes
                     {
-                        bool skipNext;
-                        var ch = GetCharacter(out skipNext, header, buffer, i);
+                        var ch = GetCharacter(out var skipNext, header, buffer, i);
                         sb.Append(ch);
                         if (skipNext)
                         {
@@ -1472,8 +1475,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (b >= 0xa1 && b <= 0xff) // Both - Character codes
                     {
-                        bool skipNext;
-                        var ch = GetCharacter(out skipNext, header, buffer, i);
+                        var ch = GetCharacter(out var skipNext, header, buffer, i);
                         sb.Append(ch);
                         if (skipNext)
                         {
@@ -1484,8 +1486,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 tti.TextField = FixSpacesAndTags(sb.ToString());
 
-                int rows;
-                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out var rows))
                 {
                     rows = 23;
                 }
