@@ -25205,6 +25205,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             var x = statusStrip1.PointToClient(Cursor.Position).X;
             var textWidth = TextRenderer.MeasureText(toolStripSelected.Text, toolStripSelected.Font).Width;
+            if (toolStripStatusLabelProgress.Visible)
+            {
+                textWidth += toolStripStatusLabelProgress.Width + 5;
+            }
             var min = statusStrip1.Width - textWidth - 20;
             var max = min + TextRenderer.MeasureText(Configuration.Settings.General.CurrentProfile, toolStripSelected.Font).Width + 10;
             if (x >= min && x <= max)

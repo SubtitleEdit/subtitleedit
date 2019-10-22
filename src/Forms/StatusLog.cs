@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                DialogResult = DialogResult.Cancel;
+                buttonOK_Click(null, null);
             }
             else if (e.KeyCode == Keys.Delete && e.Modifiers == Keys.Control)
             {
