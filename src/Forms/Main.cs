@@ -12746,6 +12746,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Cursor.Current = Cursors.WaitCursor;
                     var selectedLines = new Subtitle();
+                    var selectedIndices = SubtitleListview1.SelectedIndices.Cast<int>().ToList();
                     selectedLines.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
                     if (onlySelectedLines)
                     {
@@ -12764,6 +12765,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool saveChangeCaseChanges = true;
                     var casingNamesLinesChanged = 0;
+
+                    if (changeCasing.ChangeNamesToo && changeCasing.OnlyAllUpper)
+                    {
+                        selectedIndices = new List<int>();
+                        var allUpperSubtitle = new Subtitle();
+                        var sub = onlySelectedLines ? selectedLines : _subtitle;
+                        for (var index = 0; index < sub.Paragraphs.Count; index++)
+                        {
+                            var p = sub.Paragraphs[index];
+                            var noTags = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                            if (noTags == noTags.ToUpperInvariant())
+                            {
+                                allUpperSubtitle.Paragraphs.Add(p);
+                                selectedIndices.Add(index);
+                            }
+                        }
+                        selectedLines = allUpperSubtitle;
+                        onlySelectedLines = true;
+                        selectedLines.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
+                    }
+
                     changeCasing.FixCasing(selectedLines, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
                     if (changeCasing.ChangeNamesToo)
                     {
@@ -12800,7 +12822,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (onlySelectedLines)
                         {
                             int i = 0;
-                            foreach (int index in SubtitleListview1.SelectedIndices)
+                            foreach (int index in selectedIndices)
                             {
                                 _subtitle.Paragraphs[index].Text = selectedLines.Paragraphs[i].Text;
                                 i++;
