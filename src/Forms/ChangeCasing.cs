@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ChangeNamesToo => radioButtonFixOnlyNames.Checked || radioButtonNormal.Checked && checkBoxFixNames.Checked;
 
+        public bool OnlyAllUpper => checkBoxOnlyAllUpper.Checked;
+
         private void FixLargeFonts()
         {
             if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
