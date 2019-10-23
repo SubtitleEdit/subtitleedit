@@ -842,9 +842,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
                             {
-                                text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                                
+                                text = "- " + text;
+                                if (!text.Contains(Environment.NewLine + "<i>- "))
+                                {
+                                    text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                                }
                             }
-
                             if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
                             {
                                 text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
