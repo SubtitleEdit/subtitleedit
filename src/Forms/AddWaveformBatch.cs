@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -11,7 +12,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AddWaveformBatch : PositionAndSizeForm
     {
-
         private int _delayInMilliseconds;
         private bool _converting;
         private bool _abort;
@@ -39,6 +39,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Text = l.ScanFolder;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
+            checkBoxGenerateSceneChanges.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
+            checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
+            checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             UiUtil.FixLargeFonts(this, buttonDone);
         }
 
@@ -87,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var ext = Path.GetExtension(fileName).ToLowerInvariant();
+                var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
                 if (string.IsNullOrEmpty(ext) || ExcludedExtensions.Contains(ext))
                 {
                     return;
@@ -272,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         try
                         {
-                            using (MatroskaFile matroska = new MatroskaFile(fileName))
+                            using (var matroska = new MatroskaFile(fileName))
                             {
                                 if (matroska.IsValid)
                                 {
@@ -308,6 +311,11 @@ namespace Nikse.SubtitleEdit.Forms
                     updateStatus(Configuration.Settings.Language.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
+                    if (checkBoxGenerateSceneChanges.Visible && checkBoxGenerateSceneChanges.Checked)
+                    {
+                        GenerateSceneChanges(fileName);
+                    }
+
                     // cleanup
                     try
                     {
@@ -338,6 +346,35 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRipWave.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
+        }
+
+        private void GenerateSceneChanges(string videoFileName)
+        {
+            var sceneChangesGenerator = new SceneChangesGenerator();
+            var threshold = 0.4m;
+            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+            {
+                threshold = d;
+            }
+            using (var process = sceneChangesGenerator.GetProcess(videoFileName, threshold))
+            {
+                while (!process.HasExited)
+                {
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(100);
+                    if (_abort)
+                    {
+                        DialogResult = DialogResult.Cancel;
+                        process.Kill();
+                        return;
+                    }
+                }
+            }
+            var seconds = SceneChangesGenerator.GetSeconds(sceneChangesGenerator.TimeCodes.ToString().SplitToLines().ToArray());
+            if (seconds.Count > 0)
+            {
+                SceneChangeHelper.SaveSceneChanges(videoFileName, seconds);
+            }
         }
 
         private void MakeWaveformAndSpectrogram(string videoFileName, string targetFile, int delayInMilliseconds)

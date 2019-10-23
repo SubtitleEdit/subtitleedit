@@ -204,6 +204,7 @@
     <Compile Include="SeJsonParser.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />
+    <Compile Include="SubtitleFormats\DCinemaSmpte2014.cs" />
     <Compile Include="SubtitleFormats\ESubXf.cs" />
     <Compile Include="SubtitleFormats\JsonType15.cs" />
     <Compile Include="SubtitleFormats\AwsTranscribeJson.cs" />
@@ -633,9 +634,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\NetflixAllowedGlyphs.bin.gz" />
     <None Include="Resources\netflix_glyphs2_gz" />
-    <None Include="Resources\netflix_glyphs2_zip" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
