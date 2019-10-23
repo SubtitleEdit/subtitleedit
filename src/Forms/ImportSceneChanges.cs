@@ -3,12 +3,10 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -16,15 +14,13 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportSceneChanges : PositionAndSizeForm
     {
-        private static StringBuilder _timeCodes;
         public List<double> SceneChangesInSeconds = new List<double>();
         private readonly double _frameRate = 25;
         private readonly string _videoFileName;
-        private double _lastSeconds;
-        private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
         private bool _abort;
         private bool _pause;
         private readonly StringBuilder _log;
+        private SceneChangesGenerator _sceneChangesGenerator;
 
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
         {
@@ -220,8 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string start = Json.ReadTag(s, "frame_time");
                     if (start != null)
                     {
-                        double startSeconds;
-                        if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds))
+                        if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var startSeconds))
                         {
                             list.Add(startSeconds * 1000.0);
                         }
@@ -246,37 +241,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            SceneChangesInSeconds = new List<double>();
-            foreach (string line in string.IsNullOrEmpty(textBoxGenerate.Text) ? textBoxIImport.Lines : textBoxGenerate.Lines)
+            var lines = string.IsNullOrEmpty(textBoxGenerate.Text) ? textBoxIImport.Lines : textBoxGenerate.Lines;
+            if (radioButtonHHMMSSMS.Checked)
             {
-                if (radioButtonHHMMSSMS.Checked)
+                SceneChangesInSeconds = SceneChangesGenerator.GetSeconds(lines);
+            }
+            else
+            {
+                SceneChangesInSeconds = new List<double>();
+                foreach (var line in lines)
                 {
-                    // Parse string (HH:MM:SS.ms)
-                    string[] timeParts = line.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
-                    try
-                    {
-                        if (timeParts.Length == 2)
-                        {
-                            SceneChangesInSeconds.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1])).TotalSeconds);
-                        }
-                        else if (timeParts.Length == 3)
-                        {
-                            SceneChangesInSeconds.Add(new TimeSpan(0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2])).TotalSeconds);
-                        }
-                        else if (timeParts.Length == 4)
-                        {
-                            SceneChangesInSeconds.Add(new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3])).TotalSeconds);
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-                else
-                {
-                    double d;
-                    if (double.TryParse(line, out d))
+                    if (double.TryParse(line, out var d))
                     {
                         if (radioButtonFrames.Checked)
                         {
@@ -293,6 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
             Configuration.Settings.General.FFmpegSceneThreshold = numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture);
             if (SceneChangesInSeconds.Count > 0)
             {
@@ -337,6 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonImportWithFfmpeg_Click(object sender, EventArgs e)
         {
+            _sceneChangesGenerator = new SceneChangesGenerator();
             groupBoxImportText.Enabled = false;
             buttonOK.Enabled = false;
             progressBar1.Visible = true;
@@ -345,20 +322,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownThreshold.Enabled = false;
             Cursor = Cursors.WaitCursor;
             textBoxGenerate.Text = string.Empty;
-            _timeCodes = new StringBuilder();
-            using (var process = new Process())
+            using (var process = _sceneChangesGenerator.GetProcess(_videoFileName, numericUpDownThreshold.Value))
             {
-                process.StartInfo.FileName = Configuration.Settings.General.FFmpegLocation;
-                process.StartInfo.Arguments = $"-i \"{_videoFileName}\" -vf \"select=gt(scene\\," + numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture) + "),showinfo\" -vsync vfr -f null -";
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.CreateNoWindow = true;
-                process.OutputDataReceived += OutputHandler;
-                process.ErrorDataReceived += OutputHandler;
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
                 double lastUpdateSeconds = 0;
                 radioButtonHHMMSSMS.Checked = true;
                 while (!process.HasExited)
@@ -371,9 +336,9 @@ namespace Nikse.SubtitleEdit.Forms
                         continue;
                     }
 
-                    if (_lastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _lastSeconds) > 0 - 001)
+                    if (_sceneChangesGenerator.LastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _sceneChangesGenerator.LastSeconds) > 0 - 001)
                     {
-                        lastUpdateSeconds = _lastSeconds;
+                        lastUpdateSeconds = _sceneChangesGenerator.LastSeconds;
                         UpdateImportTextBox();
                     }
                     if (_abort)
@@ -395,28 +360,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateImportTextBox()
         {
-            textBoxGenerate.Text = _timeCodes.ToString();
+            textBoxGenerate.Text = _sceneChangesGenerator.TimeCodes.ToString();
             textBoxGenerate.SelectionStart = textBoxGenerate.Text.Length;
             textBoxGenerate.ScrollToCaret();
-        }
-
-        void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            if (!string.IsNullOrWhiteSpace(outLine.Data))
-            {
-                _log.AppendLine(outLine.Data);
-                var match = TimeRegex.Match(outLine.Data);
-                if (match.Success)
-                {
-                    var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
-                    double seconds;
-                    if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out seconds) && seconds > 0.2)
-                    {
-                        _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortString());
-                        _lastSeconds = seconds;
-                    }
-                }
-            }
         }
 
         private void ImportSceneChanges_Shown(object sender, EventArgs e)

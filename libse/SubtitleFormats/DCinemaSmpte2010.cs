@@ -46,7 +46,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
 
-            if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2007/DCST"))
+            if (xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2007/DCST") ||
+                xmlAsString.Contains("http://www.smpte-ra.org/schemas/428-7/2014/DCST"))
             {
                 return false;
             }

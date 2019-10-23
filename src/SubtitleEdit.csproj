@@ -991,6 +991,7 @@
     <Compile Include="Logic\CommandLineConvert\TsToBluRaySup.cs" />
     <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
+    <Compile Include="Logic\SceneChangesGenerator.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
@@ -1551,6 +1552,10 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\SMPTE-428-7-2010-DCST.xsd.gz" />
+    <None Include="Resources\SMPTE-428-7-2014-DCST.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EmbeddedResource Include="Resources\SMPTE-428-7-2014-DCST.xsd.gz" />
     <None Include="Web References\SeNetworkService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
