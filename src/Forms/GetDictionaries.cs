@@ -146,6 +146,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
+                wc.DownloadProgressChanged += (o, args) =>
+                {
+                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                };
                 wc.DownloadDataAsync(new Uri(url));
             }
             catch (Exception exception)
