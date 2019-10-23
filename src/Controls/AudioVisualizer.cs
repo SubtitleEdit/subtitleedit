@@ -1845,15 +1845,21 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
                 ZoomIn();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Subtract)
             {
                 ZoomOut();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D0)
             {
                 ZoomFactor = 1.0;
                 OnZoomedChanged?.Invoke(this, null);
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Z)
             {
@@ -1863,6 +1869,7 @@ namespace Nikse.SubtitleEdit.Controls
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
                     Invalidate();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.X)
@@ -1873,6 +1880,7 @@ namespace Nikse.SubtitleEdit.Controls
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
                     Invalidate();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.C)
@@ -1880,6 +1888,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Locked = !Locked;
                 Invalidate();
                 e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (e.KeyData == InsertAtVideoPositionShortcut)
             {
@@ -1887,6 +1896,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     InsertAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+v = Paste from clipboard
@@ -1895,6 +1905,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     PasteAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
         }
