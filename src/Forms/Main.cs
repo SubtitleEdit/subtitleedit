@@ -480,6 +480,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnZoomedChanged += AudioWaveform_OnZoomedChanged;
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
                 audioVisualizer.PasteAtVideoPosition += audioVisualizer_PasteAtVideoPosition;
+                audioVisualizer.KeyDown += AudioVisualizer_KeyDown;
                 audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
                 audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
                 audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
@@ -511,6 +512,83 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
                 SeLogger.Error(exception, "Main constructor");
+            }
+        }
+
+        private void AudioVisualizer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count != 1 || e.Handled)
+            {
+                return;
+            }
+
+            if (e.KeyData == italicToolStripMenuItem.ShortcutKeys)
+            {
+                ListViewToggleTag(HtmlUtil.TagItalic);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == boldToolStripMenuItem.ShortcutKeys)
+            {
+                ListViewToggleTag(HtmlUtil.TagBold);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == underlineToolStripMenuItem.ShortcutKeys)
+            {
+                ListViewToggleTag(HtmlUtil.TagUnderline);
+                e.SuppressKeyPress = true;
+            }
+
+            else if (e.KeyData == removeAllFormattingsToolStripMenuItem.ShortcutKeys)
+            {
+                removeAllFormattingsToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+
+
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
+            {
+                SetAlignment("{\\an1}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN2)
+            {
+                SetAlignment("", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN3)
+            {
+                SetAlignment("{\\an3}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN4)
+            {
+                SetAlignment("{\\an4}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN5)
+            {
+                SetAlignment("{\\an5}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN6)
+            {
+                SetAlignment("{\\an6}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN7)
+            {
+                SetAlignment("{\\an7}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN8)
+            {
+                SetAlignment("{\\an8}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewAlignmentN9)
+            {
+                SetAlignment("{\\an9}", false);
+                e.SuppressKeyPress = true;
             }
         }
 
