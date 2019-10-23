@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonJoinAddTime.Text = Configuration.Settings.Language.JoinSubtitles.AppendTimeCodes;
             labelAddTime.Text = Configuration.Settings.Language.JoinSubtitles.AddMs;
 
-            labelAddTime.Left = radioButtonJoinAddTime.Left + labelAddTime.Width + 20;
+            labelAddTime.Left = radioButtonJoinAddTime.Left + radioButtonJoinAddTime.Width + 20;
             numericUpDownAddMs.Left = labelAddTime.Left + labelAddTime.Width + 5;
 
             UiUtil.FixLargeFonts(this, buttonCancel);
