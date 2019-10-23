@@ -53,9 +53,9 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(709, 348);
+            this.buttonCancel.Location = new System.Drawing.Point(694, 385);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(90, 23);
             this.buttonCancel.TabIndex = 45;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -65,9 +65,9 @@
             // 
             this.buttonJoin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonJoin.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonJoin.Location = new System.Drawing.Point(628, 348);
+            this.buttonJoin.Location = new System.Drawing.Point(573, 385);
             this.buttonJoin.Name = "buttonJoin";
-            this.buttonJoin.Size = new System.Drawing.Size(75, 21);
+            this.buttonJoin.Size = new System.Drawing.Size(115, 23);
             this.buttonJoin.TabIndex = 40;
             this.buttonJoin.Text = "&Join";
             this.buttonJoin.UseVisualStyleBackColor = true;
@@ -88,7 +88,7 @@
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(6, 19);
             this.listViewParts.Name = "listViewParts";
-            this.listViewParts.Size = new System.Drawing.Size(669, 256);
+            this.listViewParts.Size = new System.Drawing.Size(669, 273);
             this.listViewParts.TabIndex = 101;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
@@ -127,7 +127,7 @@
             this.groupBoxPreview.Controls.Add(this.listViewParts);
             this.groupBoxPreview.Location = new System.Drawing.Point(11, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(773, 297);
+            this.groupBoxPreview.Size = new System.Drawing.Size(773, 314);
             this.groupBoxPreview.TabIndex = 27;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Add subtitles to join (drop also supported)";
@@ -136,7 +136,7 @@
             // 
             this.labelTotalLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTotalLines.AutoSize = true;
-            this.labelTotalLines.Location = new System.Drawing.Point(7, 278);
+            this.labelTotalLines.Location = new System.Drawing.Point(7, 295);
             this.labelTotalLines.Name = "labelTotalLines";
             this.labelTotalLines.Size = new System.Drawing.Size(78, 13);
             this.labelTotalLines.TabIndex = 105;
@@ -183,7 +183,7 @@
             // 
             this.radioButtonJoinPlain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonJoinPlain.AutoSize = true;
-            this.radioButtonJoinPlain.Location = new System.Drawing.Point(14, 318);
+            this.radioButtonJoinPlain.Location = new System.Drawing.Point(14, 334);
             this.radioButtonJoinPlain.Name = "radioButtonJoinPlain";
             this.radioButtonJoinPlain.Size = new System.Drawing.Size(200, 17);
             this.radioButtonJoinPlain.TabIndex = 30;
@@ -195,7 +195,7 @@
             // numericUpDownAddMs
             // 
             this.numericUpDownAddMs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numericUpDownAddMs.Location = new System.Drawing.Point(385, 341);
+            this.numericUpDownAddMs.Location = new System.Drawing.Point(385, 357);
             this.numericUpDownAddMs.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -209,7 +209,7 @@
             // 
             this.radioButtonJoinAddTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonJoinAddTime.AutoSize = true;
-            this.radioButtonJoinAddTime.Location = new System.Drawing.Point(14, 341);
+            this.radioButtonJoinAddTime.Location = new System.Drawing.Point(14, 357);
             this.radioButtonJoinAddTime.Name = "radioButtonJoinAddTime";
             this.radioButtonJoinAddTime.Size = new System.Drawing.Size(161, 17);
             this.radioButtonJoinAddTime.TabIndex = 32;
@@ -222,7 +222,7 @@
             // 
             this.labelAddTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAddTime.AutoSize = true;
-            this.labelAddTime.Location = new System.Drawing.Point(227, 343);
+            this.labelAddTime.Location = new System.Drawing.Point(227, 359);
             this.labelAddTime.Name = "labelAddTime";
             this.labelAddTime.Size = new System.Drawing.Size(152, 13);
             this.labelAddTime.TabIndex = 34;
@@ -232,7 +232,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(796, 381);
+            this.ClientSize = new System.Drawing.Size(796, 420);
             this.Controls.Add(this.labelAddTime);
             this.Controls.Add(this.radioButtonJoinAddTime);
             this.Controls.Add(this.numericUpDownAddMs);
