@@ -9,6 +9,7 @@
    * Add new subtitle format - thx Zhen
    * Add new subtitle format
    * Add new subtitle format ESUB-XF - thx Bernard
+   * Add new subtitle format D-Cinema Smpte 2014 - thx James
    * Run only "Batch convert" in UI via "/batchconvertui" - thx 07416
    * Add option to capture top align in OCR - thx teodargent
    * Add support for WebVTT X-TIMESTAMP-MAP - thx laurensscheers/Nickola
@@ -32,8 +33,10 @@
    * Improve compatibility for ASS/SSA - thx sneaker_ger
    * Improve compatibility with Linux/Mono - thx shag00/JGoutin/stefano 
    * Add some missing translations - thx Jamakmake
-   * Add progress when using ocr in "Batch convert" or cmd-line
+   * Add progress when using OCR in "Batch convert" or cmd-line
    * Include language (if exists) in TS track picker
+   * Make tag shortcuts work in waveform - thx AlexandreMT
+   * Add progress for GetDictionaries
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan
@@ -51,13 +54,15 @@
    * Fix remembering export buttom margin - thx Saxtus
    * Skip small/short images when importing vobsub from mkv - thx Maitch
    * Fix for reading mkv on Linux - thx JGoutin
-   * Exclude html/ass tags in line lengts (Statistics) - thx AlexandreMT
+   * Exclude html/ass tags in line lengths (Statistics) - thx AlexandreMT
    * Fix PAC reading issues - thx Milenko
    * Fix remove text for HI issue - thx teodargent
    * Fix time code for bluray sup in m2ts - thx Jack1789
    * Fix "Find next" in "Replace dialog" - thx Maiki0
    * Fix spruce double lines with italic - thx Haiko
    * Fix left-over period in "Remove interjections" - thx Y4kuzi
+   * Fix remove text for HI issue with double dash - thx von Suppé 
+   * Fix for two line color tags in ebu - thx Alfonso
 
 
 3.5.10 (18th August 2019)
