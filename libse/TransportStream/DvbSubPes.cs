@@ -110,6 +110,42 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             _dataBuffer = new byte[dataSize + 1];
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
+
+        }
+
+        public string GetTeletext(int  packetId)
+        {
+            if (!IsTeletext)
+            {
+                return string.Empty;
+            }
+
+            Teletext.Fout.Clear();
+            Teletext.config.Page = 2184;
+            Teletext.config.Tid = packetId;
+            var i = 1;
+            while (i <= _dataBuffer.Length - 6)
+            {
+                var dataUnitId = _dataBuffer[i++];
+                var dataUnitLen = _dataBuffer[i++];
+                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                {
+                    // teletext payload has always size 44 bytes
+                    if (dataUnitLen == 44)
+                    {
+                        // reverse endianess (via lookup table), ETS 300 706, chapter 7.1
+                        for (var j = 0; j < dataUnitLen; j++)
+                        {
+                            _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
+                        }
+
+                        // FIXME: This explicit type conversion could be a problem some day -- do not need to be platform independant
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), 0);
+                    }
+                }
+                i += dataUnitLen;
+            }
+            return Teletext.Fout.ToString().Trim();
         }
 
         public DvbSubPes(int index, byte[] buffer)
@@ -195,6 +231,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         }
 
         public bool IsDvbSubpicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
+
+        public bool IsTeletext
+        {
+            get
+            {
+                if (DataIdentifier == 16)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         public int DataIdentifier
         {

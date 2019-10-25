@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
@@ -23,6 +24,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public List<Packet> SubtitlePackets { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
+        public Dictionary<int, StringBuilder> TeletextSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
 
@@ -56,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
             SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
+            TeletextSubtitlesLookup = new Dictionary<int, StringBuilder>();
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -77,8 +80,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
 
                 ms.Read(packetBuffer, 0, packetLength);
-                byte syncByte = packetBuffer[0];
-                if (syncByte == Packet.SynchronizationByte)
+                if (packetBuffer[0] == Packet.SynchronizationByte)
                 {
                     var packet = new Packet(packetBuffer);
 
@@ -119,16 +121,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         if (!IsM2TransportStream && packet.PayloadUnitStartIndicator)
                         {
                             var list = MakeSubtitlePesPackets(packet.PacketId, SubtitlePackets);
-                            bool hasImageSubtitles = false;
-                            foreach (var item in list)
-                            {
-                                if (item.IsDvbSubpicture)
-                                {
-                                    hasImageSubtitles = true;
-                                    break;
-                                }
-                            }
-                            if (hasImageSubtitles)
+                            if (list.Any(p => p.IsDvbSubpicture))
                             {
                                 if (SubtitlesLookup.ContainsKey(packet.PacketId))
                                 {
@@ -137,6 +130,24 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                                 else
                                 {
                                     SubtitlesLookup.Add(packet.PacketId, list);
+                                }
+                            }
+                            if (list.Any(p => p.IsTeletext))
+                            {
+                                foreach (var item in list.Where(p => p.IsTeletext))
+                                {
+                                    var text = item.GetTeletext(packet.PacketId);
+                                    if (text.Length > 0)
+                                    {
+                                        if (TeletextSubtitlesLookup.ContainsKey(packet.PacketId))
+                                        {
+                                            TeletextSubtitlesLookup[packet.PacketId].AppendLine(text + Environment.NewLine + Environment.NewLine);
+                                        }
+                                        else
+                                        {
+                                            TeletextSubtitlesLookup.Add(packet.PacketId, new StringBuilder(text + Environment.NewLine + Environment.NewLine));
+                                        }
+                                    }
                                 }
                             }
 

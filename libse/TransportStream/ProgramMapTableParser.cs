@@ -70,9 +70,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
 
                     ms.Read(packetBuffer, 0, packetLength);
-                    byte syncByte = packetBuffer[0];
-
-                    if (syncByte == Packet.SynchronizationByte)
+                    if (packetBuffer[0] == Packet.SynchronizationByte)
                     {
                         var packet = new Packet(packetBuffer);
 
