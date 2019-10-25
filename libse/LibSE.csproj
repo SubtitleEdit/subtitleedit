@@ -588,8 +588,8 @@
     <Compile Include="TransportStream\DvbSubPes.cs" />
     <Compile Include="TransportStream\EbuPesDataField.cs" />
     <Compile Include="TransportStream\EbuPesDataFieldText.cs" />
+    <Compile Include="TransportStream\TeletextHamming.cs" />
     <Compile Include="TransportStream\Helper.cs" />
-    <Compile Include="TransportStream\HummingDecoder.cs" />
     <Compile Include="TransportStream\ObjectDataSegment.cs" />
     <Compile Include="TransportStream\Packet.cs" />
     <Compile Include="TransportStream\PacketizedElementaryStream.cs" />
@@ -604,6 +604,8 @@
     <Compile Include="TransportStream\RegionCompositionSegment.cs" />
     <Compile Include="TransportStream\RegionCompositionSegmentObject.cs" />
     <Compile Include="TransportStream\SubtitleSegment.cs" />
+    <Compile Include="TransportStream\TeletextTables.cs" />
+    <Compile Include="TransportStream\Teletext.cs" />
     <Compile Include="TransportStream\TransportStreamParser.cs" />
     <Compile Include="TransportStream\TransportStreamSubtitle.cs" />
     <Compile Include="UknownFormatImporterJson.cs" />
