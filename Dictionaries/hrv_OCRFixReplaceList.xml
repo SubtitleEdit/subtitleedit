@@ -2642,6 +2642,7 @@
     <RegEx find="([gG])ore([lt])" replaceWith="$1orje$2" />
     <!-- ne diraj! [dogorio/razgorio/ izgorio] -->
     <RegEx find="([gG])oreo" replaceWith="$1orio" />
+    <RegEx find="gpdb" replaceWith="godb" />
     <RegEx find="govren" replaceWith="govoren" />
     <RegEx find="([gG])rej(?!p)" replaceWith="$1rij" />
     <RegEx find="\b([gG])rj?e([hs])" replaceWith="$1rije$2" />
