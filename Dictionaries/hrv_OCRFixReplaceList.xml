@@ -805,6 +805,7 @@
     <Word from="nebiste" to="ne biste" />
     <Word from="Nebiste" to="Ne biste" />
     <Word from="nedaj" to="ne daj" />
+    <Word from="nedaje" to="ne daje" />
     <Word from="nedgje" to="negdje" />
     <Word from="nega" to="njega" />
     <Word from="Nega" to="Njega" />
@@ -1138,6 +1139,7 @@
     <Word from="predame" to="preda me" />
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
+    <Word from="predsjenik" to="predsjednik" />
     <Word from="preformuliši" to="preformuliraj" />
     <Word from="preklo" to="porijeklo" />
     <Word from="preliv" to="preljev" />
@@ -2640,6 +2642,7 @@
     <RegEx find="([gG])ore([lt])" replaceWith="$1orje$2" />
     <!-- ne diraj! [dogorio/razgorio/ izgorio] -->
     <RegEx find="([gG])oreo" replaceWith="$1orio" />
+    <RegEx find="gpdb" replaceWith="godb" />
     <RegEx find="govren" replaceWith="govoren" />
     <RegEx find="([gG])rej(?!p)" replaceWith="$1rij" />
     <RegEx find="\b([gG])rj?e([hs])" replaceWith="$1rije$2" />
@@ -3039,6 +3042,7 @@
     <RegEx find="\b([rR])i?j?ečni([kcč])" replaceWith="$1ječni$2" />
     <RegEx find="\b([rR])j?eš([ei]o?|il[aeio]|it[ei]|imo?|i[mš]|en|en[aeiou])\b" replaceWith="$1iješ$2" />
     <RegEx find="\b([rR])j?etk([aiou])" replaceWith="$1ijetk$2" />
+    <RegEx find="rofn" replaceWith="rafn" />
     <RegEx find="sačeka" replaceWith="pričeka" />
     <RegEx find="Sačeka" replaceWith="Pričeka" />
     <RegEx find="aglasno" replaceWith="uglasno" />
