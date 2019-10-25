@@ -12170,15 +12170,22 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Empty);
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
 
-            if (tsParser.SubtitlePacketIds.Count == 0)
+            if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 0)
             {
                 MessageBox.Show(_language.NoSubtitlesFound);
                 _exitWhenLoaded = _loading;
                 return false;
             }
 
-            int packedId = tsParser.SubtitlePacketIds[0];
-            if (tsParser.SubtitlePacketIds.Count > 1)
+            if (tsParser.TeletextSubtitlesLookup.Count > 0)
+            {
+                new SubRip().LoadSubtitle(_subtitle, tsParser.TeletextSubtitlesLookup.First().ToString().SplitToLines(), null);
+                SubtitleListview1.Fill(_subtitle);
+                return true;
+            }
+
+            int packedId;
+            if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Count > 1)
             {
                 using (var subChooser = new TransportStreamSubtitleChooser())
                 {
@@ -12189,10 +12196,17 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
+                    //if (tsParser.TeletextSubtitlesLookup.Count > 0)
+                    //{
+                    //    new SubRip().LoadSubtitle(_subtitle, tsParser.TeletextSubtitlesLookup.First().ToString().SplitToLines(), null);
+                    //    SubtitleListview1.Fill(_subtitle);
+                    //    return true;
+                    //}
                 }
             }
-            var subtitles = tsParser.GetDvbSubtitles(packedId);
 
+            packedId = tsParser.SubtitlePacketIds[0];
+            var subtitles = tsParser.GetDvbSubtitles(packedId);
             using (var formSubOcr = new VobSubOcr())
             {
                 string language = null;
@@ -12235,9 +12249,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Save();
                     return true;
                 }
-                _exitWhenLoaded = _loading;
-                return false;
             }
+            _exitWhenLoaded = _loading;
+            return false;
+
         }
 
         #region Teletext
