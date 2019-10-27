@@ -12177,15 +12177,16 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            if (tsParser.TeletextSubtitlesLookup.Count > 0)
+            if (tsParser.SubtitlePacketIds.Count == 0 & tsParser.TeletextSubtitlesLookup.Count == 1 && tsParser.TeletextSubtitlesLookup.First().Value.Count() == 1)
             {
-                new SubRip().LoadSubtitle(_subtitle, tsParser.TeletextSubtitlesLookup.First().ToString().SplitToLines(), null);
+                var srt = tsParser.TeletextSubtitlesLookup.First().Value.First().Value.ToString();
+                new SubRip().LoadSubtitle(_subtitle, srt.SplitToLines(), null);
                 SubtitleListview1.Fill(_subtitle);
                 return true;
             }
 
-            int packedId;
-            if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Count > 1)
+            int packetId;
+            if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Sum(p=>p.Value.Count()) > 1)
             {
                 using (var subChooser = new TransportStreamSubtitleChooser())
                 {
@@ -12195,18 +12196,22 @@ namespace Nikse.SubtitleEdit.Forms
                         return false;
                     }
 
-                    packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
-                    //if (tsParser.TeletextSubtitlesLookup.Count > 0)
-                    //{
-                    //    new SubRip().LoadSubtitle(_subtitle, tsParser.TeletextSubtitlesLookup.First().ToString().SplitToLines(), null);
-                    //    SubtitleListview1.Fill(_subtitle);
-                    //    return true;
-                    //}
+                    if (subChooser.IsTeletext)
+                    {
+                        new SubRip().LoadSubtitle(_subtitle, subChooser.Srt.SplitToLines(), null);
+                        SubtitleListview1.Fill(_subtitle);
+                        return true;
+                    }
+                    packetId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
                 }
             }
+            else
+            {
+                packetId = tsParser.SubtitlePacketIds[0];
+            }
 
-            packedId = tsParser.SubtitlePacketIds[0];
-            var subtitles = tsParser.GetDvbSubtitles(packedId);
+            
+            var subtitles = tsParser.GetDvbSubtitles(packetId);
             using (var formSubOcr = new VobSubOcr())
             {
                 string language = null;
@@ -12214,7 +12219,7 @@ namespace Nikse.SubtitleEdit.Forms
                 programMapTableParser.Parse(fileName); // get languages
                 if (programMapTableParser.GetSubtitlePacketIds().Count > 0)
                 {
-                    language = programMapTableParser.GetSubtitleLanguage(packedId);
+                    language = programMapTableParser.GetSubtitleLanguage(packetId);
                 }
 
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName, language);
@@ -12254,150 +12259,6 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
 
         }
-
-        #region Teletext
-
-        /*
-        private readonly static String[] colors = {
-        "{\\c&HC0C0C0&}",   // black /gray
-        "{\\c&H4040FF&}",   // red
-        "{\\c&H00FF00&}",   // green
-        "{\\c&H00FFFF&}",   // yellow
-        "{\\c&HFF409B&}",   // blue //DM15032004 081.6 int18 changed
-        "{\\c&HFF00FF&}",   // magenta
-        "{\\c&HFFFF00&}",   // cyan
-        "{\\c&HFFFFFF&}",   // white
-        };
-
-        public static byte ByteReverse(byte n)
-        {
-            n = (byte)(((n >> 1) & 0x55) | ((n << 1) & 0xaa));
-            n = (byte)(((n >> 2) & 0x33) | ((n << 2) & 0xcc));
-            n = (byte)(((n >> 4) & 0x0f) | ((n << 4) & 0xf0));
-            return n;
-        }
-
-        private static string GetTeletext(byte[] _buffer, int offset)
-        {
-            string text = string.Empty;
-            bool ascii = false;
-            const int color = 0;
-            bool toggle = false;
-            for (int c = offset, i = 0; c < _buffer.Length; c++, i++)
-            {
-                //var char_value = _buffer[c];
-
-                var char_value = 0x7F & ByteReverse(_buffer[c]);
-
-                if (char_value >> 3 == 0) //0x0..7
-                {
-                    ascii = true;
-                    text += ((color == 1) ? colors[char_value] : string.Empty); // + (char)active_set[32];
-                }
-                else if (char_value >> 4 == 0) //0x8..F
-                {
-                    text += " "; //(char)active_set[32];
-                }
-                else if (char_value >> 7 == 1) //0x80..FF
-                {
-                    text += " "; //(char)active_set[32];
-                }
-                else if (char_value < 27) //0x10..1A
-                {
-                    ascii = false;
-                    text += " "; //(char)active_set[32];
-                }
-                else if (char_value < 32) //0x1B..1F
-                {
-                    if (char_value == 0x1B) //ESC
-                    {
-                        if (toggle)
-                        {
-                            //  active_set = CharSet.getActive_G0_Set(primary_set_mapping, primary_national_set_mapping, row);
-                            //  active_national_set = CharSet.getActiveNationalSubset(primary_set_mapping, primary_national_set_mapping, row);
-                        }
-                        else
-                        {
-                            //active_set = CharSet.getActive_G0_Set(secondary_set_mapping, secondary_national_set_mapping, row);
-                            //active_national_set = CharSet.getActiveNationalSubset(secondary_set_mapping, secondary_national_set_mapping, row);
-                        }
-                        toggle = !toggle;
-                    }
-
-                    text += " "; //(char)active_set[32];
-                    continue;
-                }
-                else if (char_value == 0x7F) //0x7F
-                {
-                    text += " "; // (char)active_set[32];
-                    continue;
-                }
-
-                if (!ascii)
-                {
-                    text += " "; // (char)active_set[32];
-                    continue;
-                }
-
-                //if (active_national_set != null)
-                //{
-                //    // all chars 0x20..7F
-                //    switch (char_value) // special national characters
-                //    {
-                //        case 0x23:
-                //            text += (char)active_national_set[0];
-                //            continue loopi;
-                //        case 0x24:
-                //            text += (char)active_national_set[1];
-                //            continue loopi;
-                //        case 0x40:
-                //            text += (char)active_national_set[2];
-                //            continue loopi;
-                //        case 0x5b:
-                //            text += (char)active_national_set[3];
-                //            continue loopi;
-                //        case 0x5c:
-                //            text += (char)active_national_set[4];
-                //            continue loopi;
-                //        case 0x5d:
-                //            text += (char)active_national_set[5];
-                //            continue loopi;
-                //        case 0x5e:
-                //            text += (char)active_national_set[6];
-                //            continue loopi;
-                //        case 0x5f:
-                //            text += (char)active_national_set[7];
-                //            continue loopi;
-                //        case 0x60:
-                //            text += (char)active_national_set[8];
-                //            continue loopi;
-                //        case 0x7b:
-                //            text += (char)active_national_set[9];
-                //            continue loopi;
-                //        case 0x7c:
-                //            text += (char)active_national_set[10];
-                //            continue loopi;
-                //        case 0x7d:
-                //            text += (char)active_national_set[11];
-                //            continue loopi;
-                //        case 0x7e:
-                //            text += (char)active_national_set[12];
-                //            continue loopi;
-                //    }
-                //}
-
-                text += Encoding.Default.GetString(new byte[] { (byte)char_value }); //(char)active_set[char_value];
-                //continue loopi;
-            }
-
-            if (color == 1)
-                return colors[7] + text.Trim();
-            else
-                return text;
-        }
-        */
-
-        #endregion Teletext
 
         private bool ImportSubtitleFromMp4(string fileName)
         {
