@@ -2,8 +2,8 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.10</Version>
-    <TranslatedBy>Tłumaczenie: Adam Malich (https://potplayerclub.pl)</TranslatedBy>
+    <Version>3.5.11</Version>
+    <TranslatedBy>Tłumaczenie: Adam Malich (http://www.mm.pl/~fanpack/)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -79,6 +79,8 @@
     <Size>Rozmiar</Size>
     <Search>Szukaj</Search>
     <DeleteCurrentLine>Usuń aktualną linię</DeleteCurrentLine>
+    <Width>Szerokość</Width>
+    <Height>Wysokość</Height>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -172,7 +174,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <BatchConvert>
     <Title>Konwersja wielu plików równocześnie</Title>
     <Input>Wejście</Input>
-    <InputDescription>Pliki wejściowe (przeglądaj lub przeciągnij &amp;&amp; upuść)</InputDescription>
+    <InputDescription>Pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
     <Status>Status</Status>
     <Output>Wyjście</Output>
     <ChooseOutputFolder>Wybierz folder wyjściowy</ChooseOutputFolder>
@@ -211,6 +213,12 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <MultipleReplaceErrorX>Wielokrotne zastąpienia: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Przesunięcie kodów czasowych</OffsetTimeCodes>
+    <TransportStreamSettings>Ustawienia strumienia transportowego (TS)</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Zastąp oryginalną pozycję X</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Zastąp oryginalną pozycję Y</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Zastąp oryginalny rozmiar wideo</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Zakończenie nazwy pliku</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>Ustawienia TS...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -783,7 +791,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Pliki mają już poprawne kody czasowe</AlreadyCorrectTimeCodes>
-    <AppendTimeCodes>Dodaj czas zakończenia poprzedniego pliku</AppendTimeCodes>
+    <AppendTimeCodes>Dodaj czas zakończenia z poprzedniego pliku</AppendTimeCodes>
     <AddMs>Dodaj milisekundy po każdym pliku</AddMs>
   </JoinSubtitles>
   <LanguageNames>
@@ -2450,10 +2458,10 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <BinaryThreshold>Próg porównania obrazu binarnego</BinaryThreshold>
     <InvertColors>Odwróć kolory</InvertColors>
     <YellowToWhite>Żółty na biały</YellowToWhite>
-    <ColorToWhite>Kolor na biel</ColorToWhite>
-    <ColorToRemove>Kolor do usunięcia</ColorToRemove>
-    <Cropping>Przycinanie</Cropping>
-    <CropTransparentColors>Przytnij przezroczyste kolory</CropTransparentColors>
+    <ColorToWhite>Kolor na biały</ColorToWhite>
+    <ColorToRemove>Kolor do wykluczenia</ColorToRemove>
+    <Cropping>Wycinanie</Cropping>
+    <CropTransparentColors>Wytnij kolory przezroczystości</CropTransparentColors>
   </OcrPreprocessing>
   <Watermark>
     <Title>Znak wodny</Title>
