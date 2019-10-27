@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.5.11 (xth October 2019) BETA
+3.5.11 (27th October 2019)
 * NEW:
    * Join: Can now append with "add time" - thx Michael/Nickola
    * Add cmd-line/batch-convert-ui of TS files to Bluray sup or BDN/XML
@@ -36,7 +36,7 @@
    * Add progress when using OCR in "Batch convert" or cmd-line
    * Include language (if exists) in TS track picker
    * Make tag shortcuts work in waveform - thx AlexandreMT
-   * Add progress for GetDictionaries
+   * Add progress for GetDictionaries - thx HimbeersaftLP
 * FIXED:
    * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix crash when using "Batch convert" txt to img - thx Alan

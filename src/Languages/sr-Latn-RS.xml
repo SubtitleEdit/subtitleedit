@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.10</Version>
+    <Version>3.5.11</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -785,9 +785,12 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
     <FileName>Naziv datoteke</FileName>
     <Join>Spoji</Join>
     <TotalNumberOfLinesX>Ukupan broj linija: {0:#,###,###}</TotalNumberOfLinesX>
-    <AlreadyCorrectTimeCodes></AlreadyCorrectTimeCodes>
-    <AppendTimeCodes></AppendTimeCodes>
-    <AddMs></AddMs>
+    <AlreadyCorrectTimeCodes>
+    </AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>
+    </AppendTimeCodes>
+    <AddMs>
+    </AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nije precizirano</NotSpecified>
@@ -2402,7 +2405,8 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <UseTimeCodesFromIdx>Koristi vremenske kodove iz .idx datoteke</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nema poklapanja&gt;</NoMatch>
     <AutoTransparentBackground>Providna pozadina</AutoTransparentBackground>
-    <CaptureTopAlign></CaptureTopAlign>
+    <CaptureTopAlign>
+    </CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Rezultati poređenja za trenutnu sliku...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune poređenja za poslednju sliku...</EditLastAdditions>
     <SetUnitalicFactor>Podesi 'ne-kurziv' faktor...</SetUnitalicFactor>
