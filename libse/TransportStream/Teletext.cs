@@ -42,21 +42,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             public ulong UtcRefValue { get; set; } // UTC referential value
             public bool SeMode { get; set; } // FIXME: move SE_MODE to output module
             public bool M2Ts { get; set; } // consider input stream is af s M2TS, instead of TS
+            public int Count { get; set; } // consider input stream is af s M2TS, instead of TS
 
             public Config()
             {
-                InputName = null;
-                OutputName = null;
-                Verbose = false;
-                Page = 0;
-                Tid = 0;
-                Offset = 0;
-                Colours = false;
                 Bom = true;
-                NonEmpty = false;
-                UtcRefValue = 0;
-                SeMode = false;
-                M2Ts = false;
             }
         }
 
@@ -125,17 +115,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public static readonly StringBuilder Fout = new StringBuilder();
 
-        private static readonly States states = new States();
+        public static States states = new States();
 
         public static readonly Config config = new Config();
 
         private static readonly PrimaryCharset primaryCharset = new PrimaryCharset();
 
         // global TS PCR value
-        private static ulong _globalTimestamp;
+        public static ulong _globalTimestamp;
 
         // last timestamp computed
-        private static ulong _lastTimestamp;
+        public static ulong _lastTimestamp;
 
         private static long _delta;
         private static long _t0;
@@ -411,7 +401,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             page_is_empty:
             if (pageIsEmpty) return;
 
-            if (page.ShowTimestamp > page.HideTimestamp) page.HideTimestamp = page.ShowTimestamp;
+            if (page.ShowTimestamp > page.HideTimestamp)
+            {
+                page.HideTimestamp = page.ShowTimestamp;
+            }
 
             if (config.SeMode)
             {
@@ -539,6 +532,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 Fout.Append(config.SeMode ? " " : Environment.NewLine);
             }
             Fout.AppendLine();
+        }
+
+        public static int GetPageNumber(TeletextPacketPayload packet)
+        {
+            var address = (Unham84(packet.Address[1]) << 4) | Unham84(packet.Address[0]);
+            var m = address & 0x7;
+            if (m == 0)
+            {
+                m = 8;
+            }
+            return (m << 8) | (Unham84(packet.Data[1]) << 4) | Unham84(packet.Data[0]);
         }
 
         public static void ProcessTelxPacket(DataUnitT dataUnitId, TeletextPacketPayload packet, ulong timestamp)

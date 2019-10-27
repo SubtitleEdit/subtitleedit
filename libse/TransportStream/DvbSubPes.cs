@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public const int DefaultScreenWidth = 720;
         public const int DefaultScreenHeight = 576;
 
-        public readonly UInt32 StartCode;
+        public readonly uint StartCode;
         public readonly int StreamId;
         public readonly int Length;
         public readonly int ScramblingControl;
@@ -30,12 +30,14 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public readonly int ExtensionFlag;
         public readonly int HeaderDataLength;
 
-        public readonly UInt64? PresentationTimestamp;
-        public readonly UInt64? DecodeTimestamp;
+        public readonly ulong? PresentationTimestamp;
+        public readonly ulong? DecodeTimestamp;
 
         public readonly int? SubPictureStreamId;
 
         private readonly byte[] _dataBuffer;
+
+        private static long Delta = long.MaxValue; //TODO: remove
 
         public DvbSubPes(byte[] buffer, int index)
         {
@@ -110,16 +112,25 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             _dataBuffer = new byte[dataSize + 1];
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
-
         }
 
-        public string GetTeletext(int  packetId)
+        public Dictionary<int, string> GetTeletext(int packetId)
         {
             if (!IsTeletext)
             {
-                return string.Empty;
+                return new Dictionary<int, string>();
             }
 
+            var pts = PresentationTimestamp.HasValue ? (long)PresentationTimestamp.Value / 90 : 0;
+            if (Delta == long.MaxValue)
+            {
+                Delta = -pts;
+            }
+            ulong lastTimestamp = (ulong)(pts + Delta);
+
+
+            // find all pages
+            var pages = new List<int>();
             Teletext.Fout.Clear();
             Teletext.config.Page = 2184;
             Teletext.config.Tid = packetId;
@@ -139,13 +150,64 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
 
-                        // FIXME: This explicit type conversion could be a problem some day -- do not need to be platform independant
-                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), 0);
+                        var p = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i)); //TODO: optimize use databuffer
+                        if (!pages.Contains(p))
+                        {
+                            pages.Add(p);
+                        }
                     }
                 }
                 i += dataUnitLen;
             }
-            return Teletext.Fout.ToString().Trim();
+
+
+            var teletextPages = new Dictionary<int, string>();
+            Teletext.Fout.Clear();
+            Teletext._lastTimestamp = 0;
+            Teletext._globalTimestamp = 0;
+            Teletext.states = new Teletext.States();
+            foreach (var page in pages)
+            {
+                Teletext.Fout.Clear();
+                Teletext.config.Page = page;
+                Teletext.config.Tid = packetId;
+                i = 1;
+                while (i <= _dataBuffer.Length - 6)
+                {
+                    var dataUnitId = _dataBuffer[i++];
+                    var dataUnitLen = _dataBuffer[i++];
+                    if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                    {
+                        // teletext payload has always size 44 bytes
+                        if (dataUnitLen == 44)
+                        {
+                            // reverse endianess (via lookup table), ETS 300 706, chapter 7.1
+                            //for (var j = 0; j < dataUnitLen; j++)
+                            //{
+                            //    _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
+                            //}
+
+                            Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp); //TODO: optimize use databuffer
+                        }
+                    }
+                    i += dataUnitLen;
+                }
+                var text = Teletext.Fout.ToString().Trim();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var p = 888;
+                    if (teletextPages.ContainsKey(p))
+                    {
+                        teletextPages[p] += Environment.NewLine + Environment.NewLine + text;
+                    }
+                    else
+                    {
+                        teletextPages.Add(p, text);
+                    }
+                }
+            }
+
+            return teletextPages;
         }
 
         public DvbSubPes(int index, byte[] buffer)
@@ -230,19 +292,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
         }
 
-        public bool IsDvbSubpicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
+        public bool IsDvbSubPicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
 
-        public bool IsTeletext
-        {
-            get
-            {
-                if (DataIdentifier == 16)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
+        public bool IsTeletext => DataIdentifier == 16;
 
         public int DataIdentifier
         {
@@ -325,13 +377,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         private ClutDefinitionSegment GetClutDefinitionSegment(ObjectDataSegment ods)
         {
-            foreach (RegionCompositionSegment rcs in RegionCompositions)
+            foreach (var rcs in RegionCompositions)
             {
-                foreach (RegionCompositionSegmentObject o in rcs.Objects)
+                foreach (var o in rcs.Objects)
                 {
                     if (o.ObjectId == ods.ObjectId)
                     {
-                        foreach (ClutDefinitionSegment cds in ClutDefinitions)
+                        foreach (var cds in ClutDefinitions)
                         {
                             if (cds.ClutId == rcs.RegionClutId)
                             {
@@ -359,13 +411,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             var p = new Point(0, 0);
 
-            foreach (RegionCompositionSegment rcs in RegionCompositions)
+            foreach (var rcs in RegionCompositions)
             {
-                foreach (RegionCompositionSegmentObject o in rcs.Objects)
+                foreach (var o in rcs.Objects)
                 {
                     if (o.ObjectId == ods.ObjectId)
                     {
-                        foreach (PageCompositionSegment cds in PageCompositions)
+                        foreach (var cds in PageCompositions)
                         {
                             foreach (var r in cds.Regions)
                             {
@@ -398,7 +450,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 return ods.Image;
             }
 
-            ClutDefinitionSegment cds = GetClutDefinitionSegment(ods);
+            var cds = GetClutDefinitionSegment(ods);
             ods.DecodeImage(_dataBuffer, ods.BufferIndex, cds);
             return ods.Image;
         }
@@ -414,7 +466,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             int height = DefaultScreenHeight;
 
             var segments = SubtitleSegments;
-            foreach (SubtitleSegment ss in segments)
+            foreach (var ss in segments)
             {
                 if (ss.DisplayDefinition != null)
                 {
