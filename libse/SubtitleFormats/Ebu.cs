@@ -131,11 +131,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public EbuGeneralSubtitleInformation()
             {
-                CodePageNumber = "437";
+                CodePageNumber = "888";
                 DiskFormatCode = "STL25.01";
-                DisplayStandardCode = "0"; // 0=Open subtitling
+                DisplayStandardCode = "1"; // 0=Open subtitling
                 CharacterCodeTableNumber = "00";
-                LanguageCode = "0A";
+                LanguageCode = "56";
                 OriginalProgrammeTitle = "No Title                        ";
                 OriginalEpisodeTitle = "                                ";
                 TranslatedProgrammeTitle = string.Empty.PadLeft(32, ' ');
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TimeCodeFirstInCue = "00000001";
                 TotalNumberOfDisks = "1";
                 DiskSequenceNumber = "1";
-                CountryOfOrigin = "USA";
+                CountryOfOrigin = "RUS";
                 Publisher = string.Empty.PadLeft(32, ' ');
                 EditorsName = string.Empty.PadLeft(32, ' ');
                 EditorsContactDetails = string.Empty.PadLeft(32, ' ');
