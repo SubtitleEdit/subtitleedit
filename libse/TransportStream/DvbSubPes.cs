@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
         }
 
-        public Dictionary<int, string> GetTeletext(int packetId)
+        public Dictionary<int, string> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings)
         {
             if (!IsTeletext)
             {
@@ -128,6 +129,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
             ulong lastTimestamp = (ulong)(pts + Delta);
 
+            var sb = new StringBuilder();
 
             // find all pages
             var pages = new List<int>();
@@ -135,59 +137,78 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Teletext.config.Page = 2184;
             Teletext.config.Tid = packetId;
             var i = 1;
-            while (i <= _dataBuffer.Length - 6)
+            //while (i <= _dataBuffer.Length - 6)
+            //{
+            //    var dataUnitId = _dataBuffer[i++];
+            //    var dataUnitLen = _dataBuffer[i++];
+            //    if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+            //    {
+            //        // teletext payload has always size 44 bytes
+            //        if (dataUnitLen == 44)
+            //        {
+            //            // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
+            //            for (var j = 0; j < dataUnitLen; j++)
+            //            {
+            //                _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
+            //            }
+
+            //            var p = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i)); //TODO: optimize use databuffer
+            //            if (p >= 0 && !pages.Contains(p))
+            //            {
+            //                pages.Add(p);
+            //            }
+            //        }
+            //    }
+            //    i += dataUnitLen;
+            //}
+
+            if (pages.Count == 0)
             {
-                var dataUnitId = _dataBuffer[i++];
-                var dataUnitLen = _dataBuffer[i++];
-                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
-                {
-                    // teletext payload has always size 44 bytes
-                    if (dataUnitLen == 44)
-                    {
-                        // reverse endianess (via lookup table), ETS 300 706, chapter 7.1
-                        for (var j = 0; j < dataUnitLen; j++)
-                        {
-                            _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
-                        }
-
-                        var p = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i)); //TODO: optimize use databuffer
-                        if (!pages.Contains(p))
-                        {
-                            pages.Add(p);
-                        }
-                    }
-                }
-                i += dataUnitLen;
+                pages.Add(888); // default
             }
-
 
             var teletextPages = new Dictionary<int, string>();
             Teletext.Fout.Clear();
             Teletext._lastTimestamp = 0;
             Teletext._globalTimestamp = 0;
             Teletext.states = new Teletext.States();
-            foreach (var page in pages)
+
+
+            var pageNum = 888;
+            // dec to BCD, magazine pages numbers are in BCD (ETSI 300 706)
+            var pageNumBcd = ((pageNum / 100) << 8) | ((pageNum / 10 % 10) << 4) | (pageNum % 10);
+            // pages = new List<int> { pageNumBcd };
+            var page = pageNum;
+            int teletextPackageNo = 0;
+            //foreach (var page in pages)
             {
                 Teletext.Fout.Clear();
-                Teletext.config.Page = page;
+                Teletext.config.Page = page; //  ((page / 100) << 8) | ((page / 10 % 10) << 4) | (page % 10); ;
                 Teletext.config.Tid = packetId;
                 i = 1;
                 while (i <= _dataBuffer.Length - 6)
                 {
+                    teletextPackageNo++;
+                    sb.AppendLine("----------------");
+                    sb.AppendLine($"{teletextPackageNo} for packet-id {packetId}");
+
                     var dataUnitId = _dataBuffer[i++];
                     var dataUnitLen = _dataBuffer[i++];
+                    sb.AppendLine($"dataUnitId: {dataUnitId}");
+                    sb.AppendLine($"dataUnitLen: {dataUnitLen}");
                     if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                     {
                         // teletext payload has always size 44 bytes
                         if (dataUnitLen == 44)
                         {
-                            // reverse endianess (via lookup table), ETS 300 706, chapter 7.1
-                            //for (var j = 0; j < dataUnitLen; j++)
-                            //{
-                            //    _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
-                            //}
 
-                            Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp); //TODO: optimize use databuffer
+                            // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
+                            for (var j = 0; j < dataUnitLen; j++)
+                            {
+                                _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
+                            }
+
+                            Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, sb); //TODO: optimize use databuffer
                         }
                     }
                     i += dataUnitLen;
@@ -195,7 +216,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var text = Teletext.Fout.ToString().Trim();
                 if (!string.IsNullOrEmpty(text))
                 {
-                    var p = 888;
+                    var p = teletextRunSettings.PageNumber;
                     if (teletextPages.ContainsKey(p))
                     {
                         teletextPages[p] += Environment.NewLine + Environment.NewLine + text;
@@ -206,7 +227,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
                 }
             }
-
             return teletextPages;
         }
 

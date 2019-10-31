@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             long position = 0;
             SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
             TeletextSubtitlesLookup = new Dictionary<int, Dictionary<int, StringBuilder>>();
+            TeletextRunSettings teletextRunSettings = new TeletextRunSettings();
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
@@ -117,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             SubtitlePacketIds.Add(packet.PacketId);
                         }
 
-                        if (!IsM2TransportStream && packet.PayloadUnitStartIndicator)
+                        if (packet.PayloadUnitStartIndicator) //TODO: fix for m2ts if (!IsM2TransportStream && packet.PayloadUnitStartIndicator) //TODO: fix for m2ts
                         {
                             var list = MakeSubtitlePesPackets(packet.PacketId, SubtitlePackets);
                             if (list.Any(p => p.IsDvbSubPicture))
@@ -135,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             {
                                 foreach (var item in list.Where(p => p.IsTeletext))
                                 {
-                                    var textDictionary = item.GetTeletext(packet.PacketId);
+                                    var textDictionary = item.GetTeletext(packet.PacketId, teletextRunSettings);
                                     foreach (var dic in textDictionary)
                                     {
                                         if (dic.Value.Length > 0)
