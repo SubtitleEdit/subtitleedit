@@ -136,32 +136,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Teletext.Fout.Clear();
             Teletext.config.Page = 2184;
             Teletext.config.Tid = packetId;
-            var i = 1;
-            //while (i <= _dataBuffer.Length - 6)
-            //{
-            //    var dataUnitId = _dataBuffer[i++];
-            //    var dataUnitLen = _dataBuffer[i++];
-            //    if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
-            //    {
-            //        // teletext payload has always size 44 bytes
-            //        if (dataUnitLen == 44)
-            //        {
-            //            // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
-            //            for (var j = 0; j < dataUnitLen; j++)
-            //            {
-            //                _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
-            //            }
-
-            //            var p = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i)); //TODO: optimize use databuffer
-            //            if (p >= 0 && !pages.Contains(p))
-            //            {
-            //                pages.Add(p);
-            //            }
-            //        }
-            //    }
-            //    i += dataUnitLen;
-            //}
-
             if (pages.Count == 0)
             {
                 pages.Add(888); // default
@@ -171,19 +145,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Teletext.Fout.Clear();
             Teletext._lastTimestamp = 0;
             Teletext._globalTimestamp = 0;
-            Teletext.states = new Teletext.States();
-
-
             var pageNum = 888;
-            // dec to BCD, magazine pages numbers are in BCD (ETSI 300 706)
-            var pageNumBcd = ((pageNum / 100) << 8) | ((pageNum / 10 % 10) << 4) | (pageNum % 10);
-            // pages = new List<int> { pageNumBcd };
             var page = pageNum;
             int teletextPackageNo = 0;
             Teletext.Fout.Clear();
             Teletext.config.Page = page; //  ((page / 100) << 8) | ((page / 10 % 10) << 4) | (page % 10); ;
             Teletext.config.Tid = packetId;
-            i = 1;
+            var i = 1;
             while (i <= _dataBuffer.Length - 6)
             {
                 teletextPackageNo++;

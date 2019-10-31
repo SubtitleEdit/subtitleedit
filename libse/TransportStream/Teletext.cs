@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
@@ -117,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public static readonly StringBuilder Fout = new StringBuilder();
 
-        public static States states = new States();
+        //public static States states = new States();
 
         public static readonly Config config = new Config();
 
@@ -128,11 +126,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         // last timestamp computed
         public static ulong _lastTimestamp;
-
-        private static long _delta;
-        private static long _t0;
-
-        private static BoolT _usingPts = BoolT.Undef;
 
         // SRT frames produced
         private static int _framesProduced;
@@ -153,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var m = TeletextTables.G0LatinNationalSubsetsMap[c];
                 if (m == 0xff)
                 {
-                    Console.WriteLine($"- G0 Latin National Subset ID {(c >> 3):X2}.{(c & 0x7):X2} is not implemented");
+                    Console.WriteLine($"- G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} is not implemented");
                 }
                 else
                 {
@@ -223,116 +216,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         {
             return p & 0xff;
         }
-
-        public static void ProcessPesPacket(byte[] buffer, int size)
-        {
-            if (size < 6) return;
-
-            // Packetized Elementary Stream (PES) 32-bit start code
-            ulong pesPrefix = (ulong)((buffer[0] << 16) | (buffer[1] << 8) | buffer[2]);
-            var pesStreamId = buffer[3];
-
-            // check for PES header
-            if (pesPrefix != 0x000001) return;
-
-            // stream_id is not "Private Stream 1" (0xbd)
-            if (pesStreamId != 0xbd) return;
-
-            // PES packet length
-            // ETSI EN 301 775 V1.2.1 (2003-05) chapter 4.3: (N x 184) - 6 + 6 B header
-            var pesPacketLength = 6 + ((buffer[4] << 8) | buffer[5]);
-            // Can be zero. If the "PES packet length" is set to zero, the PES packet can be of any length.
-            // A value of zero for the PES packet length can be used only when the PES packet payload is a video elementary stream.
-            if (pesPacketLength == 6) return;
-
-            // truncate incomplete PES packets
-            if (pesPacketLength > size) pesPacketLength = size;
-
-            bool optionalPesHeaderIncluded = false;
-            var optionalPesHeaderLength = 0;
-            // optional PES header marker bits (10.. ....)
-            if ((buffer[6] & 0xc0) == 0x80)
-            {
-                optionalPesHeaderIncluded = true;
-                optionalPesHeaderLength = buffer[8];
-            }
-
-            // should we use PTS or PCR?
-            if (_usingPts == BoolT.Undef)
-            {
-                if (optionalPesHeaderIncluded && (buffer[7] & 0x80) > 0)
-                {
-                    _usingPts = BoolT.Yes;
-                    if (config.Verbose) Console.WriteLine("- PID 0xbd PTS available");
-                }
-                else
-                {
-                    _usingPts = BoolT.No;
-                    if (config.Verbose) Console.WriteLine(" - PID 0xbd PTS unavailable, using TS PCR");
-                }
-            }
-
-            ulong t;
-            // If there is no PTS available, use global PCR
-            if (_usingPts == BoolT.No)
-            {
-                t = _globalTimestamp;
-            }
-            else
-            {
-                // PTS is 33 bits wide, however, timestamp in ms fits into 32 bits nicely (PTS/90)
-                // presentation and decoder timestamps use the 90 KHz clock, hence PTS/90 = [ms]
-                // __MUST__ assign value to uint64_t and __THEN__ rotate left by 29 bits
-                // << is defined for signed int (as in "C" spec.) and overflow occures
-                long pts = buffer[9] & 0x0e;
-                pts <<= 29;
-                pts |= (uint)(buffer[10] << 22);
-                pts |= (uint)((buffer[11] & 0xfe) << 14);
-                pts |= (uint)(buffer[12] << 7);
-                pts |= (uint)((buffer[13] & 0xfe) >> 1);
-                t = (ulong)pts / 90;
-            }
-
-            if (!states.PtsInitialized)
-            {
-                _delta = (long)(1000 * config.Offset + 1000 * config.UtcRefValue - t);
-                states.PtsInitialized = true;
-
-                if (_usingPts == BoolT.No && _globalTimestamp == 0)
-                {
-                    // We are using global PCR, nevertheless we still have not received valid PCR timestamp yet
-                    states.PtsInitialized = false;
-                }
-            }
-            if (t < (ulong)_t0) _delta = (long)_lastTimestamp;
-            _lastTimestamp = t + (ulong)_delta;
-            _t0 = (long)t;
-
-            // skip optional PES header and process each 46 bytes long teletext packet
-            var i = 7;
-            if (optionalPesHeaderIncluded) i += 3 + optionalPesHeaderLength;
-            while (i <= pesPacketLength - 6)
-            {
-                var dataUnitId = buffer[i++];
-                var dataUnitLen = buffer[i++];
-
-                if (dataUnitId == (int)DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)DataUnitT.DataUnitEbuTeletextSubtitle)
-                {
-                    // teletext payload has always size 44 bytes
-                    if (dataUnitLen == 44)
-                    {
-                        // reverse endianess (via lookup table), ETS 300 706, chapter 7.1
-                        for (var j = 0; j < dataUnitLen; j++) buffer[i + j] = TeletextHamming.Reverse8[buffer[i + j]];
-
-                        // FIXME: This explicit type conversion could be a problem some day -- do not need to be platform independant
-                        ProcessTelxPacket((DataUnitT)dataUnitId, new TeletextPacketPayload(buffer, i), _lastTimestamp, null, new StringBuilder());
-                    }
-                }
-
-                i += dataUnitLen;
-            }
-        }
-
 
         static void ProcessPage(TeletextPage page, TeletextRunSettings teletextRunSettings)
         {
@@ -435,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                     if (col == colStart)
                     {
-                        if ((foregroundColor != 0x7) && (config.Colors))
+                        if (foregroundColor != 0x7 && config.Colors)
                         {
                             Fout.Append($"<font color=\"{TeletextColors[foregroundColor]}\">");
                             fontTagOpened = true;
@@ -507,7 +390,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
             else
             {
-                throw  new NotImplementedException();
+                throw new NotImplementedException();
             }
         }
 
@@ -535,13 +418,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             ulong mask = 0x000f;
             ulong pwr = 1;
 
-            ulong i = (ulong)(bcd & mask);
-            bcd = (bcd >> 4);
+            ulong i = bcd & mask;
+            bcd = bcd >> 4;
             while (bcd > 0)
             {
                 pwr *= 10;
                 i += (bcd & mask) * pwr;
-                bcd = (bcd >> 4);
+                bcd = bcd >> 4;
             }
             return (int)i;
         }
@@ -571,10 +454,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     var pageNumberInt = BcdToDec((ulong)bcdPage);
                     sb.AppendLine("page: " + pageNumberInt);
-                    if (pageNumberInt == 398)
+                    teletextRunSettings.PageNumber = pageNumberInt;
+                    teletextRunSettings.PageNumberBcd = bcdPage;
+                    if (pageNumberInt == 888) // 398)
                     {
-                        teletextRunSettings.PageNumber = pageNumberInt;
-                        teletextRunSettings.PageNumberBcd = bcdPage;
                         if (!teletextRunSettings.PageNumbersInt.Contains(pageNumberInt))
                         {
                             teletextRunSettings.PageNumbersInt.Add(pageNumberInt);
@@ -590,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     teletextRunSettings.PageNumber = -1;
                 }
 
-                
+
                 CcMap[i] |= (byte)(flagSubtitle << (m - 1));
 
                 //if (config.Page == 0 && flagSubtitle == (int)BoolT.Yes && i < 0xff)
@@ -619,24 +502,28 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
 
                 // FIXME: Well, this is not ETS 300 706 kosher, however we are interested in DATA_UNIT_EBU_TELETEXT_SUBTITLE only
-                if (_transmissionMode == TransmissionMode.TransmissionModeParallel && dataUnitId != DataUnitT.DataUnitEbuTeletextSubtitle) return;
+                if (_transmissionMode == TransmissionMode.TransmissionModeParallel && dataUnitId != DataUnitT.DataUnitEbuTeletextSubtitle)
+                {
+                    return;
+                }
 
-                if (_receivingData && (
-                        _transmissionMode == TransmissionMode.TransmissionModeSerial && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) ||
-                        _transmissionMode == TransmissionMode.TransmissionModeParallel && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) && m == Magazine(teletextRunSettings.PageNumberBcd)
-                    ))
+                if (_receivingData &&
+                    (_transmissionMode == TransmissionMode.TransmissionModeSerial && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) ||
+                    _transmissionMode == TransmissionMode.TransmissionModeParallel && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) && m == Magazine(teletextRunSettings.PageNumberBcd))
+                   )
                 {
                     _receivingData = false;
                     return;
                 }
 
                 // Page transmission is terminated, however now we are waiting for our new page
-               if (!teletextRunSettings.PageNumbersBcd.Contains(pageNumber))
-               {
-                   return;
-               }
+                //if (teletextRunSettings.PageNumberBcd != pageNumber)
+                if (!teletextRunSettings.PageNumbersBcd.Contains(pageNumber))
+                {
+                    return;
+                }
 
-               // Now we have the beginning of page transmission; if there is page_buffer pending, process it
+                // Now we have the beginning of page transmission; if there is page_buffer pending, process it
                 if (PageBuffer.Tainted)
                 {
                     // it would be nice, if subtitle hides on previous video frame, so we contract 40 ms (1 frame @25 fps)
@@ -680,7 +567,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 PageBuffer.Tainted = true;
             }
-            else if  (m == Magazine(teletextRunSettings.PageNumberBcd) && y == 26 && _receivingData)
+            else if (m == Magazine(teletextRunSettings.PageNumberBcd) && y == 26 && _receivingData)
             {
                 // ETS 300 706, chapter 12.3.2: X/26 definition
                 var x26Row = 0;
@@ -688,14 +575,21 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 var triplets = new uint[13];
                 var j = 0;
-                for (var i = 1; i < 40; i += 3, j++) triplets[j] = TeletextHamming.UnHamming2418((packet.Data[i + 2] << 16) | (packet.Data[i + 1] << 8) | packet.Data[i]);
+                for (var i = 1; i < 40; i += 3, j++)
+                {
+                    triplets[j] = TeletextHamming.UnHamming2418((packet.Data[i + 2] << 16) | (packet.Data[i + 1] << 8) | packet.Data[i]);
+                }
 
                 for (var j2 = 0; j2 < 13; j2++)
                 {
                     if (triplets[j2] == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (config.Verbose) Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplets[j2]}");
+                        if (config.Verbose)
+                        {
+                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplets[j2]}");
+                        }
+
                         continue;
                     }
 
@@ -736,7 +630,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
                 }
             }
-            else if  (m == Magazine(teletextRunSettings.PageNumberBcd) && y == 28 && _receivingData)
+            else if (m == Magazine(teletextRunSettings.PageNumberBcd) && y == 28 && _receivingData)
             {
                 // TODO:
                 //   ETS 300 706, chapter 9.4.7: Packet X/28/4
@@ -798,7 +692,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             else if (m == 8 && y == 30)
             {
                 // ETS 300 706, chapter 9.8: Broadcast Service Data Packets
-                if (!states.ProgrammeInfoProcessed)
+                if (!teletextRunSettings.GetState().ProgrammeInfoProcessed) //NIXE: states.ProgrammeInfoProcessed)
                 {
                     // ETS 300 706, chapter 9.8.1: Packet 8/30 Format 1
                     if (TeletextHamming.UnHamming84(packet.Data[0]) < 2)
@@ -845,14 +739,14 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         {
                             Console.WriteLine($"- Broadcast Service Data Packet received, resetting UTC referential value to {t} seconds");
                             config.UtcRefValue = (ulong)t;
-                            states.PtsInitialized = false;
+                            //states.PtsInitialized = false;
+                            teletextRunSettings.GetState().PtsInitialized = false;
                         }
-
-                        states.ProgrammeInfoProcessed = true;
+                        teletextRunSettings.GetState().ProgrammeInfoProcessed = true;
+                        //                        states.ProgrammeInfoProcessed = true;
                     }
                 }
             }
         }
-
     }
 }
