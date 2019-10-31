@@ -12179,8 +12179,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (tsParser.SubtitlePacketIds.Count == 0 & tsParser.TeletextSubtitlesLookup.Count == 1 && tsParser.TeletextSubtitlesLookup.First().Value.Count() == 1)
             {
-                var srt = tsParser.TeletextSubtitlesLookup.First().Value.First().Value.ToString();
-                new SubRip().LoadSubtitle(_subtitle, srt.SplitToLines(), null);
+                _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
                 SubtitleListview1.Fill(_subtitle);
                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                 {

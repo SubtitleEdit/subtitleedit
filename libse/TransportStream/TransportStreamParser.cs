@@ -21,9 +21,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
-        private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
-        private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
-        public Dictionary<int, Dictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; }
+        private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
+        private SortedDictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
+        public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
 
@@ -56,8 +56,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
-            SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
-            TeletextSubtitlesLookup = new Dictionary<int, Dictionary<int, List<Paragraph>>>();
+            SubtitlesLookup = new SortedDictionary<int, List<DvbSubPes>>();
+            TeletextSubtitlesLookup = new SortedDictionary<int, SortedDictionary<int, List<Paragraph>>>();
             TeletextRunSettings teletextRunSettings = new TeletextRunSettings();
 
             // check for Topfield .rec file
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                                             }
                                             else
                                             {
-                                                TeletextSubtitlesLookup.Add(packet.PacketId, new Dictionary<int, List<Paragraph>> { { dic.Key, new List<Paragraph> { dic.Value } } });
+                                                TeletextSubtitlesLookup.Add(packet.PacketId, new SortedDictionary<int, List<Paragraph>> { { dic.Key, new List<Paragraph> { dic.Value } } });
                                             }
                                         }
                                     }
@@ -205,8 +205,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             if (IsM2TransportStream)
             {
-                DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
-                SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
+                DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
+                SubtitlesLookup = new SortedDictionary<int, List<DvbSubPes>>();
                 foreach (int pid in SubtitlePacketIds)
                 {
                     var bdMs = new MemoryStream();
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             SubtitlePacketIds.Sort();
 
             // Merge packets and set start/end time
-            DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
+            DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             var firstVideoMs = (ulong)(FirstVideoPts / 90.0);
             foreach (int pid in SubtitlePacketIds)
             {
