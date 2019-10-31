@@ -177,6 +177,7 @@
             this.textBoxTeletext.Multiline = true;
             this.textBoxTeletext.Name = "textBoxTeletext";
             this.textBoxTeletext.ReadOnly = true;
+            this.textBoxTeletext.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxTeletext.Size = new System.Drawing.Size(589, 273);
             this.textBoxTeletext.TabIndex = 61;
             // 
@@ -201,6 +202,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Transport stream subtitle chooser";
+            this.Shown += new System.EventHandler(this.TransportStreamSubtitleChooser_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TransportStreamSubtitleChooser_KeyDown);
             this.contextMenuStripListview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

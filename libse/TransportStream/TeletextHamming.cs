@@ -61,5 +61,48 @@
             0xff, 0x0c, 0x0f, 0xff, 0x04, 0xff, 0xff, 0x09, 0x0f, 0xff, 0x0f, 0x0f, 0xff, 0x0e, 0x0f, 0xff,
             0x08, 0xff, 0xff, 0x05, 0xff, 0x0e, 0x0d, 0xff, 0xff, 0x0e, 0x0f, 0xff, 0x0e, 0x0e, 0xff, 0x0e
         };
+
+        // ETS 300 706, chapter 8.2 - Hamming 8/4
+        public static byte UnHamming84(byte a)
+        {
+            var r = Unham84[a];
+            if (r == 0xff)
+            {
+                r = 0;
+                //TODO: Cast exception???
+                //if (config.Verbose)
+                //{
+                //    Console.WriteLine($"! Unrecoverable data error; UNHAM8/4({a:X2})");
+                //}
+            }
+            return (byte)(r & 0x0f);
+        }
+
+        // ETS 300 706, chapter 8.3 - Hamming 24/18
+        public static uint UnHamming2418(int a)
+        {
+            int test = 0;
+
+            // Tests A-F correspond to bits 0-6 respectively in 'test'.
+            for (int i = 0; i < 23; i++)
+                test ^= ((a >> i) & 0x01) * (i + 33);
+            // Only parity bit is tested for bit 24
+            test ^= ((a >> 23) & 0x01) * 32;
+
+            if ((test & 0x1f) != 0x1f)
+            {
+                // Not all tests A-E correct
+                if ((test & 0x20) == 0x20)
+                {
+                    // F correct: Double error
+                    return 0xffffffff;
+                }
+                // Test F incorrect: Single error
+                a ^= 1 << (30 - test);
+            }
+            var result = (a & 0x000004) >> 2 | (a & 0x000070) >> 3 | (a & 0x007f00) >> 4 | (a & 0x7f0000) >> 5;
+            return (uint)result;
+        }
+
     }
 }

@@ -588,6 +588,7 @@
     <Compile Include="TransportStream\DvbSubPes.cs" />
     <Compile Include="TransportStream\EbuPesDataField.cs" />
     <Compile Include="TransportStream\EbuPesDataFieldText.cs" />
+    <Compile Include="TransportStream\TeletextRunSettings.cs" />
     <Compile Include="TransportStream\TeletextHamming.cs" />
     <Compile Include="TransportStream\Helper.cs" />
     <Compile Include="TransportStream\ObjectDataSegment.cs" />

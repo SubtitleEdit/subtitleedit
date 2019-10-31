@@ -287,5 +287,10 @@ namespace Nikse.SubtitleEdit.Forms
                 formSubOcr.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(sender, e);
             }
         }
+
+        private void TransportStreamSubtitleChooser_Shown(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
     }
 }

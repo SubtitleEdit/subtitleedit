@@ -12182,6 +12182,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var srt = tsParser.TeletextSubtitlesLookup.First().Value.First().Value.ToString();
                 new SubRip().LoadSubtitle(_subtitle, srt.SplitToLines(), null);
                 SubtitleListview1.Fill(_subtitle);
+                if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                {
+                    OpenVideo(fileName);
+                }
+                _fileName = Path.GetFileNameWithoutExtension(fileName);
+                _converted = true;
                 return true;
             }
 
@@ -12200,6 +12206,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         new SubRip().LoadSubtitle(_subtitle, subChooser.Srt.SplitToLines(), null);
                         SubtitleListview1.Fill(_subtitle);
+                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                        {
+                            OpenVideo(fileName);
+                        }
+                        _fileName = Path.GetFileNameWithoutExtension(fileName);
+                        _converted = true;
                         return true;
                     }
                     packetId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
