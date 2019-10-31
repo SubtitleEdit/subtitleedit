@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public List<Packet> SubtitlePackets { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
-        public Dictionary<int, Dictionary<int, StringBuilder>> TeletextSubtitlesLookup { get; set; }
+        public Dictionary<int, Dictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
 
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
             SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
-            TeletextSubtitlesLookup = new Dictionary<int, Dictionary<int, StringBuilder>>();
+            TeletextSubtitlesLookup = new Dictionary<int, Dictionary<int, List<Paragraph>>>();
             TeletextRunSettings teletextRunSettings = new TeletextRunSettings();
 
             // check for Topfield .rec file
@@ -139,24 +139,23 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                                     var textDictionary = item.GetTeletext(packet.PacketId, teletextRunSettings);
                                     foreach (var dic in textDictionary)
                                     {
-                                        if (dic.Value.Length > 0)
+                                        if (!string.IsNullOrEmpty(dic.Value.Text))
                                         {
-                                            var text = dic.Value + Environment.NewLine + Environment.NewLine;
                                             if (TeletextSubtitlesLookup.ContainsKey(packet.PacketId))
                                             {
                                                 var innerDic = TeletextSubtitlesLookup[packet.PacketId];
                                                 if (innerDic.ContainsKey(dic.Key))
                                                 {
-                                                    innerDic[dic.Key].Append(text);
+                                                    innerDic[dic.Key].Add(dic.Value);
                                                 }
                                                 else
                                                 {
-                                                    innerDic.Add(dic.Key, new StringBuilder(text));
+                                                    innerDic.Add(dic.Key, new List<Paragraph> { dic.Value });
                                                 }
                                             }
                                             else
                                             {
-                                                TeletextSubtitlesLookup.Add(packet.PacketId, new Dictionary<int, StringBuilder> { { dic.Key, new StringBuilder(text) } });
+                                                TeletextSubtitlesLookup.Add(packet.PacketId, new Dictionary<int, List<Paragraph>> { { dic.Key, new List<Paragraph> { dic.Value } } });
                                             }
                                         }
                                     }

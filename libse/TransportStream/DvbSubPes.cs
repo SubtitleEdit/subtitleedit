@@ -115,11 +115,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
         }
 
-        public Dictionary<int, string> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings)
+        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings)
         {
             if (!IsTeletext)
             {
-                return new Dictionary<int, string>();
+                return new Dictionary<int, Paragraph>();
             }
 
             var pts = PresentationTimestamp.HasValue ? (long)PresentationTimestamp.Value / 90 : 0;
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 pages.Add(888); // default
             }
 
-            var teletextPages = new Dictionary<int, string>();
+            var teletextPages = new Dictionary<int, Paragraph>();
             Teletext.Fout.Clear();
             Teletext._lastTimestamp = 0;
             Teletext._globalTimestamp = 0;
@@ -180,53 +180,52 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             // pages = new List<int> { pageNumBcd };
             var page = pageNum;
             int teletextPackageNo = 0;
-            //foreach (var page in pages)
+            Teletext.Fout.Clear();
+            Teletext.config.Page = page; //  ((page / 100) << 8) | ((page / 10 % 10) << 4) | (page % 10); ;
+            Teletext.config.Tid = packetId;
+            i = 1;
+            while (i <= _dataBuffer.Length - 6)
             {
-                Teletext.Fout.Clear();
-                Teletext.config.Page = page; //  ((page / 100) << 8) | ((page / 10 % 10) << 4) | (page % 10); ;
-                Teletext.config.Tid = packetId;
-                i = 1;
-                while (i <= _dataBuffer.Length - 6)
-                {
-                    teletextPackageNo++;
-                    sb.AppendLine("----------------");
-                    sb.AppendLine($"{teletextPackageNo} for packet-id {packetId}");
+                teletextPackageNo++;
+                sb.AppendLine("----------------");
+                sb.AppendLine($"{teletextPackageNo} for packet-id {packetId}");
 
-                    var dataUnitId = _dataBuffer[i++];
-                    var dataUnitLen = _dataBuffer[i++];
-                    sb.AppendLine($"dataUnitId: {dataUnitId}");
-                    sb.AppendLine($"dataUnitLen: {dataUnitLen}");
-                    if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                var dataUnitId = _dataBuffer[i++];
+                var dataUnitLen = _dataBuffer[i++];
+                sb.AppendLine($"dataUnitId: {dataUnitId}");
+                sb.AppendLine($"dataUnitLen: {dataUnitLen}");
+                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                {
+                    // teletext payload has always size 44 bytes
+                    if (dataUnitLen == 44)
                     {
-                        // teletext payload has always size 44 bytes
-                        if (dataUnitLen == 44)
+
+                        // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
+                        for (var j = 0; j < dataUnitLen; j++)
                         {
-
-                            // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
-                            for (var j = 0; j < dataUnitLen; j++)
-                            {
-                                _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
-                            }
-
-                            Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, sb); //TODO: optimize use databuffer
+                            _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
+
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, sb); //TODO: optimize use databuffer
                     }
-                    i += dataUnitLen;
                 }
-                var text = Teletext.Fout.ToString().Trim();
-                if (!string.IsNullOrEmpty(text))
+                i += dataUnitLen;
+            }
+            foreach (var pNo in teletextRunSettings.PageNumberAndParagraph.Keys)
+            {
+                if (teletextRunSettings.PageNumberAndParagraph.ContainsKey(pNo) && teletextRunSettings.PageNumberAndParagraph[pNo] != null)
                 {
-                    var p = teletextRunSettings.PageNumber;
-                    if (teletextPages.ContainsKey(p))
+                    if (teletextPages.ContainsKey(pNo))
                     {
-                        teletextPages[p] += Environment.NewLine + Environment.NewLine + text;
+                        teletextPages[pNo] = teletextRunSettings.PageNumberAndParagraph[pNo];
                     }
                     else
                     {
-                        teletextPages.Add(p, text);
+                        teletextPages.Add(pNo, teletextRunSettings.PageNumberAndParagraph[pNo]);
                     }
                 }
             }
+            teletextRunSettings.PageNumberAndParagraph.Clear();
             return teletextPages;
         }
 

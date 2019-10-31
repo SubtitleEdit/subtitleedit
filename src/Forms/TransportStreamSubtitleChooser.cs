@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Text = "Teletext program " + program.Key + " page " + kvp.Key + " in " + language,
                             IsTeletext = true,
                             Pid = program.Key,
-                            Srt = kvp.Value.ToString()
+                            Srt = new SubRip().ToText(new Subtitle(kvp.Value), null)
                         });
                     }
                     else
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Text = "Teletext program " + program.Key + " page " + kvp.Key,
                             IsTeletext = true,
                             Pid = program.Key,
-                            Srt = kvp.Value.ToString()
+                            Srt = new SubRip().ToText(new Subtitle(kvp.Value), null)
                         });
                     }
                 }

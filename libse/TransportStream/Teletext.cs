@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         }
 
 
-        static void ProcessPage(TeletextPage page)
+        static void ProcessPage(TeletextPage page, TeletextRunSettings teletextRunSettings)
         {
             //#if DEBUG
             //            for (int row = 1; row < 25; row++)
@@ -361,6 +361,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
             if (pageIsEmpty) return;
 
+            var paragraph = new Paragraph();
+
             if (page.ShowTimestamp > page.HideTimestamp)
             {
                 page.HideTimestamp = page.ShowTimestamp;
@@ -376,7 +378,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var timeCodeShow = TimestampToSrtTime(page.ShowTimestamp);
                 var timeCodeHide = TimestampToSrtTime(page.HideTimestamp);
                 Fout.AppendLine($"{++_framesProduced}{Environment.NewLine}{timeCodeShow} --> {timeCodeHide}");
+
+                paragraph.Number = _framesProduced;
+                paragraph.StartTime = new TimeCode(page.ShowTimestamp);
+                paragraph.EndTime = new TimeCode(page.HideTimestamp);
             }
+
+            Fout.Clear(); //nixe - now we use paragraph
 
             // process data
             for (var row = 1; row < 25; row++)
@@ -409,7 +417,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 if (colStop > 39) continue;
 
                 // ETS 300 706, chapter 12.2: Alpha White ("Set-After") - Start-of-row default condition.
-                // used for colour changes _before_ start box mark
+                // used for color changes _before_ start box mark
                 // white is default as stated in ETS 300 706, chapter 12.2
                 // black(0), red(1), green(2), yellow(3), blue(4), magenta(5), cyan(6), white(7)
                 var foregroundColor = 0x7;
@@ -492,6 +500,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 Fout.Append(config.SeMode ? " " : Environment.NewLine);
             }
             Fout.AppendLine();
+            paragraph.Text = Fout.ToString().TrimEnd();
+            if (!teletextRunSettings.PageNumberAndParagraph.ContainsKey(teletextRunSettings.PageNumber))
+            {
+                teletextRunSettings.PageNumberAndParagraph.Add(teletextRunSettings.PageNumber, paragraph);
+            }
+            else
+            {
+                throw  new NotImplementedException();
+            }
         }
 
         public static int GetPageNumber(TeletextPacketPayload packet)
@@ -576,11 +593,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 
                 CcMap[i] |= (byte)(flagSubtitle << (m - 1));
 
-                if (config.Page == 0 && flagSubtitle == (int)BoolT.Yes && i < 0xff)
-                {
-                    config.Page = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
-                    Console.WriteLine($"- No teletext page specified, first received suitable page is {config.Page}, not guaranteed");
-                }
+                //if (config.Page == 0 && flagSubtitle == (int)BoolT.Yes && i < 0xff)
+                //{
+                //    config.Page = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
+                //    Console.WriteLine($"- No teletext page specified, first received suitable page is {config.Page}, not guaranteed");
+                //}
 
                 // Page number and control bits
                 var pageNumber = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
@@ -605,8 +622,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 if (_transmissionMode == TransmissionMode.TransmissionModeParallel && dataUnitId != DataUnitT.DataUnitEbuTeletextSubtitle) return;
 
                 if (_receivingData && (
-                        _transmissionMode == TransmissionMode.TransmissionModeSerial && Page(pageNumber) != Page(config.Page) ||
-                        _transmissionMode == TransmissionMode.TransmissionModeParallel && Page(pageNumber) != Page(config.Page) && m == Magazine(config.Page)
+                        _transmissionMode == TransmissionMode.TransmissionModeSerial && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) ||
+                        _transmissionMode == TransmissionMode.TransmissionModeParallel && Page(pageNumber) != Page(teletextRunSettings.PageNumberBcd) && m == Magazine(teletextRunSettings.PageNumberBcd)
                     ))
                 {
                     _receivingData = false;
@@ -624,7 +641,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     // it would be nice, if subtitle hides on previous video frame, so we contract 40 ms (1 frame @25 fps)
                     PageBuffer.HideTimestamp = timestamp - 40;
-                    ProcessPage(PageBuffer);
+                    ProcessPage(PageBuffer, teletextRunSettings);
                 }
 
                 PageBuffer.ShowTimestamp = timestamp;
