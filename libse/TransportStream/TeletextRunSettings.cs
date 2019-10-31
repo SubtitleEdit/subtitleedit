@@ -11,5 +11,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public int TransmissionMode { get; set; }
         public HashSet<int> PageNumbersInt { get; set; } = new HashSet<int>();
         public HashSet<int> PageNumbersBcd { get; set; } = new HashSet<int>();
+        public Dictionary<int, Paragraph> PageNumberAndParagraph { get; set; } = new Dictionary<int, Paragraph>();
     }
 }
