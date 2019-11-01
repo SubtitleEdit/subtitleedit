@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     sb.AppendLine("page: " + pageNumberInt);
                     teletextRunSettings.PageNumber = pageNumberInt;
                     teletextRunSettings.PageNumberBcd = bcdPage;
-                    if (pageNumberInt == 888) // 398)
+                    if (pageNumberInt == 398) //TODO: Not hardcoded... possible to find all pages in one run?
                     {
                         if (!teletextRunSettings.PageNumbersInt.Contains(pageNumberInt))
                         {

@@ -201,8 +201,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
             }
 
-            var i333 = Teletext.config.Count;
-
             if (IsM2TransportStream)
             {
                 DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
@@ -233,16 +231,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             currentList.Clear();
                         }
                     }
-                    SubtitlesLookup.Add(pid, list);
-                    DvbSubtitlesLookup.Add(pid, subList);
+
+                    if (subList.Count > 0)
+                    {
+                        SubtitlesLookup.Add(pid, list);
+                        DvbSubtitlesLookup.Add(pid, subList);
+                    }
                 }
                 SubtitlePacketIds.Clear();
                 foreach (int key in DvbSubtitlesLookup.Keys)
                 {
                     SubtitlePacketIds.Add(key);
                 }
-
-                SubtitlePacketIds.Sort();
                 return;
             }
 
