@@ -2318,7 +2318,8 @@ Setting a font for a subtitle is normally done in the video player, but can also
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Transport stream subtitle chooser - {0}</Title>
-    <PidLine>Transport Packet Identifier (PID) = {0}, number of subtitles = {1}</PidLine>
+    <PidLineImage>Images - Transport Packet Identifier (PID) = {0}, language = {1}, number of subtitles = {2}</PidLineImage>
+    <PidLineTeletext>Teletext - Transport Packet Identifier (PID) = {1}, page {0}, language = {2}, number of subtitles = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} image(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>

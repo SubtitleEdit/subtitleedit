@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -22,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool IsTeletext { get; set; }
             public string Srt { get; set; }
             public int Pid { get; set; }
+            public string Language { get; set; }
 
             public override string ToString()
             {
@@ -78,51 +80,39 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (int id in tsParser.SubtitlePacketIds)
             {
                 var language = _programMapTableParser.GetSubtitleLanguage(id);
-                if (!string.IsNullOrEmpty(language))
+                if (string.IsNullOrEmpty(language))
                 {
-                    listBoxTracks.Items.Add(new StreamTrackItem
-                    {
-                        Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id + ", " + language, tsParser.GetDvbSubtitles(id).Count),
-                        IsTeletext = false,
-                        Pid = id
-                    });
+                    language = "unknown";
                 }
-                else
+
+                listBoxTracks.Items.Add(new StreamTrackItem
                 {
-                    listBoxTracks.Items.Add(new StreamTrackItem
-                    {
-                        Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count),
-                        IsTeletext = false,
-                        Pid = id
-                    });
-                }
+                    Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineImage, id, language, tsParser.GetDvbSubtitles(id).Count),
+                    IsTeletext = false,
+                    Pid = id,
+                    Language = language
+                });
             }
 
             foreach (var program in tsParser.TeletextSubtitlesLookup)
             {
                 var language = _programMapTableParser.GetSubtitleLanguage(program.Key);
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = "unknown";
+                }
+
                 foreach (var kvp in program.Value)
                 {
-                    if (!string.IsNullOrEmpty(language))
+                    var subtitle = new Subtitle(kvp.Value);
+                    subtitle.Renumber();
+                    listBoxTracks.Items.Add(new StreamTrackItem
                     {
-                        listBoxTracks.Items.Add(new StreamTrackItem
-                        {
-                            Text = "Teletext program " + program.Key + " page " + kvp.Key + " in " + language,
-                            IsTeletext = true,
-                            Pid = program.Key,
-                            Srt = new SubRip().ToText(new Subtitle(kvp.Value), null)
-                        });
-                    }
-                    else
-                    {
-                        listBoxTracks.Items.Add(new StreamTrackItem
-                        {
-                            Text = "Teletext program " + program.Key + " page " + kvp.Key,
-                            IsTeletext = true,
-                            Pid = program.Key,
-                            Srt = new SubRip().ToText(new Subtitle(kvp.Value), null)
-                        });
-                    }
+                        Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineTeletext, kvp.Key, program.Key, language, kvp.Value.Count),
+                        IsTeletext = true,
+                        Pid = program.Key,
+                        Srt = new SubRip().ToText(subtitle, null)
+                    });
                 }
             }
 
@@ -140,7 +130,6 @@ namespace Nikse.SubtitleEdit.Forms
             var item = (StreamTrackItem)listBoxTracks.SelectedItem;
             if (item.IsTeletext)
             {
-                
                 textBoxTeletext.Visible = true;
                 textBoxTeletext.Text = item.Srt;
                 IsTeletext = true;
@@ -291,6 +280,56 @@ namespace Nikse.SubtitleEdit.Forms
         private void TransportStreamSubtitleChooser_Shown(object sender, EventArgs e)
         {
             BringToFront();
+        }
+
+        private void contextMenuStripListview_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            int idx = listBoxTracks.SelectedIndex;
+            if (idx < 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            var item = (StreamTrackItem)listBoxTracks.SelectedItem;
+            if (item.IsTeletext)
+            {
+                toolStripMenuItemExport.Visible = false;
+                saveAllImagesWithHtmlIndexViewToolStripMenuItem.Visible = false;
+                saveSubtitleAsToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemExport.Visible = true;
+                saveAllImagesWithHtmlIndexViewToolStripMenuItem.Visible = true;
+                saveSubtitleAsToolStripMenuItem.Visible = true;
+            }
+        }
+
+        private void saveSubtitleAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int idx = listBoxTracks.SelectedIndex;
+            if (idx < 0)
+            {
+                return;
+            }
+
+            var item = (StreamTrackItem)listBoxTracks.SelectedItem;
+            if (item.IsTeletext)
+            {
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
+                var fileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+                if (!string.IsNullOrEmpty(item.Language))
+                {
+                    fileName += "." + _programMapTableParser.GetSubtitleLanguageTwoLetter(item.Pid);
+                }
+                saveFileDialog1.FileName = fileName;
+
+                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, item.Srt);
+                }
+            }
         }
     }
 }

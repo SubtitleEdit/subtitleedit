@@ -2645,7 +2645,8 @@ can edit in same subtitle file (collaboration)",
             TransportStreamSubtitleChooser = new LanguageStructure.TransportStreamSubtitleChooser
             {
                 Title = "Transport stream subtitle chooser - {0}",
-                PidLine = "Transport Packet Identifier (PID) = {0}, number of subtitles = {1}",
+                PidLineImage = "Images - Transport Packet Identifier (PID) = {0}, language = {1}, number of subtitles = {2}",
+                PidLineTeletext = "Teletext - Transport Packet Identifier (PID) = {1}, page {0}, language = {2}, number of subtitles = {3}",
                 SubLine = "{0}: {1} -> {2}, {3} image(s)",
             };
 

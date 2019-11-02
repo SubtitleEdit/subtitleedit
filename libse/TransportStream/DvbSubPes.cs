@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
-
     public class DvbSubPes
     {
         public const int HeaderLength = 6;
@@ -37,8 +35,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public readonly int? SubPictureStreamId;
 
         private readonly byte[] _dataBuffer;
-
-        private static long Delta = long.MaxValue; //TODO: remove
 
         public DvbSubPes(byte[] buffer, int index)
         {
@@ -115,82 +111,72 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
         }
 
-        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings)
+        public List<int> PrepareTeletext()
         {
-            if (!IsTeletext)
-            {
-                return new Dictionary<int, Paragraph>();
-            }
-
-            var pts = PresentationTimestamp.HasValue ? (long)PresentationTimestamp.Value / 90 : 0;
-            if (Delta == long.MaxValue)
-            {
-                Delta = -pts;
-            }
-            ulong lastTimestamp = (ulong)(pts + Delta);
-
-            var sb = new StringBuilder();
-
-            // find all pages
             var pages = new List<int>();
-            Teletext.Fout.Clear();
-            Teletext.config.Page = 2184;
-            Teletext.config.Tid = packetId;
-            if (pages.Count == 0)
-            {
-                pages.Add(888); // default
-            }
-
-            var teletextPages = new Dictionary<int, Paragraph>();
-            Teletext.Fout.Clear();
-            Teletext._lastTimestamp = 0;
-            Teletext._globalTimestamp = 0;
-            var pageNum = 888;
-            var page = pageNum;
-            int teletextPackageNo = 0;
-            Teletext.Fout.Clear();
-            Teletext.config.Page = page; //  ((page / 100) << 8) | ((page / 10 % 10) << 4) | (page % 10); ;
-            Teletext.config.Tid = packetId;
             var i = 1;
             while (i <= _dataBuffer.Length - 6)
             {
-                teletextPackageNo++;
-                sb.AppendLine("----------------");
-                sb.AppendLine($"{teletextPackageNo} for packet-id {packetId}");
-
                 var dataUnitId = _dataBuffer[i++];
                 var dataUnitLen = _dataBuffer[i++];
-                sb.AppendLine($"dataUnitId: {dataUnitId}");
-                sb.AppendLine($"dataUnitLen: {dataUnitLen}");
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
                     // teletext payload has always size 44 bytes
                     if (dataUnitLen == 44)
                     {
-
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
                         for (var j = 0; j < dataUnitLen; j++)
                         {
                             _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
                         }
-
-                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, sb); //TODO: optimize use databuffer
+                        var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
+                        if (!pages.Contains(pageNumber) && pageNumber > 0)
+                        {
+                            pages.Add(pageNumber);
+                        }
                     }
                 }
                 i += dataUnitLen;
             }
-            foreach (var pNo in teletextRunSettings.PageNumberAndParagraph.Keys)
+            return pages;
+        }
+
+        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, ulong? firstMs)
+        {
+            var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 0;
+            if (firstMs.HasValue)
             {
-                if (teletextRunSettings.PageNumberAndParagraph.ContainsKey(pNo) && teletextRunSettings.PageNumberAndParagraph[pNo] != null)
+                lastTimestamp = Math.Max(lastTimestamp - firstMs.Value, 0);
+            }
+            Teletext.Fout.Clear();
+            Teletext.config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
+            Teletext.config.Tid = packetId;
+            var teletextPages = new Dictionary<int, Paragraph>();
+            teletextRunSettings.PageNumber = pageNumber;
+            teletextRunSettings.PageNumberBcd = Teletext.config.Page;
+            var i = 1;
+            while (i <= _dataBuffer.Length - 6)
+            {
+                var dataUnitId = _dataBuffer[i++];
+                var dataUnitLen = _dataBuffer[i++];
+                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    if (teletextPages.ContainsKey(pNo))
+                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
-                        teletextPages[pNo] = teletextRunSettings.PageNumberAndParagraph[pNo];
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings); //TODO: optimize use databuffer
                     }
-                    else
-                    {
-                        teletextPages.Add(pNo, teletextRunSettings.PageNumberAndParagraph[pNo]);
-                    }
+                }
+                i += dataUnitLen;
+            }
+            if (teletextRunSettings.PageNumberAndParagraph.ContainsKey(pageNumber) && teletextRunSettings.PageNumberAndParagraph[pageNumber] != null)
+            {
+                if (teletextPages.ContainsKey(pageNumber))
+                {
+                    teletextPages[pageNumber] = teletextRunSettings.PageNumberAndParagraph[pageNumber];
+                }
+                else
+                {
+                    teletextPages.Add(pageNumber, teletextRunSettings.PageNumberAndParagraph[pageNumber]);
                 }
             }
             teletextRunSettings.PageNumberAndParagraph.Clear();

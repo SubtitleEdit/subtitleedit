@@ -12180,6 +12180,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (tsParser.SubtitlePacketIds.Count == 0 & tsParser.TeletextSubtitlesLookup.Count == 1 && tsParser.TeletextSubtitlesLookup.First().Value.Count() == 1)
             {
                 _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle);
                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                 {
@@ -12191,7 +12192,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int packetId;
-            if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Sum(p=>p.Value.Count()) > 1)
+            if (tsParser.SubtitlePacketIds.Count + tsParser.TeletextSubtitlesLookup.Sum(p => p.Value.Count()) > 1)
             {
                 using (var subChooser = new TransportStreamSubtitleChooser())
                 {
@@ -12204,6 +12205,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (subChooser.IsTeletext)
                     {
                         new SubRip().LoadSubtitle(_subtitle, subChooser.Srt.SplitToLines(), null);
+                        _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle);
                         if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
@@ -12221,7 +12223,7 @@ namespace Nikse.SubtitleEdit.Forms
                 packetId = tsParser.SubtitlePacketIds[0];
             }
 
-            
+
             var subtitles = tsParser.GetDvbSubtitles(packetId);
             using (var formSubOcr = new VobSubOcr())
             {
@@ -12258,6 +12260,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var currentFormat = GetCurrentSubtitleFormat();
                         _fileName = Utilities.GetPathAndFileNameWithoutExtension(formSubOcr.FileName) + currentFormat.Extension;
+                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                        {
+                            OpenVideo(fileName);
+                        }
                         _converted = true;
                     }
                     Text = Title;
