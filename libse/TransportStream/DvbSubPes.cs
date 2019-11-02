@@ -148,6 +148,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 lastTimestamp = lastTimestamp - firstMs.Value;
             }
+            if (lastTimestamp < 40)
+            {
+                lastTimestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
+            }
             Teletext.Fout.Clear();
             Teletext.Config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
             Teletext.Config.Tid = packetId;
