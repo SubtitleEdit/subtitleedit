@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
@@ -236,6 +237,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
 
             var paragraph = new Paragraph();
+            var usedLines = new List<int>();
 
             if (page.ShowTimestamp > page.HideTimestamp)
             {
@@ -378,9 +380,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 // line delimiter
                 Fout.Append(Environment.NewLine);
+                usedLines.Add(row);
             }
             Fout.AppendLine();
-            paragraph.Text = Fout.ToString().TrimEnd();
+            var topAlign = usedLines.Count > 0 && usedLines.All(p => p < 6);
+            paragraph.Text = (topAlign ? "{\\an8}" : "") + Fout.ToString().TrimEnd();
             if (!teletextRunSettings.PageNumberAndParagraph.ContainsKey(pageNumber))
             {
                 teletextRunSettings.PageNumberAndParagraph.Add(pageNumber, paragraph);
