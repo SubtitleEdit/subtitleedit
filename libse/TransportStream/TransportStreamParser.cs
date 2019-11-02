@@ -71,17 +71,21 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
 
             long transportStreamLength = ms.Length;
+            ms.Seek(position, SeekOrigin.Begin);
             while (position < transportStreamLength)
             {
-                ms.Seek(position, SeekOrigin.Begin);
-
                 if (IsM2TransportStream)
                 {
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
-                ms.Read(packetBuffer, 0, packetLength);
+                var bytesRead = ms.Read(packetBuffer, 0, packetLength);
+                if (bytesRead < packetLength)
+                {
+                    break; // incomplete packet at end-of-file
+                }
+
                 if (packetBuffer[0] == Packet.SynchronizationByte)
                 {
                     var packet = new Packet(packetBuffer);
