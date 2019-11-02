@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                     if (TotalNumberOfPackets % 100000 == 0)
                     {
-                        callback.Invoke(ms.Position, transportStreamLength);
+                        callback?.Invoke(position, transportStreamLength);
                     }
                 }
                 else
@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 firstMs = ProcessPackages(pid.Key, teletextPages, teletextPesList, firstMs);
             }
             SubtitlePackets.Clear();
+            callback?.Invoke(transportStreamLength, transportStreamLength);
 
 
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
@@ -251,7 +252,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
-                var offset = (long)(firstMs ?? 0);
+                var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
                 for (int i = 0; i < list.Count; i++)
                 {
                     var pes = list[i];
