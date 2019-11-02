@@ -143,10 +143,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
         {
-            var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 0;
-            if (firstMs.HasValue)
+            var lastTimestamp = PresentationTimestamp.HasValue ? (PresentationTimestamp.Value / 90) : 0;
+            if (firstMs.HasValue && lastTimestamp >= firstMs)
             {
-                lastTimestamp = Math.Max(lastTimestamp - firstMs.Value, 0);
+                lastTimestamp = lastTimestamp - firstMs.Value;
             }
             Teletext.Fout.Clear();
             Teletext.Config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
-                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, pageNumberBcd, pageNumber); 
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, pageNumberBcd, pageNumber);
                     }
                 }
                 i += dataUnitLen;
