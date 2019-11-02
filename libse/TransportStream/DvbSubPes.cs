@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             return pages;
         }
 
-        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, ulong? firstMs)
+        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
         {
             var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 0;
             if (firstMs.HasValue)
@@ -149,11 +149,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 lastTimestamp = Math.Max(lastTimestamp - firstMs.Value, 0);
             }
             Teletext.Fout.Clear();
-            Teletext.config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
-            Teletext.config.Tid = packetId;
+            Teletext.Config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
+            Teletext.Config.Tid = packetId;
             var teletextPages = new Dictionary<int, Paragraph>();
-            teletextRunSettings.PageNumber = pageNumber;
-            teletextRunSettings.PageNumberBcd = Teletext.config.Page;
             var i = 1;
             while (i <= _dataBuffer.Length - 6)
             {
@@ -163,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
-                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings); //TODO: optimize use databuffer
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, pageNumberBcd, pageNumber); 
                     }
                 }
                 i += dataUnitLen;
