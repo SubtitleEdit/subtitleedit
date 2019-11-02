@@ -142,10 +142,12 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     position++;
                 }
             }
-            foreach (var pid in SubtitlePackets.Select(p => p.PacketId))
+            foreach (var pid in SubtitlePackets.GroupBy(p => p.PacketId))
             {
-                firstMs = ProcessPackages(pid, teletextPages, teletextPesList, firstMs);
+                firstMs = ProcessPackages(pid.Key, teletextPages, teletextPesList, firstMs);
             }
+            SubtitlePackets.Clear();
+
 
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
             {
@@ -236,39 +238,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 return;
             }
 
-            // check for SubPictureStreamId = 32
-            foreach (int pid in SubtitlePacketIds)
-            {
-                var list = MakeSubtitlePesPackets(pid, SubtitlePackets);
-                bool hasImageSubtitles = false;
-                foreach (var item in list)
-                {
-                    if (item.IsDvbSubPicture)
-                    {
-                        hasImageSubtitles = true;
-                        break;
-                    }
-                }
-                if (hasImageSubtitles)
-                {
-                    if (SubtitlesLookup.ContainsKey(pid))
-                    {
-                        SubtitlesLookup[pid].AddRange(list);
-                    }
-                    else
-                    {
-                        SubtitlesLookup.Add(pid, list);
-                    }
-                }
-                SubtitlePackets.RemoveAll(p => p.PacketId == pid);
-            }
-
             SubtitlePacketIds.Clear();
             foreach (int key in SubtitlesLookup.Keys)
             {
                 SubtitlePacketIds.Add(key);
             }
-
             SubtitlePacketIds.Sort();
 
             // Merge packets and set start/end time
