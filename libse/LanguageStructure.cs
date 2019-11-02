@@ -2516,7 +2516,8 @@
         public class TransportStreamSubtitleChooser
         {
             public string Title { get; set; }
-            public string PidLine { get; set; }
+            public string PidLineImage { get; set; }
+            public string PidLineTeletext { get; set; }
             public string SubLine { get; set; }
         }
 

@@ -17,9 +17,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         {
             DataUnitEbuTeletextNonSubtitle = 0x02,
             DataUnitEbuTeletextSubtitle = 0x03,
-            DataUnitEbuTeletextInverted = 0x0c,
-            DataUnitVps = 0xc3,
-            DataUnitClosedCaptions = 0xc5
         }
 
         public enum TransmissionMode
@@ -30,24 +27,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public class Config
         {
-            public string InputName { get; set; }
-            public string OutputName { get; set; }
             public bool Verbose { get; set; } // should telxcc be verbose?
             public int Page { get; set; } // teletext page containing cc we want to filter
             public int Tid { get; set; } // 13-bit packet ID for teletext stream
             public double Offset { get; set; } // time offset in seconds
             public bool Colors { get; set; } // output <font...></font> tags
-            public bool Bom { get; set; } // print UTF-8 BOM characters at the beginning of output
             public bool NonEmpty { get; set; } // produce at least one (dummy) frame
             public ulong UtcRefValue { get; set; } // UTC referential value
-            public bool SeMode { get; set; } // FIXME: move SE_MODE to output module
-            public bool M2Ts { get; set; } // consider input stream is af s M2TS, instead of TS
-            public int Count { get; set; } // consider input stream is af s M2TS, instead of TS
-
-            public Config()
-            {
-                Bom = true;
-            }
         }
 
         // application states -- flags for notices that should be printed only once
@@ -103,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         };
 
         // subtitle type pages bitmap, 2048 bits = 2048 possible pages in teletext (excl. subpages)
-        private static readonly byte[] CcMap = new byte[256];
+        public static byte[] CcMap = new byte[256];
 
         // entities, used in colour mode, to replace unsafe HTML tag chars
         private static readonly Dictionary<char, string> Entities = new Dictionary<char, string>
@@ -117,9 +103,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         //public static States states = new States();
 
-        public static readonly Config config = new Config();
+        public static Config config = new Config();
 
-        private static readonly PrimaryCharset primaryCharset = new PrimaryCharset();
+        public static PrimaryCharset primaryCharset = new PrimaryCharset();
 
         // global TS PCR value
         public static ulong _globalTimestamp;
@@ -128,16 +114,16 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public static ulong _lastTimestamp;
 
         // SRT frames produced
-        private static int _framesProduced;
+        public static int _framesProduced;
 
         // teletext transmission mode
-        private static TransmissionMode _transmissionMode = TransmissionMode.TransmissionModeSerial;
+        public static TransmissionMode _transmissionMode = TransmissionMode.TransmissionModeSerial;
 
         // flag indicating if incoming data should be processed or ignored
-        private static bool _receivingData;
+        public static bool _receivingData;
 
         // working teletext page buffer
-        private static readonly TeletextPage PageBuffer = new TeletextPage();
+        public static TeletextPage PageBuffer = new TeletextPage();
 
         private static void RemapG0Charset(int c)
         {
@@ -155,16 +141,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     primaryCharset.Current = c;
                 }
             }
-        }
-
-        private static string TimestampToSrtTime(ulong timestamp)
-        {
-            var p = timestamp;
-            var h = p / 3600000;
-            var m = p / 60000 - 60 * h;
-            var s = p / 1000 - 3600 * h - 60 * m;
-            var u = p - 3600000 * h - 60000 * m - 1000 * s;
-            return $"{h:00}:{m:00}:{s:00},{u:000}";
         }
 
         // UCS-2 (16 bits) to UTF-8 (Unicode Normalization Form C (NFC)) conversion
@@ -242,7 +218,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
                 }
             }
-            if (pageIsEmpty) return;
+            if (pageIsEmpty)
+            {
+                return;
+            }
 
             var paragraph = new Paragraph();
 
@@ -251,23 +230,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 page.HideTimestamp = page.ShowTimestamp;
             }
 
-            if (config.SeMode)
-            {
-                ++_framesProduced;
-                Fout.Append($"{page.ShowTimestamp / 1000.0}|");
-            }
-            else
-            {
-                var timeCodeShow = TimestampToSrtTime(page.ShowTimestamp);
-                var timeCodeHide = TimestampToSrtTime(page.HideTimestamp);
-                Fout.AppendLine($"{++_framesProduced}{Environment.NewLine}{timeCodeShow} --> {timeCodeHide}");
+            paragraph.Number = _framesProduced;
+            paragraph.StartTime = new TimeCode(page.ShowTimestamp);
+            paragraph.EndTime = new TimeCode(page.HideTimestamp);
 
-                paragraph.Number = _framesProduced;
-                paragraph.StartTime = new TimeCode(page.ShowTimestamp);
-                paragraph.EndTime = new TimeCode(page.HideTimestamp);
-            }
-
-            Fout.Clear(); //nixe - now we use paragraph
+            Fout.Clear(); //TODO: now we use paragraph, fix colors
 
             // process data
             for (var row = 1; row < 25; row++)
@@ -285,19 +252,31 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
                 }
                 // line is empty
-                if (colStart > 39) continue;
+                if (colStart > 39)
+                {
+                    continue;
+                }
 
                 for (var col = colStart + 1; col <= 39; col++)
                 {
                     if (page.Text[row, col] > 0x20)
                     {
-                        if (colStop > 39) colStart = col;
+                        if (colStop > 39)
+                        {
+                            colStart = col;
+                        }
                         colStop = col;
                     }
-                    if (page.Text[row, col] == 0xa) break;
+                    if (page.Text[row, col] == 0xa)
+                    {
+                        break;
+                    }
                 }
                 // line is empty
-                if (colStop > 39) continue;
+                if (colStop > 39)
+                {
+                    continue;
+                }
 
                 // ETS 300 706, chapter 12.2: Alpha White ("Set-After") - Start-of-row default condition.
                 // used for color changes _before_ start box mark
@@ -313,7 +292,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                     if (col < colStart)
                     {
-                        if (v <= 0x7) foregroundColor = v;
+                        if (v <= 0x7)
+                        {
+                            foregroundColor = v;
+                        }
                     }
 
                     if (col == colStart)
@@ -347,7 +329,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                                     fontTagOpened = true;
                                 }
                             }
-                            else v = 0x20;
+                            else
+                            {
+                                v = 0x20;
+                            }
                         }
 
                         if (v >= 0x20)
@@ -380,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
 
                 // line delimiter
-                Fout.Append(config.SeMode ? " " : Environment.NewLine);
+                Fout.Append(Environment.NewLine);
             }
             Fout.AppendLine();
             paragraph.Text = Fout.ToString().TrimEnd();
@@ -429,50 +414,20 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             return (int)i;
         }
 
-        public static void ProcessTelxPacket(DataUnitT dataUnitId, TeletextPacketPayload packet, ulong timestamp, TeletextRunSettings teletextRunSettings, StringBuilder sb)
+        public static void ProcessTelxPacket(DataUnitT dataUnitId, TeletextPacketPayload packet, ulong timestamp, TeletextRunSettings teletextRunSettings)
         {
             // variable names conform to ETS 300 706, chapter 7.1.2
             var address = (TeletextHamming.UnHamming84(packet.Address[1]) << 4) | TeletextHamming.UnHamming84(packet.Address[0]);
-            sb.AppendLine($"address: {address}");
-
             var m = address & 0x7;
             if (m == 0) m = 8;
-            sb.AppendLine($"Magezine: {m}");
             var y = (address >> 3) & 0x1f;
-            sb.AppendLine($"Y: {y}");
             var designationCode = y > 25 ? TeletextHamming.UnHamming84(packet.Data[0]) : 0x00;
-            sb.AppendLine($"designationCode: {designationCode}");
 
             if (y == 0) // PAGE HEADER  
             {
                 // CC map
                 var i = (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
                 var flagSubtitle = (TeletextHamming.UnHamming84(packet.Data[5]) & 0x08) >> 3;
-
-                var bcdPage = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
-                if (flagSubtitle == 1 && i < 0xff)
-                {
-                    var pageNumberInt = BcdToDec((ulong)bcdPage);
-                    sb.AppendLine("page: " + pageNumberInt);
-                    teletextRunSettings.PageNumber = pageNumberInt;
-                    teletextRunSettings.PageNumberBcd = bcdPage;
-                    if (pageNumberInt == 398) //TODO: Not hardcoded... possible to find all pages in one run?
-                    {
-                        if (!teletextRunSettings.PageNumbersInt.Contains(pageNumberInt))
-                        {
-                            teletextRunSettings.PageNumbersInt.Add(pageNumberInt);
-                        }
-                        if (!teletextRunSettings.PageNumbersBcd.Contains(bcdPage))
-                        {
-                            teletextRunSettings.PageNumbersBcd.Add(bcdPage);
-                        }
-                    }
-                }
-                else
-                {
-                    teletextRunSettings.PageNumber = -1;
-                }
-
 
                 CcMap[i] |= (byte)(flagSubtitle << (m - 1));
 
@@ -497,9 +452,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 // ETS 300 706, chapter 7.2.1: Page is terminated by and excludes the next page header packet
                 // having the same magazine address in parallel transmission mode, or any magazine address in serial transmission mode.
                 _transmissionMode = (TransmissionMode)(TeletextHamming.UnHamming84(packet.Data[7]) & 0x01);
-                sb.AppendLine($"_transmissionMode: {_transmissionMode}");
                 teletextRunSettings.TransmissionMode = TeletextHamming.UnHamming84(packet.Data[7]) & 0x01;
-
 
                 // FIXME: Well, this is not ETS 300 706 kosher, however we are interested in DATA_UNIT_EBU_TELETEXT_SUBTITLE only
                 if (_transmissionMode == TransmissionMode.TransmissionModeParallel && dataUnitId != DataUnitT.DataUnitEbuTeletextSubtitle)
@@ -518,7 +471,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 // Page transmission is terminated, however now we are waiting for our new page
                 //if (teletextRunSettings.PageNumberBcd != pageNumber)
-                if (!teletextRunSettings.PageNumbersBcd.Contains(pageNumber))
+                if (teletextRunSettings.PageNumberBcd != pageNumber)
                 {
                     return;
                 }
@@ -589,7 +542,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         {
                             Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplets[j2]}");
                         }
-
                         continue;
                     }
 
@@ -620,13 +572,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (mode >= 0x11 && mode <= 0x1f && !rowAddressGroup)
                     {
                         x26Col = (int)address2;
-
-                        // A - Z
-                        if (data >= 65 && data <= 90) PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2Accents[mode - 0x11, data - 65];
-                        // a - z
-                        else if (data >= 97 && data <= 122) PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2Accents[mode - 0x11, data - 71];
-                        // other
-                        else PageBuffer.Text[x26Row, x26Col] = TelxToUcs2((byte)data);
+                        if (data >= 65 && data <= 90) // A-Z
+                        {
+                            PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2Accents[mode - 0x11, data - 65];
+                        }
+                        else if (data >= 97 && data <= 122) // a-z
+                        {
+                            PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2Accents[mode - 0x11, data - 71];
+                        }
+                        else // other
+                        {
+                            PageBuffer.Text[x26Row, x26Col] = TelxToUcs2((byte)data);
+                        }
                     }
                 }
             }
@@ -702,8 +659,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         {
                             var c = TelxToUcs2(packet.Data[i]);
                             // strip any control codes from PID, eg. TVP station
-                            if (c < 0x20) continue;
-
+                            if (c < 0x20)
+                            {
+                                continue;
+                            }
                             Console.Write(Ucs2ToUtf8(c));
                         }
                         Console.WriteLine();
@@ -733,15 +692,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                         Console.WriteLine($"- Programme Timestamp (UTC) = {localTime.ToLongDateString()} {localTime.ToLongTimeString()}");
 
-                        if (config.Verbose) Console.WriteLine($"- Transmission mode = {(_transmissionMode == TransmissionMode.TransmissionModeSerial ? "serial" : "parallel")}");
-
-                        if (config.SeMode)
+                        if (config.Verbose)
                         {
-                            Console.WriteLine($"- Broadcast Service Data Packet received, resetting UTC referential value to {t} seconds");
-                            config.UtcRefValue = (ulong)t;
-                            //states.PtsInitialized = false;
-                            teletextRunSettings.GetState().PtsInitialized = false;
+                            Console.WriteLine($"- Transmission mode = {(_transmissionMode == TransmissionMode.TransmissionModeSerial ? "serial" : "parallel")}");
                         }
+
                         teletextRunSettings.GetState().ProgrammeInfoProcessed = true;
                         //                        states.ProgrammeInfoProcessed = true;
                     }

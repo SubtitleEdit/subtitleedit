@@ -6274,8 +6274,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "TransportStreamSubtitleChooser/Title":
                     language.TransportStreamSubtitleChooser.Title = reader.Value;
                     break;
-                case "TransportStreamSubtitleChooser/PidLine":
-                    language.TransportStreamSubtitleChooser.PidLine = reader.Value;
+                case "TransportStreamSubtitleChooser/PidLineImage":
+                    language.TransportStreamSubtitleChooser.PidLineImage = reader.Value;
+                    break;
+                case "TransportStreamSubtitleChooser/PidLineTeletext":
+                    language.TransportStreamSubtitleChooser.PidLineTeletext = reader.Value;
                     break;
                 case "TransportStreamSubtitleChooser/SubLine":
                     language.TransportStreamSubtitleChooser.SubLine = reader.Value;
