@@ -257,14 +257,38 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var colStart = 40;
                 var colStop = 40;
 
-                for (var col = 39; col >= 0; col--)
+
+                bool boxOpen = false;
+                for (var col = 0; col < 40; col++)
                 {
-                    if (page.Text[row, col] == 0xb)
+                    // replace all 0/B and 0/A characters with 0/20, as specified in ETS 300 706:
+                    // Unless operating in "Hold Mosaics" mode, each character space occupied by a
+                    // spacing attribute is displayed as a SPACE
+                    if (page.Text[row, col] == 0xb) // open the box
                     {
-                        colStart = col;
-                        break;
+                        if (colStart == 40)
+                        {
+                            colStart = col;
+                        }
+                        else
+                        {
+                            page.Text[row, col] = 0x20;
+                        }
+                        boxOpen = true;
+                    }
+                    else if (page.Text[row, col] == 0xa) // close the box
+                    {
+                        page.Text[row, col] = 0x20;
+                        boxOpen = false;
+                    }
+                    // characters between 0xA and 0xB shouldn't be displayed
+                    // page->text[row][col] > 0x20 added to preserve color information
+                    else if (!boxOpen && colStart < 40 && page.Text[row, col] > 0x20)
+                    {
+                        page.Text[row, col] = 0x20;
                     }
                 }
+
                 // line is empty
                 if (colStart > 39)
                 {
