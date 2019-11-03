@@ -33,7 +33,6 @@ namespace Test.Logic.TransportStream
             var parser = new TransportStreamParser();
             parser.Parse(fileName, null);
             Assert.AreEqual(1, parser.TeletextSubtitlesLookup.Count);
-            //parser.TeletextSubtitlesLookup[0].Keys
             Assert.AreEqual(5104, parser.TeletextSubtitlesLookup.First().Key); // package Id
             var packagePages = parser.TeletextSubtitlesLookup[parser.TeletextSubtitlesLookup.First().Key];
             Assert.AreEqual(2, packagePages.Count);
