@@ -1,4 +1,16 @@
-﻿using System;
+﻿/*
+ * Teletext decoding
+ *
+ * Based on telxcc by Petr Kutalek (src from https://github.com/debackerl/telxcc) which is inspired by
+ * https://github.com/nxmirrors/dvbtools/tree/master/dvbsubs and
+ * https://sourceforge.net/projects/project-x/
+ *
+ * Also, some fixes applied from https://github.com/CCExtractor/ccextractor/commits/master/src/lib_ccx/telxcc.c
+ *
+ * NOTE: Converted to C# and modified by nikse.dk@gmail.com
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
