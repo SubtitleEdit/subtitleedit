@@ -121,8 +121,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var dataUnitLen = _dataBuffer[i++];
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    // teletext payload has always size 44 bytes
-                    if (dataUnitLen == 44)
+                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes 
                     {
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
                         for (var j = 0; j < dataUnitLen; j++)
@@ -143,17 +142,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
         {
-            var lastTimestamp = PresentationTimestamp.HasValue ? (PresentationTimestamp.Value / 90) : 0;
+            var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
             if (firstMs.HasValue && lastTimestamp >= firstMs)
             {
-                lastTimestamp = lastTimestamp - firstMs.Value;
+                lastTimestamp -= firstMs.Value;
             }
             if (lastTimestamp < 40)
             {
                 lastTimestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
             }
             Teletext.Fout.Clear();
-            Teletext.Config.Page = ((pageNumber / 100) << 8) | ((pageNumber / 10 % 10) << 4) | (pageNumber % 10);
+            Teletext.Config.Page = Teletext.DecToBec(pageNumber);
             Teletext.Config.Tid = packetId;
             var teletextPages = new Dictionary<int, Paragraph>();
             var i = 1;
