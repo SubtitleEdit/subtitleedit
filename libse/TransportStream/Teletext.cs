@@ -56,7 +56,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public class TeletextStates
         {
             public bool ProgrammeInfoProcessed { get; set; }
-            public bool PtsInitialized { get; set; }
         }
 
         public class TeletextPacketPayload
@@ -106,14 +105,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         // subtitle type pages bitmap, 2048 bits = 2048 possible pages in teletext (excl. subpages)
         public static byte[] CcMap = new byte[256];
-
-        // entities, used in color mode, to replace unsafe HTML tag chars
-        private static readonly Dictionary<char, string> Entities = new Dictionary<char, string>
-        {
-            //{ '<', "&lt;" },
-            //{ '>', "&gt;" },
-            //{ '&', "&amp;" }
-        };
 
         public static readonly StringBuilder Fout = new StringBuilder();
 
@@ -387,21 +378,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                         if (v >= 0x20)
                         {
-                            // translate some chars into entities, if in colour mode
-                            if (Config.Colors)
-                            {
-                                if (Entities.ContainsKey(Convert.ToChar(v)))
-                                {
-                                    Fout.Append(Entities[Convert.ToChar(v)]);
-                                    // v < 0x20 won't be printed in next block
-                                    v = 0;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (v >= 0x20)
-                        {
                             Fout.Append(Ucs2ToUtf8(v));
                         }
                     }
@@ -529,7 +505,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
 
                 // Page transmission is terminated, however now we are waiting for our new page
-                //if (teletextRunSettings.PageNumberBcd != pageNumber)
                 if (targetPageNumberBcd != pageNumber)
                 {
                     return;
