@@ -38,10 +38,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
+            this.groupBoxColors = new System.Windows.Forms.GroupBox();
+            this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
+            this.groupBoxColors.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelDescription
@@ -78,7 +81,7 @@
             // 
             // pictureBoxSubtitleImage
             // 
-            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxSubtitleImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 247);
@@ -113,8 +116,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 412);
@@ -141,23 +144,45 @@
             this.label3.TabIndex = 22;
             this.label3.Text = "Image after pre-processing";
             // 
-            // groupBoxBinaryImageCompareThresshold
+            // groupBoxBinaryImageCompareThreshold
             // 
-            this.groupBoxBinaryImageCompareThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.groupBoxBinaryImageCompareThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.labelDescription);
-            this.groupBoxBinaryImageCompareThreshold.Location = new System.Drawing.Point(15, 12);
+            this.groupBoxBinaryImageCompareThreshold.Location = new System.Drawing.Point(348, 12);
             this.groupBoxBinaryImageCompareThreshold.Name = "groupBoxBinaryImageCompareThreshold";
-            this.groupBoxBinaryImageCompareThreshold.Size = new System.Drawing.Size(801, 216);
+            this.groupBoxBinaryImageCompareThreshold.Size = new System.Drawing.Size(468, 216);
             this.groupBoxBinaryImageCompareThreshold.TabIndex = 29;
             this.groupBoxBinaryImageCompareThreshold.TabStop = false;
+            // 
+            // groupBoxColors
+            // 
+            this.groupBoxColors.Controls.Add(this.checkBoxInvertColors);
+            this.groupBoxColors.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxColors.Name = "groupBoxColors";
+            this.groupBoxColors.Size = new System.Drawing.Size(326, 216);
+            this.groupBoxColors.TabIndex = 31;
+            this.groupBoxColors.TabStop = false;
+            this.groupBoxColors.Text = "Colors";
+            // 
+            // checkBoxInvertColors
+            // 
+            this.checkBoxInvertColors.AutoSize = true;
+            this.checkBoxInvertColors.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxInvertColors.Name = "checkBoxInvertColors";
+            this.checkBoxInvertColors.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxInvertColors.TabIndex = 27;
+            this.checkBoxInvertColors.Text = "Invert colors";
+            this.checkBoxInvertColors.UseVisualStyleBackColor = true;
+            this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
             // 
             // OcrPreprocessingT4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(828, 591);
+            this.Controls.Add(this.groupBoxColors);
             this.Controls.Add(this.groupBoxBinaryImageCompareThreshold);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -179,6 +204,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
+            this.groupBoxColors.ResumeLayout(false);
+            this.groupBoxColors.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +223,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThreshold;
+        private System.Windows.Forms.GroupBox groupBoxColors;
+        private System.Windows.Forms.CheckBox checkBoxInvertColors;
     }
 }

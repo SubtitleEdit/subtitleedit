@@ -5396,7 +5396,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (replaceDialog != null && !replaceDialog.IsDisposed)
                             {
                                 replaceDialog.Dispose();
-                                replaceDialog = null;
                             }
                             _findHelper.InProgress = false;
                             return;
@@ -5425,7 +5424,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (replaceDialog != null)
                                     {
                                         replaceDialog.Dispose();
-                                        replaceDialog = null;
                                     }
                                     _findHelper.InProgress = false;
                                     return;
@@ -5436,7 +5434,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (replaceDialog != null && !replaceDialog.IsDisposed)
                                 {
                                     replaceDialog.Dispose();
-                                    replaceDialog = null;
                                 }
                                 _findHelper.InProgress = false;
                                 return;
@@ -9952,7 +9949,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var deleteIndices = new List<int>();
                 bool first = true;
                 int firstIndex = 0;
-                double durationMilliseconds = 0;
+                double endMilliseconds = 0;
                 int next = 0;
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
@@ -9982,7 +9979,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.AppendLine(_subtitle.Paragraphs[index].Text);
                     }
 
-                    durationMilliseconds += _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
+                    endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
                 }
 
                 if (sb.Length > 200)
@@ -10016,7 +10013,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.Text = text;
 
                 //display time
-                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
+                currentParagraph.EndTime.TotalMilliseconds = endMilliseconds;
 
                 var nextParagraph = _subtitle.GetParagraphOrDefault(next);
                 if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
@@ -13014,6 +13011,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
             {
+                // check consecutive numbers
+                var last = SubtitleListview1.SelectedIndices[0] - 1;
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    if (last != index - 1)
+                    {
+                        return;
+                    }
+                    last = index;
+                }
+
                 MergeAfterToolStripMenuItemClick(null, null);
             }
         }
