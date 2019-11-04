@@ -611,4 +611,20 @@ zhTW.types_default=Default installation
 ;id.types_custom=Instalasi khusus
 ;id.types_default=Instalasi standar
 
+; Macedonian
+mk.comp_translations=Преводи
+mk.msg_AskToDownNET=За користење на Subtitle Edit потребно е .NET Framework 4.0. Ве молиме, преземете и инсталирајте .NET Framework и пак започнете со инсталација.%n%nДали сакате сега да преземете .NET Framework 4.0?
+mk.msg_DeleteSettings=Дали сакате да ги избришете и поставките во Subtitle Edit и сите сопствени промени во речниците?%n%nАко планирате да го реинсталирате Subtitle Edit не треба да ги избришете.
+mk.msg_OptimizingPerformance=Оптимизирање на работата на програмот...
+mk.run_VisitWebsite=Посетете ја веб страницата на Subtitle Edit
+mk.sm_com_Changelog=Извештај за промени во Subtitle Edit
+mk.tsk_AllUsers=За сите корисници
+mk.tsk_CurrentUser=Само за моменталниот корисник
+mk.tsk_Other=Друго:
+mk.tsk_ResetDictionaries=Ресетирај речници и избриши додадени називи по избор
+mk.tsk_ResetSettings=Ресетирај поставки на Subtitle Edit
+mk.tsk_SetFileTypes=Постави го Subtitle edit како стандарден програм за SubRip Text (.srt) записи
+mk.types_custom=Инсталиција по избор
+mk.types_default=Стандардна инсталација
+
 #endif

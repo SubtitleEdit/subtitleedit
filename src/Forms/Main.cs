@@ -5467,6 +5467,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             tb.SelectedText = _findHelper.ReplaceText;
                             msg = _language.OneReplacementMade + " ";
+                            _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                         }
 
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
@@ -5513,18 +5514,25 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (replaceDialog != null && !replaceDialog.IsDisposed)
                                     {
                                         replaceDialog.Dispose();
-                                        replaceDialog = null;
                                     }
                                     _findHelper.InProgress = false;
                                     return;
                                 }
+                            }
+                            else
+                            {
+                                if (replaceDialog != null && !replaceDialog.IsDisposed)
+                                {
+                                    replaceDialog.Dispose();
+                                }
+                                _findHelper.InProgress = false;
+                                return;
                             }
                         }
                         Replace(replaceDialog);
                         if (replaceDialog != null && !replaceDialog.IsDisposed)
                         {
                             replaceDialog.Dispose();
-                            replaceDialog = null;
                         }
                         _findHelper.InProgress = false;
                         return;
