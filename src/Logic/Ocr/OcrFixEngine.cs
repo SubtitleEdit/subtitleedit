@@ -1357,6 +1357,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true;
                     }
 
+                    if (!correct && _threeLetterIsoLanguageName.Equals("ara", StringComparison.Ordinal))
+                    {
+                        var trimmed = word.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،', '؟', '»', ')', '(');
+                        if (trimmed != word)
+                        {
+                            if (_userWordList.Contains(trimmed))
+                            {
+                                correct = true;
+                            }
+                            else
+                            {
+                                correct = DoSpell(trimmed);
+                            }
+                        }
+                    }
+
                     if (!correct)
                     {
                         //look for match via dash'ed word, e.g. sci-fi
@@ -1874,7 +1890,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             int wordsNotFound = 0;
-            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…„“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split(SpellCheckWordLists.SplitChars.ToArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
