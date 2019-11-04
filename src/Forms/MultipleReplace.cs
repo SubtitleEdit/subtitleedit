@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Initialize(subtitle);
             GeneratePreview();
+            SetDeleteIndices();
         }
 
         internal void RunFromBatch(Subtitle subtitle, IEnumerable<string> importFileNames)
