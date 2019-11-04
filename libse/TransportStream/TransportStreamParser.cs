@@ -143,7 +143,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
                 else
                 {
+                    // sync byte not found - search for it (will be very slow!)
+                    if (IsM2TransportStream)
+                    {
+                        position -= m2TsTimeCodeBuffer.Length;
+                    }
                     position++;
+                    ms.Seek(position, SeekOrigin.Begin);
                 }
             }
             foreach (var pid in SubtitlePackets.GroupBy(p => p.PacketId))
