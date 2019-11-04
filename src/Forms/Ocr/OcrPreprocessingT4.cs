@@ -46,11 +46,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void RefreshImage()
         {
+            PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
             PreprocessingSettings.BinaryImageCompareThreshold = (int)numericUpDownThreshold.Value;
 
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);
+
+            if (PreprocessingSettings.InvertColors)
+            {
+                n.InvertColors();
+            }
+
             n.MakeTwoColor((int)numericUpDownThreshold.Value, Color.White, Color.Black);
+
             pictureBox1.Image = n.GetBitmap();
         }
 
@@ -70,6 +78,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void checkBoxInvertColors_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshImage();
         }
     }
 }

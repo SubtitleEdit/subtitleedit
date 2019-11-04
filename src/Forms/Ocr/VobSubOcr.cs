@@ -1697,6 +1697,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 var nb = new NikseBitmap(returnBmp);
                 nb.AddMargin(10);
+                if (_preprocessingSettings != null && _preprocessingSettings.InvertColors)
+                {
+                    nb.InvertColors();
+                }
                 nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
                 returnBmp.Dispose();
                 return nb.GetBitmap();
