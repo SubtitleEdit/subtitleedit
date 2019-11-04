@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         };
 
         // subtitle type pages bitmap, 2048 bits = 2048 possible pages in teletext (excl. subpages)
-        public static byte[] CcMap = new byte[256];
+        private static byte[] _ccMap = new byte[256];
 
         public static readonly StringBuilder Fout = new StringBuilder();
 
@@ -411,7 +411,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         {
             var address = (TeletextHamming.UnHamming84(packet.Address[1]) << 4) | TeletextHamming.UnHamming84(packet.Address[0]);
             var m = address & 0x7;
-            if (m == 0) m = 8;
+            if (m == 0)
+            {
+                m = 8;
+            }
             var y = (address >> 3) & 0x1f;
             if (y == 0)
             {
@@ -465,13 +468,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var i = (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
                 var flagSubtitle = (TeletextHamming.UnHamming84(packet.Data[5]) & 0x08) >> 3;
 
-                CcMap[i] |= (byte)(flagSubtitle << (m - 1));
-
-                //if (config.Page == 0 && flagSubtitle == (int)BoolT.Yes && i < 0xff)
-                //{
-                //    config.Page = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
-                //    Console.WriteLine($"- No teletext page specified, first received suitable page is {config.Page}, not guaranteed");
-                //}
+                _ccMap[i] |= (byte)(flagSubtitle << (m - 1));
 
                 // Page number and control bits
                 var pageNumber = (m << 8) | (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);
@@ -520,7 +517,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 PageBuffer.ShowTimestamp = timestamp;
                 PageBuffer.HideTimestamp = 0;
-                PageBuffer.Text = new int[25, 40]; //memset(page_buffer.text, 0x00, sizeof(page_buffer.text));
+                PageBuffer.Text = new int[25, 40];
                 PageBuffer.Tainted = false;
                 ReceivingData = true;
                 PrimaryCharset.G0X28 = (int)BoolT.Undef;
@@ -588,18 +585,26 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (mode == 0x04 && rowAddressGroup)
                     {
                         x26Row = (int)(address2 - 40);
-                        if (x26Row == 0) x26Row = 24;
-                        x26Col = 0;
+                        if (x26Row == 0)
+                        {
+                            x26Row = 24;
+                        }
                     }
 
                     // ETS 300 706, chapter 12.3.1, table 27: termination marker
-                    if (mode >= 0x11 && mode <= 0x1f && rowAddressGroup) break;
+                    if (mode >= 0x11 && mode <= 0x1f && rowAddressGroup)
+                    {
+                        break;
+                    }
 
                     // ETS 300 706, chapter 12.3.1, table 27: character from G2 set
                     if (mode == 0x0f && !rowAddressGroup)
                     {
                         x26Col = (int)address2;
-                        if (data > 31) PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2[0, data - 0x20];
+                        if (data > 31)
+                        {
+                            PageBuffer.Text[x26Row, x26Col] = TeletextTables.G2[0, data - 0x20];
+                        }
                     }
 
                     // ETS 300 706, chapter 12.3.1, table 27: G0 character with diacritical mark
@@ -635,7 +640,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (triplet0 == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (Config.Verbose) Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
+                        if (Config.Verbose)
+                        {
+                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
+                        }
                     }
                     else
                     {
@@ -662,7 +670,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (triplet0 == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (Config.Verbose) Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
+                        if (Config.Verbose)
+                        {
+                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
+                        }
                     }
                     else
                     {

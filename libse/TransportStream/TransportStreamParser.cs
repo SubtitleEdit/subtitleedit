@@ -170,7 +170,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     Teletext.TransMode = Teletext.TransmissionMode.TransmissionModeSerial;
                     Teletext.ReceivingData = false;
                     Teletext.States = new Teletext.TeletextStates();
-                    Teletext.CcMap = new byte[256];
                     Teletext.PageBuffer = new Teletext.TeletextPage();
                     var pageBcd = Teletext.DecToBec(page);
                     var teletextRunSettings = new TeletextRunSettings();
