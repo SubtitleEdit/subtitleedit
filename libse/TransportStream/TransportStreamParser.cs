@@ -212,6 +212,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     var currentList = new List<DvbSubPes>();
                     var sb = new StringBuilder();
                     var subList = new List<TransportStreamSubtitle>();
+                    var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
                     for (var index = 0; index < list.Count; index++)
                     {
                         var item = list[index];
@@ -225,8 +226,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             {
                                 var startMs = currentList.First().PresentationTimestampToMilliseconds();
                                 var endMs = index + 1 < list.Count ? list[index + 1].PresentationTimestampToMilliseconds() : startMs + (ulong)Configuration.Settings.General.NewEmptyDefaultMs;
-                                startMs = (ulong)((long)startMs - (long)firstVideoMs);
-                                endMs = (ulong)((long)endMs - (long)firstVideoMs);
+                                startMs = (ulong)((long)startMs - offset);
+                                endMs = (ulong)((long)endMs - offset);
                                 subList.Add(new TransportStreamSubtitle(bdList[0], startMs, endMs));
                             }
                             bdMs.Dispose();
