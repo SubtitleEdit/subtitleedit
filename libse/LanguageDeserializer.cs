@@ -5644,6 +5644,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UseDoNotBreakAfterList":
                     language.Settings.UseDoNotBreakAfterList = reader.Value;
                     break;
+                case "Settings/BreakEarlyForLineEnding":
+                    language.Settings.BreakEarlyForLineEnding = reader.Value;
+                    break;
+                case "Settings/BreakEarlyForDashDialog":
+                    language.Settings.BreakEarlyForDashDialog = reader.Value;
+                    break;
+                case "Settings/BreakEarlyForComma":
+                    language.Settings.BreakEarlyForComma = reader.Value;
+                    break;
                 case "Settings/GoogleTranslate":
                     language.Settings.GoogleTranslate = reader.Value;
                     break;
