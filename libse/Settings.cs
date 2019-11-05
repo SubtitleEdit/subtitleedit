@@ -245,6 +245,8 @@ namespace Nikse.SubtitleEdit.Core
         public string AdjustDurationLast { get; set; }
         public bool AdjustDurationExtendOnly { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
+        public bool AutoBreakDashEarly { get; set; }
+        public bool AutoBreakLineEndingEarly { get; set; }
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
 
@@ -344,7 +346,9 @@ namespace Nikse.SubtitleEdit.Core
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AdjustDurationExtendOnly = true;
-            AutoBreakCommaBreakEarly = true;
+            AutoBreakCommaBreakEarly = false;
+            AutoBreakDashEarly = true;
+            AutoBreakLineEndingEarly = false;
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
         }
@@ -3490,6 +3494,18 @@ $HorzAlign          =   Center
                 settings.Tools.AutoBreakCommaBreakEarly = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("AutoBreakDashEarly");
+            if (subNode != null)
+            {
+                settings.Tools.AutoBreakDashEarly = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AutoBreakLineEndingEarly");
+            if (subNode != null)
+            {
+                settings.Tools.AutoBreakLineEndingEarly = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ApplyMinimumDurationLimit");
             if (subNode != null)
             {
@@ -6222,6 +6238,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
                 textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString());
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString());
+                textWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString());
+                textWriter.WriteElementString("AutoBreakLineEndingEarly", settings.Tools.AutoBreakLineEndingEarly.ToString());
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString());
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString());
 

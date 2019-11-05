@@ -205,7 +205,9 @@
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
+            this.checkBoxToolsBreakEarlyComma = new System.Windows.Forms.CheckBox();
+            this.checkBoxToolsBreakEarlyDash = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
             this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
@@ -358,6 +360,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxToolsBreakEarlyLineEnding = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -387,7 +390,7 @@
             this.tabPageTools.SuspendLayout();
             this.groupBoxGoogleTranslate.SuspendLayout();
             this.groupBoxBing.SuspendLayout();
-            this.groupBoxToolsMisc.SuspendLayout();
+            this.groupBoxToolsAutoBr.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
@@ -2569,7 +2572,7 @@
             // 
             this.tabPageTools.Controls.Add(this.groupBoxGoogleTranslate);
             this.tabPageTools.Controls.Add(this.groupBoxBing);
-            this.tabPageTools.Controls.Add(this.groupBoxToolsMisc);
+            this.tabPageTools.Controls.Add(this.groupBoxToolsAutoBr);
             this.tabPageTools.Controls.Add(this.groupBoxSpellCheck);
             this.tabPageTools.Controls.Add(this.groupBoxFixCommonErrors);
             this.tabPageTools.Controls.Add(this.groupBoxToolsVisualSync);
@@ -2699,17 +2702,40 @@
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 25;
             // 
-            // groupBoxToolsMisc
+            // groupBoxToolsAutoBr
             // 
-            this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
-            this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
-            this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 108);
-            this.groupBoxToolsMisc.TabIndex = 5;
-            this.groupBoxToolsMisc.TabStop = false;
-            this.groupBoxToolsMisc.Text = "Misc";
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyLineEnding);
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyComma);
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyDash);
+            this.groupBoxToolsAutoBr.Controls.Add(this.labelUserBingApiId);
+            this.groupBoxToolsAutoBr.Controls.Add(this.buttonEditDoNotBreakAfterList);
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
+            this.groupBoxToolsAutoBr.Location = new System.Drawing.Point(421, 6);
+            this.groupBoxToolsAutoBr.Name = "groupBoxToolsAutoBr";
+            this.groupBoxToolsAutoBr.Size = new System.Drawing.Size(404, 232);
+            this.groupBoxToolsAutoBr.TabIndex = 5;
+            this.groupBoxToolsAutoBr.TabStop = false;
+            this.groupBoxToolsAutoBr.Text = "Auto br";
+            // 
+            // checkBoxToolsBreakEarlyComma
+            // 
+            this.checkBoxToolsBreakEarlyComma.AutoSize = true;
+            this.checkBoxToolsBreakEarlyComma.Location = new System.Drawing.Point(15, 72);
+            this.checkBoxToolsBreakEarlyComma.Name = "checkBoxToolsBreakEarlyComma";
+            this.checkBoxToolsBreakEarlyComma.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxToolsBreakEarlyComma.TabIndex = 27;
+            this.checkBoxToolsBreakEarlyComma.Text = "Break early for comma";
+            this.checkBoxToolsBreakEarlyComma.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxToolsBreakEarlyDash
+            // 
+            this.checkBoxToolsBreakEarlyDash.AutoSize = true;
+            this.checkBoxToolsBreakEarlyDash.Location = new System.Drawing.Point(15, 49);
+            this.checkBoxToolsBreakEarlyDash.Name = "checkBoxToolsBreakEarlyDash";
+            this.checkBoxToolsBreakEarlyDash.Size = new System.Drawing.Size(123, 17);
+            this.checkBoxToolsBreakEarlyDash.TabIndex = 26;
+            this.checkBoxToolsBreakEarlyDash.Text = "Break early for dash";
+            this.checkBoxToolsBreakEarlyDash.UseVisualStyleBackColor = true;
             // 
             // labelUserBingApiId
             // 
@@ -2734,9 +2760,9 @@
             this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
             this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 26);
             this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
-            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(218, 17);
+            this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(154, 17);
             this.checkBoxUseDoNotBreakAfterList.TabIndex = 1;
-            this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list (for auto-br)";
+            this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list";
             this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
             // 
             // groupBoxSpellCheck
@@ -2892,7 +2918,7 @@
             this.groupBoxToolsVisualSync.Controls.Add(this.labelVerifyButton);
             this.groupBoxToolsVisualSync.Location = new System.Drawing.Point(6, 6);
             this.groupBoxToolsVisualSync.Name = "groupBoxToolsVisualSync";
-            this.groupBoxToolsVisualSync.Size = new System.Drawing.Size(820, 116);
+            this.groupBoxToolsVisualSync.Size = new System.Drawing.Size(409, 116);
             this.groupBoxToolsVisualSync.TabIndex = 2;
             this.groupBoxToolsVisualSync.TabStop = false;
             this.groupBoxToolsVisualSync.Text = "Visual sync";
@@ -4332,6 +4358,16 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxToolsBreakEarlyLineEnding
+            // 
+            this.checkBoxToolsBreakEarlyLineEnding.AutoSize = true;
+            this.checkBoxToolsBreakEarlyLineEnding.Location = new System.Drawing.Point(16, 95);
+            this.checkBoxToolsBreakEarlyLineEnding.Name = "checkBoxToolsBreakEarlyLineEnding";
+            this.checkBoxToolsBreakEarlyLineEnding.Size = new System.Drawing.Size(175, 17);
+            this.checkBoxToolsBreakEarlyLineEnding.TabIndex = 28;
+            this.checkBoxToolsBreakEarlyLineEnding.Text = "Break early for line ending (.!?)";
+            this.checkBoxToolsBreakEarlyLineEnding.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4393,8 +4429,8 @@
             this.groupBoxGoogleTranslate.PerformLayout();
             this.groupBoxBing.ResumeLayout(false);
             this.groupBoxBing.PerformLayout();
-            this.groupBoxToolsMisc.ResumeLayout(false);
-            this.groupBoxToolsMisc.PerformLayout();
+            this.groupBoxToolsAutoBr.ResumeLayout(false);
+            this.groupBoxToolsAutoBr.PerformLayout();
             this.groupBoxSpellCheck.ResumeLayout(false);
             this.groupBoxSpellCheck.PerformLayout();
             this.groupBoxFixCommonErrors.ResumeLayout(false);
@@ -4700,7 +4736,7 @@
         private System.Windows.Forms.Button buttonVlcPathBrowse;
         private System.Windows.Forms.TextBox textBoxVlcPath;
         private System.Windows.Forms.Label labelVlcPath;
-        private System.Windows.Forms.GroupBox groupBoxToolsMisc;
+        private System.Windows.Forms.GroupBox groupBoxToolsAutoBr;
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
         private System.Windows.Forms.Button buttonEditDoNotBreakAfterList;
         private System.Windows.Forms.CheckBox checkBoxCheckForUpdates;
@@ -4799,5 +4835,8 @@
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Label labelBingTokenEndpoint;
         private System.Windows.Forms.TextBox textBoxBingTokenEndpoint;
+        private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyComma;
+        private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyDash;
+        private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyLineEnding;
     }
 }
