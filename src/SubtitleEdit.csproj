@@ -1572,10 +1572,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Transparent Background.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
-    <Content Include="Icons\RemoveTextForHI.png" />
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1621,6 +1619,9 @@
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\hr-HR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\hu-HU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1630,13 +1631,13 @@
     <Content Include="Languages\it-IT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\ja-JP.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\ko-KR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\hr-HR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ja-JP.xml">
+    <Content Include="Languages\mk-MK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\nb-NO.xml">
@@ -1654,6 +1655,12 @@
     <Content Include="Languages\pt-PT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\ro-RO.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Languages\ru-RU.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\sl-SI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1663,19 +1670,13 @@
     <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\sv-SE.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\th-TH.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\tr-TR.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ro-RO.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\ru-RU.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Languages\sv-SE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\uk-UA.xml">
@@ -1690,9 +1691,6 @@
     <Content Include="Languages\zh-TW.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\pictureBoxNoFSOver.Image.png" />
-    <None Include="Resources\pictureBoxNoFSDown.Image.png" />
-    <None Include="Resources\pictureBoxNoFS.Image.png" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
@@ -1745,6 +1743,7 @@
     <Content Include="Icons\Help.png" />
     <Content Include="Icons\New.png" />
     <Content Include="Icons\Open.png" />
+    <Content Include="Icons\RemoveTextForHI.png" />
     <Content Include="Icons\Replace.png" />
     <Content Include="Icons\Save.png" />
     <Content Include="Icons\SaveAs.png" />
@@ -1753,16 +1752,20 @@
     <Content Include="Icons\VideoToggle.png" />
     <Content Include="Icons\VisualSync.png" />
     <Content Include="Icons\WaveformToggle.png" />
+    <None Include="Resources\bookmark22.png" />
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
     <None Include="Resources\pictureBoxFastForward.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseDown.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseOver.Image.png" />
+    <None Include="Resources\pictureBoxNoFS.Image.png" />
+    <None Include="Resources\pictureBoxNoFSDown.Image.png" />
+    <None Include="Resources\pictureBoxNoFSOver.Image.png" />
     <None Include="Resources\pictureBoxReverse.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
-    <None Include="Resources\bookmark22.png" />
+    <None Include="Resources\Transparent Background.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

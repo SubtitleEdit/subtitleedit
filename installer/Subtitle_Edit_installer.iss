@@ -251,6 +251,7 @@ Source: {#bindir}\Languages\id-ID.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ko-KR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\mk-MK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\nb-NO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -369,6 +370,7 @@ Type: files;      Name: {app}\Languages\id-ID.xml;      Check: not IsComponentSe
 Type: files;      Name: {app}\Languages\it-IT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ko-KR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\mk-MK.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\nb-NO.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\nl-NL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()

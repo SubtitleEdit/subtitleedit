@@ -330,6 +330,23 @@ ko.types_custom=사용자 지정 설치
 ko.types_default=기본 설치
 
 
+; Macedonian
+mk.comp_translations=Преводи
+mk.msg_AskToDownNET=За користење на Subtitle Edit потребно е .NET Framework 4.0. Ве молиме, преземете и инсталирајте .NET Framework и пак започнете со инсталација.%n%nДали сакате сега да преземете .NET Framework 4.0?
+mk.msg_DeleteSettings=Дали сакате да ги избришете и поставките во Subtitle Edit и сите сопствени промени во речниците?%n%nАко планирате да го реинсталирате Subtitle Edit не треба да ги избришете.
+mk.msg_OptimizingPerformance=Оптимизирање на работата на програмот...
+mk.run_VisitWebsite=Посетете ја веб страницата на Subtitle Edit
+mk.sm_com_Changelog=Извештај за промени во Subtitle Edit
+mk.tsk_AllUsers=За сите корисници
+mk.tsk_CurrentUser=Само за моменталниот корисник
+mk.tsk_Other=Друго:
+mk.tsk_ResetDictionaries=Ресетирај речници и избриши додадени називи по избор
+mk.tsk_ResetSettings=Ресетирај поставки на Subtitle Edit
+mk.tsk_SetFileTypes=Постави го Subtitle edit како стандарден програм за SubRip Text (.srt) записи
+mk.types_custom=Инсталиција по избор
+mk.types_default=Стандардна инсталација
+
+
 ; Dutch
 nl.comp_translations=Vertalingen
 nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.0. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.0 instaleren?
@@ -499,6 +516,7 @@ sv.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 sv.types_custom=Custom installation
 sv.types_default=Default installation
 
+
 ; Thai
 th.comp_translations=Translations
 th.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
@@ -514,6 +532,7 @@ th.tsk_ResetSettings=Reset Subtitle Edit's settings
 th.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 th.types_custom=Custom installation
 th.types_default=Default installation
+
 
 ; Turkish
 tr.comp_translations=Translations
@@ -531,6 +550,7 @@ tr.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 tr.types_custom=Custom installation
 tr.types_default=Default installation
 
+
 ; Ukrainian
 uk.comp_translations=Файли локалізації
 uk.msg_AskToDownNET=Subtitle Edit потребує для своєї роботи .NET Framework 4.0. Будь ласка, звантажте та встановіть .NET Framework і запустіть інсталяцію ще раз.%n%nБажаєте звантажити .NET Framework 4.0 зараз?
@@ -546,6 +566,7 @@ uk.tsk_ResetSettings=Скинути налаштування Subtitle Edit
 uk.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 uk.types_custom=Налаштовуване встановлення
 uk.types_default=Типове встановлення
+
 
 ; Vietnamese
 vi.comp_translations=Translations
@@ -563,6 +584,7 @@ vi.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 vi.types_custom=Custom installation
 vi.types_default=Default installation
 
+
 ; Chinese Simplified
 zh.comp_translations=Translations
 zh.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
@@ -578,6 +600,7 @@ zh.tsk_ResetSettings=Reset Subtitle Edit's settings
 zh.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 zh.types_custom=Custom installation
 zh.types_default=Default installation
+
 
 ; Chinese Traditional
 zhTW.comp_translations=Translations
@@ -595,6 +618,7 @@ zhTW.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 zhTW.types_custom=Custom installation
 zhTW.types_default=Default installation
 
+
 ; Indonesian
 ;id.comp_translations=Terjemahan
 ;id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.0. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.0 sekarang?
@@ -610,21 +634,5 @@ zhTW.types_default=Default installation
 ;id.tsk_SetFileTypes=Asosiasikan file Teks SubRip (.srt) dengan Subtitle Edit
 ;id.types_custom=Instalasi khusus
 ;id.types_default=Instalasi standar
-
-; Macedonian
-mk.comp_translations=Преводи
-mk.msg_AskToDownNET=За користење на Subtitle Edit потребно е .NET Framework 4.0. Ве молиме, преземете и инсталирајте .NET Framework и пак започнете со инсталација.%n%nДали сакате сега да преземете .NET Framework 4.0?
-mk.msg_DeleteSettings=Дали сакате да ги избришете и поставките во Subtitle Edit и сите сопствени промени во речниците?%n%nАко планирате да го реинсталирате Subtitle Edit не треба да ги избришете.
-mk.msg_OptimizingPerformance=Оптимизирање на работата на програмот...
-mk.run_VisitWebsite=Посетете ја веб страницата на Subtitle Edit
-mk.sm_com_Changelog=Извештај за промени во Subtitle Edit
-mk.tsk_AllUsers=За сите корисници
-mk.tsk_CurrentUser=Само за моменталниот корисник
-mk.tsk_Other=Друго:
-mk.tsk_ResetDictionaries=Ресетирај речници и избриши додадени називи по избор
-mk.tsk_ResetSettings=Ресетирај поставки на Subtitle Edit
-mk.tsk_SetFileTypes=Постави го Subtitle edit како стандарден програм за SubRip Text (.srt) записи
-mk.types_custom=Инсталиција по избор
-mk.types_default=Стандардна инсталација
 
 #endif
