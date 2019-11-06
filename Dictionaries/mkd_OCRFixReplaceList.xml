@@ -1,4 +1,5 @@
-<ReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="5ВЕЗДЕНИ" to="ЅВЕЗДЕНИ" />
     <Word from="5везден" to="ѕвезден" />
@@ -40,14 +41,15 @@
     <Word from="не не" to="не нѐ" />
     <Word from="и и" to="и ѝ" />
   </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it is (they are) accepted -->
+  </PartialWords>
+  <WholeLines />
+  <PartialLinesAlways />
   <PartialLines />
   <BeginLines />
   <EndLines />
-  <WholeLines>
-  </WholeLines>
-  <RemovedWholeWords />
-  <RemovedPartialLines />
-  <RemovedBeginLines />
-  <RemovedEndLines />
-  <RemovedWholeLines />
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>
