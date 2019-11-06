@@ -328,6 +328,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private double _numericUpDownMaxErrorPct = 6;
         private int _ocrMethodIndex;
         private bool _autoBreakLines;
+        private bool _hasForcedSubtitles;
 
         private readonly int _ocrMethodTesseract4;
         private readonly int _ocrMethodModi;
@@ -673,13 +674,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, Main main, bool batchMode = false)
         {
             _main = main;
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -700,13 +695,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void Initialize(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
         {
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -733,13 +722,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void Initialize(Subtitle subtitle, List<DvbSubPes> subtitleImages, VobSubOcrSettings vobSubOcrSettings)
         {
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -762,13 +745,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void InitializeQuick(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
         {
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -924,13 +901,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void Initialize(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -1217,12 +1188,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 numericUpDownStartNumber.Value = 1;
             }
 
-            buttonOK.Enabled = true;
-            buttonCancel.Enabled = true;
-            buttonStartOcr.Enabled = true;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = true;
-            buttonEditCharacterDatabase.Enabled = true;
+            SetButtonsEnabledAfterOcrDone();
             buttonStartOcr.Focus();
         }
 
@@ -1259,12 +1225,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 numericUpDownStartNumber.Value = 1;
             }
 
-            buttonOK.Enabled = true;
-            buttonCancel.Enabled = true;
-            buttonStartOcr.Enabled = true;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = true;
-            buttonEditCharacterDatabase.Enabled = true;
+            SetButtonsEnabledAfterOcrDone();
             buttonStartOcr.Focus();
         }
 
@@ -1305,12 +1266,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 numericUpDownStartNumber.Value = 1;
             }
 
-            buttonOK.Enabled = true;
-            buttonCancel.Enabled = true;
-            buttonStartOcr.Enabled = true;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = true;
-            buttonEditCharacterDatabase.Enabled = true;
+            SetButtonsEnabledAfterOcrDone();
             buttonStartOcr.Focus();
         }
 
@@ -4803,12 +4759,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                buttonStartOcr.Enabled = true;
-                buttonStop.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = true;
-                buttonEditCharacterDatabase.Enabled = true;
+                SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
             else if (_spList != null)
@@ -4816,12 +4767,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                buttonStartOcr.Enabled = true;
-                buttonStop.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = true;
-                buttonEditCharacterDatabase.Enabled = true;
+                SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
             else if (_dvbSubtitles != null)
@@ -4829,12 +4775,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                buttonStartOcr.Enabled = true;
-                buttonStop.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = true;
-                buttonEditCharacterDatabase.Enabled = true;
+                SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
             else if (_dvbPesSubtitles != null)
@@ -4842,28 +4783,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                buttonStartOcr.Enabled = true;
-                buttonStop.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = true;
-                buttonEditCharacterDatabase.Enabled = true;
+                SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
             else if (_bdnXmlOriginal != null)
             {
                 LoadBdnXml();
-                bool hasForcedSubtitles = false;
+                _hasForcedSubtitles = false;
                 foreach (var x in _bdnXmlOriginal.Paragraphs)
                 {
                     if (x.Forced)
                     {
-                        hasForcedSubtitles = true;
+                        _hasForcedSubtitles = true;
                         break;
                     }
                 }
 
-                checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+                checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
             }
             else if (_bluRaySubtitlesOriginal != null)
@@ -4875,17 +4811,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 LoadBluRaySup();
-                bool hasForcedSubtitles = false;
+                _hasForcedSubtitles = false;
                 foreach (var x in _bluRaySubtitlesOriginal)
                 {
                     if (x.IsForced)
                     {
-                        hasForcedSubtitles = true;
+                        _hasForcedSubtitles = true;
                         break;
                     }
                 }
 
-                checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+                checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
             }
             else if (_xSubList != null)
@@ -4893,12 +4829,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
 
-                buttonOK.Enabled = true;
-                buttonCancel.Enabled = true;
-                buttonStartOcr.Enabled = true;
-                buttonStop.Enabled = false;
-                buttonNewCharacterDatabase.Enabled = true;
-                buttonEditCharacterDatabase.Enabled = true;
+                SetButtonsEnabledAfterOcrDone();
                 buttonStartOcr.Focus();
             }
             else
@@ -4923,7 +4854,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
             bool hasIdxTimeCodes = false;
-            bool hasForcedSubtitles = false;
+            _hasForcedSubtitles = false;
             if (_vobSubMergedPackist == null)
             {
                 return null;
@@ -4939,7 +4870,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (x.SubPicture.Forced)
                 {
-                    hasForcedSubtitles = true;
+                    _hasForcedSubtitles = true;
                 }
             }
 
@@ -4947,7 +4878,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
             checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
-            checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+            checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
             LoadVobRip();
             return _subtitle;
         }
@@ -4963,6 +4894,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.OK;
         }
 
+        private void SetButtonsStartOcr()
+        {
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = true;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            _mainOcrRunning = true;
+            progressBar1.Visible = true;
+            subtitleListView1.MultiSelect = false;
+            checkBoxUseTimeCodesFromIdx.Enabled = false;
+            checkBoxShowOnlyForced.Enabled = false;
+            labelStatus.Text = string.Empty;
+        }
+
         private void SetButtonsEnabledAfterOcrDone()
         {
             buttonOK.Enabled = true;
@@ -4975,6 +4922,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelStatus.Text = string.Empty;
             progressBar1.Visible = false;
             subtitleListView1.MultiSelect = true;
+            checkBoxUseTimeCodesFromIdx.Enabled = checkBoxUseTimeCodesFromIdx.Visible;
+            checkBoxShowOnlyForced.Enabled = _hasForcedSubtitles;
         }
 
         private static void NOcrThreadDoWork(object sender, DoWorkEventArgs e)
@@ -5091,12 +5040,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = true;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
+
+            SetButtonsStartOcr();
             _fromMenuItem = false;
             _abort = false;
             _autoBreakLines = checkBoxAutoBreakLines.Checked;
@@ -7588,13 +7533,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxEmphasis2.BackColor = Color.White;
             }
 
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -7912,13 +7851,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void Initialize(string fileName, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, List<SpHeader> spList)
         {
             _spList = spList;
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -7978,13 +7911,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _mp4List = subPicturesWithTimeCodes;
 
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -8018,13 +7945,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _xSubList = subPictures;
 
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
@@ -8757,13 +8678,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, string language)
         {
-            buttonOK.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonStartOcr.Enabled = false;
-            buttonStop.Enabled = false;
-            buttonNewCharacterDatabase.Enabled = false;
-            buttonEditCharacterDatabase.Enabled = false;
-            labelStatus.Text = string.Empty;
+            SetButtonsStartOcr();
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
