@@ -2073,7 +2073,10 @@ can edit in same subtitle file (collaboration)</Information>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Use do-not-break-after list</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Break early for line ending (.!?)</BreakEarlyForLineEnding>
+    <BreakEarlyForDashDialog>Break early for dialog dash</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Break early for comma</BreakEarlyForComma>
     <GoogleTranslate>Google Translate</GoogleTranslate>
     <GoogleTranslateApiKey>API key</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Translator</MicrosoftBingTranslator>

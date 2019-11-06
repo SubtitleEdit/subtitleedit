@@ -153,6 +153,7 @@ namespace Test.Logic
         {
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for today.";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -163,6 +164,7 @@ namespace Test.Logic
         public void AutoBreakPreferPeriod2()
         {
             const string s1 = "That's alright. I get it all the time.";
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("That's alright." + Environment.NewLine + "I get it all the time.", s2);
         }
@@ -171,6 +173,7 @@ namespace Test.Logic
         public void AutoBreakPreferPeriod3()
         {
             const string s1 = "That's alright... I get it all the time.";
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("That's alright..." + Environment.NewLine + "I get it all the time.", s2);
         }
@@ -179,6 +182,7 @@ namespace Test.Logic
         public void AutoBreakPreferExclamation()
         {
             const string s1 = "That's alright!!! I get it all the time.";
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("That's alright!!!" + Environment.NewLine + "I get it all the time.", s2);
         }
@@ -188,6 +192,7 @@ namespace Test.Logic
         {
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for <i>today</i>.";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -197,6 +202,7 @@ namespace Test.Logic
         [TestMethod]
         public void AutoBreakPreferComma()
         {
+            Configuration.Settings.Tools.AutoBreakCommaBreakEarly = true;
             const string s1 = "Ha Ha Ha Ha Ha Ha Ha Ha Ha, Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha.";
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("Ha Ha Ha Ha Ha Ha Ha Ha Ha," + Environment.NewLine + "Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha.", s2);

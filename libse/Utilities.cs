@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Core
                 return text;
             }
 
-            // do not autobreak dialogs or music symbol
+            // do not auto break dialogs or music symbol
             if (text.Contains(Environment.NewLine) && (text.Contains('-') || text.Contains('♪')))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Core
             int mid = s.Length / 2;
 
             // try to find " - " with uppercase letter after (dialog)
-            if (s.Contains(" - "))
+            if (s.Contains(" - ") && Configuration.Settings.Tools.AutoBreakDashEarly)
             {
                 for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
@@ -618,11 +618,11 @@ namespace Nikse.SubtitleEdit.Core
                 splitPos = -1;
             }
 
-            if (splitPos < 0)
+            if (splitPos < 0 && Configuration.Settings.Tools.AutoBreakLineEndingEarly)
             {
                 const string expectedChars1 = ".!?0123456789";
                 const string expectedChars2 = ".!?";
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < s.Length / 4; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             splitPos = mid + j + 1;
                             if (expectedChars1.Contains(s[splitPos]))
-                            { // do not break double/tripple end lines like "!!!" or "..."
+                            { // do not break double/triple end lines like "!!!" or "..."
                                 splitPos++;
                                 if (expectedChars1.Contains(s[mid + j + 1]))
                                 {
@@ -662,35 +662,32 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // prefer comma
-            if (Configuration.Settings.Tools.AutoBreakCommaBreakEarly)
+            if (splitPos < 0 && Configuration.Settings.Tools.AutoBreakCommaBreakEarly)
             {
-                if (splitPos < 0)
+                const string expectedChars1 = ".!?0123456789";
+                const string expectedChars2 = ",";
+                for (int j = 0; j < s.Length / 4; j++)
                 {
-                    const string expectedChars1 = ".!?0123456789";
-                    const string expectedChars2 = ",";
-                    for (int j = 0; j < 15; j++)
+                    if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (mid + j + 1 < s.Length && mid + j > 0)
+                        if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
                         {
-                            if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
-                            {
-                                splitPos = mid + j + 1;
-                                if (expectedChars1.Contains(s[splitPos]))
-                                { // do not break double/tripple end lines like "!!!" or "..."
-                                    splitPos++;
-                                    if (expectedChars1.Contains(s[mid + j + 1]))
-                                    {
-                                        splitPos++;
-                                    }
-                                }
-                                break;
-                            }
-                            if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
-                            {
-                                splitPos = mid - j;
+                            splitPos = mid + j + 1;
+                            if (expectedChars1.Contains(s[splitPos]))
+                            { // do not break double/triple end lines like "!!!" or "..."
                                 splitPos++;
-                                break;
+                                if (expectedChars1.Contains(s[mid + j + 1]))
+                                {
+                                    splitPos++;
+                                }
                             }
+                            break;
+                        }
+                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
+                        {
+                            splitPos = mid - j;
+                            splitPos++;
+                            break;
                         }
                     }
                 }
@@ -710,10 +707,10 @@ namespace Nikse.SubtitleEdit.Core
 
             if (splitPos < 0)
             {
-                const string expectedChars1 = ".!?…, ";
+                const string expectedChars1 = ".!?… ";
                 const string expectedChars2 = " .!?";
                 const string expectedChars3 = ".!?";
-                for (int j = 0; j < 25; j++)
+                for (int j = 0; j < 15; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
@@ -782,13 +779,17 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         s = secondSplit;
                     }
-                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
+                    else if (Configuration.Settings.Tools.AutoBreakLineEndingEarly &&
+                             secondLinesMax <= firstLinesMax -5 &&
+                             secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
                              !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") &&
                              (secondFirstLine.EndsWith(".") || secondFirstLine.EndsWith("!") || secondFirstLine.EndsWith("?")))
                     {
                         s = secondSplit;
                     }
-                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
+                    else if (Configuration.Settings.Tools.AutoBreakLineEndingEarly &&
+                             secondLinesMax <= firstLinesMax - 5 && 
+                             secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
                              !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") && !firstLine.EndsWith(",") &&
                              secondFirstLine.EndsWith(","))
                     {
