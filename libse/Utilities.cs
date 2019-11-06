@@ -622,7 +622,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 const string expectedChars1 = ".!?0123456789";
                 const string expectedChars2 = ".!?";
-                for (int j = 0; j < s.Length / 5; j++)
+                for (int j = 0; j < s.Length / 4; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 const string expectedChars1 = ".!?0123456789";
                 const string expectedChars2 = ",";
-                for (int j = 0; j < s.Length / 5; j++)
+                for (int j = 0; j < s.Length / 4; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
