@@ -12,27 +12,25 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public const int DefaultScreenWidth = 720;
         public const int DefaultScreenHeight = 576;
 
-        public readonly uint StartCode;
-        public readonly int StreamId;
-        public readonly int Length;
-        public readonly int ScramblingControl;
-        public readonly int Priority;
-        public readonly int DataAlignmentIndicator;
-        public readonly int Copyright;
-        public readonly int OriginalOrCopy;
-        public readonly int PresentationTimestampDecodeTimestampFlags;
-        public readonly int ElementaryStreamClockReferenceFlag;
-        public readonly int EsRateFlag;
-        public readonly int DsmTrickModeFlag;
-        public readonly int AdditionalCopyInfoFlag;
-        public readonly int CrcFlag;
-        public readonly int ExtensionFlag;
-        public readonly int HeaderDataLength;
-
-        public readonly ulong? PresentationTimestamp;
-        public readonly ulong? DecodeTimestamp;
-
-        public readonly int? SubPictureStreamId;
+        public int Length { get; }
+        public ulong? PresentationTimestamp { get; }
+        public ulong? DecodeTimestamp { get; }
+        public int? SubPictureStreamId { get; }
+        public uint StartCode { get; }
+        public int StreamId { get; }
+        public int ScramblingControl { get; }
+        public int Priority { get; }
+        public int DataAlignmentIndicator { get; }
+        public int Copyright { get; }
+        public int OriginalOrCopy { get; }
+        public int PresentationTimestampDecodeTimestampFlags { get; }
+        public int ElementaryStreamClockReferenceFlag { get; }
+        public int EsRateFlag { get; }
+        public int DsmTrickModeFlag { get; }
+        public int AdditionalCopyInfoFlag { get; }
+        public int CrcFlag { get; }
+        public int ExtensionFlag { get; }
+        public int HeaderDataLength { get; }
 
         private readonly byte[] _dataBuffer;
 
@@ -151,9 +149,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 lastTimestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
             }
-            Teletext.Fout.Clear();
-            Teletext.Config.Page = Teletext.DecToBec(pageNumber);
-            Teletext.Config.Tid = packetId;
             var teletextPages = new Dictionary<int, Paragraph>();
             var i = 1;
             while (i <= _dataBuffer.Length - 6)

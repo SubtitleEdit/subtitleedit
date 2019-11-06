@@ -164,14 +164,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 foreach (var page in teletextPages[packetId].OrderBy(p => p))
                 {
-                    Teletext.Config = new Teletext.TeletextConfig();
-                    Teletext.PrimaryCharset = new Teletext.TeletextPrimaryCharset();
-                    Teletext.FramesProduced = 0;
-                    Teletext.TransMode = Teletext.TransmissionMode.TransmissionModeSerial;
-                    Teletext.ReceivingData = false;
-                    Teletext.States = new Teletext.TeletextStates();
-                    Teletext.PageBuffer = new Teletext.TeletextPage();
                     var pageBcd = Teletext.DecToBec(page);
+                    Teletext.InitializeStaticFields(packetId, pageBcd);
                     var teletextRunSettings = new TeletextRunSettings();
                     foreach (var pes in teletextPesList[packetId])
                     {
