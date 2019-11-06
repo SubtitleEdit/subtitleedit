@@ -12182,7 +12182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            if (tsParser.SubtitlePacketIds.Count == 0 & tsParser.TeletextSubtitlesLookup.Count == 1 && tsParser.TeletextSubtitlesLookup.First().Value.Count() == 1)
+            if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 1 && tsParser.TeletextSubtitlesLookup.First().Value.Count() == 1)
             {
                 _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
                 _subtitle.Renumber();
