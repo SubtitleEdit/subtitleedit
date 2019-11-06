@@ -2240,6 +2240,9 @@
             public string Miscellaneous { get; set; }
             public string CpsIncludesSpace { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
+            public string BreakEarlyForLineEnding { get; set; }
+            public string BreakEarlyForDashDialog { get; set; }
+            public string BreakEarlyForComma { get; set; }
             public string GoogleTranslate { get; set; }
             public string GoogleTranslateApiKey { get; set; }
             public string MicrosoftBingTranslator { get; set; }

@@ -643,8 +643,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
 
-            groupBoxToolsMisc.Text = language.Miscellaneous;
+            groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
+            checkBoxToolsBreakEarlyComma.Text = language.BreakEarlyForComma;
+            checkBoxToolsBreakEarlyDash.Text = language.BreakEarlyForDashDialog;
+            checkBoxToolsBreakEarlyLineEnding.Text = language.BreakEarlyForLineEnding;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
@@ -824,6 +827,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseAlwaysToFile.Checked = toolsSettings.RememberUseAlwaysList;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
+            checkBoxToolsBreakEarlyComma.Checked = toolsSettings.AutoBreakCommaBreakEarly;
+            checkBoxToolsBreakEarlyDash.Checked = toolsSettings.AutoBreakDashEarly;
+            checkBoxToolsBreakEarlyLineEnding.Checked = toolsSettings.AutoBreakLineEndingEarly;
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
@@ -1607,6 +1613,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
             toolsSettings.RememberUseAlwaysList = checkBoxUseAlwaysToFile.Checked;
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
+            toolsSettings.AutoBreakCommaBreakEarly = checkBoxToolsBreakEarlyComma.Checked;
+            toolsSettings.AutoBreakLineEndingEarly = checkBoxToolsBreakEarlyLineEnding.Checked;
+            toolsSettings.AutoBreakDashEarly = checkBoxToolsBreakEarlyDash.Checked;
+
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
