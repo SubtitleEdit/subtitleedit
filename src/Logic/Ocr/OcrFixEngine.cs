@@ -1359,7 +1359,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                     if (!correct && _threeLetterIsoLanguageName.Equals("ara", StringComparison.Ordinal))
                     {
-                        var trimmed = word.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،', '؟', '»', ')', '(');
+                        var trimmed = word.Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '،', '؟', '»');
                         if (trimmed != word)
                         {
                             if (_userWordList.Contains(trimmed))
