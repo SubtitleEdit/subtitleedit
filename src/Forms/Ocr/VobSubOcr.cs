@@ -5574,7 +5574,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "7", _tesseractEngineMode); // 7 = Treat the image as a single text line.
 
                 // sometimes short texts are not recognized - this resize seems to help
-                if (psm == string.Empty && textWithOutFixes == string.Empty)
+                if (psm == string.Empty && textWithOutFixes == string.Empty ||
+                    psm.Length < 5 && !psm.Contains('.') && psm == psm.ToUpperInvariant()) // e.g. "SEN" (could be more...) - see https://github.com/SubtitleEdit/subtitleedit/issues/3833
                 {
                     using (var b = ResizeBitmap(bitmap, bitmap.Width * 2, (int)Math.Round(bitmap.Height * 2.5)))
                     {

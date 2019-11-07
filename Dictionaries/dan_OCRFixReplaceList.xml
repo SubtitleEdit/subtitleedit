@@ -637,7 +637,13 @@
   <WholeLines />
   <PartialLinesAlways />
   <PartialLines />
-  <BeginLines />
+  <BeginLines>
+    <Beginning from="-] " to="- I " />
+    <Beginning from="- ] " to="- I " />
+    <Beginning from="] " to="I " />
+    <Beginning from="-| " to="- I " />
+    <Beginning from="- | " to="- I " />
+  </BeginLines>
   <EndLines />
   <RegularExpressions />
 </OCRFixReplaceList>
