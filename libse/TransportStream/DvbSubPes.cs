@@ -5,7 +5,6 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
-
     public class DvbSubPes
     {
         public const int HeaderLength = 6;
@@ -13,27 +12,25 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public const int DefaultScreenWidth = 720;
         public const int DefaultScreenHeight = 576;
 
-        public readonly UInt32 StartCode;
-        public readonly int StreamId;
-        public readonly int Length;
-        public readonly int ScramblingControl;
-        public readonly int Priority;
-        public readonly int DataAlignmentIndicator;
-        public readonly int Copyright;
-        public readonly int OriginalOrCopy;
-        public readonly int PresentationTimestampDecodeTimestampFlags;
-        public readonly int ElementaryStreamClockReferenceFlag;
-        public readonly int EsRateFlag;
-        public readonly int DsmTrickModeFlag;
-        public readonly int AdditionalCopyInfoFlag;
-        public readonly int CrcFlag;
-        public readonly int ExtensionFlag;
-        public readonly int HeaderDataLength;
-
-        public readonly UInt64? PresentationTimestamp;
-        public readonly UInt64? DecodeTimestamp;
-
-        public readonly int? SubPictureStreamId;
+        public int Length { get; }
+        public ulong? PresentationTimestamp { get; }
+        public ulong? DecodeTimestamp { get; }
+        public int? SubPictureStreamId { get; }
+        public uint StartCode { get; }
+        public int StreamId { get; }
+        public int ScramblingControl { get; }
+        public int Priority { get; }
+        public int DataAlignmentIndicator { get; }
+        public int Copyright { get; }
+        public int OriginalOrCopy { get; }
+        public int PresentationTimestampDecodeTimestampFlags { get; }
+        public int ElementaryStreamClockReferenceFlag { get; }
+        public int EsRateFlag { get; }
+        public int DsmTrickModeFlag { get; }
+        public int AdditionalCopyInfoFlag { get; }
+        public int CrcFlag { get; }
+        public int ExtensionFlag { get; }
+        public int HeaderDataLength { get; }
 
         private readonly byte[] _dataBuffer;
 
@@ -110,6 +107,76 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             _dataBuffer = new byte[dataSize + 1];
             Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
+        }
+
+        public List<int> PrepareTeletext()
+        {
+            var pages = new List<int>();
+            var i = 1;
+            while (i <= _dataBuffer.Length - 6)
+            {
+                var dataUnitId = _dataBuffer[i++];
+                var dataUnitLen = _dataBuffer[i++];
+                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                {
+                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes 
+                    {
+                        // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
+                        for (var j = 0; j < dataUnitLen; j++)
+                        {
+                            _dataBuffer[i + j] = TeletextHamming.Reverse8[_dataBuffer[i + j]];
+                        }
+                        var pageNumber = Teletext.GetPageNumber(new Teletext.TeletextPacketPayload(_dataBuffer, i));
+                        if (!pages.Contains(pageNumber) && pageNumber > 0)
+                        {
+                            pages.Add(pageNumber);
+                        }
+                    }
+                }
+                i += dataUnitLen;
+            }
+            return pages;
+        }
+
+        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
+        {
+            var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
+            if (firstMs.HasValue && lastTimestamp >= firstMs)
+            {
+                lastTimestamp -= firstMs.Value;
+            }
+            if (lastTimestamp < 40)
+            {
+                lastTimestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
+            }
+            var teletextPages = new Dictionary<int, Paragraph>();
+            var i = 1;
+            while (i <= _dataBuffer.Length - 6)
+            {
+                var dataUnitId = _dataBuffer[i++];
+                var dataUnitLen = _dataBuffer[i++];
+                if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
+                {
+                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
+                    {
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, pageNumberBcd, pageNumber);
+                    }
+                }
+                i += dataUnitLen;
+            }
+            if (teletextRunSettings.PageNumberAndParagraph.ContainsKey(pageNumber) && teletextRunSettings.PageNumberAndParagraph[pageNumber] != null)
+            {
+                if (teletextPages.ContainsKey(pageNumber))
+                {
+                    teletextPages[pageNumber] = teletextRunSettings.PageNumberAndParagraph[pageNumber];
+                }
+                else
+                {
+                    teletextPages.Add(pageNumber, teletextRunSettings.PageNumberAndParagraph[pageNumber]);
+                }
+            }
+            teletextRunSettings.PageNumberAndParagraph.Clear();
+            return teletextPages;
         }
 
         public DvbSubPes(int index, byte[] buffer)
@@ -194,7 +261,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
         }
 
-        public bool IsDvbSubpicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
+        public bool IsDvbSubPicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
+
+        public bool IsTeletext => DataIdentifier == 16;
 
         public int DataIdentifier
         {
@@ -277,13 +346,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         private ClutDefinitionSegment GetClutDefinitionSegment(ObjectDataSegment ods)
         {
-            foreach (RegionCompositionSegment rcs in RegionCompositions)
+            foreach (var rcs in RegionCompositions)
             {
-                foreach (RegionCompositionSegmentObject o in rcs.Objects)
+                foreach (var o in rcs.Objects)
                 {
                     if (o.ObjectId == ods.ObjectId)
                     {
-                        foreach (ClutDefinitionSegment cds in ClutDefinitions)
+                        foreach (var cds in ClutDefinitions)
                         {
                             if (cds.ClutId == rcs.RegionClutId)
                             {
@@ -311,13 +380,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             var p = new Point(0, 0);
 
-            foreach (RegionCompositionSegment rcs in RegionCompositions)
+            foreach (var rcs in RegionCompositions)
             {
-                foreach (RegionCompositionSegmentObject o in rcs.Objects)
+                foreach (var o in rcs.Objects)
                 {
                     if (o.ObjectId == ods.ObjectId)
                     {
-                        foreach (PageCompositionSegment cds in PageCompositions)
+                        foreach (var cds in PageCompositions)
                         {
                             foreach (var r in cds.Regions)
                             {
@@ -350,7 +419,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 return ods.Image;
             }
 
-            ClutDefinitionSegment cds = GetClutDefinitionSegment(ods);
+            var cds = GetClutDefinitionSegment(ods);
             ods.DecodeImage(_dataBuffer, ods.BufferIndex, cds);
             return ods.Image;
         }
@@ -366,7 +435,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             int height = DefaultScreenHeight;
 
             var segments = SubtitleSegments;
-            foreach (SubtitleSegment ss in segments)
+            foreach (var ss in segments)
             {
                 if (ss.DisplayDefinition != null)
                 {

@@ -1,45 +1,13 @@
 ﻿using System.Drawing;
-using System.Linq.Expressions;
-using System.Runtime.Remoting.Messaging;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
     public class TransportStreamSubtitle 
     {
-        private ulong _startMilliseconds;
+        public ulong StartMilliseconds { get; set; }
 
-        public ulong StartMilliseconds
-        {
-            get
-            {
-                if (_startMilliseconds < OffsetMilliseconds)
-                {
-                    return 0;
-                }
+        public ulong EndMilliseconds { get; set; }
 
-                return _startMilliseconds - OffsetMilliseconds;
-            }
-            set => _startMilliseconds = value + OffsetMilliseconds;
-        }
-
-        private ulong _endMilliseconds;
-
-        public ulong EndMilliseconds
-        {
-            get
-            {
-                if (_endMilliseconds < OffsetMilliseconds)
-                {
-                    return 0;
-                }
-
-                return _endMilliseconds - OffsetMilliseconds;
-            }
-            set => _endMilliseconds = value + OffsetMilliseconds;
-        }
-
-        public ulong OffsetMilliseconds { get; set; }
         public DvbSubPes Pes { get; set; }
         private readonly BluRaySup.BluRaySupParser.PcsData _bdSup;
         public int? ActiveImageIndex { get; set; }
@@ -53,14 +21,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             _bdSup = bdSup;
             StartMilliseconds = startMilliseconds;
             EndMilliseconds = endMilliseconds;
-        }
-
-        public TransportStreamSubtitle(BluRaySup.BluRaySupParser.PcsData bdSup, ulong startMilliseconds, ulong endMilliseconds, ulong offset)
-        {
-            _bdSup = bdSup;
-            StartMilliseconds = startMilliseconds;
-            EndMilliseconds = endMilliseconds;
-            OffsetMilliseconds = offset;
         }
 
         public TransportStreamSubtitle()

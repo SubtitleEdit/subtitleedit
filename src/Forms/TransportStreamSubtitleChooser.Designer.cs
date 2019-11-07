@@ -42,6 +42,9 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxSubtitles = new System.Windows.Forms.ListBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBoxTeletext = new System.Windows.Forms.TextBox();
+            this.saveSubtitleAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripListview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -63,7 +66,7 @@
             this.listBoxTracks.FormattingEnabled = true;
             this.listBoxTracks.Location = new System.Drawing.Point(13, 31);
             this.listBoxTracks.Name = "listBoxTracks";
-            this.listBoxTracks.Size = new System.Drawing.Size(589, 82);
+            this.listBoxTracks.Size = new System.Drawing.Size(589, 134);
             this.listBoxTracks.TabIndex = 51;
             this.listBoxTracks.SelectedIndexChanged += new System.EventHandler(this.listBoxTracks_SelectedIndexChanged);
             // 
@@ -71,9 +74,11 @@
             // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemExport,
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem});
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem,
+            this.saveSubtitleAsToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(284, 48);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(284, 70);
+            this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListview_Opening);
             // 
             // toolStripMenuItemExport
             // 
@@ -150,9 +155,9 @@
             this.listBoxSubtitles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxSubtitles.FormattingEnabled = true;
-            this.listBoxSubtitles.Location = new System.Drawing.Point(12, 119);
+            this.listBoxSubtitles.Location = new System.Drawing.Point(12, 171);
             this.listBoxSubtitles.Name = "listBoxSubtitles";
-            this.listBoxSubtitles.Size = new System.Drawing.Size(589, 199);
+            this.listBoxSubtitles.Size = new System.Drawing.Size(589, 147);
             this.listBoxSubtitles.TabIndex = 53;
             this.listBoxSubtitles.SelectedIndexChanged += new System.EventHandler(this.listBoxSubtitles_SelectedIndexChanged);
             // 
@@ -167,11 +172,32 @@
             this.pictureBox1.TabIndex = 54;
             this.pictureBox1.TabStop = false;
             // 
+            // textBoxTeletext
+            // 
+            this.textBoxTeletext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTeletext.Location = new System.Drawing.Point(12, 167);
+            this.textBoxTeletext.Multiline = true;
+            this.textBoxTeletext.Name = "textBoxTeletext";
+            this.textBoxTeletext.ReadOnly = true;
+            this.textBoxTeletext.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxTeletext.Size = new System.Drawing.Size(589, 273);
+            this.textBoxTeletext.TabIndex = 61;
+            // 
+            // saveSubtitleAsToolStripMenuItem
+            // 
+            this.saveSubtitleAsToolStripMenuItem.Name = "saveSubtitleAsToolStripMenuItem";
+            this.saveSubtitleAsToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.saveSubtitleAsToolStripMenuItem.Text = "Save subtitle as...";
+            this.saveSubtitleAsToolStripMenuItem.Click += new System.EventHandler(this.saveSubtitleAsToolStripMenuItem_Click);
+            // 
             // TransportStreamSubtitleChooser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(613, 483);
+            this.Controls.Add(this.textBoxTeletext);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.listBoxSubtitles);
             this.Controls.Add(this.labelChoose);
@@ -187,6 +213,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Transport stream subtitle chooser";
+            this.Shown += new System.EventHandler(this.TransportStreamSubtitleChooser_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TransportStreamSubtitleChooser_KeyDown);
             this.contextMenuStripListview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -210,5 +237,8 @@
         private System.Windows.Forms.ToolStripMenuItem vobSubToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAllImagesWithHtmlIndexViewToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBoxTeletext;
+        private System.Windows.Forms.ToolStripMenuItem saveSubtitleAsToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
