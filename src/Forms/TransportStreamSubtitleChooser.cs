@@ -6,12 +6,31 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class TransportStreamSubtitleChooser : PositionAndSizeForm
     {
+        public int SelectedIndex => listBoxTracks.SelectedIndex;
+        public bool IsTeletext { get; private set; }
+        public string Srt { get; private set; }
+
+        public class StreamTrackItem
+        {
+            public string Text { get; set; }
+            public bool IsTeletext { get; set; }
+            public string Srt { get; set; }
+            public int Pid { get; set; }
+            public string Language { get; set; }
+
+            public override string ToString()
+            {
+                return Text;
+            }
+        }
+
         private TransportStreamParser _tsParser;
         private string _fileName;
         private ProgramMapTableParser _programMapTableParser;
@@ -61,19 +80,44 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (int id in tsParser.SubtitlePacketIds)
             {
                 var language = _programMapTableParser.GetSubtitleLanguage(id);
-                if (!string.IsNullOrEmpty(language))
+                if (string.IsNullOrEmpty(language))
                 {
-                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id + ", " + language, tsParser.GetDvbSubtitles(id).Count));
+                    language = "unknown";
                 }
-                else
+
+                listBoxTracks.Items.Add(new StreamTrackItem
                 {
-                    listBoxTracks.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
+                    Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineImage, id, language, tsParser.GetDvbSubtitles(id).Count),
+                    IsTeletext = false,
+                    Pid = id,
+                    Language = language
+                });
+            }
+
+            foreach (var program in tsParser.TeletextSubtitlesLookup)
+            {
+                var language = _programMapTableParser.GetSubtitleLanguage(program.Key);
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = "unknown";
+                }
+
+                foreach (var kvp in program.Value)
+                {
+                    var subtitle = new Subtitle(kvp.Value);
+                    subtitle.Renumber();
+                    listBoxTracks.Items.Add(new StreamTrackItem
+                    {
+                        Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineTeletext, kvp.Key, program.Key, language, kvp.Value.Count),
+                        IsTeletext = true,
+                        Pid = program.Key,
+                        Srt = new SubRip().ToText(subtitle, null)
+                    });
                 }
             }
+
             listBoxTracks.SelectedIndex = 0;
         }
-
-        public int SelectedIndex => listBoxTracks.SelectedIndex;
 
         private void listBoxTracks_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -83,6 +127,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var item = (StreamTrackItem)listBoxTracks.SelectedItem;
+            if (item.IsTeletext)
+            {
+                textBoxTeletext.Visible = true;
+                textBoxTeletext.Text = item.Srt;
+                IsTeletext = true;
+                Srt = item.Srt;
+                return;
+            }
+
+            IsTeletext = false;
+            Srt = string.Empty;
+            textBoxTeletext.Visible = false;
             listBoxSubtitles.Items.Clear();
             int pid = _tsParser.SubtitlePacketIds[idx];
             var list = _tsParser.GetDvbSubtitles(pid);
@@ -178,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (list.Count > 0)
             {
                 using (var bmp = list[0].GetBitmap())
-                { 
+                {
                     return new Point(bmp.Width, bmp.Height);
                 }
             }
@@ -203,7 +260,6 @@ namespace Nikse.SubtitleEdit.Forms
                     exportBdnXmlPng.ShowDialog(this);
                 }
             }
-
         }
 
         private void SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -218,6 +274,61 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName, GetSelectedLanguage());
                 formSubOcr.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void TransportStreamSubtitleChooser_Shown(object sender, EventArgs e)
+        {
+            BringToFront();
+        }
+
+        private void contextMenuStripListview_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            int idx = listBoxTracks.SelectedIndex;
+            if (idx < 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            var item = (StreamTrackItem)listBoxTracks.SelectedItem;
+            if (item.IsTeletext)
+            {
+                toolStripMenuItemExport.Visible = false;
+                saveAllImagesWithHtmlIndexViewToolStripMenuItem.Visible = false;
+                saveSubtitleAsToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemExport.Visible = true;
+                saveAllImagesWithHtmlIndexViewToolStripMenuItem.Visible = true;
+                saveSubtitleAsToolStripMenuItem.Visible = true;
+            }
+        }
+
+        private void saveSubtitleAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int idx = listBoxTracks.SelectedIndex;
+            if (idx < 0)
+            {
+                return;
+            }
+
+            var item = (StreamTrackItem)listBoxTracks.SelectedItem;
+            if (item.IsTeletext)
+            {
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
+                var fileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+                if (!string.IsNullOrEmpty(item.Language))
+                {
+                    fileName += "." + _programMapTableParser.GetSubtitleLanguageTwoLetter(item.Pid);
+                }
+                saveFileDialog1.FileName = fileName;
+
+                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, item.Srt);
+                }
             }
         }
     }

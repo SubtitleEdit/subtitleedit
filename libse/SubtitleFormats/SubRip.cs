@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            bool doRenum = false;
+            bool doRenumber = false;
             _errors = new StringBuilder();
             _lineNumber = 0;
             _isMsFrames = true;
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 _lineNumber++;
                 string line = lines[i].TrimEnd();
-                line = line.Trim('\u007F'); // 127=delete acscii
+                line = line.Trim('\u007F'); // 127=delete ascii
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(line.Trim(), null))
                 {
                     _expecting = ExpectingLine.TimeCodes;
-                    doRenum = true;
+                    doRenumber = true;
                 }
                 else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(line.Trim(), null))
                 {
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _lastParagraph = _paragraph;
                     _paragraph = new Paragraph();
                     _expecting = ExpectingLine.TimeCodes;
-                    doRenum = true;
+                    doRenumber = true;
                 }
 
                 ReadLine(subtitle, line, next, nextNext, nextNextNext);
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(_paragraph);
             }
 
-            if (doRenum)
+            if (doRenumber)
             {
                 subtitle.Renumber();
             }
@@ -190,7 +190,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
+                    if (Utilities.IsInteger(line) && TryReadTimeCodesLine(next, _paragraph) && line.Trim() == GetLastNumber(_paragraph))
+                    {
+                        subtitle.Paragraphs.Add(_paragraph);
+                        _lastParagraph = _paragraph;
+                        _paragraph = new Paragraph();
+                        _expecting = ExpectingLine.Number;
+                        if (int.TryParse(line, out var n))
+                        {
+                            _paragraph.Number = n;
+                        }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
                         if (_isWsrt && !string.IsNullOrEmpty(line))
                         {
@@ -272,7 +283,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace(" -- > ", defaultSeparator)
                 .Replace(" - -> ", defaultSeparator)
                 .Replace(" -->> ", defaultSeparator)
-                .Replace(" ---> ", defaultSeparator).Trim();
+                .Replace(" ---> ", defaultSeparator)
+                .Replace(": ", ":").Trim();
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
@@ -296,7 +308,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
             }
 
-            if (RegexTimeCodes.IsMatch(line) || RegexTimeCodes2.IsMatch(line))
+            if (RegexTimeCodes.IsMatch(line.RemoveChar(' ')) || RegexTimeCodes2.IsMatch(line.RemoveChar(' ')))
             {
                 string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
                 try
