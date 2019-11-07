@@ -320,6 +320,28 @@ Germany has taken most of Europe...";
             Assert.AreEqual("Germany has taken most of Europe...", subtitle.Paragraphs[2].Text);
         }
 
+        [TestMethod]
+        public void SrtMissingNewLinesAndBadTimeCodes()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+00: 00: 12,083  -->  00: 00: 15,726
+text1
+ 2
+00: 00: 15,750  -->  00: 00: 28,892
+text2
+3
+00: 00: 28,916  -->  00: 00: 33,726
+text3a
+text3b";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+            Assert.AreEqual("text1", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("text2", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("text3a" + Environment.NewLine + "text3b", subtitle.Paragraphs[2].Text);
+        }
+
         #endregion SubRip (.srt)
 
         #region Advanced Sub Station alpha (.ass)
