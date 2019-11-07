@@ -79,6 +79,8 @@
     <Size>크기</Size>
     <Search>검색</Search>
     <DeleteCurrentLine>현재 줄 삭제</DeleteCurrentLine>
+    <Width>폭</Width>
+    <Height>높이</Height>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -207,6 +209,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>오프셋 타임 코드</OffsetTimeCodes>
+    <TransportStreamSettings>전송 스트림 설정</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>원래 X 위치 재정의</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>원래 Y 위치 재정의</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>원본 비디오 크기 재정의</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>파일 이름 끝</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>TS 설정...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -2061,7 +2069,10 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>줄 마침을 위해 일찍 줄바꿈 (.!?)</BreakEarlyForLineEnding>
+    <BreakEarlyForDashDialog>대화 대시를 위해 일찍 줄바꿈</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>쉼표를 위해 일찍 줄바꿈</BreakEarlyForComma>
     <GoogleTranslate>Google 번역</GoogleTranslate>
     <GoogleTranslateApiKey>API 키</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft 번역</MicrosoftBingTranslator>
@@ -2404,6 +2415,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MinLineSplitHeight>최소 줄 높이 (분할)</MinLineSplitHeight>
     <FallbackToX>{0}으로 대체</FallbackToX>
     <ImagePreProcessing>이미지 사전 처리중...</ImagePreProcessing>
+    <EditImageDb>이미지 DB 편집</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
@@ -2435,6 +2447,20 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Title>기울임꼴 인자 설정</Title>
     <Description>텍스트가 기울임이 없어질 때까지 값을 조정하십시오! 원본 이미지가 기울임꼴(이탤릭체)이어야 합니다.</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR 이미지 전처리</Title>
+    <Colors>색상</Colors>
+    <AdjustAlpha>텍스트가 명학하게 표시될 때까지 값을 조정합니다 (보통 200 ~ 300 사이의 값)</AdjustAlpha>
+    <OriginalImage>원본 이미지</OriginalImage>
+    <PostImage>전처리 후 이미지</PostImage>
+    <BinaryThreshold>바이너리 이미지 비교 임계 값</BinaryThreshold>
+    <InvertColors>색상 반전</InvertColors>
+    <YellowToWhite>노란색을 흰색으로</YellowToWhite>
+    <ColorToWhite>색상을 흰색으로</ColorToWhite>
+    <ColorToRemove>제거할 색상</ColorToRemove>
+    <Cropping>자르기</Cropping>
+    <CropTransparentColors>투명 색상 자르기</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>워터마크</Title>
     <WatermarkX>워터마크: {0}</WatermarkX>
