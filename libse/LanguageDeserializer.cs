@@ -5647,6 +5647,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/BreakEarlyForLineEnding":
                     language.Settings.BreakEarlyForLineEnding = reader.Value;
                     break;
+                case "Settings/BreakByPixelWidth":
+                    language.Settings.BreakByPixelWidth = reader.Value;
+                    break;
                 case "Settings/BreakEarlyForDashDialog":
                     language.Settings.BreakEarlyForDashDialog = reader.Value;
                     break;
