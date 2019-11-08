@@ -1,5 +1,23 @@
 ﻿Subtitle Edit Changelog
 
+3.5.12 (xth December 2019) BETA
+* NEW:
+   * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare
+   * Auto break option pixel width (not after number of characters)
+   * Auto break options now available in settings UI
+* IMPROVED:
+   * Add Macedonian translation - thx Numberguy
+   * Update Polish translation - thx admas
+   * Update Korean translation - thx domddol
+   * Improved reading of faulty .srt files a little - thx andradadad
+   * Allow invert colors pre-processing for T4 - thx rookiefromspace/OmrSi
+   * Improve line mergning of 3+ lines - thx taxen
+   * Improve read speed of .ts/.m2ts files
+   * Add progress bar to "Get dictionaries" window - thx HimbeersaftLP
+* FIXED:
+   * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
+   * Fix "Replace" issue - thx loyaldragon
+
 
 3.5.11 (27th October 2019)
 * NEW:
