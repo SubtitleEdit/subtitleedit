@@ -89,16 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in files)
             {
-                bool alreadyInList = false;
-                foreach (string existingFileName in _fileNamesToJoin)
-                {
-                    if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        alreadyInList = true;
-                        break;
-                    }
-                }
-                if (!alreadyInList)
+                if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                 {
                     _fileNamesToJoin.Add(fileName);
                 }
@@ -118,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var sub = new Subtitle();
-                    SubtitleFormat format = null;
+                    SubtitleFormat format;
                     var lines = FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName));
                     if (lastFormat != null && lastFormat.IsMine(lines, fileName))
                     {
@@ -164,36 +155,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        for (int j = k; j < _fileNamesToJoin.Count; j++)
-                        {
-                            _fileNamesToJoin.RemoveAt(j);
-                        }
-                        MessageBox.Show("Unkown subtitle format: " + fileName);
+                        Revert(k, Configuration.Settings.Language.UnknownSubtitle.Title + Environment.NewLine + fileName);
                         break;
                     }
+
                     if (sub.Header != null)
                     {
                         header = sub.Header;
                     }
 
-                    if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
-                    {
-                        lastFormat = format;
-                    }
-                    else
-                    {
-                        lastFormat = new SubRip(); // default subtitle format
-                    }
+                    lastFormat = lastFormat == null || lastFormat.FriendlyName == format.FriendlyName ? format : new SubRip();
 
                     subtitles.Add(sub);
                 }
                 catch (Exception exception)
                 {
-                    for (int j = k; j < _fileNamesToJoin.Count; j++)
-                    {
-                        _fileNamesToJoin.RemoveAt(j);
-                    }
-                    MessageBox.Show(exception.Message);
+                    Revert(k, exception.Message);
                     return;
                 }
             }
@@ -266,6 +243,15 @@ namespace Nikse.SubtitleEdit.Forms
             labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
 
+        private void Revert(int idx, string message)
+        {
+            for (int i = _fileNamesToJoin.Count - 1; i >= idx; i--)
+            {
+                _fileNamesToJoin.RemoveAt(i);
+            }
+            MessageBox.Show(message);
+        }
+
         private void JoinSubtitles_Resize(object sender, EventArgs e)
         {
             columnHeaderFileName.Width = -2;
@@ -288,15 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var fileInfo = new FileInfo(fileName);
                         if (fileInfo.Length < Subtitle.MaxFileSize)
                         {
-                            bool alreadyInList = false;
-                            foreach (string existingFileName in _fileNamesToJoin)
-                            {
-                                if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    alreadyInList = true;
-                                }
-                            }
-                            if (!alreadyInList)
+                            if (!_fileNamesToJoin.Any(file => file.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                             {
                                 _fileNamesToJoin.Add(fileName);
                             }
