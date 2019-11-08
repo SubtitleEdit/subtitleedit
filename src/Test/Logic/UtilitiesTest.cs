@@ -154,6 +154,7 @@ namespace Test.Logic
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
             Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for today.";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -193,6 +194,7 @@ namespace Test.Logic
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
             Configuration.Settings.Tools.AutoBreakLineEndingEarly = true;
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for <i>today</i>.";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -213,6 +215,7 @@ namespace Test.Logic
         {
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -224,6 +227,7 @@ namespace Test.Logic
         {
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             const string s1 = "Follow him.    Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
@@ -261,6 +265,23 @@ namespace Test.Logic
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("<i>la</i> la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la <i>la</i>", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPixelWidth()
+        {
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+            string res = Utilities.AutoBreakLine("Iiiiii iiiiii iiiiii iiii WWWWWW WWWWWW WWWWWW.");
+            Assert.IsTrue(res.SplitToLines()[0].Contains('W'));
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPixelWidth2()
+        {
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+            string res = Utilities.AutoBreakLine("Samo želim životnog partnera koji će mi biti prijatelj do kraja života,");
+            Assert.AreEqual("Samo želim životnog partnera koji" + Environment.NewLine +
+                                   "će mi biti prijatelj do kraja života,", res);
         }
 
         [TestMethod]

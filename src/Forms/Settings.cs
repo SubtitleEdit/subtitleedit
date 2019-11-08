@@ -648,6 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolsBreakEarlyComma.Text = language.BreakEarlyForComma;
             checkBoxToolsBreakEarlyDash.Text = language.BreakEarlyForDashDialog;
             checkBoxToolsBreakEarlyLineEnding.Text = language.BreakEarlyForLineEnding;
+            checkBoxToolsBreakByPixelWidth.Text = Text = language.BreakByPixelWidth;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
@@ -830,6 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolsBreakEarlyComma.Checked = toolsSettings.AutoBreakCommaBreakEarly;
             checkBoxToolsBreakEarlyDash.Checked = toolsSettings.AutoBreakDashEarly;
             checkBoxToolsBreakEarlyLineEnding.Checked = toolsSettings.AutoBreakLineEndingEarly;
+            checkBoxToolsBreakByPixelWidth.Checked = toolsSettings.AutoBreakUsePixelWidth;
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
@@ -1615,6 +1617,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
             toolsSettings.AutoBreakCommaBreakEarly = checkBoxToolsBreakEarlyComma.Checked;
             toolsSettings.AutoBreakLineEndingEarly = checkBoxToolsBreakEarlyLineEnding.Checked;
+            toolsSettings.AutoBreakUsePixelWidth = checkBoxToolsBreakByPixelWidth.Checked;
             toolsSettings.AutoBreakDashEarly = checkBoxToolsBreakEarlyDash.Checked;
 
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;

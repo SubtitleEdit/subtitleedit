@@ -47,6 +47,7 @@ namespace Test.Logic
         [TestMethod]
         public void SplitLongLinesInSubtitleTest()
         {
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
             var procSubtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(_subtitle, _maxLineLength * 2, _maxLineLength);
 
             Assert.AreEqual("We have never been to Asia,\r\nnor have we visited Africa.", procSubtitle.Paragraphs[0].Text);

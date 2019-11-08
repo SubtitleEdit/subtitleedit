@@ -222,6 +222,8 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle88.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle91.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle90.cs" />
+    <Compile Include="TextSplit.cs" />
+    <Compile Include="TextSplitResult.cs" />
     <Compile Include="TinyJsonParser.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />

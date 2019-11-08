@@ -2241,6 +2241,7 @@
             public string CpsIncludesSpace { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
             public string BreakEarlyForLineEnding { get; set; }
+            public string BreakByPixelWidth { get; set; }
             public string BreakEarlyForDashDialog { get; set; }
             public string BreakEarlyForComma { get; set; }
             public string GoogleTranslate { get; set; }
@@ -2669,7 +2670,7 @@
         public class OcrPreprocessing
         {
             public string Title { get; set; }
-            public string Colors{ get; set; }
+            public string Colors { get; set; }
             public string AdjustAlpha { get; set; }
             public string OriginalImage { get; set; }
             public string PostImage { get; set; }

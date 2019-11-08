@@ -206,6 +206,7 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
+            this.checkBoxToolsBreakEarlyLineEnding = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakEarlyComma = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakEarlyDash = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
@@ -360,7 +361,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxToolsBreakEarlyLineEnding = new System.Windows.Forms.CheckBox();
+            this.checkBoxToolsBreakByPixelWidth = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2704,6 +2705,7 @@
             // 
             // groupBoxToolsAutoBr
             // 
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakByPixelWidth);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyLineEnding);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyComma);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyDash);
@@ -2717,13 +2719,23 @@
             this.groupBoxToolsAutoBr.TabStop = false;
             this.groupBoxToolsAutoBr.Text = "Auto br";
             // 
+            // checkBoxToolsBreakEarlyLineEnding
+            // 
+            this.checkBoxToolsBreakEarlyLineEnding.AutoSize = true;
+            this.checkBoxToolsBreakEarlyLineEnding.Location = new System.Drawing.Point(15, 72);
+            this.checkBoxToolsBreakEarlyLineEnding.Name = "checkBoxToolsBreakEarlyLineEnding";
+            this.checkBoxToolsBreakEarlyLineEnding.Size = new System.Drawing.Size(175, 17);
+            this.checkBoxToolsBreakEarlyLineEnding.TabIndex = 40;
+            this.checkBoxToolsBreakEarlyLineEnding.Text = "Break early for line ending (.!?)";
+            this.checkBoxToolsBreakEarlyLineEnding.UseVisualStyleBackColor = true;
+            // 
             // checkBoxToolsBreakEarlyComma
             // 
             this.checkBoxToolsBreakEarlyComma.AutoSize = true;
-            this.checkBoxToolsBreakEarlyComma.Location = new System.Drawing.Point(15, 72);
+            this.checkBoxToolsBreakEarlyComma.Location = new System.Drawing.Point(15, 95);
             this.checkBoxToolsBreakEarlyComma.Name = "checkBoxToolsBreakEarlyComma";
             this.checkBoxToolsBreakEarlyComma.Size = new System.Drawing.Size(133, 17);
-            this.checkBoxToolsBreakEarlyComma.TabIndex = 27;
+            this.checkBoxToolsBreakEarlyComma.TabIndex = 50;
             this.checkBoxToolsBreakEarlyComma.Text = "Break early for comma";
             this.checkBoxToolsBreakEarlyComma.UseVisualStyleBackColor = true;
             // 
@@ -2733,7 +2745,7 @@
             this.checkBoxToolsBreakEarlyDash.Location = new System.Drawing.Point(15, 49);
             this.checkBoxToolsBreakEarlyDash.Name = "checkBoxToolsBreakEarlyDash";
             this.checkBoxToolsBreakEarlyDash.Size = new System.Drawing.Size(123, 17);
-            this.checkBoxToolsBreakEarlyDash.TabIndex = 26;
+            this.checkBoxToolsBreakEarlyDash.TabIndex = 30;
             this.checkBoxToolsBreakEarlyDash.Text = "Break early for dash";
             this.checkBoxToolsBreakEarlyDash.UseVisualStyleBackColor = true;
             // 
@@ -2750,7 +2762,7 @@
             this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(239, 22);
             this.buttonEditDoNotBreakAfterList.Name = "buttonEditDoNotBreakAfterList";
             this.buttonEditDoNotBreakAfterList.Size = new System.Drawing.Size(75, 23);
-            this.buttonEditDoNotBreakAfterList.TabIndex = 23;
+            this.buttonEditDoNotBreakAfterList.TabIndex = 20;
             this.buttonEditDoNotBreakAfterList.Text = "Edit";
             this.buttonEditDoNotBreakAfterList.UseVisualStyleBackColor = true;
             this.buttonEditDoNotBreakAfterList.Click += new System.EventHandler(this.buttonEditDoNotBreakAfterList_Click);
@@ -4358,15 +4370,15 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxToolsBreakEarlyLineEnding
+            // checkBoxToolsBreakByPixelWidth
             // 
-            this.checkBoxToolsBreakEarlyLineEnding.AutoSize = true;
-            this.checkBoxToolsBreakEarlyLineEnding.Location = new System.Drawing.Point(16, 95);
-            this.checkBoxToolsBreakEarlyLineEnding.Name = "checkBoxToolsBreakEarlyLineEnding";
-            this.checkBoxToolsBreakEarlyLineEnding.Size = new System.Drawing.Size(175, 17);
-            this.checkBoxToolsBreakEarlyLineEnding.TabIndex = 28;
-            this.checkBoxToolsBreakEarlyLineEnding.Text = "Break early for line ending (.!?)";
-            this.checkBoxToolsBreakEarlyLineEnding.UseVisualStyleBackColor = true;
+            this.checkBoxToolsBreakByPixelWidth.AutoSize = true;
+            this.checkBoxToolsBreakByPixelWidth.Location = new System.Drawing.Point(15, 118);
+            this.checkBoxToolsBreakByPixelWidth.Name = "checkBoxToolsBreakByPixelWidth";
+            this.checkBoxToolsBreakByPixelWidth.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxToolsBreakByPixelWidth.TabIndex = 60;
+            this.checkBoxToolsBreakByPixelWidth.Text = "Break by estimated pixel width";
+            this.checkBoxToolsBreakByPixelWidth.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -4838,5 +4850,6 @@
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyComma;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyDash;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyLineEnding;
+        private System.Windows.Forms.CheckBox checkBoxToolsBreakByPixelWidth;
     }
 }
