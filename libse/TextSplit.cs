@@ -7,22 +7,28 @@ namespace Nikse.SubtitleEdit.Core
     public class TextSplit
     {
         private readonly List<TextSplitResult> _splits;
+        private readonly List<TextSplitResult> _allSplits;
         private readonly int _singleLineMaxLength;
         private const string EndLineChars = ".!?…";
 
-        public TextSplit(string text, int singleLineMaxLength)
+        public TextSplit(string text, int singleLineMaxLength, string language)
         {
             _singleLineMaxLength = singleLineMaxLength;
 
             // create list with all split possibilities
             _splits = new List<TextSplitResult>();
+            _allSplits = new List<TextSplitResult>();
             for (int i = 1; i < text.Length - 1; i++)
             {
                 if (text[i] == ' ')
                 {
                     var l1 = text.Substring(0, i).Trim();
                     var l2 = text.Substring(i + 1).Trim();
-                    _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                    _allSplits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                    if (Utilities.CanBreak(text, i, language))
+                    {
+                        _splits.Add(new TextSplitResult(new List<string> { l1, l2 }));
+                    }
                 }
             }
         }
@@ -90,6 +96,13 @@ namespace Nikse.SubtitleEdit.Core
         {
             var orderedArray = _splits.OrderBy(p => p.DiffFromAverage());
             var best = orderedArray.FirstOrDefault();
+            if (best != null)
+            {
+                return string.Join(Environment.NewLine, best.Lines);
+            }
+
+            orderedArray = _allSplits.OrderBy(p => p.DiffFromAverage());
+            best = orderedArray.FirstOrDefault();
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 

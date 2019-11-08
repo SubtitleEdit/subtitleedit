@@ -169,20 +169,6 @@ namespace Nikse.SubtitleEdit.Core
             return null;
         }
 
-        private static bool IsPartOfNumber(string s, int position)
-        {
-            if (string.IsNullOrWhiteSpace(s) || position + 1 >= s.Length)
-            {
-                return false;
-            }
-
-            if (position > 0 && @",.".Contains(s[position]))
-            {
-                return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
-            }
-            return false;
-        }
-
         public static bool IsBetweenNumbers(string s, int position)
         {
             if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)
@@ -566,7 +552,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             s = sb.ToString();
 
-            var textSplit = new TextSplit(s, Configuration.Settings.General.SubtitleLineMaximumLength);
+            var textSplit = new TextSplit(s, Configuration.Settings.General.SubtitleLineMaximumLength, language);
             var split = textSplit.AutoBreak(Configuration.Settings.Tools.AutoBreakDashEarly, Configuration.Settings.Tools.AutoBreakLineEndingEarly, Configuration.Settings.Tools.AutoBreakCommaBreakEarly, Configuration.Settings.Tools.AutoBreakUsePixelWidth);
             if (split != null)
             {
