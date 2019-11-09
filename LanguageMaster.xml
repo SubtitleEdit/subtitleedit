@@ -2076,6 +2076,7 @@ can edit in same subtitle file (collaboration)</Information>
     <UseDoNotBreakAfterList>Use do-not-break-after list</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Break early for line ending (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Break by pixel width</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Prefer bottom heavy</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>Break early for dialog dash</BreakEarlyForDashDialog>
     <BreakEarlyForComma>Break early for comma</BreakEarlyForComma>
     <GoogleTranslate>Google Translate</GoogleTranslate>

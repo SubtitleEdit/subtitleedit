@@ -649,6 +649,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolsBreakEarlyDash.Text = language.BreakEarlyForDashDialog;
             checkBoxToolsBreakEarlyLineEnding.Text = language.BreakEarlyForLineEnding;
             checkBoxToolsBreakByPixelWidth.Text = Text = language.BreakByPixelWidth;
+            checkBoxToolsBreakPreferBottomHeavy.Text = Text = language.BreakPreferBottomHeavy;
+            numericUpDownToolsBreakPreferBottomHeavy.Left = checkBoxToolsBreakPreferBottomHeavy.Left + checkBoxToolsBreakPreferBottomHeavy.Width + 9;
+            labelToolsBreakBottomHeavyPercent.Left = numericUpDownToolsBreakPreferBottomHeavy.Left + numericUpDownToolsBreakPreferBottomHeavy.Width + 2;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
@@ -832,6 +835,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolsBreakEarlyDash.Checked = toolsSettings.AutoBreakDashEarly;
             checkBoxToolsBreakEarlyLineEnding.Checked = toolsSettings.AutoBreakLineEndingEarly;
             checkBoxToolsBreakByPixelWidth.Checked = toolsSettings.AutoBreakUsePixelWidth;
+            checkBoxToolsBreakPreferBottomHeavy.Checked = toolsSettings.AutoBreakPreferBottomHeavy;
+            numericUpDownToolsBreakPreferBottomHeavy.Value = (decimal)toolsSettings.AutoBreakPreferBottomPercent;
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
@@ -1618,6 +1623,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.AutoBreakCommaBreakEarly = checkBoxToolsBreakEarlyComma.Checked;
             toolsSettings.AutoBreakLineEndingEarly = checkBoxToolsBreakEarlyLineEnding.Checked;
             toolsSettings.AutoBreakUsePixelWidth = checkBoxToolsBreakByPixelWidth.Checked;
+            toolsSettings.AutoBreakPreferBottomHeavy = checkBoxToolsBreakPreferBottomHeavy.Checked;
+            toolsSettings.AutoBreakPreferBottomPercent = (double) numericUpDownToolsBreakPreferBottomHeavy.Value;
             toolsSettings.AutoBreakDashEarly = checkBoxToolsBreakEarlyDash.Checked;
 
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
@@ -3105,6 +3112,12 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
+        }
+
+        private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxToolsBreakPreferBottomHeavy.Enabled = checkBoxToolsBreakByPixelWidth.Checked;
+            numericUpDownToolsBreakPreferBottomHeavy.Enabled = checkBoxToolsBreakByPixelWidth.Checked;
         }
     }
 }

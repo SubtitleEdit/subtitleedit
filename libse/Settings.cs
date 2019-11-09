@@ -248,6 +248,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoBreakDashEarly { get; set; }
         public bool AutoBreakLineEndingEarly { get; set; }
         public bool AutoBreakUsePixelWidth { get; set; }
+        public bool AutoBreakPreferBottomHeavy { get; set; }
+        public double AutoBreakPreferBottomPercent { get; set; }
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
 
@@ -351,6 +353,8 @@ namespace Nikse.SubtitleEdit.Core
             AutoBreakDashEarly = true;
             AutoBreakLineEndingEarly = false;
             AutoBreakUsePixelWidth = true;
+            AutoBreakPreferBottomHeavy = true;
+            AutoBreakPreferBottomPercent = 5;
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
         }
@@ -3514,6 +3518,18 @@ $HorzAlign          =   Center
                 settings.Tools.AutoBreakUsePixelWidth = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("AutoBreakPreferBottomHeavy");
+            if (subNode != null)
+            {
+                settings.Tools.AutoBreakPreferBottomHeavy = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("AutoBreakPreferBottomPercent");
+            if (subNode != null)
+            {
+                settings.Tools.AutoBreakPreferBottomPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ApplyMinimumDurationLimit");
             if (subNode != null)
             {
@@ -6249,6 +6265,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakLineEndingEarly", settings.Tools.AutoBreakLineEndingEarly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakUsePixelWidth", settings.Tools.AutoBreakUsePixelWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoBreakPreferBottomHeavy", settings.Tools.AutoBreakPreferBottomHeavy.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoBreakPreferBottomPercent", settings.Tools.AutoBreakPreferBottomPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
 
