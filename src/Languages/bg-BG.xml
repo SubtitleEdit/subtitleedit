@@ -216,8 +216,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBalanceErrorX>Автоматичен баланс: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Изместване на времевите кодове</OffsetTimeCodes>
     <TransportStreamSettings>Настройки на транспортния поток</TransportStreamSettings>
-    <TransportStreamOverridePosition>Замяна на оригиналната позиция</TransportStreamOverridePosition>
+    <TransportStreamOverrideXPosition>Замяна на оригиналната X позиция</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Замяна на оригиналната Y позиция</TransportStreamOverrideYPosition>
     <TransportStreamOverrideVideoSize>Замяна на оригиналния размер на видеото</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Край на името на файла</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>Настройки на TS...</TransportStreamSettingsButton>
   </BatchConvert>
   <Beamer>
     <Title>Проектор</Title>
@@ -2080,6 +2083,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Miscellaneous>Разни</Miscellaneous>
     <CpsIncludesSpace>Символи/сек (CPS-Chars per Second), включително интервалите</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Неразделяй след списъка(заАвт.пренасяне)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Прекъсване в началото за завършване на реда (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Прекъсване по ширина на пикселите</BreakByPixelWidth>
+    <BreakPreferBottomHeavy></BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Прекъсване в началото за диалогово тире</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Прекъсване в началото за запетая</BreakEarlyForComma>
     <GoogleTranslate>Google преводач</GoogleTranslate>
     <GoogleTranslateApiKey>API ключ</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing преводач</MicrosoftBingTranslator>
@@ -2324,7 +2332,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Избран поток със субтитри - {0}</Title>
-    <PidLine>Пакетен идентификатор на потока (PID) = {0}, брой субтитри = {1}</PidLine>
+    <PidLineImage>Изображения - Пакетен идентификатор на потока (PID) = {0}, език = {1}, брой субтитри = {2}</PidLineImage>
+    <PidLineTeletext>Телетекст - Пакетен идентификатор на потока (PID) = {1}, страница {0}, език = {2}, брой субтитри = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} избражение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
