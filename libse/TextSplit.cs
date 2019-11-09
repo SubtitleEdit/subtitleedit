@@ -89,6 +89,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             var orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength)).OrderBy(p => p.DiffFromAveragePixel());
             var best = orderedArray.FirstOrDefault();
+            if (best != null && !best.IsBottomHeavy && Configuration.Settings.Tools.AutoBreakUsePixelWidth && Configuration.Settings.Tools.AutoBreakPreferBottomHeavy)
+            {
+                orderedArray = _splits.Where(p => p.IsLineLengthOkay(_singleLineMaxLength)).OrderBy(p => p.DiffFromAveragePixelBottomHeavy());
+                best = orderedArray.FirstOrDefault() ?? best;
+            }
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 
