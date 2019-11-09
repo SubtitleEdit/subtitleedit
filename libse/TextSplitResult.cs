@@ -45,9 +45,28 @@ namespace Nikse.SubtitleEdit.Core
         public double DiffFromAveragePixel()
         {
             var avg = TotalLengthPixels / Lines.Count;
+            double diff = 0;
+            double bottomHeavyPercentageFactor = 0;
+            if (Configuration.Settings.Tools.AutoBreakPreferBottomHeavy)
+            {
+                bottomHeavyPercentageFactor = Configuration.Settings.Tools.AutoBreakPreferBottomPercent / 100.0;
+            }
+            var bottomDiffPixels = avg * bottomHeavyPercentageFactor;
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                return Lines.Select(line => g.MeasureString(line, new Font(SystemFonts.DefaultFont.FontFamily, 10)).Width).Select(w => Math.Abs(avg - w)).Sum();
+                for (int i = 0; i < Lines.Count; i++)
+                {
+                    var w = g.MeasureString(Lines[i], new Font(SystemFonts.DefaultFont.FontFamily, 10)).Width;
+                    if (i == Lines.Count - 1)
+                    {
+                        diff += Math.Abs(avg + bottomDiffPixels - w);
+                    }
+                    else
+                    {
+                        diff += Math.Abs(avg - bottomDiffPixels - w);
+                    }
+                }
+                return diff;
             }
         }
     }

@@ -206,6 +206,9 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
+            this.numericUpDownToolsBreakPreferBottomHeavy = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxToolsBreakPreferBottomHeavy = new System.Windows.Forms.CheckBox();
+            this.checkBoxToolsBreakByPixelWidth = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakEarlyLineEnding = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakEarlyComma = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakEarlyDash = new System.Windows.Forms.CheckBox();
@@ -361,7 +364,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxToolsBreakByPixelWidth = new System.Windows.Forms.CheckBox();
+            this.labelToolsBreakBottomHeavyPercent = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -392,6 +395,7 @@
             this.groupBoxGoogleTranslate.SuspendLayout();
             this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsAutoBr.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownToolsBreakPreferBottomHeavy)).BeginInit();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
             this.groupBoxToolsVisualSync.SuspendLayout();
@@ -2705,6 +2709,9 @@
             // 
             // groupBoxToolsAutoBr
             // 
+            this.groupBoxToolsAutoBr.Controls.Add(this.labelToolsBreakBottomHeavyPercent);
+            this.groupBoxToolsAutoBr.Controls.Add(this.numericUpDownToolsBreakPreferBottomHeavy);
+            this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakPreferBottomHeavy);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakByPixelWidth);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyLineEnding);
             this.groupBoxToolsAutoBr.Controls.Add(this.checkBoxToolsBreakEarlyComma);
@@ -2718,6 +2725,50 @@
             this.groupBoxToolsAutoBr.TabIndex = 5;
             this.groupBoxToolsAutoBr.TabStop = false;
             this.groupBoxToolsAutoBr.Text = "Auto br";
+            // 
+            // numericUpDownToolsBreakPreferBottomHeavy
+            // 
+            this.numericUpDownToolsBreakPreferBottomHeavy.DecimalPlaces = 1;
+            this.numericUpDownToolsBreakPreferBottomHeavy.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownToolsBreakPreferBottomHeavy.Location = new System.Drawing.Point(164, 140);
+            this.numericUpDownToolsBreakPreferBottomHeavy.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownToolsBreakPreferBottomHeavy.Name = "numericUpDownToolsBreakPreferBottomHeavy";
+            this.numericUpDownToolsBreakPreferBottomHeavy.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownToolsBreakPreferBottomHeavy.TabIndex = 62;
+            this.numericUpDownToolsBreakPreferBottomHeavy.Value = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            // 
+            // checkBoxToolsBreakPreferBottomHeavy
+            // 
+            this.checkBoxToolsBreakPreferBottomHeavy.AutoSize = true;
+            this.checkBoxToolsBreakPreferBottomHeavy.Location = new System.Drawing.Point(32, 141);
+            this.checkBoxToolsBreakPreferBottomHeavy.Name = "checkBoxToolsBreakPreferBottomHeavy";
+            this.checkBoxToolsBreakPreferBottomHeavy.Size = new System.Drawing.Size(126, 17);
+            this.checkBoxToolsBreakPreferBottomHeavy.TabIndex = 61;
+            this.checkBoxToolsBreakPreferBottomHeavy.Text = "Prefer bottom heavy";
+            this.checkBoxToolsBreakPreferBottomHeavy.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxToolsBreakByPixelWidth
+            // 
+            this.checkBoxToolsBreakByPixelWidth.AutoSize = true;
+            this.checkBoxToolsBreakByPixelWidth.Location = new System.Drawing.Point(15, 118);
+            this.checkBoxToolsBreakByPixelWidth.Name = "checkBoxToolsBreakByPixelWidth";
+            this.checkBoxToolsBreakByPixelWidth.Size = new System.Drawing.Size(172, 17);
+            this.checkBoxToolsBreakByPixelWidth.TabIndex = 60;
+            this.checkBoxToolsBreakByPixelWidth.Text = "Break by estimated pixel width";
+            this.checkBoxToolsBreakByPixelWidth.UseVisualStyleBackColor = true;
+            this.checkBoxToolsBreakByPixelWidth.CheckedChanged += new System.EventHandler(this.checkBoxToolsBreakByPixelWidth_CheckedChanged);
             // 
             // checkBoxToolsBreakEarlyLineEnding
             // 
@@ -4370,15 +4421,14 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxToolsBreakByPixelWidth
+            // labelToolsBreakBottomHeavyPercent
             // 
-            this.checkBoxToolsBreakByPixelWidth.AutoSize = true;
-            this.checkBoxToolsBreakByPixelWidth.Location = new System.Drawing.Point(15, 118);
-            this.checkBoxToolsBreakByPixelWidth.Name = "checkBoxToolsBreakByPixelWidth";
-            this.checkBoxToolsBreakByPixelWidth.Size = new System.Drawing.Size(172, 17);
-            this.checkBoxToolsBreakByPixelWidth.TabIndex = 60;
-            this.checkBoxToolsBreakByPixelWidth.Text = "Break by estimated pixel width";
-            this.checkBoxToolsBreakByPixelWidth.UseVisualStyleBackColor = true;
+            this.labelToolsBreakBottomHeavyPercent.AutoSize = true;
+            this.labelToolsBreakBottomHeavyPercent.Location = new System.Drawing.Point(226, 142);
+            this.labelToolsBreakBottomHeavyPercent.Name = "labelToolsBreakBottomHeavyPercent";
+            this.labelToolsBreakBottomHeavyPercent.Size = new System.Drawing.Size(18, 13);
+            this.labelToolsBreakBottomHeavyPercent.TabIndex = 63;
+            this.labelToolsBreakBottomHeavyPercent.Text = "%";
             // 
             // Settings
             // 
@@ -4443,6 +4493,7 @@
             this.groupBoxBing.PerformLayout();
             this.groupBoxToolsAutoBr.ResumeLayout(false);
             this.groupBoxToolsAutoBr.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownToolsBreakPreferBottomHeavy)).EndInit();
             this.groupBoxSpellCheck.ResumeLayout(false);
             this.groupBoxSpellCheck.PerformLayout();
             this.groupBoxFixCommonErrors.ResumeLayout(false);
@@ -4851,5 +4902,8 @@
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyDash;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyLineEnding;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakByPixelWidth;
+        private System.Windows.Forms.NumericUpDown numericUpDownToolsBreakPreferBottomHeavy;
+        private System.Windows.Forms.CheckBox checkBoxToolsBreakPreferBottomHeavy;
+        private System.Windows.Forms.Label labelToolsBreakBottomHeavyPercent;
     }
 }

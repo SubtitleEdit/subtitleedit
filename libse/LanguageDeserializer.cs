@@ -5650,6 +5650,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/BreakByPixelWidth":
                     language.Settings.BreakByPixelWidth = reader.Value;
                     break;
+                case "Settings/BreakPreferBottomHeavy":
+                    language.Settings.BreakPreferBottomHeavy = reader.Value;
+                    break;
                 case "Settings/BreakEarlyForDashDialog":
                     language.Settings.BreakEarlyForDashDialog = reader.Value;
                     break;

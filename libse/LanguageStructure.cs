@@ -2242,6 +2242,7 @@
             public string UseDoNotBreakAfterList { get; set; }
             public string BreakEarlyForLineEnding { get; set; }
             public string BreakByPixelWidth { get; set; }
+            public string BreakPreferBottomHeavy { get; set; }
             public string BreakEarlyForDashDialog { get; set; }
             public string BreakEarlyForComma { get; set; }
             public string GoogleTranslate { get; set; }
