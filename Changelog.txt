@@ -3,8 +3,8 @@
 3.5.12 (xth December 2019) BETA
 * NEW:
    * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare
-   * Auto break option pixel width (not after number of characters)
-   * Auto break options now available in settings UI
+   * Auto break option pixel width (and not after number of characters)
+   * Auto break options now available in UI via Options -> Settings -> Tools
 * IMPROVED:
    * Add Macedonian translation - thx Numberguy
    * Update Polish translation - thx admas
@@ -15,7 +15,6 @@
    * Improve read speed of .ts/.m2ts files
    * Add progress bar to "Get dictionaries" window - thx HimbeersaftLP
 * FIXED:
-   * Fix crash + bug in "Fix music notations" - thx paolovador/btsix
    * Fix "Replace" issue - thx loyaldragon
 
 
