@@ -279,9 +279,22 @@ namespace Test.Logic
         public void AutoBreakPreferPixelWidth2()
         {
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+            Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = false;
             string res = Utilities.AutoBreakLine("Samo želim životnog partnera koji će mi biti prijatelj do kraja života,");
             Assert.AreEqual("Samo želim životnog partnera koji" + Environment.NewLine +
-                                   "će mi biti prijatelj do kraja života,", res);
+                            "će mi biti prijatelj do kraja života,", res);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPixelWidth3HeavyBottom()
+        {
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = true;
+            Configuration.Settings.Tools.AutoBreakPreferBottomHeavy = true;
+            Configuration.Settings.Tools.AutoBreakLineEndingEarly = false;
+            Configuration.Settings.Tools.AutoBreakPreferBottomPercent = 6;
+            string res = Utilities.AutoBreakLine("Izvini. Trebalo bi da ima hrane za sve.");
+            Assert.AreEqual("Izvini. Trebalo bi" + Environment.NewLine +
+                            "da ima hrane za sve.", res);
         }
 
         [TestMethod]
