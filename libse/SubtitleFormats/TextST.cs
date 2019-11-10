@@ -1103,21 +1103,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             long transportStreamLength = ms.Length;
+            ms.Seek(position, SeekOrigin.Begin);
             while (position < transportStreamLength)
             {
-                ms.Seek(position, SeekOrigin.Begin);
                 if (isM2TransportStream)
                 {
-                    ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
-                    var tc = (m2TsTimeCodeBuffer[0] << 24) + (m2TsTimeCodeBuffer[1] << 16) + (m2TsTimeCodeBuffer[2] << 8) + (m2TsTimeCodeBuffer[3] & Helper.B00111111);
-                    // should m2ts time code be used in any way?
-                    var msecs = (ulong)Math.Round((tc) / 27.0); // 27 or 90?
-                    var tc2 = new TimeCode(msecs);
-                    System.Diagnostics.Debug.WriteLine(tc2);
+                    var m2TsHeaderBytesRead = ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
+                    if (m2TsHeaderBytesRead < m2TsTimeCodeBuffer.Length)
+                    {
+                        break; // incomplete m2ts header
+                    }
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
-                ms.Read(packetBuffer, 0, packetLength);
+                var packetBytesRead = ms.Read(packetBuffer, 0, packetLength);
+                if (packetBytesRead < packetLength)
+                {
+                    break; // incomplete packet
+                }
+
                 byte syncByte = packetBuffer[0];
                 if (syncByte == Packet.SynchronizationByte)
                 {
@@ -1130,7 +1134,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
+                    if (isM2TransportStream)
+                    {
+                        position -= m2TsTimeCodeBuffer.Length;
+                    }
                     position++;
+                    ms.Seek(position, SeekOrigin.Begin);
                 }
             }
 
