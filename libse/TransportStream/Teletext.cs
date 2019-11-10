@@ -2,10 +2,10 @@
  * Teletext decoding
  *
  * Based on telxcc by Petr Kutalek (src from https://github.com/debackerl/telxcc) which is inspired by
- * https://github.com/nxmirrors/dvbtools/tree/master/dvbsubs and
- * https://sourceforge.net/projects/project-x/
+ * https://github.com/nxmirrors/dvbtools/tree/master/dvbsubs and https://sourceforge.net/projects/project-x/
  *
- * Also, some fixes applied from https://github.com/CCExtractor/ccextractor/commits/master/src/lib_ccx/telxcc.c
+ * Also, a fix applied from https://github.com/CCExtractor/ccextractor/commits/master/src/lib_ccx/telxcc.c
+ * Related code here: https://github.com/orryverducci/TtxFromTS
  *
  * NOTE: Converted to C# and modified by nikse.dk@gmail.com
  */
@@ -43,12 +43,34 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             public bool Verbose { get; set; } // should telxcc be verbose?
             public int Page { get; set; } // teletext page containing cc we want to filter
             public int Tid { get; set; } // 13-bit packet ID for teletext stream
-            public double Offset { get; set; } // time offset in seconds
             public bool Colors { get; set; } // output <font...></font> tags
+            public StringBuilder Log { get; set; }
 
             public Config()
             {
                 Colors = true;
+                Log = new StringBuilder();
+            }
+
+            public void LogInfo(string message)
+            {
+                if (Verbose)
+                {
+                    Log.AppendLine(message);
+                }
+            }
+
+            public void LogInfoNoNewLine(string message)
+            {
+                if (Verbose)
+                {
+                    Log.Append(message);
+                }
+            }
+
+            public void LogError(string message)
+            {
+                Log.AppendLine("ERROR: " + message);
             }
         }
 
@@ -138,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var m = TeletextTables.G0LatinNationalSubsetsMap[c];
                 if (m == 0xff)
                 {
-                    Console.WriteLine($"- G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} is not implemented");
+                    _config.LogError($"- G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} is not implemented");
                 }
                 else
                 {
@@ -147,10 +169,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         TeletextTables.G0[(int)TeletextTables.G0CharsetsT.Latin, TeletextTables.G0LatinNationalSubsetsPositions[j]] = TeletextTables.G0LatinNationalSubsets[m].Characters[j];
                     }
 
-                    if (_config.Verbose)
-                    {
-                        Console.WriteLine($"- Using G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} ({TeletextTables.G0LatinNationalSubsets[m].Language})");
-                    }
+                    _config.LogInfo($"- Using G0 Latin National Subset ID {c >> 3:X2}.{c & 0x7:X2} ({TeletextTables.G0LatinNationalSubsets[m].Language})");
 
                     _primaryCharset.Current = c;
                 }
@@ -185,11 +204,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         {
             if (TeletextHamming.Parity8[c] == 0)
             {
-                if (_config.Verbose)
-                {
-                    Console.WriteLine($"! Unrecoverable data error; PARITY({c:X2})");
-                }
-
+                _config.LogError($"! Unrecoverable data error; PARITY({c:X2})");
                 return 0x20;
             }
 
@@ -216,15 +231,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         static void ProcessPage(TeletextPage page, TeletextRunSettings teletextRunSettings, int pageNumber)
         {
-            //#if DEBUG
-            //            for (int row = 1; row < 25; row++)
-            //            {
-            //                fout.Append($"# DEBUG[{row}]: ");
-            //                for (int col = 0; col < 40; col++) fout.Append($"{(page.text[row, col]):X2} ");
-            //                fout.AppendLine();
-            //            }
-            //            fout.AppendLine();
-            //#endif
+#if DEBUG
+            for (int row = 1; row < 25; row++)
+            {
+                _config.LogInfoNoNewLine($"# DEBUG[{row}]: ");
+                for (int col = 0; col < 40; col++)
+                {
+                    _config.LogInfo($"{(page.Text[row, col]):X2} ");
+                }
+                _config.LogInfo(string.Empty);
+            }
+            _config.LogInfo(string.Empty);
+#endif
 
             // optimization: slicing column by column -- higher probability we could find boxed area start mark sooner
             bool pageIsEmpty = true;
@@ -403,7 +421,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
             else
             {
-                throw new Exception("New pageId in page: " + pageNumber);
+                _config.LogError("New pageId in page: " + pageNumber);
             }
         }
 
@@ -555,7 +573,6 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 // ETS 300 706, chapter 12.3.2: X/26 definition
                 var x26Row = 0;
-                var x26Col = 0;
 
                 var triplets = new uint[13];
                 var j = 0;
@@ -569,10 +586,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (triplets[j2] == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (_config.Verbose)
-                        {
-                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplets[j2]}");
-                        }
+                        _config.LogError($"! Unrecoverable data error; UNHAM24/18()={triplets[j2]}");
                         continue;
                     }
 
@@ -598,6 +612,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     }
 
                     // ETS 300 706, chapter 12.3.1, table 27: character from G2 set
+                    int x26Col;
                     if (mode == 0x0f && !rowAddressGroup)
                     {
                         x26Col = (int)address2;
@@ -640,10 +655,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (triplet0 == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (_config.Verbose)
-                        {
-                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
-                        }
+                        _config.LogError($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
                     }
                     else
                     {
@@ -670,10 +682,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     if (triplet0 == 0xffffffff)
                     {
                         // invalid data (HAM24/18 uncorrectable error detected), skip group
-                        if (_config.Verbose)
-                        {
-                            Console.WriteLine($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
-                        }
+                        _config.LogError($"! Unrecoverable data error; UNHAM24/18()={triplet0}");
                     }
                     else
                     {
@@ -699,7 +708,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     // ETS 300 706, chapter 9.8.1: Packet 8/30 Format 1
                     if (TeletextHamming.UnHamming84(packet.Data[0]) < 2)
                     {
-                        Console.Write("- Programme Identification Data = ");
+                        _config.LogInfoNoNewLine("- Programme Identification Data = ");
                         for (var i = 20; i < 40; i++)
                         {
                             var c = TelxToUcs2(packet.Data[i]);
@@ -708,9 +717,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             {
                                 continue;
                             }
-                            Console.Write(Ucs2ToUtf8(c));
+                            _config.LogInfoNoNewLine(Ucs2ToUtf8(c));
                         }
-                        Console.WriteLine();
+                        _config.LogInfo(string.Empty);
 
                         // OMG! ETS 300 706 stores timestamp in 7 bytes in Modified Julian Day in BCD format + HH:MM:SS in BCD format
                         // + timezone as 5-bit count of half-hours from GMT with 1-bit sign
@@ -735,13 +744,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         var t2 = new DateTime(1970, 1, 1).Add(span);
                         var localTime = TimeZoneInfo.ConvertTimeFromUtc(t2, TimeZoneInfo.Local);
 
-                        Console.WriteLine($"- Programme Timestamp (UTC) = {localTime.ToLongDateString()} {localTime.ToLongTimeString()}");
-
-                        if (_config.Verbose)
-                        {
-                            Console.WriteLine($"- Transmission mode = {(_transmissionMode == TransmissionMode.TransmissionModeSerial ? "serial" : "parallel")}");
-                        }
-
+                        _config.LogInfo($"- Programme Timestamp (UTC) = {localTime.ToLongDateString()} {localTime.ToLongTimeString()}");
+                        _config.LogInfo($"- Transmission mode = {(_transmissionMode == TransmissionMode.TransmissionModeSerial ? "serial" : "parallel")}");
                         _states.ProgrammeInfoProcessed = true;
                     }
                 }

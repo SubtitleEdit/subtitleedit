@@ -9,6 +9,7 @@
    * Add Macedonian translation - thx Numberguy
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
+   * Update Bulgarian translation - thx KalinM
    * Improved reading of faulty .srt files a little - thx andradadad
    * Allow invert colors pre-processing for T4 - thx rookiefromspace/OmrSi
    * Improve line mergning of 3+ lines - thx taxen
