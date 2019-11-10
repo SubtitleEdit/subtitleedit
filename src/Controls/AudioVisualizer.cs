@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public class ParagraphEventArgs : EventArgs
         {
-            public Paragraph Paragraph { get; private set; }
-            public double Seconds { get; private set; }
+            public Paragraph Paragraph { get; }
+            public double Seconds { get; }
             public Paragraph BeforeParagraph { get; set; }
             public MouseDownParagraphType MouseDownParagraphType { get; set; }
             public bool MovePreviousOrNext { get; set; }
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public int ClosenessForBorderSelection = 15;
+        public int ClosenessForBorderSelection { get; set; } = 15;
         private const int MinimumSelectionMilliseconds = 100;
 
         private long _buttonDownTimeTicks;
@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
-        public Keys InsertAtVideoPositionShortcut;
-        public bool MouseWheelScrollUpIsForward = true;
+        public Keys InsertAtVideoPositionShortcut { get; set; }
+        public bool MouseWheelScrollUpIsForward { get; set; } = true;
 
         public const double ZoomMinimum = 0.1;
         public const double ZoomMaximum = 2.5;
@@ -115,10 +115,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double ZoomFactor
         {
-            get
-            {
-                return _zoomFactor;
-            }
+            get => _zoomFactor;
             set
             {
                 if (value < ZoomMinimum)
@@ -146,10 +143,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double VerticalZoomFactor
         {
-            get
-            {
-                return _verticalZoomFactor;
-            }
+            get => _verticalZoomFactor;
             set
             {
                 if (value < VerticalZoomMinimum)
@@ -178,10 +172,7 @@ namespace Nikse.SubtitleEdit.Controls
         /// </summary>
         public List<double> SceneChanges
         {
-            get
-            {
-                return _sceneChanges;
-            }
+            get => _sceneChanges;
             set
             {
                 _sceneChanges = value;
@@ -189,22 +180,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool IsSpectrogramAvailable
-        {
-            get
-            {
-                return _spectrogram != null && _spectrogram.Images.Count > 0;
-            }
-        }
+        public bool IsSpectrogramAvailable => _spectrogram != null && _spectrogram.Images.Count > 0;
 
         private bool _showSpectrogram;
 
         public bool ShowSpectrogram
         {
-            get
-            {
-                return _showSpectrogram;
-            }
+            get => _showSpectrogram;
             set
             {
                 if (_showSpectrogram != value)
@@ -221,10 +203,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowWaveform
         {
-            get
-            {
-                return _showWaveform;
-            }
+            get => _showWaveform;
             set
             {
                 if (_showWaveform != value)
@@ -239,10 +218,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double StartPositionSeconds
         {
-            get
-            {
-                return _startPositionSeconds;
-            }
+            get => _startPositionSeconds;
             set
             {
                 if (_wavePeaks != null)
@@ -267,7 +243,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public Paragraph NewSelectionParagraph { get; set; }
-        public Paragraph SelectedParagraph { get { return _selectedParagraph; } }
+        public Paragraph SelectedParagraph => _selectedParagraph;
         public Paragraph RightClickedParagraph { get; private set; }
         public double RightClickedSeconds { get; private set; }
 
@@ -300,10 +276,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public WavePeakData WavePeaks
         {
-            get
-            {
-                return _wavePeaks;
-            }
+            get => _wavePeaks;
             set
             {
                 _zoomFactor = 1.0;
@@ -384,7 +357,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
 
                 if (p.StartTime.IsMaxTime)
                 {
@@ -401,7 +374,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             Action<int, bool> addSelection = (index, isPrimary) =>
             {
-                Paragraph p = subtitle.GetParagraphOrDefault(index);
+                var p = subtitle.GetParagraphOrDefault(index);
                 if (p == null || p.StartTime.IsMaxTime)
                 {
                     return;
@@ -445,7 +418,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _ranges = new SelectionRange[count];
                 for (int index = 0; index < count; index++)
                 {
-                    Paragraph p = paragraphs[index];
+                    var p = paragraphs[index];
                     int start = (int)Math.Round(p.StartTime.TotalSeconds * sampleRate);
                     int end = (int)Math.Round(p.EndTime.TotalSeconds * sampleRate);
                     _ranges[index] = new SelectionRange(start, end);
@@ -469,7 +442,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _nextSelection = new SelectionRange(int.MaxValue, int.MaxValue);
                 for (int index = 0; index < _ranges.Length; index++)
                 {
-                    SelectionRange range = _ranges[index];
+                    var range = _ranges[index];
                     if (range.End >= position && (range.Start < _nextSelection.Start || (range.Start == _nextSelection.Start && range.End > _nextSelection.End)))
                     {
                         _nextSelection = range;
@@ -599,7 +572,7 @@ namespace Nikse.SubtitleEdit.Controls
                         int index = 0;
                         while (index < _sceneChanges.Count)
                         {
-                            int pos = -1;
+                            int pos;
                             try
                             {
                                 double time = _sceneChanges[index++];
@@ -1020,7 +993,7 @@ namespace Nikse.SubtitleEdit.Controls
                 double seconds = RelativeXPositionToSeconds(e.X);
                 var milliseconds = (int)(seconds * TimeCode.BaseUnit);
 
-                if (SetParagrapBorderHit(milliseconds, NewSelectionParagraph))
+                if (SetParagraphBorderHit(milliseconds, NewSelectionParagraph))
                 {
                     if (_mouseDownParagraph != null)
                     {
@@ -1051,7 +1024,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     SetMinMaxViaSeconds(seconds);
                 }
-                else if (SetParagrapBorderHit(milliseconds, _selectedParagraph) ||
+                else if (SetParagraphBorderHit(milliseconds, _selectedParagraph) ||
                          SetParagrapBorderHit(milliseconds, _displayableParagraphs))
                 {
                     NewSelectionParagraph = null;
@@ -1292,7 +1265,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             foreach (Paragraph p in paragraphs)
             {
-                bool hit = SetParagrapBorderHit(milliseconds, p);
+                bool hit = SetParagraphBorderHit(milliseconds, p);
                 if (hit)
                 {
                     return true;
@@ -1324,21 +1297,21 @@ namespace Nikse.SubtitleEdit.Controls
             return p;
         }
 
-        private bool SetParagrapBorderHit(int milliseconds, Paragraph paragraph)
+        private bool SetParagraphBorderHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
             {
                 return false;
             }
 
-            if (IsParagrapBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds))
+            if (IsParagraphBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds))
             {
                 _oldParagraph = new Paragraph(paragraph);
                 _mouseDownParagraph = paragraph;
                 _mouseDownParagraphType = MouseDownParagraphType.Start;
                 return true;
             }
-            if (IsParagrapBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds))
+            if (IsParagraphBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds))
             {
                 _oldParagraph = new Paragraph(paragraph);
                 _mouseDownParagraph = paragraph;
@@ -1412,12 +1385,12 @@ namespace Nikse.SubtitleEdit.Controls
                 double seconds = RelativeXPositionToSeconds(e.X);
                 var milliseconds = (int)(seconds * TimeCode.BaseUnit);
 
-                if (IsParagrapBorderHit(milliseconds, NewSelectionParagraph))
+                if (IsParagraphBorderHit(milliseconds, NewSelectionParagraph))
                 {
                     Cursor = Cursors.VSplit;
                 }
-                else if (IsParagrapBorderHit(milliseconds, _selectedParagraph) ||
-                         IsParagrapBorderHit(milliseconds, _displayableParagraphs))
+                else if (IsParagraphBorderHit(milliseconds, _selectedParagraph) ||
+                         IsParagraphBorderHit(milliseconds, _displayableParagraphs))
                 {
                     Cursor = Cursors.VSplit;
                 }
@@ -1621,11 +1594,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool IsParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
+        private bool IsParagraphBorderHit(int milliseconds, List<Paragraph> paragraphs)
         {
             foreach (Paragraph p in paragraphs)
             {
-                bool hit = IsParagrapBorderHit(milliseconds, p);
+                bool hit = IsParagraphBorderHit(milliseconds, p);
                 if (hit)
                 {
                     return true;
@@ -1634,23 +1607,23 @@ namespace Nikse.SubtitleEdit.Controls
             return false;
         }
 
-        private bool IsParagrapBorderHit(int milliseconds, Paragraph paragraph)
+        private bool IsParagraphBorderHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
             {
                 return false;
             }
 
-            return IsParagrapBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds) ||
-                   IsParagrapBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds);
+            return IsParagraphBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds) ||
+                   IsParagraphBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds);
         }
 
-        private bool IsParagrapBorderStartHit(double milliseconds, double startMs)
+        private bool IsParagraphBorderStartHit(double milliseconds, double startMs)
         {
             return Math.Abs(milliseconds - (startMs - 5)) - 10 <= ClosenessForBorderSelection;
         }
 
-        private bool IsParagrapBorderEndHit(double milliseconds, double endMs)
+        private bool IsParagraphBorderEndHit(double milliseconds, double endMs)
         {
             return Math.Abs(milliseconds - (endMs - 22)) - 7 <= ClosenessForBorderSelection;
         }
@@ -2063,7 +2036,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 StartPositionSeconds += delta / 256.0;
-                _lastMouseWheelScroll = DateTime.UtcNow.Ticks; // nixe
+                _lastMouseWheelScroll = DateTime.UtcNow.Ticks;
                 if (_currentVideoPositionSeconds < _startPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
                 {
                     OnPositionSelected?.Invoke(this, new ParagraphEventArgs(_startPositionSeconds, null));
