@@ -9,7 +9,8 @@ namespace Nikse.SubtitleEdit.Core
         private readonly List<TextSplitResult> _splits;
         private readonly List<TextSplitResult> _allSplits;
         private readonly int _singleLineMaxLength;
-        private const string EndLineChars = ".!?…";
+        private const string EndLineChars = ".!?…؟";
+        private const string Commas = ",،";
 
         public TextSplit(string text, int singleLineMaxLength, string language)
         {
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             if (breakEarlyComma)
             {
-                var s = GetBestEnding(",");
+                var s = GetBestEnding(Commas);
                 if (s != null)
                 {
                     return s;
