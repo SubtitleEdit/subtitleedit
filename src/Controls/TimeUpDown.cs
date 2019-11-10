@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -27,7 +26,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool UseVideoOffset { get; set; }
 
-        private static char[] _splitChars;
+        private static readonly char[] SplitChars = GetSplitChars();
 
         private bool _dirty;
         double _initialTotalMilliseconds;
@@ -51,6 +50,21 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private static char[] GetSplitChars()
+        {
+            var splitChars = new List<char> { ':', ',', '.' };
+            string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+            if (cultureSeparator.Length == 1)
+            {
+                var ch = Convert.ToChar(cultureSeparator);
+                if (!splitChars.Contains(ch))
+                {
+                    splitChars.Add(ch);
+                }
+            }
+            return splitChars.ToArray();
+        }
+
         public TimeUpDown()
         {
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -60,21 +74,6 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.ValueChanged += NumericUpDownValueChanged;
             numericUpDown1.Value = NumericUpDownValue;
             maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;
-
-            if (_splitChars == null)
-            {
-                var splitChars = new List<char> { ':', ',', '.' };
-                string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-                if (cultureSeparator.Length == 1)
-                {
-                    char ch = Convert.ToChar(cultureSeparator);
-                    if (!splitChars.Contains(ch))
-                    {
-                        splitChars.Add(ch);
-                    }
-                }
-                _splitChars = splitChars.ToArray();
-            }
         }
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
@@ -141,12 +140,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double? GetTotalMilliseconds()
         {
-            if (!_dirty)
-            {
-                return _initialTotalMilliseconds;
-            }
-
-            return TimeCode?.TotalMilliseconds;
+            return _dirty ? TimeCode?.TotalMilliseconds : _initialTotalMilliseconds;
         }
 
         public TimeCode TimeCode
@@ -178,7 +172,7 @@ namespace Nikse.SubtitleEdit.Controls
                         startTime += "000";
                     }
 
-                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -196,8 +190,8 @@ namespace Nikse.SubtitleEdit.Controls
                             seconds = 59;
                         }
 
-                        int.TryParse(times[3].PadRight(3, '0'), out var milliSeconds);
-                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
+                        int.TryParse(times[3].PadRight(3, '0'), out var milliseconds);
+                        var tc = new TimeCode(hours, minutes, seconds, milliseconds);
 
                         if (UseVideoOffset)
                         {
@@ -219,7 +213,7 @@ namespace Nikse.SubtitleEdit.Controls
                         startTime += "00";
                     }
 
-                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -229,12 +223,12 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int.TryParse(times[2], out var seconds);
 
-                        if (int.TryParse(times[3], out var milliSeconds))
+                        if (int.TryParse(times[3], out var milliseconds))
                         {
-                            milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
+                            milliseconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliseconds);
                         }
 
-                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
+                        var tc = new TimeCode(hours, minutes, seconds, milliseconds);
 
                         if (UseVideoOffset)
                         {
