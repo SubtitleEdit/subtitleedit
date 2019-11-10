@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _spectrogramDirectory;
         public WavePeakData Peaks { get; private set; }
         public SpectrogramData Spectrogram { get; private set; }
-        private string _encodeParamters;
+        private string _encodeParameters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
         private int _delayInMilliseconds;
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveform.SourceVideoFile;
             _spectrogramDirectory = spectrogramDirectory;
-            _encodeParamters = Configuration.Settings.General.VlcWaveTranscodeSettings;
+            _encodeParameters = Configuration.Settings.General.VlcWaveTranscodeSettings;
         }
 
         public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             Process process;
             try
             {
-                process = GetCommandLineProcess(SourceVideoFileName, _audioTrackNumber, targetFile, _encodeParamters, out encoderName);
+                process = GetCommandLineProcess(SourceVideoFileName, _audioTrackNumber, targetFile, _encodeParameters, out encoderName);
                 labelInfo.Text = encoderName;
             }
             catch (DllNotFoundException)
@@ -220,9 +220,9 @@ namespace Nikse.SubtitleEdit.Forms
             var targetFileInfo = new FileInfo(targetFile);
             if (!targetFileInfo.Exists)
             {
-                if (_encodeParamters != RetryEncodeParameters)
+                if (_encodeParameters != RetryEncodeParameters)
                 {
-                    _encodeParamters = RetryEncodeParameters;
+                    _encodeParameters = RetryEncodeParameters;
                     buttonRipWave_Click(null, null);
                     return;
                 }

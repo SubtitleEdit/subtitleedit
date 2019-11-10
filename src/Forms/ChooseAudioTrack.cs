@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ChooseAudioTrack : Form
+    public sealed partial class ChooseAudioTrack : Form
     {
         public ChooseAudioTrack(List<string> tracks, int defaultTrack)
         {

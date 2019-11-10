@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ChooseAudioTrack
+    sealed partial class ChooseAudioTrack
     {
         /// <summary>
         /// Required designer variable.
