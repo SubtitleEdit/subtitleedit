@@ -190,16 +190,8 @@ namespace Nikse.SubtitleEdit.Core
                             return false;
                         }
                     }
-                    else if (ch == 'n' && max > i + 3 && content[i + 1] == 'u' && content[i + 2] == 'l' && content[i + 3] == 'l')
-                    {
-                        i += 4;
-                        state.Pop();
-                        if (state.Count > 0)
-                        {
-                            state.Peek().Count++;
-                        }
-                    }
-                    else if (ch == 't' && max > i + 3 && content[i + 1] == 'r' && content[i + 2] == 'u' && content[i + 3] == 'e')
+                    else if (ch == 'n' && max > i + 3 && content[i + 1] == 'u' && content[i + 2] == 'l' && content[i + 3] == 'l' ||
+                             ch == 't' && max > i + 3 && content[i + 1] == 'r' && content[i + 2] == 'u' && content[i + 3] == 'e')
                     {
                         i += 4;
                         state.Pop();
