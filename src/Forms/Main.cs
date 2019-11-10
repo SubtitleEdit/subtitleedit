@@ -19674,7 +19674,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var addWaveform = new AddWaveform())
                 {
                     var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
-                    var spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
 
                     if (WavePeakGenerator.IsFileValidForVisualizer(_videoFileName))
                     {
