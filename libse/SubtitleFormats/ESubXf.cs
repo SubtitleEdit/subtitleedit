@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private const string NameSpaceUri = "urn:esub-xf";
 
-        private static readonly Dictionary<string, string> ColorDictionary = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> ColorDictionary = new Dictionary<string, string>
         {
             {"white", "FFFFFF"},
             {"green", "72FD59"},
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string languageDisplay;
             try
             {
-                CultureInfo ci = new CultureInfo(LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
+                var ci = new CultureInfo(LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
                 threeLetterLanguage = ci.ThreeLetterISOLanguageName;
                 languageDisplay = ci.EnglishName;
             }
