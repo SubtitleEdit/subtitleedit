@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private bool IsJson(List<string> lines)
+        private static bool IsJson(List<string> lines)
         {
             var jp = new JsonParser();
             try
