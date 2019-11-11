@@ -33,19 +33,19 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
-        public int ColumnIndexNumber = -1;
-        public int ColumnIndexStart = -1;
-        public int ColumnIndexEnd = -1;
-        public int ColumnIndexDuration = -1;
-        public int ColumnIndexCps = -1;
-        public int ColumnIndexWpm = -1;
-        public int ColumnIndexGap = -1;
-        public int ColumnIndexActor = -1;
-        public int ColumnIndexRegion = -1;
-        public int ColumnIndexText = -1;
-        public int ColumnIndexTextAlternate = -1;
-        public int ColumnIndexExtra = -1;
-        public int ColumnIndexNetwork = -1;
+        public int ColumnIndexNumber { get; set; } = -1;
+        public int ColumnIndexStart { get; set; } = -1;
+        public int ColumnIndexEnd { get; set; } = -1;
+        public int ColumnIndexDuration { get; set; } = -1;
+        public int ColumnIndexWpm { get; set; } = -1;
+        public int ColumnIndexCps { get; set; } = -1;
+        public int ColumnIndexGap { get; set; } = -1;
+        public int ColumnIndexActor { get; set; } = -1;
+        public int ColumnIndexRegion { get; set; } = -1;
+        public int ColumnIndexText { get; set; } = -1;
+        public int ColumnIndexTextAlternate { get; set; } = -1;
+        public int ColumnIndexExtra { get; set; } = -1;
+        public int ColumnIndexNetwork { get; set; } = -1;
 
         public bool IsAlternateTextColumnVisible => ColumnIndexTextAlternate >= 0;
         private string _lineSeparatorString = " || ";
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public int SubtitleFontSize
         {
-            get { return _subtitleFontSize; }
+            get => _subtitleFontSize;
             set
             {
                 _subtitleFontSize = value;
