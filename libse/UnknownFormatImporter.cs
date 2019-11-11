@@ -81,10 +81,14 @@ namespace Nikse.SubtitleEdit.Core
                 subtitle = ImportSubtitleWithNoLineBreaks(lines[0]);
             }
 
-            if (subtitle.Paragraphs.Count == 0)
+            if (subtitle.Paragraphs.Count < 10 || subtitle.Paragraphs.Average(p => p.Text.Length) > 100)
             {
                 var text = string.Join(Environment.NewLine, lines);
-                subtitle = ImportSubtitleWithNoLineBreaksWithExtraSpaces(text);
+                var noLineBreakSub = ImportSubtitleWithNoLineBreaksWithExtraSpaces(text);
+                if (noLineBreakSub.Paragraphs.Count > subtitle.Paragraphs.Count * 1.5)
+                {
+                    subtitle = noLineBreakSub;
+                }
             }
 
 
@@ -924,7 +928,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static Subtitle ImportSubtitleWithNoLineBreaksWithExtraSpaces(string text)
         {
-            var regex = new Regex(@"^(\d+: *)?\d+:\s*\d+[.,:;] *\d+ -{0,3}> \d+: *\d+:\s*\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            var regex = new Regex(@"^(\d+: *)?\d+ *: *\d+[.,:;] *\d+ *-{0,3}> *(\d+: *)?\d+ *: *\d+[.,:;] *\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
             var subtitle = new Subtitle();
             int i = 0;
             var sb = new StringBuilder();
