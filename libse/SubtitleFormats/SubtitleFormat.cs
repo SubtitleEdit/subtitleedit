@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new PhoenixSubtitle(),
                     new PinnacleImpression(),
                     new PListCaption(),
+                    new ProjectionSubtitleList(),
                     new QubeMasterImport(),
                     new QuickTimeText(),
                     new RealTime(),
