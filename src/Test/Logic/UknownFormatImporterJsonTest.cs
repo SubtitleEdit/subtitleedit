@@ -70,7 +70,7 @@ namespace Test.Logic
         }]
 }";
 
-            var importer = new UknownFormatImporterJson();
+            var importer = new UnknownFormatImporterJson();
             var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
             Assert.AreEqual(11, subtitle.Paragraphs.Count);
             Assert.AreEqual("development", subtitle.Paragraphs[1].Text);
@@ -139,7 +139,7 @@ namespace Test.Logic
         }]
 }";
 
-            var importer = new UknownFormatImporterJson();
+            var importer = new UnknownFormatImporterJson();
             var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
             Assert.AreEqual(11, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ford" + Environment.NewLine + "BMW" + Environment.NewLine + "Fiat", subtitle.Paragraphs[1].Text);
@@ -176,7 +176,7 @@ namespace Test.Logic
             }]
         }";
 
-            var importer = new UknownFormatImporterJson();
+            var importer = new UnknownFormatImporterJson();
             var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
             Assert.AreEqual(4, subtitle.Paragraphs.Count);
             Assert.AreEqual("Line1", subtitle.Paragraphs[1].Text);

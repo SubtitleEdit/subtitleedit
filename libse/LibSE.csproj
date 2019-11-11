@@ -611,8 +611,8 @@
     <Compile Include="TransportStream\Teletext.cs" />
     <Compile Include="TransportStream\TransportStreamParser.cs" />
     <Compile Include="TransportStream\TransportStreamSubtitle.cs" />
-    <Compile Include="UknownFormatImporterJson.cs" />
-    <Compile Include="UknownFormatImporter.cs" />
+    <Compile Include="UnknownFormatImporterJson.cs" />
+    <Compile Include="UnknownFormatImporter.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="VideoInfo.cs" />
     <Compile Include="VobSub\Helper.cs" />
