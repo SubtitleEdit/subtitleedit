@@ -672,7 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     s = rtb.Text;
                                 }
                             }
-                            var unknownFormatImporter = new UknownFormatImporter { UseFrames = true };
+                            var unknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
                             var genericParseSubtitle = unknownFormatImporter.AutoGuessImport(s.SplitToLines());
                             if (genericParseSubtitle.Paragraphs.Count > 1)
                             {

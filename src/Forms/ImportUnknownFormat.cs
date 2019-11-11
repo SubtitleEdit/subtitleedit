@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            var uknownFormatImporter = new UknownFormatImporter { UseFrames = radioButtonTimeCodeFrames.Checked };
+            var uknownFormatImporter = new UnknownFormatImporter { UseFrames = radioButtonTimeCodeFrames.Checked };
             ImportedSubitle = uknownFormatImporter.AutoGuessImport(textBoxText.Lines.ToList());
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, ImportedSubitle.Paragraphs.Count);
             SubtitleListview1.Fill(ImportedSubitle);
