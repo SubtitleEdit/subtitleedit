@@ -211,6 +211,7 @@
     <Compile Include="SubtitleFormats\JsonType8b.cs" />
     <Compile Include="SubtitleFormats\KaraokeCdgCreatorText.cs" />
     <Compile Include="SubtitleFormats\GooglePlayJson.cs" />
+    <Compile Include="SubtitleFormats\ProjectionSubtitleList.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle92.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle89.cs" />
     <Compile Include="SubtitleFormats\OtterAi.cs" />
