@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.BluRaySup
@@ -34,25 +35,25 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /// <summary>
             /// Type of segment
             /// </summary>
-            public int Type;
+            public int Type { get; set; }
 
             /// <summary>
             /// segment size in bytes
             /// </summary>
-            public int Size;
+            public int Size { get; set; }
 
             /// <summary>
             /// segment PTS time stamp
             /// </summary>
-            public long PtsTimestamp;
+            public long PtsTimestamp { get; set; }
         }
 
         public class PcsObject
         {
-            public int ObjectId;
-            public int WindowId;
-            public bool IsForced;
-            public Point Origin;
+            public int ObjectId { get; set; }
+            public int WindowId { get; set; }
+            public bool IsForced { get; set; }
+            public Point Origin { get; set; }
         }
 
         public static class SupDecoder
@@ -140,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         if (b == 0)
                         {
                             // next line
-                            ofs = (ofs / w) * w;
+                            ofs = ofs / w * w;
                             if (xpos < w)
                             {
                                 ofs += w;
@@ -248,36 +249,23 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         public class PcsData : IBinaryParagraph
         {
-            public int CompNum;
-            public CompositionState CompositionState;
-            public bool PaletteUpdate;
-            public long StartTime; // Pts
-            public long EndTime; // end Pts
-            public Size Size;
-            public int FramesPerSecondType;
-            public int PaletteId;
-            public List<PcsObject> PcsObjects;
-            public string Message;
-            public List<List<OdsData>> BitmapObjects;
-            public List<PaletteInfo> PaletteInfos;
+            public int CompNum { get; set; }
+            public CompositionState CompositionState { get; set; }
+            public bool PaletteUpdate { get; set; }
+            public long StartTime { get; set; }
+            public long EndTime { get; set; }
+            public Size Size { get; set; }
+            public int FramesPerSecondType { get; set; }
+            public int PaletteId { get; set; }
+            public List<PcsObject> PcsObjects { get; set; }
+            public string Message { get; set; }
+            public List<List<OdsData>> BitmapObjects { get; set; }
+            public List<PaletteInfo> PaletteInfos { get; set; }
 
             /// <summary>
             /// if true, contains forced entry
             /// </summary>
-            public bool IsForced
-            {
-                get
-                {
-                    foreach (var obj in PcsObjects)
-                    {
-                        if (obj.IsForced)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
+            public bool IsForced => PcsObjects.Any(obj => obj.IsForced);
 
             public Bitmap GetBitmap()
             {
@@ -311,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     return new Position(PcsObjects[0].Origin.X, PcsObjects[0].Origin.Y);
                 }
-                return new Position(0,0);
+                return new Position(0, 0);
             }
 
             public TimeCode StartTimeCode => new TimeCode(StartTime / 90.0);
@@ -320,20 +308,20 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         public class PdsData
         {
-            public string Message;
-            public int PaletteId;
-            public int PaletteVersion;
-            public PaletteInfo PaletteInfo;
+            public string Message { get; set; }
+            public int PaletteId { get; set; }
+            public int PaletteVersion { get; set; }
+            public PaletteInfo PaletteInfo { get; set; }
         }
 
         public class OdsData
         {
-            public int ObjectId;
-            public int ObjectVersion;
-            public string Message;
-            public bool IsFirst;
-            public Size Size;
-            public ImageObjectFragment Fragment;
+            public int ObjectId { get; set; }
+            public int ObjectVersion { get; set; }
+            public string Message { get; set; }
+            public bool IsFirst { get; set; }
+            public Size Size { get; set; }
+            public ImageObjectFragment Fragment { get; set; }
         }
 
         /// <summary>
@@ -608,14 +596,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             PcsData latestPcs = null;
             var pcsList = new List<PcsData>();
             var headerBuffer = fromMatroskaFile ? new byte[3] : new byte[HeaderSize];
-            var length = ms.Length;
 
-            while (position < length)
+            while (ms.Read(headerBuffer, 0, headerBuffer.Length) == headerBuffer.Length)
             {
-                ms.Seek(position, SeekOrigin.Begin);
-
-                // Read segment header
-                ms.Read(headerBuffer, 0, headerBuffer.Length);
                 var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
                 position += headerBuffer.Length;
 
@@ -623,7 +606,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 {
                     // Read segment data
                     var buffer = new byte[segment.Size];
-                    ms.Read(buffer, 0, buffer.Length);
+                    var bytesRead = ms.Read(buffer, 0, buffer.Length);
+                    if (bytesRead < buffer.Length)
+                    {
+                        break;
+                    }
+
 
 #if DEBUG
                     log.Append(segmentCount + ": ");
