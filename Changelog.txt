@@ -16,6 +16,8 @@
    * Improve read speed of .ts/.m2ts files
 * FIXED:
    * Fix "Replace" issue - thx loyaldragon
+   * Fix extracting correct audio track with VLC
+   * Fix remove empty lines after "Multiple replace" in "Batch convert"
 
 
 3.5.11 (27th October 2019)
