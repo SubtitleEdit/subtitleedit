@@ -11065,6 +11065,10 @@ namespace Nikse.SubtitleEdit.Forms
                         var timeCodeRegEx = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$");
                         var lineNumber = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart);
                         var lines = textBoxSource.Lines.ToList();
+                        if (lineNumber >= lines.Count)
+                        {
+                            lineNumber = lines.Count - 1;
+                        }
                         var currentLine = lines[lineNumber];
                         var nextLine = lineNumber + 1 < lines.Count ? lines[lineNumber + 1] : string.Empty;
                         var startLine = 0;
