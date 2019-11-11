@@ -7,9 +7,8 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class UknownFormatImporterJson
+    public class UnknownFormatImporterJson
     {
-
         public Subtitle AutoGuessImport(List<string> lines)
         {
 
