@@ -10,27 +10,27 @@ namespace Nikse.SubtitleEdit.Core.VobSub
     {
         public const int HeaderLength = 6;
 
-        public readonly UInt32 StartCode;
-        public readonly int StreamId;
-        public readonly int Length;
-        public readonly int ScramblingControl;
-        public readonly int Priority;
-        public readonly int DataAlignmentIndicator;
-        public readonly int Copyright;
-        public readonly int OriginalOrCopy;
-        public readonly int PresentationTimestampDecodeTimestampFlags;
-        public readonly int ElementaryStreamClockReferenceFlag;
-        public readonly int EsRateFlag;
-        public readonly int DsmTrickModeFlag;
-        public readonly int AdditionalCopyInfoFlag;
-        public readonly int CrcFlag;
-        public readonly int ExtensionFlag;
-        public readonly int HeaderDataLength;
+        public uint StartCode { get; }
+        public int StreamId { get; }
+        public int Length { get; }
+        public int ScramblingControl { get; }
+        public int Priority { get; }
+        public int DataAlignmentIndicator { get; }
+        public int Copyright { get; }
+        public int OriginalOrCopy { get; }
+        public int PresentationTimestampDecodeTimestampFlags { get; }
+        public int ElementaryStreamClockReferenceFlag { get; }
+        public int EsRateFlag { get; }
+        public int DsmTrickModeFlag { get; }
+        public int AdditionalCopyInfoFlag { get; }
+        public int CrcFlag { get; }
+        public int ExtensionFlag { get; }
+        public int HeaderDataLength { get; }
 
-        public readonly UInt64? PresentationTimestamp;
-        public readonly UInt64? DecodeTimestamp;
+        public ulong? PresentationTimestamp { get; }
+        public ulong? DecodeTimestamp { get; }
 
-        public readonly int? SubPictureStreamId;
+        public int? SubPictureStreamId { get; }
 
         private readonly byte[] _dataBuffer;
 
@@ -112,6 +112,5 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             stream.Write(_dataBuffer, 0, _dataBuffer.Length);
         }
-
     }
 }
