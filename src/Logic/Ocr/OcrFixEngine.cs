@@ -1295,7 +1295,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             var words = new List<string>();
-            foreach (var w in tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(SpellCheckWordLists.SplitChars.ToArray()))
+            var splitChars = SpellCheckWordLists.SplitChars.Where(ch => ch != '/').ToArray();
+            foreach (var w in tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(splitChars))
             {
                 words.Add(w.Trim(trimChars));
             }
