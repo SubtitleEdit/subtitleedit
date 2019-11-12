@@ -9,19 +9,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension => ".psl";
         public override string Name => "Projection Subtitle List";
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.Append($"{EncodeTime(p.StartTime)} {EncodeTime(p.EndTime)} {{\\uc0\\pard\\qc");
+                sb.Append($"{EncodeTime(p.StartTime)} {EncodeTime(p.EndTime)} {{\\uc0\\pard\\qc ");
                 var text = Utilities.RemoveSsaTags(p.Text);
                 text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
                 foreach (var line in text.SplitToLines())
                 {
-                    sb.Append("{");
-                    sb.Append(RftEncode(line)); 
-                    sb.Append("}\\par");
+                    sb.Append(RftEncode(line));
+                    sb.Append("\\par ");
                 }
                 sb.AppendLine("}");
             }
@@ -29,27 +29,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        private string RftEncode(string line)
+        private static string RftEncode(string line)
         {
             var sb = new StringBuilder();
-            for (var index = 0; index < line.Length; index++)
+            int index = 0;
+            while (index < line.Length)
             {
-                char ch = line[index];
+                var ch = line[index];
                 var number = (int)ch;
                 if (ch == '\\' || ch == '{' || ch == '}')
                 {
                     sb.Append($"\\{ch}");
                 }
-                else if (number <= byte.MaxValue)
+                else if (ch == '<' && line.Substring(index).StartsWith("<i>"))
+                {
+                    sb.Append("{\\i ");
+                    index += 2;
+                }
+                else if (ch == '<' && line.Substring(index).StartsWith("</i>"))
+                {
+                    sb.Append(" }");
+                    index += 3;
+                }
+                else if (number <= 127)
                 {
                     sb.Append(ch);
                 }
                 else
                 {
-                    sb.Append($"\\u{number.ToString(CultureInfo.InvariantCulture).PadLeft(4, '0')}");
+                    sb.Append($"\\u{GetUnicodeNumber(ch).ToString(CultureInfo.InvariantCulture).PadLeft(3, '0')} ");
                 }
+                index++;
             }
+
             return sb.ToString();
+        }
+
+        private static int GetUnicodeNumber(char character)
+        {
+            var encoding = new UTF32Encoding();
+            var bytes = encoding.GetBytes(character.ToString().ToCharArray());
+            return BitConverter.ToInt32(bytes, 0);
         }
 
         private static string EncodeTime(TimeCode time)
@@ -86,7 +106,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (long.TryParse(frameArray[0], NumberStyles.None, CultureInfo.InvariantCulture, out var startFrame) &&
                     long.TryParse(frameArray[1], NumberStyles.None, CultureInfo.InvariantCulture, out var endFrame))
-
                 {
                     var rtf = line.Remove(0, startText);
                     var text = RtfDecode(rtf, "en");
@@ -96,9 +115,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private string RtfDecode(string text, string language)
+        private static string RtfDecode(string text, string language)
         {
             var codeOn = false;
+            var italicOn = false;
             var sb = new StringBuilder();
             char last = ' ';
             var i = 0;
@@ -109,11 +129,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     codeOn = false;
                 }
-                else if (codeOn && ch != ' ')
+                else if (codeOn && !char.IsWhiteSpace(ch))
                 {
-
+                    // just code - wait for whitespace
                 }
-                else if (codeOn && ch == ' ')
+                else if (codeOn && char.IsWhiteSpace(ch))
                 {
                     codeOn = false;
                     sb.Append(ch);
@@ -126,9 +146,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var unescaped = char.ConvertFromUtf32(int.Parse(unicodeNumber));
                         sb.Append(unescaped);
                         i += 4;
+                        if (i + 6 < text.Length && text[i + 5] == ' ')
+                        {
+                            i++;
+                        }
                     }
-                    if (ch == 'p' && i + 5 < text.Length && text[i + 1] == 'a' && text[i + 2] == 'r' && " \r\n\\{}".Contains(text[i + 3]))
+                    else if (ch == 'u' && i + 4 < text.Length && char.IsNumber(text[i + 1]) && char.IsNumber(text[i + 2]) && char.IsNumber(text[i + 3]))
                     {
+                        var unicodeNumber = text.Substring(i + 1, 3);
+                        var unescaped = char.ConvertFromUtf32(int.Parse(unicodeNumber));
+                        sb.Append(unescaped);
+                        i += 4;
+                        if (i + 5 < text.Length && text[i + 4] == ' ')
+                        {
+                            i++;
+                        }
+                    }
+                    else if (ch == 'i' && i + 3 < text.Length && " \r\n\\{}".Contains(text[i + 1]))
+                    {
+                        sb.Append("<i>");
+                        italicOn = true;
+                        i++;
+                    }
+                    else if (ch == 'p' && i + 5 < text.Length && text[i + 1] == 'a' && text[i + 2] == 'r' && " \r\n\\{}".Contains(text[i + 3]))
+                    {
+                        if (italicOn)
+                        {
+                            sb.Append("</i>");
+                        }
+                        italicOn = false;
                         sb.AppendLine();
                         i += 2;
                     }
@@ -156,6 +202,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 i++;
                 last = ch;
+            }
+            if (italicOn)
+            {
+                sb.Append("</i>");
             }
             return Utilities.RemoveUnneededSpaces(sb.ToString(), language);
         }
