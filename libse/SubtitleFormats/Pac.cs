@@ -958,6 +958,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        private double _lastStartTotalSeconds;
+        private double _lastEndTotalSeconds;
+
         private Paragraph GetPacParagraph(ref int index, byte[] buffer)
         {
             if (index < 15)
@@ -989,16 +992,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
-            if (buffer[timeStartIndex] == 0x60 || buffer[timeStartIndex] == 0x61)
+            if (buffer[timeStartIndex] == 0x60)
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
-            else if (buffer[timeStartIndex + 3] == 0x60 || buffer[timeStartIndex + 3] == 0x61)
+            else if (buffer[timeStartIndex + 3] == 0x60)
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+            }
+            else if (buffer[timeStartIndex] == 0x61)
+            {
+                p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
+                p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+                int length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+                if (length < 1 || length > 200 ||
+                    p.StartTime.TotalSeconds - _lastStartTotalSeconds < 1 || p.StartTime.TotalSeconds - _lastStartTotalSeconds > 1500 ||
+                    p.EndTime.TotalSeconds - _lastEndTotalSeconds < 1 || p.EndTime.TotalSeconds - _lastEndTotalSeconds > 1500)
+                {
+                    return null;
+                }
+            }
+            else if (buffer[timeStartIndex + 3] == 0x61)
+            {
+                timeStartIndex += 3;
+                p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
+                p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+                int length = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+                if (length < 1 || length > 200 ||
+                    p.StartTime.TotalSeconds - _lastStartTotalSeconds < 1 || p.StartTime.TotalSeconds - _lastStartTotalSeconds > 1500 ||
+                    p.EndTime.TotalSeconds - _lastEndTotalSeconds < 1 || p.EndTime.TotalSeconds - _lastEndTotalSeconds > 1500)
+                {
+                    return null;
+                }
             }
             else
             {
@@ -1009,6 +1037,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return null; // probably not correct index
             }
+
+            _lastStartTotalSeconds = p.StartTime.TotalSeconds;
+            _lastEndTotalSeconds = p.EndTime.TotalSeconds;
 
             int maxIndex = timeStartIndex + 10 + textLength;
 
@@ -1329,14 +1360,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            if (GetPacEncodingImplementation != null)
-            {
-                CodePage = GetPacEncodingImplementation.GetPacEncoding(previewBuffer, _fileName);
-            }
-            else
-            {
-                CodePage = 2;
-            }
+            CodePage = GetPacEncodingImplementation?.GetPacEncoding(previewBuffer, _fileName) ?? 2;
         }
 
         private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
