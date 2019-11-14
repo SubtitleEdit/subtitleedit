@@ -18,6 +18,7 @@
    * Fix "Replace" issue - thx loyaldragon
    * Fix extracting correct audio track with VLC
    * Fix remove empty lines after "Multiple replace" in "Batch convert"
+   * Fix "Fix ocr errors" in "Fix common errors" via "Batch convert" - thx  JySzE
 
 
 3.5.11 (27th October 2019)
