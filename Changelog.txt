@@ -5,12 +5,14 @@
    * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare
    * Auto break options "pixel width" (and not after #of characters) + "bottom heavy"
    * Auto break options now available in UI via Options -> Settings -> Tools
-* IMPROVED:
+   * Add new format psl
    * Add Macedonian translation - thx Numberguy
+* IMPROVED:
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Update Bulgarian translation - thx KalinM
-   * Improved reading of faulty .srt files a little - thx andradadad
+   * Update Brazilian translation - thx igor
+   * Improve reading of faulty .srt files a little - thx andradadad
    * Allow invert colors pre-processing for T4 - thx rookiefromspace/OmrSi
    * Improve line mergning of 3+ lines - thx taxen
    * Improve read speed of .ts/.m2ts files
@@ -18,6 +20,9 @@
    * Fix "Replace" issue - thx loyaldragon
    * Fix extracting correct audio track with VLC
    * Fix remove empty lines after "Multiple replace" in "Batch convert"
+   * Fix "Fix ocr errors" in "Fix common errors" via "Batch convert" - thx  JySzE
+   * Fix issue with PAC reading - thx s3ncha
+   * Fix possible crash when going from src view to list view
 
 
 3.5.11 (27th October 2019)

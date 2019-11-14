@@ -108,14 +108,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     long.TryParse(frameArray[1], NumberStyles.None, CultureInfo.InvariantCulture, out var endFrame))
                 {
                     var rtf = line.Remove(0, startText);
-                    var text = RtfDecode(rtf, "en");
+                    var text = RtfDecode(rtf);
                     subtitle.Paragraphs.Add(new Paragraph(text, FramesToMilliseconds(startFrame), FramesToMilliseconds(endFrame)));
                 }
             }
             subtitle.Renumber();
         }
 
-        private static string RtfDecode(string text, string language)
+        private static string RtfDecode(string text)
         {
             var codeOn = false;
             var italicOn = false;
@@ -140,27 +140,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (last == '\\')
                 {
-                    if (ch == 'u' && i + 5 < text.Length && char.IsNumber(text[i + 1]) && char.IsNumber(text[i + 2]) && char.IsNumber(text[i + 3]) && char.IsNumber(text[i + 4]))
+                    if (ch == 'u' && i + 6 < text.Length && char.IsNumber(text[i + 1]) && char.IsNumber(text[i + 2]) && char.IsNumber(text[i + 3]) && char.IsNumber(text[i + 4]) && char.IsNumber(text[i + 5]))
                     {
                         var unicodeNumber = text.Substring(i + 1, 4);
                         var unescaped = char.ConvertFromUtf32(int.Parse(unicodeNumber));
                         sb.Append(unescaped);
-                        i += 4;
+                        if (i + 7 < text.Length && text[i + 6] == ' ')
+                        {
+                            i++;
+                        }
+                        i += 5;
+                    }
+                    else if (ch == 'u' && i + 5 < text.Length && char.IsNumber(text[i + 1]) && char.IsNumber(text[i + 2]) && char.IsNumber(text[i + 3]) && char.IsNumber(text[i + 4]))
+                    {
+                        var unicodeNumber = text.Substring(i + 1, 4);
+                        var unescaped = char.ConvertFromUtf32(int.Parse(unicodeNumber));
+                        sb.Append(unescaped);
                         if (i + 6 < text.Length && text[i + 5] == ' ')
                         {
                             i++;
                         }
+                        i += 4;
                     }
                     else if (ch == 'u' && i + 4 < text.Length && char.IsNumber(text[i + 1]) && char.IsNumber(text[i + 2]) && char.IsNumber(text[i + 3]))
                     {
                         var unicodeNumber = text.Substring(i + 1, 3);
                         var unescaped = char.ConvertFromUtf32(int.Parse(unicodeNumber));
                         sb.Append(unescaped);
-                        i += 4;
                         if (i + 5 < text.Length && text[i + 4] == ' ')
                         {
                             i++;
                         }
+                        i += 3;
                     }
                     else if (ch == 'i' && i + 3 < text.Length && " \r\n\\{}".Contains(text[i + 1]))
                     {
@@ -196,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     // start/end of block
                     codeOn = false;
                 }
-                else
+                else if (!"\r\n".Contains(ch))
                 {
                     sb.Append(ch);
                 }
@@ -207,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.Append("</i>");
             }
-            return Utilities.RemoveUnneededSpaces(sb.ToString(), language);
+            return Utilities.RemoveUnneededSpaces(sb.ToString(), string.Empty);
         }
     }
 }
