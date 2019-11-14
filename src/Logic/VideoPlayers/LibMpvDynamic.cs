@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private MpvFree _mpvFree;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate UInt32 MpvClientApiVersion();
+        private delegate ulong MpvClientApiVersion();
         private MpvClientApiVersion _mpvClientApiVersion;
 
         #endregion
