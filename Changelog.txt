@@ -23,6 +23,7 @@
    * Fix "Fix ocr errors" in "Fix common errors" via "Batch convert" - thx  JySzE
    * Fix issue with PAC reading - thx s3ncha
    * Fix possible crash when going from src view to list view
+   * Fix "Save selected lines as..." issues - thx Milenko
 
 
 3.5.11 (27th October 2019)
