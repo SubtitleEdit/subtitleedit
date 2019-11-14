@@ -23893,24 +23893,29 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
+                        // only allow current extension or ".txt"
+                        string fileName = saveFileDialog1.FileName;
+                        string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                        bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        if (!extOk)
+                        {
+                            if (fileName.EndsWith('.'))
+                            {
+                                fileName = fileName.TrimEnd('.');
+                            }
+                            fileName += format.Extension;
+                        }
+
                         if (format.IsTextBased)
                         {
-                            // only allow current extension or ".txt"
-                            string fileName = saveFileDialog1.FileName;
-                            string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                            bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
-                            if (!extOk)
-                            {
-                                if (fileName.EndsWith('.'))
-                                {
-                                    fileName = fileName.TrimEnd('.');
-                                }
-
-                                fileName += format.Extension;
-                            }
-
                             string allText = newSub.ToText(format);
                             File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                            ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
+                            return;
+                        }
+                        else if (format.GetType() == typeof(Ebu))
+                        {
+                            new Ebu().Save(fileName, GetSaveSubtitle(newSub));
                             ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
                             return;
                         }
