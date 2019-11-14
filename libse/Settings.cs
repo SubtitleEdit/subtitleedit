@@ -1403,7 +1403,7 @@ $HorzAlign          =   Center
             GeneralHelp = "F1";
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
-            WaveformAddTextHere = string.Empty;
+            WaveformAddTextHere = "Return";
         }
     }
 
