@@ -23908,7 +23908,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format.IsTextBased)
                         {
-                            string allText = newSub.ToText(format);
+                            string allText = GetSaveSubtitle(newSub).ToText(format);
                             File.WriteAllText(fileName, allText, GetCurrentEncoding());
                             ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
                             return;
