@@ -649,7 +649,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolsBreakEarlyDash.Text = language.BreakEarlyForDashDialog;
             checkBoxToolsBreakEarlyLineEnding.Text = language.BreakEarlyForLineEnding;
             checkBoxToolsBreakByPixelWidth.Text = Text = language.BreakByPixelWidth;
-            checkBoxToolsBreakPreferBottomHeavy.Text = Text = language.BreakPreferBottomHeavy;
+            checkBoxToolsBreakPreferBottomHeavy.Text = language.BreakPreferBottomHeavy;
             numericUpDownToolsBreakPreferBottomHeavy.Left = checkBoxToolsBreakPreferBottomHeavy.Left + checkBoxToolsBreakPreferBottomHeavy.Width + 9;
             labelToolsBreakBottomHeavyPercent.Left = numericUpDownToolsBreakPreferBottomHeavy.Left + numericUpDownToolsBreakPreferBottomHeavy.Width + 2;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
