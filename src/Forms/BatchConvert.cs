@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _customTextTemplate;
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
-        private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup =new Dictionary<string, List<BluRaySupParser.PcsData>>();
+        private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
 
         public BatchConvert(Icon icon)
         {
@@ -1204,9 +1204,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var fixCommonErrors = new FixCommonErrors { BatchMode = true })
                     {
+                        var l = Configuration.Settings.Tools.BatchConvertLanguage;
+                        if (string.IsNullOrEmpty(l))
+                        {
+                            l = LanguageAutoDetect.AutoDetectGoogleLanguage(p.Subtitle);
+                        }
                         for (int i = 0; i < 3; i++)
                         {
-                            fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                            fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, l);
                             p.Subtitle = fixCommonErrors.FixedSubtitle;
                         }
                     }
