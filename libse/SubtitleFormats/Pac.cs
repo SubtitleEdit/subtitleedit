@@ -1263,7 +1263,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return Encoding.GetEncoding("windows-874");
                 case CodePageCyrillic:
                     return Encoding.GetEncoding("iso-8859-5");
-                default: return Encoding.Default;
+                default:
+                    return Encoding.Default;
             }
         }
 

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core
         private const int JStateArray = 1;
         private const int JStateValue = 2;
         private readonly HashSet<char> _whiteSpace = new HashSet<char> { ' ', '\r', '\n', '\t' };
-   
+
         public List<string> GetAllTagsByNameAsStrings(string content, string name)
         {
             Errors = new List<string>();

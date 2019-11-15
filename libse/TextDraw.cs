@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core
                 fontStyle |= FontStyle.Underline;
             }
 
-            var fontSize = (float) GetFontSize(font.Size);
+            var fontSize = (float)GetFontSize(font.Size);
             try
             {
                 path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);

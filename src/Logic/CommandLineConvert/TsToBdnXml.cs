@@ -26,8 +26,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             stdOutWriter?.Write("\r");
 
             var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
-                                     Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 &&
-                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0 ||
+                                     Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0 &&
+                                     Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 ||
                                      resolution.HasValue;
 
             using (var form = new ExportPngXml())

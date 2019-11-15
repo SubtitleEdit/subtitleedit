@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 var dataUnitLen = _dataBuffer[i++];
                 if (dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextNonSubtitle || dataUnitId == (int)Teletext.DataUnitT.DataUnitEbuTeletextSubtitle)
                 {
-                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes 
+                    if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
                         // reverse endianness (via lookup table), ETS 300 706, chapter 7.1
                         for (var j = 0; j < dataUnitLen; j++)
