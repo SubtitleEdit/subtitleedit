@@ -5,8 +5,7 @@
     <Version>3.5.11</Version>
     <TranslatedBy>Превод на македонски: Numberguy</TranslatedBy>
     <CultureName>mk-MK</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;Добро</Ok>
     <Cancel>Откажи</Cancel>
     <Apply>Примени</Apply>
