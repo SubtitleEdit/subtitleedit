@@ -223,12 +223,12 @@
                 0x0138, 0x00e6, 0x0111, 0x00f0, 0x0127, 0x0131, 0x0133, 0x0140, 0x0142, 0x00f8, 0x0153, 0x00df, 0x00fe,
                 0x0167, 0x014b, 0x0020
             }
-            //	{ // Cyrillic G2 Supplementary Set
-            //	},
-            //	{ // Greek G2 Supplementary Set
-            //	},
-            //	{ // Arabic G2 Supplementary Set
-            //	}
+            //{ // Cyrillic G2 Supplementary Set
+            //},
+            //{ // Greek G2 Supplementary Set
+            //},
+            //{ // Arabic G2 Supplementary Set
+            //}
         };
 
         public static readonly int[,] G2Accents = new int[15, 52]

@@ -1824,6 +1824,6 @@ namespace Test.Logic.Forms
             Assert.AreEqual("- Spoken text." + Environment.NewLine + "<i>- Spoken text.</i>", actual);
         }
 
-        
+
     }
 }

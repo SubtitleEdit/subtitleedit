@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
-    public class TransportStreamSubtitle 
+    public class TransportStreamSubtitle
     {
         public ulong StartMilliseconds { get; set; }
 

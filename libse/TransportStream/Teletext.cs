@@ -480,7 +480,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             var y = (address >> 3) & 0x1f;
             var designationCode = y > 25 ? TeletextHamming.UnHamming84(packet.Data[0]) : 0x00;
 
-            if (y == 0) // PAGE HEADER  
+            if (y == 0) // PAGE HEADER
             {
                 // CC map
                 var i = (TeletextHamming.UnHamming84(packet.Data[1]) << 4) | TeletextHamming.UnHamming84(packet.Data[0]);

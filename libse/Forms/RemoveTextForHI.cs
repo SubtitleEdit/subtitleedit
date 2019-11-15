@@ -842,7 +842,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
                             {
-                                
+
                                 text = "- " + text;
                                 if (!text.Contains(Environment.NewLine + "<i>- "))
                                 {

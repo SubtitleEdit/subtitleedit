@@ -27,22 +27,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "lime", Color.FromArgb(0, 255, 0)
             },
             {
-                "cyan", Color.FromArgb(0,255,255)
+                "cyan", Color.FromArgb(0, 255, 255)
             },
             {
-                "red", Color.FromArgb(255,0,0)
+                "red", Color.FromArgb(255, 0, 0)
             },
             {
-                "yellow", Color.FromArgb(255,255,0)
+                "yellow", Color.FromArgb(255, 255, 0)
             },
             {
-                "magenta", Color.FromArgb(255,0,255)
+                "magenta", Color.FromArgb(255, 0, 255)
             },
             {
-                "blue", Color.FromArgb(0,0,255)
+                "blue", Color.FromArgb(0, 0, 255)
             },
             {
-                "black", Color.FromArgb(0,0,0)
+                "black", Color.FromArgb(0, 0, 0)
             },
         };
 
