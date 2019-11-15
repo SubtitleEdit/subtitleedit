@@ -785,12 +785,9 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
     <FileName>Naziv datoteke</FileName>
     <Join>Spoji</Join>
     <TotalNumberOfLinesX>Ukupan broj linija: {0:#,###,###}</TotalNumberOfLinesX>
-    <AlreadyCorrectTimeCodes>
-    </AlreadyCorrectTimeCodes>
-    <AppendTimeCodes>
-    </AppendTimeCodes>
-    <AddMs>
-    </AddMs>
+    <AlreadyCorrectTimeCodes />
+    <AppendTimeCodes />
+    <AddMs />
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Nije precizirano</NotSpecified>
@@ -2405,8 +2402,7 @@ sa ugrađenim informacijama o fontu kao u "Advanced Sub Station Alpha" ili preko
     <UseTimeCodesFromIdx>Koristi vremenske kodove iz .idx datoteke</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nema poklapanja&gt;</NoMatch>
     <AutoTransparentBackground>Providna pozadina</AutoTransparentBackground>
-    <CaptureTopAlign>
-    </CaptureTopAlign>
+    <CaptureTopAlign />
     <InspectCompareMatchesForCurrentImage>Rezultati poređenja za trenutnu sliku...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune poređenja za poslednju sliku...</EditLastAdditions>
     <SetUnitalicFactor>Podesi 'ne-kurziv' faktor...</SetUnitalicFactor>

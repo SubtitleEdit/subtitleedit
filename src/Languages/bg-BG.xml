@@ -2085,7 +2085,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseDoNotBreakAfterList>Неразделяй след списъка(заАвт.пренасяне)</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Прекъсване в началото за завършване на реда (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Прекъсване по ширина на пикселите</BreakByPixelWidth>
-    <BreakPreferBottomHeavy></BreakPreferBottomHeavy>
+    <BreakPreferBottomHeavy />
     <BreakEarlyForDashDialog>Прекъсване в началото за диалогово тире</BreakEarlyForDashDialog>
     <BreakEarlyForComma>Прекъсване в началото за запетая</BreakEarlyForComma>
     <GoogleTranslate>Google преводач</GoogleTranslate>
