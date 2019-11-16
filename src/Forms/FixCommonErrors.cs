@@ -79,6 +79,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public class LanguageItem
+        {
+            public CultureInfo Code { get; }
+            public string Name { get; }
+
+            public LanguageItem(CultureInfo code, string name)
+            {
+                Code = code;
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
         public Subtitle Subtitle;
         private SubtitleFormat _format;
         public Encoding Encoding { get; set; }
@@ -109,35 +126,45 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle FixedSubtitle { get; private set; }
 
+        private void InitializeLanguageNames(LanguageItem firstItem = null)
+        {
+            comboBoxLanguage.BeginUpdate();
+            comboBoxLanguage.Items.Clear();
+            if (firstItem != null)
+            {
+                comboBoxLanguage.Items.Add(firstItem);
+            }
+            foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            {
+                if (!string.IsNullOrWhiteSpace(x.ToString()) && !x.EnglishName.Contains("("))
+                {
+                    comboBoxLanguage.Items.Add(new LanguageItem(x, x.EnglishName));
+                }
+            }
+            comboBoxLanguage.Sorted = true;
+            comboBoxLanguage.EndUpdate();
+        }
+
+
         public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
-            comboBoxLanguage.Items.Clear();
-            comboBoxLanguage.Items.Add("-Auto-");
-            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-            {
-                if (!string.IsNullOrWhiteSpace(x.ToString()))
-                {
-                    comboBoxLanguage.Items.Add(x);
-                }
-            }
-            comboBoxLanguage.Sorted = true;
+            InitializeLanguageNames(new LanguageItem(null, "-Auto-"));
             int languageIndex = 0;
             int j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = x as CultureInfo;
-                if (xci != null)
+                if (x is LanguageItem xci)
                 {
-                    if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                    if (xci.Code != null && xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
                     {
                         languageIndex = j;
                         break;
                     }
-                    if (xci.TwoLetterISOLanguageName == "en")
+                    if (xci.Code != null && xci.Code.TwoLetterISOLanguageName == "en")
                     {
                         languageIndex = j;
                     }
@@ -167,13 +194,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
-                if (ci == null)
-                {
-                    return string.Empty;
-                }
-
-                return ci.TwoLetterISOLanguageName;
+                var ci = comboBoxLanguage.SelectedItem as LanguageItem;
+                return ci?.Code == null ? string.Empty : ci.Code.TwoLetterISOLanguageName;
             }
             set
             {
@@ -195,25 +217,18 @@ namespace Nikse.SubtitleEdit.Forms
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
-
-            comboBoxLanguage.Items.Clear();
-            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-            {
-                comboBoxLanguage.Items.Add(x);
-            }
-
-            comboBoxLanguage.Sorted = true;
+            InitializeLanguageNames();
             int languageIndex = 0;
             int j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (CultureInfo)x;
-                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                var xci = (LanguageItem)x;
+                if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
                 {
                     languageIndex = j;
                     break;
                 }
-                if (xci.TwoLetterISOLanguageName == "en")
+                if (xci.Code.TwoLetterISOLanguageName == "en")
                 {
                     languageIndex = j;
                 }
@@ -252,25 +267,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
-
-            comboBoxLanguage.Items.Clear();
-            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-            {
-                comboBoxLanguage.Items.Add(x);
-            }
-
-            comboBoxLanguage.Sorted = true;
+            InitializeLanguageNames();
             int languageIndex = 0;
             int j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (CultureInfo)x;
-                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                var xci = (LanguageItem)x;
+                if (xci.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
                 {
                     languageIndex = j;
                     break;
                 }
-                if (xci.TwoLetterISOLanguageName == "en")
+                if (xci.Code.TwoLetterISOLanguageName == "en")
                 {
                     languageIndex = j;
                 }
@@ -306,9 +314,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(Configuration.Settings.CommonErrors.StartSize))
             {
                 StartPosition = FormStartPosition.Manual;
-                string[] arr = Configuration.Settings.CommonErrors.StartSize.Split(';');
-                int x, y;
-                if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
+                var arr = Configuration.Settings.CommonErrors.StartSize.Split(';');
+                if (arr.Length == 2 && int.TryParse(arr[0], out var x) && int.TryParse(arr[1], out var y))
                 {
                     if (x > 10 && x < 10000 && y > 10 && y < 10000)
                     {
@@ -320,9 +327,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(Configuration.Settings.CommonErrors.StartPosition))
             {
                 StartPosition = FormStartPosition.Manual;
-                string[] arr = Configuration.Settings.CommonErrors.StartPosition.Split(';');
-                int x, y;
-                if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
+                var arr = Configuration.Settings.CommonErrors.StartPosition.Split(';');
+                if (arr.Length == 2 && int.TryParse(arr[0], out var x) && int.TryParse(arr[1], out var y))
                 {
                     var screen = Screen.FromPoint(Cursor.Position);
                     if (x > 0 && x < screen.WorkingArea.Width && y > 0 && y < screen.WorkingArea.Height)
@@ -1114,8 +1120,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (ListViewItem lvi in subtitleListView1.Items)
                 {
-                    var p2 = lvi.Tag as Paragraph;
-                    if (p2 != null && p.Id == p2.Id)
+                    if (lvi.Tag is Paragraph p2 && p.Id == p2.Id)
                     {
                         var index = lvi.Index;
                         if (index - 1 > 0)
@@ -1237,10 +1242,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph nextParagraph = FixedSubtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
-                    double durationMilliSeconds = (double)numericUpDownDuration.Value * TimeCode.BaseUnit;
-                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds)
+                    double durationMilliseconds = (double)numericUpDownDuration.Value * TimeCode.BaseUnit;
+                    if (startTime.TotalMilliseconds + durationMilliseconds > nextParagraph.StartTime.TotalMilliseconds)
                     {
-                        labelDurationWarning.Text = string.Format(_languageGeneral.OverlapNextX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
+                        labelDurationWarning.Text = string.Format(_languageGeneral.OverlapNextX, ((startTime.TotalMilliseconds + durationMilliseconds) - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     }
 
                     if (labelStartTimeWarning.Text.Length == 0 &&
@@ -1435,7 +1440,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.BeginUpdate();
 
-            // save de-seleced fixes
+            // save de-selected fixes
             var deSelectedFixes = new List<string>();
             foreach (ListViewItem item in listViewFixes.Items)
             {
@@ -1498,7 +1503,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int firstIndex = subtitleListView1.SelectedItems[0].Index;
 
-                // save de-seleced fixes
+                // save de-selected fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
@@ -1556,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int startNumber = FixedSubtitle.Paragraphs[0].Number;
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-                // save de-seleced fixes
+                // save de-selected fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
@@ -1679,7 +1684,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-                // save de-seleced fixes
+                // save de-selected fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
@@ -1796,11 +1801,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Subtitle != null)
             {
-                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
-                if (ci != null)
+                if (comboBoxLanguage.SelectedItem is LanguageItem ci)
                 {
-                    _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
-                    AddFixActions(ci.ThreeLetterISOLanguageName);
+                    _autoDetectGoogleLanguage = ci.Code.TwoLetterISOLanguageName;
+                    AddFixActions(ci.Code.ThreeLetterISOLanguageName);
                 }
             }
         }
