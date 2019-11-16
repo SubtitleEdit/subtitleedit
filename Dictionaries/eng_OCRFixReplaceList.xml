@@ -2645,6 +2645,8 @@
     <Word from="z'housand" to="thousand" />
     <Word from="zlPPING" to="ZIPPING" />
     <Word from="ZSth" to="25th" />
+    <Word from="d0n't" to="don't" />
+    <Word from="D0n't" to="Don't" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->

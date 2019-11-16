@@ -231,6 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader3});
             this.listView1.FullRowSelect = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(6, 48);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(810, 477);
@@ -416,6 +417,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ColumnIndexActor = -1;
+            this.subtitleListView1.ColumnIndexCps = -1;
+            this.subtitleListView1.ColumnIndexDuration = 3;
+            this.subtitleListView1.ColumnIndexEnd = 2;
+            this.subtitleListView1.ColumnIndexExtra = -1;
+            this.subtitleListView1.ColumnIndexGap = -1;
+            this.subtitleListView1.ColumnIndexNetwork = -1;
+            this.subtitleListView1.ColumnIndexNumber = 0;
+            this.subtitleListView1.ColumnIndexRegion = -1;
+            this.subtitleListView1.ColumnIndexStart = 1;
+            this.subtitleListView1.ColumnIndexText = 4;
+            this.subtitleListView1.ColumnIndexTextAlternate = -1;
+            this.subtitleListView1.ColumnIndexWpm = -1;
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -694,8 +708,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
+            this.Controls.Add(this.groupBox2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
