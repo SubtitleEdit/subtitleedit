@@ -468,7 +468,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = Utilities.RemoveSsaTags(text);
             text = HtmlUtil.FixInvalidItalicTags(text);
 
-            // Trying to parse and convert pararagraph content
+            // Trying to parse and convert paragraph content
             try
             {
                 text = string.Join("<br/>", text.SplitToLines());
@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return paragraph;
         }
 
-        private static void ConvertParagraphNodeToTtmlNode(XmlNode node, XmlDocument ttmlXml, XmlNode ttmlNode)
+        internal static void ConvertParagraphNodeToTtmlNode(XmlNode node, XmlDocument ttmlXml, XmlNode ttmlNode)
         {
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -897,7 +897,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
+        internal static void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
         {
             string beginAttr = TryGetAttribute(paragraph, "begin", TtmlNamespace);
             string endAttr = TryGetAttribute(paragraph, "end", TtmlNamespace);
