@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new MidwayInscriberCGX(),
                     new MPlayer2(),
                     new NciTimedRollUpCaptions(),
+                    new NetflixImsc11Japanese(),
                     new NetflixTimedText(),
                     new OgmChapters(),
                     new OpenDvt(),

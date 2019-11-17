@@ -23631,6 +23631,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAlignment_Click(object sender, EventArgs e)
         {
+            var formatType = GetCurrentSubtitleFormat().GetType();
+
+            if (formatType == typeof(NetflixImsc11Japanese))
+            {
+                using (var f = new AlignmentPickerJapanese(textBoxListViewText.Text))
+                {
+                    if (f.ShowDialog(this) == DialogResult.OK)
+                    {
+                        SetAlignment(f.ContentAlignment, true);
+                    }
+                }
+                return;
+            }
+
             using (var f = new AlignmentPicker())
             {
                 f.TopMost = true;
@@ -23640,8 +23654,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (f.ShowDialog(this) == DialogResult.OK)
                 {
                     string tag = string.Empty;
-                    var format = GetCurrentSubtitleFormat();
-                    if (format.GetType() == typeof(SubStationAlpha))
+                    if (formatType == typeof(SubStationAlpha))
                     {
                         //1: Bottom left
                         //2: Bottom center
@@ -23700,7 +23713,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 tag = "{\\an1}";
                                 break;
                             case ContentAlignment.BottomCenter:
-                                if (format.GetType() == typeof(SubRip))
+                                if (formatType == typeof(SubRip))
                                 {
                                     tag = string.Empty;
                                 }
@@ -25248,7 +25261,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsNetflixGlyphCheckAvailable()
         {
             var formatType = GetCurrentSubtitleFormat().GetType();
-            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText) || formatType == typeof(Ebu);
+            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText) || formatType == typeof(NetflixImsc11Japanese) || formatType == typeof(Ebu);
         }
 
         private void NetflixGlyphCheck(bool isSaving)
