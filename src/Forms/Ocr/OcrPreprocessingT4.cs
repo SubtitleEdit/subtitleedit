@@ -44,10 +44,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             RefreshImage();
         }
 
+        public static Bitmap ResizeBitmap(Bitmap b, int width, int height)
+        {
+            var result = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(result))
+            {
+                g.DrawImage(b, 0, 0, width, height);
+            }
+
+            return result;
+        }
+
         private void RefreshImage()
         {
             PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
             PreprocessingSettings.BinaryImageCompareThreshold = (int)numericUpDownThreshold.Value;
+            PreprocessingSettings.ScalingPercent = (int)numericUpDownScaling.Value;
 
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);
@@ -58,6 +70,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             n.MakeTwoColor((int)numericUpDownThreshold.Value, Color.White, Color.Black);
+
+            if (PreprocessingSettings.ScalingPercent > 100)
+            {
+                var bTemp = n.GetBitmap();
+                var f = PreprocessingSettings.ScalingPercent / 100.0;
+                var b = ResizeBitmap(bTemp, (int)Math.Round(bTemp.Width * f), (int)Math.Round(bTemp.Height * f));
+                bTemp.Dispose();
+                pictureBox1.Image = b;
+                return;
+            }
 
             pictureBox1.Image = n.GetBitmap();
         }
@@ -81,6 +103,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         private void checkBoxInvertColors_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshImage();
+        }
+
+        private void numericUpDownScaling_ValueChanged(object sender, EventArgs e)
         {
             RefreshImage();
         }
