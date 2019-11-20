@@ -40,11 +40,15 @@
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
+            this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
             this.groupBoxColors.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).BeginInit();
             this.SuspendLayout();
             // 
             // labelDescription
@@ -148,6 +152,9 @@
             // 
             this.groupBoxBinaryImageCompareThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.label4);
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.label1);
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownScaling);
             this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.labelDescription);
             this.groupBoxBinaryImageCompareThreshold.Location = new System.Drawing.Point(348, 12);
@@ -176,6 +183,47 @@
             this.checkBoxInvertColors.Text = "Invert colors";
             this.checkBoxInvertColors.UseVisualStyleBackColor = true;
             this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
+            // 
+            // numericUpDownScaling
+            // 
+            this.numericUpDownScaling.Location = new System.Drawing.Point(20, 181);
+            this.numericUpDownScaling.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numericUpDownScaling.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownScaling.Name = "numericUpDownScaling";
+            this.numericUpDownScaling.Size = new System.Drawing.Size(57, 20);
+            this.numericUpDownScaling.TabIndex = 17;
+            this.numericUpDownScaling.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownScaling.ValueChanged += new System.EventHandler(this.numericUpDownScaling_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 165);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Scaling";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(83, 183);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(15, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "%";
             // 
             // OcrPreprocessingT4
             // 
@@ -206,6 +254,7 @@
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
             this.groupBoxColors.ResumeLayout(false);
             this.groupBoxColors.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,5 +274,8 @@
         private System.Windows.Forms.GroupBox groupBoxBinaryImageCompareThreshold;
         private System.Windows.Forms.GroupBox groupBoxColors;
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDownScaling;
     }
 }

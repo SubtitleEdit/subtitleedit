@@ -15,10 +15,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public int BinaryImageCompareThreshold { get; set; }
 
+        public int ScalingPercent { get; set; }
+
+
         public PreprocessingSettings()
         {
             ColorToWhite = Color.Transparent;
             ColorToRemove = Color.Transparent;
+            ScalingPercent = 100;
         }
 
         public bool Active => ColorToWhite != Color.Transparent ||
@@ -27,6 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                               YellowToWhite ||
                               CropTransparentColors ||
                               CropLeftRight > 0 ||
-                              CropTopBottom > 0;
+                              CropTopBottom > 0 ||
+                              ScalingPercent != 100;
     }
 }

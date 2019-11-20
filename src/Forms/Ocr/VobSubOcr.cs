@@ -1657,6 +1657,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     nb.InvertColors();
                 }
+                if (_preprocessingSettings != null && _preprocessingSettings.ScalingPercent > 100)
+                {
+                    var bTemp = nb.GetBitmap();
+                    var f = _preprocessingSettings.ScalingPercent / 100.0;
+                    var b = ResizeBitmap(bTemp, (int)Math.Round(bTemp.Width * f), (int)Math.Round(bTemp.Height * f));
+                    bTemp.Dispose();
+                    nb = new NikseBitmap(b);
+                }
                 nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
                 returnBmp.Dispose();
                 return nb.GetBitmap();
@@ -1723,6 +1731,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_preprocessingSettings.ColorToRemove.A > 0)
                 {
                     n.ReplaceColor(_preprocessingSettings.ColorToRemove.A, _preprocessingSettings.ColorToRemove.R, _preprocessingSettings.ColorToRemove.G, _preprocessingSettings.ColorToRemove.B, Color.Transparent.A, Color.Transparent.R, Color.Transparent.G, Color.Transparent.B);
+                }
+
+                if (_preprocessingSettings.ScalingPercent > 100)
+                {
+                    var bTemp = n.GetBitmap();
+                    var f = _preprocessingSettings.ScalingPercent / 100.0;
+                    var b = ResizeBitmap(bTemp, (int)Math.Round(bTemp.Width * f), (int)Math.Round(bTemp.Height * f));
+                    bTemp.Dispose();
+                    n = new NikseBitmap(b);
                 }
             }
 
