@@ -393,44 +393,53 @@ namespace Nikse.SubtitleEdit.Controls
 
             try
             {
-                SubtitleFormat format = new AdvancedSubStationAlpha();
-                if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
-                {
-                    var oldSub = subtitle;
-                    subtitle = new Subtitle(subtitle);
-                    if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
-                    {
-                        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
-                        {
-                            var paragraph = subtitle.Paragraphs[index];
-                            paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
-                        }
-                    }
-                    var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
-                    var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
-                    Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
-                    Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
-                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
-                    Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
-                    Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
+                var format = new AdvancedSubStationAlpha();
+                string text;
 
-                    if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
+                if (subtitle.Header != null && subtitle.Header.Contains("lang=\"ja\"", StringComparison.Ordinal) && subtitle.Header.Contains("bouten-", StringComparison.Ordinal))
+                {
+                    text = NetflixImsc11Japanese.ToAss(subtitle, 1280, 720);
+                }
+                else
+                {
+                    if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                     {
-                        subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box,arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
-                                                                   Environment.NewLine + "Style: Default,");
-                        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                        var oldSub = subtitle;
+                        subtitle = new Subtitle(subtitle);
+                        if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
                         {
-                            var p = subtitle.Paragraphs[index];
-                            if (p.Text.Contains("<box>"))
+                            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {
-                                p.Extra = "Box";
-                                p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                                var paragraph = subtitle.Paragraphs[index];
+                                paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
+                            }
+                        }
+                        var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
+                        var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
+                        Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
+                        Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
+                        subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                        Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
+                        Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
+
+                        if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
+                        {
+                            subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box,arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
+                                                                       Environment.NewLine + "Style: Default,");
+                            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+                            {
+                                var p = subtitle.Paragraphs[index];
+                                if (p.Text.Contains("<box>"))
+                                {
+                                    p.Extra = "Box";
+                                    p.Text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                                }
                             }
                         }
                     }
+                    text = subtitle.ToText(format);
                 }
 
-                string text = subtitle.ToText(format);
 
                 if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
                 {

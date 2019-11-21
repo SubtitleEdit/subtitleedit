@@ -48,13 +48,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ContentAlignment = @"{\an4\frz-90\fn@}";
+            ContentAlignment = @"{\an7}";
             DialogResult = DialogResult.OK;
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            ContentAlignment = @"{\an6\frz-90\fn@}";
+            ContentAlignment = @"{\an9}";
             DialogResult = DialogResult.OK;
         }
 
@@ -68,11 +68,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 button5.Focus();
             }
-            else if (_text.StartsWith(@"{\an4", StringComparison.Ordinal))
+            else if (_text.StartsWith(@"{\an7", StringComparison.Ordinal))
             {
                 button4.Focus();
             }
-            else if (_text.StartsWith(@"{\an6", StringComparison.Ordinal))
+            else if (_text.StartsWith(@"{\an9", StringComparison.Ordinal))
             {
                 button6.Focus();
             }
