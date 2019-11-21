@@ -272,10 +272,10 @@ namespace Nikse.SubtitleEdit.Forms
             return duration / text.Length;
         }
 
-        private void MakeAnimation()
+        public void MakeAnimation()
         {
             TypewriterParagraphs = new List<Paragraph>();
-            double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
+            double duration = _paragraph.Duration.TotalMilliseconds - (double)numericUpDownDelay.Value * TimeCode.BaseUnit;
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
             double startMilliseconds;
