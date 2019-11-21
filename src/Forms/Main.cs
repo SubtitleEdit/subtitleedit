@@ -7484,7 +7484,6 @@ namespace Nikse.SubtitleEdit.Forms
                     mergeAfterToolStripMenuItem.Visible = false;
                     mergeBeforeToolStripMenuItem.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
-                    typeEffectToolStripMenuItem.Visible = false;
                     toolStripMenuItemMergeDialog.Visible = true;
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
@@ -7496,7 +7495,6 @@ namespace Nikse.SubtitleEdit.Forms
                     splitLineToolStripMenuItem.Visible = false;
                     mergeAfterToolStripMenuItem.Visible = false;
                     mergeBeforeToolStripMenuItem.Visible = false;
-                    typeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparator7.Visible = false;
 
                     if (SubtitleListview1.SelectedItems.Count > 25)
@@ -7527,7 +7525,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (formatType != typeof(SubRip))
                 {
-                    karokeeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1 && noNetWorkSession;
                 }
             }
@@ -11364,19 +11361,31 @@ namespace Nikse.SubtitleEdit.Forms
                     if (typewriter.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeTypeWriterEffect);
-                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                        int index = lastSelectedIndex;
-                        _subtitle.Paragraphs.RemoveAt(index);
                         bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
-                        foreach (var p in typewriter.TypewriterParagraphs)
+                        int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                        int i = SubtitleListview1.SelectedItems.Count - 1;
+                        while (i >= 0)
                         {
-                            if (isframeBased)
+                            var item = SubtitleListview1.SelectedItems[i];
+                            var p = _subtitle.GetParagraphOrDefault(item.Index);
+                            if (p != null)
                             {
-                                p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                                p.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                                typewriter.Initialize(p);
+                                typewriter.MakeAnimation();
+                                int index = item.Index;
+                                _subtitle.Paragraphs.RemoveAt(index);
+                                foreach (var tp in typewriter.TypewriterParagraphs)
+                                {
+                                    if (isframeBased)
+                                    {
+                                        tp.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                                        tp.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                                    }
+                                    _subtitle.Paragraphs.Insert(index, tp);
+                                    index++;
+                                }
                             }
-                            _subtitle.Paragraphs.Insert(index, p);
-                            index++;
+                            i--;
                         }
                         _subtitle.Renumber();
                         _subtitleListViewIndex = -1;
