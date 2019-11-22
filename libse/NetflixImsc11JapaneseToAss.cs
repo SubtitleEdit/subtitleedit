@@ -42,21 +42,35 @@ namespace Nikse.SubtitleEdit.Core
                 return MakeVerticalParagraphs(p, width);
             }
 
-            if (p.Text.Contains("<bouten-", StringComparison.Ordinal))
-            {
-                return MakeHorizontalParagraphs(p, width, height);
-            }
-
-            return new List<Paragraph> { p };
+            return MakeHorizontalParagraphs(p, width, height);
         }
 
         private static List<Paragraph> MakeHorizontalParagraphs(Paragraph p, int width, int height)
         {
             var lines = p.Text.SplitToLines();
             var adjustment = 34;
-            var startY = height - (20 + lines.Count * 2 * adjustment);
+            var startY = height - lines.Count * 2 * adjustment;
+            if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
+            {
+                startY = 40;
+            }
+
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
+            var rubyOn = false;
+
+            int startX;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                var actualText = NetflixImsc11Japanese.RemoveBoutens(HtmlUtil.RemoveHtmlTags(p.Text, true));
+                var actualTextSize = g.MeasureString(actualText, new Font(SystemFonts.DefaultFont.FontFamily, 20));
+                startX = (int)(width / 2.0 - actualTextSize.Width / 2.0);
+                if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))
+                {
+                    startY = (int)(height / 2.0 - actualTextSize.Height / 2.0);
+                }
+            }
+
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
@@ -103,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core
 
                         var tag = line.Substring(i + 1, end - i - 1);
                         var text = line.Substring(end + 1, endTagStart - end - 1);
+
                         foreach (var ch in text)
                         {
                             var furiganaChar = BoutenTagToUnicode(tag);
@@ -121,6 +136,63 @@ namespace Nikse.SubtitleEdit.Core
 
                         i = endTagEnd + 1;
                     }
+                    else if (line.Substring(i).StartsWith("<ruby-container>", StringComparison.Ordinal))
+                    {
+                        var baseTextStart = line.IndexOf("<ruby-base>", i, StringComparison.Ordinal);
+                        var baseTextEnd = line.IndexOf("</ruby-base>", i, StringComparison.Ordinal);
+                        if (baseTextStart < 0 || baseTextEnd < 0)
+                        {
+                            baseTextStart = line.IndexOf("<ruby-base-italic>", i, StringComparison.Ordinal);
+                            baseTextEnd = line.IndexOf("</ruby-base-italic>", i, StringComparison.Ordinal);
+                            if (baseTextStart < 0 || baseTextEnd < 0)
+                            {
+                                break;
+                            }
+                        }
+                        baseTextStart += "<ruby-base>".Length;
+                        var baseText = line.Substring(baseTextStart, baseTextEnd - baseTextStart);
+
+                        var extraText = string.Empty;
+                        var extraTextStart = line.IndexOf("<ruby-text>", i, StringComparison.Ordinal);
+                        var extraTextEnd = line.IndexOf("</ruby-text>", i, StringComparison.Ordinal);
+                        if (extraTextStart >= 0 || extraTextEnd >= 0 && extraTextStart < extraTextEnd)
+                        {
+                            extraTextStart += "<ruby-text>".Length;
+                            extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                        }
+
+                        var extraTextAfter = string.Empty;
+                        var extraTextStartAfter = line.IndexOf("<ruby-text-after>", i, StringComparison.Ordinal);
+                        var extraTextEndAfter = line.IndexOf("</ruby-text-after>", i, StringComparison.Ordinal);
+                        if (extraTextStartAfter >= 0 || extraTextEndAfter >= 0 && extraTextStartAfter < extraTextEndAfter)
+                        {
+                            extraTextStartAfter += "<ruby-text-after>".Length;
+                            extraText = line.Substring(extraTextStartAfter, extraTextEndAfter - extraTextStartAfter);
+                        }
+
+                        var preFurigana = string.Empty;
+                        if (actual.Length > 0)
+                        {
+                            preFurigana = $"{{\\alpha&FF&}}{actual.ToString().TrimEnd()}{{\\alpha&0&}}";
+                        }
+                        if (!string.IsNullOrWhiteSpace(extraText))
+                        {
+                            furiganaList.Add(new Paragraph($"{preFurigana}{{\\fs20}}{extraText}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                        }
+                        if (!string.IsNullOrWhiteSpace(extraTextAfter))
+                        {
+                            furiganaList.Add(new Paragraph($"{preFurigana}{{\\fs20}} {extraTextAfter}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                        }
+                        actual.Append(baseText);
+
+                        var endTagEnd = line.IndexOf("</ruby-container>", i, StringComparison.Ordinal);
+                        if (endTagEnd < 0)
+                        {
+                            break;
+                        }
+                        i = endTagEnd + "</ruby-container>".Length;
+                        rubyOn = true;
+                    }
                     else
                     {
                         actual.Append(line.Substring(i, 1));
@@ -129,14 +201,6 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var actualText = actual.ToString().TrimEnd();
-                int actualTextWidth;
-                using (var g = Graphics.FromHwnd(IntPtr.Zero))
-                {
-                    actualTextWidth = (int)g.MeasureString(actualText, new Font(SystemFonts.DefaultFont.FontFamily, 20)).Width;
-                }
-
-                int startX = width / 2 - (actualTextWidth / 2);
-
                 bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
                 if (displayBefore && furiganaList.Count > 0)
                 {
@@ -146,6 +210,10 @@ namespace Nikse.SubtitleEdit.Core
                         list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                     }
                     startY += adjustment;
+                    if (rubyOn && index == 0 && lines.Count == 2)
+                    {
+                        startY += 3;
+                    }
                 }
 
                 actualText = "{\\an1}{\\pos(" + startX + "," + startY + ")}" + actualText;
@@ -155,6 +223,11 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (!displayBefore && furiganaList.Count > 0)
                 {
+                    if (rubyOn && index == 1 && lines.Count == 2)
+                    {
+                        startY = (int)(startY - adjustment * 0.4);
+                    }
+
                     foreach (var fp in furiganaList)
                     {
                         var beforeText = "{\\an1}{\\pos(" + startX + "," + startY + ")}" + fp.Text;
@@ -182,10 +255,11 @@ namespace Nikse.SubtitleEdit.Core
 
             string pre = p.Text.Substring(0, 5);
             var list = new List<Paragraph>();
+            var furiganaList = new List<Paragraph>();
+            var rubyOn = false;
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
-                var furigana = new StringBuilder();
                 var actual = new StringBuilder();
                 int i = 0;
                 while (i < line.Length)
@@ -225,7 +299,6 @@ namespace Nikse.SubtitleEdit.Core
                         var text = line.Substring(end + 1, endTagStart - end - 1);
                         actual.Append(text);
                         actual.AppendLine();
-                        furigana.AppendLine(" ");
                         i = endTagStart + "</horizontalDigit>".Length;
                     }
                     else if (line.Substring(i).StartsWith("</horizontalDigit>", StringComparison.Ordinal))
@@ -255,9 +328,18 @@ namespace Nikse.SubtitleEdit.Core
                         var text = line.Substring(end + 1, endTagStart - end - 1);
                         foreach (var ch in text)
                         {
+                            var furiganaChar = BoutenTagToUnicode(tag);
+                            if (!string.IsNullOrWhiteSpace(furiganaChar))
+                            {
+                                var preFurigana = string.Empty;
+                                if (actual.Length > 0)
+                                {
+                                    preFurigana = $"{{\\alpha&FF&}}{actual}{{\\alpha&0&}}";
+                                }
+                                furiganaList.Add(new Paragraph($"{preFurigana}{furiganaChar}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                            }
                             actual.Append(ch);
                             actual.AppendLine();
-                            furigana.AppendLine(BoutenTagToUnicode(tag));
                         }
 
                         var endTagEnd = line.IndexOf('>', endTagStart);
@@ -268,21 +350,102 @@ namespace Nikse.SubtitleEdit.Core
 
                         i = endTagEnd + 1;
                     }
+                    else if (line.Substring(i).StartsWith("<ruby-container>", StringComparison.Ordinal))
+                    {
+                        var baseTextStart = line.IndexOf("<ruby-base>", i, StringComparison.Ordinal);
+                        var baseTextEnd = line.IndexOf("</ruby-base>", i, StringComparison.Ordinal);
+                        if (baseTextStart < 0 || baseTextEnd < 0)
+                        {
+                            break;
+                        }
+                        baseTextStart += "<ruby-base>".Length;
+                        var baseText = line.Substring(baseTextStart, baseTextEnd - baseTextStart);
+
+                        var extraText = string.Empty;
+                        var extraTextStart = line.IndexOf("<ruby-text>", i, StringComparison.Ordinal);
+                        var extraTextEnd = line.IndexOf("</ruby-text>", i, StringComparison.Ordinal);
+                        if (extraTextStart >= 0 || extraTextEnd >= 0 && extraTextStart < extraTextEnd)
+                        {
+                            extraTextStart += "<ruby-text>".Length;
+                            extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                        }
+
+                        var extraTextAfter = string.Empty;
+                        var extraTextStartAfter = line.IndexOf("<ruby-text-after>", i, StringComparison.Ordinal);
+                        var extraTextEndAfter = line.IndexOf("</ruby-text-after>", i, StringComparison.Ordinal);
+                        if (extraTextStartAfter >= 0 || extraTextEndAfter >= 0 && extraTextStartAfter < extraTextEndAfter)
+                        {
+                            extraTextStartAfter += "<ruby-text-after>".Length;
+                            extraText = line.Substring(extraTextStartAfter, extraTextEndAfter - extraTextStartAfter);
+                        }
+
+                        var preFurigana = string.Empty;
+                        if (actual.Length > 0)
+                        {
+                            preFurigana = $"{{\\alpha&FF&}}{actual.ToString().TrimEnd()}{{\\alpha&0&}}";
+                        }
+                        if (!string.IsNullOrWhiteSpace(extraText))
+                        {
+                            var sb = new StringBuilder();
+                            foreach (var ch in extraText)
+                            {
+                                sb.Append(ch);
+                                sb.AppendLine();
+                            }
+                            furiganaList.Add(new Paragraph($"{preFurigana}{{\\fs20}}{sb.ToString().TrimEnd()}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                        }
+                        if (!string.IsNullOrWhiteSpace(extraTextAfter))
+                        {
+                            var sb = new StringBuilder();
+                            foreach (var ch in extraTextAfter)
+                            {
+                                sb.Append(ch);
+                                sb.AppendLine();
+                            }
+                            furiganaList.Add(new Paragraph($"{preFurigana}{{\\fs20}} {sb.ToString().TrimEnd()}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                        }
+
+                        foreach (var ch in baseText)
+                        {
+                            actual.Append(ch);
+                            actual.AppendLine();
+                        }
+
+                        var endTagEnd = line.IndexOf("</ruby-container>", i, StringComparison.Ordinal);
+                        if (endTagEnd < 0)
+                        {
+                            break;
+                        }
+                        i = endTagEnd + "</ruby-container>".Length;
+                        rubyOn = true;
+                    }
                     else
                     {
-                        furigana.AppendLine(" ");
                         actual.AppendLine(line.Substring(i, 1));
                         i++;
                     }
                 }
 
                 bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
-                if (displayBefore && furigana.ToString().Trim().Length > 0)
+                if (displayBefore && furiganaList.Count > 0)
                 {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = pre + "\\pos(" + startX + ",40)}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                    foreach (var fp in furiganaList)
+                    {
+                        var text = pre + "\\pos(" + startX + ",45)}" + fp.Text.TrimEnd();
+                        list.Add(new Paragraph(text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                    }
                     startX -= adjustment;
+                    if (rubyOn && index == 0 && lines.Count == 2)
+                    {
+                        if (leftAlign)
+                        {
+                            startX -= 8;
+                        }
+                        else
+                        {
+                            startX += 16;
+                        }
+                    }
                 }
 
                 var actualText = actual.ToString().TrimEnd();
@@ -297,17 +460,29 @@ namespace Nikse.SubtitleEdit.Core
                         .Replace('⸺', '︱') // em dash
                         .Replace('ー', '⏐') //  // prolonged sound mark
                         .Replace('（', '︵')
-                        .Replace('）', '︶')
-                    ;
+                        .Replace('）', '︶');
 
                 list.Add(new Paragraph(actualText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                 startX -= adjustment;
 
-                if (!displayBefore && furigana.ToString().Trim().Length > 0)
+                if (!displayBefore && furiganaList.Count > 0)
                 {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = pre + "\\pos(" + startX + ",40)}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                    if (rubyOn && index == 1 && lines.Count == 2)
+                    {
+                        if (leftAlign)
+                        {
+                            startX += 14;
+                        }
+                        else
+                        {
+                            startX -= 8;
+                        }
+                    }
+                    foreach (var fp in furiganaList)
+                    {
+                        var text = pre + "\\pos(" + startX + ",45)}" + fp.Text.TrimEnd();
+                        list.Add(new Paragraph(text, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                    }
                     startX -= adjustment;
                 }
             }

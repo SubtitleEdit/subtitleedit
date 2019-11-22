@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = string.Join("<br/>", text.SplitToLines());
                 var paragraphContent = new XmlDocument();
                 paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
-                TimedText10.ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
+                ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
             }
             catch // Wrong markup, clear it
             {
@@ -135,6 +135,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return paragraph;
+        }
+
+        internal static void ConvertParagraphNodeToTtmlNode(XmlNode node, XmlDocument ttmlXml, XmlNode ttmlNode)
+        {
+            foreach (XmlNode child in node.ChildNodes)
+            {
+                if (child is XmlText)
+                {
+                    ttmlNode.AppendChild(ttmlXml.CreateTextNode(child.Value));
+                }
+                else if (child.Name == "br")
+                {
+                    XmlNode br = ttmlXml.CreateElement("br");
+                    ttmlNode.AppendChild(br);
+
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, br);
+                }
+                else if (child.Name == "i")
+                {
+                    XmlNode span = ttmlXml.CreateElement("span");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("style");
+                    attr.InnerText = "italic";
+                    span.Attributes.Append(attr);
+                    ttmlNode.AppendChild(span);
+
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
+                }
+                else if (child.Name.StartsWith("bouten-", StringComparison.Ordinal) || child.Name == "horizontalDigit" || child.Name.StartsWith("ruby-", StringComparison.Ordinal))
+                {
+                    var span = ttmlXml.CreateElement("span");
+                    var attr = ttmlXml.CreateAttribute("style");
+                    attr.InnerText = child.Name;
+                    span.Attributes.Append(attr);
+                    ttmlNode.AppendChild(span);
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
+                }
+                else // Default - skip node
+                {
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, ttmlNode);
+                }
+            }
         }
 
         private static string GetRegionFromText(string text)
@@ -299,6 +340,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool boutenAutoOutside = false;
                     bool boutenAuto = false;
                     bool horizontalDigit = false;
+                    bool rubyContainer = false;
+                    bool rubyBase = false;
+                    bool rubyBaseItalic = false;
+                    bool rubyText = false;
+                    bool rubyTextAfter = false;
 
                     // Composing styles
 
@@ -348,6 +394,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (styleName == "horizontalDigit")
                         {
                             horizontalDigit = true;
+                        }
+                        else if (styleName == "ruby-container")
+                        {
+                            rubyContainer = true;
+                        }
+                        else if (styleName == "ruby-base")
+                        {
+                            rubyBase = true;
+                        }
+                        else if (styleName == "ruby-base-italic")
+                        {
+                            rubyBaseItalic = true;
+                        }
+                        else if (styleName == "ruby-text")
+                        {
+                            rubyText = true;
+                        }
+                        else if (styleName == "ruby-text-after")
+                        {
+                            rubyTextAfter = true;
                         }
                         else if (styles.Contains(styleName))
                         {
@@ -408,6 +474,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         isItalic = true;
                     }
+                    else if (child.Attributes["style"] != null && child.Attributes["style"].Value == "italic")
+                    {
+                        isItalic = true;
+                    }
+
 
                     if (child.Attributes["tts:fontWeight"] != null && child.Attributes["tts:fontWeight"].Value == "bold")
                     {
@@ -520,6 +591,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append("<horizontalDigit>");
                     }
 
+                    if (rubyContainer)
+                    {
+                        pText.Append("<ruby-container>");
+                    }
+
+                    if (rubyBase)
+                    {
+                        pText.Append("<ruby-base>");
+                    }
+
+                    if (rubyBaseItalic)
+                    {
+                        pText.Append("<ruby-base-italic>");
+                    }
+
+                    if (rubyText)
+                    {
+                        pText.Append("<ruby-text>");
+                    }
+
+                    if (rubyTextAfter)
+                    {
+                        pText.Append("<ruby-text-after>");
+                    }
+
                     pText.Append(ReadParagraph(child, xml));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
@@ -596,10 +692,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         pText.Append("</horizontalDigit>");
                     }
+
+                    if (rubyBase)
+                    {
+                        pText.Append("</ruby-base>");
+                    }
+
+                    if (rubyBaseItalic)
+                    {
+                        pText.Append("</ruby-base-italic>");
+                    }
+
+                    if (rubyText)
+                    {
+                        pText.Append("</ruby-text>");
+                    }
+
+                    if (rubyTextAfter)
+                    {
+                        pText.Append("</ruby-text-after>");
+                    }
+
+                    if (rubyContainer)
+                    {
+                        pText.Append("</ruby-container>");
+                    }
                 }
             }
 
-            return pText.ToString().Trim();
+            return pText.ToString().TrimEnd();
         }
 
         public static string RemoveBoutens(string text)
@@ -636,7 +757,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("</bouten-auto>", string.Empty)
 
                 .Replace("<horizontalDigit>", string.Empty)
-                .Replace("</horizontalDigit>", string.Empty);
+                .Replace("</horizontalDigit>", string.Empty)
+
+                .Replace("<ruby-container>", string.Empty)
+                .Replace("</ruby-container>", string.Empty)
+
+                .Replace("<ruby-base>", string.Empty)
+                .Replace("</ruby-base>", string.Empty)
+
+                .Replace("<ruby-base-italic>", string.Empty)
+                .Replace("</ruby-base-italic>", string.Empty)
+
+                .Replace("<ruby-text>", string.Empty)
+                .Replace("</ruby-text>", string.Empty)
+
+                .Replace("<ruby-text-after>", string.Empty)
+                .Replace("</ruby-text-after>", string.Empty);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)

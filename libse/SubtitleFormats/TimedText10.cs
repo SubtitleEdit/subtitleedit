@@ -636,7 +636,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
                 }
-                else if (child.Name.StartsWith("bouten-", StringComparison.Ordinal) || child.Name == "horizontalDigit")
+                else if (child.Name.StartsWith("bouten-", StringComparison.Ordinal) || child.Name == "horizontalDigit" || child.Name.StartsWith("ruby-", StringComparison.Ordinal))
                 {
                     var span = ttmlXml.CreateElement("span");
                     var attr = ttmlXml.CreateAttribute("style");
