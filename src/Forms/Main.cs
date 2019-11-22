@@ -22146,6 +22146,38 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemWebVttVoice.Visible = false;
             }
 
+            if (formatType == typeof(NetflixImsc11Japanese) )
+            {
+                boldToolStripMenuItem1.Visible = false;
+                underlineToolStripMenuItem1.Visible = false;
+                colorToolStripMenuItem1.Visible = false;
+                fontNameToolStripMenuItem.Visible = false;
+                if (tb.SelectionLength > 0)
+                {
+                    toolStripMenuItemBouten.Visible = true;
+                }
+                else
+                {
+                    toolStripMenuItemBouten.Visible = false;
+                }
+                if (tb.SelectionLength > 1 && tb.SelectionLength < 8)
+                {
+                    toolStripMenuItemHorizontalDigits.Visible = true;
+                }
+                else
+                {
+                    toolStripMenuItemHorizontalDigits.Visible = false;
+                }
+            }
+            else
+            {
+                boldToolStripMenuItem1.Visible = true;
+                underlineToolStripMenuItem1.Visible = true;
+                colorToolStripMenuItem1.Visible = true;
+                fontNameToolStripMenuItem.Visible = true;
+                toolStripMenuItemBouten.Visible = false;
+            }
+
             if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1 && !string.IsNullOrEmpty(_videoFileName) && mediaPlayer != null &&
                 _subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -25893,6 +25925,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return RemoveAssAlignmentTags(p.Text);
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAlignment));
+        }
+
+        private void BoutenToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            TextBoxListViewToggleTag((sender as ToolStripMenuItem).Text);
+        }
+
+        private void toolStripMenuItemHorizontalDigits_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToggleTag("horizontalDigit");
         }
     }
 }
