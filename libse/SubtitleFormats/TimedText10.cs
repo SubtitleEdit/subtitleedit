@@ -636,7 +636,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
                 }
-                else    // Default - skip node
+                else if (child.Name.StartsWith("bouten-", StringComparison.Ordinal))
+                {
+                    var span = ttmlXml.CreateElement("span");
+                    var attr = ttmlXml.CreateAttribute("style");
+                    attr.InnerText = child.Name;
+                    span.Attributes.Append(attr);
+                    ttmlNode.AppendChild(span);
+                    ConvertParagraphNodeToTtmlNode(child, ttmlXml, span);
+                }
+                else // Default - skip node
                 {
                     ConvertParagraphNodeToTtmlNode(child, ttmlXml, ttmlNode);
                 }

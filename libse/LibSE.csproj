@@ -198,6 +198,7 @@
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="IsoCountryCodes.cs" />
+    <Compile Include="NetflixImsc11JapaneseToAss.cs" />
     <Compile Include="PlainTextImporter.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="SeJsonValidator.cs" />

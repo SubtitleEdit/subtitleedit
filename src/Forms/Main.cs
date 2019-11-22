@@ -544,7 +544,6 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
 
-
             else if (e.KeyData == _shortcuts.MainListViewAlignmentN1)
             {
                 SetAlignment("{\\an1}", false);
@@ -20196,13 +20195,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (tb.SelectionLength == 0)
             {
-                tb.Text = HtmlUtil.RemoveHtmlTags(tb.Text);
+                var allText = HtmlUtil.RemoveHtmlTags(tb.Text);
+                allText = NetflixImsc11Japanese.RemoveBoutens(allText);
+                tb.Text = allText;
                 return;
             }
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
             text = HtmlUtil.RemoveHtmlTags(text);
+            text = NetflixImsc11Japanese.RemoveBoutens(text);
             tb.SelectedText = text;
             tb.SelectionStart = selectionStart;
             tb.SelectionLength = text.Length;
@@ -25769,6 +25771,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunActionOnAllParagraphs((p) =>
             {
                 var s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
+                s = NetflixImsc11Japanese.RemoveBoutens(s);
                 return HtmlUtil.RemoveHtmlTags(s, true).Trim();
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAll));
         }
