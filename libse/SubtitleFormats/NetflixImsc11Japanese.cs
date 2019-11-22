@@ -345,6 +345,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool rubyBaseItalic = false;
                     bool rubyText = false;
                     bool rubyTextAfter = false;
+                    bool rubyTextItalic = false;
 
                     // Composing styles
 
@@ -414,6 +415,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (styleName == "ruby-text-after")
                         {
                             rubyTextAfter = true;
+                        }
+                        else if (styleName == "ruby-text-italic")
+                        {
+                            rubyTextItalic = true;
                         }
                         else if (styles.Contains(styleName))
                         {
@@ -616,6 +621,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append("<ruby-text-after>");
                     }
 
+                    if (rubyTextItalic)
+                    {
+                        pText.Append("<ruby-text-italic>");
+                    }
+
                     pText.Append(ReadParagraph(child, xml));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
@@ -713,6 +723,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append("</ruby-text-after>");
                     }
 
+                    if (rubyTextItalic)
+                    {
+                        pText.Append("</ruby-text-italic>");
+                    }
+
                     if (rubyContainer)
                     {
                         pText.Append("</ruby-container>");
@@ -772,7 +787,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("</ruby-text>", string.Empty)
 
                 .Replace("<ruby-text-after>", string.Empty)
-                .Replace("</ruby-text-after>", string.Empty);
+                .Replace("</ruby-text-after>", string.Empty)
+
+                .Replace("<ruby-text-italic>", string.Empty)
+                .Replace("</ruby-text-italic>", string.Empty);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)

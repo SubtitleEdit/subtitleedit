@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var lines = p.Text.SplitToLines();
             var adjustment = 34;
-            var startY = height - lines.Count * 2 * adjustment;
+            var startY = height - lines.Count * 2 * adjustment + 30;
             if (p.Text.StartsWith("{\\an8", StringComparison.Ordinal))
             {
                 startY = 40;
@@ -159,6 +159,17 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             extraTextStart += "<ruby-text>".Length;
                             extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                        }
+
+                        if (string.IsNullOrEmpty(extraText))
+                        {
+                            extraTextStart = line.IndexOf("<ruby-text-italic>", i, StringComparison.Ordinal);
+                            extraTextEnd = line.IndexOf("</ruby-text-italic>", i, StringComparison.Ordinal);
+                            if (extraTextStart >= 0 || extraTextEnd >= 0 && extraTextStart < extraTextEnd)
+                            {
+                                extraTextStart += "<ruby-text-italic>".Length;
+                                extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                            }
                         }
 
                         var extraTextAfter = string.Empty;

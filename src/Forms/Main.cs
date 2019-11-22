@@ -8454,6 +8454,7 @@ namespace Nikse.SubtitleEdit.Forms
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
             text = HtmlUtil.RemoveHtmlTags(text, true);
+            text = NetflixImsc11Japanese.RemoveBoutens(text);
             UiUtil.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
