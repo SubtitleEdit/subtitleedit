@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (subtitle.Header != null && subtitle.Header.Contains("lang=\"ja\"", StringComparison.Ordinal) && subtitle.Header.Contains("bouten-", StringComparison.Ordinal))
                 {
-                    text = NetflixImsc11Japanese.ToAss(subtitle, 1280, 720);
+                    text = NetflixImsc11JapaneseToAss.Convert(subtitle, 1280, 720);
                 }
                 else
                 {

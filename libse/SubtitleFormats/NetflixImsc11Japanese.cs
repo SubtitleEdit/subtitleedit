@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -121,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 text = Utilities.RemoveSsaTags(text);
                 text = string.Join("<br/>", text.SplitToLines());
-                text = SetFuriganaDots(text);
+                //text = SetFuriganaDots(text);
                 var paragraphContent = new XmlDocument();
                 paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
                 TimedText10.ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
@@ -133,40 +132,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return paragraph;
-        }
-
-        private static string SetFuriganaDots(string text)
-        {
-            return text
-                .Replace("<bouten-dot-before>", "<span style=\"bouten-dot-before\">")
-                .Replace("</bouten-dot-before>", "</span>")
-
-                .Replace("<bouten-dot-after>", "<span style=\"bouten-dot-after\">")
-                .Replace("</bouten-dot-after>", "</span>")
-
-                .Replace("<bouten-dot-outside>", "<span style=\"bouten-dot-outside\">")
-                .Replace("</bouten-dot-outside>", "</span>")
-
-                .Replace("<bouten-filled-circle-outside>", "<span style=\"bouten-filled-circle-outside\">")
-                .Replace("</bouten-filled-circle-outside>", "</span>")
-
-                .Replace("<bouten-open-circle-outside>", "<span style=\"bouten-open-circle-outside\">")
-                .Replace("</bouten-open-circle-outside>", "</span>")
-
-                .Replace("<bouten-open-dot-outside>", "<span style=\"bouten-open-dot-outside\">")
-                .Replace("</bouten-open-dot-outside>", "</span>")
-
-                .Replace("<bouten-filled-sesame-outside>", "<span style=\"bouten-filled-sesame-outside\">")
-                .Replace("</bouten-filled-sesame-outside>", "</span>")
-
-                .Replace("<bouten-open-sesame-outside>", "<span style=\"bouten-open-sesame-outside\">")
-                .Replace("</bouten-open-sesame-outside>", "</span>")
-
-                .Replace("<bouten-auto-outside>", "<span style=\"bouten-auto-outside\">")
-                .Replace("</bouten-auto-outside>", "</span>")
-
-                .Replace("<bouten-auto>", "<span style=\"bouten-auto\">")
-                .Replace("</bouten-auto>", "</span>");
         }
 
         private static string GetRegionFromText(string text)
@@ -196,14 +161,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "bottom-left-justified";
         }
 
-        private string GetAssStyleFromRegion(string region)
+        private static string GetAssStyleFromRegion(string region)
         {
             switch (region)
             {
                 case "top-center-justified": return @"{\an8}";
                 case "force-narrative-example-region": return @"{\an5}";
-                case "left": return @"{\an7}"; // @"{\an4\frz-90\fn@}";
-                case "right": return @"{\an9}"; // @"{\an6\frz-90\fn@}";
+                case "left": return @"{\an7}";
+                case "right": return @"{\an9}";
                 default: return string.Empty;
             }
         }
@@ -619,295 +584,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return pText.ToString().Trim();
         }
 
-        private static string BoutenTagToUnicode(string tag)
+        public static string RemoveBoutens(string text)
         {
-            switch (tag)
-            {
-                case "bouten-dot-before":
-                case "bouten-dot-after":
-                case "bouten-dot-outside":
-                    return "•";
-                case "bouten-filled-circle-outside":
-                    return "●";
-                case "bouten-open-circle-outside":
-                    return "○";
-                case "bouten-open-dot-outside":
-                    return "◦";
-                case "bouten-filled-sesame-outside":
-                    return "﹅";
-                case "bouten-open-sesame-outside":
-                    return "﹆";
-                case "bouten-auto-outside":
-                case "bouten-auto":
-                    return "﹅";
-                default:
-                    return " ";
-            }
-        }
+            return text
+                .Replace("<bouten-dot-before>", string.Empty)
+                .Replace("</bouten-dot-before>", string.Empty)
 
-        public static List<Paragraph> SplitToAssRenderLines(Paragraph p, int width, int height)
-        {
-            if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // vertical text
-            {
-                return MakeVerticalParagraphs(p, width);
-            }
+                .Replace("<bouten-dot-after>", string.Empty)
+                .Replace("</bouten-dot-after>", string.Empty)
 
-            if (p.Text.Contains("<bouten-", StringComparison.Ordinal))
-            {
-                return MakeHorizontalParagraphs(p, width, height);
-            }
+                .Replace("<bouten-dot-outside>", string.Empty)
+                .Replace("</bouten-dot-outside>", string.Empty)
 
-            return new List<Paragraph> { p };
-        }
+                .Replace("<bouten-filled-circle-outside>", string.Empty)
+                .Replace("</bouten-filled-circle-outside>", string.Empty)
 
-        private static List<Paragraph> MakeHorizontalParagraphs(Paragraph p, int width, int height)
-        {
-            var lines = p.Text.SplitToLines();
-            var adjustment = 25;
-            var startY = height - (20 + lines.Count * 2 * adjustment);
-            var list = new List<Paragraph>();
-            for (var index = 0; index < lines.Count; index++)
-            {
-                var line = lines[index];
-                var furigana = new StringBuilder();
-                var actual = new StringBuilder();
-                int i = 0;
-                while (i < line.Length)
-                {
-                    if (line.Substring(i).StartsWith("{\\"))
-                    {
-                        var end = line.IndexOf('}', i);
-                        if (end < 0)
-                        {
-                            break;
-                        }
+                .Replace("<bouten-open-circle-outside>", string.Empty)
+                .Replace("</bouten-open-circle-outside>", string.Empty)
 
-                        i = end + 1;
-                    }
-                    else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
-                    {
-                        i += 3;
-                    }
-                    else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
-                    {
-                        i += 4;
-                    }
-                    else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
-                    {
-                        var end = line.IndexOf('>', i);
-                        if (end < 0)
-                        {
-                            break;
-                        }
+                .Replace("<bouten-open-dot-outside>", string.Empty)
+                .Replace("</bouten-open-dot-outside>", string.Empty)
 
-                        if (end + 1 >= line.Length)
-                        {
-                            break;
-                        }
+                .Replace("<bouten-filled-sesame-outside>", string.Empty)
+                .Replace("</bouten-filled-sesame-outside>", string.Empty)
 
-                        var endTagStart = line.IndexOf("</", end, StringComparison.Ordinal);
-                        if (endTagStart < 0)
-                        {
-                            break;
-                        }
+                .Replace("<bouten-open-sesame-outside>", string.Empty)
+                .Replace("</bouten-open-sesame-outside>", string.Empty)
 
-                        var tag = line.Substring(i + 1, end - i - 1);
-                        var text = line.Substring(end + 1, endTagStart - end - 1);
-                        foreach (var ch in text)
-                        {
-                            actual.Append(ch);
-                            var furiganaChar = BoutenTagToUnicode(tag);
-                        }
+                .Replace("<bouten-auto-outside>", string.Empty)
+                .Replace("</bouten-auto-outside>", string.Empty)
 
-                        var endTagEnd = line.IndexOf('>', endTagStart);
-                        if (endTagEnd < 0)
-                        {
-                            break;
-                        }
-
-                        i = endTagEnd + 1;
-                    }
-                    else
-                    {
-                        furigana.AppendLine(" ");
-                        actual.Append(line.Substring(i, 1));
-                        i++;
-                    }
-                }
-
-                int startX = 200;
-                bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
-                if (displayBefore && furigana.ToString().Trim().Length > 0)
-                {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = "{\\pos(" + startX + "," + startY + ")}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                    startY += adjustment;
-                }
-
-                var actualText = actual.ToString().TrimEnd();
-                actualText = "{\\pos(" + startX + "," + startY + ")}" + actualText;
-
-                list.Add(new Paragraph(actualText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                startY += adjustment;
-
-                if (!displayBefore && furigana.ToString().Trim().Length > 0)
-                {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = "{\\pos(" + startX + "," + startY + ")}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                    startY += adjustment;
-                }
-            }
-
-            return list;
+                .Replace("<bouten-auto>", string.Empty)
+                .Replace("</bouten-auto>", string.Empty);
         }
 
 
-        private static List<Paragraph> MakeVerticalParagraphs(Paragraph p, int width)
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var lines = p.Text.SplitToLines();
-            var adjustment = 25;
-            var startX = 9 + lines.Count * 2 * adjustment;
-            var leftAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
-            if (!leftAlign)
+            foreach (var p in subtitle.Paragraphs)
             {
-                startX = width - 50;
+                p.Text = RemoveBoutens(p.Text);
             }
-
-            string pre = p.Text.Substring(0, 5);
-            var list = new List<Paragraph>();
-            for (var index = 0; index < lines.Count; index++)
-            {
-                var line = lines[index];
-                var furigana = new StringBuilder();
-                var actual = new StringBuilder();
-                int i = 0;
-                while (i < line.Length)
-                {
-                    if (line.Substring(i).StartsWith("{\\"))
-                    {
-                        var end = line.IndexOf('}', i);
-                        if (end < 0)
-                        {
-                            break;
-                        }
-
-                        i = end + 1;
-                    }
-                    else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
-                    {
-                        i += 3;
-                    }
-                    else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
-                    {
-                        i += 4;
-                    }
-                    else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
-                    {
-                        var end = line.IndexOf('>', i);
-                        if (end < 0)
-                        {
-                            break;
-                        }
-
-                        if (end + 1 >= line.Length)
-                        {
-                            break;
-                        }
-
-                        var endTagStart = line.IndexOf("</", end, StringComparison.Ordinal);
-                        if (endTagStart < 0)
-                        {
-                            break;
-                        }
-
-                        var tag = line.Substring(i + 1, end - i - 1);
-                        var text = line.Substring(end + 1, endTagStart - end - 1);
-                        foreach (var ch in text)
-                        {
-                            actual.Append(ch);
-                            actual.AppendLine();
-                            furigana.AppendLine(BoutenTagToUnicode(tag));
-                        }
-
-                        var endTagEnd = line.IndexOf('>', endTagStart);
-                        if (endTagEnd < 0)
-                        {
-                            break;
-                        }
-
-                        i = endTagEnd + 1;
-                    }
-                    else
-                    {
-                        furigana.AppendLine(" ");
-                        actual.AppendLine(line.Substring(i, 1));
-                        i++;
-                    }
-                }
-
-                bool displayBefore = lines.Count == 2 && index == 0 || lines.Count == 1;
-                if (displayBefore && furigana.ToString().Trim().Length > 0)
-                {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = pre + "\\pos(" + startX + ",40)}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                    startX -= adjustment;
-                }
-
-                var actualText = actual.ToString().TrimEnd();
-                actualText = pre + "\\pos(" + startX + ",40)}" + actualText;
-
-                // change horizontal chars to vertical version
-                actualText = actualText
-                        .Replace('…', '⋮')
-                        .Replace('〈', '︿')
-                        .Replace('〉', '﹀')
-                        .Replace('—', '︱') // em dash
-                        .Replace('⸺', '︱') // em dash
-                        .Replace('ー', '⏐') //  // prolonged sound mark
-                        .Replace('（', '︵')
-                        .Replace('）', '︶')
-                    ;
-
-                list.Add(new Paragraph(actualText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                startX -= adjustment;
-
-                if (!displayBefore && furigana.ToString().Trim().Length > 0)
-                {
-                    var beforeText = furigana.ToString().TrimEnd();
-                    beforeText = pre + "\\pos(" + startX + ",40)}" + beforeText;
-                    list.Add(new Paragraph(beforeText, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                    startX -= adjustment;
-                }
-            }
-
-            return list;
-        }
-
-        public static string ToAss(Subtitle subtitle, int width, int height)
-        {
-            var finalSub = new Subtitle();
-            foreach (var paragraph in subtitle.Paragraphs)
-            {
-                finalSub.Paragraphs.AddRange(SplitToAssRenderLines(paragraph, width, height));
-            }
-
-            var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
-            var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
-            Configuration.Settings.SubtitleSettings.SsaFontSize = 30; // font size
-            Configuration.Settings.SubtitleSettings.SsaFontBold = false;
-            finalSub.Header = AdvancedSubStationAlpha.DefaultHeader;
-            Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
-            Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
-
-            finalSub.Header = finalSub.Header.Replace("PlayDepth: 0", @"PlayDepth: 0
-PlayResX: 1280
-PlayResY: 720").Replace("1280", width.ToString(CultureInfo.InvariantCulture))
-               .Replace("720", height.ToString(CultureInfo.InvariantCulture));
-
-            return finalSub.ToText(new AdvancedSubStationAlpha());
         }
     }
 }
