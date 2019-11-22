@@ -37,9 +37,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(108, 287);
+            this.button2.Location = new System.Drawing.Point(108, 268);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(282, 39);
+            this.button2.Size = new System.Drawing.Size(282, 60);
             this.button2.TabIndex = 17;
             this.button2.Text = "bottom-left-justified\r\n(normal text)";
             this.button2.UseVisualStyleBackColor = true;
@@ -49,7 +49,7 @@
             // 
             this.button6.Location = new System.Drawing.Point(396, 12);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(103, 314);
+            this.button6.Size = new System.Drawing.Size(90, 314);
             this.button6.TabIndex = 15;
             this.button6.Text = "R\r\ni\r\ng\r\nh\r\nt";
             this.button6.UseVisualStyleBackColor = true;
@@ -57,9 +57,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(108, 143);
+            this.button5.Location = new System.Drawing.Point(108, 138);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(282, 53);
+            this.button5.Size = new System.Drawing.Size(282, 60);
             this.button5.TabIndex = 14;
             this.button5.Text = "force-narrative-example-region \r\n(exceptional cases for forced narrative events)";
             this.button5.UseVisualStyleBackColor = true;
@@ -79,7 +79,7 @@
             // 
             this.button8.Location = new System.Drawing.Point(108, 12);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(282, 43);
+            this.button8.Size = new System.Drawing.Size(282, 60);
             this.button8.TabIndex = 11;
             this.button8.Text = "top-center-justified \r\n(English text only)";
             this.button8.UseVisualStyleBackColor = true;
@@ -89,7 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 340);
+            this.ClientSize = new System.Drawing.Size(499, 340);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
