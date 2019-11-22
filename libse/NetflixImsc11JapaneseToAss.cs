@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core
         private static List<Paragraph> MakeHorizontalParagraphs(Paragraph p, int width, int height)
         {
             var lines = p.Text.SplitToLines();
-            var adjustment = 32;
+            var adjustment = 34;
             var startY = height - (20 + lines.Count * 2 * adjustment);
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core
         private static List<Paragraph> MakeVerticalParagraphs(Paragraph p, int width)
         {
             var lines = p.Text.SplitToLines();
-            var adjustment = 32;
+            var adjustment = 34;
             var startX = 9 + lines.Count * 2 * adjustment;
             var leftAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
             if (!leftAlign)
@@ -207,6 +207,30 @@ namespace Nikse.SubtitleEdit.Core
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
                         i += 4;
+                    }
+                    else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
+                    {
+                        var end = line.IndexOf('>', i);
+                        if (end < 0)
+                        {
+                            break;
+                        }
+
+                        var endTagStart = line.IndexOf("</", end, StringComparison.Ordinal);
+                        if (endTagStart < 0)
+                        {
+                            break;
+                        }
+
+                        var text = line.Substring(end + 1, endTagStart - end - 1);
+                        actual.Append(text);
+                        actual.AppendLine();
+                        furigana.AppendLine(" ");
+                        i = endTagStart + "</horizontalDigit>".Length;
+                    }
+                    else if (line.Substring(i).StartsWith("</horizontalDigit>", StringComparison.Ordinal))
+                    {
+                        i += "</horizontalDigit>".Length;
                     }
                     else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
                     {

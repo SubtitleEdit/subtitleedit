@@ -6,6 +6,10 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
+    /// <summary>
+    /// IMSC1 Viewer: http://sandflow.com/imsc1_1/
+    /// More about bouten/furigana: https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html
+    /// </summary>
     public class NetflixImsc11Japanese : SubtitleFormat
     {
         public override string Extension => ".xml";
@@ -120,7 +124,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 text = Utilities.RemoveSsaTags(text);
                 text = string.Join("<br/>", text.SplitToLines());
-                //text = SetFuriganaDots(text);
                 var paragraphContent = new XmlDocument();
                 paragraphContent.LoadXml($"<root>{text.Replace("&", "&amp;")}</root>");
                 TimedText10.ConvertParagraphNodeToTtmlNode(paragraphContent.DocumentElement, xml, paragraph);
@@ -295,6 +298,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool boutenOpenSesameOutside = false;
                     bool boutenAutoOutside = false;
                     bool boutenAuto = false;
+                    bool horizontalDigit = false;
 
                     // Composing styles
 
@@ -340,6 +344,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (styleName == "bouten-auto")
                         {
                             boutenAuto = true;
+                        }
+                        else if (styleName == "horizontalDigit")
+                        {
+                            horizontalDigit = true;
                         }
                         else if (styles.Contains(styleName))
                         {
@@ -507,6 +515,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append("<bouten-auto>");
                     }
 
+                    if (horizontalDigit)
+                    {
+                        pText.Append("<horizontalDigit>");
+                    }
+
                     pText.Append(ReadParagraph(child, xml));
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
@@ -578,6 +591,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         pText.Append("</bouten-auto>");
                     }
+
+                    if (horizontalDigit)
+                    {
+                        pText.Append("</horizontalDigit>");
+                    }
                 }
             }
 
@@ -615,9 +633,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("</bouten-auto-outside>", string.Empty)
 
                 .Replace("<bouten-auto>", string.Empty)
-                .Replace("</bouten-auto>", string.Empty);
-        }
+                .Replace("</bouten-auto>", string.Empty)
 
+                .Replace("<horizontalDigit>", string.Empty)
+                .Replace("</horizontalDigit>", string.Empty);
+        }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
