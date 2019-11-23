@@ -635,6 +635,12 @@
     <Compile Include="Forms\RestoreAutoBackup.Designer.cs">
       <DependentUpon>RestoreAutoBackup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RubyJapanese.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RubyJapanese.Designer.cs">
+      <DependentUpon>RubyJapanese.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SeekSilence.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1349,6 +1355,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RestoreAutoBackup.resx">
       <DependentUpon>RestoreAutoBackup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RubyJapanese.resx">
+      <DependentUpon>RubyJapanese.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SeekSilence.resx">
       <DependentUpon>SeekSilence.cs</DependentUpon>

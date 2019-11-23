@@ -22638,13 +22638,16 @@ namespace Nikse.SubtitleEdit.Forms
                 underlineToolStripMenuItem1.Visible = false;
                 colorToolStripMenuItem1.Visible = false;
                 fontNameToolStripMenuItem.Visible = false;
+                toolStripMenuItemHorizontalDigits.Visible = true;
                 if (tb.SelectionLength > 0)
                 {
                     toolStripMenuItemBouten.Visible = true;
+                    toolStripMenuItemRuby.Visible = true;
                 }
                 else
                 {
                     toolStripMenuItemBouten.Visible = false;
+                    toolStripMenuItemRuby.Visible = true;
                 }
 
                 if (tb.SelectionLength > 1 && tb.SelectionLength < 8)
@@ -22663,6 +22666,8 @@ namespace Nikse.SubtitleEdit.Forms
                 colorToolStripMenuItem1.Visible = true;
                 fontNameToolStripMenuItem.Visible = true;
                 toolStripMenuItemBouten.Visible = false;
+                toolStripMenuItemRuby.Visible = false;
+                toolStripMenuItemHorizontalDigits.Visible = false;
             }
 
             if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1 && !string.IsNullOrEmpty(_videoFileName) && mediaPlayer != null &&
@@ -26515,6 +26520,55 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx - 1), _subtitle.GetParagraphOrDefault(idx + 1));
                 mediaPlayer.CurrentPosition = audioVisualizer.NewSelectionParagraph.EndTime.TotalSeconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
                 audioVisualizer.NewSelectionParagraph = null;
+            }
+        }
+
+        private void toolStripMenuItemRuby_Click(object sender, EventArgs e)
+        {
+            var tb = GetFocusedTextBox();
+            string before = string.Empty;
+            string text = tb.SelectedText;
+            string after = string.Empty;
+
+            int selectionStart = tb.SelectionStart;
+            if (selectionStart > 0)
+            {
+                before = tb.Text.Substring(0, selectionStart);
+            }
+
+            if (tb.Text.Length > selectionStart + text.Length)
+            {
+                after = tb.Text.Remove(0, selectionStart + text.Length);
+            }
+
+            if (text.StartsWith(' '))
+            {
+                before += " ";
+                text = text.TrimStart();
+            }
+
+            if (text.EndsWith(' '))
+            {
+                after = " " + after;
+            }
+
+            using (var form = new RubyJapanese(before, text, after))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                var rubyText = form.RubyText;
+                if (form.RubyItalic)
+                {
+                    rubyText = "<ruby-text-italic>" + rubyText + "</ruby-text-italic>";
+                }
+                else
+                {
+                    rubyText = "<ruby-text>" + rubyText + "</ruby-text>";
+                }
+                tb.SelectedText = before + "<ruby-container><ruby-base>" + text + "</ruby-base>" + rubyText + "</ruby-container>" + after;
             }
         }
     }
