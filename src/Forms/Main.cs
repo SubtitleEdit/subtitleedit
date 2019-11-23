@@ -25930,11 +25930,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BoutenToolStripMenuItemClick(object sender, EventArgs e)
         {
+            MakeHistoryForUndo(string.Format(_language.BeforeX, (sender as ToolStripMenuItem).Text));
             TextBoxListViewToggleTag((sender as ToolStripMenuItem).Text);
         }
 
         private void toolStripMenuItemHorizontalDigits_Click(object sender, EventArgs e)
         {
+            MakeHistoryForUndo(string.Format(_language.BeforeX, "horizontalDigit"));
             TextBoxListViewToggleTag("horizontalDigit");
         }
     }
