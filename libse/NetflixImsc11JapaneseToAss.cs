@@ -90,10 +90,12 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                     {
+                        actual.Append("{\\i1}");
                         i += 3;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
+                        actual.Append("{\\i0}");
                         i += 4;
                     }
                     else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
@@ -287,10 +289,12 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                     {
+                        actual.Append("{\\i1}");
                         i += 3;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
+                        actual.Append("{\\i0}");
                         i += 4;
                     }
                     else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
@@ -367,7 +371,12 @@ namespace Nikse.SubtitleEdit.Core
                         var baseTextEnd = line.IndexOf("</ruby-base>", i, StringComparison.Ordinal);
                         if (baseTextStart < 0 || baseTextEnd < 0)
                         {
-                            break;
+                            baseTextStart = line.IndexOf("<ruby-base-italic>", i, StringComparison.Ordinal);
+                            baseTextEnd = line.IndexOf("</ruby-base-italic>", i, StringComparison.Ordinal);
+                            if (baseTextStart < 0 || baseTextEnd < 0)
+                            {
+                                break;
+                            }
                         }
                         baseTextStart += "<ruby-base>".Length;
                         var baseText = line.Substring(baseTextStart, baseTextEnd - baseTextStart);
@@ -379,6 +388,17 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             extraTextStart += "<ruby-text>".Length;
                             extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                        }
+
+                        if (string.IsNullOrEmpty(extraText))
+                        {
+                            extraTextStart = line.IndexOf("<ruby-text-italic>", i, StringComparison.Ordinal);
+                            extraTextEnd = line.IndexOf("</ruby-text-italic>", i, StringComparison.Ordinal);
+                            if (extraTextStart >= 0 || extraTextEnd >= 0 && extraTextStart < extraTextEnd)
+                            {
+                                extraTextStart += "<ruby-text-italic>".Length;
+                                extraText = line.Substring(extraTextStart, extraTextEnd - extraTextStart);
+                            }
                         }
 
                         var extraTextAfter = string.Empty;
@@ -469,7 +489,7 @@ namespace Nikse.SubtitleEdit.Core
                         .Replace('〉', '﹀')
                         .Replace('—', '︱') // em dash
                         .Replace('⸺', '︱') // em dash
-                        .Replace('ー', '⏐') //  // prolonged sound mark
+                        .Replace('ー', '⏐') // prolonged sound mark
                         .Replace('（', '︵')
                         .Replace('）', '︶');
 
