@@ -7,8 +7,9 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// IMSC1 Viewer: http://sandflow.com/imsc1_1/
+    /// IMSC 1.1 Viewer: http://sandflow.com/imsc1_1/
     /// More about bouten/furigana: https://www.japanesewithanime.com/2018/03/furigana-dots-bouten.html
+    /// Netflix blog entry: https://medium.com/netflix-techblog/implementing-japanese-subtitles-on-netflix-c165fbe61989
     /// </summary>
     public class NetflixImsc11Japanese : SubtitleFormat
     {
