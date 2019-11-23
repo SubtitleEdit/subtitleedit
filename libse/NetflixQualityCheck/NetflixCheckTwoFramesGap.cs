@@ -8,6 +8,11 @@
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            if (controller.Language == "ja")
+            {
+                return;
+            }
+
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 Paragraph p = subtitle.Paragraphs[index];
@@ -16,7 +21,7 @@
                 if (next != null && p.EndTime.TotalMilliseconds + twoFramesGap > next.StartTime.TotalMilliseconds)
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
-                    string comment = "Mininum two frames gap";
+                    string comment = "Minimum two frames gap";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

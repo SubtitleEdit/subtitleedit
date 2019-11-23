@@ -147,9 +147,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             Records = new List<Record>();
         }
 
-        public void AddRecord(Paragraph originalParagraph, string timecod, string context, string comment)
+        public void AddRecord(Paragraph originalParagraph, string timeCode, string context, string comment)
         {
-            Records.Add(new Record(timecod, context, comment) { OriginalParagraph = originalParagraph });
+            Records.Add(new Record(timeCode, context, comment) { OriginalParagraph = originalParagraph });
         }
 
         public void AddRecord(Paragraph originalParagraph, string comment)
