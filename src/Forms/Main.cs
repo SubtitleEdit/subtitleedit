@@ -9105,6 +9105,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     TextBoxListViewToggleTag(HtmlUtil.TagItalic);
+                    e.SuppressKeyPress = true;
                 }
             }
 
@@ -22145,6 +22146,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     TextBoxListViewToggleTag(HtmlUtil.TagItalic);
+                    e.SuppressKeyPress = true;
                 }
             }
 
@@ -26568,7 +26570,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     rubyText = "<ruby-text>" + rubyText + "</ruby-text>";
                 }
-                tb.SelectedText = before + "<ruby-container><ruby-base>" + text + "</ruby-base>" + rubyText + "</ruby-container>" + after;
+                tb.Text = before + "<ruby-container><ruby-base>" + text + "</ruby-base>" + rubyText + "</ruby-container>" + after;
             }
         }
     }

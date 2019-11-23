@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
             var rubyOn = false;
-
+            var italinOn = false;
             int startX;
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
@@ -74,6 +74,10 @@ namespace Nikse.SubtitleEdit.Core
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
+                if (italinOn)
+                {
+                    line = "<i>" + line;
+                }
                 var actual = new StringBuilder();
                 int i = 0;
                 while (i < line.Length)
@@ -92,11 +96,13 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         actual.Append("{\\i1}");
                         i += 3;
+                        italinOn = true;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
                         actual.Append("{\\i0}");
                         i += 4;
+                        italinOn = false;
                     }
                     else if (line.Substring(i).StartsWith("<bouten-", StringComparison.Ordinal))
                     {
@@ -270,11 +276,16 @@ namespace Nikse.SubtitleEdit.Core
             var list = new List<Paragraph>();
             var furiganaList = new List<Paragraph>();
             var rubyOn = false;
+            var italinOn = false;
             for (var index = 0; index < lines.Count; index++)
             {
                 var line = lines[index];
                 var actual = new StringBuilder();
                 int i = 0;
+                if (italinOn)
+                {
+                    line = "<i>" + line;
+                }
                 while (i < line.Length)
                 {
                     if (line.Substring(i).StartsWith("{\\"))
@@ -291,11 +302,13 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         actual.Append("{\\i1}");
                         i += 3;
+                        italinOn = true;
                     }
                     else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</u>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal))
                     {
                         actual.Append("{\\i0}");
                         i += 4;
+                        italinOn = false;
                     }
                     else if (line.Substring(i).StartsWith("<horizontalDigit>", StringComparison.Ordinal))
                     {
@@ -488,7 +501,7 @@ namespace Nikse.SubtitleEdit.Core
                         .Replace('〈', '︿')
                         .Replace('〉', '﹀')
                         .Replace('—', '︱') // em dash
-                        .Replace('⸺', '︱') // em dash
+                        .Replace('⸺', '︱') // double em dash (could not find double em dash vertical)
                         .Replace('ー', '⏐') // prolonged sound mark
                         .Replace('（', '︵')
                         .Replace('）', '︶');
