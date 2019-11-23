@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys WaveformSearchSilenceBack { get; set; }
         public Keys WaveformAddTextAtHere { get; set; }
         public Keys WaveformAddTextAtHereFromClipboard { get; set; }
+        public Keys WaveformSetParagraphAsNewSelection { get; set; }
         public Keys WaveformFocusListView { get; set; }
         public Keys WaveformGoToPreviousSceneChange { get; set; }
         public Keys WaveformGoToNextSceneChange { get; set; }
@@ -259,6 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformSearchSilenceBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             WaveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
             WaveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
+            WaveformSetParagraphAsNewSelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSetParagraphAsSelection);
             WaveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             WaveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
             WaveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);

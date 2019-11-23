@@ -1290,6 +1290,7 @@ $HorzAlign          =   Center
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
+        public string WaveformSetParagraphAsSelection { get; set; }
         public string WaveformFocusListView { get; set; }
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
@@ -5666,6 +5667,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.WaveformAddTextHereFromClipboard = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformSetParagraphAsSelection");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.WaveformSetParagraphAsSelection = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
                 {
@@ -6670,6 +6677,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
                 textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
+                textWriter.WriteElementString("WaveformSetParagraphAsSelection", settings.Shortcuts.WaveformSetParagraphAsSelection);
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
                 textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
