@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
+﻿using System.Globalization;
+
+namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public class NetflixCheckMinDuration : INetflixQualityChecker
     {
@@ -10,7 +12,18 @@
         {
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
-                Paragraph p = subtitle.Paragraphs[index];
+                var p = subtitle.Paragraphs[index];
+
+                if (controller.Language == "ja")
+                {
+                    if (p.Duration.TotalMilliseconds < 500)
+                    {
+                        string comment = "Minimum duration: 0.5 second";
+                        controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), comment, p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture));
+                    }
+                    continue;
+                }
+
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (p.Duration.TotalMilliseconds < 833)
                 {

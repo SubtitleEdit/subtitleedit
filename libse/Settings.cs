@@ -4263,11 +4263,6 @@ $HorzAlign          =   Center
             }
 
             subNode = node.SelectSingleNode("WaveformMinimumSampleRate");
-            if (subNode == null) // TODO: Remove in 3.5
-            {
-                subNode = node.SelectSingleNode("WaveformMininumSampleRate");
-            }
-
             if (subNode != null)
             {
                 settings.VideoControls.WaveformMinimumSampleRate = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);

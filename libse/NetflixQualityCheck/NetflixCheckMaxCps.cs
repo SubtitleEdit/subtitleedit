@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
@@ -15,7 +17,13 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = false;
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    var charactersPerSeconds = Utilities.GetCharactersPerSecond(p);
+                    var jp = new Paragraph(p);
+                    if (controller.Language == "ja")
+                    {
+                        jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
+                        jp.Text = NetflixImsc11Japanese.RemoveBoutens(jp.Text);
+                    }
+                    var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp);
                     if (charactersPerSeconds > controller.CharactersPerSecond)
                     {
                         var fixedParagraph = new Paragraph(p, false);

@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            if (controller.Language == "ja")
+            {
+                return;
+            }
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string newText = p.Text;
