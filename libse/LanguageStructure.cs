@@ -2159,6 +2159,7 @@
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
             public string WaveformAddTextHereFromClipboard { get; set; }
+            public string SetParagraphAsSelection { get; set; }
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
@@ -2706,6 +2707,7 @@
             public string ZoomOut { get; set; }
             public string AddParagraphHere { get; set; }
             public string AddParagraphHereAndPasteText { get; set; }
+            public string SetParagraphAsSelection { get; set; }
             public string FocusTextBox { get; set; }
             public string DeleteParagraph { get; set; }
             public string Split { get; set; }

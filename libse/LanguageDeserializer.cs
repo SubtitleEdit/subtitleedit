@@ -5404,6 +5404,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformAddTextHereFromClipboard":
                     language.Settings.WaveformAddTextHereFromClipboard = reader.Value;
                     break;
+                case "Settings/SetParagraphAsSelection":
+                    language.Settings.SetParagraphAsSelection = reader.Value;
+                    break;
                 case "Settings/WaveformPlayNewSelection":
                     language.Settings.WaveformPlayNewSelection = reader.Value;
                     break;
@@ -6711,6 +6714,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/AddParagraphHereAndPasteText":
                     language.Waveform.AddParagraphHereAndPasteText = reader.Value;
+                    break;
+                case "Waveform/SetParagraphAsSelection":
+                    language.Waveform.SetParagraphAsSelection = reader.Value;
                     break;
                 case "Waveform/FocusTextBox":
                     language.Waveform.FocusTextBox = reader.Value;
