@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected virtual Regex RegexTimeCodes => Regex;
         protected bool DropFrame;
 
-        public static List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
+        private static readonly List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
         {
             new KeyValuePair<string, string>("20",                  " " ),
             new KeyValuePair<string, string>("a1",                  "!" ),
