@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string RubyText { get; private set; }
         public bool RubyItalic { get; private set; }
+        public string RubyBaseText { get; private set; }
 
         public RubyJapanese(string before, string text, string after)
         {
@@ -18,8 +19,41 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
+            var rubyBaseText = text;
+            if (text.Contains("ruby-container", System.StringComparison.Ordinal))
+            {
+                var start = text.IndexOf("<ruby-text", System.StringComparison.Ordinal);
+                if (start >= 0)
+                {
+                    start = text.IndexOf('>', start);
+                    if (start > 0)
+                    {
+                        var end = text.IndexOf('<', start);
+                        if (end > 0)
+                        {
+                            textBoxRubyText.Text = text.Substring(start + 1, end - start - 1);
+                        }
+                    }
+                    checkBoxItalic.Checked = text.Contains("ruby-text-italic", System.StringComparison.Ordinal);
+                }
+
+                start = text.IndexOf("<ruby-base", System.StringComparison.Ordinal);
+                if (start >= 0)
+                {
+                    start = text.IndexOf('>', start);
+                    if (start > 0)
+                    {
+                        var end = text.IndexOf('<', start);
+                        if (end > 0)
+                        {
+                            rubyBaseText = text.Substring(start + 1, end - start - 1);
+                        }
+                    }
+                }
+            }
+            RubyBaseText = rubyBaseText;
             label1.Text = before;
-            label2.Text = text;
+            label2.Text = rubyBaseText;
             label3.Text = after;
             label2.Left = label1.Left + label1.Width + 5;
             label3.Left = label2.Left + label2.Width + 5;
@@ -50,6 +84,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void RubyJapanese_Shown(object sender, System.EventArgs e)
         {
             textBoxRubyText.Focus();
+        }
+
+        private void textBoxRubyText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(null, null);
+            }
         }
     }
 }

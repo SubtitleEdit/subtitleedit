@@ -8667,7 +8667,7 @@ namespace Nikse.SubtitleEdit.Forms
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
             text = HtmlUtil.RemoveHtmlTags(text, true);
-            text = NetflixImsc11Japanese.RemoveBoutens(text);
+            text = NetflixImsc11Japanese.RemoveTags(text);
             UiUtil.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
@@ -20673,7 +20673,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (tb.SelectionLength == 0)
             {
                 var allText = HtmlUtil.RemoveHtmlTags(tb.Text);
-                allText = NetflixImsc11Japanese.RemoveBoutens(allText);
+                allText = NetflixImsc11Japanese.RemoveTags(allText);
                 tb.Text = allText;
                 return;
             }
@@ -20681,7 +20681,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
             text = HtmlUtil.RemoveHtmlTags(text);
-            text = NetflixImsc11Japanese.RemoveBoutens(text);
+            text = NetflixImsc11Japanese.RemoveTags(text);
             tb.SelectedText = text;
             tb.SelectionStart = selectionStart;
             tb.SelectionLength = text.Length;
@@ -26401,7 +26401,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunActionOnAllParagraphs((p) =>
             {
                 var s = p.Text.Replace("♪", string.Empty).Replace("♫", string.Empty);
-                s = NetflixImsc11Japanese.RemoveBoutens(s);
+                s = NetflixImsc11Japanese.RemoveTags(s);
                 return HtmlUtil.RemoveHtmlTags(s, true).Trim();
             }, string.Format(_language.BeforeX, _language.Menu.ContextMenu.RemoveFormattingAll));
         }
@@ -26604,7 +26604,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     rubyText = "<ruby-text>" + rubyText + "</ruby-text>";
                 }
-                tb.Text = before + "<ruby-container><ruby-base>" + text + "</ruby-base>" + rubyText + "</ruby-container>" + after;
+                tb.Text = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after;
             }
         }
     }

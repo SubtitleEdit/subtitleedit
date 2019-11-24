@@ -739,7 +739,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return pText.ToString().TrimEnd();
         }
 
-        public static string RemoveBoutens(string text)
+        public static string RemoveTags(string text)
         {
             return text
                 .Replace("<bouten-dot-before>", string.Empty)
@@ -798,7 +798,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             foreach (var p in subtitle.Paragraphs)
             {
-                p.Text = RemoveBoutens(p.Text);
+                p.Text = RemoveTags(p.Text);
             }
         }
     }
