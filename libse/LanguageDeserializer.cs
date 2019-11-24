@@ -5629,6 +5629,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MainTextBoxSelectionToUpper":
                     language.Settings.MainTextBoxSelectionToUpper = reader.Value;
                     break;
+                case "Settings/MainTextBoxSelectionToRuby":
+                    language.Settings.MainTextBoxSelectionToRuby = reader.Value;
+                    break;
                 case "Settings/MainTextBoxToggleAutoDuration":
                     language.Settings.MainTextBoxToggleAutoDuration = reader.Value;
                     break;
