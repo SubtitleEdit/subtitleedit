@@ -1621,8 +1621,14 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/XFixesApplied":
                     language.FixCommonErrors.XFixesApplied = reader.Value;
                     break;
-                case "FixCommonErrors/NothingToFixBut":
-                    language.FixCommonErrors.NothingToFixBut = reader.Value;
+                case "FixCommonErrors/NothingFixableBut":
+                    language.FixCommonErrors.NothingFixableBut = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixedBut":
+                    language.FixCommonErrors.XFixedBut = reader.Value;
+                    break;
+                case "FixCommonErrors/XCouldBeFixedBut":
+                    language.FixCommonErrors.XCouldBeFixedBut = reader.Value;
                     break;
                 case "FixCommonErrors/UncheckedFixLowercaseIToUppercaseI":
                     language.FixCommonErrors.UncheckedFixLowercaseIToUppercaseI = reader.Value;
@@ -3219,6 +3225,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/PromptInsertSubtitleOverlap":
                     language.Main.PromptInsertSubtitleOverlap = reader.Value;
+                    break;
+                case "Main/SubtitleContainsNegativeDurationsX":
+                    language.Main.SubtitleContainsNegativeDurationsX = reader.Value;
                     break;
                 case "Main/SetPlayRateX":
                     language.Main.SetPlayRateX = reader.Value;

@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxFixedIssues.Name = "textBoxFixedIssues";
             this.textBoxFixedIssues.ReadOnly = true;
             this.textBoxFixedIssues.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxFixedIssues.Size = new System.Drawing.Size(796, 466);
+            this.textBoxFixedIssues.Size = new System.Drawing.Size(796, 499);
             this.textBoxFixedIssues.TabIndex = 5;
             this.textBoxFixedIssues.WordWrap = false;
             // 

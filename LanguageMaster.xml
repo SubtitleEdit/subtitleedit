@@ -618,7 +618,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NothingToFix>Nothing to fix :)</NothingToFix>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
-    <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
+    <NothingFixableBut>Nothing could be fixed automatically. The subtitle contains errors - see log for details</NothingFixableBut>
+    <XFixedBut>{0} issue(s) fixed but the subtitle still contain errors - see log for details</XFixedBut>
+    <XCouldBeFixedBut>{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
@@ -1514,6 +1516,7 @@ Continue?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Insert subtitle at waveform position will cause overlap!
 
 Continue anyway?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Subtitle contains negative duration in line(s): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
     <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
     <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>

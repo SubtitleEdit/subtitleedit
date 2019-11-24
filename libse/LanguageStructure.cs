@@ -686,7 +686,9 @@
             public string NothingToFix { get; set; }
             public string FixesFoundX { get; set; }
             public string XFixesApplied { get; set; }
-            public string NothingToFixBut { get; set; }
+            public string NothingFixableBut { get; set; }
+            public string XFixedBut { get; set; }
+            public string XCouldBeFixedBut { get; set; }
             public string UncheckedFixLowercaseIToUppercaseI { get; set; }
             public string XIsChangedToUppercase { get; set; }
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
@@ -1270,6 +1272,7 @@
             public string XPercentCompleted { get; set; }
             public string NextX { get; set; }
             public string PromptInsertSubtitleOverlap { get; set; }
+            public string SubtitleContainsNegativeDurationsX { get; set;  }
             public string SetPlayRateX { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
