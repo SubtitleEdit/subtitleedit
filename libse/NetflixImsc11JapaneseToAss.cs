@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core
             int startX;
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                var actualText = NetflixImsc11Japanese.RemoveBoutens(HtmlUtil.RemoveHtmlTags(p.Text, true));
+                var actualText = NetflixImsc11Japanese.RemoveTags(HtmlUtil.RemoveHtmlTags(p.Text, true));
                 var actualTextSize = g.MeasureString(actualText, new Font(SystemFonts.DefaultFont.FontFamily, 20));
                 startX = (int)(width / 2.0 - actualTextSize.Width / 2.0);
                 if (p.Text.StartsWith("{\\an5", StringComparison.Ordinal))

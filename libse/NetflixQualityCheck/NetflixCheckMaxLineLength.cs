@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         var vertical = p.Text.Contains("{\\an7", StringComparison.Ordinal) || p.Text.Contains("{\\an9", StringComparison.Ordinal);
                         var text = HtmlUtil.RemoveHtmlTags(line, true);
-                        text = NetflixImsc11Japanese.RemoveBoutens(text);
+                        text = NetflixImsc11Japanese.RemoveTags(text);
                         if (vertical) // Vertical subtitles - Maximum 11 full-width characters per line
                         {
                             if (CalculateJapaneseLength(text) > 11)

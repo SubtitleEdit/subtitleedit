@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     if (controller.Language == "ja")
                     {
                         jp.Text = HtmlUtil.RemoveHtmlTags(jp.Text, true);
-                        jp.Text = NetflixImsc11Japanese.RemoveBoutens(jp.Text);
+                        jp.Text = NetflixImsc11Japanese.RemoveTags(jp.Text);
                     }
                     var charactersPerSeconds = Utilities.GetCharactersPerSecond(jp);
                     if (charactersPerSeconds > controller.CharactersPerSecond)

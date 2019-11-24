@@ -68,6 +68,7 @@
             this.textBoxRubyText.Name = "textBoxRubyText";
             this.textBoxRubyText.Size = new System.Drawing.Size(100, 20);
             this.textBoxRubyText.TabIndex = 0;
+            this.textBoxRubyText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxRubyText_KeyDown);
             // 
             // label1
             // 
