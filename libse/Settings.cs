@@ -1249,6 +1249,7 @@ $HorzAlign          =   Center
         public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
+        public string MainTextBoxSelectionToRuby { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -5422,6 +5423,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxSelectionToRuby");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainTextBoxSelectionToRuby = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
                 if (subNode != null)
                 {
@@ -6643,6 +6650,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
                 textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
+                textWriter.WriteElementString("MainTextBoxSelectionToRuby", settings.Shortcuts.MainTextBoxSelectionToRuby);
                 textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

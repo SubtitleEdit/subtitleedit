@@ -2235,6 +2235,7 @@
             public string MainTextBoxMoveLastWordDownCurrent { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
+            public string MainTextBoxSelectionToRuby { get; set; }
             public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
             public string MainTextBoxAutoBreakFromPos { get; set; }
