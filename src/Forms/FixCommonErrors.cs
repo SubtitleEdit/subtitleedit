@@ -528,9 +528,9 @@ namespace Nikse.SubtitleEdit.Forms
         public void ShowStatus(string message)
         {
             message = message.Replace(Environment.NewLine, "  ");
-            if (message.Length > 83)
+            if (message.Length > 103)
             {
-                message = message.Substring(0, 80) + "...";
+                message = message.Substring(0, 100) + "...";
             }
 
             labelStatus.Text = message;
@@ -661,7 +661,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.WaitCursor;
                 Next();
-                ShowAvailableFixesStatus();
+                ShowAvailableFixesStatus(false);
             }
             Cursor = Cursors.Default;
         }
@@ -1368,19 +1368,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunSelectedActions();
             FixedSubtitle = new Subtitle(Subtitle, false);
             subtitleListView1.Fill(FixedSubtitle);
-            if (_totalFixes == 0 && _totalErrors == 0)
-            {
-                ShowStatus(_language.NothingToFix);
-            }
-            else if (_totalFixes > 0)
-            {
-                ShowStatus(string.Format(_language.XFixesApplied, _totalFixes));
-            }
-            else if (_totalErrors > 0)
-            {
-                ShowStatus(_language.NothingToFixBut);
-            }
-
+            ShowAvailableFixesStatus(true);
             RefreshFixes();
             if (listViewFixes.Items.Count == 0)
             {
@@ -1406,14 +1394,13 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(_language.Analysing);
             _totalFixes = 0;
             RefreshFixes();
-
-            ShowAvailableFixesStatus();
-
+            ShowAvailableFixesStatus(false);
             Cursor = Cursors.Default;
         }
 
-        private void ShowAvailableFixesStatus()
+        private void ShowAvailableFixesStatus(bool applied)
         {
+            labelStatus.ForeColor = DefaultForeColor;
             if (_totalFixes == 0 && _totalErrors == 0)
             {
                 ShowStatus(_language.NothingToFix);
@@ -1424,11 +1411,27 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_totalFixes > 0)
             {
-                ShowStatus(string.Format(_language.FixesFoundX, _totalFixes));
+                if (_totalErrors > 0)
+                {
+                    labelStatus.ForeColor = Color.Red;
+                    if (applied)
+                    {
+                        ShowStatus(string.Format(_language.XFixedBut, _totalFixes));
+                    }
+                    else
+                    {
+                        ShowStatus(string.Format(_language.XCouldBeFixedBut, _totalFixes));
+                    }
+                }
+                else
+                {
+                    ShowStatus(string.Format(_language.XFixesApplied, _totalFixes));
+                }
             }
             else if (_totalErrors > 0)
             {
-                ShowStatus(_language.NothingToFixBut);
+                labelStatus.ForeColor = Color.Red;
+                ShowStatus(_language.NothingFixableBut);
             }
 
             TopMost = true;

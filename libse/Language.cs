@@ -814,7 +814,9 @@ namespace Nikse.SubtitleEdit.Core
                 NothingToFix = "Nothing to fix :)",
                 FixesFoundX = "Fixes found: {0}",
                 XFixesApplied = "Fixes applied: {0}",
-                NothingToFixBut = "Nothing to fix but a few things could be improved - see log for details",
+                NothingFixableBut = "Nothing could be fixed automatically. The subtitle contains errors - see log for details",
+                XFixedBut = "{0} issue(s) fixed but the subtitle still contain errors - see log for details",
+                XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details",
                 UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",
                 XIsChangedToUppercase = "{0} i's changed to uppercase",
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",
@@ -1410,6 +1412,7 @@ namespace Nikse.SubtitleEdit.Core
                 PromptInsertSubtitleOverlap = "Insert subtitle at waveform position will cause overlap!" + Environment.NewLine +
                                               Environment.NewLine +
                                               "Continue anyway?",
+                SubtitleContainsNegativeDurationsX = "Subtitle contains negative duration in line(s): {0}",
                 SetPlayRateX = "Set play rate (speed) to {0}%",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",

@@ -4702,6 +4702,40 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowStatus(s);
             }
+
+            if (Configuration.Settings.General.ShowNegativeDurationInfoOnSave)
+            {
+                var sb = new StringBuilder();
+                for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    if (p.Duration.TotalMilliseconds < 0)
+                    {
+                        if (sb.Length < 20)
+                        {
+                            if (sb.Length > 0)
+                            {
+                                sb.Append(", ");
+                            }
+                            sb.Append((index + 1).ToString(CultureInfo.InvariantCulture));
+                        }
+                        else
+                        {
+                            sb.Append("...");
+                            break;
+                        }
+                    }
+                }
+
+                if (sb.Length > 0)
+                {
+                    using (var form = new DialogDoNotShowAgain(Title, string.Format(_language.SubtitleContainsNegativeDurationsX, sb.ToString())))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.General.ShowNegativeDurationInfoOnSave = !form.DoNoDisplayAgain;
+                    }
+                }
+            }
         }
 
         private void ToolStripButtonSaveAsClick(object sender, EventArgs e)

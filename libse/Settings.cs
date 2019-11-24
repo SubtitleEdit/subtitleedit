@@ -783,6 +783,7 @@ $HorzAlign          =   Center
         public bool AutoSave { get; set; }
         public string PreviewAssaText { get; set; }
         public bool ShowProgress { get; set; }
+        public bool ShowNegativeDurationInfoOnSave { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public bool UseDarkTheme { get; set; }
         public bool ShowBetaStuff { get; set; }
@@ -2495,6 +2496,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("ShowNegativeDurationInfoOnSave");
+            if (subNode != null)
+            {
+                settings.General.ShowNegativeDurationInfoOnSave = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("UseDarkTheme");
@@ -6094,6 +6101,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
