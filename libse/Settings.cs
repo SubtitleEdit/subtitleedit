@@ -890,6 +890,7 @@ $HorzAlign          =   Center
             CheckForUpdates = true;
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;
+            ShowNegativeDurationInfoOnSave = true;
             UseDarkTheme = false;
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
             ShowBetaStuff = false;
