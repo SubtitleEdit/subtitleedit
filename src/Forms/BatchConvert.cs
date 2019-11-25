@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxInput.Text = l.Input;
             labelChooseInputFiles.Text = l.InputDescription;
             groupBoxOutput.Text = l.Output;
-            labelChooseOutputFolder.Text = l.ChooseOutputFolder;
+            //labelChooseOutputFolder.Text = l.ChooseOutputFolder;
             checkBoxOverwrite.Text = l.OverwriteExistingFiles;
             labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Text = l.RemoveFormatting;
             checkBoxFixCasing.Text = l.RedoCasing;
             checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
-            checkBoxOverwriteOriginalFiles.Text = l.OverwriteOriginalFiles;
+            //checkBoxOverwriteOriginalFiles.Text = l.OverwriteOriginalFiles;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
@@ -1685,7 +1685,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxOverwriteOriginalFiles_CheckedChanged(object sender, EventArgs e)
         {
-            labelChooseOutputFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
+           // labelChooseOutputFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
             textBoxOutputFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
             checkBoxOverwrite.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
             buttonChooseFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
@@ -1940,6 +1940,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void radioButtonSaveInSourceFolder_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxOutputFolder.Enabled = false;
+            buttonChooseFolder.Enabled = false;
+            //checkBoxOverwrite.Enabled = false;
         }
     }
 }

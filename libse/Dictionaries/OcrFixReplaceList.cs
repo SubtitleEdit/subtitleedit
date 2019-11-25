@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
     public class OcrFixReplaceList
     {
         private static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
-        private static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
+        private static readonly Regex RegExIAndZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
         private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï]0", RegexOptions.Compiled);
         private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
         private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
@@ -85,6 +85,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedBeginLines"))
+            {
+                if (_beginLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _beginLineReplaceList.Remove(kp.Key);
+                }
+            }
             foreach (var kp in LoadReplaceList(userDoc, "BeginLines"))
             {
                 if (!_beginLineReplaceList.ContainsKey(kp.Key))
@@ -93,6 +100,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedEndLines"))
+            {
+                if (_endLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _endLineReplaceList.Remove(kp.Key);
+                }
+            }
             foreach (var kp in LoadReplaceList(userDoc, "EndLines"))
             {
                 if (!_endLineReplaceList.ContainsKey(kp.Key))
@@ -101,17 +115,31 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedWholeLines"))
+            {
+                if (_wholeLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _wholeLineReplaceList.Remove(kp.Key);
+                }
+            }
             foreach (var kp in LoadReplaceList(userDoc, "WholeLines"))
             {
-                if (!_endLineReplaceList.ContainsKey(kp.Key))
+                if (!_wholeLineReplaceList.ContainsKey(kp.Key))
                 {
                     _wholeLineReplaceList.Add(kp.Key, kp.Value);
                 }
             }
 
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedRegularExpressions"))
+            {
+                if (_regExList.ContainsKey(kp.Key))
+                {
+                    _regExList.Remove(kp.Key);
+                }
+            }
             foreach (var kp in LoadReplaceList(userDoc, "RegularExpressions"))
             {
-                if (!_endLineReplaceList.ContainsKey(kp.Key))
+                if (!_regExList.ContainsKey(kp.Key))
                 {
                     _regExList.Add(kp.Key, kp.Value);
                 }
@@ -136,14 +164,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
-                    if (HasValidAttributes(item, false))
+                    if (!HasValidAttributes(item, false) || item.Attributes == null)
                     {
-                        string to = item.Attributes["to"].Value;
-                        string from = item.Attributes["from"].Value;
-                        if (!list.ContainsKey(from))
-                        {
-                            list.Add(from, to);
-                        }
+                        continue;
+                    }
+
+                    var to = item.Attributes["to"].Value;
+                    var from = item.Attributes["from"].Value;
+                    if (!list.ContainsKey(from))
+                    {
+                        list.Add(from, to);
                     }
                 }
             }
@@ -164,14 +194,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
-                    if (HasValidAttributes(item, true))
+                    if (!HasValidAttributes(item, true) || item.Attributes == null)
                     {
-                        string to = item.Attributes["replaceWith"].Value;
-                        string from = item.Attributes["find"].Value;
-                        if (!list.ContainsKey(from))
-                        {
-                            list.Add(from, to);
-                        }
+                        continue;
+                    }
+
+                    var to = item.Attributes["replaceWith"].Value;
+                    var from = item.Attributes["find"].Value;
+                    if (!list.ContainsKey(from))
+                    {
+                        list.Add(from, to);
                     }
                 }
             }
@@ -586,7 +618,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
             {
-                var match = RegExIandZero.Match(word);
+                var match = RegExIAndZero.Match(word);
                 while (match.Success)
                 {
                     if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
@@ -607,7 +639,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                             }
                         }
                     }
-                    match = RegExIandZero.Match(word, match.Index + 1);
+                    match = RegExIAndZero.Match(word, match.Index + 1);
                 }
             }
             return word;
@@ -893,7 +925,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private XmlDocument LoadXmlReplaceListDocument()
         {
-            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>";
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><WholeLines/><RegularExpressions/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(_replaceListXmlFileName))
             {
@@ -917,7 +949,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
-            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>";
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RegularExpressions/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/><RegularExpressions/></RemovedReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(ReplaceListXmlFileNameUser))
             {
