@@ -4728,19 +4728,6 @@
             // 
             this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.ColumnIndexActor = -1;
-            this.SubtitleListview1.ColumnIndexCps = -1;
-            this.SubtitleListview1.ColumnIndexDuration = 3;
-            this.SubtitleListview1.ColumnIndexEnd = 2;
-            this.SubtitleListview1.ColumnIndexExtra = -1;
-            this.SubtitleListview1.ColumnIndexGap = -1;
-            this.SubtitleListview1.ColumnIndexNetwork = -1;
-            this.SubtitleListview1.ColumnIndexNumber = 0;
-            this.SubtitleListview1.ColumnIndexRegion = -1;
-            this.SubtitleListview1.ColumnIndexStart = 1;
-            this.SubtitleListview1.ColumnIndexText = 4;
-            this.SubtitleListview1.ColumnIndexTextAlternate = -1;
-            this.SubtitleListview1.ColumnIndexWpm = -1;
             this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
             this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SubtitleListview1.FirstVisibleIndex = -1;
