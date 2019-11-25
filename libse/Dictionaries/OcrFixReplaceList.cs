@@ -84,6 +84,38 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     PartialLineWordBoundaryReplaceList.Add(kp.Key, kp.Value);
                 }
             }
+
+            foreach (var kp in LoadReplaceList(userDoc, "BeginLines"))
+            {
+                if (!_beginLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _beginLineReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "EndLines"))
+            {
+                if (!_endLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _endLineReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "WholeLines"))
+            {
+                if (!_endLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _wholeLineReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "RegularExpressions"))
+            {
+                if (!_endLineReplaceList.ContainsKey(kp.Key))
+                {
+                    _regExList.Add(kp.Key, kp.Value);
+                }
+            }
         }
 
         public static OcrFixReplaceList FromLanguageId(string languageId)
