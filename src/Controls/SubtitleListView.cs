@@ -33,19 +33,19 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
-        public int ColumnIndexNumber { get; set; } = -1;
-        public int ColumnIndexStart { get; set; } = -1;
-        public int ColumnIndexEnd { get; set; } = -1;
-        public int ColumnIndexDuration { get; set; } = -1;
-        public int ColumnIndexWpm { get; set; } = -1;
-        public int ColumnIndexCps { get; set; } = -1;
-        public int ColumnIndexGap { get; set; } = -1;
-        public int ColumnIndexActor { get; set; } = -1;
-        public int ColumnIndexRegion { get; set; } = -1;
-        public int ColumnIndexText { get; set; } = -1;
-        public int ColumnIndexTextAlternate { get; set; } = -1;
-        public int ColumnIndexExtra { get; set; } = -1;
-        public int ColumnIndexNetwork { get; set; } = -1;
+        public int ColumnIndexNumber { get; set; }
+        public int ColumnIndexStart { get; set; }
+        public int ColumnIndexEnd { get; set; }
+        public int ColumnIndexDuration { get; set; }
+        public int ColumnIndexWpm { get; set; }
+        public int ColumnIndexCps { get; set; }
+        public int ColumnIndexGap { get; set; }
+        public int ColumnIndexActor { get; set; }
+        public int ColumnIndexRegion { get; set; }
+        public int ColumnIndexText { get; set; }
+        public int ColumnIndexTextAlternate { get; set; }
+        public int ColumnIndexExtra { get; set; }
+        public int ColumnIndexNetwork { get; set; }
 
         public bool IsAlternateTextColumnVisible => ColumnIndexTextAlternate >= 0;
         private string _lineSeparatorString = " || ";
@@ -301,6 +301,20 @@ namespace Nikse.SubtitleEdit.Controls
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             AllowColumnReorder = true;
             HeaderStyle = ColumnHeaderStyle.Nonclickable;
+
+            ColumnIndexNumber = -1;
+            ColumnIndexStart = -1;
+            ColumnIndexEnd = -1;
+            ColumnIndexDuration = -1;
+            ColumnIndexWpm = -1;
+            ColumnIndexCps = -1;
+            ColumnIndexGap = -1;
+            ColumnIndexActor = -1;
+            ColumnIndexRegion = -1;
+            ColumnIndexText = -1;
+            ColumnIndexTextAlternate = -1;
+            ColumnIndexExtra = -1;
+            ColumnIndexNetwork = -1;
 
             SubtitleColumns = new List<SubtitleColumn>
             {
