@@ -949,7 +949,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
-            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RegularExpressions/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/><RegularExpressions/></ReplaceList>";
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RegularExpressions/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/><RemovedRegularExpressions/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(ReplaceListXmlFileNameUser))
             {
