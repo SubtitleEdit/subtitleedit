@@ -130,14 +130,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
-            foreach (var kp in LoadReplaceList(userDoc, "RemovedRegularExpressions"))
+            foreach (var kp in LoadRegExList(userDoc, "RemovedRegularExpressions"))
             {
                 if (_regExList.ContainsKey(kp.Key))
                 {
                     _regExList.Remove(kp.Key);
                 }
             }
-            foreach (var kp in LoadReplaceList(userDoc, "RegularExpressions"))
+            foreach (var kp in LoadRegExList(userDoc, "RegularExpressions"))
             {
                 if (!_regExList.ContainsKey(kp.Key))
                 {
