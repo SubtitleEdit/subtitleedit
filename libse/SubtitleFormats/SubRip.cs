@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // A new line is missing between two paragraphs or no line number (buggy file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
-                    Utilities.IsInteger(line) && TryReadTimeCodesLine(line.Trim(), null))
+                    Utilities.IsInteger(line) && TryReadTimeCodesLine(line.Trim(), null, false))
                 {
                     if (!string.IsNullOrEmpty(_paragraph.Text))
                     {
@@ -106,12 +106,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     _expecting = ExpectingLine.Number;
                 }
-                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(line.Trim(), null))
+                if (_expecting == ExpectingLine.Number && TryReadTimeCodesLine(line.Trim(), null, false))
                 {
                     _expecting = ExpectingLine.TimeCodes;
                     doRenumber = true;
                 }
-                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(line.Trim(), null))
+                else if (!string.IsNullOrEmpty(_paragraph?.Text) && _expecting == ExpectingLine.Text && TryReadTimeCodesLine(line.Trim(), null, false))
                 {
                     subtitle.Paragraphs.Add(_paragraph);
                     _lastParagraph = _paragraph;
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.TimeCodes:
-                    if (TryReadTimeCodesLine(line, _paragraph))
+                    if (TryReadTimeCodesLine(line, _paragraph, true))
                     {
                         _paragraph.Text = string.Empty;
                         _expecting = ExpectingLine.Text;
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (Utilities.IsInteger(line) && TryReadTimeCodesLine(next, _paragraph) && line.Trim() == GetLastNumber(_paragraph))
+                    if (Utilities.IsInteger(line) && TryReadTimeCodesLine(next, _paragraph, false) && line.Trim() == GetLastNumber(_paragraph))
                     {
                         subtitle.Paragraphs.Add(_paragraph);
                         _lastParagraph = _paragraph;
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
                         _paragraph.Text = string.Empty;
-                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next, null)))
+                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || TryReadTimeCodesLine(next, null, false)))
                         {
                             subtitle.Paragraphs.Add(_paragraph);
                             _lastParagraph = _paragraph;
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private bool IsText(string text)
         {
-            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null));
+            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || TryReadTimeCodesLine(text.Trim(), null, false));
         }
 
         private static string RemoveBadChars(string line)
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return line.Replace('\0', ' ');
         }
 
-        private bool TryReadTimeCodesLine(string input, Paragraph paragraph)
+        private bool TryReadTimeCodesLine(string input, Paragraph paragraph, bool validate)
         {
             var s = input.TrimStart('-', ' ');
             if (s.Length < 10 || !char.IsDigit(s[0]))
@@ -321,6 +321,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int endMinutes = int.Parse(parts[5]);
                     int endSeconds = int.Parse(parts[6]);
                     int endMilliseconds = int.Parse(parts[7]);
+
+                    if (validate && _errors.Length < 2000 &&
+                        (startHours > 99 || startMinutes > 99 || startSeconds > 99 || startMilliseconds > 999 ||
+                        endHours > 99 || endMinutes > 99 || endSeconds > 99 || endMilliseconds > 999))
+                    {
+                        _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
+                    }
 
                     if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))
                     {

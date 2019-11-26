@@ -5,7 +5,7 @@
    * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare
    * Auto break options "pixel width" (not by #characters) + "bottom heavy"
    * Auto break options now available in UI via Options -> Settings -> Tools
-   * Add new format Netflix IMSC1 Japanese
+   * Add new format Netflix IMSC 1.1 Japanese
    * Add new format psl
    * Add Macedonian translation - thx Numberguy
 * IMPROVED:
@@ -27,6 +27,7 @@
    * Fix issue with PAC reading - thx s3ncha
    * Fix possible crash when going from src view to list view
    * Fix "Save selected lines as..." issues - thx Milenko
+   * Fix OcrFixReplaceLst_User issues - thx Maitch/xylographe
 
 
 3.5.11 (27th October 2019)
