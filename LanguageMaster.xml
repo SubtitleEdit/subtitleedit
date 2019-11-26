@@ -177,8 +177,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <InputDescription>Input files (browse or drag-n-drop)</InputDescription>
     <Status>Status</Status>
     <Output>Output</Output>
-    <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
-    <OverwriteExistingFiles>Overwrite existing files</OverwriteExistingFiles>
+    <SaveInSourceFolder>Save in source file folder</SaveInSourceFolder>
+    <SaveInOutputFolder>Save in output folder below</SaveInOutputFolder>
+    <OverwriteFiles>Overwrite files</OverwriteFiles>
     <Style>Style...</Style>
     <UseStyleFromSource>Use style from source</UseStyleFromSource>
     <ConvertOptions>Convert options</ConvertOptions>

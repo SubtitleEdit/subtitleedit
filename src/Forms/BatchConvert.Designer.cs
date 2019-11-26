@@ -65,19 +65,17 @@
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
-            this.linkLabelOpenOutputFolder = new System.Windows.Forms.LinkLabel();
-            this.checkBoxOverwrite = new System.Windows.Forms.CheckBox();
-            this.buttonChooseFolder = new System.Windows.Forms.Button();
-            this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
-            this.radioButtonSaveInSourceFolder = new System.Windows.Forms.RadioButton();
-            this.checkBoxOverwriteOriginalFiles = new System.Windows.Forms.CheckBox();
             this.buttonTransportStreamSettings = new System.Windows.Forms.Button();
+            this.linkLabelOpenOutputFolder = new System.Windows.Forms.LinkLabel();
             this.checkBoxUseStyleFromSource = new System.Windows.Forms.CheckBox();
+            this.checkBoxOverwrite = new System.Windows.Forms.CheckBox();
             this.buttonStyles = new System.Windows.Forms.Button();
+            this.buttonChooseFolder = new System.Windows.Forms.Button();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
+            this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
             this.labelEncoding = new System.Windows.Forms.Label();
+            this.radioButtonSaveInSourceFolder = new System.Windows.Forms.RadioButton();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
@@ -106,7 +104,6 @@
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
             this.SuspendLayout();
@@ -516,13 +513,17 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxOutput.Controls.Add(this.groupBox1);
+            this.groupBoxOutput.Controls.Add(this.radioButtonSaveInOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonTransportStreamSettings);
+            this.groupBoxOutput.Controls.Add(this.linkLabelOpenOutputFolder);
             this.groupBoxOutput.Controls.Add(this.checkBoxUseStyleFromSource);
+            this.groupBoxOutput.Controls.Add(this.checkBoxOverwrite);
             this.groupBoxOutput.Controls.Add(this.buttonStyles);
+            this.groupBoxOutput.Controls.Add(this.buttonChooseFolder);
             this.groupBoxOutput.Controls.Add(this.comboBoxSubtitleFormats);
+            this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
             this.groupBoxOutput.Controls.Add(this.labelEncoding);
-            this.groupBoxOutput.Controls.Add(this.checkBoxOverwriteOriginalFiles);
+            this.groupBoxOutput.Controls.Add(this.radioButtonSaveInSourceFolder);
             this.groupBoxOutput.Controls.Add(this.comboBoxEncoding);
             this.groupBoxOutput.Controls.Add(this.labelOutputFormat);
             this.groupBoxOutput.Controls.Add(this.groupBoxConvertOptions);
@@ -533,97 +534,20 @@
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.radioButtonSaveInOutputFolder);
-            this.groupBox1.Controls.Add(this.linkLabelOpenOutputFolder);
-            this.groupBox1.Controls.Add(this.checkBoxOverwrite);
-            this.groupBox1.Controls.Add(this.buttonChooseFolder);
-            this.groupBox1.Controls.Add(this.textBoxOutputFolder);
-            this.groupBox1.Controls.Add(this.radioButtonSaveInSourceFolder);
-            this.groupBox1.Location = new System.Drawing.Point(13, 19);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(397, 174);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Output folder";
-            // 
             // radioButtonSaveInOutputFolder
             // 
             this.radioButtonSaveInOutputFolder.AutoSize = true;
-            this.radioButtonSaveInOutputFolder.Location = new System.Drawing.Point(14, 69);
+            this.radioButtonSaveInOutputFolder.Location = new System.Drawing.Point(10, 56);
             this.radioButtonSaveInOutputFolder.Name = "radioButtonSaveInOutputFolder";
             this.radioButtonSaveInOutputFolder.Size = new System.Drawing.Size(154, 17);
             this.radioButtonSaveInOutputFolder.TabIndex = 11;
             this.radioButtonSaveInOutputFolder.Text = "Save in output folder below";
             this.radioButtonSaveInOutputFolder.UseVisualStyleBackColor = true;
-            // 
-            // linkLabelOpenOutputFolder
-            // 
-            this.linkLabelOpenOutputFolder.AutoSize = true;
-            this.linkLabelOpenOutputFolder.Enabled = false;
-            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(332, 96);
-            this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
-            this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
-            this.linkLabelOpenOutputFolder.TabIndex = 9;
-            this.linkLabelOpenOutputFolder.TabStop = true;
-            this.linkLabelOpenOutputFolder.Text = "Open...";
-            // 
-            // checkBoxOverwrite
-            // 
-            this.checkBoxOverwrite.AutoSize = true;
-            this.checkBoxOverwrite.Location = new System.Drawing.Point(17, 140);
-            this.checkBoxOverwrite.Name = "checkBoxOverwrite";
-            this.checkBoxOverwrite.Size = new System.Drawing.Size(125, 17);
-            this.checkBoxOverwrite.TabIndex = 10;
-            this.checkBoxOverwrite.Text = "Overwrite exiting files";
-            this.checkBoxOverwrite.UseVisualStyleBackColor = true;
-            // 
-            // buttonChooseFolder
-            // 
-            this.buttonChooseFolder.Enabled = false;
-            this.buttonChooseFolder.Location = new System.Drawing.Point(300, 91);
-            this.buttonChooseFolder.Name = "buttonChooseFolder";
-            this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
-            this.buttonChooseFolder.TabIndex = 8;
-            this.buttonChooseFolder.Text = "...";
-            this.buttonChooseFolder.UseVisualStyleBackColor = true;
-            // 
-            // textBoxOutputFolder
-            // 
-            this.textBoxOutputFolder.Enabled = false;
-            this.textBoxOutputFolder.Location = new System.Drawing.Point(25, 93);
-            this.textBoxOutputFolder.Name = "textBoxOutputFolder";
-            this.textBoxOutputFolder.Size = new System.Drawing.Size(269, 20);
-            this.textBoxOutputFolder.TabIndex = 7;
-            // 
-            // radioButtonSaveInSourceFolder
-            // 
-            this.radioButtonSaveInSourceFolder.AutoSize = true;
-            this.radioButtonSaveInSourceFolder.Checked = true;
-            this.radioButtonSaveInSourceFolder.Location = new System.Drawing.Point(17, 25);
-            this.radioButtonSaveInSourceFolder.Name = "radioButtonSaveInSourceFolder";
-            this.radioButtonSaveInSourceFolder.Size = new System.Drawing.Size(141, 17);
-            this.radioButtonSaveInSourceFolder.TabIndex = 0;
-            this.radioButtonSaveInSourceFolder.TabStop = true;
-            this.radioButtonSaveInSourceFolder.Text = "Save in source file folder";
-            this.radioButtonSaveInSourceFolder.UseVisualStyleBackColor = true;
-            this.radioButtonSaveInSourceFolder.CheckedChanged += new System.EventHandler(this.radioButtonSaveInSourceFolder_CheckedChanged);
-            // 
-            // checkBoxOverwriteOriginalFiles
-            // 
-            this.checkBoxOverwriteOriginalFiles.AutoSize = true;
-            this.checkBoxOverwriteOriginalFiles.Location = new System.Drawing.Point(245, 188);
-            this.checkBoxOverwriteOriginalFiles.Name = "checkBoxOverwriteOriginalFiles";
-            this.checkBoxOverwriteOriginalFiles.Size = new System.Drawing.Size(130, 17);
-            this.checkBoxOverwriteOriginalFiles.TabIndex = 0;
-            this.checkBoxOverwriteOriginalFiles.Text = "Overwrite existing files";
-            this.checkBoxOverwriteOriginalFiles.UseVisualStyleBackColor = true;
-            this.checkBoxOverwriteOriginalFiles.CheckedChanged += new System.EventHandler(this.checkBoxOverwriteOriginalFiles_CheckedChanged);
+            this.radioButtonSaveInOutputFolder.CheckedChanged += new System.EventHandler(this.radioButtonSaveInOutputFolder_CheckedChanged);
             // 
             // buttonTransportStreamSettings
             // 
-            this.buttonTransportStreamSettings.Location = new System.Drawing.Point(300, 238);
+            this.buttonTransportStreamSettings.Location = new System.Drawing.Point(300, 236);
             this.buttonTransportStreamSettings.Name = "buttonTransportStreamSettings";
             this.buttonTransportStreamSettings.Size = new System.Drawing.Size(116, 23);
             this.buttonTransportStreamSettings.TabIndex = 10;
@@ -632,10 +556,21 @@
             this.buttonTransportStreamSettings.Visible = false;
             this.buttonTransportStreamSettings.Click += new System.EventHandler(this.buttonTransportStreamSettings_Click);
             // 
+            // linkLabelOpenOutputFolder
+            // 
+            this.linkLabelOpenOutputFolder.AutoSize = true;
+            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(357, 81);
+            this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
+            this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
+            this.linkLabelOpenOutputFolder.TabIndex = 9;
+            this.linkLabelOpenOutputFolder.TabStop = true;
+            this.linkLabelOpenOutputFolder.Text = "Open...";
+            this.linkLabelOpenOutputFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenOutputFolder_LinkClicked);
+            // 
             // checkBoxUseStyleFromSource
             // 
             this.checkBoxUseStyleFromSource.AutoSize = true;
-            this.checkBoxUseStyleFromSource.Location = new System.Drawing.Point(80, 238);
+            this.checkBoxUseStyleFromSource.Location = new System.Drawing.Point(80, 236);
             this.checkBoxUseStyleFromSource.Name = "checkBoxUseStyleFromSource";
             this.checkBoxUseStyleFromSource.Size = new System.Drawing.Size(127, 17);
             this.checkBoxUseStyleFromSource.TabIndex = 9;
@@ -643,9 +578,19 @@
             this.checkBoxUseStyleFromSource.UseVisualStyleBackColor = true;
             this.checkBoxUseStyleFromSource.Visible = false;
             // 
+            // checkBoxOverwrite
+            // 
+            this.checkBoxOverwrite.AutoSize = true;
+            this.checkBoxOverwrite.Location = new System.Drawing.Point(10, 122);
+            this.checkBoxOverwrite.Name = "checkBoxOverwrite";
+            this.checkBoxOverwrite.Size = new System.Drawing.Size(125, 17);
+            this.checkBoxOverwrite.TabIndex = 10;
+            this.checkBoxOverwrite.Text = "Overwrite exiting files";
+            this.checkBoxOverwrite.UseVisualStyleBackColor = true;
+            // 
             // buttonStyles
             // 
-            this.buttonStyles.Location = new System.Drawing.Point(300, 209);
+            this.buttonStyles.Location = new System.Drawing.Point(300, 207);
             this.buttonStyles.Name = "buttonStyles";
             this.buttonStyles.Size = new System.Drawing.Size(116, 23);
             this.buttonStyles.TabIndex = 8;
@@ -654,30 +599,62 @@
             this.buttonStyles.Visible = false;
             this.buttonStyles.Click += new System.EventHandler(this.ButtonStylesClick);
             // 
+            // buttonChooseFolder
+            // 
+            this.buttonChooseFolder.Enabled = false;
+            this.buttonChooseFolder.Location = new System.Drawing.Point(325, 76);
+            this.buttonChooseFolder.Name = "buttonChooseFolder";
+            this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
+            this.buttonChooseFolder.TabIndex = 8;
+            this.buttonChooseFolder.Text = "...";
+            this.buttonChooseFolder.UseVisualStyleBackColor = true;
+            this.buttonChooseFolder.Click += new System.EventHandler(this.buttonChooseFolder_Click);
+            // 
             // comboBoxSubtitleFormats
             // 
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
-            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 211);
+            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 209);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(214, 21);
             this.comboBoxSubtitleFormats.TabIndex = 7;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             // 
+            // textBoxOutputFolder
+            // 
+            this.textBoxOutputFolder.Enabled = false;
+            this.textBoxOutputFolder.Location = new System.Drawing.Point(17, 79);
+            this.textBoxOutputFolder.Name = "textBoxOutputFolder";
+            this.textBoxOutputFolder.Size = new System.Drawing.Size(302, 20);
+            this.textBoxOutputFolder.TabIndex = 7;
+            // 
             // labelEncoding
             // 
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(10, 269);
+            this.labelEncoding.Location = new System.Drawing.Point(10, 267);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 9;
             this.labelEncoding.Text = "Encoding";
             // 
+            // radioButtonSaveInSourceFolder
+            // 
+            this.radioButtonSaveInSourceFolder.AutoSize = true;
+            this.radioButtonSaveInSourceFolder.Checked = true;
+            this.radioButtonSaveInSourceFolder.Location = new System.Drawing.Point(10, 27);
+            this.radioButtonSaveInSourceFolder.Name = "radioButtonSaveInSourceFolder";
+            this.radioButtonSaveInSourceFolder.Size = new System.Drawing.Size(141, 17);
+            this.radioButtonSaveInSourceFolder.TabIndex = 0;
+            this.radioButtonSaveInSourceFolder.TabStop = true;
+            this.radioButtonSaveInSourceFolder.Text = "Save in source file folder";
+            this.radioButtonSaveInSourceFolder.UseVisualStyleBackColor = true;
+            this.radioButtonSaveInSourceFolder.CheckedChanged += new System.EventHandler(this.radioButtonSaveInSourceFolder_CheckedChanged);
+            // 
             // comboBoxEncoding
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 266);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 264);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(214, 21);
             this.comboBoxEncoding.TabIndex = 11;
@@ -685,7 +662,7 @@
             // labelOutputFormat
             // 
             this.labelOutputFormat.AutoSize = true;
-            this.labelOutputFormat.Location = new System.Drawing.Point(10, 214);
+            this.labelOutputFormat.Location = new System.Drawing.Point(10, 212);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
             this.labelOutputFormat.TabIndex = 6;
@@ -909,8 +886,6 @@
             this.groupBoxOffsetTimeCodes.PerformLayout();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
@@ -963,7 +938,6 @@
         private System.Windows.Forms.Button buttonMultipleReplaceSettings;
         private System.Windows.Forms.CheckBox checkBoxMultipleReplace;
         private System.Windows.Forms.CheckBox checkBoxAutoBalance;
-        private System.Windows.Forms.CheckBox checkBoxOverwriteOriginalFiles;
         private System.Windows.Forms.Button buttonSearchFolder;
         private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
@@ -984,7 +958,6 @@
         private System.Windows.Forms.Button buttonFixRtlSettings;
         private System.Windows.Forms.CheckBox checkBoxFixRtl;
         private System.Windows.Forms.Button buttonTransportStreamSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButtonSaveInOutputFolder;
         private System.Windows.Forms.LinkLabel linkLabelOpenOutputFolder;
         private System.Windows.Forms.CheckBox checkBoxOverwrite;

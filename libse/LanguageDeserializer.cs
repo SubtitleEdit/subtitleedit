@@ -472,11 +472,14 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/Output":
                     language.BatchConvert.Output = reader.Value;
                     break;
-                case "BatchConvert/ChooseOutputFolder":
-                    language.BatchConvert.ChooseOutputFolder = reader.Value;
+                case "BatchConvert/SaveInSourceFolder":
+                    language.BatchConvert.SaveInSourceFolder = reader.Value;
                     break;
-                case "BatchConvert/OverwriteExistingFiles":
-                    language.BatchConvert.OverwriteExistingFiles = reader.Value;
+                case "BatchConvert/SaveInOutputFolder":
+                    language.BatchConvert.SaveInOutputFolder = reader.Value;
+                    break;
+                case "BatchConvert/OverwriteFiles":
+                    language.BatchConvert.OverwriteFiles = reader.Value;
                     break;
                 case "BatchConvert/Style":
                     language.BatchConvert.Style = reader.Value;

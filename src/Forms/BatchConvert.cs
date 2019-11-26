@@ -100,8 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxInput.Text = l.Input;
             labelChooseInputFiles.Text = l.InputDescription;
             groupBoxOutput.Text = l.Output;
-            //labelChooseOutputFolder.Text = l.ChooseOutputFolder;
-            checkBoxOverwrite.Text = l.OverwriteExistingFiles;
+            radioButtonSaveInSourceFolder.Text = l.SaveInSourceFolder;
+            radioButtonSaveInOutputFolder.Text = l.SaveInOutputFolder;
+            checkBoxOverwrite.Text = l.OverwriteFiles;
             labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonStyles.Text = l.Style;
@@ -110,7 +111,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Text = l.RemoveFormatting;
             checkBoxFixCasing.Text = l.RedoCasing;
             checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
-            //checkBoxOverwriteOriginalFiles.Text = l.OverwriteOriginalFiles;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
@@ -202,7 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
-            checkBoxOverwriteOriginalFiles.Checked = Configuration.Settings.Tools.BatchConvertOverwriteOriginal;
             checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
             checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
             checkBoxMultipleReplace.Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace;
@@ -230,6 +229,14 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
             checkBoxBridgeGaps.Text = l.BridgeGaps;
+            if (Configuration.Settings.Tools.BatchConvertSaveInSourceFolder)
+            {
+                radioButtonSaveInSourceFolder.Checked = true;
+            }
+            else
+            {
+                radioButtonSaveInOutputFolder.Checked = true;
+            }
 
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
             _removeTextForHiSettings = _removeTextForHearingImpaired.Settings;
@@ -256,14 +263,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonTransportStreamSettings.Visible = false;
         }
 
-        private void buttonChooseFolder_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.ShowNewFolderButton = true;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textBoxOutputFolder.Text = folderBrowserDialog1.SelectedPath;
-            }
-        }
 
         private void buttonInputBrowse_Click(object sender, EventArgs e)
         {
@@ -570,7 +569,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(Configuration.Settings.Language.BatchConvert.NothingToConvert);
                 return;
             }
-            if (!checkBoxOverwriteOriginalFiles.Checked)
+            if (!checkBoxOverwrite.Checked)
             {
                 if (textBoxOutputFolder.Text.Length < 2)
                 {
@@ -1367,10 +1366,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     var dir = textBoxOutputFolder.Text;
                     var overwrite = checkBoxOverwrite.Checked;
-                    if (checkBoxOverwriteOriginalFiles.Checked)
+                    if (radioButtonSaveInSourceFolder.Checked)
                     {
                         dir = Path.GetDirectoryName(p.FileName);
-                        overwrite = true;
                     }
                     var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, CommandLineConverter.BatchAction.None, null, false, progressCallback);
                     if (success)
@@ -1564,18 +1562,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LinkLabelOpenOutputFolderLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (Directory.Exists(textBoxOutputFolder.Text))
-            {
-                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
-            }
-            else
-            {
-                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
-            }
-        }
-
         private void ContextMenuStripFilesOpening(object sender, CancelEventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0 || _converting)
@@ -1666,12 +1652,12 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = checkBoxSetMinimumDisplayTimeBetweenSubs.Checked;
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
-            Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
             Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
             Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
             Configuration.Settings.Tools.BatchConvertUseStyleFromSource = checkBoxUseStyleFromSource.Checked;
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
+            Configuration.Settings.Tools.BatchConvertSaveInSourceFolder = radioButtonSaveInSourceFolder.Checked;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
@@ -1681,14 +1667,6 @@ namespace Nikse.SubtitleEdit.Forms
                 form.Initialize(new Subtitle());
                 form.ShowDialog(this);
             }
-        }
-
-        private void checkBoxOverwriteOriginalFiles_CheckedChanged(object sender, EventArgs e)
-        {
-           // labelChooseOutputFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
-            textBoxOutputFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
-            checkBoxOverwrite.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
-            buttonChooseFolder.Enabled = !checkBoxOverwriteOriginalFiles.Checked;
         }
 
         private string _rootFolder;
@@ -1758,7 +1736,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static HashSet<string> SearchExtBlackList = new HashSet<string>
+        private static readonly HashSet<string> SearchExtBlackList = new HashSet<string>
         {
             ".png",
             ".jpg",
@@ -1946,7 +1924,33 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxOutputFolder.Enabled = false;
             buttonChooseFolder.Enabled = false;
-            //checkBoxOverwrite.Enabled = false;
+        }
+
+        private void radioButtonSaveInOutputFolder_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxOutputFolder.Enabled = true;
+            buttonChooseFolder.Enabled = true;
+        }
+
+        private void linkLabelOpenOutputFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (Directory.Exists(textBoxOutputFolder.Text))
+            {
+                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+            }
+            else
+            {
+                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
+            }
+        }
+
+        private void buttonChooseFolder_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.ShowNewFolderButton = true;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBoxOutputFolder.Text = folderBrowserDialog1.SelectedPath;
+            }
         }
     }
 }

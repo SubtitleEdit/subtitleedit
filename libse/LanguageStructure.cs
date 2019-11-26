@@ -187,8 +187,9 @@
             public string InputDescription { get; set; }
             public string Status { get; set; }
             public string Output { get; set; }
-            public string ChooseOutputFolder { get; set; }
-            public string OverwriteExistingFiles { get; set; }
+            public string SaveInSourceFolder { get; set; }
+            public string SaveInOutputFolder { get; set; }
+            public string OverwriteFiles { get; set; }
             public string Style { get; set; }
             public string UseStyleFromSource { get; set; }
             public string ConvertOptions { get; set; }

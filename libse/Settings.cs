@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
         public string NewEmptyTranslationText { get; set; }
         public string BatchConvertOutputFolder { get; set; }
         public bool BatchConvertOverwriteExisting { get; set; }
-        public bool BatchConvertOverwriteOriginal { get; set; }
+        public bool BatchConvertSaveInSourceFolder { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
         public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
@@ -2832,10 +2832,10 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertOverwriteExisting = Convert.ToBoolean(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("BatchConvertOverwriteOriginal");
+            subNode = node.SelectSingleNode("BatchConvertSaveInSourceFolder");
             if (subNode != null)
             {
-                settings.Tools.BatchConvertOverwriteOriginal = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.BatchConvertSaveInSourceFolder = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
@@ -6167,7 +6167,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
                 textWriter.WriteElementString("BatchConvertOutputFolder", settings.Tools.BatchConvertOutputFolder);
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("BatchConvertOverwriteOriginal", settings.Tools.BatchConvertOverwriteOriginal.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertSaveInSourceFolder", settings.Tools.BatchConvertSaveInSourceFolder.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
