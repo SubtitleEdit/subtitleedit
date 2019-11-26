@@ -594,6 +594,7 @@
     <Word from="krstovima" to="križevima" />
     <Word from="Krstovima" to="Križevima" />
     <Word from="križom" to="križem" />
+    <Word from="ksko" to="kako" />
     <Word from="kuča" to="kuća" />
     <Word from="kuče" to="kuće" />
     <Word from="kuči" to="kući" />
@@ -1261,6 +1262,7 @@
     <Word from="razreši" to="razriješi" />
     <Word from="razume" to="razumije" />
     <Word from="razumeju" to="razumiju" />
+    <Word from="razumijeti" to="razumjeti" />
     <Word from="recitujte" to="recitirajte" />
     <Word from="reč" to="riječ" />
     <Word from="reči" to="riječi" />
@@ -1660,6 +1662,7 @@
     <Word from="tugi" to="tuzi" />
     <Word from="tvrtci" to="tvrtki" />
     <Word from="ua" to="za" />
+    <Word from="ubde" to="bude" />
     <Word from="ubede" to="uvjere" />
     <Word from="Ubeđivao" to="Uvjeravao" />
     <Word from="ubeđivao" to="uvjeravao" />
@@ -1761,6 +1764,7 @@
     <Word from="Uspjevati" to="Uspijevati" />
     <Word from="uspjevala" to="uspijevala" />
     <Word from="uspijo" to="uspio" />
+    <Word from="uspijehom" to="uspjehom" />
     <Word from="u sred" to="usred" />
     <Word from="usled" to="uslijed" />
     <Word from="Usled" to="Uslijed" />
@@ -1904,6 +1908,7 @@
     <Word from="zalivu" to="zaljevu" />
     <Word from="zamnom" to="za mnom" />
     <Word from="Zamnom" to="Za mnom" />
+    <Word from="zanči" to="znači" />
     <Word from="zanm" to="znam" />
     <Word from="zano" to="znao" />
     <Word from="zanma" to="zanima" />
