@@ -1106,9 +1106,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonGoogleIt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleIt.Location = new System.Drawing.Point(152, 88);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(152, 94);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(217, 21);
+            this.buttonGoogleIt.Size = new System.Drawing.Size(217, 23);
             this.buttonGoogleIt.TabIndex = 3;
             this.buttonGoogleIt.Text = "Google it";
             this.buttonGoogleIt.UseVisualStyleBackColor = true;
@@ -1118,9 +1118,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonAddToOcrReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAddToOcrReplaceList.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(152, 61);
+            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(152, 65);
             this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
-            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(217, 21);
+            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(217, 23);
             this.buttonAddToOcrReplaceList.TabIndex = 2;
             this.buttonAddToOcrReplaceList.Text = "Add OCR replace pair";
             this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
@@ -1130,9 +1130,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonUknownToUserDic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUknownToUserDic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonUknownToUserDic.Location = new System.Drawing.Point(152, 34);
+            this.buttonUknownToUserDic.Location = new System.Drawing.Point(152, 36);
             this.buttonUknownToUserDic.Name = "buttonUknownToUserDic";
-            this.buttonUknownToUserDic.Size = new System.Drawing.Size(217, 21);
+            this.buttonUknownToUserDic.Size = new System.Drawing.Size(217, 23);
             this.buttonUknownToUserDic.TabIndex = 1;
             this.buttonUknownToUserDic.Text = "Add to user dictionary";
             this.buttonUknownToUserDic.UseVisualStyleBackColor = true;
@@ -1144,7 +1144,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonUknownToNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUknownToNames.Location = new System.Drawing.Point(152, 7);
             this.buttonUknownToNames.Name = "buttonUknownToNames";
-            this.buttonUknownToNames.Size = new System.Drawing.Size(217, 21);
+            this.buttonUknownToNames.Size = new System.Drawing.Size(217, 23);
             this.buttonUknownToNames.TabIndex = 0;
             this.buttonUknownToNames.Text = "Add to names etc list";
             this.buttonUknownToNames.UseVisualStyleBackColor = true;
@@ -1616,6 +1616,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ColumnIndexActor = -1;
+            this.subtitleListView1.ColumnIndexCps = -1;
+            this.subtitleListView1.ColumnIndexDuration = 3;
+            this.subtitleListView1.ColumnIndexEnd = 2;
+            this.subtitleListView1.ColumnIndexExtra = -1;
+            this.subtitleListView1.ColumnIndexGap = -1;
+            this.subtitleListView1.ColumnIndexNetwork = -1;
+            this.subtitleListView1.ColumnIndexNumber = 0;
+            this.subtitleListView1.ColumnIndexRegion = -1;
+            this.subtitleListView1.ColumnIndexStart = 1;
+            this.subtitleListView1.ColumnIndexText = 4;
+            this.subtitleListView1.ColumnIndexTextAlternate = -1;
+            this.subtitleListView1.ColumnIndexWpm = -1;
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
