@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else
                         {
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(" " + node.InnerText.TrimStart()));
+                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(node.InnerText.TrimStart()));
                         }
                     }
                 }

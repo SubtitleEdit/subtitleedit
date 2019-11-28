@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core
                 return Regex.IsMatch(line);
             }
 
-            return line.EndsWith(Text, StringComparison.Ordinal);
+            return line.EndsWith($" {Text}", StringComparison.Ordinal) || line.Equals(Text, StringComparison.Ordinal);
         }
 
         public override string ToString()
