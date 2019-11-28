@@ -19,7 +19,9 @@
    * Improve read speed of .ts/.m2ts files
    * Use display-friendly language name in "Fix common errors" - thx Zoltan
    * Allow "Typewriter effect" for multiple lines - thx andradadad
+   * Improve overwrite setting in "Batch convert" - thx mgutt/xylographe
 * FIXED:
+   * Fix list view initialization issue - thx AlexandreMT
    * Fix "Replace" issue - thx loyaldragon
    * Fix extracting correct audio track with VLC
    * Fix remove empty lines after "Multiple replace" in "Batch convert"
@@ -28,6 +30,7 @@
    * Fix possible crash when going from src view to list view
    * Fix "Save selected lines as..." issues - thx Milenko
    * Fix OcrFixReplaceLst_User issues - thx Maitch/xylographe
+   * Fix crash in cmd line FixCommonErrors - thx Rouzax
 
 
 3.5.11 (27th October 2019)
