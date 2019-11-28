@@ -32,7 +32,13 @@ namespace Nikse.SubtitleEdit.Core
                 return Regex.IsMatch(line);
             }
 
-            return line.EndsWith($" {Text}", StringComparison.Ordinal) || line.Equals(Text, StringComparison.Ordinal);
+            if (line.EndsWith(Text, StringComparison.Ordinal))
+            {
+                var indexBeforeText = line.Length - Text.Length - 1;
+                return indexBeforeText < 0 || line[indexBeforeText] == ' ';
+            }
+
+            return false;
         }
 
         public override string ToString()
