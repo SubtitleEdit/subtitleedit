@@ -1140,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
 
                         // Remove native formatting
-                        if (format?.Name != sf.Name)
+                        if (format != null && format.Name != sf.Name)
                         {
                             format.RemoveNativeFormatting(sub, sf);
                         }

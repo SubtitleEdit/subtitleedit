@@ -36,14 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     s = s.Remove(0, 1);
                     if (s.StartsWith(' '))
                     {
-                        if (s.StartsWith(" <i>", StringComparison.Ordinal))
-                        {
-                            pre = " <i>";
-                        }
-                        else
-                        {
-                            pre = " ";
-                        }
+                        pre = s.StartsWith(" <i>", StringComparison.Ordinal) ? " <i>" : " ";
                     }
                     else if (s.StartsWith("<i>", StringComparison.Ordinal))
                     {
@@ -624,7 +617,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return newText;
         }
 
-        private bool IsInsideBrackets(string text, int targetIndex)
+        private static bool IsInsideBrackets(string text, int targetIndex)
         {
             // <i>♪ (THE CAPITOLS: "COOL JERK") ♪</i>
             var index = text.LastIndexOf('(', targetIndex - 1) + 1;
@@ -642,7 +635,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return false;
         }
 
-        private bool ShouldRemoveNarrator(string pre)
+        private static bool ShouldRemoveNarrator(string pre)
         {
             // Skip these: Barry, remember: She cannot; http://google.com; Improved by: ...
             if (pre.IndexOfAny(new[] { "Previously on", "Improved by", "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -973,7 +966,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text.Trim();
         }
 
-        private string RemoveEmptyFontTag(string text)
+        private static string RemoveEmptyFontTag(string text)
         {
             int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
             if (indexOfStartFont >= 0)
@@ -1214,7 +1207,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                    text.StartsWith(Settings.CustomStart, StringComparison.Ordinal) && text.EndsWith(Settings.CustomEnd, StringComparison.Ordinal);
         }
 
-        private bool StartsAndEndsWithHearImpairedTags(string text, char startTag, char endTag)
+        private static bool StartsAndEndsWithHearImpairedTags(string text, char startTag, char endTag)
         {
             if (text.Length > 1 && text.StartsWith(startTag) && (text.EndsWith(endTag) || text.EndsWith(endTag + ":")))
             {
