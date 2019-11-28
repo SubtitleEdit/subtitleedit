@@ -27,15 +27,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
         public delegate void BatchConvertProgress(string progress);
 
-        [Flags]
         internal enum BatchAction
         {
-            None = 0,
-            FixCommonErrors = 1,
-            RemoveTextForHI = 2,
-            RemoveFormatting = 4,
-            ReDoCasing = 8,
-            ReverseRtlStartEnd = 16
+            FixCommonErrors,
+            RemoveTextForHI,
+            RemoveFormatting,
+            ReDoCasing,
+            ReverseRtlStartEnd
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)
@@ -729,7 +727,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly, Point? resolution)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, Point? resolution)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -758,7 +756,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions, bool forcedOnly)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -784,7 +782,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -919,40 +917,40 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static BatchAction GetArgumentActions(List<string> args)
+        private static List<BatchAction> GetArgumentActions(List<string> args)
         {
-            var actions = BatchAction.None;
+            var actions = new List<BatchAction>();
             for (int i = args.Count - 1; i >= 0; i--)
             {
                 var argument = args[i];
                 if (argument.StartsWith("/fixcommonerrors", StringComparison.OrdinalIgnoreCase) ||
                     argument.StartsWith("-fixcommonerrors", StringComparison.OrdinalIgnoreCase))
                 {
-                    actions |= BatchAction.FixCommonErrors;
+                    actions.Add(BatchAction.FixCommonErrors);
                     args.RemoveAt(i);
                 }
                 else if (argument.StartsWith("/reversertlstartend", StringComparison.OrdinalIgnoreCase) ||
                          argument.StartsWith("-reversertlstartend", StringComparison.OrdinalIgnoreCase))
                 {
-                    actions |= BatchAction.ReverseRtlStartEnd;
+                    actions.Add(BatchAction.ReverseRtlStartEnd);
                     args.RemoveAt(i);
                 }
                 else if (argument.StartsWith("/redocasing", StringComparison.OrdinalIgnoreCase) ||
                          argument.StartsWith("-redocasing", StringComparison.OrdinalIgnoreCase))
                 {
-                    actions |= BatchAction.ReDoCasing;
+                    actions.Add(BatchAction.ReDoCasing);
                     args.RemoveAt(i);
                 }
                 else if (argument.StartsWith("/removetextforhi", StringComparison.OrdinalIgnoreCase) ||
                          argument.StartsWith("-removetextforhi", StringComparison.OrdinalIgnoreCase))
                 {
-                    actions |= BatchAction.RemoveTextForHI;
+                    actions.Add(BatchAction.RemoveTextForHI);
                     args.RemoveAt(i);
                 }
                 else if (argument.StartsWith("/removeformatting", StringComparison.OrdinalIgnoreCase) ||
                          argument.StartsWith("-removeformatting", StringComparison.OrdinalIgnoreCase))
                 {
-                    actions |= BatchAction.RemoveFormatting;
+                    actions.Add(BatchAction.RemoveFormatting);
                     args.RemoveAt(i);
                 }
             }
@@ -1025,10 +1023,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
                                               IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, List<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
-                                              double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, BatchAction actions = BatchAction.None,
+                                              double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
                                               Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
@@ -1049,58 +1046,59 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     Configuration.Settings.General.CurrentFrameRate = targetFrameRate.Value;
                 }
 
-                if (actions != BatchAction.None)
+                if (actions != null)
                 {
-                    if ((actions & BatchAction.RemoveTextForHI) == BatchAction.RemoveTextForHI)
+                    foreach (var action in actions)
                     {
-                        var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
-                        var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
-                        foreach (var p in sub.Paragraphs)
+                        switch (action)
                         {
-                            p.Text = hiLib.RemoveTextFromHearImpaired(p.Text);
-                        }
-                    }
-                    if ((actions & BatchAction.RemoveFormatting) == BatchAction.RemoveFormatting)
-                    {
-                        foreach (var p in sub.Paragraphs)
-                        {
-                            p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                        }
-                    }
-                    if ((actions & BatchAction.FixCommonErrors) == BatchAction.FixCommonErrors)
-                    {
-                        using (var fce = new FixCommonErrors { BatchMode = true })
-                        {
-                            for (int i = 0; i < 3; i++)
-                            {
-                                var language = Configuration.Settings.Tools.BatchConvertLanguage;
-                                if (string.IsNullOrEmpty(language) || autoDetectLanguage)
+                            case BatchAction.FixCommonErrors:
+                                using (var fce = new FixCommonErrors { BatchMode = true })
                                 {
-                                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
-                                }
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        var language = Configuration.Settings.Tools.BatchConvertLanguage;
+                                        if (string.IsNullOrEmpty(language) || autoDetectLanguage)
+                                        {
+                                            language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+                                        }
 
-                                fce.RunBatch(sub, format, targetEncoding, language);
-                                sub = fce.FixedSubtitle;
-                            }
-                        }
-                    }
-                    if ((actions & BatchAction.ReDoCasing) == BatchAction.ReDoCasing)
-                    {
-                        using (var changeCasing = new ChangeCasing())
-                        {
-                            changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
-                        }
-                        using (var changeCasingNames = new ChangeCasingNames())
-                        {
-                            changeCasingNames.Initialize(sub);
-                            changeCasingNames.FixCasing();
-                        }
-                    }
-                    if ((actions & BatchAction.ReverseRtlStartEnd) == BatchAction.ReverseRtlStartEnd)
-                    {
-                        foreach (var p in sub.Paragraphs)
-                        {
-                            p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                                        fce.RunBatch(sub, format, targetEncoding, language);
+                                        sub = fce.FixedSubtitle;
+                                    }
+                                }
+                                break;
+                            case BatchAction.RemoveTextForHI:
+                                var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
+                                var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    p.Text = hiLib.RemoveTextFromHearImpaired(p.Text);
+                                }
+                                break;
+                            case BatchAction.RemoveFormatting:
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
+                                }
+                                break;
+                            case BatchAction.ReDoCasing:
+                                using (var changeCasing = new ChangeCasing())
+                                {
+                                    changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
+                                }
+                                using (var changeCasingNames = new ChangeCasingNames())
+                                {
+                                    changeCasingNames.Initialize(sub);
+                                    changeCasingNames.FixCasing();
+                                }
+                                break;
+                            case BatchAction.ReverseRtlStartEnd:
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                                }
+                                break;
                         }
                     }
                 }
