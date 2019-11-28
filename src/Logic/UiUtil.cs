@@ -524,6 +524,15 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        internal static void FixFonts(ToolStripComboBox item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                DarkTheme.SetDarkTheme(item);
+            }
+        }
+
         private static void FixFontsInner(Control form, int iterations = 5)
         {
             if (iterations < 1)
@@ -574,7 +583,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void GetLineLengths(Label label, string text)
         {
-            label.ForeColor = Color.Black;
+            label.ForeColor = ForeColor;
             var lines = text.SplitToLines();
             const int max = 3;
             var sb = new StringBuilder();
@@ -966,5 +975,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
         }
+
+        public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.BackColor : Control.DefaultBackColor;
+
+        public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.ForeColor : Control.DefaultForeColor;
     }
 }

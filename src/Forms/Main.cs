@@ -8635,7 +8635,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    charsPerSecond.ForeColor = Color.Black;
+                    charsPerSecond.ForeColor = UiUtil.ForeColor;
                 }
 
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
@@ -8644,7 +8644,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
-                    charsPerSecond.ForeColor = Color.Black;
+                    charsPerSecond.ForeColor = UiUtil.ForeColor;
                 }
                 else
                 {
@@ -8701,7 +8701,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
                 {
-                    lineTotal.ForeColor = Color.Black;
+                    lineTotal.ForeColor = UiUtil.ForeColor;
                     if (!textBoxHasFocus)
                     {
                         lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
@@ -19242,6 +19242,11 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Focus();
             }
 
+            UiUtil.FixFonts(toolStripComboBoxWaveform);
+            UiUtil.FixFonts(toolStripComboBoxFrameRate);
+            UiUtil.FixFonts(comboBoxSubtitleFormats);
+            UiUtil.FixFonts(comboBoxEncoding);
+            UiUtil.FixFonts(toolStripSplitButtonPlayRate);
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             ShowSubtitleTimer.Start();
         }
@@ -19249,9 +19254,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializePlayRateDropDown()
         {
             toolStripSplitButtonPlayRate.DropDownItems.Clear();
+            var foreColor = UiUtil.ForeColor;
+            var backColor = UiUtil.BackColor;
             for (int i = 30; i <= 300; i += 10)
             {
-                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100 });
+                toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100, BackColor = backColor, ForeColor = foreColor });
             }
         }
 
