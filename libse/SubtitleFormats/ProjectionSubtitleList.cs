@@ -13,9 +13,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            foreach (var p in subtitle.Paragraphs)
+            for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {
-                sb.Append($"{EncodeTime(p.StartTime)} {EncodeTime(p.EndTime)} {{\\uc0\\pard\\qc ");
+                var p = subtitle.Paragraphs[index];
+                sb.Append($"{GetTimeCodes(p, index)}{{\\uc0\\pard\\qc ");
                 var text = Utilities.RemoveSsaTags(p.Text);
                 text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
                 foreach (var line in text.SplitToLines())
@@ -23,10 +24,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(RftEncode(line));
                     sb.Append("\\par ");
                 }
+
                 sb.AppendLine("}");
             }
-            sb.AppendLine();
+
             return sb.ToString();
+        }
+
+        private string GetTimeCodes(Paragraph p, int index)
+        {
+            if (p.StartTime.IsMaxTime || p.EndTime.IsMaxTime)
+            {
+                var displayNumber = (index + 1).ToString(CultureInfo.InvariantCulture).PadRight(13, ' ');
+                return $"{displayNumber} {displayNumber}";
+            }
+            return $"{EncodeTime(p.StartTime)} {EncodeTime(p.EndTime)}";
+        }
+
+        private static string EncodeTime(TimeCode time)
+        {
+            return MillisecondsToFrames(time.TotalMilliseconds).ToString(CultureInfo.InvariantCulture).PadRight(13, ' ');
         }
 
         private static string RftEncode(string line)
@@ -72,11 +89,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return BitConverter.ToInt32(bytes, 0);
         }
 
-        private static string EncodeTime(TimeCode time)
-        {
-            return MillisecondsToFrames(time.TotalMilliseconds).ToString(CultureInfo.InvariantCulture).PadLeft(8, ' ');
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -109,7 +121,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var rtf = line.Remove(0, startText);
                     var text = RtfDecode(rtf);
-                    subtitle.Paragraphs.Add(new Paragraph(text, FramesToMilliseconds(startFrame), FramesToMilliseconds(endFrame)));
+                    var p = new Paragraph(text, FramesToMilliseconds(startFrame), FramesToMilliseconds(endFrame));
+                    if (startFrame == endFrame && startFrame == subtitle.Paragraphs.Count + 1)
+                    {
+                        p.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                        p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    }
+                    subtitle.Paragraphs.Add(p);
                 }
             }
             subtitle.Renumber();
