@@ -13,23 +13,23 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static IEnumerable<Control> GetAllControlByType(Control control, Type type)
         {
-            var controls = control.Controls.Cast<Control>();
+            var controls = control.Controls.Cast<Control>().ToList();
 
             return controls.SelectMany(ctrl => GetAllControlByType(ctrl, type))
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type);
         }
 
-        static readonly Color BackColor = Color.FromArgb(52, 52, 45);
-        static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
+        internal static readonly Color BackColor = Color.FromArgb(52, 52, 45);
+        internal static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
 
         private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
+            var sz = e.Graphics.MeasureString((sender as TabControl)?.TabPages[e.Index].Text, e.Font);
             using (Brush br = new SolidBrush(BackColor))
             {
                 e.Graphics.FillRectangle(br, e.Bounds);
-                SizeF sz = e.Graphics.MeasureString((sender as TabControl).TabPages[e.Index].Text, e.Font);
-                e.Graphics.DrawString((sender as TabControl).TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
+                e.Graphics.DrawString((sender as TabControl)?.TabPages[e.Index].Text, e.Font, Brushes.WhiteSmoke, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
 
                 Rectangle rect = e.Bounds;
                 rect.Offset(0, 1);
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void Tabpage_Paint(object sender, PaintEventArgs e)
+        private static void TabPage_Paint(object sender, PaintEventArgs e)
         {
             using (SolidBrush fillBrush = new SolidBrush(BackColor))
             {
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var type = c.GetType();
             var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-            var contextMenus = fields.Where(f => f != null && f.GetValue(c) != null &&
+            var contextMenus = fields.Where(f => f.GetValue(c) != null &&
             (f.GetValue(c).GetType().IsSubclassOf(typeof(T)) || f.GetValue(c).GetType() == typeof(T)));
             var menus = contextMenus.Select(f => f.GetValue(c));
             return menus.Cast<T>().ToList();
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Configuration.Settings.General.SubtitleFontColor = ForeColor;
                 Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
                 Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
-                // prevent re assignings
+                // prevent re-assignments
                 _isConfigUpdated = true;
             }
 
@@ -77,9 +77,72 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
-            if (ctrl is Form)
+            if (ctrl is Form form) // https://www.dreamincode.net/forums/topic/64981-designing-a-custom-title-bar/
             {
-                var contextMenus = GetSubControls<ContextMenuStrip>(ctrl);
+                //form.FormBorderStyle = FormBorderStyle.None;
+                //var title = new PictureBox
+                //{
+                //    Location = new Point(0,0), 
+                //    Width = form.Width, 
+                //    Height = 50, 
+                //    BackColor = Color.Black,
+                //    Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left
+                //};
+                //form.Controls.Add(title);
+                //title.SendToBack();
+                //title.MouseDown += (o, i) => { form.WindowState = FormWindowState.Minimized; };
+                //title.MouseUp += (o, i) => { form.WindowState = FormWindowState.Maximized; };
+                //title.MouseMove += (o, i) => { form.WindowState = FormWindowState.Normal; };
+
+                //var minimize = new Label
+                //{
+                //    Text = "🗕", 
+                //    Location = new Point(form.Width - 60, 5),
+                //    ForeColor = ForeColor,
+                //    BackColor = Color.Black, // BackColor,
+                //    Width =  15,
+                //    Height = 15,
+                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
+                //};
+                //minimize.Click += (o, i) => { form.WindowState = FormWindowState.Minimized; };
+                //form.Controls.Add(minimize);
+                //minimize.BringToFront();
+
+                //var maximize = new Label
+                //{
+                //    Text = "🗗", //🗗 Overlap or 🗖 maximize
+                //    Location = new Point(form.Width - 40, 5),
+                //    ForeColor = ForeColor,
+                //    BackColor = Color.Black, // BackColor,
+                //    Width = 15,
+                //    Height = 15,
+                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
+                //};
+
+                //maximize.Click += (o, i) =>
+                //{
+                //    form.WindowState = form.WindowState == FormWindowState.Maximized ?  FormWindowState.Normal : FormWindowState.Maximized;
+                //    maximize.Text = form.WindowState == FormWindowState.Maximized ? "🗗" : "🗖";
+                //};
+                //form.Controls.Add(maximize);
+                //maximize.BringToFront();
+
+                //var close = new Label
+                //{
+                //    Text = "🗙",
+                //    Location = new Point(form.Width - 20, 5),
+                //    ForeColor = ForeColor,
+                //    BackColor = Color.Black, // BackColor,
+                //    Width = 15,
+                //    Height = 15,
+                //    Anchor = AnchorStyles.Top | AnchorStyles.Right
+                //};
+                //close.Click += (o, i) => { form.Close(); };
+                //form.Controls.Add(close);
+                //close.BringToFront();
+
+
+                var contextMenus = GetSubControls<ContextMenuStrip>(form);
                 foreach (ContextMenuStrip cms in contextMenus)
                 {
                     cms.BackColor = BackColor;
@@ -93,28 +156,28 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(ctrl);
+                var toolStrips = GetSubControls<ToolStrip>(form);
                 foreach (ToolStrip c in toolStrips)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(ctrl);
+                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(ctrl);
+                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
                 foreach (ToolStripContainer c in toolStripContainers)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(ctrl);
+                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
                 foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
                 {
                     c.BackColor = BackColor;
@@ -126,14 +189,14 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(ctrl);
+                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
                 foreach (ToolStripMenuItem c in toolStripMenuItems)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(ctrl);
+                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
                 foreach (ToolStripSeparator c in toolStripSeparators)
                 {
                     if (c.GetCurrentParent() is ToolStripDropDownMenu p)
@@ -156,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic
                     tc.DrawItem += TabControl1_DrawItem;
                     foreach (TabPage tabPage in tc.TabPages)
                     {
-                        tabPage.Paint += Tabpage_Paint;
+                        tabPage.Paint += TabPage_Paint;
                     }
                 }
                 FixControl(c);
@@ -200,6 +263,22 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        private static void xxx(object sender, PaintEventArgs e)
+        {
+            // Get the separator's width and height.
+            TrackBar toolStripSeparator = (TrackBar)sender;
+            int width = toolStripSeparator.Width;
+            int height = toolStripSeparator.Height;
+
+
+            // Fill the background.
+            e.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, width, height);
+
+            // Draw the line.
+            e.Graphics.DrawLine(new Pen(ForeColor), 4, height / 2, width - 4, height / 2);
+        }
+
+
         private static void lv_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             var lv = (ListView)sender;
@@ -230,14 +309,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         private class MyRenderer : ToolStripProfessionalRenderer
         {
-            //            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
-            //            {
-            //                Rectangle rc = new Rectangle(Point.Empty, e.Item.Size);
-            ////                Color c = e.Item.Selected ? Color.Azure : Color.Beige;
-            //                using (SolidBrush brush = new SolidBrush(BackColor))
-            //                    e.Graphics.FillRectangle(brush, rc);
-            //            }
-
             protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
             {
                 using (SolidBrush brush = new SolidBrush(BackColor))
@@ -251,6 +322,25 @@ namespace Nikse.SubtitleEdit.Logic
         {
             item.BackColor = BackColor;
             item.ForeColor = ForeColor;
+            if (item is ToolStripSeparator)
+            {
+                item.Paint += ToolStripSeparatorPaint;
+            }
+        }
+
+        private static void ToolStripSeparatorPaint(object sender, PaintEventArgs e)
+        {
+            // Get the separator's width and height.
+            ToolStripSeparator toolStripSeparator = (ToolStripSeparator)sender;
+            int width = toolStripSeparator.Width;
+            int height = toolStripSeparator.Height;
+
+
+            // Fill the background.
+            e.Graphics.FillRectangle(new SolidBrush(BackColor), 0, 0, width, height);
+
+            // Draw the line.
+            e.Graphics.DrawLine(new Pen(ForeColor), 4, height / 2, width - 4, height / 2);
         }
     }
 }
