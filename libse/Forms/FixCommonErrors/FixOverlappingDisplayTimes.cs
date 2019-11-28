@@ -20,8 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Duration.TotalMilliseconds < 0) // negative display time...
                 {
                     bool isFixed = false;
-                    string status = string.Format(language.StartTimeLaterThanEndTime,
-                                                    i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
+                    string status = string.Format(language.StartTimeLaterThanEndTime, i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
 
                     var prev = subtitle.GetParagraphOrDefault(i - 1);
                     var next = subtitle.GetParagraphOrDefault(i + 1);
@@ -81,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
                 double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
                 double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                bool canBeEqual = callbacks != null && (callbacks.Format != null && callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
+                bool canBeEqual = callbacks.Format != null && (callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
                 if (!canBeEqual)
                 {
                     canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;

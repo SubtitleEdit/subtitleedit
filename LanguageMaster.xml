@@ -2080,7 +2080,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Miscellaneous>Misc.</Miscellaneous>
     <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Use do-not-break-after list</UseDoNotBreakAfterList>
-    <BreakEarlyForLineEnding>Break early for line ending (.!?)</BreakEarlyForLineEnding>
+    <BreakEarlyForLineEnding>Break early for end of sentence (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Break by pixel width</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Prefer bottom heavy</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>Break early for dialog dash</BreakEarlyForDashDialog>
