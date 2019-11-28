@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        private string GetTimeCodes(Paragraph p, int index)
+        private static string GetTimeCodes(Paragraph p, int index)
         {
             if (p.StartTime.IsMaxTime || p.EndTime.IsMaxTime)
             {
