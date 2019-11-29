@@ -840,7 +840,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         private static TimeSpan GetOffset(IList<string> commandLineArguments)
         {
-            var offset = GetArgument(commandLineArguments, "offset:", "0");
+            var offset = GetArgument(commandLineArguments, "offset:", "0").TrimStart('+');
             if (int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.CurrentCulture, out var number) || int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out number))
             {
                 return TimeSpan.FromMilliseconds(number);
