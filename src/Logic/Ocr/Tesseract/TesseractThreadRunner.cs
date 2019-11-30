@@ -24,28 +24,29 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         public delegate void OcrDone(int index, ImageJob job);
 
         private static readonly object QueueLock = new object();
+        private readonly TesseractRunner _tesseractRunner;
         private readonly Queue<ImageJob> _jobQueue;
         private readonly OcrDone _callback;
         private bool _abort;
 
         public TesseractThreadRunner(OcrDone callback = null)
         {
+            // Collecting Tesseract errors in a TesseractRunner instance is not thread safe.
+            _tesseractRunner = new TesseractRunner(collectErrors: false);
             _jobQueue = new Queue<ImageJob>();
             _callback = callback;
         }
 
-        private void DoOcr(object j)
+        private void DoOcr(object state)
         {
-            if (_abort)
+            if (!_abort)
             {
-                return;
-            }
-
-            var job = (ImageJob)j;
-            job.Result = new TesseractRunner().Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
-            lock (QueueLock)
-            {
-                job.Completed = DateTime.UtcNow;
+                var job = state as ImageJob;
+                job.Result = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
+                lock (QueueLock)
+                {
+                    job.Completed = DateTime.UtcNow;
+                }
             }
         }
 

@@ -9,29 +9,33 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 {
     public class TesseractRunner
     {
-        public string LastError { get; private set; }
-        public List<string> TesseractErrors { get; }
         private readonly bool _runningOnWindows;
 
+        public string LastError { get; private set; }
+        public List<string> TesseractErrors { get; }
+
         public TesseractRunner()
+            : this(true)
         {
-            TesseractErrors = new List<string>();
+        }
+
+        public TesseractRunner(bool collectErrors)
+        {
+            if (collectErrors)
+            {
+                TesseractErrors = new List<string>();
+            }
             _runningOnWindows = Configuration.IsRunningOnWindows;
         }
 
-        public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302 = false)
+        public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302)
         {
             LastError = null;
+
             var tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
-            var tesseractDirectory = run302 ? Configuration.Tesseract302Directory : Configuration.TesseractDirectory;
             using (var process = new Process())
             {
-                process.StartInfo = new ProcessStartInfo(Path.Combine(tesseractDirectory, "tesseract.exe"))
-                {
-                    UseShellExecute = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}"
-                };
+                process.StartInfo.Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}";
 
                 if (!string.IsNullOrEmpty(psmMode))
                 {
@@ -48,39 +52,48 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
                 if (_runningOnWindows)
                 {
+                    string tesseractDirectory;
                     if (run302)
                     {
+                        tesseractDirectory = Configuration.Tesseract302Directory;
                         process.StartInfo.WorkingDirectory = tesseractDirectory;
                     }
                     else
                     {
-                        process.ErrorDataReceived += TesseractErrorReceived;
-                        process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments.Trim()}";
+                        tesseractDirectory = Configuration.TesseractDirectory;
+                        process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments}";
                     }
+                    process.StartInfo.FileName = Path.Combine(tesseractDirectory, "tesseract.exe");
                 }
                 else
                 {
                     process.StartInfo.FileName = "tesseract";
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.RedirectStandardError = true;
                 }
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardError = true;
+                process.ErrorDataReceived += TesseractStandardErrorHandler;
 
                 try
                 {
                     process.Start();
+                    process.BeginErrorReadLine();
                 }
                 catch (Exception exception)
                 {
-                    LastError = exception.Message + Environment.NewLine + exception.StackTrace;
-                    TesseractErrors.Add(LastError);
+                    AddTesseractError(exception.Message + Environment.NewLine + exception.StackTrace);
                     return "Error!";
                 }
                 process.WaitForExit(8000);
 
-                if (process.HasExited && process.ExitCode != 0)
+                if (!process.HasExited)
                 {
-                    LastError = "Tesseract returned with code " + process.ExitCode;
-                    TesseractErrors.Add(LastError);
+                    AddTesseractError("Tesseract timeout");
+                    return "Timeout!";
+                }
+                if (process.ExitCode != 0 && string.IsNullOrEmpty(LastError))
+                {
+                    AddTesseractError("Tesseract exited with code " + process.ExitCode);
                 }
             }
 
@@ -95,8 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             {
                 if (File.Exists(outputFileName))
                 {
-                    result = File.ReadAllText(outputFileName, Encoding.UTF8);
-                    result = ParseHocr(result);
+                    result = ParseHocr(File.ReadAllText(outputFileName, Encoding.UTF8));
                     File.Delete(outputFileName);
                 }
                 File.Delete(imageFileName);
@@ -167,31 +179,40 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             return sb.ToString().Trim();
         }
 
-        private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
+        private void AddTesseractError(string message)
         {
-            var msg = e.Data;
-
-            if (string.IsNullOrEmpty(msg) ||
-                msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
-                msg.Contains("Too few characters", StringComparison.OrdinalIgnoreCase) ||
-                msg.Contains("Empty page", StringComparison.OrdinalIgnoreCase) ||
-                msg.Contains(" diacritics", StringComparison.OrdinalIgnoreCase) ||
-                msg.Contains("Weak margin", StringComparison.OrdinalIgnoreCase))
+            if (TesseractErrors != null)
             {
-                return;
+                LastError = message;
+                TesseractErrors.Add(message);
             }
+        }
 
-            if (TesseractErrors.Count <= 100)
+        private void TesseractStandardErrorHandler(object sender, DataReceivedEventArgs e)
+        {
+            if (TesseractErrors != null && TesseractErrors.Count <= 100)
             {
+                var message = e.Data;
+
+                if (string.IsNullOrEmpty(message) ||
+                    message.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("Too few characters", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("Empty page", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains(" diacritics", StringComparison.OrdinalIgnoreCase) ||
+                    message.Contains("Weak margin", StringComparison.OrdinalIgnoreCase))
+                {
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(LastError))
                 {
-                    LastError = msg;
+                    LastError = message;
                 }
-                else if (!LastError.Contains(msg))
+                else if (!LastError.Contains(message))
                 {
-                    LastError = LastError + Environment.NewLine + msg;
+                    LastError = LastError + Environment.NewLine + message;
                 }
-                TesseractErrors.Add(msg);
+                TesseractErrors.Add(message);
             }
         }
 
