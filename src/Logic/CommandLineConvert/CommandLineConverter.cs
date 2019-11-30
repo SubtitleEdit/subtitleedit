@@ -115,14 +115,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /overwrite");
+                _stdOutWriter.WriteLine("        /forcedonly");
                 _stdOutWriter.WriteLine("        /multiplereplace:<comma separated file name list> ('.' represents the default replace rules)");
                 _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
-                _stdOutWriter.WriteLine("        /removeformatting");
-                _stdOutWriter.WriteLine("        /removetextforhi");
-                _stdOutWriter.WriteLine("        /fixcommonerrors");
-                _stdOutWriter.WriteLine("        /reversertlstartend");
-                _stdOutWriter.WriteLine("        /redocasing");
-                _stdOutWriter.WriteLine("        /forcedonly");
+                _stdOutWriter.WriteLine("      Following operations are applied in command line order");
+                _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
+                _stdOutWriter.WriteLine("        /FixCommonErrors");
+                _stdOutWriter.WriteLine("        /ReverseRtlStartEnd");
+                _stdOutWriter.WriteLine("        /RemoveFormatting");
+                _stdOutWriter.WriteLine("        /RemoveTextForHI");
+                _stdOutWriter.WriteLine("        /RedoCasing");
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    show this usage message: SubtitleEdit /help");
@@ -727,7 +729,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly, Point? resolution)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly, Point? resolution)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -756,7 +758,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions, bool forcedOnly)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -782,7 +784,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -835,22 +837,38 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         }
 
         /// <summary>
-        /// Gets an offset argument from the command line
+        /// Gets an offset argument from the command line (/offset:[+|-][[[hh:]mm:]ss.]ms)
         /// </summary>
         /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         private static TimeSpan GetOffset(IList<string> commandLineArguments)
         {
-            var offset = GetArgument(commandLineArguments, "offset:", "0").TrimStart('+');
-            if (int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.CurrentCulture, out var number) || int.TryParse(offset, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out number))
+            var offsetArgument = GetArgument(commandLineArguments, "offset:", "0");
+            var offset = offsetArgument;
+            var negate = false;
+            while (offset.Length > 0)
             {
-                return TimeSpan.FromMilliseconds(number);
+                if (offset[0] == '-')
+                {
+                    offset = offset.Substring(1);
+                    negate = !negate;
+                    continue;
+                }
+                if (offset[0] == '+')
+                {
+                    offset = offset.Substring(1);
+                    continue;
+                }
+                break;
             }
 
-            var negate = false;
-            while (offset.StartsWith('-'))
+            if (int.TryParse(offset, NumberStyles.None, CultureInfo.CurrentCulture, out var number) || int.TryParse(offset, NumberStyles.None, CultureInfo.InvariantCulture, out number))
             {
-                offset = offset.Substring(1);
-                negate = !negate;
+                var result = TimeSpan.FromMilliseconds(number);
+                if (negate)
+                {
+                    result = result.Negate();
+                }
+                return result;
             }
 
             var parts = offset.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -887,7 +905,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
             }
 
-            throw new FormatException($"The /offset value '{offset}' is invalid.");
+            throw new FormatException($"The /offset value '{offsetArgument}' is invalid.");
         }
 
         /// <summary>
@@ -917,43 +935,44 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static List<BatchAction> GetArgumentActions(List<string> args)
+        private static List<BatchAction> GetArgumentActions(IList<string> commandLineArguments)
         {
             var actions = new List<BatchAction>();
-            for (int i = args.Count - 1; i >= 0; i--)
+            for (int i = commandLineArguments.Count - 1; i >= 0; i--)
             {
-                var argument = args[i];
-                if (argument.StartsWith("/fixcommonerrors", StringComparison.OrdinalIgnoreCase) ||
-                    argument.StartsWith("-fixcommonerrors", StringComparison.OrdinalIgnoreCase))
+                var argument = commandLineArguments[i];
+                if (argument.Equals("/fixcommonerrors", StringComparison.OrdinalIgnoreCase) ||
+                    argument.Equals("-fixcommonerrors", StringComparison.OrdinalIgnoreCase))
                 {
                     actions.Add(BatchAction.FixCommonErrors);
-                    args.RemoveAt(i);
+                    commandLineArguments.RemoveAt(i);
                 }
-                else if (argument.StartsWith("/reversertlstartend", StringComparison.OrdinalIgnoreCase) ||
-                         argument.StartsWith("-reversertlstartend", StringComparison.OrdinalIgnoreCase))
+                else if (argument.Equals("/reversertlstartend", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-reversertlstartend", StringComparison.OrdinalIgnoreCase))
                 {
                     actions.Add(BatchAction.ReverseRtlStartEnd);
-                    args.RemoveAt(i);
+                    commandLineArguments.RemoveAt(i);
                 }
-                else if (argument.StartsWith("/redocasing", StringComparison.OrdinalIgnoreCase) ||
-                         argument.StartsWith("-redocasing", StringComparison.OrdinalIgnoreCase))
+                else if (argument.Equals("/redocasing", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-redocasing", StringComparison.OrdinalIgnoreCase))
                 {
                     actions.Add(BatchAction.ReDoCasing);
-                    args.RemoveAt(i);
+                    commandLineArguments.RemoveAt(i);
                 }
-                else if (argument.StartsWith("/removetextforhi", StringComparison.OrdinalIgnoreCase) ||
-                         argument.StartsWith("-removetextforhi", StringComparison.OrdinalIgnoreCase))
+                else if (argument.Equals("/removetextforhi", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-removetextforhi", StringComparison.OrdinalIgnoreCase))
                 {
                     actions.Add(BatchAction.RemoveTextForHI);
-                    args.RemoveAt(i);
+                    commandLineArguments.RemoveAt(i);
                 }
-                else if (argument.StartsWith("/removeformatting", StringComparison.OrdinalIgnoreCase) ||
-                         argument.StartsWith("-removeformatting", StringComparison.OrdinalIgnoreCase))
+                else if (argument.Equals("/removeformatting", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-removeformatting", StringComparison.OrdinalIgnoreCase))
                 {
                     actions.Add(BatchAction.RemoveFormatting);
-                    args.RemoveAt(i);
+                    commandLineArguments.RemoveAt(i);
                 }
             }
+            actions.Reverse();
             return actions;
         }
 
@@ -1024,8 +1043,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         }
 
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
-                                              IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, List<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
-                                              double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, List<BatchAction> actions = null,
+                                              IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
+                                              double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions = null,
                                               Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
@@ -1360,7 +1379,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                         if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                         {
-                                            if (binaryParagraphs.Count > index)
+                                            if (index < binaryParagraphs.Count)
                                             {
                                                 mp.Bitmap = binaryParagraphs[index].GetBitmap();
                                                 mp.Forced = binaryParagraphs[index].IsForced;
@@ -1442,7 +1461,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     var mp = form.MakeMakeBitmapParameter(index, width, height);
                                     if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                     {
-                                        if (binaryParagraphs.Count > index)
+                                        if (index < binaryParagraphs.Count)
                                         {
                                             var sourceBitmap = binaryParagraphs[index].GetBitmap();
                                             var nbmp = new NikseBitmap(sourceBitmap);
@@ -1519,7 +1538,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                 if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
-                                    if (binaryParagraphs.Count > index)
+                                    if (index < binaryParagraphs.Count)
                                     {
                                         mp.Bitmap = binaryParagraphs[index].GetBitmap();
                                         mp.Forced = binaryParagraphs[index].IsForced;
@@ -1590,7 +1609,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                     if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                     {
-                                        if (binaryParagraphs.Count > index)
+                                        if (index < binaryParagraphs.Count)
                                         {
                                             mp.Bitmap = binaryParagraphs[index].GetBitmap();
                                             mp.Forced = binaryParagraphs[index].IsForced;
@@ -1651,7 +1670,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
                                 if (binaryParagraphs != null && binaryParagraphs.Count > 0)
                                 {
-                                    if (binaryParagraphs.Count > index)
+                                    if (index < binaryParagraphs.Count)
                                     {
                                         mp.Bitmap = binaryParagraphs[index].GetBitmap();
                                         mp.Forced = binaryParagraphs[index].IsForced;
