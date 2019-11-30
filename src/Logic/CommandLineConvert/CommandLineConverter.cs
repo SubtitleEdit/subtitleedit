@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("    " + Pac.NameOfFormat);
                 _stdOutWriter.WriteLine("    " + Spt.NameOfFormat);
                 _stdOutWriter.WriteLine("    " + Ultech130.NameOfFormat);
+                _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For VobSub .sub output use: '" + BatchConvert.VobSubSubtitle.RemoveChar(' ') + "'");
                 _stdOutWriter.WriteLine("- For DOST/image .dost/image output use: '" + BatchConvert.DostImageSubtitle.RemoveChar(' ') + "'");
@@ -145,9 +146,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
                 _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine();
-                _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
-                _stdOutWriter.WriteLine("    show this usage message: SubtitleEdit /help");
-                _stdOutWriter.WriteLine("    list available formats: SubtitleEdit /help formats");
+                _stdOutWriter.WriteLine("    Example: SubtitleEdit /convert *.srt sami");
+                _stdOutWriter.WriteLine("    Show this usage message: SubtitleEdit /help");
+                _stdOutWriter.WriteLine("    List available formats: SubtitleEdit /help formats");
             }
             _stdOutWriter.WriteLine();
 
@@ -341,7 +342,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             multipleReplaceImportFiles.Add(mra);
                         }
                     }
-                    else if (GetArgument(unconsumedArguments, "multiplereplace").Equals("multiplereplace"))
+                    else if (GetArgument(unconsumedArguments, "multiplereplace").Length > 0)
                     {
                         multipleReplaceImportFiles.Add(".");
                     }
@@ -359,8 +360,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                 var actions = GetArgumentActions(unconsumedArguments);
 
-                bool overwrite = GetArgument(unconsumedArguments, "overwrite").Equals("overwrite");
-                bool forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Equals("forcedonly");
+                bool overwrite = GetArgument(unconsumedArguments, "overwrite").Length > 0;
+                bool forcedOnly = GetArgument(unconsumedArguments, "forcedonly").Length > 0;
 
                 var patterns = new List<string>();
 
@@ -410,7 +411,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     throw new Exception(string.Empty);
                 }
 
-                var formats = SubtitleFormat.AllSubtitleFormats.ToList();
+                var formats = SubtitleFormat.AllSubtitleFormats;
                 foreach (var fileName in files)
                 {
                     count++;
@@ -419,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (fileInfo.Exists)
                     {
                         var sub = new Subtitle();
-                        SubtitleFormat format = null;
+                        var format = default(SubtitleFormat);
                         bool done = false;
 
                         if (targetFormat.RemoveChar(' ').ToLowerInvariant() != BatchConvert.BluRaySubtitle.RemoveChar(' ').ToLowerInvariant() &&
@@ -738,7 +739,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         private static SubtitleFormat GetTargetformat(string targetFormat, IEnumerable<SubtitleFormat> formats)
         {
             string targetFormatNoWhiteSpace = targetFormat.RemoveChar(' ');
-            foreach (SubtitleFormat sf in formats)
+            foreach (var sf in formats)
             {
                 if (sf.IsTextBased && sf.Name.RemoveChar(' ').Equals(targetFormatNoWhiteSpace, StringComparison.OrdinalIgnoreCase))
                 {
@@ -752,8 +753,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
-            var log = new StringBuilder();
             _stdOutWriter?.WriteLine($"Loading subtitles from file \"{fileName}\"");
+            var log = new StringBuilder();
             var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
             Subtitle sub;
             using (var vobSubOcr = new VobSubOcr())
@@ -934,7 +935,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         private static Point? GetResolution(IList<string> commandLineArguments)
         {
             var res = GetArgument(commandLineArguments, "resolution:");
-            if (string.IsNullOrEmpty(res))
+            if (res.Length == 0)
             {
                 res = GetArgument(commandLineArguments, "res:");
             }
@@ -1219,10 +1220,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                         if (format != null && (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern)))
                         {
-                            foreach (string className in Sami.GetStylesFromHeader(sub.Header))
+                            foreach (var className in Sami.GetStylesFromHeader(sub.Header))
                             {
                                 var newSub = new Subtitle();
-                                foreach (Paragraph p in sub.Paragraphs)
+                                foreach (var p in sub.Paragraphs)
                                 {
                                     if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
                                     {
