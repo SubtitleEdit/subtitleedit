@@ -51,7 +51,7 @@ namespace Test.Logic
             var procSubtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(_subtitle, _maxLineLength * 2, _maxLineLength);
 
             Assert.AreEqual("We have never been to Asia,\r\nnor have we visited Africa.", procSubtitle.Paragraphs[0].Text);
-            Assert.AreEqual("We have never been to Asia,\r\nnor have we visited Africa.", procSubtitle.Paragraphs[1].Text);
+            Assert.AreEqual("We have never\r\nbeen to Asia, nor\r\nhave we visited Africa.", procSubtitle.Paragraphs[1].Text);
             Assert.AreEqual(_subtitle.Paragraphs[2].Text, procSubtitle.Paragraphs[2].Text);
 
             Assert.AreNotEqual(_subtitle.Paragraphs.Count, procSubtitle.Paragraphs.Count);
@@ -73,6 +73,17 @@ namespace Test.Logic
             {
                 Assert.IsTrue(procSubtitle.Paragraphs[5].Text.Length < procSubtitle.Paragraphs[6].Text.Length);
             }
+        }
+
+        [TestMethod]
+        public void SplitLongLinesInSubtitleTest2()
+        {
+            Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi Joes, how are you feeling after the match yesterday?" + Environment.NewLine + "I know you must be pretty smashed up.", 0, 5000));
+            var procSubtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(sub, _maxLineLength * 2, _maxLineLength);
+            Assert.AreEqual("Hi Joes, how are you feeling" + Environment.NewLine + "after the match yesterday?", procSubtitle.Paragraphs[0].Text);
+            Assert.AreEqual("I know you must be" + Environment.NewLine + "pretty smashed up.", procSubtitle.Paragraphs[1].Text);
         }
 
         [TestMethod]

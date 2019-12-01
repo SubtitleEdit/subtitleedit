@@ -53,16 +53,34 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var oldParagraph = splittedSubtitle.Paragraphs[i];
 
                 // don't split into two paragraph if it can be balanced
-                var text = Utilities.AutoBreakLine(oldParagraph.Text, language);
-                if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
+                var text = oldParagraph.Text;
+                var noHtmlLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+
+                bool autoBreak = true;
+                if (noHtmlLines.Count == 2 && noHtmlLines[0].Length <= totalLineMaxCharacters && noHtmlLines[1].Length < totalLineMaxCharacters &&
+                    (noHtmlLines[0].EndsWith('.') || noHtmlLines[0].EndsWith('!') || noHtmlLines[0].EndsWith('?')))
+                {
+                    autoBreak = false;
+                }
+                if (autoBreak)
+                {
+                    text = Utilities.AutoBreakLine(oldParagraph.Text, language, true);
+                }
+
+                if (noHtmlLines.Count == 1 && text.SplitToLines().Count <= 2 && noHtmlLines[0].Length > singleLineMaxCharacters && !QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
                 {
                     oldParagraph.Text = text;
                     continue;
                 }
 
+                if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
+                {
+                    continue;
+                }
+
                 // continue if paragraph doesn't contain exactly two lines
                 var lines = text.SplitToLines();
-                if (lines.Count != 2)
+                if (lines.Count > 2)
                 {
                     continue; // ignore 3+ lines
                 }

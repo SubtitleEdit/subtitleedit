@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core
                 return text;
             }
 
-            string s = AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language);
+            string s = AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language, Configuration.Settings.Tools.AutoBreakLineEndingEarly);
 
             var arr = HtmlUtil.RemoveHtmlTags(s, true).SplitToLines();
             if (arr.Count == 1 && arr[0].Length <= maximumLength ||
@@ -438,13 +438,23 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (Configuration.Settings.General.MaxNumberOfLines <= 2)
             {
-                return AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language);
+                return AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language, Configuration.Settings.Tools.AutoBreakLineEndingEarly);
             }
 
             return AutoBreakLineMoreThanTwoLines(text, maximumLength, mergeLinesShorterThan, language);
         }
 
-        public static string AutoBreakLinePrivate(string text, int maximumLength, int mergeLinesShorterThan, string language)
+        public static string AutoBreakLine(string text, string language, bool autoBreakLineEndingEarly)
+        {
+            if (Configuration.Settings.General.MaxNumberOfLines <= 2)
+            {
+                return AutoBreakLinePrivate(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language, autoBreakLineEndingEarly);
+            }
+
+            return AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
+        }
+
+        public static string AutoBreakLinePrivate(string text, int maximumLength, int mergeLinesShorterThan, string language, bool autoBreakLineEndingEarly)
         {
             if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
             {
@@ -552,8 +562,8 @@ namespace Nikse.SubtitleEdit.Core
             }
             s = sb.ToString();
 
-            var textSplit = new TextSplit(s, Configuration.Settings.General.SubtitleLineMaximumLength, language);
-            var split = textSplit.AutoBreak(Configuration.Settings.Tools.AutoBreakDashEarly, Configuration.Settings.Tools.AutoBreakLineEndingEarly, Configuration.Settings.Tools.AutoBreakCommaBreakEarly, Configuration.Settings.Tools.AutoBreakUsePixelWidth);
+            var textSplit = new TextSplit(s, maximumLength, language);
+            var split = textSplit.AutoBreak(Configuration.Settings.Tools.AutoBreakDashEarly, autoBreakLineEndingEarly, Configuration.Settings.Tools.AutoBreakCommaBreakEarly, Configuration.Settings.Tools.AutoBreakUsePixelWidth);
             if (split != null)
             {
                 s = split;
