@@ -1370,7 +1370,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
-            toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
+            toolStripMenuItemSortBy.Text = _language.Menu.Tools.SortBy;
+            netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
             toolStripButtonNetflixQualityCheck.Text = _language.Menu.Tools.NetflixQualityCheck;
 
             sortNumberToolStripMenuItem.Text = _language.Menu.Tools.Number;
@@ -25480,7 +25481,7 @@ namespace Nikse.SubtitleEdit.Forms
             descendingToolStripMenuItem.Checked = false;
             AscendingToolStripMenuItem.Checked = true;
             toolsToolStripMenuItem.ShowDropDown();
-            toolStripMenuItem1.ShowDropDown();
+            toolStripMenuItemSortBy.ShowDropDown();
         }
 
         private void descendingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -25488,7 +25489,7 @@ namespace Nikse.SubtitleEdit.Forms
             AscendingToolStripMenuItem.Checked = false;
             descendingToolStripMenuItem.Checked = true;
             toolsToolStripMenuItem.ShowDropDown();
-            toolStripMenuItem1.ShowDropDown();
+            toolStripMenuItemSortBy.ShowDropDown();
         }
 
         private void exportCustomTextFormatToolStripMenuItem_Click(object sender, EventArgs e)
@@ -25896,8 +25897,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void UpdateNetflixGlyphCheckToolsVisibility()
         {
             bool showTools = IsNetflixGlyphCheckAvailable();
-            netflixQualityCheckToolStripMenuItem.Visible = showTools;
-            netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
             toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 
