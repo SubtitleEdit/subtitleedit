@@ -1140,6 +1140,7 @@ $HorzAlign          =   Center
         public string GeneralGoToPreviousBookmark { get; set; }
         public string GeneralGoToNextBookmark { get; set; }
         public string ChooseProfile { get; set; }
+        public string DuplicateLine { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -4764,6 +4765,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.ChooseProfile = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("DuplicateLine");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.DuplicateLine = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                 {
@@ -6540,6 +6547,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralGoToBookmark", settings.Shortcuts.GeneralGoToBookmark);
                 textWriter.WriteElementString("GeneralGoToNextBookmark", settings.Shortcuts.GeneralGoToNextBookmark);
                 textWriter.WriteElementString("ChooseProfile", settings.Shortcuts.ChooseProfile);
+                textWriter.WriteElementString("DuplicateLine", settings.Shortcuts.DuplicateLine);
                 textWriter.WriteElementString("GeneralGoToPreviousBookmark", settings.Shortcuts.GeneralGoToPreviousBookmark);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
