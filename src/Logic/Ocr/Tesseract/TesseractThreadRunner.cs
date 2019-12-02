@@ -8,20 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 {
     public class TesseractThreadRunner
     {
-        public delegate void OcrDone(int index, ImageJob job);
-        private readonly OcrDone _callback;
-        private readonly Queue<ImageJob> _jobQueue;
-        private static readonly object QueueLock = new object();
-        private readonly TesseractRunner _tesseractRunner;
-        private bool _abort;
-
-        public TesseractThreadRunner(OcrDone callback = null)
-        {
-            _jobQueue = new Queue<ImageJob>();
-            _callback = callback;
-            _tesseractRunner = new TesseractRunner();
-        }
-
         public class ImageJob
         {
             public string FileName { get; set; }
@@ -35,6 +21,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             public Bitmap Bitmap { get; set; }
         }
 
+        public delegate void OcrDone(int index, ImageJob job);
+
+        private static readonly object QueueLock = new object();
+        private readonly Queue<ImageJob> _jobQueue;
+        private readonly OcrDone _callback;
+        private bool _abort;
+
+        public TesseractThreadRunner(OcrDone callback = null)
+        {
+            _jobQueue = new Queue<ImageJob>();
+            _callback = callback;
+        }
+
         private void DoOcr(object j)
         {
             if (_abort)
@@ -43,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             }
 
             var job = (ImageJob)j;
-            job.Result = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
+            job.Result = new TesseractRunner().Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
             lock (QueueLock)
             {
                 job.Completed = DateTime.UtcNow;
@@ -94,5 +93,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         {
             _abort = true;
         }
+
     }
 }
