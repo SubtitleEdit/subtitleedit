@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) <= 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                    if (Utilities.GetNumberOfLines(text) <= 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) <= 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -858,7 +858,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                    if (Utilities.GetNumberOfLines(text) <= 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -5195,7 +5195,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (_autoBreakLines && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                if (_autoBreakLines && Utilities.GetNumberOfLines(text) <= 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -5204,7 +5204,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                    if (Utilities.GetNumberOfLines(text) <= 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -5356,7 +5356,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             // max allow 2 lines
-            if (_autoBreakLines && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+            if (_autoBreakLines && Utilities.GetNumberOfLines(text) <= 2)
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -5365,7 +5365,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 }
 
-                if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                if (Utilities.GetNumberOfLines(text) <= 2)
                 {
                     text = Utilities.AutoBreakLine(text);
                 }
