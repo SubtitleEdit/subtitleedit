@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 {
     public class TesseractRunner
     {
-        public List<string> TesseractErrors { get; set; }
-        public string LastError { get; set; }
+        public string LastError { get; private set; }
+        public List<string> TesseractErrors { get; }
         private readonly bool _runningOnWindows;
 
         public TesseractRunner()
@@ -22,25 +22,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302 = false)
         {
             LastError = null;
-            var dir = run302 ? Configuration.Tesseract302Directory : Configuration.TesseractDirectory;
-            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
+            var tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
+            var tesseractDirectory = run302 ? Configuration.Tesseract302Directory : Configuration.TesseractDirectory;
             using (var process = new Process())
             {
-                process.StartInfo = new ProcessStartInfo(Path.Combine(dir, "tesseract.exe"))
+                process.StartInfo = new ProcessStartInfo(Path.Combine(tesseractDirectory, "tesseract.exe"))
                 {
                     UseShellExecute = true,
-                    Arguments = "\"" + imageFileName + "\" \"" + tempTextFileName + "\" -l " + languageCode
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Arguments = $@"""{imageFileName}"" ""{tempTextFileName}"" -l {languageCode}"
                 };
 
                 if (!string.IsNullOrEmpty(psmMode))
                 {
-                    var prefix = run302 ? " -psm " : " --psm ";
-                    process.StartInfo.Arguments += prefix + psmMode;
+                    var prefix = run302 ? "-psm" : "--psm";
+                    process.StartInfo.Arguments += $" {prefix} {psmMode}";
                 }
 
                 if (!string.IsNullOrEmpty(engineMode) && !run302)
                 {
-                    process.StartInfo.Arguments += " --oem " + engineMode;
+                    process.StartInfo.Arguments += $" --oem {engineMode}";
                 }
 
                 process.StartInfo.Arguments += " hocr";
@@ -49,22 +50,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 {
                     if (run302)
                     {
-                        process.StartInfo.WorkingDirectory = Configuration.Tesseract302Directory;
+                        process.StartInfo.WorkingDirectory = tesseractDirectory;
                     }
                     else
                     {
                         process.ErrorDataReceived += TesseractErrorReceived;
-                        process.StartInfo.Arguments = " --tessdata-dir \"" + Path.Combine(dir, "tessdata") + "\" " + process.StartInfo.Arguments.Trim();
+                        process.StartInfo.Arguments = $@"--tessdata-dir ""{Path.Combine(tesseractDirectory, "tessdata")}"" {process.StartInfo.Arguments.Trim()}";
                     }
                 }
                 else
                 {
+                    process.StartInfo.FileName = "tesseract";
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardError = true;
-                    process.StartInfo.FileName = "tesseract";
                 }
 
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 try
                 {
                     process.Start();
@@ -84,13 +84,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 }
             }
 
-            string result = string.Empty;
-            string outputFileName = tempTextFileName + ".html";
+            var outputFileName = tempTextFileName + ".html";
             if (!File.Exists(outputFileName))
             {
                 outputFileName = tempTextFileName + ".hocr";
             }
 
+            var result = string.Empty;
             try
             {
                 if (File.Exists(outputFileName))
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             while (lineStart > 0)
             {
                 var wordStart = html.IndexOf("<span class='ocrx_word'", lineStart, StringComparison.InvariantCulture);
-                int wordMax = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
+                var wordMax = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
                 if (wordMax <= 0)
                 {
                     wordMax = html.Length;
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                         if (endText > 0)
                         {
                             var text = html.Substring(startText, endText - startText);
-                            sb.Append(text.Trim() + " ");
+                            sb.Append(text.Trim()).Append(' ');
                         }
                     }
                     wordStart = html.IndexOf("<span class='ocrx_word'", wordStart + 1, StringComparison.InvariantCulture);
@@ -146,28 +146,30 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 sb.AppendLine();
                 lineStart = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
             }
-            var result = sb.ToString().Replace("<em>", "<i>").Replace("</em>", "</i>");
-            result = result.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty);
-            result = result.Replace("</i> <i>", " ");
-            result = result.Replace("</i><i>", string.Empty);
+            sb.Replace("<em>", "<i>")
+              .Replace("</em>", "</i>")
+              .Replace("<strong>", string.Empty)
+              .Replace("</strong>", string.Empty)
+              .Replace("</i> <i>", " ")
+              .Replace("</i><i>", string.Empty);
 
             // html escape decoding
-            result = result.Replace("&amp;", "&")
-                .Replace("&lt;", "<")
-                .Replace("&gt;", ">")
-                .Replace("&quot;", "\"")
-                .Replace("&#39;", "'")
-                .Replace("&apos;", "'");
+            sb.Replace("&amp;", "&")
+              .Replace("&lt;", "<")
+              .Replace("&gt;", ">")
+              .Replace("&quot;", "\"")
+              .Replace("&#39;", "'")
+              .Replace("&apos;", "'");
 
-            result = result.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
-            result = result.Replace(" " + Environment.NewLine, Environment.NewLine);
+            sb.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine)
+              .Replace(" " + Environment.NewLine, Environment.NewLine);
 
-            return result.Trim();
+            return sb.ToString().Trim();
         }
 
         private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
         {
-            string msg = e.Data;
+            var msg = e.Data;
 
             if (string.IsNullOrEmpty(msg) ||
                 msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
