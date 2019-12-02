@@ -1950,6 +1950,7 @@
             public string GoToPreviousBookmark { get; set; }
             public string GoToNextBookmark { get; set; }
             public string ChooseProfile { get; set; }
+            public string DuplicateLine { get; set; }
             public string FontInUi { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }

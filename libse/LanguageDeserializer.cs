@@ -4786,6 +4786,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ChooseProfile":
                     language.Settings.ChooseProfile = reader.Value;
                     break;
+                case "Settings/DuplicateLine":
+                    language.Settings.DuplicateLine = reader.Value;
+                    break;
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
                     break;

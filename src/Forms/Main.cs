@@ -13750,6 +13750,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
+            {
+                DuplicateLine();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
             {
                 SaveAll();
@@ -25845,6 +25851,59 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSourceLineNumber();
                 }
             }
+        }
+
+        private void DuplicateLine()
+        {
+            if (SubtitleListview1.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+            MakeHistoryForUndo(_language.BeforeInsertLine);
+            var newParagraph = new Paragraph();
+            SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
+            var cur = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+            newParagraph.StartTime.TotalMilliseconds = cur.StartTime.TotalMilliseconds;
+            newParagraph.EndTime.TotalMilliseconds = cur.EndTime.TotalMilliseconds;
+            newParagraph.Text = cur.Text;
+
+            if (GetCurrentSubtitleFormat().IsFrameBased)
+            {
+                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            }
+
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                var currentOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex - 1, _subtitle.Paragraphs[firstSelectedIndex - 1], _subtitleAlternate.Paragraphs);
+                if (currentOriginal != null)
+                {
+                    _subtitleAlternate.Paragraphs.Insert(_subtitleAlternate.Paragraphs.IndexOf(currentOriginal) + 1, new Paragraph(newParagraph));
+                }
+                else
+                {
+                    _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
+                }
+                _subtitleAlternate.Renumber();
+            }
+
+            if (_networkSession != null)
+            {
+                _networkSession.TimerStop();
+                NetworkGetSendUpdates(new List<int>(), firstSelectedIndex, newParagraph);
+            }
+            else
+            {
+                _subtitle.Paragraphs.Insert(firstSelectedIndex, newParagraph);
+                _subtitle.Renumber();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            }
+
+            SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
+            ShowSource();
+            ShowStatus(_language.LineInserted);
         }
 
         private void toolStripSelected_Click(object sender, EventArgs e)
