@@ -669,6 +669,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             SetButtonsEnabledAfterOcrDone();
+            checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
         }
 
         internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, Main main, bool batchMode = false)
@@ -879,6 +880,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
             }
+            checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
         }
 
         internal void InitializeBatch(Subtitle imageListSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
@@ -7115,7 +7117,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BinaryImageCompare";
-                checkBoxPromptForUnknownWords.Checked = false;
                 numericUpDownMaxErrorPct.Minimum = 0;
                 _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 LoadImageCompareCharacterDatabaseList();
