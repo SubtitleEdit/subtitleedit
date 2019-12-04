@@ -1159,7 +1159,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFilter.SelectedIndex == 4 && fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
             {
-                skip = true;
+                skip = false;
             }
             return skip;
         }
@@ -1802,6 +1802,10 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (ext == ".mp4")
                         {
                             // skip for now
+                        }
+                        else if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // skip 
                         }
                         else
                         {
