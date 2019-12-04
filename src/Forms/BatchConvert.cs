@@ -246,6 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.Items[1] = l.FilterSrtNoUtf8BOM;
             comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
             comboBoxFilter.Items[3] = l.FilterContains;
+            comboBoxFilter.Items[4] = l.FilterFileNameContains;
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
@@ -1156,6 +1157,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (comboBoxFilter.SelectedIndex == 4 && fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+            {
+                skip = true;
+            }
             return skip;
         }
 
@@ -1896,7 +1901,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3;
+            textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4;
         }
 
         private void buttonBridgeGapsSettings_Click(object sender, EventArgs e)

@@ -350,6 +350,7 @@ namespace Nikse.SubtitleEdit.Core
                 FilterSrtNoUtf8BOM = "SubRip (.srt) files without UTF-8 BOM header",
                 FilterMoreThanTwoLines = "More than two lines in one subtitle",
                 FilterContains = "Text contains...",
+                FilterFileNameContains = "File name contains...",
                 FixCommonErrorsErrorX = "Fix common errors: {0}",
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",

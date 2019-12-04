@@ -220,6 +220,7 @@
             public string FilterSrtNoUtf8BOM { get; set; }
             public string FilterMoreThanTwoLines { get; set; }
             public string FilterContains { get; set; }
+            public string FilterFileNameContains { get; set; }
             public string FixCommonErrorsErrorX { get; set; }
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }

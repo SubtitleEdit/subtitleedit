@@ -210,6 +210,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
     <FilterContains>Text contains...</FilterContains>
+    <FilterFileNameContains>File name contains...</FilterFileNameContains>
     <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
