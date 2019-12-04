@@ -715,7 +715,8 @@
             "All files",
             "SubRip .srt files without BOM header",
             "Files with subtitle with more than two lines",
-            "Files that contains..."});
+            "Files that contains...",
+            "File name cotains..."});
             this.comboBoxFilter.Location = new System.Drawing.Point(81, 258);
             this.comboBoxFilter.Name = "comboBoxFilter";
             this.comboBoxFilter.Size = new System.Drawing.Size(335, 21);
