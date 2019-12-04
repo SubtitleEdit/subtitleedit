@@ -908,7 +908,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
-            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = 11;
+            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
