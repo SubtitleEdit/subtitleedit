@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
         public delegate void BatchConvertProgress(string progress);
 
-        internal enum BatchAction
+        public enum BatchAction
         {
             FixCommonErrors,
             MergeShortLines,
@@ -36,7 +36,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             RemoveTextForHI,
             RemoveFormatting,
             ReDoCasing,
-            ReverseRtlStartEnd
+            ReverseRtlStartEnd,
+            BridgeGaps,
+            MultipleReplace,
+            FixRtl,
+            SplitLongLines,
+            BalanceLines,
+            SetMinGap
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)
