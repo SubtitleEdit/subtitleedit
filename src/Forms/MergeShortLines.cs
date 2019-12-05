@@ -12,10 +12,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MergeShortLines : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private Subtitle _mergedSubtitle;
-
         public int NumberOfMerges { get; private set; }
+        public Subtitle MergedSubtitle { get; private set; }
+
+        private Subtitle _subtitle;
 
         public MergeShortLines()
         {
@@ -26,8 +26,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
         }
-
-        public Subtitle MergedSubtitle => _mergedSubtitle;
 
         private void MergeShortLines_KeyDown(object sender, KeyEventArgs e)
         {
@@ -84,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             NumberOfMerges = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out var count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
+            MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out var count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
             NumberOfMerges = count;
 
             SubtitleListview1.Fill(_subtitle);
@@ -141,13 +139,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines) && IsFixAllowed(p))
                     {
-                        if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
-                            GetEndTag(p.Text) == GetEndTag(next.Text))
+                        if (MergeShortLinesUtils.GetStartTag(p.Text) == MergeShortLinesUtils.GetStartTag(next.Text) &&
+                            MergeShortLinesUtils.GetEndTag(p.Text) == MergeShortLinesUtils.GetEndTag(next.Text))
                         {
                             string s1 = p.Text.Trim();
-                            s1 = s1.Substring(0, s1.Length - GetEndTag(s1).Length);
+                            s1 = s1.Substring(0, s1.Length - MergeShortLinesUtils.GetEndTag(s1).Length);
                             string s2 = next.Text.Trim();
-                            s2 = s2.Substring(GetStartTag(s2).Length);
+                            s2 = s2.Substring(MergeShortLinesUtils.GetStartTag(s2).Length);
                             p.Text = Utilities.AutoBreakLine(s1 + Environment.NewLine + s2, language);
                         }
                         else
@@ -203,51 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             return mergedSubtitle;
-        }
-
-        private static string GetEndTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return string.Empty;
-            }
-
-            text = text.Trim();
-            if (!text.EndsWith('>'))
-            {
-                return string.Empty;
-            }
-
-            string endTag = string.Empty;
-            int start = text.LastIndexOf("</", StringComparison.Ordinal);
-            if (start > 0 && start >= text.Length - 8)
-            {
-                endTag = text.Substring(start);
-            }
-            return endTag;
-        }
-
-        private static string GetStartTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return string.Empty;
-            }
-
-            text = text.Trim();
-            if (!text.StartsWith('<'))
-            {
-                return string.Empty;
-            }
-
-            string startTag = string.Empty;
-            int end = text.IndexOf('>');
-            if (end > 0 && end < 25)
-            {
-                startTag = text.Substring(0, end + 1);
-            }
-            return startTag;
-        }
+        }       
 
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
         {
@@ -302,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
+            MergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)

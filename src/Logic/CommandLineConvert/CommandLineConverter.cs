@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal enum BatchAction
         {
             FixCommonErrors,
+            MergeShortLines,
+            MergeSameTimeCodes,
             RemoveTextForHI,
             RemoveFormatting,
             ReDoCasing,
@@ -111,20 +113,22 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /encoding:<encoding name>");
                 _stdOutWriter.WriteLine("        /pac-codepage:<code page>");
                 _stdOutWriter.WriteLine("        /track-number:<comma separated track number list>");
-                _stdOutWriter.WriteLine("        /resolution:<width>x<height> (or <width>,<height>)");
+                _stdOutWriter.WriteLine("        /resolution:<width>x<height>");
                 _stdOutWriter.WriteLine("        /inputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /outputfolder:<folder name>");
                 _stdOutWriter.WriteLine("        /overwrite");
                 _stdOutWriter.WriteLine("        /forcedonly");
                 _stdOutWriter.WriteLine("        /multiplereplace:<comma separated file name list> ('.' represents the default replace rules)");
                 _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
-                _stdOutWriter.WriteLine("      Following operations are applied in command line order");
+                _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /FixCommonErrors");
                 _stdOutWriter.WriteLine("        /ReverseRtlStartEnd");
                 _stdOutWriter.WriteLine("        /RemoveFormatting");
                 _stdOutWriter.WriteLine("        /RemoveTextForHI");
                 _stdOutWriter.WriteLine("        /RedoCasing");
+                _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
+                _stdOutWriter.WriteLine("        /MergeShortLines");
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    show this usage message: SubtitleEdit /help");
@@ -971,6 +975,18 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     actions.Add(BatchAction.RemoveFormatting);
                     commandLineArguments.RemoveAt(i);
                 }
+                else if (argument.Equals("/mergeshortlines", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-mergeshortlines", StringComparison.OrdinalIgnoreCase))
+                {
+                    actions.Add(BatchAction.MergeShortLines);
+                    commandLineArguments.RemoveAt(i);
+                }
+                else if (argument.Equals("/mergesametimecodes", StringComparison.OrdinalIgnoreCase) ||
+                         argument.Equals("-mergesametimecodes", StringComparison.OrdinalIgnoreCase))
+                {
+                    actions.Add(BatchAction.MergeSameTimeCodes);
+                    commandLineArguments.RemoveAt(i);
+                }
             }
             actions.Reverse();
             return actions;
@@ -1116,6 +1132,22 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 foreach (var p in sub.Paragraphs)
                                 {
                                     p.Text = Utilities.ReverseStartAndEndingForRightToLeft(p.Text);
+                                }
+                                break;
+                            case BatchAction.MergeSameTimeCodes:
+                                var mergedSameTimeCodesSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                                if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedSameTimeCodesSub.Paragraphs);
+                                }
+                                break;
+                            case BatchAction.MergeShortLines:
+                                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, 250, Configuration.Settings.General.SubtitleLineMaximumLength, true);
+                                if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
                                 }
                                 break;
                         }
