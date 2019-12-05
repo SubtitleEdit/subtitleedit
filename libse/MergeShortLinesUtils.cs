@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class MergeShortLinesUtils
+    public static class MergeShortLinesUtils
     {
         public static Subtitle MergeShortLinesInSubtitle(Subtitle subtitle, double maxMillisecondsBetweenLines, int maxCharacters, bool onlyContinuousLines)
         {
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core
                     p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                     mergedSubtitle.Paragraphs.Add(p);
                 }
-                Paragraph next = subtitle.GetParagraphOrDefault(i);
+                var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
                     if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines))
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core
                 return string.Empty;
             }
 
-            string endTag = string.Empty;
+            var endTag = string.Empty;
             int start = text.LastIndexOf("</", StringComparison.Ordinal);
             if (start > 0 && start >= text.Length - 8)
             {
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core
                 return string.Empty;
             }
 
-            string startTag = string.Empty;
+            var startTag = string.Empty;
             int end = text.IndexOf('>');
             if (end > 0 && end < 25)
             {

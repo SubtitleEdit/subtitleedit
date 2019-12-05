@@ -123,12 +123,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /FixCommonErrors");
+                _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
+                _stdOutWriter.WriteLine("        /MergeShortLines");
                 _stdOutWriter.WriteLine("        /ReverseRtlStartEnd");
                 _stdOutWriter.WriteLine("        /RemoveFormatting");
                 _stdOutWriter.WriteLine("        /RemoveTextForHI");
                 _stdOutWriter.WriteLine("        /RedoCasing");
-                _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
-                _stdOutWriter.WriteLine("        /MergeShortLines");
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    show this usage message: SubtitleEdit /help");
@@ -942,50 +942,18 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         private static List<BatchAction> GetArgumentActions(IList<string> commandLineArguments)
         {
             var actions = new List<BatchAction>();
+            var actionNames = typeof(BatchAction).GetEnumNames();
             for (int i = commandLineArguments.Count - 1; i >= 0; i--)
             {
                 var argument = commandLineArguments[i];
-                if (argument.Equals("/fixcommonerrors", StringComparison.OrdinalIgnoreCase) ||
-                    argument.Equals("-fixcommonerrors", StringComparison.OrdinalIgnoreCase))
+                foreach (var actionName in actionNames)
                 {
-                    actions.Add(BatchAction.FixCommonErrors);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/reversertlstartend", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-reversertlstartend", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.ReverseRtlStartEnd);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/redocasing", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-redocasing", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.ReDoCasing);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/removetextforhi", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-removetextforhi", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.RemoveTextForHI);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/removeformatting", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-removeformatting", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.RemoveFormatting);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/mergeshortlines", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-mergeshortlines", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.MergeShortLines);
-                    commandLineArguments.RemoveAt(i);
-                }
-                else if (argument.Equals("/mergesametimecodes", StringComparison.OrdinalIgnoreCase) ||
-                         argument.Equals("-mergesametimecodes", StringComparison.OrdinalIgnoreCase))
-                {
-                    actions.Add(BatchAction.MergeSameTimeCodes);
-                    commandLineArguments.RemoveAt(i);
+                    if (argument.Equals("/" + actionName, StringComparison.OrdinalIgnoreCase) ||
+                        argument.Equals("-" + actionName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        actions.Add((BatchAction)Enum.Parse(typeof(BatchAction), actionName));
+                        commandLineArguments.RemoveAt(i);
+                    }
                 }
             }
             actions.Reverse();
