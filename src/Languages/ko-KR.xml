@@ -173,10 +173,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <InputDescription>파일 입력 (찾아보기 또는 드래그 앤 드롭)</InputDescription>
     <Status>상태</Status>
     <Output>출력</Output>
-    <ChooseOutputFolder>출력 폴더 선택</ChooseOutputFolder>
-    <OverwriteExistingFiles>기존 파일에 덮어쓰기</OverwriteExistingFiles>
+    <SaveInSourceFolder>원본 파일 폴더에 저장</SaveInSourceFolder>
+    <SaveInOutputFolder>아래 출력 폴더에 저장</SaveInOutputFolder>
+    <OverwriteFiles>파일 덮어쓰기</OverwriteFiles>
     <Style>스타일...</Style>
-    <UseStyleFromSource>소스 스타일 사용</UseStyleFromSource>
+    <UseStyleFromSource>원본 스타일 사용</UseStyleFromSource>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
@@ -205,6 +206,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FilterSrtNoUtf8BOM>UTF-8에서 BOM 표식 없는 subRip(.srt) 파일</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>한 자막 당 두 개 이상의 줄</FilterMoreThanTwoLines>
     <FilterContains>텍스트 포함...</FilterContains>
+    <FilterFileNameContains>파일 이름 포함 ...</FilterFileNameContains>
     <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
@@ -613,7 +615,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NothingToFix>수정할 곳이 없습니다:</NothingToFix>
     <FixesFoundX>수정할 곳: {0}</FixesFoundX>
     <XFixesApplied>수정된 곳: {0}</XFixesApplied>
-    <NothingToFixBut>수정하는 것은 아니지만 향상시킬 수 있습니다. - 자세한 내용은 로그를 참조하십시오.</NothingToFixBut>
+    <NothingFixableBut>아무것도 자동으로 수정할 수 없음.  자막에 오류가 있습니다 - 자세한 내용은 로그를 참조하십시오.</NothingFixableBut>
+    <XFixedBut>{0}개의 문제가 수정되었지만 자막에는 여전히 오류가 있습니다 - 자세한 내용은 로그를 참조하십시오.</XFixedBut>
+    <XCouldBeFixedBut>{0}개의 문제를 수정할 수 있지만 자막에는 여전히 오류가 있을 것입니다.- 자세한 내용은 로그를 참조하십시오.</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>"소문자 'i'를 대문자 'I'로 수정하기(영어)" 실행을 취소합니다.</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0}개의 'i'가 대문자로 변환되었습니다.</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>단락이 끝난 뒤에 나오는 첫글자를 대문자로 바꾸기</FixFirstLetterToUppercaseAfterParagraph>
@@ -1510,6 +1514,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <PromptInsertSubtitleOverlap>파형 위치에 자막을 삽입하면 오버랩이 발생합니다! 
 
 그래도 계속하겠습니까?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>자막에 표시시간이 음수인 줄이 있습니다: {0} </SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>재생 속도를 {0}%로 설정하십시오.</SetPlayRateX>
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
@@ -1780,6 +1785,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoToPreviousBookmark>이전 책갈피로 이동</GoToPreviousBookmark>
     <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
     <ChooseProfile>프로필 선택</ChooseProfile>
+    <DuplicateLine>중복 줄</DuplicateLine>
     <FontInUi>UI 글꼴</FontInUi>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
@@ -1990,6 +1996,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <WaveformSeekSilenceBack>이전 무음 탐색</WaveformSeekSilenceBack>
     <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>여기에 텍스트 추가 (클립보드에서 새로운 선택)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>현재를 새로운 선택으로 설정</SetParagraphAsSelection>
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
@@ -2061,6 +2068,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MainTextBoxMoveLastWordDownCurrent>첫째 줄의 마지막 단어를 아래로 이동 (현재 자막)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>선택한 영역 소문자로...</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>루비로 선택 (일본어)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>자동 표시시간</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>커서 위치에서 첫 번째 공간에 줄바꿈</MainTextBoxAutoBreakFromPos>
@@ -2070,7 +2078,9 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용</UseDoNotBreakAfterList>
-    <BreakEarlyForLineEnding>줄 마침을 위해 일찍 줄바꿈 (.!?)</BreakEarlyForLineEnding>
+    <BreakEarlyForLineEnding>문장의 마침을 위해 일찍 줄바꿈 (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>픽셀 너비로 줄바꿈</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Prefer bottom heavy</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>대화 대시를 위해 일찍 줄바꿈</BreakEarlyForDashDialog>
     <BreakEarlyForComma>쉼표를 위해 일찍 줄바꿈</BreakEarlyForComma>
     <GoogleTranslate>Google 번역</GoogleTranslate>
@@ -2317,7 +2327,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>전송 스트림 자막 선택기 - {0}</Title>
-    <PidLine>전송 패킷 식별자 (PID) = {0}, 자막 수 = {1}</PidLine>
+    <PidLineImage>이미지 - 전송 패킷 식별자 (PID) = {0}, 언어 = {1}, 자막 수 = {2}</PidLineImage>
+    <PidLineTeletext>텔레텍스트 - 전송 패킷 식별자 (PID) = {1}, 페이지 {0}, 언어 = {2}, 자막 수 = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} 이미지</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2480,6 +2491,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ZoomOut>축소</ZoomOut>
     <AddParagraphHere>여기에 텍스트 쓰기</AddParagraphHere>
     <AddParagraphHereAndPasteText>여기에 복사한 텍스트 추가...</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>현재를 새로운 선택으로 설정</SetParagraphAsSelection>
     <FocusTextBox>텍스트 입력 창으로 이동...</FocusTextBox>
     <DeleteParagraph>이 줄 삭제</DeleteParagraph>
     <Split>분할</Split>
