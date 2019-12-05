@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         {
             FixCommonErrors,
             MergeShortLines,
+            MergeSameTexts,
             MergeSameTimeCodes,
             RemoveTextForHI,
             RemoveFormatting,
@@ -124,6 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
                 _stdOutWriter.WriteLine("        /FixCommonErrors");
                 _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
+                _stdOutWriter.WriteLine("        /MergeSameTexts");
                 _stdOutWriter.WriteLine("        /MergeShortLines");
                 _stdOutWriter.WriteLine("        /ReverseRtlStartEnd");
                 _stdOutWriter.WriteLine("        /RemoveFormatting");
@@ -1108,6 +1110,14 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     sub.Paragraphs.Clear();
                                     sub.Paragraphs.AddRange(mergedSameTimeCodesSub.Paragraphs);
+                                }
+                                break;
+                            case BatchAction.MergeSameTexts:
+                                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, true, 250);
+                                if (mergedSameTextsSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedSameTextsSub.Paragraphs);
                                 }
                                 break;
                             case BatchAction.MergeShortLines:
