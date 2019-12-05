@@ -262,6 +262,102 @@ namespace Nikse.SubtitleEdit.Forms
             _bridgeGaps = new DurationsBridgeGaps(null);
             _bridgeGaps.InitializeSettingsOnly();
             buttonTransportStreamSettings.Visible = false;
+
+            var fixItems = new List<FixActionItem>
+            {
+                new FixActionItem
+                {
+                    Text = "Remove formatting",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.RemoveFormatting
+                },
+                new FixActionItem
+                {
+                    Text = "Redo casing",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.ReDoCasing
+                },
+                new FixActionItem
+                {
+                    Text = "Remove text for HI",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.RemoveTextForHI
+                },
+                new FixActionItem
+                {
+                    Text = "Bridge gaps",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.BridgeGaps
+                },
+                new FixActionItem
+                {
+                    Text = "Fix common errors",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.FixCommonErrors
+                },
+                new FixActionItem
+                {
+                    Text = "Multiple replace",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.MultipleReplace
+                },
+                new FixActionItem
+                {
+                    Text = "Fix RTL",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.FixRtl
+                },
+                new FixActionItem
+                {
+                    Text = "Split long lines",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.SplitLongLines
+                },
+                new FixActionItem
+                {
+                    Text = "Auto balance lines",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.BalanceLines
+                },
+                new FixActionItem
+                {
+                    Text = "Set min. milliseconds between subtitles",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.SetMinGap
+                },
+                new FixActionItem
+                {
+                    Text = "Merge short lines",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.MergeShortLines
+                },
+                new FixActionItem
+                {
+                    Text = "Merge lines with same text",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.MergeSameTexts
+                },
+                new FixActionItem
+                {
+                    Text = "Merge lines with same time codes",
+                    Checked = false,
+                    Action = CommandLineConverter.BatchAction.MergeSameTimeCodes
+                },
+            };
+            foreach (var fixItem in fixItems)
+            {
+                var listViewItem = new ListViewItem { Tag = fixItem.Action };
+                listViewItem.SubItems.Add(fixItem.Text);
+                listViewItem.Checked = fixItem.Checked;
+                listViewConvertOptions.Items.Add(listViewItem);
+            }
+        }
+
+        public class FixActionItem
+        {
+            public string Text { get; set; }
+            public bool Checked { get; set; }
+            public CommandLineConverter.BatchAction Action { get; set; }
         }
 
 

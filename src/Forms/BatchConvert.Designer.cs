@@ -33,6 +33,9 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.listViewConvertOptions = new System.Windows.Forms.ListView();
+            this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonFixRtlSettings = new System.Windows.Forms.Button();
             this.checkBoxFixRtl = new System.Windows.Forms.CheckBox();
             this.buttonBridgeGapsSettings = new System.Windows.Forms.Button();
@@ -136,6 +139,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.buttonFixRtlSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.buttonBridgeGapsSettings);
@@ -160,6 +164,31 @@
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // listViewConvertOptions
+            // 
+            this.listViewConvertOptions.CheckBoxes = true;
+            this.listViewConvertOptions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ActionCheckBox,
+            this.Action});
+            this.listViewConvertOptions.FullRowSelect = true;
+            this.listViewConvertOptions.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewConvertOptions.HideSelection = false;
+            this.listViewConvertOptions.Location = new System.Drawing.Point(6, 17);
+            this.listViewConvertOptions.MultiSelect = false;
+            this.listViewConvertOptions.Name = "listViewConvertOptions";
+            this.listViewConvertOptions.Size = new System.Drawing.Size(281, 252);
+            this.listViewConvertOptions.TabIndex = 301;
+            this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
+            this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
+            // 
+            // ActionCheckBox
+            // 
+            this.ActionCheckBox.Width = 30;
+            // 
+            // Action
+            // 
+            this.Action.Width = 400;
             // 
             // buttonFixRtlSettings
             // 
@@ -965,5 +994,8 @@
         private System.Windows.Forms.Button buttonChooseFolder;
         private System.Windows.Forms.TextBox textBoxOutputFolder;
         private System.Windows.Forms.RadioButton radioButtonSaveInSourceFolder;
+        private System.Windows.Forms.ListView listViewConvertOptions;
+        private System.Windows.Forms.ColumnHeader ActionCheckBox;
+        private System.Windows.Forms.ColumnHeader Action;
     }
 }
