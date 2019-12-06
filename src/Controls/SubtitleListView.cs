@@ -33,19 +33,19 @@ namespace Nikse.SubtitleEdit.Controls
             return SubtitleColumns.IndexOf(column);
         }
 
-        public int ColumnIndexNumber { get; set; }
-        public int ColumnIndexStart { get; set; }
-        public int ColumnIndexEnd { get; set; }
-        public int ColumnIndexDuration { get; set; }
-        public int ColumnIndexWpm { get; set; }
-        public int ColumnIndexCps { get; set; }
-        public int ColumnIndexGap { get; set; }
-        public int ColumnIndexActor { get; set; }
-        public int ColumnIndexRegion { get; set; }
-        public int ColumnIndexText { get; set; }
-        public int ColumnIndexTextAlternate { get; set; }
-        public int ColumnIndexExtra { get; set; }
-        public int ColumnIndexNetwork { get; set; }
+        public int ColumnIndexNumber { get; private set; }
+        public int ColumnIndexStart { get; private set; }
+        public int ColumnIndexEnd { get; private set; }
+        public int ColumnIndexDuration { get; private set; }
+        public int ColumnIndexWpm { get; private set; }
+        public int ColumnIndexCps { get; private set; }
+        public int ColumnIndexGap { get; private set; }
+        public int ColumnIndexActor { get; private set; }
+        public int ColumnIndexRegion { get; private set; }
+        public int ColumnIndexText { get; private set; }
+        public int ColumnIndexTextAlternate { get; private set; }
+        public int ColumnIndexExtra { get; private set; }
+        public int ColumnIndexNetwork { get; private set; }
 
         public bool IsAlternateTextColumnVisible => ColumnIndexTextAlternate >= 0;
         private string _lineSeparatorString = " || ";
