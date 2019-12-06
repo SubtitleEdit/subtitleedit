@@ -326,38 +326,38 @@ namespace Nikse.SubtitleEdit.Forms
                 },
                 new FixActionItem
                 {
-                    Text = "Merge short lines",
+                    Text = Configuration.Settings.Language.MergedShortLines.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeShortLines,
                     Action = CommandLineConverter.BatchAction.MergeShortLines
                 },
                 new FixActionItem
                 {
-                    Text = "Merge lines with same text",
+                    Text = Configuration.Settings.Language.MergeDoubleLines.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeSameText,
                     Action = CommandLineConverter.BatchAction.MergeSameTexts
                 },
                 new FixActionItem
                 {
-                    Text = "Merge lines with same time codes",
-                    Checked = false,
+                    Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes,
                     Action = CommandLineConverter.BatchAction.MergeSameTimeCodes
                 },
                 new FixActionItem
                 {
-                    Text = "Change frame rate",
-                    Checked = false,
+                    Text = Configuration.Settings.Language.ChangeFrameRate.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertChangeFrameRate,
                     Action = CommandLineConverter.BatchAction.ChangeFrameRate
                 },
                 new FixActionItem
                 {
-                    Text = "Offset time codes",
-                    Checked = false,
+                    Text = l.OffsetTimeCodes,
+                    Checked = Configuration.Settings.Tools.BatchConvertOffsetTimeCodes,
                     Action = CommandLineConverter.BatchAction.OffsetTimeCodes
                 },
                 new FixActionItem
                 {
-                    Text = "Change speed",
-                    Checked = false,
+                    Text =  Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort,
+                    Checked = Configuration.Settings.Tools.BatchConvertChangeSpeed,
                     Action = CommandLineConverter.BatchAction.ChangeSpeed
                 }
             };
@@ -1015,7 +1015,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                                 }
-                                if (!numericUpDownPercent.Value.Equals(100))
+                                if (!numericUpDownPercent.Value.Equals(100) && IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed))
                                 {
                                     var toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
                                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
@@ -1046,12 +1046,43 @@ namespace Nikse.SubtitleEdit.Forms
                                 _changeCasingNames.FixCasing();
                             }
 
-                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
-                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
+                            {
+                                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, 250, Configuration.Settings.General.SubtitleLineMaximumLength, true);
+                                if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
+                                }
+                            }
+
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts))
+                            {
+                                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, true, 250);
+                                if (mergedSameTextsSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedSameTextsSub.Paragraphs);
+                                }
+                            }
+
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes))
+                            {
+                                var mergedSameTimeCodesSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                                if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                                {
+                                    sub.Paragraphs.Clear();
+                                    sub.Paragraphs.AddRange(mergedSameTimeCodesSub.Paragraphs);
+                                }
+                            }
+
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate) &&
+                                double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
+                                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
                             {
                                 sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                             }
-                            if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes) && timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
                             {
                                 var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
                                 if (radioButtonShowEarlier.Checked)
@@ -1752,7 +1783,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
@@ -1785,6 +1816,12 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertUseStyleFromSource = checkBoxUseStyleFromSource.Checked;
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
             Configuration.Settings.Tools.BatchConvertSaveInSourceFolder = radioButtonSaveInSourceFolder.Checked;
+            Configuration.Settings.Tools.BatchConvertMergeShortLines = IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines);
+            Configuration.Settings.Tools.BatchConvertMergeSameText = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts);
+            Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes);
+            Configuration.Settings.Tools.BatchConvertChangeSpeed = IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed);
+            Configuration.Settings.Tools.BatchConvertChangeFrameRate = IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate);
+            Configuration.Settings.Tools.BatchConvertOffsetTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes);
 
             UpdateRtlSettings();
         }
@@ -1807,7 +1844,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
         {
-          
+
         }
 
         private string _rootFolder;
@@ -2051,7 +2088,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonFixRtlSettings_Click(object sender, EventArgs e)
         {
-          
+
         }
 
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
@@ -2203,56 +2240,6 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
-        }
-
-        private void groupBoxChangeFrameRate_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBoxOffsetTimeCodes_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBoxConvertOptions_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxBridgeGaps_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxFixCommonErrors_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxAutoBalance_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxSplitLongLines_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxSetMinimumDisplayTimeBetweenSubs_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listViewInputFiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
         }
     }
 }

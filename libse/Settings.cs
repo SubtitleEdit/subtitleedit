@@ -148,6 +148,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertMergeShortLines { get; set; }
         public bool BatchConvertMergeSameText { get; set; }
         public bool BatchConvertMergeSameTimeCodes { get; set; }
+        public bool BatchConvertChangeFrameRate { get; set; }
+        public bool BatchConvertChangeSpeed { get; set; }
+        public bool BatchConvertOffsetTimeCodes { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
         public string BatchConvertAssStyles { get; set; }
@@ -2924,6 +2927,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertMergeSameTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertChangeSpeed");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertChangeSpeed = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertChangeFrameRate");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertChangeFrameRate = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertOffsetTimeCodes");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertOffsetTimeCodes = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BatchConvertLanguage");
@@ -6210,6 +6231,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertMergeShortLines", settings.Tools.BatchConvertMergeShortLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeSameText", settings.Tools.BatchConvertMergeSameText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeSameTimeCodes", settings.Tools.BatchConvertMergeSameTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
                 textWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
