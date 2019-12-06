@@ -131,10 +131,10 @@ namespace Nikse.SubtitleEdit.Core
 
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var datafolder_override = Environment.GetEnvironmentVariable("DATA_FOLDER_OVERRIDE");
-                if (datafolder_override != null)
+                var dataFolderOverride = Environment.GetEnvironmentVariable("DATA_FOLDER_OVERRIDE");
+                if (!string.IsNullOrEmpty(dataFolderOverride) && Directory.Exists(dataFolderOverride))
                 {
-                    appDataRoamingPath = Path.Combine(datafolder_override, "");
+                    appDataRoamingPath = Path.Combine(dataFolderOverride, "");
                 }
                 else if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
                 {
@@ -185,10 +185,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var tesseract_overide = Environment.GetEnvironmentVariable("TESSERACT4_OVERRIDE");
-                if (tesseract_overide != null)
+                var tesseract4Override = Environment.GetEnvironmentVariable("TESSERACT4_OVERRIDE");
+                if (!string.IsNullOrEmpty(tesseract4Override) && Directory.Exists(tesseract4Override))
                 {
-                    return tesseract_overide;
+                    return tesseract4Override;
                 }
                 if (Directory.Exists("/usr/share/tesseract-ocr/4.00/tessdata"))
                 {
@@ -212,10 +212,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var tesseract_overide = Environment.GetEnvironmentVariable("TESSERACT302_OVERRIDE");
-                if (tesseract_overide != null)
+                var tesseract3Override = Environment.GetEnvironmentVariable("TESSERACT302_OVERRIDE");
+                if (!string.IsNullOrEmpty(tesseract3Override) && Directory.Exists(tesseract3Override))
                 {
-                    return tesseract_overide;
+                    return tesseract3Override;
                 }
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                 {
