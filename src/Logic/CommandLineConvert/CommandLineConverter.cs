@@ -42,7 +42,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             FixRtl,
             SplitLongLines,
             BalanceLines,
-            SetMinGap
+            SetMinGap,
+            ChangeFrameRate,
+            OffsetTimeCodes,
+            ChangeSpeed
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)

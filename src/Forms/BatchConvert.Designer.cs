@@ -29,31 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.listViewConvertOptions = new System.Windows.Forms.ListView();
-            this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buttonFixRtlSettings = new System.Windows.Forms.Button();
-            this.checkBoxFixRtl = new System.Windows.Forms.CheckBox();
-            this.buttonBridgeGapsSettings = new System.Windows.Forms.Button();
-            this.checkBoxBridgeGaps = new System.Windows.Forms.CheckBox();
             this.groupBoxSpeed = new System.Windows.Forms.GroupBox();
+            this.buttonConvertOptionsSettings = new System.Windows.Forms.Button();
             this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
             this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
             this.labelPercent = new System.Windows.Forms.Label();
-            this.checkBoxSplitLongLines = new System.Windows.Forms.CheckBox();
-            this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
-            this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
-            this.buttonMultipleReplaceSettings = new System.Windows.Forms.Button();
-            this.checkBoxMultipleReplace = new System.Windows.Forms.CheckBox();
-            this.checkBoxFixCommonErrors = new System.Windows.Forms.CheckBox();
-            this.buttonFixCommonErrorSettings = new System.Windows.Forms.Button();
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
             this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
             this.labelToFrameRate = new System.Windows.Forms.Label();
@@ -64,9 +50,9 @@
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
-            this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
-            this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
-            this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
+            this.listViewConvertOptions = new System.Windows.Forms.ListView();
+            this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
             this.buttonTransportStreamSettings = new System.Windows.Forms.Button();
@@ -101,6 +87,10 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.groupBoxFixRtl = new System.Windows.Forms.GroupBox();
+            this.radioButtonReverseStartEnd = new System.Windows.Forms.RadioButton();
+            this.radioButtonRemoveUnicode = new System.Windows.Forms.RadioButton();
+            this.radioButtonAddUnicode = new System.Windows.Forms.RadioButton();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxSpeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
@@ -109,6 +99,7 @@
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
+            this.groupBoxFixRtl.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -139,98 +130,19 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonFixRtlSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixRtl);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonBridgeGapsSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxBridgeGaps);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxAutoBalance);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonMultipleReplaceSettings);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxMultipleReplace);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCommonErrors);
-            this.groupBoxConvertOptions.Controls.Add(this.buttonFixCommonErrorSettings);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
-            this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
-            // 
-            // listViewConvertOptions
-            // 
-            this.listViewConvertOptions.CheckBoxes = true;
-            this.listViewConvertOptions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ActionCheckBox,
-            this.Action});
-            this.listViewConvertOptions.FullRowSelect = true;
-            this.listViewConvertOptions.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewConvertOptions.HideSelection = false;
-            this.listViewConvertOptions.Location = new System.Drawing.Point(6, 17);
-            this.listViewConvertOptions.MultiSelect = false;
-            this.listViewConvertOptions.Name = "listViewConvertOptions";
-            this.listViewConvertOptions.Size = new System.Drawing.Size(281, 252);
-            this.listViewConvertOptions.TabIndex = 301;
-            this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
-            this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
-            // 
-            // ActionCheckBox
-            // 
-            this.ActionCheckBox.Width = 30;
-            // 
-            // Action
-            // 
-            this.Action.Width = 400;
-            // 
-            // buttonFixRtlSettings
-            // 
-            this.buttonFixRtlSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixRtlSettings.Location = new System.Drawing.Point(183, 164);
-            this.buttonFixRtlSettings.Name = "buttonFixRtlSettings";
-            this.buttonFixRtlSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonFixRtlSettings.TabIndex = 29;
-            this.buttonFixRtlSettings.Text = "Settings...";
-            this.buttonFixRtlSettings.UseVisualStyleBackColor = true;
-            this.buttonFixRtlSettings.Click += new System.EventHandler(this.buttonFixRtlSettings_Click);
-            // 
-            // checkBoxFixRtl
-            // 
-            this.checkBoxFixRtl.AutoSize = true;
-            this.checkBoxFixRtl.Location = new System.Drawing.Point(15, 167);
-            this.checkBoxFixRtl.Name = "checkBoxFixRtl";
-            this.checkBoxFixRtl.Size = new System.Drawing.Size(63, 17);
-            this.checkBoxFixRtl.TabIndex = 28;
-            this.checkBoxFixRtl.Text = "Fix RTL";
-            this.checkBoxFixRtl.UseVisualStyleBackColor = true;
-            // 
-            // buttonBridgeGapsSettings
-            // 
-            this.buttonBridgeGapsSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBridgeGapsSettings.Location = new System.Drawing.Point(183, 92);
-            this.buttonBridgeGapsSettings.Name = "buttonBridgeGapsSettings";
-            this.buttonBridgeGapsSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonBridgeGapsSettings.TabIndex = 10;
-            this.buttonBridgeGapsSettings.Text = "Settings...";
-            this.buttonBridgeGapsSettings.UseVisualStyleBackColor = true;
-            this.buttonBridgeGapsSettings.Click += new System.EventHandler(this.buttonBridgeGapsSettings_Click);
-            // 
-            // checkBoxBridgeGaps
-            // 
-            this.checkBoxBridgeGaps.AutoSize = true;
-            this.checkBoxBridgeGaps.Location = new System.Drawing.Point(15, 96);
-            this.checkBoxBridgeGaps.Name = "checkBoxBridgeGaps";
-            this.checkBoxBridgeGaps.Size = new System.Drawing.Size(139, 17);
-            this.checkBoxBridgeGaps.TabIndex = 7;
-            this.checkBoxBridgeGaps.Text = "Bridge gaps in durations";
-            this.checkBoxBridgeGaps.UseVisualStyleBackColor = true;
+            this.groupBoxConvertOptions.Enter += new System.EventHandler(this.groupBoxConvertOptions_Enter);
             // 
             // groupBoxSpeed
             // 
@@ -239,12 +151,24 @@
             this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
             this.groupBoxSpeed.Controls.Add(this.numericUpDownPercent);
             this.groupBoxSpeed.Controls.Add(this.labelPercent);
-            this.groupBoxSpeed.Location = new System.Drawing.Point(444, 89);
+            this.groupBoxSpeed.Location = new System.Drawing.Point(305, 17);
             this.groupBoxSpeed.Name = "groupBoxSpeed";
-            this.groupBoxSpeed.Size = new System.Drawing.Size(132, 115);
+            this.groupBoxSpeed.Size = new System.Drawing.Size(271, 129);
             this.groupBoxSpeed.TabIndex = 300;
             this.groupBoxSpeed.TabStop = false;
             this.groupBoxSpeed.Text = "Change speed";
+            this.groupBoxSpeed.Visible = false;
+            // 
+            // buttonConvertOptionsSettings
+            // 
+            this.buttonConvertOptionsSettings.Location = new System.Drawing.Point(305, 144);
+            this.buttonConvertOptionsSettings.Name = "buttonConvertOptionsSettings";
+            this.buttonConvertOptionsSettings.Size = new System.Drawing.Size(116, 23);
+            this.buttonConvertOptionsSettings.TabIndex = 302;
+            this.buttonConvertOptionsSettings.Text = "Settings...";
+            this.buttonConvertOptionsSettings.UseVisualStyleBackColor = true;
+            this.buttonConvertOptionsSettings.Visible = false;
+            this.buttonConvertOptionsSettings.Click += new System.EventHandler(this.ButtonOptionConvertSettings);
             // 
             // radioButtonToDropFrame
             // 
@@ -314,101 +238,20 @@
             this.labelPercent.TabIndex = 12;
             this.labelPercent.Text = "%";
             // 
-            // checkBoxSplitLongLines
-            // 
-            this.checkBoxSplitLongLines.AutoSize = true;
-            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 190);
-            this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
-            this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxSplitLongLines.TabIndex = 40;
-            this.checkBoxSplitLongLines.Text = "Split long lines";
-            this.checkBoxSplitLongLines.UseVisualStyleBackColor = true;
-            // 
-            // buttonRemoveTextForHiSettings
-            // 
-            this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(183, 68);
-            this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
-            this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonRemoveTextForHiSettings.TabIndex = 3;
-            this.buttonRemoveTextForHiSettings.Text = "Settings...";
-            this.buttonRemoveTextForHiSettings.UseVisualStyleBackColor = true;
-            this.buttonRemoveTextForHiSettings.Click += new System.EventHandler(this.buttonRemoveTextForHiSettings_Click);
-            // 
-            // checkBoxSetMinimumDisplayTimeBetweenSubs
-            // 
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 236);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(208, 17);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 50;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. milliseconds between subtitles";
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAutoBalance
-            // 
-            this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 213);
-            this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
-            this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAutoBalance.TabIndex = 45;
-            this.checkBoxAutoBalance.Text = "Auto balance lines";
-            this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
-            // 
-            // buttonMultipleReplaceSettings
-            // 
-            this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(183, 140);
-            this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
-            this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonMultipleReplaceSettings.TabIndex = 26;
-            this.buttonMultipleReplaceSettings.Text = "Settings...";
-            this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
-            this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
-            // 
-            // checkBoxMultipleReplace
-            // 
-            this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 144);
-            this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
-            this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxMultipleReplace.TabIndex = 25;
-            this.checkBoxMultipleReplace.Text = "Multiple replace";
-            this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxFixCommonErrors
-            // 
-            this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 119);
-            this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
-            this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
-            this.checkBoxFixCommonErrors.TabIndex = 15;
-            this.checkBoxFixCommonErrors.Text = "Fix common errors";
-            this.checkBoxFixCommonErrors.UseVisualStyleBackColor = true;
-            // 
-            // buttonFixCommonErrorSettings
-            // 
-            this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(183, 116);
-            this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
-            this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonFixCommonErrorSettings.TabIndex = 20;
-            this.buttonFixCommonErrorSettings.Text = "Settings...";
-            this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
-            this.buttonFixCommonErrorSettings.Click += new System.EventHandler(this.buttonFixCommonErrorSettings_Click);
-            // 
             // groupBoxChangeFrameRate
             // 
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateTo);
             this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
             this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
-            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(295, 12);
+            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(307, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
-            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(281, 73);
+            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(269, 90);
             this.groupBoxChangeFrameRate.TabIndex = 100;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
+            this.groupBoxChangeFrameRate.Visible = false;
+            this.groupBoxChangeFrameRate.Enter += new System.EventHandler(this.groupBoxChangeFrameRate_Enter);
             // 
             // comboBoxFrameRateTo
             // 
@@ -450,12 +293,14 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
-            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(295, 89);
+            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(143, 119);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
             this.groupBoxOffsetTimeCodes.TabIndex = 200;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
+            this.groupBoxOffsetTimeCodes.Visible = false;
+            this.groupBoxOffsetTimeCodes.Enter += new System.EventHandler(this.groupBoxOffsetTimeCodes_Enter);
             // 
             // radioButtonShowLater
             // 
@@ -489,14 +334,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode3;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -508,35 +353,31 @@
             this.labelHourMinSecMilliSecond.TabIndex = 0;
             this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
-            // checkBoxFixCasing
+            // listViewConvertOptions
             // 
-            this.checkBoxFixCasing.AutoSize = true;
-            this.checkBoxFixCasing.Location = new System.Drawing.Point(15, 47);
-            this.checkBoxFixCasing.Name = "checkBoxFixCasing";
-            this.checkBoxFixCasing.Size = new System.Drawing.Size(95, 17);
-            this.checkBoxFixCasing.TabIndex = 1;
-            this.checkBoxFixCasing.Text = "Auto-fix casing";
-            this.checkBoxFixCasing.UseVisualStyleBackColor = true;
+            this.listViewConvertOptions.CheckBoxes = true;
+            this.listViewConvertOptions.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ActionCheckBox,
+            this.Action});
+            this.listViewConvertOptions.FullRowSelect = true;
+            this.listViewConvertOptions.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewConvertOptions.HideSelection = false;
+            this.listViewConvertOptions.Location = new System.Drawing.Point(6, 17);
+            this.listViewConvertOptions.MultiSelect = false;
+            this.listViewConvertOptions.Name = "listViewConvertOptions";
+            this.listViewConvertOptions.Size = new System.Drawing.Size(293, 252);
+            this.listViewConvertOptions.TabIndex = 301;
+            this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
+            this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
+            this.listViewConvertOptions.SelectedIndexChanged += new System.EventHandler(this.listViewConvertOptions_SelectedIndexChanged);
             // 
-            // checkBoxRemoveTextForHI
+            // ActionCheckBox
             // 
-            this.checkBoxRemoveTextForHI.AutoSize = true;
-            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(15, 72);
-            this.checkBoxRemoveTextForHI.Name = "checkBoxRemoveTextForHI";
-            this.checkBoxRemoveTextForHI.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxRemoveTextForHI.TabIndex = 2;
-            this.checkBoxRemoveTextForHI.Text = "Remove text for HI";
-            this.checkBoxRemoveTextForHI.UseVisualStyleBackColor = true;
+            this.ActionCheckBox.Width = 30;
             // 
-            // checkBoxRemoveFormatting
+            // Action
             // 
-            this.checkBoxRemoveFormatting.AutoSize = true;
-            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(15, 22);
-            this.checkBoxRemoveFormatting.Name = "checkBoxRemoveFormatting";
-            this.checkBoxRemoveFormatting.Size = new System.Drawing.Size(115, 17);
-            this.checkBoxRemoveFormatting.TabIndex = 0;
-            this.checkBoxRemoveFormatting.Text = "Remove formatting";
-            this.checkBoxRemoveFormatting.UseVisualStyleBackColor = true;
+            this.Action.Width = 400;
             // 
             // groupBoxOutput
             // 
@@ -816,6 +657,7 @@
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
+            this.listViewInputFiles.SelectedIndexChanged += new System.EventHandler(this.listViewInputFiles_SelectedIndexChanged);
             this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
             this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
             this.listViewInputFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewInputFilesKeyDown);
@@ -886,6 +728,56 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
+            // groupBoxFixRtl
+            // 
+            this.groupBoxFixRtl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonReverseStartEnd);
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonRemoveUnicode);
+            this.groupBoxFixRtl.Controls.Add(this.radioButtonAddUnicode);
+            this.groupBoxFixRtl.Location = new System.Drawing.Point(305, 17);
+            this.groupBoxFixRtl.Name = "groupBoxFixRtl";
+            this.groupBoxFixRtl.Size = new System.Drawing.Size(271, 115);
+            this.groupBoxFixRtl.TabIndex = 303;
+            this.groupBoxFixRtl.TabStop = false;
+            this.groupBoxFixRtl.Text = "Settings";
+            this.groupBoxFixRtl.Visible = false;
+            this.groupBoxFixRtl.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // radioButtonReverseStartEnd
+            // 
+            this.radioButtonReverseStartEnd.AutoSize = true;
+            this.radioButtonReverseStartEnd.Location = new System.Drawing.Point(19, 77);
+            this.radioButtonReverseStartEnd.Name = "radioButtonReverseStartEnd";
+            this.radioButtonReverseStartEnd.Size = new System.Drawing.Size(135, 17);
+            this.radioButtonReverseStartEnd.TabIndex = 2;
+            this.radioButtonReverseStartEnd.TabStop = true;
+            this.radioButtonReverseStartEnd.Text = "Reverse RTL start/end";
+            this.radioButtonReverseStartEnd.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonRemoveUnicode
+            // 
+            this.radioButtonRemoveUnicode.AutoSize = true;
+            this.radioButtonRemoveUnicode.Location = new System.Drawing.Point(19, 54);
+            this.radioButtonRemoveUnicode.Name = "radioButtonRemoveUnicode";
+            this.radioButtonRemoveUnicode.Size = new System.Drawing.Size(153, 17);
+            this.radioButtonRemoveUnicode.TabIndex = 1;
+            this.radioButtonRemoveUnicode.TabStop = true;
+            this.radioButtonRemoveUnicode.Text = "Remove RTL unicode tags";
+            this.radioButtonRemoveUnicode.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonAddUnicode
+            // 
+            this.radioButtonAddUnicode.AutoSize = true;
+            this.radioButtonAddUnicode.Location = new System.Drawing.Point(19, 31);
+            this.radioButtonAddUnicode.Name = "radioButtonAddUnicode";
+            this.radioButtonAddUnicode.Size = new System.Drawing.Size(145, 17);
+            this.radioButtonAddUnicode.TabIndex = 0;
+            this.radioButtonAddUnicode.TabStop = true;
+            this.radioButtonAddUnicode.Text = "Fix RTL via Unicode tags";
+            this.radioButtonAddUnicode.UseVisualStyleBackColor = true;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -906,7 +798,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
-            this.groupBoxConvertOptions.PerformLayout();
             this.groupBoxSpeed.ResumeLayout(false);
             this.groupBoxSpeed.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
@@ -919,6 +810,8 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
+            this.groupBoxFixRtl.ResumeLayout(false);
+            this.groupBoxFixRtl.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -929,9 +822,6 @@
         private System.Windows.Forms.Button buttonConvert;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.GroupBox groupBoxConvertOptions;
-        private System.Windows.Forms.CheckBox checkBoxFixCasing;
-        private System.Windows.Forms.CheckBox checkBoxRemoveTextForHI;
-        private System.Windows.Forms.CheckBox checkBoxRemoveFormatting;
         private System.Windows.Forms.GroupBox groupBoxOutput;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label labelEncoding;
@@ -959,20 +849,12 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFiles;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
-        private System.Windows.Forms.CheckBox checkBoxFixCommonErrors;
-        private System.Windows.Forms.Button buttonFixCommonErrorSettings;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.RadioButton radioButtonShowLater;
         private System.Windows.Forms.RadioButton radioButtonShowEarlier;
-        private System.Windows.Forms.Button buttonMultipleReplaceSettings;
-        private System.Windows.Forms.CheckBox checkBoxMultipleReplace;
-        private System.Windows.Forms.CheckBox checkBoxAutoBalance;
         private System.Windows.Forms.Button buttonSearchFolder;
-        private System.Windows.Forms.CheckBox checkBoxSetMinimumDisplayTimeBetweenSubs;
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
-        private System.Windows.Forms.Button buttonRemoveTextForHiSettings;
-        private System.Windows.Forms.CheckBox checkBoxSplitLongLines;
         private System.Windows.Forms.Label labelFilter;
         private System.Windows.Forms.ComboBox comboBoxFilter;
         private System.Windows.Forms.TextBox textBoxFilter;
@@ -983,10 +865,6 @@
         private System.Windows.Forms.RadioButton radioButtonSpeedFromDropFrame;
         private System.Windows.Forms.RadioButton radioButtonSpeedCustom;
         private System.Windows.Forms.CheckBox checkBoxUseStyleFromSource;
-        private System.Windows.Forms.CheckBox checkBoxBridgeGaps;
-        private System.Windows.Forms.Button buttonBridgeGapsSettings;
-        private System.Windows.Forms.Button buttonFixRtlSettings;
-        private System.Windows.Forms.CheckBox checkBoxFixRtl;
         private System.Windows.Forms.Button buttonTransportStreamSettings;
         private System.Windows.Forms.RadioButton radioButtonSaveInOutputFolder;
         private System.Windows.Forms.LinkLabel linkLabelOpenOutputFolder;
@@ -997,5 +875,10 @@
         private System.Windows.Forms.ListView listViewConvertOptions;
         private System.Windows.Forms.ColumnHeader ActionCheckBox;
         private System.Windows.Forms.ColumnHeader Action;
+        private System.Windows.Forms.Button buttonConvertOptionsSettings;
+        private System.Windows.Forms.GroupBox groupBoxFixRtl;
+        private System.Windows.Forms.RadioButton radioButtonReverseStartEnd;
+        private System.Windows.Forms.RadioButton radioButtonRemoveUnicode;
+        private System.Windows.Forms.RadioButton radioButtonAddUnicode;
     }
 }
