@@ -679,6 +679,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             UpdateRtlSettings();
+            UpdateActionEnabledCache();
             if (listViewInputFiles.Items.Count == 0)
             {
                 MessageBox.Show(Configuration.Settings.Language.BatchConvert.NothingToConvert);
@@ -1141,8 +1142,25 @@ namespace Nikse.SubtitleEdit.Forms
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
         }
 
+        private Dictionary<CommandLineConverter.BatchAction, bool> _actionEnabledCache;
+
+        private void UpdateActionEnabledCache()
+        {
+            _actionEnabledCache = new Dictionary<CommandLineConverter.BatchAction, bool>();
+            foreach (ListViewItem item in listViewConvertOptions.Items)
+            {
+                var fixItem = item.Tag as FixActionItem;
+                _actionEnabledCache.Add(fixItem.Action, item.Checked);
+            }
+        }
+
         private bool IsActionEnabled(CommandLineConverter.BatchAction action)
         {
+            if (_actionEnabledCache != null)
+            {
+                return _actionEnabledCache[action];
+            }
+
             foreach (ListViewItem item in listViewConvertOptions.Items)
             {
                 var fixItem = item.Tag as FixActionItem;
@@ -1918,6 +1936,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ".png",
             ".jpg",
+            ".jpeg",
             ".tif",
             ".tiff",
             ".gif",
@@ -1956,7 +1975,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelStatus.Refresh();
                         var fi = new FileInfo(fileName);
-                        if (ext == ".sub" && FileUtil.IsVobSub(fileName))
+                        if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // skip 
+                        }
+                        else if (ext == ".sub" && FileUtil.IsVobSub(fileName))
                         {
                             AddFromSearch(fileName, fi, "VobSub");
                         }
@@ -1975,10 +1998,6 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (ext == ".mp4")
                         {
                             // skip for now
-                        }
-                        else if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            // skip 
                         }
                         else
                         {
