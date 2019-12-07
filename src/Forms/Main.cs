@@ -14357,6 +14357,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _shortcuts.VideoGoToPrevSubtitle)
             {
                 var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
+                var found = false;
                 foreach (var p in _subtitle.Paragraphs)
                 {
                     if (p.StartTime.TotalMilliseconds > cp - 1)
@@ -14373,11 +14374,20 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
                         }
-
+                        found = true;
                         break;
                     }
                 }
-
+                if (!found && _subtitle.Paragraphs.Count > 0 && _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds < cp)
+                {
+                    var p = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
+                    mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1, true);
+                    if (audioVisualizer.WavePeaks != null && p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
+                    {
+                        audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
+                    }
+                }
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.VideoGoToNextSubtitle)
