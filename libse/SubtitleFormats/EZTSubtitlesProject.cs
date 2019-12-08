@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
-            var splitChars = new char[] { ':' };
+            var splitChars = new[] { ':' };
             foreach (XmlNode subNode in subtitles.SelectNodes("Subtitle"))
             {
                 var inCue = subNode.Attributes["incue"];
