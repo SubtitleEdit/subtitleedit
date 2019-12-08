@@ -24,9 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class BatchConvert : PositionAndSizeForm
     {
-        public const string AddUnicode = "ADD_UNICODE";
-        public const string RemoveUnicode = "REMOVE_UNICODE";
-        public const string ReverseStartEnd = "REVERSE_START_END";
+        private const string AddUnicode = "ADD_UNICODE";
+        private const string RemoveUnicode = "REMOVE_UNICODE";
+        private const string ReverseStartEnd = "REVERSE_START_END";
 
         public class ThreadDoWorkParameter
         {
@@ -79,11 +79,11 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _searching;
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
-        public const string BluRaySubtitle = "Blu-ray sup";
-        public const string VobSubSubtitle = "VobSub";
-        public const string DostImageSubtitle = "Dost-image";
-        public const string BdnXmlSubtitle = "BDN-XML";
-        public const string FcpImageSubtitle = "FCP-image";
+        public static string BluRaySubtitle => "Blu-ray sup";
+        public static string VobSubSubtitle => "VobSub";
+        public static string DostImageSubtitle => "Dost-image";
+        public static string BdnXmlSubtitle => "BDN-XML";
+        public static string FcpImageSubtitle => "FCP-image";
         private string _customTextTemplate;
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
@@ -1799,11 +1799,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (_converting)
@@ -1858,11 +1853,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.BatchConvertFixRtlMode = AddUnicode;
             }
-        }
-
-        private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
-        {
-
         }
 
         private string _rootFolder;
@@ -2105,11 +2095,6 @@ namespace Nikse.SubtitleEdit.Forms
             _bridgeGaps.ShowDialog(this);
         }
 
-        private void buttonFixRtlSettings_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
         {
             using (var form = new BatchConvertTsSettings())
@@ -2215,8 +2200,6 @@ namespace Nikse.SubtitleEdit.Forms
                 case CommandLineConverter.BatchAction.ChangeSpeed:
                     groupBoxSpeed.Visible = true;
                     groupBoxSpeed.BringToFront();
-                    break;
-                default:
                     break;
             }
         }
