@@ -26,9 +26,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument();
             var template = @"<?xml version='1.0' encoding='utf-8'?>
 <EZTSubtitlesProject version='1.3'>
+  <ProjectConfiguration>
+    <SubtitlesType>open</SubtitlesType>
+    <SubtitlesMode>native</SubtitlesMode>
+    <DvdSystem>None</DvdSystem>
+    <VideoFormat>HD1080</VideoFormat>
+    <VideoFrameRate>23.976 fps</VideoFrameRate>
+    <AspectRatio>16x9</AspectRatio>
+    <Letterbox>none</Letterbox>
+    <TimeCodeStandard>30drop</TimeCodeStandard>
+    <SafeArea units='pixels' left_edge='192' center='960' right_edge='1728' top_edge='108' bottom_edge='1007' spacing_type='row_interval' spacing='-8' sa_override='true' max_chars='42' max_chars_vertical='36' max_chars_count_halfwidth_as_half='false'>
+      <BottomAlign type='above_bottom' base_line='810'/>
+      <ClosedCaptions double_control_codes='true' interleave_23_976_CC_data='false' blank_between_popons='2' use_extended_char_set='true'/>
+    </SafeArea>
+    <Fonts number_of_fonts='2'>
+      <Font1 name='Arial' height='25' metric_language='' metric='' bold='false' spacing='0' scalex='100' rtl='false' asian_font_name=''/>
+      <Font2 name='Arial Unicode MS' height='54' metric_language='' metric='' bold='false' spacing='0' scalex='100' rtl='false' asian_font_name=''/>
+    </Fonts>
+  </ProjectConfiguration>
   <Subtitles count='[SUBTITLE_COUNT]'>
   </Subtitles>
 </EZTSubtitlesProject>".Replace("'", "\"").Replace("[SUBTITLE_COUNT]", subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("23.976", Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture));
+            if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.001)
+            {
+                template = template.Replace("30drop", Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture));
+            }
+            else if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.001)
+            {
+                template = template.Replace("30drop", ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString(CultureInfo.InvariantCulture) + "drop");
+            }
             xml.LoadXml(template);
             var subtitlesNode = xml.DocumentElement.SelectSingleNode("Subtitles");
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -95,6 +122,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitles == null)
             {
                 return;
+            }
+            var frameRateNode = doc.SelectSingleNode("//VideoFrameRate");
+            if (frameRateNode != null && double.TryParse(frameRateNode.InnerText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var frameRate))
+            {
+                Configuration.Settings.General.CurrentFrameRate = frameRate;
             }
 
             var splitChars = new[] { ':' };
