@@ -5320,16 +5320,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             int j = i;
             subtitleListView1.Items[j].Selected = true;
+            subtitleListView1.Items[j].Focused = true;
             if (j < max - 1)
             {
                 j++;
             }
-
             if (j < max - 1)
             {
                 j++;
             }
-
             subtitleListView1.Items[j].EnsureVisible();
 
             string text = string.Empty;
