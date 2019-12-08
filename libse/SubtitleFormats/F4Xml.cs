@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string xml = sb.ToString();
-            if (!xml.Contains("<transcript") || !xml.Contains("<content"))
+            if (!xml.Contains("<transcript", StringComparison.Ordinal))
             {
                 return;
             }
