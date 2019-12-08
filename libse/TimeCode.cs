@@ -182,7 +182,9 @@ namespace Nikse.SubtitleEdit.Core
             var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
-                s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds + 1:00}:{0:00}";
+                var newTs = new TimeSpan(ts.Ticks);
+                newTs.Add(new TimeSpan(0, 0, 1));
+                s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00}:{0:00}";
             }
             else
             {
@@ -214,7 +216,9 @@ namespace Nikse.SubtitleEdit.Core
             var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
-                s = $"{ts.Days * 24 + ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds + 1:00}.{0:00}";
+                var newTs = new TimeSpan(ts.Ticks);
+                newTs.Add(new TimeSpan(0, 0, 1));
+                s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00}.{0:00}";
             }
             else
             {
