@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 template = template.Replace("30drop", Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.InvariantCulture));
             }
-            else if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.001)
+            else
             {
                 template = template.Replace("30drop", ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString(CultureInfo.InvariantCulture) + "drop");
             }
