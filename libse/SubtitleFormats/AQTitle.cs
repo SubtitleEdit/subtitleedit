@@ -71,12 +71,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var tc = DecodeTimeCode(timePart);
                             if (expecting == ExpectingLine.TimeStart)
                             {
-                                paragraph = new Paragraph { StartFrame = int.Parse(timePart), StartTime = tc };
+                                paragraph = new Paragraph { StartTime = tc };
                                 expecting = ExpectingLine.Text;
                             }
                             else if (expecting == ExpectingLine.TimeEndOrText)
                             {
-                                paragraph.EndFrame = int.Parse(timePart);
                                 paragraph.EndTime = tc;
                                 subtitle.Paragraphs.Add(paragraph);
                                 paragraph = new Paragraph();
@@ -117,8 +116,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (expecting == ExpectingLine.TimeStart && !string.IsNullOrWhiteSpace(line))
                     {
                         int ms = (int)paragraph.EndTime.TotalMilliseconds;
-                        int frames = paragraph.EndFrame;
-                        paragraph = new Paragraph { StartTime = { TotalMilliseconds = ms }, StartFrame = frames, Text = line.Trim() };
+                        int frames = MillisecondsToFrames(paragraph.EndTime.TotalMilliseconds);
+                        paragraph = new Paragraph { StartTime = { TotalMilliseconds = ms }, Text = line.Trim() };
                         expecting = ExpectingLine.TimeEndOrText;
                     }
                 }

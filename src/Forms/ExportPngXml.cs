@@ -5579,10 +5579,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             subtitleListView1.EndUpdate();
-            if (_subtitle.WasLoadedWithFrameNumbers)
-            {
-                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-            }
         }
 
         private void ShowTimeInListView(int index)
@@ -5639,12 +5635,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ShowTimeInListView(i);
             }
             subtitleListView1.EndUpdate();
-            if (_subtitle.WasLoadedWithFrameNumbers)
-            {
-                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-            }
         }
-
     }
-
 }

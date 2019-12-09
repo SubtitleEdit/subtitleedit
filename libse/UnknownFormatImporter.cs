@@ -179,9 +179,8 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         if (UseFrames)
                         {
-                            p.StartFrame = int.Parse(start);
-                            p.EndFrame = int.Parse(end);
-                            p.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                            p.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(start));
+                            p.EndTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(end));
                         }
                         else
                         {
@@ -264,9 +263,8 @@ namespace Nikse.SubtitleEdit.Core
                             {
                                 if (UseFrames)
                                 {
-                                    p.StartFrame = int.Parse(start[0]);
-                                    p.EndFrame = int.Parse(end[0]);
-                                    p.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                                    p.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(start[0]));
+                                    p.EndTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(end[0]));
                                 }
                                 else
                                 {
@@ -305,9 +303,8 @@ namespace Nikse.SubtitleEdit.Core
                             {
                                 if (UseFrames)
                                 {
-                                    p.StartFrame = int.Parse(start[0]);
-                                    p.EndFrame = int.Parse(end[0]);
-                                    p.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                                    p.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(start[0]));
+                                    p.EndTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(int.Parse(end[0]));
                                 }
                                 else
                                 {
@@ -338,7 +335,6 @@ namespace Nikse.SubtitleEdit.Core
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
             subtitle.Renumber();
             return subtitle;
         }

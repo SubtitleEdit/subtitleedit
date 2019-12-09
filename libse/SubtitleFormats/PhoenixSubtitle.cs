@@ -53,12 +53,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
+                        var startMs = (double)FramesToMilliseconds(int.Parse(match.Groups[1].Value));
+                        var endMs = (double)FramesToMilliseconds(int.Parse(match.Groups[2].Value));
                         var paragraph = new Paragraph
                         {
                             Number = subtitle.Paragraphs.Count + 1,
-                            // Read frames.
-                            StartFrame = int.Parse(match.Groups[1].Value),
-                            EndFrame = int.Parse(match.Groups[2].Value)
+                            StartTime = new TimeCode(startMs),
+                            EndTime = new TimeCode(endMs)
                         };
 
                         // Decode text.
@@ -97,8 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 // Pipe character for forced line breaks.
                 text = text.Replace(Environment.NewLine, "|");
-                sb.AppendFormat(writeFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds),
-                    MillisecondsToFrames(p.EndTime.TotalMilliseconds), text, Environment.NewLine);
+                sb.AppendFormat(writeFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds), MillisecondsToFrames(p.EndTime.TotalMilliseconds), text, Environment.NewLine);
             }
             return sb.ToString();
         }

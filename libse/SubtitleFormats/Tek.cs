@@ -42,15 +42,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ý
 ý                                       Kraj info blocka.");
             sb.AppendLine();
-            if (!subtitle.WasLoadedWithFrameNumbers)
-            {
-                subtitle.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
-            }
-
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
-                sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, text));
+                sb.AppendLine(string.Format(paragraphWriteFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds), MillisecondsToFrames(p.EndTime.TotalMilliseconds), text));
             }
             return sb.ToString().Trim();
         }
@@ -77,9 +72,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            paragraph.StartFrame = int.Parse(parts[0]);
-                            paragraph.EndFrame = int.Parse(parts[1]);
-                            paragraph.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                            paragraph.StartTime.TotalMilliseconds = FramesToMilliseconds(int.Parse(parts[0]));
+                            paragraph.EndTime.TotalMilliseconds = FramesToMilliseconds(int.Parse(parts[1]));
                         }
                         catch
                         {
@@ -108,6 +102,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-
     }
 }

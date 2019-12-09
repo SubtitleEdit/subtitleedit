@@ -349,12 +349,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!checkBoxRemoveLinesWithoutLetters.Checked)
                     {
-                        _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                        _subtitle.Paragraphs.Add(new Paragraph(line.Trim(), 0, 0));
                     }
                 }
                 else
                 {
-                    _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                    _subtitle.Paragraphs.Add(new Paragraph(line.Trim(), 0, 0));
                 }
             }
         }

@@ -1124,8 +1124,8 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.AreEqual("Yeah. The Drama Club is worried\r\nthat you haven't been coming.", subtitle.Paragraphs[1].Text);
 
             // Test frames.
-            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].StartFrame));
-            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2513), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].EndFrame));
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2513), subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
 
             // Test total lines.
             Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
@@ -1160,7 +1160,7 @@ and astronauts.“...""
             // Test line count.
             Assert.AreEqual(2, subtitle.Paragraphs[2].NumberOfLines);
             // Test frame.
-            Assert.AreEqual(3082, subtitle.Paragraphs[1].StartFrame);
+            Assert.AreEqual(3082, SubtitleFormat.MillisecondsToFrames(subtitle.Paragraphs[1].StartTime.TotalMilliseconds));
         }
 
         #endregion
@@ -1480,11 +1480,11 @@ VÄLKOMMEN TILL TEXAS
         {
             var target = new WebVTT();
             var subtitle = new Subtitle();
-            subtitle.Paragraphs.Add(new Paragraph(0, 0, "<i>R&D</i>"));
-            subtitle.Paragraphs.Add(new Paragraph(0, 0, "i<5"));
-            subtitle.Paragraphs.Add(new Paragraph(0, 0, "i>6"));
-            subtitle.Paragraphs.Add(new Paragraph(0, 0, "<v Viggo>Hallo"));
-            subtitle.Paragraphs.Add(new Paragraph(0, 0, "&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>"));
+            subtitle.Paragraphs.Add(new Paragraph("<i>R&D</i>", 0, 0));
+            subtitle.Paragraphs.Add(new Paragraph("i<5", 0, 0));
+            subtitle.Paragraphs.Add(new Paragraph("i>6", 0, 0));
+            subtitle.Paragraphs.Add(new Paragraph("<v Viggo>Hallo", 0, 0));
+            subtitle.Paragraphs.Add(new Paragraph("&rlm;<c.arabic>مسلسلات NETFLIX ألاصلية</c.arabic>", 0, 0));
             var raw = subtitle.ToText(target);
             Assert.IsTrue(raw.Contains("<i>R&amp;D</i>"));
             Assert.IsTrue(raw.Contains("i&lt;5"));
