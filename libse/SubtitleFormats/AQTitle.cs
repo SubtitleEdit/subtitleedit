@@ -116,7 +116,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (expecting == ExpectingLine.TimeStart && !string.IsNullOrWhiteSpace(line))
                     {
                         int ms = (int)paragraph.EndTime.TotalMilliseconds;
-                        int frames = MillisecondsToFrames(paragraph.EndTime.TotalMilliseconds);
                         paragraph = new Paragraph { StartTime = { TotalMilliseconds = ms }, Text = line.Trim() };
                         expecting = ExpectingLine.TimeEndOrText;
                     }
