@@ -33,6 +33,12 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxMergeShortLines = new System.Windows.Forms.GroupBox();
+            this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
+            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
+            this.labelMaxCharacters = new System.Windows.Forms.Label();
             this.buttonConvertOptionsSettings = new System.Windows.Forms.Button();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -91,13 +97,10 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.groupBoxMergeShortLines = new System.Windows.Forms.GroupBox();
-            this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
-            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
-            this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
-            this.labelMaxCharacters = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxMergeShortLines.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxFixRtl.SuspendLayout();
@@ -106,9 +109,6 @@
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
-            this.groupBoxMergeShortLines.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -152,6 +152,95 @@
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // groupBoxMergeShortLines
+            // 
+            this.groupBoxMergeShortLines.Controls.Add(this.checkBoxOnlyContinuationLines);
+            this.groupBoxMergeShortLines.Controls.Add(this.numericUpDownMaxCharacters);
+            this.groupBoxMergeShortLines.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
+            this.groupBoxMergeShortLines.Controls.Add(this.labelMaxMillisecondsBetweenLines);
+            this.groupBoxMergeShortLines.Controls.Add(this.labelMaxCharacters);
+            this.groupBoxMergeShortLines.Location = new System.Drawing.Point(308, 71);
+            this.groupBoxMergeShortLines.Name = "groupBoxMergeShortLines";
+            this.groupBoxMergeShortLines.Size = new System.Drawing.Size(268, 204);
+            this.groupBoxMergeShortLines.TabIndex = 304;
+            this.groupBoxMergeShortLines.TabStop = false;
+            this.groupBoxMergeShortLines.Text = "Merge short lines";
+            this.groupBoxMergeShortLines.Visible = false;
+            // 
+            // checkBoxOnlyContinuationLines
+            // 
+            this.checkBoxOnlyContinuationLines.AutoSize = true;
+            this.checkBoxOnlyContinuationLines.Checked = true;
+            this.checkBoxOnlyContinuationLines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxOnlyContinuationLines.Location = new System.Drawing.Point(16, 127);
+            this.checkBoxOnlyContinuationLines.Name = "checkBoxOnlyContinuationLines";
+            this.checkBoxOnlyContinuationLines.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxOnlyContinuationLines.TabIndex = 42;
+            this.checkBoxOnlyContinuationLines.Text = "Only merge continuation lines";
+            this.checkBoxOnlyContinuationLines.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownMaxCharacters
+            // 
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(15, 41);
+            this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharacters.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxCharacters.TabIndex = 38;
+            this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
+            65,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownMaxMillisecondsBetweenLines
+            // 
+            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 90);
+            this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxMillisecondsBetweenLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 39;
+            this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            // 
+            // labelMaxMillisecondsBetweenLines
+            // 
+            this.labelMaxMillisecondsBetweenLines.AutoSize = true;
+            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(12, 73);
+            this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
+            this.labelMaxMillisecondsBetweenLines.TabIndex = 41;
+            this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
+            // 
+            // labelMaxCharacters
+            // 
+            this.labelMaxCharacters.AutoSize = true;
+            this.labelMaxCharacters.Location = new System.Drawing.Point(12, 23);
+            this.labelMaxCharacters.Name = "labelMaxCharacters";
+            this.labelMaxCharacters.Size = new System.Drawing.Size(187, 13);
+            this.labelMaxCharacters.TabIndex = 40;
+            this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
             // buttonConvertOptionsSettings
             // 
@@ -783,94 +872,6 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // groupBoxMergeShortLines
-            // 
-            this.groupBoxMergeShortLines.Controls.Add(this.checkBoxOnlyContinuationLines);
-            this.groupBoxMergeShortLines.Controls.Add(this.numericUpDownMaxCharacters);
-            this.groupBoxMergeShortLines.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
-            this.groupBoxMergeShortLines.Controls.Add(this.labelMaxMillisecondsBetweenLines);
-            this.groupBoxMergeShortLines.Controls.Add(this.labelMaxCharacters);
-            this.groupBoxMergeShortLines.Location = new System.Drawing.Point(308, 71);
-            this.groupBoxMergeShortLines.Name = "groupBoxMergeShortLines";
-            this.groupBoxMergeShortLines.Size = new System.Drawing.Size(268, 204);
-            this.groupBoxMergeShortLines.TabIndex = 304;
-            this.groupBoxMergeShortLines.TabStop = false;
-            this.groupBoxMergeShortLines.Text = "groupBox1";
-            // 
-            // checkBoxOnlyContinuationLines
-            // 
-            this.checkBoxOnlyContinuationLines.AutoSize = true;
-            this.checkBoxOnlyContinuationLines.Checked = true;
-            this.checkBoxOnlyContinuationLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxOnlyContinuationLines.Location = new System.Drawing.Point(16, 127);
-            this.checkBoxOnlyContinuationLines.Name = "checkBoxOnlyContinuationLines";
-            this.checkBoxOnlyContinuationLines.Size = new System.Drawing.Size(164, 17);
-            this.checkBoxOnlyContinuationLines.TabIndex = 42;
-            this.checkBoxOnlyContinuationLines.Text = "Only merge continuation lines";
-            this.checkBoxOnlyContinuationLines.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDownMaxCharacters
-            // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(15, 41);
-            this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharacters.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownMaxCharacters.TabIndex = 38;
-            this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
-            65,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownMaxMillisecondsBetweenLines
-            // 
-            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 90);
-            this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
-            2000,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxMillisecondsBetweenLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 39;
-            this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
-            250,
-            0,
-            0,
-            0});
-            // 
-            // labelMaxMillisecondsBetweenLines
-            // 
-            this.labelMaxMillisecondsBetweenLines.AutoSize = true;
-            this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(12, 73);
-            this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
-            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
-            this.labelMaxMillisecondsBetweenLines.TabIndex = 41;
-            this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
-            // 
-            // labelMaxCharacters
-            // 
-            this.labelMaxCharacters.AutoSize = true;
-            this.labelMaxCharacters.Location = new System.Drawing.Point(12, 23);
-            this.labelMaxCharacters.Name = "labelMaxCharacters";
-            this.labelMaxCharacters.Size = new System.Drawing.Size(187, 13);
-            this.labelMaxCharacters.TabIndex = 40;
-            this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
-            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -891,6 +892,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxMergeShortLines.ResumeLayout(false);
+            this.groupBoxMergeShortLines.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.groupBoxChangeFrameRate.ResumeLayout(false);
             this.groupBoxChangeFrameRate.PerformLayout();
             this.groupBoxOffsetTimeCodes.ResumeLayout(false);
@@ -905,10 +910,6 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
-            this.groupBoxMergeShortLines.ResumeLayout(false);
-            this.groupBoxMergeShortLines.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
