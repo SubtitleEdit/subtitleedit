@@ -96,7 +96,7 @@
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(145, 74);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFrameRateTo.TabIndex = 0;
+            this.comboBoxFrameRateTo.TabIndex = 6;
             // 
             // labelToFrameRate
             // 
@@ -122,7 +122,7 @@
             this.buttonGetFrameRateTo.Location = new System.Drawing.Point(272, 73);
             this.buttonGetFrameRateTo.Name = "buttonGetFrameRateTo";
             this.buttonGetFrameRateTo.Size = new System.Drawing.Size(28, 22);
-            this.buttonGetFrameRateTo.TabIndex = 1;
+            this.buttonGetFrameRateTo.TabIndex = 7;
             this.buttonGetFrameRateTo.Text = "...";
             this.buttonGetFrameRateTo.UseVisualStyleBackColor = true;
             this.buttonGetFrameRateTo.Click += new System.EventHandler(this.ButtonGetFrameRateToClick);
@@ -137,7 +137,7 @@
             this.buttonSwap.Location = new System.Drawing.Point(314, 55);
             this.buttonSwap.Name = "buttonSwap";
             this.buttonSwap.Size = new System.Drawing.Size(23, 28);
-            this.buttonSwap.TabIndex = 9;
+            this.buttonSwap.TabIndex = 8;
             this.buttonSwap.Text = "🡙";
             this.buttonSwap.UseVisualStyleBackColor = true;
             this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
