@@ -258,6 +258,8 @@ namespace Nikse.SubtitleEdit.Core
         public double AutoBreakPreferBottomPercent { get; set; }
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
+        public int MergeShortLinesMaxGap { get; set; }
+        public bool MergeShortLinesOnlyContinuous { get; set; }
 
         public ToolsSettings()
         {
@@ -363,6 +365,8 @@ namespace Nikse.SubtitleEdit.Core
             AutoBreakPreferBottomPercent = 5;
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
+            MergeShortLinesMaxGap = 250;
+            MergeShortLinesOnlyContinuous = true;
         }
     }
 
@@ -3595,6 +3599,18 @@ $HorzAlign          =   Center
                 settings.Tools.ApplyMaximumDurationLimit = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("MergeShortLinesMaxGap");
+            if (subNode != null)
+            {
+                settings.Tools.MergeShortLinesMaxGap = Convert.ToInt32(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("MergeShortLinesOnlyContinuous");
+            if (subNode != null)
+            {
+                settings.Tools.MergeShortLinesOnlyContinuous = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -6342,6 +6358,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoBreakPreferBottomPercent", settings.Tools.AutoBreakPreferBottomPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

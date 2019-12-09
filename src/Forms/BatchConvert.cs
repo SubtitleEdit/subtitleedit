@@ -262,6 +262,14 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonAddUnicode.Checked = true;
             }
 
+            groupBoxMergeShortLines.Text = Configuration.Settings.Language.MergedShortLines.Title;
+            labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
+            labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
+            checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
+            numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
+            checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
+
             var fixItems = new List<FixActionItem>
             {
                 new FixActionItem
@@ -1049,7 +1057,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
                             {
-                                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, 250, Configuration.Settings.General.SubtitleLineMaximumLength, true);
+                                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
                                 if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
                                 {
                                     sub.Paragraphs.Clear();
@@ -1835,6 +1843,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertChangeSpeed = IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed);
             Configuration.Settings.Tools.BatchConvertChangeFrameRate = IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate);
             Configuration.Settings.Tools.BatchConvertOffsetTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes);
+            Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
+            Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
 
             UpdateRtlSettings();
         }
@@ -2138,6 +2148,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewConvertOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
+            groupBoxMergeShortLines.Visible = false;
             groupBoxChangeFrameRate.Visible = false;
             groupBoxSpeed.Visible = false;
             groupBoxOffsetTimeCodes.Visible = false;
@@ -2156,6 +2167,9 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonConvertOptionsSettings.BringToFront();
                     break;
                 case CommandLineConverter.BatchAction.MergeShortLines:
+                    groupBoxMergeShortLines.Top = listViewConvertOptions.Top;
+                    groupBoxMergeShortLines.Visible = true;
+                    groupBoxMergeShortLines.BringToFront();
                     break;
                 case CommandLineConverter.BatchAction.MergeSameTexts:
                     break;
