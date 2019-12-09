@@ -38,13 +38,14 @@
             this.buttonGetFrameRateFrom = new System.Windows.Forms.Button();
             this.buttonGetFrameRateTo = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.buttonSwap = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(221, 115);
+            this.buttonCancel.Location = new System.Drawing.Point(262, 115);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -54,7 +55,7 @@
             // buttonOK
             // 
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(140, 115);
+            this.buttonOK.Location = new System.Drawing.Point(181, 115);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
@@ -95,7 +96,7 @@
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(145, 74);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFrameRateTo.TabIndex = 0;
+            this.comboBoxFrameRateTo.TabIndex = 6;
             // 
             // labelToFrameRate
             // 
@@ -121,7 +122,7 @@
             this.buttonGetFrameRateTo.Location = new System.Drawing.Point(272, 73);
             this.buttonGetFrameRateTo.Name = "buttonGetFrameRateTo";
             this.buttonGetFrameRateTo.Size = new System.Drawing.Size(28, 22);
-            this.buttonGetFrameRateTo.TabIndex = 1;
+            this.buttonGetFrameRateTo.TabIndex = 7;
             this.buttonGetFrameRateTo.Text = "...";
             this.buttonGetFrameRateTo.UseVisualStyleBackColor = true;
             this.buttonGetFrameRateTo.Click += new System.EventHandler(this.ButtonGetFrameRateToClick);
@@ -130,11 +131,23 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // buttonSwap
+            // 
+            this.buttonSwap.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSwap.Location = new System.Drawing.Point(314, 56);
+            this.buttonSwap.Name = "buttonSwap";
+            this.buttonSwap.Size = new System.Drawing.Size(23, 28);
+            this.buttonSwap.TabIndex = 8;
+            this.buttonSwap.Text = "🡙";
+            this.buttonSwap.UseVisualStyleBackColor = true;
+            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
+            // 
             // ChangeFrameRate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(311, 148);
+            this.ClientSize = new System.Drawing.Size(349, 148);
+            this.Controls.Add(this.buttonSwap);
             this.Controls.Add(this.buttonGetFrameRateTo);
             this.Controls.Add(this.buttonGetFrameRateFrom);
             this.Controls.Add(this.comboBoxFrameRateTo);
@@ -170,5 +183,6 @@
         private System.Windows.Forms.Button buttonGetFrameRateFrom;
         private System.Windows.Forms.Button buttonGetFrameRateTo;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button buttonSwap;
     }
 }

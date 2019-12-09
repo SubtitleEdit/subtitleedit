@@ -95,6 +95,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void buttonSwap_Click(object sender, EventArgs e)
+        {
+            string oldFrameRate = comboBoxFrameRateFrom.Text;
+            string newFrameRate = comboBoxFrameRateTo.Text;
+
+            comboBoxFrameRateFrom.Text = newFrameRate;
+            comboBoxFrameRateTo.Text = oldFrameRate;
+        }
+
         public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text);
 
         public double NewFrameRate => double.Parse(comboBoxFrameRateTo.Text);
