@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("O,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("Ό,τι", StringComparison.Ordinal) ||
+                         p.Text.Substring(match.Index).StartsWith("Ο,ΤΙ", StringComparison.Ordinal) || 
                          p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                     {
                         doFix = false;
