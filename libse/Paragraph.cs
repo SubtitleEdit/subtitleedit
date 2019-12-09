@@ -14,10 +14,6 @@ namespace Nikse.SubtitleEdit.Core
 
         public TimeCode Duration => new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
 
-        public int StartFrame { get; set; }
-
-        public int EndFrame { get; set; }
-
         public bool Forced { get; set; }
 
         public string Extra { get; set; }
@@ -70,8 +66,6 @@ namespace Nikse.SubtitleEdit.Core
             Text = paragraph.Text;
             StartTime = new TimeCode(paragraph.StartTime.TotalMilliseconds);
             EndTime = new TimeCode(paragraph.EndTime.TotalMilliseconds);
-            StartFrame = paragraph.StartFrame;
-            EndFrame = paragraph.EndFrame;
             Forced = paragraph.Forced;
             Extra = paragraph.Extra;
             IsComment = paragraph.IsComment;
@@ -89,13 +83,6 @@ namespace Nikse.SubtitleEdit.Core
             Bookmark = paragraph.Bookmark;
         }
 
-        public Paragraph(int startFrame, int endFrame, string text) :
-            this(new TimeCode(), new TimeCode(), text)
-        {
-            StartFrame = startFrame;
-            EndFrame = endFrame;
-        }
-
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)
             : this(new TimeCode(startTotalMilliseconds), new TimeCode(endTotalMilliseconds), text)
         {
@@ -110,18 +97,6 @@ namespace Nikse.SubtitleEdit.Core
 
             StartTime.TotalMilliseconds = StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit;
             EndTime.TotalMilliseconds = EndTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit;
-        }
-
-        public void CalculateFrameNumbersFromTimeCodes(double frameRate)
-        {
-            StartFrame = (int)Math.Round(StartTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate);
-            EndFrame = (int)Math.Round(EndTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate);
-        }
-
-        public void CalculateTimeCodesFromFrameNumbers(double frameRate)
-        {
-            StartTime.TotalMilliseconds = StartFrame * (TimeCode.BaseUnit / frameRate);
-            EndTime.TotalMilliseconds = EndFrame * (TimeCode.BaseUnit / frameRate);
         }
 
         public override string ToString()

@@ -146,27 +146,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
-
-                // be sure to match frames with movie
-                if (_inputSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
-                {
-                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
-                    {
-                        _inputSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
-                        LoadAndShowOriginalSubtitle();
-                        FrameRateChanged = true;
-                    }
-                }
-                if (_inputAlternateSubtitle != null && _inputAlternateSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
-                {
-                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
-                    {
-                        _inputAlternateSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
-                        LoadAndShowOriginalSubtitle();
-                        FrameRateChanged = true;
-                    }
-                }
-
                 UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, MediaPlayerStart, VideoStartLoaded, VideoStartEnded);
             }
         }
@@ -484,7 +463,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // fix overlapping time codes
-            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputSubtitle.WasLoadedWithFrameNumbers };
+            var tmpSubtitle = new Subtitle();
             foreach (Paragraph p in _paragraphs)
             {
                 tmpSubtitle.Paragraphs.Add(new Paragraph(p));
@@ -496,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms
             // fix overlapping time codes for alternate subtitle (translation)
             if (_inputAlternateSubtitle != null)
             {
-                tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputAlternateSubtitle.WasLoadedWithFrameNumbers };
+                tmpSubtitle = new Subtitle();
                 foreach (Paragraph p in _paragraphsAlternate)
                 {
                     tmpSubtitle.Paragraphs.Add(new Paragraph(p));

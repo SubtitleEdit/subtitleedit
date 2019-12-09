@@ -81,9 +81,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('{');
-                sb.Append(p.StartFrame);
+                sb.Append(MillisecondsToFrames(p.StartTime.TotalMilliseconds));
                 sb.Append("}{");
-                sb.Append(p.EndFrame);
+                sb.Append(MillisecondsToFrames(p.EndTime.TotalMilliseconds));
                 sb.Append('}');
 
                 //{y:b} is italics for single line
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 count++;
                             }
                             text = lineSb + post;
-                            subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text));
+                            subtitle.Paragraphs.Add(new Paragraph(text, FramesToMilliseconds(startFrame), FramesToMilliseconds(endFrame)));
                         }
                     }
                     catch
@@ -593,13 +593,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph previous = subtitle.GetParagraphOrDefault(j - 1);
-                if (p.StartFrame == 0 && previous != null)
+                if (p.StartTime.TotalMilliseconds == 0 && previous != null)
                 {
-                    p.StartFrame = previous.EndFrame + 1;
+                    p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + 1;
                 }
-                if (p.EndFrame == 0)
+                if (p.EndTime.TotalMilliseconds == 0)
                 {
-                    p.EndFrame = p.StartFrame;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                 }
                 j++;
             }

@@ -251,13 +251,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph previous = subtitle.GetParagraphOrDefault(i - 1);
-                if (p.StartFrame == 0 && previous != null)
+                if (p.StartTime.TotalMilliseconds == 0 && previous != null)
                 {
-                    p.StartFrame = previous.EndFrame + 1;
+                    p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + 1;
                 }
-                if (p.EndFrame == 0)
+                if (p.EndTime.TotalMilliseconds == 0)
                 {
-                    p.EndFrame = p.StartFrame;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                 }
                 i++;
             }
@@ -275,7 +275,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     tagCount++;
                 }
-
                 i++;
             }
             return i;

@@ -62,7 +62,6 @@ namespace Nikse.SubtitleEdit.Core
             {
                 _paragraphs.Add(new Paragraph(p, generateNewId));
             }
-            WasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
@@ -198,11 +197,6 @@ namespace Nikse.SubtitleEdit.Core
                 subtitleFormat.LoadSubtitle(this, lines, fileName);
             }
             OriginalFormat = subtitleFormat;
-            WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
-            if (WasLoadedWithFrameNumbers)
-            {
-                CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-            }
             return subtitleFormat;
         }
 
@@ -257,81 +251,14 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        /// <summary>
-        /// Calculate the time codes from frame number/frame rate
-        /// </summary>
-        /// <param name="frameRate">Number of frames per second</param>
-        /// <returns>True if times could be calculated</returns>
-        public bool CalculateTimeCodesFromFrameNumbers(double frameRate)
-        {
-            if (OriginalFormat == null || OriginalFormat.IsTimeBased)
-            {
-                return false;
-            }
-
-            foreach (Paragraph p in Paragraphs)
-            {
-                p.CalculateTimeCodesFromFrameNumbers(frameRate);
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Calculate the frame numbers from time codes/frame rate
-        /// </summary>
-        /// <param name="frameRate"></param>
-        /// <returns></returns>
-        public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
-        {
-            if (OriginalFormat == null || OriginalFormat.IsFrameBased)
-            {
-                return false;
-            }
-
-            foreach (Paragraph p in Paragraphs)
-            {
-                p.CalculateFrameNumbersFromTimeCodes(frameRate);
-            }
-
-            FixEqualOrJustOverlappingFrameNumbers();
-
-            return true;
-        }
-
-        public void CalculateFrameNumbersFromTimeCodesNoCheck(double frameRate)
-        {
-            foreach (Paragraph p in Paragraphs)
-            {
-                p.CalculateFrameNumbersFromTimeCodes(frameRate);
-            }
-
-            FixEqualOrJustOverlappingFrameNumbers();
-        }
-
-        private void FixEqualOrJustOverlappingFrameNumbers()
-        {
-            for (int i = 0; i < Paragraphs.Count - 1; i++)
-            {
-                Paragraph p = Paragraphs[i];
-                Paragraph next = GetParagraphOrDefault(i + 1);
-                if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
-                {
-                    p.EndFrame = next.StartFrame - 1;
-                }
-            }
-        }
-
         public void ChangeFrameRate(double oldFrameRate, double newFrameRate)
         {
             foreach (Paragraph p in Paragraphs)
             {
                 p.StartTime.TotalMilliseconds = (p.StartTime.TotalMilliseconds * oldFrameRate / newFrameRate);
                 p.EndTime.TotalMilliseconds = (p.EndTime.TotalMilliseconds * oldFrameRate / newFrameRate);
-                p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
-
-        public bool WasLoadedWithFrameNumbers { get; set; }
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
         {

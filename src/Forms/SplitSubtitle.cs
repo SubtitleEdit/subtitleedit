@@ -127,11 +127,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (saveFileDialog1.FilterIndex == index + 1)
                         {
-                            if (format.IsFrameBased)
-                            {
-                                part.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-                            }
-
                             File.WriteAllText(fileName, part.ToText(format), _encoding);
                         }
                         index++;

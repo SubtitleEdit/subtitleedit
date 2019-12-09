@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         case Expecting.StartFrame:
                             if (ContainsOnlyNumber(line))
                             {
-                                p.StartFrame = int.Parse(line.TrimStart(trimChar));
+                                p.StartTime.TotalMilliseconds = FramesToMilliseconds(int.Parse(line.TrimStart(trimChar)));
                                 expecting = Expecting.Text;
                             }
                             else
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         case Expecting.EndFrame:
                             if (ContainsOnlyNumber(line))
                             {
-                                p.EndFrame = int.Parse(line.TrimStart(trimChar));
+                                p.EndTime.TotalMilliseconds = FramesToMilliseconds(int.Parse(line.TrimStart(trimChar)));
                                 subtitle.Paragraphs.Add(p);
                                 // Prepare for next reading.
                                 p = new Paragraph();

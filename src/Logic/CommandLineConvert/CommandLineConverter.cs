@@ -1161,14 +1161,6 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         sf.BatchMode = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                        {
-                            sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-                        }
-                        else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                        {
-                            sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-                        }
 
                         if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
                         {
