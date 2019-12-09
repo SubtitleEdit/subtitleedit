@@ -179,8 +179,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <InputDescription>Входящи видео файлове (намиране или влачене)</InputDescription>
     <Status>Статус</Status>
     <Output>Изход</Output>
-    <ChooseOutputFolder>Избор на изходната папка</ChooseOutputFolder>
-    <OverwriteExistingFiles>Презаписване на съществуващите файлове</OverwriteExistingFiles>
+    <SaveInSourceFolder>Запазване в папката на изходния файл</SaveInSourceFolder>
+    <SaveInOutputFolder>Запазване в изходната папка по-долу</SaveInOutputFolder>
+    <OverwriteFiles>Презаписване на файлове</OverwriteFiles>
     <Style>Стил...</Style>
     <UseStyleFromSource>Използвайте стил от източника</UseStyleFromSource>
     <ConvertOptions>Опции при конвертиране</ConvertOptions>
@@ -211,6 +212,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FilterSrtNoUtf8BOM>SubRip (.srt) файлове без UTF-8 BOM заглавие</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Субтитри с повече от 2 реда</FilterMoreThanTwoLines>
     <FilterContains>Текста съдържа...</FilterContains>
+    <FilterFileNameContains>Името на файла съдържа...</FilterFileNameContains>
     <FixCommonErrorsErrorX>Поправяне на прости грешки: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Множествено заместване: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Автоматичен баланс: {0}</AutoBalanceErrorX>
@@ -539,7 +541,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Генериране на време като текст</Title>
-    <OpenVideoFile>Изберете видео файл за извличане на дата/време във форма</OpenVideoFile>
+    <OpenVideoFile>Изберете видео файл за извличане инфо за дата/време от него</OpenVideoFile>
     <StartFrom>Начало от</StartFrom>
     <DateTimeFormat>Формат на дата/време</DateTimeFormat>
     <Example>Пример</Example>
@@ -620,7 +622,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToFix>Няма нищо за поправяне :)</NothingToFix>
     <FixesFoundX>Намерени грешки: {0}</FixesFoundX>
     <XFixesApplied>Направени поправки: {0}</XFixesApplied>
-    <NothingToFixBut>Няма нищо за поправяне, но някои неща могат да се подобрят – вижте отчета</NothingToFixBut>
+    <NothingFixableBut>Нищо не може да бъде поправено автоматично.  Подзаглавието съдържа грешки - вижте отчета за подробности</NothingFixableBut>
+    <XFixedBut>{0} проблем(и) поправен(и), но субтитрите все още съдържат грешки - вижте отчета за подробности</XFixedBut>
+    <XCouldBeFixedBut>{0} проблем(и) може да се поправи(ят), но субтитрите все още ще съдържат грешки-вижте отчета</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>Опцията «Поправяне на единична малка буква "i" към "I" (на англ.) не е избрана»</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>Направена замяна на буквите "i" на Главни: {0}</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Поправяне на началната буква на Главна след абзац</FixFirstLetterToUppercaseAfterParagraph>
@@ -948,7 +952,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Файл</Title>
         <New>Нов</New>
         <Open>Отвори...</Open>
-        <OpenKeepVideo>Отвори файл със субтитри (Без затваряне на видеото)</OpenKeepVideo>
+        <OpenKeepVideo>Отвори файл със субтитри (запазване на видеото)</OpenKeepVideo>
         <Reopen>Отвори предишен файл със субтитри</Reopen>
         <Save>Запиши</Save>
         <SaveAs>Запиши като...</SaveAs>
@@ -1522,6 +1526,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PromptInsertSubtitleOverlap>Поставянето на субтитри в позицията на формата на звуковия сигнал ще доведе до припокриване!
 
 Продължавате ли все пак?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Субтитрите съдържат отрицателна продължителност в ред(ове): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Задайте скорост на възпроизвеждане до {0}%</SetPlayRateX>
     <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а Subtitle Edit може да отвори .sub файла.</ErrorLoadIdx>
     <ErrorLoadRar>Изглежда това са архивни .rar файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadRar>
@@ -1791,6 +1796,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToPreviousBookmark>Отидете на предишната отметка</GoToPreviousBookmark>
     <GoToNextBookmark>Отидете до следващата отметка</GoToNextBookmark>
     <ChooseProfile>Избор на профил</ChooseProfile>
+    <DuplicateLine>Дублиран ред</DuplicateLine>
     <FontInUi>Шрифт на потребителския интерфейс</FontInUi>
     <ShowFrameRate>Показване честотата на кадрите в лентата с инструменти</ShowFrameRate>
     <DefaultFrameRate>Честота на кадрите (fps) по подр.</DefaultFrameRate>
@@ -2002,8 +2008,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformSeekSilenceBack>Търсене на тишина НАЗАД</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавяне на текст тук (за ново избиране)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Добавяне на текст тук (за нов избор от клипборда)</WaveformAddTextHereFromClipboard>
-    <WaveformPlayNewSelection>Възпроизвеждане на новата селекция</WaveformPlayNewSelection>
-    <WaveformPlayNewSelectionEnd>Възпроизвеждане края на селекцията</WaveformPlayNewSelectionEnd>
+    <SetParagraphAsSelection>Задаване на текущия като нов избор</SetParagraphAsSelection>
+    <WaveformPlayNewSelection>Възпроизвеждане на избраното</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Възпроизвеждане края на избраното</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Възпроизвеждане на първия избран субтитър</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокусиране върху изгледа на списъка</WaveformFocusListView>
     <WaveformGoToPreviousSceneChange>Преминете към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
@@ -2074,6 +2081,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxMoveLastWordDownCurrent>Премести последната дума от първия ред надолу (текущите субтитри)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Избраното в малки букви</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Избраното в ГЛАВНИ букви</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>Избраното на Ruby (Японски)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Превключване на авт. времетраене</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Автоматично прекъсване на текст</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Прекъсване първо място от позицията на курсора</MainTextBoxAutoBreakFromPos>
@@ -2085,7 +2093,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UseDoNotBreakAfterList>Неразделяй след списъка(заАвт.пренасяне)</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Прекъсване в началото за завършване на реда (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Прекъсване по ширина на пикселите</BreakByPixelWidth>
-    <BreakPreferBottomHeavy />
+    <BreakPreferBottomHeavy>Предпочитане отдолу получерен</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>Прекъсване в началото за диалогово тире</BreakEarlyForDashDialog>
     <BreakEarlyForComma>Прекъсване в началото за запетая</BreakEarlyForComma>
     <GoogleTranslate>Google преводач</GoogleTranslate>
@@ -2200,7 +2208,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <SplitSubtitle>
     <Title>Основни настройки за Разделяне на субтитри</Title>
     <Description1>Въведете времетраенето на първата част на видеото или</Description1>
-    <Description2>натиснете бутон [..] и получете стойността от видео файла.</Description2>
+    <Description2>получ.стойността му от видео файла чрез [Повече настр.]</Description2>
     <Split>Раздели</Split>
     <Done>ОК</Done>
     <NothingToSplit>Няма нищо за разделяне!</NothingToSplit>
@@ -2334,7 +2342,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Избран поток със субтитри - {0}</Title>
     <PidLineImage>Изображения - Пакетен идентификатор на потока (PID) = {0}, език = {1}, брой субтитри = {2}</PidLineImage>
     <PidLineTeletext>Телетекст - Пакетен идентификатор на потока (PID) = {1}, страница {0}, език = {2}, брой субтитри = {3}</PidLineTeletext>
-    <SubLine>{0}: {1} -&gt; {2}, {3} избражение(я)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} изображение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Неизвестен тип субтитри</Title>
@@ -2497,6 +2505,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ZoomOut>Намаляване</ZoomOut>
     <AddParagraphHere>Добавяне на текст тук</AddParagraphHere>
     <AddParagraphHereAndPasteText>Добави текст от клипборда тук</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Задаване текущия като нов избор</SetParagraphAsSelection>
     <FocusTextBox>Фокусиране върху текстовото поле</FocusTextBox>
     <DeleteParagraph>Изтриване на реда</DeleteParagraph>
     <Split>Разделяне на реда</Split>
@@ -2511,7 +2520,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveSceneChange>Премахване променена сцена</RemoveSceneChange>
     <GuessTimeCodes>Разпознаване на времеви кодове...</GuessTimeCodes>
     <SeekSilence>Търсене на тишина (пауза)...</SeekSilence>
-    <InsertSubtitleHere>Поставете субтитрите тук...</InsertSubtitleHere>
+    <InsertSubtitleHere>Поставете субтитри от тук...</InsertSubtitleHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Думи/мин.: {0:0.00}</WordsMinX>
   </Waveform>
