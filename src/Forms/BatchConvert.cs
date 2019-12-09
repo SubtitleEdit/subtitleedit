@@ -266,7 +266,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
             checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
-            numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
+            }
+            else if (Configuration.Settings.General.SubtitleLineMaximumLength < numericUpDownMaxCharacters.Minimum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Minimum;
+            }
+            else
+            {
+                numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            }
             numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
