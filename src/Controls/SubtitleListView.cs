@@ -1934,6 +1934,11 @@ namespace Nikse.SubtitleEdit.Controls
                     Items[index].SubItems[ColumnIndexWpm].BackColor = color;
                 }
 
+                if (ColumnIndexGap >= 0)
+                {
+                    Items[index].SubItems[ColumnIndexGap].BackColor = color;
+                }
+
                 if (ColumnIndexText >= 0)
                 {
                     Items[index].SubItems[ColumnIndexText].BackColor = color;
@@ -1985,6 +1990,11 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexText >= 0)
                 {
                     item.SubItems[ColumnIndexText].Text = string.Empty;
+                }
+
+                if (ColumnIndexGap >= 0)
+                {
+                    item.SubItems[ColumnIndexGap].Text = string.Empty;
                 }
 
                 SetBackgroundColor(index, color);
