@@ -353,39 +353,39 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.tbSaturation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbValue)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // lblBlue
-            //
+            // 
             this.lblBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBlue.Location = new System.Drawing.Point(322, 70);
+            this.lblBlue.Location = new System.Drawing.Point(340, 70);
             this.lblBlue.Name = "lblBlue";
             this.lblBlue.Size = new System.Drawing.Size(39, 23);
             this.lblBlue.TabIndex = 54;
             this.lblBlue.Text = "Blue";
             this.lblBlue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblGreen
-            //
+            // 
             this.lblGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGreen.Location = new System.Drawing.Point(322, 35);
+            this.lblGreen.Location = new System.Drawing.Point(340, 35);
             this.lblGreen.Name = "lblGreen";
             this.lblGreen.Size = new System.Drawing.Size(39, 23);
             this.lblGreen.TabIndex = 53;
             this.lblGreen.Text = "Green";
             this.lblGreen.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblRed
-            //
+            // 
             this.lblRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRed.Location = new System.Drawing.Point(322, 0);
+            this.lblRed.Location = new System.Drawing.Point(340, 0);
             this.lblRed.Name = "lblRed";
             this.lblRed.Size = new System.Drawing.Size(39, 23);
             this.lblRed.TabIndex = 52;
             this.lblRed.Text = "Red";
             this.lblRed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // lblValue
-            //
+            // 
             this.lblValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValue.Location = new System.Drawing.Point(623, 217);
             this.lblValue.Name = "lblValue";
@@ -394,9 +394,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.lblValue.Text = "Value";
             this.lblValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblValue.Visible = false;
-            //
+            // 
             // lblSaturation
-            //
+            // 
             this.lblSaturation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSaturation.Location = new System.Drawing.Point(623, 182);
             this.lblSaturation.Name = "lblSaturation";
@@ -405,9 +405,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.lblSaturation.Text = "Sat";
             this.lblSaturation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblSaturation.Visible = false;
-            //
+            // 
             // lblHue
-            //
+            // 
             this.lblHue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHue.Location = new System.Drawing.Point(623, 155);
             this.lblHue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -417,17 +417,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.lblHue.Text = "Hue";
             this.lblHue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblHue.Visible = false;
-            //
+            // 
             // pnlColor
-            //
+            // 
             this.pnlColor.Location = new System.Drawing.Point(5, 8);
             this.pnlColor.Name = "pnlColor";
             this.pnlColor.Size = new System.Drawing.Size(224, 216);
             this.pnlColor.TabIndex = 38;
             this.pnlColor.Visible = false;
-            //
+            // 
             // label5
-            //
+            // 
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(304, 155);
             this.label5.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -437,27 +437,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.label5.Text = "Hue";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label5.Visible = false;
-            //
+            // 
             // pnlBrightness
-            //
+            // 
             this.pnlBrightness.Location = new System.Drawing.Point(254, 8);
             this.pnlBrightness.Name = "pnlBrightness";
             this.pnlBrightness.Size = new System.Drawing.Size(24, 216);
             this.pnlBrightness.TabIndex = 39;
             this.pnlBrightness.Visible = false;
-            //
+            // 
             // lblAlpha2
-            //
+            // 
             this.lblAlpha2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAlpha2.Location = new System.Drawing.Point(322, 111);
+            this.lblAlpha2.Location = new System.Drawing.Point(340, 111);
             this.lblAlpha2.Name = "lblAlpha2";
             this.lblAlpha2.Size = new System.Drawing.Size(39, 24);
             this.lblAlpha2.TabIndex = 57;
             this.lblAlpha2.Text = "Alpha";
             this.lblAlpha2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // tbHexCode
-            //
+            // 
             this.tbHexCode.BackColor = System.Drawing.Color.White;
             this.tbHexCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbHexCode.Location = new System.Drawing.Point(295, 50);
@@ -467,9 +467,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbHexCode.Size = new System.Drawing.Size(96, 22);
             this.tbHexCode.TabIndex = 58;
             this.tbHexCode.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TbHexCodeMouseDown);
-            //
+            // 
             // flowLayoutPanel1
-            //
+            // 
             this.flowLayoutPanel1.Controls.Add(this.labelRed);
             this.flowLayoutPanel1.Controls.Add(this.tbRed);
             this.flowLayoutPanel1.Controls.Add(this.lblRed);
@@ -484,11 +484,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.flowLayoutPanel1.Controls.Add(this.lblAlpha2);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(5, 232);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(386, 157);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(396, 157);
             this.flowLayoutPanel1.TabIndex = 59;
-            //
+            // 
             // labelRed
-            //
+            // 
             this.labelRed.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelRed.Location = new System.Drawing.Point(3, 8);
             this.labelRed.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -497,22 +497,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelRed.TabIndex = 42;
             this.labelRed.Text = "Red";
             this.labelRed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // tbRed
-            //
+            // 
             this.tbRed.AutoSize = false;
             this.tbRed.LargeChange = 16;
             this.tbRed.Location = new System.Drawing.Point(78, 3);
             this.tbRed.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
             this.tbRed.Maximum = 255;
             this.tbRed.Name = "tbRed";
-            this.tbRed.Size = new System.Drawing.Size(238, 32);
+            this.tbRed.Size = new System.Drawing.Size(256, 32);
             this.tbRed.TabIndex = 43;
             this.tbRed.TickFrequency = 32;
             this.tbRed.Scroll += new System.EventHandler(this.HandleRGBScroll);
-            //
+            // 
             // labelGreen
-            //
+            // 
             this.labelGreen.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelGreen.Location = new System.Drawing.Point(3, 43);
             this.labelGreen.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -521,22 +521,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelGreen.TabIndex = 44;
             this.labelGreen.Text = "Green";
             this.labelGreen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // tbGreen
-            //
+            // 
             this.tbGreen.AutoSize = false;
             this.tbGreen.LargeChange = 16;
             this.tbGreen.Location = new System.Drawing.Point(78, 38);
             this.tbGreen.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
             this.tbGreen.Maximum = 255;
             this.tbGreen.Name = "tbGreen";
-            this.tbGreen.Size = new System.Drawing.Size(238, 32);
+            this.tbGreen.Size = new System.Drawing.Size(256, 32);
             this.tbGreen.TabIndex = 45;
             this.tbGreen.TickFrequency = 32;
             this.tbGreen.Scroll += new System.EventHandler(this.HandleRGBScroll);
-            //
+            // 
             // labelBlue
-            //
+            // 
             this.labelBlue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBlue.Location = new System.Drawing.Point(3, 78);
             this.labelBlue.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -545,22 +545,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelBlue.TabIndex = 46;
             this.labelBlue.Text = "Blue";
             this.labelBlue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // tbBlue
-            //
+            // 
             this.tbBlue.AutoSize = false;
             this.tbBlue.LargeChange = 16;
             this.tbBlue.Location = new System.Drawing.Point(78, 73);
             this.tbBlue.Margin = new System.Windows.Forms.Padding(0, 3, 3, 6);
             this.tbBlue.Maximum = 255;
             this.tbBlue.Name = "tbBlue";
-            this.tbBlue.Size = new System.Drawing.Size(238, 32);
+            this.tbBlue.Size = new System.Drawing.Size(256, 32);
             this.tbBlue.TabIndex = 47;
             this.tbBlue.TickFrequency = 32;
             this.tbBlue.Scroll += new System.EventHandler(this.HandleRGBScroll);
-            //
+            // 
             // labelAlpha1
-            //
+            // 
             this.labelAlpha1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelAlpha1.Location = new System.Drawing.Point(3, 119);
             this.labelAlpha1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -569,22 +569,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelAlpha1.TabIndex = 55;
             this.labelAlpha1.Text = "Alpha";
             this.labelAlpha1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            //
+            // 
             // tbAlpha
-            //
+            // 
             this.tbAlpha.AutoSize = false;
             this.tbAlpha.LargeChange = 16;
             this.tbAlpha.Location = new System.Drawing.Point(78, 114);
             this.tbAlpha.Margin = new System.Windows.Forms.Padding(0, 3, 3, 0);
             this.tbAlpha.Maximum = 255;
             this.tbAlpha.Name = "tbAlpha";
-            this.tbAlpha.Size = new System.Drawing.Size(238, 32);
+            this.tbAlpha.Size = new System.Drawing.Size(256, 32);
             this.tbAlpha.TabIndex = 56;
             this.tbAlpha.TickFrequency = 32;
             this.tbAlpha.Scroll += new System.EventHandler(this.TbAlphaScroll);
-            //
+            // 
             // tbHue
-            //
+            // 
             this.tbHue.AutoSize = false;
             this.tbHue.LargeChange = 16;
             this.tbHue.Location = new System.Drawing.Point(379, 150);
@@ -596,9 +596,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbHue.TickFrequency = 32;
             this.tbHue.Visible = false;
             this.tbHue.Scroll += new System.EventHandler(this.HandleHSVScroll);
-            //
+            // 
             // label1
-            //
+            // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(304, 190);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -608,9 +608,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.label1.Text = "Saturation";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.Visible = false;
-            //
+            // 
             // tbSaturation
-            //
+            // 
             this.tbSaturation.AutoSize = false;
             this.tbSaturation.LargeChange = 16;
             this.tbSaturation.Location = new System.Drawing.Point(379, 185);
@@ -622,9 +622,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbSaturation.TickFrequency = 32;
             this.tbSaturation.Visible = false;
             this.tbSaturation.Scroll += new System.EventHandler(this.HandleHSVScroll);
-            //
+            // 
             // label2
-            //
+            // 
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(304, 225);
             this.label2.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
@@ -634,9 +634,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.label2.Text = "Value";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label2.Visible = false;
-            //
+            // 
             // tbValue
-            //
+            // 
             this.tbValue.AutoSize = false;
             this.tbValue.LargeChange = 16;
             this.tbValue.Location = new System.Drawing.Point(379, 220);
@@ -648,9 +648,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tbValue.TickFrequency = 32;
             this.tbValue.Visible = false;
             this.tbValue.Scroll += new System.EventHandler(this.HandleHSVScroll);
-            //
+            // 
             // pnlSelectedColor
-            //
+            // 
             this.pnlSelectedColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.pnlSelectedColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlSelectedColor.Location = new System.Drawing.Point(295, 12);
@@ -658,33 +658,35 @@ namespace Nikse.SubtitleEdit.Forms
             this.pnlSelectedColor.Size = new System.Drawing.Size(96, 32);
             this.pnlSelectedColor.TabIndex = 40;
             this.pnlSelectedColor.Visible = false;
-            //
+            // 
             // buttonCancel
-            //
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(311, 408);
+            this.buttonCancel.Location = new System.Drawing.Point(321, 406);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(80, 23);
             this.buttonCancel.TabIndex = 61;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // buttonOK
-            //
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(230, 408);
+            this.buttonOK.Location = new System.Drawing.Point(235, 406);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(80, 23);
             this.buttonOK.TabIndex = 60;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // ColorChooser
-            //
+            // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(398, 441);
+            this.ClientSize = new System.Drawing.Size(413, 441);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label5);
@@ -726,6 +728,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.tbValue)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion Windows Form Designer generated code
