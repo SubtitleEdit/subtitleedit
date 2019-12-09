@@ -134,7 +134,7 @@
             // buttonSwap
             // 
             this.buttonSwap.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSwap.Location = new System.Drawing.Point(314, 55);
+            this.buttonSwap.Location = new System.Drawing.Point(314, 56);
             this.buttonSwap.Name = "buttonSwap";
             this.buttonSwap.Size = new System.Drawing.Size(23, 28);
             this.buttonSwap.TabIndex = 8;
