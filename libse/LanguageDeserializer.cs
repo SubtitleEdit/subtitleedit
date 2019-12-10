@@ -1672,6 +1672,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/FixOverlappingDisplayTime":
                     language.FixCommonErrors.FixOverlappingDisplayTime = reader.Value;
                     break;
+                case "FixCommonErrors/FixShortGap":
+                    language.FixCommonErrors.FixShortGap = reader.Value;
+                    break;
                 case "FixCommonErrors/FixInvalidItalicTagsExample":
                     language.FixCommonErrors.FixInvalidItalicTagsExample = reader.Value;
                     break;

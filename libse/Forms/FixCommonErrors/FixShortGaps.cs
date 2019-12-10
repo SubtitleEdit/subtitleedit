@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixShortGaps;
+            string fixAction = language.FixShortGap;
             int noOfShortGaps = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

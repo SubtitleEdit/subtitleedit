@@ -703,6 +703,7 @@
             public string FixInvalidItalicTag { get; set; }
             public string FixShortDisplayTime { get; set; }
             public string FixOverlappingDisplayTime { get; set; }
+            public string FixShortGap { get; set; }
             public string FixInvalidItalicTagsExample { get; set; }
             public string RemoveUnneededSpacesExample { get; set; }
             public string RemoveUnneededPeriodsExample { get; set; }

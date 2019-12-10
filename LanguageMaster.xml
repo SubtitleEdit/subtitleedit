@@ -635,6 +635,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Fix short display time</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlapping display time</FixOverlappingDisplayTime>
+    <FixShortGap>Fix short gap</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
