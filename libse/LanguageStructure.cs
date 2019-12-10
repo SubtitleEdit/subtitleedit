@@ -651,6 +651,7 @@
             public string FixOverlappingDisplayTimes { get; set; }
             public string FixShortDisplayTimes { get; set; }
             public string FixLongDisplayTimes { get; set; }
+            public string FixShortGaps { get; set; }
             public string FixInvalidItalicTags { get; set; }
             public string RemoveUnneededSpaces { get; set; }
             public string RemoveUnneededPeriods { get; set; }
@@ -716,6 +717,7 @@
             public string XDisplayTimesProlonged { get; set; }
             public string XInvalidHtmlTagsFixed { get; set; }
             public string XDisplayTimesShortned { get; set; }
+            public string XGapsFixed { get; set; }
             public string XLinesUnbreaked { get; set; }
             public string UnneededSpace { get; set; }
             public string XUnneededSpacesRemoved { get; set; }

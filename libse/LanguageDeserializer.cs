@@ -1516,6 +1516,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/FixLongDisplayTimes":
                     language.FixCommonErrors.FixLongDisplayTimes = reader.Value;
                     break;
+                case "FixCommonErrors/FixShortGaps":
+                    language.FixCommonErrors.FixShortGaps = reader.Value;
+                    break;
                 case "FixCommonErrors/FixInvalidItalicTags":
                     language.FixCommonErrors.FixInvalidItalicTags = reader.Value;
                     break;
@@ -1710,6 +1713,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "FixCommonErrors/XDisplayTimesShortned":
                     language.FixCommonErrors.XDisplayTimesShortned = reader.Value;
+                    break;
+                case "FixCommonErrors/XGapsFixed":
+                    language.FixCommonErrors.XGapsFixed = reader.Value;
                     break;
                 case "FixCommonErrors/XLinesUnbreaked":
                     language.FixCommonErrors.XLinesUnbreaked = reader.Value;
