@@ -594,6 +594,7 @@ $HorzAlign          =   Center
         public bool OverlappingDisplayTimeTicked { get; set; }
         public bool TooShortDisplayTimeTicked { get; set; }
         public bool TooLongDisplayTimeTicked { get; set; }
+        public bool TooShortGapTicked { get; set; }
         public bool InvalidItalicTagsTicked { get; set; }
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
@@ -635,6 +636,7 @@ $HorzAlign          =   Center
             OverlappingDisplayTimeTicked = true;
             TooShortDisplayTimeTicked = true;
             TooLongDisplayTimeTicked = true;
+            TooShortGapTicked = true;
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
@@ -3971,6 +3973,12 @@ $HorzAlign          =   Center
                 settings.CommonErrors.TooLongDisplayTimeTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("TooShortGapTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.TooShortGapTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("InvalidItalicTagsTicked");
             if (subNode != null)
             {
@@ -6456,6 +6464,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OverlappingDisplayTimeTicked", settings.CommonErrors.OverlappingDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TooShortDisplayTimeTicked", settings.CommonErrors.TooShortDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TooLongDisplayTimeTicked", settings.CommonErrors.TooLongDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TooShortGapTicked", settings.CommonErrors.TooShortGapTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("InvalidItalicTagsTicked", settings.CommonErrors.InvalidItalicTagsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));

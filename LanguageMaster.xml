@@ -583,6 +583,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fix long display times</FixLongDisplayTimes>
+    <FixShortGaps>Fix short gaps</FixShortGaps>
     <FixInvalidItalicTags>Fix invalid italic tags</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Remove unneeded spaces</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Remove unneeded periods</RemoveUnneededPeriods>
@@ -648,6 +649,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
+    <XGapsFixed>{0} short gaps fixed</XGapsFixed>
     <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
     <UnneededSpace>Unneeded space</UnneededSpace>
     <XUnneededSpacesRemoved>{0} unneeded spaces removed</XUnneededSpacesRemoved>

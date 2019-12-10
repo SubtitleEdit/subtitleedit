@@ -171,6 +171,7 @@
     <Compile Include="Forms\FixCommonErrors\FixMusicNotation.cs" />
     <Compile Include="Forms\FixCommonErrors\FixOverlappingDisplayTimes.cs" />
     <Compile Include="Forms\FixCommonErrors\FixShortDisplayTimes.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixShortGaps.cs" />
     <Compile Include="Forms\FixCommonErrors\FixShortLines.cs" />
     <Compile Include="Forms\FixCommonErrors\FixShortLinesAll.cs" />
     <Compile Include="Forms\FixCommonErrors\FixSpanishInvertedQuestionAndExclamationMarks.cs" />
