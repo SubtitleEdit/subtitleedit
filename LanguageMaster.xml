@@ -2040,6 +2040,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
+    <SyntaxColorGap>Color gap if too short</SyntaxColorGap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>

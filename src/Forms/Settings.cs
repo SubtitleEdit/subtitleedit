@@ -305,6 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownMaxNumberOfLines.Value = Configuration.Settings.General.MaxNumberOfLines;
             }
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
+            checkBoxSyntaxColorGapTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorGap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
 
             // Language
@@ -901,6 +902,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.General.MaxNumberOfLines);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
+            checkBoxSyntaxColorGapTooSmall.Text = language.SyntaxColorGap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -1682,6 +1684,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxColorGap = checkBoxSyntaxColorGapTooSmall.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;

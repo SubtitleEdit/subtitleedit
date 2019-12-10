@@ -103,6 +103,7 @@
             this.labelShortcut = new System.Windows.Forms.Label();
             this.tabPageSyntaxColoring = new System.Windows.Forms.TabPage();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
+            this.checkBoxSyntaxColorGapTooSmall = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorTextMoreThanTwoLines = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxOverlap = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooSmall = new System.Windows.Forms.CheckBox();
@@ -1528,6 +1529,7 @@
             this.groupBoxListViewSyntaxColoring.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorGapTooSmall);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextMoreThanTwoLines);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxOverlap);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooSmall);
@@ -1542,6 +1544,16 @@
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
             // 
+            // checkBoxSyntaxColorGapTooSmall
+            // 
+            this.checkBoxSyntaxColorGapTooSmall.AutoSize = true;
+            this.checkBoxSyntaxColorGapTooSmall.Location = new System.Drawing.Point(20, 186);
+            this.checkBoxSyntaxColorGapTooSmall.Name = "checkBoxSyntaxColorGapTooSmall";
+            this.checkBoxSyntaxColorGapTooSmall.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorGapTooSmall.TabIndex = 6;
+            this.checkBoxSyntaxColorGapTooSmall.Text = "Gap - color if too small";
+            this.checkBoxSyntaxColorGapTooSmall.UseVisualStyleBackColor = true;
+            // 
             // checkBoxSyntaxColorTextMoreThanTwoLines
             // 
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
@@ -1555,7 +1567,7 @@
             // checkBoxSyntaxOverlap
             // 
             this.checkBoxSyntaxOverlap.AutoSize = true;
-            this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
+            this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 151);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
             this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 5;
@@ -1574,10 +1586,10 @@
             // 
             // buttonListViewSyntaxColorError
             // 
-            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
+            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 224);
             this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
             this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorError.TabIndex = 6;
+            this.buttonListViewSyntaxColorError.TabIndex = 7;
             this.buttonListViewSyntaxColorError.Text = "Error color";
             this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
             this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
@@ -1605,10 +1617,10 @@
             // panelListViewSyntaxColorError
             // 
             this.panelListViewSyntaxColorError.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 192);
+            this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 224);
             this.panelListViewSyntaxColorError.Name = "panelListViewSyntaxColorError";
             this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
-            this.panelListViewSyntaxColorError.TabIndex = 7;
+            this.panelListViewSyntaxColorError.TabIndex = 8;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
             // tabPageVideoPlayer
@@ -4905,5 +4917,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownToolsBreakPreferBottomHeavy;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakPreferBottomHeavy;
         private System.Windows.Forms.Label labelToolsBreakBottomHeavyPercent;
+        private System.Windows.Forms.CheckBox checkBoxSyntaxColorGapTooSmall;
     }
 }
