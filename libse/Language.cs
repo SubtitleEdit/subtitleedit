@@ -831,6 +831,7 @@ namespace Nikse.SubtitleEdit.Core
                 FixInvalidItalicTag = "Fix invalid italic tag",
                 FixShortDisplayTime = "Fix short display time",
                 FixOverlappingDisplayTime = "Fix overlapping display time",
+                FixShortGap = "Fix short gap",
                 FixInvalidItalicTagsExample = "<i>What do I care.<i> -> <i>What do I care.</i>",
                 RemoveUnneededSpacesExample = "Hey   you , there. -> Hey you, there.",
                 RemoveUnneededPeriodsExample = "Hey you!. -> Hey you!",
