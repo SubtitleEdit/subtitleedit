@@ -5542,6 +5542,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxColorOverlap":
                     language.Settings.SyntaxColorOverlap = reader.Value;
                     break;
+                case "Settings/SyntaxColorGap":
+                    language.Settings.SyntaxColorGap = reader.Value;
+                    break;
                 case "Settings/SyntaxErrorColor":
                     language.Settings.SyntaxErrorColor = reader.Value;
                     break;

@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
+        public bool ListViewSyntaxColorGap { get; set; }
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
@@ -292,6 +293,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
             ListViewSyntaxMoreThanXLines = true;
+            ListViewSyntaxColorGap = true;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             ListViewShowColumnEndTime = true;
@@ -2733,6 +2735,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ListViewSyntaxColorGap");
+            if (subNode != null)
+            {
+                settings.Tools.ListViewSyntaxColorGap = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
@@ -6214,6 +6222,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
