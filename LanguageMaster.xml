@@ -2096,6 +2096,10 @@ can edit in same subtitle file (collaboration)</Information>
     <FontNote>Note: These font settings are for the Subtitle Edit UI only.
 Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
 "Advanced Sub Station Alpha" or via export to image based formats.</FontNote>
+    <RestoreDefaultSettings>Restore default settings</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>All settings will be restored to default values
+
+Continue?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
