@@ -1691,7 +1691,7 @@ $HorzAlign          =   Center
         [XmlIgnore]
         public Language Language { get; set; }
 
-        private Settings()
+        public void Reset()
         {
             RecentFiles = new RecentFilesSettings();
             General = new GeneralSettings();
@@ -1710,6 +1710,11 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+        }
+
+        private Settings()
+        {
+            Reset();
         }
 
         public void Save()
