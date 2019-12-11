@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(24.0);
             comboBox.Items.Add(25.0);
             comboBox.Items.Add(29.97);
+            comboBox.Items.Add(30);
             comboBox.EndUpdate();
         }
 
