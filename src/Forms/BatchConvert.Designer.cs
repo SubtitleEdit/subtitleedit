@@ -290,7 +290,7 @@
             this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(307, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
             this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(269, 90);
-            this.groupBoxChangeFrameRate.TabIndex = 100;
+            this.groupBoxChangeFrameRate.TabIndex = 305;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             this.groupBoxChangeFrameRate.Visible = false;
@@ -338,7 +338,7 @@
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
             this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
-            this.groupBoxOffsetTimeCodes.TabIndex = 200;
+            this.groupBoxOffsetTimeCodes.TabIndex = 306;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
             this.groupBoxOffsetTimeCodes.Visible = false;
@@ -453,7 +453,7 @@
             this.groupBoxSpeed.Location = new System.Drawing.Point(305, 17);
             this.groupBoxSpeed.Name = "groupBoxSpeed";
             this.groupBoxSpeed.Size = new System.Drawing.Size(271, 129);
-            this.groupBoxSpeed.TabIndex = 300;
+            this.groupBoxSpeed.TabIndex = 307;
             this.groupBoxSpeed.TabStop = false;
             this.groupBoxSpeed.Text = "Change speed";
             this.groupBoxSpeed.Visible = false;
