@@ -97,6 +97,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.buttonSwapFrameRate = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxMergeShortLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
@@ -281,6 +282,7 @@
             // 
             // groupBoxChangeFrameRate
             // 
+            this.groupBoxChangeFrameRate.Controls.Add(this.buttonSwapFrameRate);
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateTo);
             this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
@@ -298,7 +300,7 @@
             this.comboBoxFrameRateTo.FormattingEnabled = true;
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(130, 46);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
-            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(101, 21);
             this.comboBoxFrameRateTo.TabIndex = 3;
             // 
             // labelToFrameRate
@@ -315,7 +317,7 @@
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
             this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(130, 17);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
-            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(101, 21);
             this.comboBoxFrameRateFrom.TabIndex = 1;
             // 
             // labelFromFrameRate
@@ -872,6 +874,17 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
+            // buttonSwapFrameRate
+            // 
+            this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSwapFrameRate.Location = new System.Drawing.Point(237, 28);
+            this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
+            this.buttonSwapFrameRate.Size = new System.Drawing.Size(23, 28);
+            this.buttonSwapFrameRate.TabIndex = 9;
+            this.buttonSwapFrameRate.Text = "🡙";
+            this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
+            this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -984,5 +997,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxCharacters;
+        private System.Windows.Forms.Button buttonSwapFrameRate;
     }
 }
