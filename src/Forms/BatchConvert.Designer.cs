@@ -698,9 +698,9 @@
             this.groupBoxInput.Controls.Add(this.buttonInputBrowse);
             this.groupBoxInput.Controls.Add(this.labelChooseInputFiles);
             this.groupBoxInput.Controls.Add(this.listViewInputFiles);
-            this.groupBoxInput.Location = new System.Drawing.Point(15, 12);
+            this.groupBoxInput.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInput.Name = "groupBoxInput";
-            this.groupBoxInput.Size = new System.Drawing.Size(1011, 287);
+            this.groupBoxInput.Size = new System.Drawing.Size(1014, 287);
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
@@ -746,7 +746,7 @@
             this.checkBoxScanFolderRecursive.AutoSize = true;
             this.checkBoxScanFolderRecursive.Checked = true;
             this.checkBoxScanFolderRecursive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(775, 16);
+            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(778, 16);
             this.checkBoxScanFolderRecursive.Name = "checkBoxScanFolderRecursive";
             this.checkBoxScanFolderRecursive.Size = new System.Drawing.Size(74, 17);
             this.checkBoxScanFolderRecursive.TabIndex = 0;
@@ -756,7 +756,7 @@
             // buttonSearchFolder
             // 
             this.buttonSearchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSearchFolder.Location = new System.Drawing.Point(855, 12);
+            this.buttonSearchFolder.Location = new System.Drawing.Point(858, 12);
             this.buttonSearchFolder.Name = "buttonSearchFolder";
             this.buttonSearchFolder.Size = new System.Drawing.Size(116, 23);
             this.buttonSearchFolder.TabIndex = 1;
@@ -767,7 +767,7 @@
             // buttonInputBrowse
             // 
             this.buttonInputBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonInputBrowse.Location = new System.Drawing.Point(976, 41);
+            this.buttonInputBrowse.Location = new System.Drawing.Point(979, 41);
             this.buttonInputBrowse.Name = "buttonInputBrowse";
             this.buttonInputBrowse.Size = new System.Drawing.Size(26, 23);
             this.buttonInputBrowse.TabIndex = 3;
@@ -800,7 +800,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 41);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(965, 211);
+            this.listViewInputFiles.Size = new System.Drawing.Size(968, 211);
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
