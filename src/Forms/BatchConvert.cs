@@ -140,6 +140,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRateFrom.Left = comboBoxFrameRateTo.Left;
             }
 
+            buttonSwapFrameRate.Left = comboBoxFrameRateFrom.Left + comboBoxFrameRateFrom.Width + 10;
+            buttonSwapFrameRate.Top = comboBoxFrameRateFrom.Top + ((comboBoxFrameRateTo.Top + comboBoxFrameRateTo.Height - comboBoxFrameRateFrom.Top) / 2) - (buttonSwapFrameRate.Height / 2) + 1;
+
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
             if (comboBoxSubtitleFormats.Left > comboBoxEncoding.Left)
@@ -2267,6 +2270,15 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
+        }
+
+        private void buttonSwapFrameRate_Click(object sender, EventArgs e)
+        {
+            string oldFrameRate = comboBoxFrameRateFrom.Text;
+            string newFrameRate = comboBoxFrameRateTo.Text;
+
+            comboBoxFrameRateFrom.Text = newFrameRate;
+            comboBoxFrameRateTo.Text = oldFrameRate;
         }
     }
 }
