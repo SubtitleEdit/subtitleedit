@@ -207,6 +207,7 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsAutoBr = new System.Windows.Forms.GroupBox();
+            this.labelToolsBreakBottomHeavyPercent = new System.Windows.Forms.Label();
             this.numericUpDownToolsBreakPreferBottomHeavy = new System.Windows.Forms.NumericUpDown();
             this.checkBoxToolsBreakPreferBottomHeavy = new System.Windows.Forms.CheckBox();
             this.checkBoxToolsBreakByPixelWidth = new System.Windows.Forms.CheckBox();
@@ -365,7 +366,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.labelToolsBreakBottomHeavyPercent = new System.Windows.Forms.Label();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -450,7 +451,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(697, 528);
+            this.buttonOK.Location = new System.Drawing.Point(506, 528);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 0;
@@ -462,7 +463,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(778, 528);
+            this.buttonCancel.Location = new System.Drawing.Point(587, 528);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 1;
@@ -620,7 +621,7 @@
             // 
             // buttonEditProfile
             // 
-            this.buttonEditProfile.Location = new System.Drawing.Point(282, 19);
+            this.buttonEditProfile.Location = new System.Drawing.Point(322, 19);
             this.buttonEditProfile.Name = "buttonEditProfile";
             this.buttonEditProfile.Size = new System.Drawing.Size(28, 23);
             this.buttonEditProfile.TabIndex = 10;
@@ -634,7 +635,7 @@
             this.comboBoxRulesProfileName.FormattingEnabled = true;
             this.comboBoxRulesProfileName.Location = new System.Drawing.Point(78, 20);
             this.comboBoxRulesProfileName.Name = "comboBoxRulesProfileName";
-            this.comboBoxRulesProfileName.Size = new System.Drawing.Size(198, 21);
+            this.comboBoxRulesProfileName.Size = new System.Drawing.Size(238, 21);
             this.comboBoxRulesProfileName.TabIndex = 5;
             this.comboBoxRulesProfileName.SelectedIndexChanged += new System.EventHandler(this.comboBoxRulesProfileName_SelectedIndexChanged);
             // 
@@ -784,7 +785,7 @@
             // 
             this.numericUpDownDurationMin.Location = new System.Drawing.Point(203, 163);
             this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
-            2000,
+            3000,
             0,
             0,
             0});
@@ -2738,6 +2739,15 @@
             this.groupBoxToolsAutoBr.TabStop = false;
             this.groupBoxToolsAutoBr.Text = "Auto br";
             // 
+            // labelToolsBreakBottomHeavyPercent
+            // 
+            this.labelToolsBreakBottomHeavyPercent.AutoSize = true;
+            this.labelToolsBreakBottomHeavyPercent.Location = new System.Drawing.Point(226, 142);
+            this.labelToolsBreakBottomHeavyPercent.Name = "labelToolsBreakBottomHeavyPercent";
+            this.labelToolsBreakBottomHeavyPercent.Size = new System.Drawing.Size(18, 13);
+            this.labelToolsBreakBottomHeavyPercent.TabIndex = 63;
+            this.labelToolsBreakBottomHeavyPercent.Text = "%";
+            // 
             // numericUpDownToolsBreakPreferBottomHeavy
             // 
             this.numericUpDownToolsBreakPreferBottomHeavy.DecimalPlaces = 1;
@@ -4433,20 +4443,23 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // labelToolsBreakBottomHeavyPercent
+            // buttonReset
             // 
-            this.labelToolsBreakBottomHeavyPercent.AutoSize = true;
-            this.labelToolsBreakBottomHeavyPercent.Location = new System.Drawing.Point(226, 142);
-            this.labelToolsBreakBottomHeavyPercent.Name = "labelToolsBreakBottomHeavyPercent";
-            this.labelToolsBreakBottomHeavyPercent.Size = new System.Drawing.Size(18, 13);
-            this.labelToolsBreakBottomHeavyPercent.TabIndex = 63;
-            this.labelToolsBreakBottomHeavyPercent.Text = "%";
+            this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonReset.Location = new System.Drawing.Point(668, 528);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(185, 21);
+            this.buttonReset.TabIndex = 2;
+            this.buttonReset.Text = "Restore default settings";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(865, 561);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.buttonCancel);
@@ -4918,5 +4931,6 @@
         private System.Windows.Forms.CheckBox checkBoxToolsBreakPreferBottomHeavy;
         private System.Windows.Forms.Label labelToolsBreakBottomHeavyPercent;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorGapTooSmall;
+        private System.Windows.Forms.Button buttonReset;
     }
 }

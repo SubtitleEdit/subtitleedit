@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(24.0);
             comboBox.Items.Add(25.0);
             comboBox.Items.Add(29.97);
+            comboBox.Items.Add(30);
             comboBox.EndUpdate();
         }
 
@@ -93,6 +94,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotCorrect);
             }
+        }
+
+        private void buttonSwap_Click(object sender, EventArgs e)
+        {
+            string oldFrameRate = comboBoxFrameRateFrom.Text;
+            string newFrameRate = comboBoxFrameRateTo.Text;
+
+            comboBoxFrameRateFrom.Text = newFrameRate;
+            comboBoxFrameRateTo.Text = oldFrameRate;
         }
 
         public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text);

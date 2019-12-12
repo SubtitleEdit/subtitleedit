@@ -943,7 +943,21 @@ $HorzAlign          =   Center
                 SubtitleMinimumDisplayMilliseconds = 833,
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
-                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.97 videos
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Netflix (Other languages)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 42,
+                SubtitleMaximumCharactersPerSeconds = 17,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 833,
+                SubtitleMaximumWordsPerMinute = 200,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
             });
             profiles.Add(new RulesProfile
             {
@@ -958,6 +972,174 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Dutch professional subtitles (23.976/24 fps)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 15,
+                SubtitleOptimalCharactersPerSeconds = 11,
+                SubtitleMaximumDisplayMilliseconds = 7007,
+                SubtitleMinimumDisplayMilliseconds = 1400,
+                SubtitleMaximumWordsPerMinute = 180,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 125,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Dutch professional subtitles (25 fps)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 15,
+                SubtitleOptimalCharactersPerSeconds = 11,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1400,
+                SubtitleMaximumWordsPerMinute = 180,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 120,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Dutch fansubs (23.976/24 fps)",
+                SubtitleLineMaximumLength = 45,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 22.5m,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7007,
+                SubtitleMinimumDisplayMilliseconds = 1200,
+                SubtitleMaximumWordsPerMinute = 240,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 125,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Dutch fansubs (25 fps)",
+                SubtitleLineMaximumLength = 45,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 22.5m,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 1200,
+                SubtitleMaximumWordsPerMinute = 240,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 120,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Danish professional subtitles (23.976/24 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 15,
+                SubtitleOptimalCharactersPerSeconds = 10,
+                SubtitleMaximumDisplayMilliseconds = 8008,
+                SubtitleMinimumDisplayMilliseconds = 2002,
+                SubtitleMaximumWordsPerMinute = 180,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 125,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Danish professional subtitles (25 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 40,
+                SubtitleMaximumCharactersPerSeconds = 15,
+                SubtitleOptimalCharactersPerSeconds = 10,
+                SubtitleMaximumDisplayMilliseconds = 8000,
+                SubtitleMinimumDisplayMilliseconds = 2000,
+                SubtitleMaximumWordsPerMinute = 180,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 120,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW2 (French) (23.976/24 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5005,
+                SubtitleMinimumDisplayMilliseconds = 792,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 125,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW2 (French) (25 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5000,
+                SubtitleMinimumDisplayMilliseconds = 800,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 120,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW3 (French) (23.976/24 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5005,
+                SubtitleMinimumDisplayMilliseconds = 792,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 167,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW3 (French) (25 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5000,
+                SubtitleMinimumDisplayMilliseconds = 800,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 160,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW4 (French) (23.976/24 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5005,
+                SubtitleMinimumDisplayMilliseconds = 792,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 250,
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "SW4 (French) (25 fps)",
+                SubtitleLineMaximumLength = 40,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 37,
+                SubtitleMaximumCharactersPerSeconds = 25,
+                SubtitleOptimalCharactersPerSeconds = 18,
+                SubtitleMaximumDisplayMilliseconds = 5000,
+                SubtitleMinimumDisplayMilliseconds = 800,
+                SubtitleMaximumWordsPerMinute = 300,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 240,
             });
         }
     }
@@ -1513,7 +1695,7 @@ $HorzAlign          =   Center
         [XmlIgnore]
         public Language Language { get; set; }
 
-        private Settings()
+        public void Reset()
         {
             RecentFiles = new RecentFilesSettings();
             General = new GeneralSettings();
@@ -1532,6 +1714,11 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+        }
+
+        private Settings()
+        {
+            Reset();
         }
 
         public void Save()

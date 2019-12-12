@@ -140,6 +140,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRateFrom.Left = comboBoxFrameRateTo.Left;
             }
 
+            buttonSwapFrameRate.Left = comboBoxFrameRateFrom.Left + comboBoxFrameRateFrom.Width + 10;
+            buttonSwapFrameRate.Top = comboBoxFrameRateFrom.Top + ((comboBoxFrameRateTo.Top + comboBoxFrameRateTo.Height - comboBoxFrameRateFrom.Top) / 2) - (buttonSwapFrameRate.Height / 2) + 1;
+
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
             if (comboBoxSubtitleFormats.Left > comboBoxEncoding.Left)
@@ -266,7 +269,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
             checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
-            numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
+            }
+            else if (Configuration.Settings.General.SubtitleLineMaximumLength < numericUpDownMaxCharacters.Minimum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Minimum;
+            }
+            else
+            {
+                numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            }
             numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
@@ -2256,6 +2270,15 @@ namespace Nikse.SubtitleEdit.Forms
                     form.ShowDialog(this);
                 }
             }
+        }
+
+        private void buttonSwapFrameRate_Click(object sender, EventArgs e)
+        {
+            string oldFrameRate = comboBoxFrameRateFrom.Text;
+            string newFrameRate = comboBoxFrameRateTo.Text;
+
+            comboBoxFrameRateFrom.Text = newFrameRate;
+            comboBoxFrameRateTo.Text = oldFrameRate;
         }
     }
 }
