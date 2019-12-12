@@ -58,7 +58,18 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
-            numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
+            }
+            else if (Configuration.Settings.General.SubtitleLineMaximumLength < numericUpDownMaxCharacters.Minimum)
+            {
+                numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Minimum;
+            }
+            else
+            {
+                numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+            }
             numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
             _subtitle = subtitle;
@@ -203,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             return mergedSubtitle;
-        }       
+        }
 
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
         {

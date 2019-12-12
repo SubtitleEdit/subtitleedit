@@ -499,7 +499,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
                 _videoLoadedTimer.Start();
 
-                SetVideoOwner(ownerControl);
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+                {
+                    SetVideoOwner(ownerControl);
+                });
             }
         }
 

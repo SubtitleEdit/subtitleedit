@@ -5716,6 +5716,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/FontNote":
                     language.Settings.FontNote = reader.Value;
                     break;
+                case "Settings/RestoreDefaultSettings":
+                    language.Settings.RestoreDefaultSettings = reader.Value;
+                    break;
+                case "Settings/RestoreDefaultSettingsMsg":
+                    language.Settings.RestoreDefaultSettingsMsg = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;

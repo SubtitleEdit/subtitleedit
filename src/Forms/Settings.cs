@@ -31,13 +31,13 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _wordListNames = new List<string>();
         private List<string> _userWordList = new List<string>();
         private OcrFixReplaceList _ocrFixReplaceList;
-        private readonly string _oldVlcLocation;
-        private readonly string _oldVlcLocationRelative;
-        private readonly bool _oldListViewShowCps;
-        private readonly bool _oldListViewShowWpm;
+        private string _oldVlcLocation;
+        private string _oldVlcLocationRelative;
+        private bool _oldListViewShowCps;
+        private bool _oldListViewShowWpm;
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
         private List<RulesProfile> _rulesProfiles;
-        private readonly bool _loading = true;
+        private bool _loading = true;
 
         private class ComboBoxLanguage
         {
@@ -102,7 +102,13 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
+            Init();
+        }
 
+
+        public void Init()
+        {
+            _loading = true;
             labelStatus.Text = string.Empty;
             _rulesProfiles = new List<RulesProfile>(Configuration.Settings.General.Profiles);
             var gs = Configuration.Settings.General;
@@ -121,14 +127,15 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
-            comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((24.0).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((30.00).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((50.00).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((59.94).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((60.00).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Clear();
+            comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(30.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(50.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(60.00.ToString(CultureInfo.CurrentCulture));
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);
@@ -246,7 +253,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCustomSearchUrl4.Text = Configuration.Settings.VideoControls.CustomSearchUrl4;
             textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
 
+            comboBoxFontName.BeginUpdate();
+            comboBoxSubtitleFont.BeginUpdate();
             comboBoxFontName.Items.Clear();
+            comboBoxSubtitleFont.Items.Clear();
             foreach (var x in FontFamily.Families)
             {
                 comboBoxFontName.Items.Add(x.Name);
@@ -259,6 +269,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            comboBoxFontName.EndUpdate();
+            comboBoxSubtitleFont.EndUpdate();
 
             var wordListSettings = Configuration.Settings.WordLists;
             checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
@@ -844,6 +856,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
 
+            buttonReset.Text = Configuration.Settings.Language.Settings.RestoreDefaultSettings;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
@@ -1629,7 +1642,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.AutoBreakLineEndingEarly = checkBoxToolsBreakEarlyLineEnding.Checked;
             toolsSettings.AutoBreakUsePixelWidth = checkBoxToolsBreakByPixelWidth.Checked;
             toolsSettings.AutoBreakPreferBottomHeavy = checkBoxToolsBreakPreferBottomHeavy.Checked;
-            toolsSettings.AutoBreakPreferBottomPercent = (double) numericUpDownToolsBreakPreferBottomHeavy.Value;
+            toolsSettings.AutoBreakPreferBottomPercent = (double)numericUpDownToolsBreakPreferBottomHeavy.Value;
             toolsSettings.AutoBreakDashEarly = checkBoxToolsBreakEarlyDash.Checked;
 
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
@@ -3124,6 +3137,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxToolsBreakPreferBottomHeavy.Enabled = checkBoxToolsBreakByPixelWidth.Checked;
             numericUpDownToolsBreakPreferBottomHeavy.Enabled = checkBoxToolsBreakByPixelWidth.Checked;
+        }
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show(Configuration.Settings.Language.Settings.RestoreDefaultSettingsMsg, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                Configuration.Settings.Reset();
+                Init();
+            }
         }
     }
 }
