@@ -14211,7 +14211,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     }
                 }
-                if (!found && _subtitle.Paragraphs.Count > 0 && _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds < cp)
+                if (!found && _subtitle.Paragraphs.Count > 0 && _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds < cp)
                 {
                     var p = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
                     mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
