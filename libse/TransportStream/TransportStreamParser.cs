@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     var teletextRunSettings = new TeletextRunSettings();
                     foreach (var pes in teletextPesList[packetId])
                     {
-                        var textDictionary = pes.GetTeletext(packetId, teletextRunSettings, page, pageBcd, firstMs);
+                        var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd, firstMs);
                         foreach (var dic in textDictionary)
                         {
                             if (!string.IsNullOrEmpty(dic.Value.Text))
