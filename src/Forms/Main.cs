@@ -9176,8 +9176,18 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null && next != null)
                 {
                     string s = next.Text.Trim();
+
                     // Find the first space.
-                    int idx = s.IndexOf(' ');
+                    int startIndex = 0;
+                    if (s.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        var endTagIndex = s.IndexOf('}');
+                        if (endTagIndex > 0)
+                        {
+                            startIndex = endTagIndex;
+                        }
+                    }
+                    int idx = s.IndexOf(' ', startIndex);
                     // If the first space is after a "-", even if there is "{\an8}<i>" before, find the second space.
                     if (idx > 0 && s.Substring(idx - 1, 2) == "- ")
                     {
@@ -9276,7 +9286,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // Add text + firstWord + "..." + endTag to First line.
-                        p.Text = (idx == 0 ? startTag : string.Empty) + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
+                        bool isEmpty = HtmlUtil.RemoveHtmlTags(p.Text, true).Length == 0;
+                        p.Text = (idx == 0 ? startTag : string.Empty) + p.Text.Trim() + (isEmpty ? string.Empty : " ") + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
 
                         // Now, idx will hold the position of the last line break, if any.
                         idx = p.Text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -9306,6 +9317,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string s = p.Text.Trim();
                     int idx = s.LastIndexOf(' ');
+                    if (s.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        var endTagIndex = s.IndexOf('}');
+                        if (endTagIndex > 0 && idx < endTagIndex)
+                        {
+                            idx = endTagIndex+1;
+                        }
+
+                        if (idx >= s.Length - 1)
+                        {
+                            return;
+                        }
+                    }
                     if (idx > 0 || s.Length > 0)
                     // A last word was found or the first subtitle is not empty (has one word).
                     {
@@ -9314,7 +9338,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // Define lastWord. If idx > 0, there is a last word.
                         // If not, lastWord is the whole text of the first subtitle.
-                        string lastWord = (idx > 0 ? s.Substring(idx).Trim() : p.Text);
+                        string lastWord = idx > 0 ? s.Substring(idx).Trim() : p.Text;
 
                         // If lastWord contains a line break, it has two words.
                         if (lastWord.Contains(Environment.NewLine))
@@ -9325,7 +9349,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // Remove last word from the first subtitle.
-                        p.Text = (idx > 0 ? s.Substring(0, idx).Trim() : string.Empty);
+                        p.Text = idx > 0 ? s.Substring(0, idx).Trim() : string.Empty;
 
                         // If the first subtitle ends with a tag (</i>):
                         string endTag = string.Empty;
