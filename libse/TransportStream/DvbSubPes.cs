@@ -138,17 +138,29 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             return pages;
         }
 
-        public Dictionary<int, Paragraph> GetTeletext(int packetId, TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
+
+        public Dictionary<int, Paragraph> GetTeletext(TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
         {
-            var lastTimestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
-            if (firstMs.HasValue && lastTimestamp >= firstMs)
+            var timestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
+            if (firstMs.HasValue && timestamp >= firstMs)
             {
-                lastTimestamp -= firstMs.Value;
+                timestamp -= firstMs.Value;
             }
-            if (lastTimestamp < 40)
+
+            // do not allow timestamp to go back - treat lower timestamp as a reset/overflow
+            var lastTimestamp = teletextRunSettings.GetLastTimestamp(pageNumber);
+            teletextRunSettings.SetLastTimestamp(pageNumber, timestamp);
+            timestamp += teletextRunSettings.GetAddTimestamp(pageNumber);
+            if (lastTimestamp > 0 && lastTimestamp > timestamp)
             {
-                lastTimestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
+                teletextRunSettings.SetAddTimestamp(pageNumber, lastTimestamp);
             }
+
+            if (timestamp < 40)
+            {
+                timestamp = 40; // Teletext.cs will subtract 40 ms (1 frame @25 fps) and this value must not be below 0
+            }
+
             var teletextPages = new Dictionary<int, Paragraph>();
             var i = 1;
             while (i <= _dataBuffer.Length - 6)
@@ -159,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     if (dataUnitLen == 44) // teletext payload has always size 44 bytes
                     {
-                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), lastTimestamp, teletextRunSettings, pageNumberBcd, pageNumber);
+                        Teletext.ProcessTelxPacket((Teletext.DataUnitT)dataUnitId, new Teletext.TeletextPacketPayload(_dataBuffer, i), timestamp, teletextRunSettings, pageNumberBcd, pageNumber);
                     }
                 }
                 i += dataUnitLen;
