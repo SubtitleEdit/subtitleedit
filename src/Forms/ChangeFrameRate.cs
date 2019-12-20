@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeCombobox(comboBoxFrameRateFrom);
             InitializeCombobox(comboBoxFrameRateTo);
 
-            LanguageStructure.ChangeFrameRate language = Configuration.Settings.Language.ChangeFrameRate;
+            var language = Configuration.Settings.Language.ChangeFrameRate;
             Text = language.Title;
             labelInfo.Text = language.ConvertFrameRateOfSubtitle;
             labelFromFrameRate.Text = language.FromFrameRate;

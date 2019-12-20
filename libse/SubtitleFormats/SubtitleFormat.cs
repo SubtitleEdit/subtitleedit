@@ -372,12 +372,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
+        }
+
+        public static double GetFrameForCalculation(double frameRate)
+        {
+            if (Math.Abs(frameRate - 23.976) < 0.01)
+            {
+                return 24000.0 / 1001.0;
+            }
+            if (Math.Abs(frameRate - 29.97) < 0.01)
+            {
+                return 30000.0 / 1001.0;
+            }
+            if (Math.Abs(frameRate - 59.94) < 0.01)
+            {
+                return 60000.0 / 1001.0;
+            }
+
+            return frameRate;
         }
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(milliseconds / TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
             {
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
@@ -388,12 +406,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
             return Math.Min(ms, 999);
         }
 
