@@ -6,6 +6,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
     {
         public Dictionary<int, Paragraph> PageNumberAndParagraph { get; set; } = new Dictionary<int, Paragraph>();
 
+        public ulong StartMs { get; set; }
+        public bool SubtractStartMs { get; private set; }
+        private bool _startMsInitialized;
+
         private readonly Dictionary<int, ulong> _lastTimestamp = new Dictionary<int, ulong>();
         private readonly Dictionary<int, ulong> _addTimestamp = new Dictionary<int, ulong>();
 
@@ -49,6 +53,20 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 return _addTimestamp[pageNumber];
             }
             return 0;
+        }
+
+        public void InitializeStartMs(ulong firstTimestamp)
+        {
+            if (_startMsInitialized)
+            {
+                return;
+            }
+
+            if (StartMs > 1000 && (firstTimestamp >= StartMs || firstTimestamp < StartMs && firstTimestamp + 500 > StartMs))
+            {
+                SubtractStartMs = true;
+            }
+            _startMsInitialized = true;
         }
     }
 }

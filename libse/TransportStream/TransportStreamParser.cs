@@ -159,17 +159,16 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             SubtitlePackets.Clear();
             callback?.Invoke(transportStreamLength, transportStreamLength);
 
-
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
             {
                 foreach (var page in teletextPages[packetId].OrderBy(p => p))
                 {
                     var pageBcd = Teletext.DecToBec(page);
                     Teletext.InitializeStaticFields(packetId, pageBcd);
-                    var teletextRunSettings = new TeletextRunSettings();
+                    var teletextRunSettings = new TeletextRunSettings { StartMs = firstMs ?? 0 };
                     foreach (var pes in teletextPesList[packetId])
                     {
-                        var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd, firstMs);
+                        var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
                         foreach (var dic in textDictionary)
                         {
                             if (!string.IsNullOrEmpty(dic.Value.Text))

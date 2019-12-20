@@ -139,12 +139,20 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         }
 
 
-        public Dictionary<int, Paragraph> GetTeletext(TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd, ulong? firstMs)
+        public Dictionary<int, Paragraph> GetTeletext(TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd)
         {
             var timestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
-            if (firstMs.HasValue && timestamp >= firstMs)
+            teletextRunSettings.InitializeStartMs(timestamp);
+            if (teletextRunSettings.SubtractStartMs)
             {
-                timestamp -= firstMs.Value;
+                if (teletextRunSettings.StartMs <= timestamp)
+                {
+                    timestamp -= teletextRunSettings.StartMs;
+                }
+                else
+                {
+                    timestamp = 0;
+                }
             }
 
             // do not allow timestamp to go back - treat lower timestamp as a reset/overflow
