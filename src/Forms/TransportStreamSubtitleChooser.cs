@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -23,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool IsTeletext { get; set; }
             public string Srt { get; set; }
             public int Pid { get; set; }
+            public int PageNumber { get; set; }
             public string Language { get; set; }
 
             public override string ToString()
@@ -111,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLineTeletext, kvp.Key, program.Key, language, kvp.Value.Count),
                         IsTeletext = true,
                         Pid = program.Key,
+                        PageNumber = kvp.Key,
                         Srt = new SubRip().ToText(subtitle, null)
                     });
                 }
@@ -319,6 +322,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
                 var fileName = Utilities.GetPathAndFileNameWithoutExtension(_fileName);
+                if (item.PageNumber > 0)
+                {
+                    fileName += "." + item.PageNumber.ToString(CultureInfo.InvariantCulture);
+                }
                 if (!string.IsNullOrEmpty(item.Language))
                 {
                     fileName += "." + _programMapTableParser.GetSubtitleLanguageTwoLetter(item.Pid);
