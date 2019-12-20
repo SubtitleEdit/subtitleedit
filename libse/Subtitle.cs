@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core
         public void AddTimeToAllParagraphs(TimeSpan time)
         {
             double milliseconds = time.TotalMilliseconds;
-            foreach (Paragraph p in Paragraphs)
+            foreach (var p in Paragraphs)
             {
                 p.StartTime.TotalMilliseconds += milliseconds;
                 p.EndTime.TotalMilliseconds += milliseconds;
@@ -253,10 +253,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void ChangeFrameRate(double oldFrameRate, double newFrameRate)
         {
-            foreach (Paragraph p in Paragraphs)
+            var factor = SubtitleFormat.GetFrameForCalculation(oldFrameRate) / SubtitleFormat.GetFrameForCalculation(newFrameRate);
+            foreach (var p in Paragraphs)
             {
-                p.StartTime.TotalMilliseconds = (p.StartTime.TotalMilliseconds * oldFrameRate / newFrameRate);
-                p.EndTime.TotalMilliseconds = (p.EndTime.TotalMilliseconds * oldFrameRate / newFrameRate);
+                p.StartTime.TotalMilliseconds *= factor;
+                p.EndTime.TotalMilliseconds *= factor;
             }
         }
 
