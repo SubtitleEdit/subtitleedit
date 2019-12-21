@@ -330,7 +330,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     fileName += "." + _programMapTableParser.GetSubtitleLanguageTwoLetter(item.Pid);
                 }
-                saveFileDialog1.FileName = fileName;
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                saveFileDialog1.FileName = Path.GetFileName(fileName) + ".srt";
 
                 if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
@@ -338,5 +339,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
     }
 }
