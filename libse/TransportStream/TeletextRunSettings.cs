@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Dictionary<int, Paragraph> PageNumberAndParagraph { get; }
         public ulong StartMs { get; }
 
-        public TeletextRunSettings(ulong? startMs = null)
+        public TeletextRunSettings(ulong? startMs)
         {
             if (startMs.HasValue)
             {
@@ -73,12 +73,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 if (StartMs <= timestamp)
                 {
-                    timestamp -= StartMs;
+                    return timestamp - StartMs;
                 }
-                else
-                {
-                    timestamp = 40;
-                }
+                return 40;
             }
             return timestamp;
         }
