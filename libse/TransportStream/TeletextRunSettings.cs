@@ -4,14 +4,20 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 {
     public class TeletextRunSettings
     {
-        public Dictionary<int, Paragraph> PageNumberAndParagraph { get; set; } = new Dictionary<int, Paragraph>();
-
-        public ulong StartMs { get; set; }
-        public bool SubtractStartMs { get; private set; }
-        private bool _startMsInitialized;
-
         private readonly Dictionary<int, ulong> _lastTimestamp = new Dictionary<int, ulong>();
         private readonly Dictionary<int, ulong> _addTimestamp = new Dictionary<int, ulong>();
+
+        public Dictionary<int, Paragraph> PageNumberAndParagraph { get; }
+        public ulong StartMs { get; }
+
+        public TeletextRunSettings(ulong? startMs = null)
+        {
+            if (startMs.HasValue)
+            {
+                StartMs = startMs.Value;
+            }
+            PageNumberAndParagraph = new Dictionary<int, Paragraph>();
+        }
 
         public ulong GetLastTimestamp(int pageNumber)
         {
@@ -55,18 +61,27 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             return 0;
         }
 
-        public void InitializeStartMs(ulong firstTimestamp)
-        {
-            if (_startMsInitialized)
-            {
-                return;
-            }
+        private bool? _subtractStartMs;
 
-            if (StartMs > 1000 && (firstTimestamp >= StartMs || firstTimestamp < StartMs && firstTimestamp + 500 > StartMs))
+        public ulong SubtractStartMs(ulong timestamp)
+        {
+            if (!_subtractStartMs.HasValue)
             {
-                SubtractStartMs = true;
+                _subtractStartMs = StartMs > 1000 && (timestamp >= StartMs || timestamp < StartMs && timestamp + 500 > StartMs);
             }
-            _startMsInitialized = true;
+            if (_subtractStartMs.Value)
+            {
+                if (StartMs <= timestamp)
+                {
+                    timestamp -= StartMs;
+                }
+                else
+                {
+                    timestamp = 40;
+                }
+            }
+            return timestamp;
         }
+
     }
 }
