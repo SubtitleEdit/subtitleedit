@@ -142,6 +142,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Dictionary<int, Paragraph> GetTeletext(TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd)
         {
             var timestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
+
+            // do not allow timestamp to go back - treat lower timestamp as a reset/overflow
+            var lastTimestamp = teletextRunSettings.GetLastTimestamp(pageNumber);
+            teletextRunSettings.SetLastTimestamp(pageNumber, timestamp);
+            timestamp += teletextRunSettings.GetAddTimestamp(pageNumber);
+            if (lastTimestamp > 0 && lastTimestamp > timestamp)
+            {
+                teletextRunSettings.SetAddTimestamp(pageNumber, lastTimestamp);
+            }
+
+            // offset all time codes if first timestamp in ts file is > 1 sec
             teletextRunSettings.InitializeStartMs(timestamp);
             if (teletextRunSettings.SubtractStartMs)
             {
@@ -151,17 +162,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
                 else
                 {
-                    timestamp = 0;
+                    timestamp = 40;
                 }
-            }
-
-            // do not allow timestamp to go back - treat lower timestamp as a reset/overflow
-            var lastTimestamp = teletextRunSettings.GetLastTimestamp(pageNumber);
-            teletextRunSettings.SetLastTimestamp(pageNumber, timestamp);
-            timestamp += teletextRunSettings.GetAddTimestamp(pageNumber);
-            if (lastTimestamp > 0 && lastTimestamp > timestamp)
-            {
-                teletextRunSettings.SetAddTimestamp(pageNumber, lastTimestamp);
             }
 
             if (timestamp < 40)
