@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Controls
         private const int OriginalSubtitlesHeight = 57;
         private int _subtitlesHeight = OriginalSubtitlesHeight;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
-        private Panel _panelcontrols;
+        private Panel _panelControls;
 
         private PictureBox _pictureBoxBackground;
         private PictureBox _pictureBoxReverse;
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Controls
             Controls.Add(MakePlayerPanel());
             Controls.Add(MakeSubtitlesPanel());
             Controls.Add(MakeControlsPanel());
-            _panelcontrols.BringToFront();
+            _panelControls.BringToFront();
             _pictureBoxProgressBar.Width = 0;
 
             ShowAllControls();
@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void ControlMouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
-            double newPosition = CurrentPosition - (delta / 256.0);
+            double newPosition = CurrentPosition - delta / 256.0;
             if (newPosition < 0)
             {
                 newPosition = 0;
@@ -741,10 +741,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void HideControls(bool hideCursor)
         {
-            if (_panelcontrols.Visible)
+            if (_panelControls.Visible)
             {
                 _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
-                _panelcontrols.Visible = false;
+                _panelControls.Visible = false;
             }
             if (hideCursor)
             {
@@ -754,10 +754,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowControls()
         {
-            if (!_panelcontrols.Visible)
+            if (!_panelControls.Visible)
             {
-                _panelcontrols.Visible = true;
-                _panelcontrols.BringToFront();
+                _panelControls.Visible = true;
+                _panelControls.BringToFront();
                 _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
             }
             ShowCursor();
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeControlsPanel()
         {
-            _panelcontrols = new Panel { Left = 0, Height = _controlsHeight };
+            _panelControls = new Panel { Left = 0, Height = _controlsHeight };
 
             _pictureBoxBackground = new PictureBox
             {
@@ -810,7 +810,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxBackground);
+            _panelControls.Controls.Add(_pictureBoxBackground);
 
             _pictureBoxPlay = new PictureBox
             {
@@ -822,7 +822,7 @@ namespace Nikse.SubtitleEdit.Controls
                 TabStop = false
             };
             _pictureBoxPlay.MouseEnter += PictureBoxPlayMouseEnter;
-            _panelcontrols.Controls.Add(_pictureBoxPlay);
+            _panelControls.Controls.Add(_pictureBoxPlay);
 
             _pictureBoxPlayDown = new PictureBox
             {
@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxPlayDown);
+            _panelControls.Controls.Add(_pictureBoxPlayDown);
 
             _pictureBoxPlayOver = new PictureBox
             {
@@ -847,7 +847,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlayOver.MouseLeave += PictureBoxPlayOverMouseLeave;
             _pictureBoxPlayOver.MouseDown += PictureBoxPlayOverMouseDown;
             _pictureBoxPlayOver.MouseUp += PictureBoxPlayOverMouseUp;
-            _panelcontrols.Controls.Add(_pictureBoxPlayOver);
+            _panelControls.Controls.Add(_pictureBoxPlayOver);
 
             _pictureBoxPause.Image = (Image)_resources.GetObject("pictureBoxPause.Image");
             _pictureBoxPause.Location = new Point(23, 126 - 113);
@@ -856,7 +856,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPause.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxPause.TabStop = false;
             _pictureBoxPause.MouseEnter += PictureBoxPauseMouseEnter;
-            _panelcontrols.Controls.Add(_pictureBoxPause);
+            _panelControls.Controls.Add(_pictureBoxPause);
 
             _pictureBoxPauseDown.Image = (Image)_resources.GetObject("pictureBoxPauseDown.Image");
             _pictureBoxPauseDown.Location = new Point(22, 127 - 113);
@@ -864,7 +864,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPauseDown.Size = new Size(29, 29);
             _pictureBoxPauseDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxPauseDown.TabStop = false;
-            _panelcontrols.Controls.Add(_pictureBoxPauseDown);
+            _panelControls.Controls.Add(_pictureBoxPauseDown);
 
             _pictureBoxPauseOver.Image = (Image)_resources.GetObject("pictureBoxPauseOver.Image");
             _pictureBoxPauseOver.Location = new Point(22, 127 - 113);
@@ -875,7 +875,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPauseOver.MouseLeave += PictureBoxPauseOverMouseLeave;
             _pictureBoxPauseOver.MouseDown += PictureBoxPauseOverMouseDown;
             _pictureBoxPauseOver.MouseUp += PictureBoxPauseOverMouseUp;
-            _panelcontrols.Controls.Add(_pictureBoxPauseOver);
+            _panelControls.Controls.Add(_pictureBoxPauseOver);
 
             _pictureBoxStop.Image = (Image)_resources.GetObject("pictureBoxStop.Image");
             _pictureBoxStop.Location = new Point(52, 130 - 113);
@@ -884,7 +884,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStop.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxStop.TabStop = false;
             _pictureBoxStop.MouseEnter += PictureBoxStopMouseEnter;
-            _panelcontrols.Controls.Add(_pictureBoxStop);
+            _panelControls.Controls.Add(_pictureBoxStop);
 
             _pictureBoxStopDown.Image = (Image)_resources.GetObject("pictureBoxStopDown.Image");
             _pictureBoxStopDown.Location = new Point(52, 130 - 113);
@@ -892,7 +892,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStopDown.Size = new Size(20, 20);
             _pictureBoxStopDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxStopDown.TabStop = false;
-            _panelcontrols.Controls.Add(_pictureBoxStopDown);
+            _panelControls.Controls.Add(_pictureBoxStopDown);
 
             _pictureBoxStopOver.Image = (Image)_resources.GetObject("pictureBoxStopOver.Image");
             _pictureBoxStopOver.Location = new Point(52, 130 - 113);
@@ -903,7 +903,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStopOver.MouseLeave += PictureBoxStopOverMouseLeave;
             _pictureBoxStopOver.MouseDown += PictureBoxStopOverMouseDown;
             _pictureBoxStopOver.MouseUp += PictureBoxStopOverMouseUp;
-            _panelcontrols.Controls.Add(_pictureBoxStopOver);
+            _panelControls.Controls.Add(_pictureBoxStopOver);
 
             _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxFS.Image");
             _pictureBoxFullscreen.Location = new Point(95, 130 - 113);
@@ -912,7 +912,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreen.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxFullscreen.TabStop = false;
             _pictureBoxFullscreen.MouseEnter += PictureBoxFullscreenMouseEnter;
-            _panelcontrols.Controls.Add(_pictureBoxFullscreen);
+            _panelControls.Controls.Add(_pictureBoxFullscreen);
 
             _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
             _pictureBoxFullscreenDown.Location = new Point(95, 130 - 113);
@@ -920,7 +920,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenDown.Size = new Size(20, 20);
             _pictureBoxFullscreenDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxFullscreenDown.TabStop = false;
-            _panelcontrols.Controls.Add(_pictureBoxFullscreenDown);
+            _panelControls.Controls.Add(_pictureBoxFullscreenDown);
 
             _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
             _pictureBoxFullscreenOver.Location = new Point(95, 130 - 113);
@@ -931,7 +931,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenOver.MouseLeave += PictureBoxFullscreenOverMouseLeave;
             _pictureBoxFullscreenOver.MouseDown += PictureBoxFullscreenOverMouseDown;
             _pictureBoxFullscreenOver.MouseUp += PictureBoxFullscreenOverMouseUp;
-            _panelcontrols.Controls.Add(_pictureBoxFullscreenOver);
+            _panelControls.Controls.Add(_pictureBoxFullscreenOver);
 
             _pictureBoxProgressbarBackground.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             _pictureBoxProgressbarBackground.BackColor = Color.Transparent;
@@ -943,7 +943,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressbarBackground.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressbarBackground.TabStop = false;
             _pictureBoxProgressbarBackground.MouseDown += PictureBoxProgressbarBackgroundMouseDown;
-            _panelcontrols.Controls.Add(_pictureBoxProgressbarBackground);
+            _panelControls.Controls.Add(_pictureBoxProgressbarBackground);
 
             _pictureBoxProgressBar.Image = (Image)_resources.GetObject("pictureBoxProgressBar.Image");
             _pictureBoxProgressBar.Location = new Point(47, 118 - 113);
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressBar.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxProgressBar.TabStop = false;
             _pictureBoxProgressBar.MouseDown += PictureBoxProgressBarMouseDown;
-            _panelcontrols.Controls.Add(_pictureBoxProgressBar);
+            _panelControls.Controls.Add(_pictureBoxProgressBar);
             _pictureBoxProgressBar.BringToFront();
 
             _pictureBoxMute.Image = (Image)_resources.GetObject("pictureBoxMute.Image");
@@ -962,7 +962,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMute.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxMute.TabStop = false;
             _pictureBoxMute.MouseEnter += PictureBoxMuteMouseEnter;
-            _panelcontrols.Controls.Add(_pictureBoxMute);
+            _panelControls.Controls.Add(_pictureBoxMute);
 
             _pictureBoxMuteDown.Image = (Image)_resources.GetObject("pictureBoxMuteDown.Image");
             _pictureBoxMuteDown.Location = new Point(75, 131 - 113);
@@ -971,7 +971,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMuteDown.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxMuteDown.TabStop = false;
             _pictureBoxMuteDown.Click += PictureBoxMuteDownClick;
-            _panelcontrols.Controls.Add(_pictureBoxMuteDown);
+            _panelControls.Controls.Add(_pictureBoxMuteDown);
 
             _pictureBoxMuteOver.Image = (Image)_resources.GetObject("pictureBoxMuteOver.Image");
             _pictureBoxMuteOver.Location = new Point(75, 131 - 113);
@@ -982,7 +982,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMuteOver.MouseLeave += PictureBoxMuteOverMouseLeave;
             _pictureBoxMuteOver.MouseDown += PictureBoxMuteOverMouseDown;
             _pictureBoxMuteOver.MouseUp += PictureBoxMuteOverMouseUp;
-            _panelcontrols.Controls.Add(_pictureBoxMuteOver);
+            _panelControls.Controls.Add(_pictureBoxMuteOver);
 
             _pictureBoxVolumeBarBackground.Image = (Image)_resources.GetObject("pictureBoxVolumeBarBackground.Image");
             _pictureBoxVolumeBarBackground.Location = new Point(111, 135 - 113);
@@ -991,7 +991,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxVolumeBarBackground.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxVolumeBarBackground.TabStop = false;
             _pictureBoxVolumeBarBackground.MouseDown += PictureBoxVolumeBarBackgroundMouseDown;
-            _panelcontrols.Controls.Add(_pictureBoxVolumeBarBackground);
+            _panelControls.Controls.Add(_pictureBoxVolumeBarBackground);
 
             _pictureBoxVolumeBar.Image = (Image)_resources.GetObject("pictureBoxVolumeBar.Image");
             _pictureBoxVolumeBar.Location = new Point(120, 139 - 113);
@@ -1000,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxVolumeBar.SizeMode = PictureBoxSizeMode.StretchImage;
             _pictureBoxVolumeBar.TabStop = false;
             _pictureBoxVolumeBar.MouseDown += PictureBoxVolumeBarMouseDown;
-            _panelcontrols.Controls.Add(_pictureBoxVolumeBar);
+            _panelControls.Controls.Add(_pictureBoxVolumeBar);
             _pictureBoxVolumeBar.BringToFront();
 
             _pictureBoxReverse = new PictureBox
@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxReverse);
+            _panelControls.Controls.Add(_pictureBoxReverse);
             _pictureBoxReverse.MouseEnter += PictureBoxReverseMouseEnter;
 
             _pictureBoxReverseOver = new PictureBox
@@ -1024,7 +1024,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxReverseOver);
+            _panelControls.Controls.Add(_pictureBoxReverseOver);
             _pictureBoxReverseOver.MouseLeave += PictureBoxReverseOverMouseLeave;
             _pictureBoxReverseOver.MouseDown += PictureBoxReverseOverMouseDown;
             _pictureBoxReverseOver.MouseUp += PictureBoxReverseOverMouseUp;
@@ -1038,7 +1038,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxReverseDown);
+            _panelControls.Controls.Add(_pictureBoxReverseDown);
 
             _pictureBoxFastForward = new PictureBox
             {
@@ -1049,7 +1049,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxFastForward);
+            _panelControls.Controls.Add(_pictureBoxFastForward);
             _pictureBoxFastForward.MouseEnter += PictureBoxFastForwardMouseEnter;
 
             _pictureBoxFastForwardOver = new PictureBox
@@ -1061,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxFastForwardOver);
+            _panelControls.Controls.Add(_pictureBoxFastForwardOver);
             _pictureBoxFastForwardOver.MouseLeave += PictureBoxFastForwardOverMouseLeave;
             _pictureBoxFastForwardOver.MouseDown += PictureBoxFastForwardOverMouseDown;
             _pictureBoxFastForwardOver.MouseUp += PictureBoxFastForwardOverMouseUp;
@@ -1075,13 +1075,13 @@ namespace Nikse.SubtitleEdit.Controls
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 TabStop = false
             };
-            _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
+            _panelControls.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 28);
             _labelTimeCode.ForeColor = Color.Gray;
             _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 8);
             _labelTimeCode.AutoSize = true;
-            _panelcontrols.Controls.Add(_labelTimeCode);
+            _panelControls.Controls.Add(_labelTimeCode);
 
             _labelVideoPlayerName.Location = new Point(282, 17);
             _labelVideoPlayerName.ForeColor = Color.Gray;
@@ -1089,7 +1089,7 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.AutoSize = true;
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
 
-            _panelcontrols.Controls.Add(_labelVideoPlayerName);
+            _panelControls.Controls.Add(_labelVideoPlayerName);
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForward.BringToFront();
@@ -1097,12 +1097,12 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForwardOver.BringToFront();
             _pictureBoxPlay.BringToFront();
 
-            _panelcontrols.BackColor = _backgroundColor;
+            _panelControls.BackColor = _backgroundColor;
             _pictureBoxPlay.BringToFront();
             _pictureBoxPlayDown.BringToFront();
             _pictureBoxPlayOver.BringToFront();
             _labelTimeCode.BringToFront();
-            return _panelcontrols;
+            return _panelControls;
         }
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
@@ -1115,8 +1115,8 @@ namespace Nikse.SubtitleEdit.Controls
             _panelSubtitle.Top = Height - (_controlsHeight + _subtitlesHeight);
             _panelSubtitle.Width = Width;
 
-            _panelcontrols.Top = Height - _controlsHeight + 2;
-            _panelcontrols.Width = Width;
+            _panelControls.Top = Height - _controlsHeight + 2;
+            _panelControls.Width = Width;
             _pictureBoxBackground.Width = Width;
             _pictureBoxProgressbarBackground.Width = Width - (_pictureBoxProgressbarBackground.Left * 2);
             _pictureBoxFastForward.Left = Width - 48;
