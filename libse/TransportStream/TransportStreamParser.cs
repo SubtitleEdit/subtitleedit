@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     var pageBcd = Teletext.DecToBec(page);
                     Teletext.InitializeStaticFields(packetId, pageBcd);
-                    var teletextRunSettings = new TeletextRunSettings { StartMs = firstMs ?? 0 };
+                    var teletextRunSettings = new TeletextRunSettings(firstMs);
                     foreach (var pes in teletextPesList[packetId])
                     {
                         var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
