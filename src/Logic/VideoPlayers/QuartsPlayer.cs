@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-//http://msdn.microsoft.com/en-us/library/dd375454%28VS.85%29.aspx
-//http://msdn.microsoft.com/en-us/library/dd387928%28v=vs.85%29.aspx
+//https://docs.microsoft.com/en-us/windows/win32/directshow/directshow
+//https://docs.microsoft.com/en-us/previous-versions//dd387928(v=vs.85)
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             const int wsChild = 0x40000000;
 
-            string ext = System.IO.Path.GetExtension(videoFileName).ToLowerInvariant();
+            string ext = System.IO.Path.GetExtension(videoFileName)?.ToLowerInvariant();
             bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".mpa" || ext == ".m4a" || ext == ".ape" || ext == ".aiff" || ext == ".flac" || ext == ".aac" || ext == ".ac3" || ext == ".mka";
 
             OnVideoLoaded = onVideoLoaded;
@@ -147,6 +147,27 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             VideoFileName = videoFileName;
             _owner = ownerControl;
+
+            try
+            {
+                // Hack for windows 10... ???
+                if (!isAudio && Configuration.Settings.General.DirectShowDoubleLoadVideo)
+                {
+                    var quartzFilterGraphManager = new FilgraphManager();
+                    quartzFilterGraphManager.RenderFile(VideoFileName);
+                    var quartzVideo = quartzFilterGraphManager as IVideoWindow;
+                    quartzVideo.Visible = 0;
+                    quartzVideo.Owner = (int)IntPtr.Zero;
+                    quartzFilterGraphManager.StopWhenReady();
+                    quartzFilterGraphManager.GetState(1000, out var test);
+                    var x = test;
+                }
+            }
+            catch
+            {
+                // ignore errors   
+            }
+
             _quartzFilgraphManager = new FilgraphManager();
             _quartzFilgraphManager.RenderFile(VideoFileName);
 
@@ -157,7 +178,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _quartzVideo.SetWindowPosition(0, 0, ownerControl.Width, ownerControl.Height);
                 _quartzVideo.WindowStyle = wsChild;
             }
-            //Play();
 
             if (!isAudio)
             {
