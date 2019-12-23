@@ -158,9 +158,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     var quartzVideo = quartzFilterGraphManager as IVideoWindow;
                     quartzVideo.Visible = 0;
                     quartzVideo.Owner = (int)IntPtr.Zero;
-                    quartzFilterGraphManager.StopWhenReady();
-                    quartzFilterGraphManager.GetState(1000, out var test);
-                    var x = test;
                 }
             }
             catch
