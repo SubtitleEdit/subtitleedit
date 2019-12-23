@@ -217,6 +217,9 @@ namespace Nikse.SubtitleEdit.Controls
             VideoPlayerContainerResize(this, null);
             Resize += VideoPlayerContainerResize;
             PanelPlayer.MouseDown += PanelPlayerMouseDown;
+
+            PictureBoxFastForwardMouseEnter(null, null);
+            PictureBoxFastForwardOverMouseLeave(null, null);
         }
 
         private void ShowAllControls()
@@ -1092,15 +1095,15 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_labelVideoPlayerName);
 
             _pictureBoxBackground.SendToBack();
-            _pictureBoxFastForward.BringToFront();
             _pictureBoxFastForwardDown.BringToFront();
             _pictureBoxFastForwardOver.BringToFront();
+            _pictureBoxFastForward.BringToFront();
             _pictureBoxPlay.BringToFront();
 
             _panelControls.BackColor = _backgroundColor;
-            _pictureBoxPlay.BringToFront();
             _pictureBoxPlayDown.BringToFront();
             _pictureBoxPlayOver.BringToFront();
+            _pictureBoxPlay.BringToFront();
             _labelTimeCode.BringToFront();
             return _panelControls;
         }
