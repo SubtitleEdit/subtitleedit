@@ -651,6 +651,7 @@
             public string FixOverlappingDisplayTimes { get; set; }
             public string FixShortDisplayTimes { get; set; }
             public string FixLongDisplayTimes { get; set; }
+            public string FixShortGaps { get; set; }
             public string FixInvalidItalicTags { get; set; }
             public string RemoveUnneededSpaces { get; set; }
             public string RemoveUnneededPeriods { get; set; }
@@ -702,6 +703,7 @@
             public string FixInvalidItalicTag { get; set; }
             public string FixShortDisplayTime { get; set; }
             public string FixOverlappingDisplayTime { get; set; }
+            public string FixShortGap { get; set; }
             public string FixInvalidItalicTagsExample { get; set; }
             public string RemoveUnneededSpacesExample { get; set; }
             public string RemoveUnneededPeriodsExample { get; set; }
@@ -716,6 +718,7 @@
             public string XDisplayTimesProlonged { get; set; }
             public string XInvalidHtmlTagsFixed { get; set; }
             public string XDisplayTimesShortned { get; set; }
+            public string XGapsFixed { get; set; }
             public string XLinesUnbreaked { get; set; }
             public string UnneededSpace { get; set; }
             public string XUnneededSpacesRemoved { get; set; }
@@ -2206,6 +2209,7 @@
             public string SyntaxColorTextIfTooLong { get; set; }
             public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
+            public string SyntaxColorGap { get; set; }
             public string SyntaxErrorColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }

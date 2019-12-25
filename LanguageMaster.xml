@@ -583,6 +583,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fix long display times</FixLongDisplayTimes>
+    <FixShortGaps>Fix short gaps</FixShortGaps>
     <FixInvalidItalicTags>Fix invalid italic tags</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Remove unneeded spaces</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Remove unneeded periods</RemoveUnneededPeriods>
@@ -634,6 +635,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Fix short display time</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlapping display time</FixOverlappingDisplayTime>
+    <FixShortGap>Fix short gap</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
@@ -648,6 +650,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
+    <XGapsFixed>{0} short gaps fixed</XGapsFixed>
     <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
     <UnneededSpace>Unneeded space</UnneededSpace>
     <XUnneededSpacesRemoved>{0} unneeded spaces removed</XUnneededSpacesRemoved>
@@ -2040,6 +2043,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
+    <SyntaxColorGap>Color gap if too short</SyntaxColorGap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
