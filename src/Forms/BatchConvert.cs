@@ -381,6 +381,12 @@ namespace Nikse.SubtitleEdit.Forms
                     Text =  Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort,
                     Checked = Configuration.Settings.Tools.BatchConvertChangeSpeed,
                     Action = CommandLineConverter.BatchAction.ChangeSpeed
+                },
+                new FixActionItem
+                {
+                    Text =  Configuration.Settings.Language.ApplyDurationLimits.Title,
+                    Checked = Configuration.Settings.Tools.BatchConvertApplyDurationLimits,
+                    Action = CommandLineConverter.BatchAction.ApplyDurationLimits
                 }
             };
             foreach (var fixItem in fixItems)
@@ -1023,6 +1029,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps))
                             {
                                 Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
+                            }
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))
+                            {
+                                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                                sub = fixDurationLimits.Fix(sub);
                             }
 
                             var prev = sub.GetParagraphOrDefault(0);
@@ -1857,6 +1868,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertChangeSpeed = IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed);
             Configuration.Settings.Tools.BatchConvertChangeFrameRate = IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate);
             Configuration.Settings.Tools.BatchConvertOffsetTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes);
+            Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
 

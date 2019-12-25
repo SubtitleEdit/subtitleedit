@@ -45,7 +45,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             SetMinGap,
             ChangeFrameRate,
             OffsetTimeCodes,
-            ChangeSpeed
+            ChangeSpeed,
+            ApplyDurationLimits
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)
@@ -132,6 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
+                _stdOutWriter.WriteLine("        /ApplyDurationLimits");
                 _stdOutWriter.WriteLine("        /FixCommonErrors");
                 _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
                 _stdOutWriter.WriteLine("        /MergeSameTexts");
@@ -1106,6 +1108,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     changeCasingNames.Initialize(sub);
                                     changeCasingNames.FixCasing();
                                 }
+                                break;
+                            case BatchAction.ApplyDurationLimits:
+                                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                                sub = fixDurationLimits.Fix(sub);
                                 break;
                             case BatchAction.ReverseRtlStartEnd:
                                 foreach (var p in sub.Paragraphs)
