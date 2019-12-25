@@ -1,18 +1,20 @@
 ﻿Subtitle Edit Changelog
 
-3.5.12 (xth December 2019) BETA
+3.5.12 (xth January 2020) BETA
 * NEW:
-   * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare
+   * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare/xylographe
    * Auto break options "pixel width" (not by #characters) + "bottom heavy"
    * Auto break options now available in UI via Options -> Settings -> Tools
    * Add new format Netflix IMSC 1.1 Japanese
    * Add new format psl
+   * Add new sub format - thx Magnus
    * Add Macedonian translation - thx Numberguy
 * IMPROVED:
    * Update Polish translation - thx admas
    * Update Korean translation - thx domddol
    * Update Bulgarian translation - thx KalinM
    * Update Brazilian translation - thx igor
+   * Add new functions to batch-convert and cmd-line-convert
    * Improve reading of faulty .srt files a little - thx andradadad
    * Allow invert colors + resize pre-processing for T4 - thx rookiefromspace/OmrSi
    * Improve line mergning of 3+ lines - thx taxen
@@ -20,6 +22,11 @@
    * Use display-friendly language name in "Fix common errors" - thx Zoltan
    * Allow "Typewriter effect" for multiple lines - thx andradadad
    * Improve overwrite setting in "Batch convert" - thx mgutt/xylographe
+   * Improve frame rate conversion precision - thx gru123
+   * Move Tools -> "Set minimum display time between paragraphs" to FCE - thx Flitskikker
+   * Add "swap frame rate" button - thx Flitskikker
+   * Add more rule profiles - thx Flitskikker
+   * Resize color picker so all 256 colors are available - thx Johan
 * FIXED:
    * Fix list view initialization issue - thx AlexandreMT
    * Fix "Replace" issue - thx loyaldragon
