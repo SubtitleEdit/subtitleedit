@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
+        public bool ListViewSyntaxColorGap { get; set; }
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
@@ -292,6 +293,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
             ListViewSyntaxMoreThanXLines = true;
+            ListViewSyntaxColorGap = true;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             ListViewShowColumnEndTime = true;
@@ -592,6 +594,7 @@ $HorzAlign          =   Center
         public bool OverlappingDisplayTimeTicked { get; set; }
         public bool TooShortDisplayTimeTicked { get; set; }
         public bool TooLongDisplayTimeTicked { get; set; }
+        public bool TooShortGapTicked { get; set; }
         public bool InvalidItalicTagsTicked { get; set; }
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
@@ -633,6 +636,7 @@ $HorzAlign          =   Center
             OverlappingDisplayTimeTicked = true;
             TooShortDisplayTimeTicked = true;
             TooLongDisplayTimeTicked = true;
+            TooShortGapTicked = true;
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
@@ -2930,6 +2934,12 @@ $HorzAlign          =   Center
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("ListViewSyntaxColorGap");
+            if (subNode != null)
+            {
+                settings.Tools.ListViewSyntaxColorGap = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
             if (subNode != null)
             {
@@ -4156,6 +4166,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.CommonErrors.TooLongDisplayTimeTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("TooShortGapTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.TooShortGapTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("InvalidItalicTagsTicked");
@@ -6410,6 +6426,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
@@ -6643,6 +6660,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OverlappingDisplayTimeTicked", settings.CommonErrors.OverlappingDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TooShortDisplayTimeTicked", settings.CommonErrors.TooShortDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TooLongDisplayTimeTicked", settings.CommonErrors.TooLongDisplayTimeTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TooShortGapTicked", settings.CommonErrors.TooShortGapTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("InvalidItalicTagsTicked", settings.CommonErrors.InvalidItalicTagsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString(CultureInfo.InvariantCulture));
