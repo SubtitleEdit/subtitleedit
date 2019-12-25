@@ -178,7 +178,6 @@
             this.toolStripMenuItemMergeDuplicateText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLinesWithSameTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoSplitLongLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSortBy = new System.Windows.Forms.ToolStripMenuItem();
             this.sortNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortStartTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1669,7 +1668,6 @@
             this.toolStripMenuItemMergeDuplicateText,
             this.toolStripMenuItemMergeLinesWithSameTimeCodes,
             this.toolStripMenuItemAutoSplitLongLines,
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
             this.toolStripMenuItemSortBy,
             this.netflixQualityCheckToolStripMenuItem,
             this.toolStripSeparator23,
@@ -1770,13 +1768,6 @@
             this.toolStripMenuItemAutoSplitLongLines.Size = new System.Drawing.Size(338, 22);
             this.toolStripMenuItemAutoSplitLongLines.Text = "Split long lines...";
             this.toolStripMenuItemAutoSplitLongLines.Click += new System.EventHandler(this.toolStripMenuItemAutoSplitLongLines_Click);
-            // 
-            // setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem
-            // 
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Name = "setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem";
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = "Minimum display time between paragraphs...";
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Click += new System.EventHandler(this.SetMinimalDisplayTimeDifferenceToolStripMenuItemClick);
             // 
             // toolStripMenuItemSortBy
             // 
@@ -5138,7 +5129,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeCharacter;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorInsertUnicodeCharacter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoMergeShortLines;
-        private System.Windows.Forms.ToolStripMenuItem setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFont;

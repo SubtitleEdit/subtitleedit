@@ -1390,7 +1390,6 @@
                     public string MergeDuplicateText { get; set; }
                     public string MergeSameTimeCodes { get; set; }
                     public string SplitLongLines { get; set; }
-                    public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
                     public string NetflixQualityCheck { get; set; }
                     public string Number { get; set; }
@@ -1900,16 +1899,6 @@
             public string Back { get; set; }
             public string LengthInSeconds { get; set; }
             public string MaxVolume { get; set; }
-        }
-
-        public class SetMinimumDisplayTimeBetweenParagraphs
-        {
-            public string Title { get; set; }
-            public string PreviewLinesModifiedX { get; set; }
-            public string ShowOnlyModifiedLines { get; set; }
-            public string MinimumMillisecondsBetweenParagraphs { get; set; }
-            public string FrameInfo { get; set; }
-            public string OneFrameXisYMilliseconds { get; set; }
         }
 
         public class SetSyncPoint

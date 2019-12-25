@@ -1369,7 +1369,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
             toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
-            setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItemSortBy.Text = _language.Menu.Tools.SortBy;
             netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
             toolStripButtonNetflixQualityCheck.Text = _language.Menu.Tools.NetflixQualityCheck;
@@ -16582,35 +16581,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetMinimalDisplayTimeDifferenceToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (!IsSubtitleLoaded)
-            {
-                DisplaySubtitleNotLoadedMessage();
-                return;
-            }
-
-            using (var setMinDisplayDiff = new SetMinimumDisplayTimeBetweenParagraphs())
-            {
-                setMinDisplayDiff.Initialize(_subtitle);
-                if (setMinDisplayDiff.ShowDialog() == DialogResult.OK && setMinDisplayDiff.FixCount > 0)
-                {
-                    MakeHistoryForUndo(_language.BeforeSetMinimumDisplayTimeBetweenParagraphs);
-                    _subtitle.Paragraphs.Clear();
-                    foreach (var p in setMinDisplayDiff.FixedSubtitle.Paragraphs)
-                    {
-                        _subtitle.Paragraphs.Add(p);
-                    }
-
-                    ShowStatus(string.Format(_language.XMinimumDisplayTimeBetweenParagraphsChanged, setMinDisplayDiff.FixCount));
-                    SaveSubtitleListviewIndices();
-                    ShowSource();
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    RestoreSubtitleListviewIndices();
-                }
-            }
-        }
-
         private void ToolStripMenuItemImportTextClick(object sender, EventArgs e)
         {
             ImportPlainText(null);
@@ -19175,7 +19145,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMakeEmptyFromCurrent.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
             toolStripMenuItemAutoSplitLongLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
             toolStripMenuItemDurationBridgeGaps.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap);
-            setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
             startNumberingFromToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
             removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
             ChangeCasingToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
