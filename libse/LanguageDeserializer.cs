@@ -3547,9 +3547,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Tools/SplitLongLines":
                     language.Main.Menu.Tools.SplitLongLines = reader.Value;
                     break;
-                case "Main/Menu/Tools/MinimumDisplayTimeBetweenParagraphs":
-                    language.Main.Menu.Tools.MinimumDisplayTimeBetweenParagraphs = reader.Value;
-                    break;
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
@@ -4671,24 +4668,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SeekSilence/MaxVolume":
                     language.SeekSilence.MaxVolume = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/Title":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.Title = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/PreviewLinesModifiedX":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.PreviewLinesModifiedX = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/ShowOnlyModifiedLines":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.ShowOnlyModifiedLines = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/MinimumMillisecondsBetweenParagraphs":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/FrameInfo":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo = reader.Value;
-                    break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/OneFrameXisYMilliseconds":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds = reader.Value;
                     break;
                 case "SetSyncPoint/Title":
                     language.SetSyncPoint.Title = reader.Value;
