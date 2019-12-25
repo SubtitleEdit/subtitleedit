@@ -1417,18 +1417,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_totalErrors > 0)
                 {
                     labelStatus.ForeColor = Color.Red;
-                    if (applied)
-                    {
-                        ShowStatus(string.Format(_language.XFixedBut, _totalFixes));
-                    }
-                    else
-                    {
-                        ShowStatus(string.Format(_language.XCouldBeFixedBut, _totalFixes));
-                    }
+                    ShowStatus(string.Format(applied ? _language.XFixedBut : _language.XCouldBeFixedBut, _totalFixes));
                 }
                 else
                 {
-                    ShowStatus(string.Format(_language.XFixesApplied, _totalFixes));
+                    ShowStatus(string.Format(applied ? _language.XFixesApplied : _language.FixesFoundX, _totalFixes));
                 }
             }
             else if (_totalErrors > 0)
