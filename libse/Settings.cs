@@ -1372,6 +1372,8 @@ $HorzAlign          =   Center
         public string MainToolsMakeEmptyFromCurrent { get; set; }
         public string MainToolsSplitLongLines { get; set; }
         public string MainToolsDurationsBridgeGap { get; set; }
+        public string MainToolsMinimumDisplayTimeBetweenParagraphs { get; set; }
+
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
         public string MainToolsChangeCasing { get; set; }
@@ -5213,6 +5215,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainToolsDurationsBridgeGap = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsMinimumDisplayTimeBetweenParagraphs");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsRenumber");
                 if (subNode != null)
                 {
@@ -6857,6 +6865,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainToolsMergeShortLines", settings.Shortcuts.MainToolsMergeShortLines);
                 textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
                 textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
+                textWriter.WriteElementString("MainToolsMinimumDisplayTimeBetweenParagraphs", settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
                 textWriter.WriteElementString("MainToolsDurationsBridgeGap", settings.Shortcuts.MainToolsDurationsBridgeGap);
                 textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
                 textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);

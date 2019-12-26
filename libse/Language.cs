@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.ReplaceDialog ReplaceDialog;
         public LanguageStructure.RestoreAutoBackup RestoreAutoBackup;
         public LanguageStructure.SeekSilence SeekSilence;
+        public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
         public LanguageStructure.SettingsMpv SettingsMpv;
@@ -1531,6 +1532,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeDuplicateText = "Merge lines with same text...",
                         MergeSameTimeCodes = "Merge lines with same time codes...",
                         SplitLongLines = "Split long lines...",
+                        MinimumDisplayTimeBetweenParagraphs = "Minimum display time between subtitles...",
                         NetflixQualityCheck = "Netflix quality check...",
                         SortBy = "Sort by",
                         Number = "Number",
@@ -2030,6 +2032,16 @@ can edit in same subtitle file (collaboration)",
                 Back = "Back",
                 LengthInSeconds = "Silence must be at at least (seconds)",
                 MaxVolume = "Volume must be below",
+            };
+
+            SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs
+            {
+                Title = "Set minimum display time between subtitles",
+                PreviewLinesModifiedX = "Preview - subtitles modified: {0}",
+                MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between lines",
+                ShowOnlyModifiedLines = "Show only modified lines",
+                FrameInfo = "Frame rate info",
+                OneFrameXisYMilliseconds = "One frame at {0:0.00} fps is {1} milliseconds",
             };
 
             SetSyncPoint = new LanguageStructure.SetSyncPoint

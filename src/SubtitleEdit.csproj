@@ -707,6 +707,12 @@
     <Compile Include="Forms\ReplaceDialog.Designer.cs">
       <DependentUpon>ReplaceDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SetMinimumDisplayTimeBetweenParagraphs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SetMinimumDisplayTimeBetweenParagraphs.Designer.cs">
+      <DependentUpon>SetMinimumDisplayTimeBetweenParagraphs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1375,6 +1381,9 @@
     <EmbeddedResource Include="Forms\ReplaceDialog.resx">
       <DependentUpon>ReplaceDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SetMinimumDisplayTimeBetweenParagraphs.resx">
+      <DependentUpon>SetMinimumDisplayTimeBetweenParagraphs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
