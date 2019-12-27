@@ -1274,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             subtitleListView1.SyntaxColorLine(FixedSubtitle.Paragraphs, _subtitleListViewIndex, FixedSubtitle.Paragraphs[_subtitleListViewIndex]);
-            Paragraph next = Subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
+            Paragraph next = FixedSubtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
             if (next != null)
             {
                 subtitleListView1.SyntaxColorLine(FixedSubtitle.Paragraphs, _subtitleListViewIndex + 1, FixedSubtitle.Paragraphs[_subtitleListViewIndex + 1]);
@@ -1490,65 +1490,74 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemDeleteClick(object sender, EventArgs e)
         {
-            if (FixedSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            if (FixedSubtitle.Paragraphs.Count <= 0 || subtitleListView1.SelectedItems.Count <= 0)
             {
-                _linesDeletedOrMerged = true;
-                _subtitleListViewIndex = -1;
-                var indexes = new List<int>();
-                foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                return;
+            }
+
+            var askText = subtitleListView1.SelectedItems.Count > 1 ? string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count) : Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            _linesDeletedOrMerged = true;
+            _subtitleListViewIndex = -1;
+            var indexes = new List<int>();
+            foreach (ListViewItem item in subtitleListView1.SelectedItems)
+            {
+                indexes.Add(item.Index);
+            }
+
+            int firstIndex = subtitleListView1.SelectedItems[0].Index;
+
+            // save de-selected fixes
+            var deSelectedFixes = new List<string>();
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                if (!item.Checked)
                 {
-                    indexes.Add(item.Index);
+                    int number = Convert.ToInt32(item.SubItems[1].Text);
+                    if (number > firstIndex)
+                    {
+                        number -= subtitleListView1.SelectedItems.Count;
+                    }
+
+                    if (number >= 0)
+                    {
+                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
+                    }
                 }
+            }
 
-                int firstIndex = subtitleListView1.SelectedItems[0].Index;
+            FixedSubtitle.RemoveParagraphsByIndices(indexes);
+            FixedSubtitle.Renumber();
+            subtitleListView1.Fill(FixedSubtitle);
 
-                // save de-selected fixes
-                var deSelectedFixes = new List<string>();
+            // refresh fixes
+            listViewFixes.Items.Clear();
+            _onlyListFixes = true;
+            Next();
+
+            // restore de-selected fixes
+            if (deSelectedFixes.Count > 0)
+            {
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
-                    if (!item.Checked)
+                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
                     {
-                        int number = Convert.ToInt32(item.SubItems[1].Text);
-                        if (number > firstIndex)
-                        {
-                            number -= subtitleListView1.SelectedItems.Count;
-                        }
-
-                        if (number >= 0)
-                        {
-                            deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
-                        }
+                        item.Checked = false;
                     }
                 }
+            }
 
-                FixedSubtitle.RemoveParagraphsByIndices(indexes);
-                FixedSubtitle.Renumber();
-                subtitleListView1.Fill(FixedSubtitle);
-                if (subtitleListView1.Items.Count > firstIndex)
-                {
-                    subtitleListView1.Items[firstIndex].Selected = true;
-                }
-                else if (subtitleListView1.Items.Count > 0)
-                {
-                    subtitleListView1.Items[subtitleListView1.Items.Count - 1].Selected = true;
-                }
-
-                // refresh fixes
-                listViewFixes.Items.Clear();
-                _onlyListFixes = true;
-                Next();
-
-                // restore de-selected fixes
-                if (deSelectedFixes.Count > 0)
-                {
-                    foreach (ListViewItem item in listViewFixes.Items)
-                    {
-                        if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                        {
-                            item.Checked = false;
-                        }
-                    }
-                }
+            if (subtitleListView1.Items.Count > firstIndex)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(firstIndex, true);
+            }
+            else if (subtitleListView1.Items.Count > 0)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
             }
         }
 
@@ -1835,6 +1844,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 subtitleListView1.InverseSelection();
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                ToolStripMenuItemDeleteClick(null, null);
             }
         }
 
