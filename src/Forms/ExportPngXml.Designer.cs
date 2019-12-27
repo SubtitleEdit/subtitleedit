@@ -142,9 +142,9 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(768, 602);
+            this.buttonExport.Location = new System.Drawing.Point(768, 597);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(126, 21);
+            this.buttonExport.Size = new System.Drawing.Size(126, 23);
             this.buttonExport.TabIndex = 6;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
@@ -155,9 +155,9 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(900, 602);
+            this.buttonCancel.Location = new System.Drawing.Point(894, 597);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 602);
+            this.progressBar1.Location = new System.Drawing.Point(12, 599);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(750, 21);
             this.progressBar1.TabIndex = 5;
@@ -260,7 +260,7 @@
             this.comboBoxBottomMarginUnit.Items.AddRange(new object[] {
             "%",
             "px"});
-            this.comboBoxBottomMarginUnit.Location = new System.Drawing.Point(179, 132);
+            this.comboBoxBottomMarginUnit.Location = new System.Drawing.Point(181, 132);
             this.comboBoxBottomMarginUnit.Name = "comboBoxBottomMarginUnit";
             this.comboBoxBottomMarginUnit.Size = new System.Drawing.Size(54, 21);
             this.comboBoxBottomMarginUnit.TabIndex = 14;
@@ -273,7 +273,7 @@
             this.comboBoxLeftRightMarginUnit.Items.AddRange(new object[] {
             "%",
             "px"});
-            this.comboBoxLeftRightMarginUnit.Location = new System.Drawing.Point(179, 159);
+            this.comboBoxLeftRightMarginUnit.Location = new System.Drawing.Point(181, 159);
             this.comboBoxLeftRightMarginUnit.Name = "comboBoxLeftRightMarginUnit";
             this.comboBoxLeftRightMarginUnit.Size = new System.Drawing.Size(54, 21);
             this.comboBoxLeftRightMarginUnit.TabIndex = 17;
@@ -303,7 +303,7 @@
             // 
             this.comboBoxLeftRightMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLeftRightMargin.FormattingEnabled = true;
-            this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(110, 159);
+            this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(112, 159);
             this.comboBoxLeftRightMargin.Name = "comboBoxLeftRightMargin";
             this.comboBoxLeftRightMargin.Size = new System.Drawing.Size(63, 21);
             this.comboBoxLeftRightMargin.TabIndex = 16;
@@ -443,7 +443,7 @@
             // 
             this.buttonShadowColor.Location = new System.Drawing.Point(802, 25);
             this.buttonShadowColor.Name = "buttonShadowColor";
-            this.buttonShadowColor.Size = new System.Drawing.Size(121, 21);
+            this.buttonShadowColor.Size = new System.Drawing.Size(121, 23);
             this.buttonShadowColor.TabIndex = 40;
             this.buttonShadowColor.Text = "Shadow color";
             this.buttonShadowColor.UseVisualStyleBackColor = true;
@@ -493,7 +493,7 @@
             // buttonCustomResolution
             // 
             this.buttonCustomResolution.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomResolution.Location = new System.Drawing.Point(236, 78);
+            this.buttonCustomResolution.Location = new System.Drawing.Point(238, 78);
             this.buttonCustomResolution.Name = "buttonCustomResolution";
             this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
             this.buttonCustomResolution.TabIndex = 6;
@@ -505,7 +505,7 @@
             // 
             this.comboBoxBottomMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBottomMargin.FormattingEnabled = true;
-            this.comboBoxBottomMargin.Location = new System.Drawing.Point(110, 132);
+            this.comboBoxBottomMargin.Location = new System.Drawing.Point(112, 132);
             this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
             this.comboBoxBottomMargin.Size = new System.Drawing.Size(63, 21);
             this.comboBoxBottomMargin.TabIndex = 10;
@@ -633,7 +633,7 @@
             "NTSC (720x480)",
             "640x352",
             "640x272"});
-            this.comboBoxResolution.Location = new System.Drawing.Point(110, 78);
+            this.comboBoxResolution.Location = new System.Drawing.Point(112, 78);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(123, 21);
             this.comboBoxResolution.TabIndex = 5;
@@ -648,7 +648,7 @@
             "Center",
             "Right",
             "Center - Left justify"});
-            this.comboBoxHAlign.Location = new System.Drawing.Point(110, 105);
+            this.comboBoxHAlign.Location = new System.Drawing.Point(112, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(123, 21);
             this.comboBoxHAlign.TabIndex = 8;
@@ -688,7 +688,7 @@
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.DropDownWidth = 210;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(110, 24);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(112, 24);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(123, 21);
             this.comboBoxSubtitleFont.TabIndex = 1;
@@ -808,7 +808,7 @@
             "450",
             "475",
             "500"});
-            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(110, 51);
+            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(112, 51);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(123, 21);
             this.comboBoxSubtitleFontSize.TabIndex = 3;
@@ -873,7 +873,7 @@
             // 
             this.buttonBorderColor.Location = new System.Drawing.Point(543, 24);
             this.buttonBorderColor.Name = "buttonBorderColor";
-            this.buttonBorderColor.Size = new System.Drawing.Size(128, 21);
+            this.buttonBorderColor.Size = new System.Drawing.Size(128, 23);
             this.buttonBorderColor.TabIndex = 30;
             this.buttonBorderColor.Text = "Border color";
             this.buttonBorderColor.UseVisualStyleBackColor = true;
@@ -892,7 +892,7 @@
             // 
             this.buttonColor.Location = new System.Drawing.Point(287, 24);
             this.buttonColor.Name = "buttonColor";
-            this.buttonColor.Size = new System.Drawing.Size(121, 21);
+            this.buttonColor.Size = new System.Drawing.Size(121, 23);
             this.buttonColor.TabIndex = 18;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
@@ -939,7 +939,7 @@
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 415);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
-            this.groupBoxExportImage.Size = new System.Drawing.Size(962, 181);
+            this.groupBoxExportImage.Size = new System.Drawing.Size(962, 178);
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
@@ -1057,7 +1057,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(981, 628);
+            this.ClientSize = new System.Drawing.Size(981, 632);
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
