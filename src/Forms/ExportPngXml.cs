@@ -1412,7 +1412,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 var parameters = new EncoderParameters { Param = { [0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8) } };
 
                                 var nbmp = new NikseBitmap(param.Bitmap);
-                                var b = nbmp.ConverTo8BitsPerPixel();
+                                var b = nbmp.ConvertTo8BitsPerPixel();
                                 b.Save(fileName, encoder, parameters);
                                 b.Dispose();
 
@@ -1421,8 +1421,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
-                        const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
-                        const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
+                        const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\" />";
+                        const string timeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";
 
                         double factor = TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate;
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
@@ -1724,7 +1724,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
 
                         var nbmp = new NikseBitmap(outBitmap);
-                        var b = nbmp.ConverTo8BitsPerPixel();
+                        var b = nbmp.ConvertTo8BitsPerPixel();
                         b.Save(targetImageFileName, encoder, parameters);
                         b.Dispose();
 
@@ -1794,7 +1794,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
 
                         var nbmp = new NikseBitmap(param.Bitmap);
-                        var b = nbmp.ConverTo8BitsPerPixel();
+                        var b = nbmp.ConvertTo8BitsPerPixel();
                         b.Save(fileName, encoder, parameters);
                         b.Dispose();
 
@@ -1881,7 +1881,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
 
                     var nbmp = new NikseBitmap(param.Bitmap);
-                    var b = nbmp.ConverTo8BitsPerPixel();
+                    var b = nbmp.ConvertTo8BitsPerPixel();
                     b.Save(fileName, encoder, parameters);
                     b.Dispose();
 
@@ -2284,7 +2284,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (_exportType == ExportFormats.VobSub || _exportType == ExportFormats.Stl || _exportType == ExportFormats.Spumux)
             {
                 var nbmp = new NikseBitmap(bmp);
-                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked);
+                nbmp.ConvertToFourColors(Color.Transparent, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked);
+
+                if (_exportType == ExportFormats.Spumux)
+                {
+                    nbmp.EnsureEvenLines(mbp.BoxSingleLine ? Color.Transparent : mbp.BackgroundColor);
+                }
+
                 var temp = nbmp.GetBitmap();
                 bmp.Dispose();
                 return temp;
