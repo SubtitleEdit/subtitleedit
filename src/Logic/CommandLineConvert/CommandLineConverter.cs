@@ -1482,7 +1482,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         {
                                             var sourceBitmap = binaryParagraphs[index].GetBitmap();
                                             var nbmp = new NikseBitmap(sourceBitmap);
-                                            nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.Black, true);
+                                            nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
                                             mp.Bitmap = nbmp.GetBitmap();
                                             sourceBitmap.Dispose();
                                             mp.Forced = binaryParagraphs[index].IsForced;
@@ -1494,7 +1494,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                         {
                                             var sourceBitmap = (Bitmap)Image.FromStream(ms);
                                             var nbmp = new NikseBitmap(sourceBitmap);
-                                            nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.Black, true);
+                                            nbmp.ConvertToFourColors(Color.Transparent, Color.White, Color.Black, true);
                                             mp.Bitmap = nbmp.GetBitmap();
                                             sourceBitmap.Dispose();
                                         }
