@@ -9175,133 +9175,17 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
                 if (p != null && next != null)
                 {
-                    string s = next.Text.Trim();
-
-                    // Find the first space.
-                    int startIndex = 0;
-                    if (s.StartsWith("{\\", StringComparison.Ordinal))
+                    var moveUpDown = new MoveWordUpDown(p.Text, next.Text);
+                    moveUpDown.MoveWordUp();
+                    if (moveUpDown.S1 != p.Text && moveUpDown.S2 != next.Text)
                     {
-                        var endTagIndex = s.IndexOf('}');
-                        if (endTagIndex > 0)
-                        {
-                            startIndex = endTagIndex;
-                        }
-                    }
-                    int idx = s.IndexOf(' ', startIndex);
-                    // If the first space is after a "-", even if there is "{\an8}<i>" before, find the second space.
-                    if (idx > 0 && s.Substring(idx - 1, 2) == "- ")
-                    {
-                        idx = idx + 1 + s.Substring(idx + 1).IndexOf(' ');
-                    }
-
-                    if (idx > 0 || s.Length > 0)
-                    // A first word was found or next subtitle is not empty (has one word).
-                    {
-                        // Undo
                         MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-
-                        // Define firstWord. If idx > 0, there is a first word.
-                        // If not, firstWord is the whole text of the next subtitle.
-                        string firstWord = (idx > 0 ? s.Substring(0, idx).Trim() : next.Text);
-
-                        // If firstWord contains a line break, it has two words.
-                        if (firstWord.Contains(Environment.NewLine))
-                        {
-                            // Redefine firstWord and idx.
-                            firstWord = firstWord.Remove(firstWord.IndexOf(Environment.NewLine, StringComparison.Ordinal));
-                            idx = s.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                        }
-
-                        // Remove first word from the next subtitle.
-                        // If there is only one word, 'next' will be empty.
-                        next.Text = (idx > 0 ? s.Substring(idx + 1).Trim() : string.Empty);
-
-                        // If the first subtitle ends with a tag (</i>):
-                        string endTag = string.Empty;
-                        if (p.Text.EndsWith('>') && p.Text.Contains('<'))
-                        {
-                            // Save the end tag.
-                            endTag = p.Text.Substring(p.Text.LastIndexOf('<'), p.Text.Length - p.Text.LastIndexOf('<'));
-                            // Remove the endTag from first subtitle.
-                            p.Text = p.Text.Remove(p.Text.LastIndexOf('<'));
-                        }
-
-                        // If the first subtitle ends with "...":
-                        bool firstSubtitleEndsWithEllipsis = p.Text.EndsWith("...", StringComparison.Ordinal);
-                        if (firstSubtitleEndsWithEllipsis)
-                        {
-                            // Remove "..." from first subtitle.
-                            p.Text = p.Text.TrimEnd('.');
-                        }
-
-                        // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        string positionTag = string.Empty;
-                        if (firstWord.StartsWith('{') && firstWord.Contains('}'))
-                        {
-                            // Save the start tag.
-                            positionTag = firstWord.Substring(firstWord.IndexOf('{'), firstWord.IndexOf('}') + 1);
-                            // Remove the position tag from the first word.
-                            firstWord = firstWord.Remove(0, firstWord.IndexOf('}') + 1);
-                        }
-
-                        // If the second subtitle (next) starts with a tag:
-                        string startTag = string.Empty;
-                        if (firstWord.StartsWith('<') && firstWord.Contains('>'))
-                        {
-                            // Save the start tag.
-                            startTag = firstWord.Substring(firstWord.IndexOf('<'), firstWord.IndexOf('>') + 1);
-                            // Remove the start tag from the first word.
-                            firstWord = firstWord.Remove(0, firstWord.IndexOf('>') + 1);
-                        }
-
-                        // If the second subtitle ends with a tag and there's only one word in it:
-                        if (next.Text.EndsWith('>') && next.Text.Contains('<') && !next.Text.Contains(' '))
-                        {
-                            // Remove the end tag.
-                            next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
-                        }
-
-                        // If the second subtitle (next) starts with a dialog ("-"):
-                        string dialogMarker = string.Empty;
-                        if (firstWord.StartsWith('-'))
-                        {
-                            // Save the dialog marker ("-" or "- ").
-                            dialogMarker = (firstWord.StartsWith("- ", StringComparison.Ordinal) ? "- " : "-");
-                            // Remove the dialog marker from the first word.
-                            firstWord = firstWord.Remove(0, dialogMarker.Length);
-                        }
-
-                        // If the second subtitle starts with "...":
-                        bool nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...", StringComparison.Ordinal);
-                        if (nextSubtitleStartsWithEllipsis)
-                        {
-                            // Remove "..." from the beginning of first word.
-                            firstWord = firstWord.TrimStart('.');
-                        }
-
-                        // Add positionTag + startTag + dialogMarker + "..." + text to 'next'.
-                        if (idx > 0)
-                        {
-                            next.Text = positionTag + startTag + dialogMarker + (nextSubtitleStartsWithEllipsis ? "..." : string.Empty) + next.Text.Trim();
-                        }
-
-                        // Add text + firstWord + "..." + endTag to First line.
-                        bool isEmpty = HtmlUtil.RemoveHtmlTags(p.Text, true).Length == 0;
-                        p.Text = (idx == 0 ? startTag : string.Empty) + p.Text.Trim() + (isEmpty ? string.Empty : " ") + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
-
-                        // Now, idx will hold the position of the last line break, if any.
-                        idx = p.Text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
-
-                        // Check if the last line of the subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
-                        if (HtmlUtil.RemoveHtmlTags(p.Text.Substring((idx > 0 ? idx + Environment.NewLine.Length : 0))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        {
-                            p.Text = Utilities.AutoBreakLine(p.Text);
-                        }
+                        p.Text = moveUpDown.S1;
+                        next.Text = moveUpDown.S2;
+                        SubtitleListview1.SetText(firstIndex, p.Text);
+                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        textBoxListViewText.Text = p.Text;
                     }
-
-                    SubtitleListview1.SetText(firstIndex, p.Text);
-                    SubtitleListview1.SetText(firstIndex + 1, next.Text);
-                    textBoxListViewText.Text = p.Text;
                 }
             }
         }
@@ -9315,123 +9199,17 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
                 if (p != null && next != null)
                 {
-                    string s = p.Text.Trim();
-                    int idx = s.LastIndexOf(' ');
-                    if (s.StartsWith("{\\", StringComparison.Ordinal))
+                    var moveUpDown = new MoveWordUpDown(p.Text, next.Text);
+                    moveUpDown.MoveWordDown();
+                    if (moveUpDown.S1 != p.Text && moveUpDown.S2 != next.Text)
                     {
-                        var endTagIndex = s.IndexOf('}');
-                        if (endTagIndex > 0 && idx < endTagIndex)
-                        {
-                            idx = endTagIndex+1;
-                        }
-
-                        if (idx >= s.Length - 1)
-                        {
-                            return;
-                        }
-                    }
-                    if (idx > 0 || s.Length > 0)
-                    // A last word was found or the first subtitle is not empty (has one word).
-                    {
-                        // Undo
                         MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
-
-                        // Define lastWord. If idx > 0, there is a last word.
-                        // If not, lastWord is the whole text of the first subtitle.
-                        string lastWord = idx > 0 ? s.Substring(idx).Trim() : p.Text;
-
-                        // If lastWord contains a line break, it has two words.
-                        if (lastWord.Contains(Environment.NewLine))
-                        {
-                            // Redefine lastWord and idx.
-                            lastWord = lastWord.Substring(lastWord.LastIndexOf(Environment.NewLine, StringComparison.Ordinal));
-                            idx = s.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
-                        }
-
-                        // Remove last word from the first subtitle.
-                        p.Text = idx > 0 ? s.Substring(0, idx).Trim() : string.Empty;
-
-                        // If the first subtitle ends with a tag (</i>):
-                        string endTag = string.Empty;
-                        if (lastWord.EndsWith('>') && lastWord.Contains('<'))
-                        {
-                            // Save the end tag.
-                            endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf('<'));
-                            // Remove the end tag from the last word.
-                            lastWord = lastWord.Remove(lastWord.LastIndexOf('<'));
-                        }
-
-                        // If the first subtitle ends with "...":
-                        bool firstSubtitleEndsWithEllipsis = lastWord.EndsWith("...", StringComparison.Ordinal);
-                        if (firstSubtitleEndsWithEllipsis)
-                        {
-                            // Remove "..." from the last word.
-                            lastWord = lastWord.TrimEnd('.');
-                        }
-
-                        // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        string positionTag = string.Empty;
-                        if (next.Text.StartsWith('{') && next.Text.Contains('}'))
-                        {
-                            // Save the start tag.
-                            positionTag = next.Text.Substring(next.Text.IndexOf('{'), next.Text.IndexOf('}') + 1);
-                            // Remove the position tag from next subtitle.
-                            next.Text = next.Text.Remove(0, next.Text.IndexOf('}') + 1);
-                        }
-
-                        // If the second subtitle (next) starts with a tag:
-                        string startTag = string.Empty;
-                        if (next.Text.StartsWith('<') && next.Text.Contains('>'))
-                        {
-                            // Save the start tag.
-                            startTag = next.Text.Substring(next.Text.IndexOf('<'), next.Text.IndexOf('>') + 1);
-                            // Remove the start tag from next subtitle.
-                            next.Text = next.Text.Remove(0, next.Text.IndexOf('>') + 1);
-                        }
-
-                        // If the second subtitle (next) starts with a dialog ("-"):
-                        string dialogMarker = string.Empty;
-                        if (next.Text.StartsWith('-'))
-                        {
-                            // Save the dialog marker ("-" or "- ").
-                            dialogMarker = (next.Text.StartsWith("- ", StringComparison.Ordinal) ? "- " : "-");
-                            // Remove the dialog marker from the next subtitle.
-                            next.Text = next.Text.Remove(0, dialogMarker.Length);
-                        }
-
-                        // If the second subtitle starts with "...":
-                        bool nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...", StringComparison.Ordinal);
-                        if (nextSubtitleStartsWithEllipsis)
-                        {
-                            // Remove "..." from the beginning of 'next'.
-                            next.Text = next.Text.TrimStart('.');
-                        }
-
-                        // Add text + "..." + endTag to first subtitle.
-                        if (idx > 0)
-                        {
-                            p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
-                        }
-
-                        // Add positionTag + startTag + dialogMarker + "..." + lastWord to 'next'.
-                        next.Text = (idx > 0 ? positionTag : string.Empty) +
-                                    (idx > 0 ? startTag : string.Empty) + dialogMarker +
-                                    (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : string.Empty) +
-                                    lastWord.Trim() + " " + next.Text.Trim();
-
-                        // Now, idx will hold the position of the first line break, if any.
-                        idx = next.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-
-                        // Check if the first line of the next subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
-                        if (HtmlUtil.RemoveHtmlTags(next.Text.Substring(0, (idx > 0 ? idx : next.Text.Length))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        {
-                            next.Text = Utilities.AutoBreakLine(next.Text);
-                        }
+                        p.Text = moveUpDown.S1;
+                        next.Text = moveUpDown.S2;
+                        SubtitleListview1.SetText(firstIndex, p.Text);
+                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        textBoxListViewText.Text = p.Text;
                     }
-
-                    SubtitleListview1.SetText(firstIndex, p.Text);
-                    SubtitleListview1.SetText(firstIndex + 1, next.Text);
-                    textBoxListViewText.Text = p.Text;
                 }
             }
         }
