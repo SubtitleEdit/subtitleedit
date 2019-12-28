@@ -578,6 +578,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>짧은 표시시간 수정하기</FixShortDisplayTimes>
     <FixLongDisplayTimes>긴 표시시간 수정하기</FixLongDisplayTimes>
+    <FixShortGaps>짧은 간격 수정</FixShortGaps>
     <FixInvalidItalicTags>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTags>
     <RemoveUnneededSpaces>불필요한 공백 제거하기</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>불필요한 마침표 제거하기</RemoveUnneededPeriods>
@@ -629,6 +630,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixInvalidItalicTag>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTag>
     <FixShortDisplayTime>짧은 표시시간 수정하기</FixShortDisplayTime>
     <FixOverlappingDisplayTime>중복된 표시시간 수정하기</FixOverlappingDisplayTime>
+    <FixShortGap>짧은 간격 수정</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;서울특별시&lt;i&gt; -&gt; &lt;i&gt;서울특별시&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>넌  정말  최고야! -&gt; 넌 정말 최고야!</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>안돼!. -&gt; 안돼!</RemoveUnneededPeriodsExample>
@@ -643,6 +645,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <XDisplayTimesProlonged>{0}개의 표시시간이 연장되었습니다.</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0}개의 잘못된 HTML 태그가 수정되었습니다.</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0}개의 표시시간이 단축되었습니다.</XDisplayTimesShortned>
+    <XGapsFixed>{0}개의 짧은 간격이 수정되었습니다.</XGapsFixed>
     <XLinesUnbreaked>{0}개가 줄바꿈 제거되었습니다.</XLinesUnbreaked>
     <UnneededSpace>불필요한 공백</UnneededSpace>
     <XUnneededSpacesRemoved>{0}개의 불필요한 공백이 제거되었습니다.</XUnneededSpacesRemoved>
@@ -2036,6 +2039,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <SyntaxColorTextIfTooLong>줄 당 문자수를 초과할 때</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>문자가 {0} 줄 보다 많을 때</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>표시시간이 중복될 때</SyntaxColorOverlap>
+    <SyntaxColorGap>간격이 너무 짧을 때</SyntaxColorGap>
     <SyntaxErrorColor>오류색 선택</SyntaxErrorColor>
     <GoToFirstSelectedLine>첫번째 선택한 줄로 이동</GoToFirstSelectedLine>
     <GoToNextEmptyLine>다음 빈 줄로 이동</GoToNextEmptyLine>
