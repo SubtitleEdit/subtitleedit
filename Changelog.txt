@@ -38,6 +38,8 @@
    * Fix "Save selected lines as..." issues - thx Milenko
    * Fix OcrFixReplaceLst_User issues - thx Maitch/xylographe
    * Fix crash in cmd line FixCommonErrors - thx Rouzax
+   * Fix crash when deleting last line in FCE - thx sir qrcz
+   * Minor fixes for export to "Spumux" - thx Isak
 
 
 3.5.11 (27th October 2019)
