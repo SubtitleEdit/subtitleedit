@@ -2084,7 +2084,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>문장의 마침을 위해 일찍 줄바꿈 (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>픽셀 너비로 줄바꿈</BreakByPixelWidth>
-    <BreakPreferBottomHeavy>Prefer bottom heavy</BreakPreferBottomHeavy>
+    <BreakPreferBottomHeavy>아래쪽 문장이 더 길게 줄바꿈</BreakPreferBottomHeavy>
     <BreakEarlyForDashDialog>대화 대시를 위해 일찍 줄바꿈</BreakEarlyForDashDialog>
     <BreakEarlyForComma>쉼표를 위해 일찍 줄바꿈</BreakEarlyForComma>
     <GoogleTranslate>Google 번역</GoogleTranslate>
@@ -2096,8 +2096,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <FontNote>※ 참고 : 이 글꼴 설정은 오직 Subtitle Edit UI에만 적용됩니다.
 자막의 글꼴 설정은 일반적으로 비디오 플레이어에서 이루어지나, "Advanced Sub Station Alpha" 또는 이미지 기반 형식으로 내보내기 처럼 
 글꼴 정보가 내장된 자막 형식을 사용할 때도 가능합니다.</FontNote>
-    <RestoreDefaultSettings>기본 설정 복원</RestoreDefaultSettings>
-    <RestoreDefaultSettingsMsg>모든 설정이 기본값으로 복원됩니다.
+    <RestoreDefaultSettings>설정 초기화</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>모든 설정이 기본값으로 초기화 됩니다.
 
 계속하시겠습니까?</RestoreDefaultSettingsMsg>
   </Settings>
