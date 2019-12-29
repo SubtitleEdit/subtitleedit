@@ -1404,12 +1404,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         string numberString = $"IMAGE{i:000}";
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
-
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
                             {
-                                var parameters = new EncoderParameters { Param = { [0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8) } };
+                                var parameters = new EncoderParameters { Param = { [0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 4) } };
 
                                 var nbmp = new NikseBitmap(param.Bitmap);
                                 var b = nbmp.ConvertTo8BitsPerPixel();
@@ -1421,13 +1420,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
-                        const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\" />";
+                        const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\" xoffset=\"{3}\" yoffset=\"{4}\" />";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";
 
                         double factor = TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate;
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
-                        sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.TopLeft)
+                        {
+                            left = param.LeftMargin;
+                        }
+                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.TopRight)
+                        {
+                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftMargin;
+                        }
+                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                        if (param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopRight)
+                        {
+                            top = param.BottomMargin;
+                        }
+                        sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName, left, top));
 
                         param.Saved = true;
                     }
