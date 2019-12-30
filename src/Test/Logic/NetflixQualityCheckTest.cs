@@ -55,7 +55,7 @@ namespace Test.Logic
             sub.Paragraphs.Add(p2);
 
             var controller = new NetflixQualityController();
-            var checker = new NetflixCheckDialogeHyphenSpace();
+            var checker = new NetflixCheckDialogHyphenSpace();
 
             checker.Check(sub, controller);
 
@@ -73,7 +73,7 @@ namespace Test.Logic
             sub.Paragraphs.Add(p2);
 
             var controller = new NetflixQualityController();
-            var checker = new NetflixCheckDialogeHyphenSpace();
+            var checker = new NetflixCheckDialogHyphenSpace();
 
             checker.Check(sub, controller);
 
@@ -91,7 +91,7 @@ namespace Test.Logic
             sub.Paragraphs.Add(p2);
 
             var controller = new NetflixQualityController() { Language = "fr" };
-            var checker = new NetflixCheckDialogeHyphenSpace();
+            var checker = new NetflixCheckDialogHyphenSpace();
 
             checker.Check(sub, controller);
 
@@ -109,7 +109,7 @@ namespace Test.Logic
             sub.Paragraphs.Add(p2);
 
             var controller = new NetflixQualityController() { Language = "fr" };
-            var checker = new NetflixCheckDialogeHyphenSpace();
+            var checker = new NetflixCheckDialogHyphenSpace();
 
             checker.Check(sub, controller);
 

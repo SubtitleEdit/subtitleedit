@@ -11,11 +11,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         private static void AddWhiteSpaceWarning(Paragraph p, NetflixQualityController report, int pos)
         {
-            string timecode = p.StartTime.ToHHMMSSFF();
+            string timeCode = p.StartTime.ToHHMMSSFF();
             string context = NetflixQualityController.StringContext(p.Text, pos, 6);
             string comment = string.Format(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckReport, pos);
 
-            report.AddRecord(p, timecode, context, comment);
+            report.AddRecord(p, timeCode, context, comment);
         }
 
         public void Check(Subtitle subtitle, NetflixQualityController controller)

@@ -1,9 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
-using System;
+﻿using System;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
-    public class NetflixCheckDialogeHyphenSpace : INetflixQualityChecker
+    public class NetflixCheckDialogHyphenSpace : INetflixQualityChecker
     {
 
         /// <summary>
@@ -11,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            if (controller.DualSpeakersHasHypenAndNoSplace)
+            if (controller.DualSpeakersHasHyphenAndNoSpace)
             {
                 RemoveSpaceAfterHyphenInDialogues(subtitle, controller);
             }
