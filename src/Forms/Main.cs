@@ -19089,8 +19089,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var pluginFiles = Directory.GetFiles(path, "*.DLL");
-
             int filePluginCount = 0;
             int toolsPluginCount = 0;
             int syncPluginCount = 0;
@@ -19104,7 +19102,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
 
-            foreach (var pluginFileName in pluginFiles)
+            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
                 try
                 {
@@ -26147,6 +26145,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 tb.Text = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after;
             }
+        }
+
+        private void toolStripMenuItemAutoTranslate_DropDownOpening(object sender, EventArgs e)
+        {
+            translatepoweredByMicrosoftToolStripMenuItem.Visible =
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint);
         }
     }
 }
