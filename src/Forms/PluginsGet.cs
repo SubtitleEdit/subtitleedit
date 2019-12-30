@@ -453,6 +453,8 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInstalledPlugins.Items[index].Selected = true;
                 listViewInstalledPlugins.Items[index].Focused = true;
             }
+            buttonUpdateAll.Visible = false;
+            DownloadPluginMetadataInfos();
         }
 
         private void buttonUpdateAll_Click(object sender, EventArgs e)
