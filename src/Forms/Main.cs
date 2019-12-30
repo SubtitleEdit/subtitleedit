@@ -25461,7 +25461,7 @@ namespace Nikse.SubtitleEdit.Forms
                 netflixController.FrameRate = _videoInfo.FramesPerSecond;
             }
 
-            netflixController.CheckAll(_subtitle);
+            netflixController.RunChecks(_subtitle);
 
             if (netflixController.Records.Count > 0)
             {
@@ -25476,6 +25476,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!isSaving)
                     {
                         dialog.ShowDialog(this);
+                        if (Configuration.Settings.General.ShowBetaStuff)
+                        {
+                            using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat()))
+                            {
+                                if (form.ShowDialog(this) == DialogResult.OK)
+                                {
+
+                                }
+                            }
+                        }
                     }
                     else
                     {

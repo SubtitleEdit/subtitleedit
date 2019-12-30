@@ -64,14 +64,14 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         private static readonly List<double> ValidFrameRates = new List<double>
         {
+            23.98,
+            24,
+            25,
             29.97,
             30,
-            59.94,
-            60,
-            25,
             50,
-            24,
-            23.98
+            59.94,
+            60
         };
 
         private static void CheckFrameRate(double fr, NetflixQualityController controller)

@@ -218,6 +218,12 @@
     <Compile Include="Forms\MultipleReplaceExportImport.Designer.cs">
       <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NetflixFixErrors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetflixFixErrors.Designer.cs">
+      <DependentUpon>NetflixFixErrors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1144,6 +1150,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MultipleReplaceExportImport.resx">
       <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetflixFixErrors.resx">
+      <DependentUpon>NetflixFixErrors.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>

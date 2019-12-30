@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (isAnyLinks)
             {
-                buttonsPosMid = btnOpen.Left + ((btnOk.Left + btnOk.Width) - btnOpen.Left) / 2;
+                buttonsPosMid = btnOpen.Left + (btnOk.Left + btnOk.Width - btnOpen.Left) / 2;
             }
             else
             {

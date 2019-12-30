@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 return;
             }
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 string newText = p.Text;
                 var m = NumberOneToNine.Match(newText);
