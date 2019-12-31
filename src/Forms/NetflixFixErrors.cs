@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
@@ -9,20 +11,30 @@ using static Nikse.SubtitleEdit.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class NetflixFixErrors : Form
+    public sealed partial class NetflixFixErrors : Form
     {
         private readonly Subtitle _subtitle;
         private readonly SubtitleFormat _subtitleFormat;
-        private readonly bool _loading;
+        private readonly string _subtitleFileName;
+        private bool _loading;
         private NetflixQualityController _netflixQualityController;
 
-        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat)
+        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName)
         {
             InitializeComponent();
 
             _subtitle = subtitle;
             _subtitleFormat = subtitleFormat;
+            _subtitleFileName = subtitleFileName;
 
+            labelTotal.Text = string.Empty;
+            linkLabelOpenReportFolder.Text = string.Empty;
+            Text = Configuration.Settings.Language.Main.Menu.ToolBar.NetflixQualityCheck;
+            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
+            groupBoxRules.Text = Configuration.Settings.Language.Settings.Rules;
+            checkBoxMinDuration.Text = Configuration.Settings.Language.NetflixQualityCheck.MinimumDuration;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             _loading = true;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             InitializeLanguages(language);
@@ -45,9 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxDialogHypenNoSpace.Checked = _netflixQualityController.DualSpeakersHasHyphenAndNoSpace;
             checkBoxDialogHypenNoSpace.Enabled = _netflixQualityController.DualSpeakersHasHyphenAndNoSpace;
 
-            checkBox17CharsPerSecond.Text = string.Format("Maximum {0} characters per second (excl. white spaces)", _netflixQualityController.CharactersPerSecond);
-            checkBoxMaxLineLength.Text = string.Format("Maximum line length ({0})", _netflixQualityController.SingleLineMaxLength);
-        }
+            checkBox17CharsPerSecond.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
+            checkBoxMaxLineLength.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
+        } 
 
         private void InitializeLanguages(string language)
         {
@@ -91,6 +103,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _netflixQualityController.RunChecks(_subtitle, GetAllSelectedChecks());
+            labelTotal.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, _netflixQualityController.Records.Count);
+            linkLabelOpenReportFolder.Left = labelTotal.Left + labelTotal.Width + 15;
+            linkLabelOpenReportFolder.Text = Configuration.Settings.Language.NetflixQualityCheck.OpenReportInFolder;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (var record in _netflixQualityController.Records)
@@ -207,9 +222,24 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-            InitializeLanguages(language);
-            RefreshCheckBoxes(language);
+            _loading = true;
+            var languageItem = (LanguageItem)comboBoxLanguage.Items[comboBoxLanguage.SelectedIndex];
+            RefreshCheckBoxes(languageItem.Code.TwoLetterISOLanguageName);
+            _loading = false;
+            RuleCheckedChanged(null, null);
+        }
+
+        private void linkLabelOpenReportFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("explorer.exe", $@"/select,""{MakeReport()}"" ");
+        }
+
+        private string MakeReport()
+        {
+            var fileName = string.IsNullOrEmpty(_subtitleFileName) ? "UntitledSubtitle" : Path.GetFileNameWithoutExtension(_subtitleFileName);
+            var reportPath = Path.GetTempPath() + fileName + "_NetflixQualityCheck.csv";
+            _netflixQualityController.SaveCsv(reportPath);
+            return reportPath;
         }
     }
 }

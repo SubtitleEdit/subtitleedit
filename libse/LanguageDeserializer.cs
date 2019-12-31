@@ -5899,11 +5899,23 @@ namespace Nikse.SubtitleEdit.Core
                 case "NetflixQualityCheck/ReportPrompt":
                     language.NetflixQualityCheck.ReportPrompt = reader.Value;
                     break;
+                case "NetflixQualityCheck/OpenReportInFolder":
+                    language.NetflixQualityCheck.OpenReportInFolder = reader.Value;
+                    break;
                 case "NetflixQualityCheck/FoundXIssues":
                     language.NetflixQualityCheck.FoundXIssues = reader.Value;
                     break;
                 case "NetflixQualityCheck/CheckOk":
                     language.NetflixQualityCheck.CheckOk = reader.Value;
+                    break;
+                case "NetflixQualityCheck/MaximumXCharsPerSecond":
+                    language.NetflixQualityCheck.MaximumXCharsPerSecond = reader.Value;
+                    break;
+                case "NetflixQualityCheck/MaximumLineLength":
+                    language.NetflixQualityCheck.MaximumLineLength = reader.Value;
+                    break;
+                case "NetflixQualityCheck/MinimumDuration":
+                    language.NetflixQualityCheck.MinimumDuration = reader.Value;
                     break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;
