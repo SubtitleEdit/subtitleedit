@@ -2486,7 +2486,11 @@ can edit in same subtitle file (collaboration)",
                 GlyphCheckReport = "Invalid character {0} found at column {1}",
                 WhiteSpaceCheckReport = "Invalid white space found at column {0}.",
                 ReportPrompt = "Please see full report here: {0}.",
-                FoundXIssues = "Netflix quality check found {0} issues.",
+                OpenReportInFolder = "Open report in folder",
+                FoundXIssues = "Netflix quality check found {0:#,###} issues.",
+                MaximumXCharsPerSecond = "Maximum {0} characters per second (excl. white spaces)",
+                MaximumLineLength = "Maximum line length ({0})",
+                MinimumDuration = "Minimum duration: 5/6 second (833 ms)",
                 CheckOk = "Netflix quality check OK :)",
             };
 

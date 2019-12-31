@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class NetflixFixErrors
+    sealed partial class NetflixFixErrors
     {
         /// <summary>
         /// Required designer variable.
@@ -54,6 +54,7 @@
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.linkLabelOpenReportFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxRules.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -366,11 +367,24 @@
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 318;
             // 
+            // linkLabelOpenReportFolder
+            // 
+            this.linkLabelOpenReportFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.linkLabelOpenReportFolder.AutoSize = true;
+            this.linkLabelOpenReportFolder.Location = new System.Drawing.Point(106, 587);
+            this.linkLabelOpenReportFolder.Name = "linkLabelOpenReportFolder";
+            this.linkLabelOpenReportFolder.Size = new System.Drawing.Size(92, 13);
+            this.linkLabelOpenReportFolder.TabIndex = 116;
+            this.linkLabelOpenReportFolder.TabStop = true;
+            this.linkLabelOpenReportFolder.Text = "Open report folder";
+            this.linkLabelOpenReportFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenReportFolder_LinkClicked);
+            // 
             // NetflixFixErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1040, 617);
+            this.Controls.Add(this.linkLabelOpenReportFolder);
             this.Controls.Add(this.labelTotal);
             this.Controls.Add(this.listViewFixes);
             this.Controls.Add(this.buttonCancel);
@@ -417,5 +431,6 @@
         private System.Windows.Forms.CheckBox checkBoxTtmlFrameRate;
         private System.Windows.Forms.CheckBox checkBoxMaxLineLength;
         private System.Windows.Forms.CheckBox checkBoxWhiteSpace;
+        private System.Windows.Forms.LinkLabel linkLabelOpenReportFolder;
     }
 }

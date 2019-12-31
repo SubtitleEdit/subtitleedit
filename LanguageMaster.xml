@@ -2177,8 +2177,12 @@ Continue?</RestoreDefaultSettingsMsg>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
-    <FoundXIssues>Netflix quality check found {0} issues.</FoundXIssues>
+    <OpenReportInFolder>Open report in folder</OpenReportInFolder>
+    <FoundXIssues>Netflix quality check found {0:#,###} issues.</FoundXIssues>
     <CheckOk>Netflix quality check OK :)</CheckOk>
+    <MaximumXCharsPerSecond>Maximum {0} characters per second (excl. white spaces)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Maximum line length ({0})</MaximumLineLength>
+    <MinimumDuration>Minimum duration: 5/6 second (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>

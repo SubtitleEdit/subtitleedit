@@ -25475,16 +25475,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!isSaving)
                     {
-                        dialog.ShowDialog(this);
                         if (Configuration.Settings.General.ShowBetaStuff)
                         {
-                            using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat()))
+                            using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat(), _fileName))
                             {
                                 if (form.ShowDialog(this) == DialogResult.OK)
                                 {
 
                                 }
                             }
+                        }
+                        else
+                        {
+                            dialog.ShowDialog(this);
                         }
                     }
                     else

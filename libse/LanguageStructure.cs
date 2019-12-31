@@ -2355,8 +2355,12 @@
             public string WhiteSpaceCheckReport { get; set; }
 
             public string ReportPrompt { get; set; }
+            public string OpenReportInFolder { get; set; }
             public string FoundXIssues { get; set; }
             public string CheckOk { get; set; }
+            public string MaximumXCharsPerSecond { get; set; }
+            public string MaximumLineLength { get; set; }
+            public string MinimumDuration { get; set; }
         }
 
         public class Split
