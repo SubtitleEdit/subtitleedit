@@ -197,12 +197,12 @@
             this.contextMenuStripLinesBackground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeBackToolStripMenuItem});
             this.contextMenuStripLinesBackground.Name = "contextMenuStripLines";
-            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(118, 26);
             // 
             // removeBackToolStripMenuItem
             // 
             this.removeBackToolStripMenuItem.Name = "removeBackToolStripMenuItem";
-            this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeBackToolStripMenuItem.Text = "Remove";
             this.removeBackToolStripMenuItem.Click += new System.EventHandler(this.removeBackToolStripMenuItem_Click);
             // 
@@ -235,7 +235,7 @@
             // removeForegroundToolStripMenuItem
             // 
             this.removeForegroundToolStripMenuItem.Name = "removeForegroundToolStripMenuItem";
-            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
             // 
@@ -306,7 +306,7 @@
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(107, 35);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(140, 21);
+            this.buttonDelete.Size = new System.Drawing.Size(140, 23);
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete character";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -335,7 +335,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(543, 437);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 17;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -347,7 +347,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(625, 437);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 18;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -358,7 +358,7 @@
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonImport.Location = new System.Drawing.Point(146, 433);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(106, 21);
+            this.buttonImport.Size = new System.Drawing.Size(106, 23);
             this.buttonImport.TabIndex = 19;
             this.buttonImport.Text = "&Import";
             this.buttonImport.UseVisualStyleBackColor = true;

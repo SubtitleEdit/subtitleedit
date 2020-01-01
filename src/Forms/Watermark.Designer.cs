@@ -43,7 +43,7 @@
             // 
             this.labelWatermark.AutoSize = true;
             this.labelWatermark.Location = new System.Drawing.Point(4, 19);
-            this.labelWatermark.Name = "LabelWatermark";
+            this.labelWatermark.Name = "labelWatermark";
             this.labelWatermark.Size = new System.Drawing.Size(62, 13);
             this.labelWatermark.TabIndex = 0;
             this.labelWatermark.Text = "Watermark:";
@@ -86,7 +86,7 @@
             this.radioButtonCurrentLine.AutoSize = true;
             this.radioButtonCurrentLine.Location = new System.Drawing.Point(6, 42);
             this.radioButtonCurrentLine.Name = "radioButtonCurrentLine";
-            this.radioButtonCurrentLine.Size = new System.Drawing.Size(122, 17);
+            this.radioButtonCurrentLine.Size = new System.Drawing.Size(119, 17);
             this.radioButtonCurrentLine.TabIndex = 1;
             this.radioButtonCurrentLine.Text = "Only on current line:";
             this.radioButtonCurrentLine.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@
             // 
             this.buttonGenerate.Location = new System.Drawing.Point(6, 65);
             this.buttonGenerate.Name = "buttonGenerate";
-            this.buttonGenerate.Size = new System.Drawing.Size(75, 21);
+            this.buttonGenerate.Size = new System.Drawing.Size(75, 23);
             this.buttonGenerate.TabIndex = 0;
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
@@ -105,7 +105,7 @@
             // 
             this.buttonRemove.Location = new System.Drawing.Point(7, 38);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(75, 21);
+            this.buttonRemove.Size = new System.Drawing.Size(75, 23);
             this.buttonRemove.TabIndex = 0;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             // 
             this.buttonOK.Location = new System.Drawing.Point(276, 175);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

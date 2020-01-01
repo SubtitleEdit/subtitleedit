@@ -69,9 +69,9 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(710, 523);
+            this.buttonOK.Location = new System.Drawing.Point(716, 515);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -81,9 +81,9 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(791, 523);
+            this.buttonCancel.Location = new System.Drawing.Point(797, 515);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 222);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(941, 296);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(941, 283);
             this.groupBoxLinesFound.TabIndex = 1;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found";
@@ -114,9 +114,10 @@
             this.columnHeaderAfter});
             this.listViewFixes.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewFixes.FullRowSelect = true;
+            this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(929, 273);
+            this.listViewFixes.Size = new System.Drawing.Size(929, 260);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -427,9 +428,9 @@
             // buttonApply
             // 
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(872, 523);
+            this.buttonApply.Location = new System.Drawing.Point(878, 515);
             this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(75, 21);
+            this.buttonApply.Size = new System.Drawing.Size(75, 23);
             this.buttonApply.TabIndex = 4;
             this.buttonApply.Text = "Apply";
             this.buttonApply.UseVisualStyleBackColor = true;

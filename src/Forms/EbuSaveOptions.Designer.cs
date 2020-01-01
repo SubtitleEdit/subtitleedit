@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -125,7 +125,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(607, 510);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "Save";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(688, 510);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -248,14 +248,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 14;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelColorRequiresTeletext
@@ -625,7 +625,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(613, 6);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(134, 21);
+            this.buttonImport.Size = new System.Drawing.Size(134, 23);
             this.buttonImport.TabIndex = 20;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;

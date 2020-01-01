@@ -50,7 +50,7 @@
             // labelTimeCodeStartOfProgramme
             // 
             this.labelTimeCodeStartOfProgramme.AutoSize = true;
-            this.labelTimeCodeStartOfProgramme.Location = new System.Drawing.Point(12, 180);
+            this.labelTimeCodeStartOfProgramme.Location = new System.Drawing.Point(12, 182);
             this.labelTimeCodeStartOfProgramme.Name = "labelTimeCodeStartOfProgramme";
             this.labelTimeCodeStartOfProgramme.Size = new System.Drawing.Size(152, 13);
             this.labelTimeCodeStartOfProgramme.TabIndex = 10;
@@ -60,9 +60,9 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(250, 264);
+            this.buttonOK.Location = new System.Drawing.Point(250, 262);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "Save";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -73,9 +73,9 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(331, 264);
+            this.buttonCancel.Location = new System.Drawing.Point(331, 262);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -87,7 +87,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(290, 12);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(116, 21);
+            this.buttonImport.Size = new System.Drawing.Size(116, 23);
             this.buttonImport.TabIndex = 14;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -99,7 +99,7 @@
             // 
             // textBoxComment
             // 
-            this.textBoxComment.Location = new System.Drawing.Point(185, 117);
+            this.textBoxComment.Location = new System.Drawing.Point(185, 119);
             this.textBoxComment.MaxLength = 24;
             this.textBoxComment.Name = "textBoxComment";
             this.textBoxComment.Size = new System.Drawing.Size(219, 20);
@@ -108,7 +108,7 @@
             // labelComment
             // 
             this.labelComment.AutoSize = true;
-            this.labelComment.Location = new System.Drawing.Point(13, 120);
+            this.labelComment.Location = new System.Drawing.Point(13, 122);
             this.labelComment.Name = "labelComment";
             this.labelComment.Size = new System.Drawing.Size(51, 13);
             this.labelComment.TabIndex = 6;
@@ -116,7 +116,7 @@
             // 
             // textBoxTranslatedTitle
             // 
-            this.textBoxTranslatedTitle.Location = new System.Drawing.Point(185, 39);
+            this.textBoxTranslatedTitle.Location = new System.Drawing.Point(185, 41);
             this.textBoxTranslatedTitle.MaxLength = 28;
             this.textBoxTranslatedTitle.Name = "textBoxTranslatedTitle";
             this.textBoxTranslatedTitle.Size = new System.Drawing.Size(219, 20);
@@ -125,7 +125,7 @@
             // labelTranslatedTitle
             // 
             this.labelTranslatedTitle.AutoSize = true;
-            this.labelTranslatedTitle.Location = new System.Drawing.Point(13, 42);
+            this.labelTranslatedTitle.Location = new System.Drawing.Point(13, 44);
             this.labelTranslatedTitle.Name = "labelTranslatedTitle";
             this.labelTranslatedTitle.Size = new System.Drawing.Size(76, 13);
             this.labelTranslatedTitle.TabIndex = 0;
@@ -133,7 +133,7 @@
             // 
             // textBoxOriginalTitle
             // 
-            this.textBoxOriginalTitle.Location = new System.Drawing.Point(185, 65);
+            this.textBoxOriginalTitle.Location = new System.Drawing.Point(185, 67);
             this.textBoxOriginalTitle.MaxLength = 24;
             this.textBoxOriginalTitle.Name = "textBoxOriginalTitle";
             this.textBoxOriginalTitle.Size = new System.Drawing.Size(219, 20);
@@ -142,7 +142,7 @@
             // labelOriginalTitle
             // 
             this.labelOriginalTitle.AutoSize = true;
-            this.labelOriginalTitle.Location = new System.Drawing.Point(13, 68);
+            this.labelOriginalTitle.Location = new System.Drawing.Point(13, 70);
             this.labelOriginalTitle.Name = "labelOriginalTitle";
             this.labelOriginalTitle.Size = new System.Drawing.Size(61, 13);
             this.labelOriginalTitle.TabIndex = 2;
@@ -150,7 +150,7 @@
             // 
             // textBoxTranslator
             // 
-            this.textBoxTranslator.Location = new System.Drawing.Point(185, 91);
+            this.textBoxTranslator.Location = new System.Drawing.Point(185, 93);
             this.textBoxTranslator.MaxLength = 24;
             this.textBoxTranslator.Name = "textBoxTranslator";
             this.textBoxTranslator.Size = new System.Drawing.Size(219, 20);
@@ -159,7 +159,7 @@
             // labelTranslator
             // 
             this.labelTranslator.AutoSize = true;
-            this.labelTranslator.Location = new System.Drawing.Point(13, 94);
+            this.labelTranslator.Location = new System.Drawing.Point(13, 96);
             this.labelTranslator.Name = "labelTranslator";
             this.labelTranslator.Size = new System.Drawing.Size(54, 13);
             this.labelTranslator.TabIndex = 4;
@@ -169,18 +169,19 @@
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(183, 175);
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(183, 177);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 24);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 11;
-            timeCode1.Hours = 99;
-            timeCode1.Milliseconds = 999;
-            timeCode1.Minutes = 59;
-            timeCode1.Seconds = 59;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
-            timeCode1.TotalMilliseconds = 359999999D;
-            timeCode1.TotalSeconds = 359999.999D;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
             this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
@@ -197,7 +198,7 @@
             "Hebrew",
             "Russian",
             "Romanian"});
-            this.comboBoxLanguage.Location = new System.Drawing.Point(185, 147);
+            this.comboBoxLanguage.Location = new System.Drawing.Point(185, 149);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(219, 21);
             this.comboBoxLanguage.TabIndex = 9;
@@ -205,7 +206,7 @@
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(16, 150);
+            this.labelLanguage.Location = new System.Drawing.Point(16, 152);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(55, 13);
             this.labelLanguage.TabIndex = 8;

@@ -53,7 +53,7 @@
             // 
             this.buttonFind.Location = new System.Drawing.Point(207, 11);
             this.buttonFind.Name = "buttonFind";
-            this.buttonFind.Size = new System.Drawing.Size(89, 21);
+            this.buttonFind.Size = new System.Drawing.Size(89, 23);
             this.buttonFind.TabIndex = 1;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
@@ -62,9 +62,9 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(207, 67);
+            this.buttonCancel.Location = new System.Drawing.Point(207, 69);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(89, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(89, 23);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -116,7 +116,7 @@
             // 
             // buttonCount
             // 
-            this.buttonCount.Location = new System.Drawing.Point(207, 38);
+            this.buttonCount.Location = new System.Drawing.Point(207, 40);
             this.buttonCount.Name = "buttonCount";
             this.buttonCount.Size = new System.Drawing.Size(89, 23);
             this.buttonCount.TabIndex = 2;

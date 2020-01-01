@@ -88,7 +88,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(692, 281);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -101,7 +101,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(487, 281);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             this.buttonSaveAs.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSaveAs.Location = new System.Drawing.Point(568, 281);
             this.buttonSaveAs.Name = "buttonSaveAs";
-            this.buttonSaveAs.Size = new System.Drawing.Size(118, 21);
+            this.buttonSaveAs.Size = new System.Drawing.Size(118, 23);
             this.buttonSaveAs.TabIndex = 4;
             this.buttonSaveAs.Text = "Save as...";
             this.buttonSaveAs.UseVisualStyleBackColor = true;

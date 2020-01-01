@@ -103,6 +103,7 @@
             this.columnHeader5,
             this.columnHeaderText});
             this.listViewFixes.FullRowSelect = true;
+            this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 19);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(971, 177);
@@ -132,7 +133,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(836, 501);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 51;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -145,7 +146,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(917, 501);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 52;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;

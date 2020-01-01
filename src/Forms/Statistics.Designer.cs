@@ -47,7 +47,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(642, 632);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -142,7 +142,7 @@
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.Location = new System.Drawing.Point(532, 632);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(104, 21);
+            this.buttonExport.Size = new System.Drawing.Size(104, 23);
             this.buttonExport.TabIndex = 2;
             this.buttonExport.Text = "Export";
             this.buttonExport.UseVisualStyleBackColor = true;

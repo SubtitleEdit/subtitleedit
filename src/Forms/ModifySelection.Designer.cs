@@ -34,6 +34,7 @@
             this.radioButtonAddToSelection = new System.Windows.Forms.RadioButton();
             this.radioButtonNewSelection = new System.Windows.Forms.RadioButton();
             this.groupBoxRule = new System.Windows.Forms.GroupBox();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.comboBoxRule = new System.Windows.Forms.ComboBox();
@@ -49,11 +50,10 @@
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStyle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelInfo = new System.Windows.Forms.Label();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.groupBoxWhatToDo.SuspendLayout();
             this.groupBoxRule.SuspendLayout();
-            this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
+            this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxWhatToDo
@@ -131,6 +131,19 @@
             this.groupBoxRule.TabStop = false;
             this.groupBoxRule.Text = "Rule";
             // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.Location = new System.Drawing.Point(198, 22);
+            this.numericUpDownDuration.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(82, 20);
+            this.numericUpDownDuration.TabIndex = 4;
+            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.numericUpDownDuration_ValueChanged);
+            // 
             // checkBoxCaseSensitive
             // 
             this.checkBoxCaseSensitive.AutoSize = true;
@@ -173,6 +186,7 @@
             this.columnHeaderStyleName});
             this.listViewStyles.FullRowSelect = true;
             this.listViewStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewStyles.HideSelection = false;
             this.listViewStyles.Location = new System.Drawing.Point(198, 21);
             this.listViewStyles.Name = "listViewStyles";
             this.listViewStyles.Size = new System.Drawing.Size(158, 108);
@@ -187,7 +201,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(621, 446);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -199,7 +213,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(540, 446);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -211,7 +225,7 @@
             this.buttonApply.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonApply.Location = new System.Drawing.Point(702, 446);
             this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(89, 21);
+            this.buttonApply.Size = new System.Drawing.Size(89, 23);
             this.buttonApply.TabIndex = 7;
             this.buttonApply.Text = "&Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
@@ -240,6 +254,7 @@
             this.columnHeaderStyle});
             this.listViewFixes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewFixes.FullRowSelect = true;
+            this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(3, 16);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(773, 267);
@@ -276,19 +291,6 @@
             this.labelInfo.TabIndex = 3;
             this.labelInfo.Text = "labelInfo";
             // 
-            // numericUpDownDuration
-            // 
-            this.numericUpDownDuration.Location = new System.Drawing.Point(198, 22);
-            this.numericUpDownDuration.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(82, 20);
-            this.numericUpDownDuration.TabIndex = 4;
-            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.numericUpDownDuration_ValueChanged);
-            // 
             // ModifySelection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -316,8 +318,8 @@
             this.groupBoxWhatToDo.PerformLayout();
             this.groupBoxRule.ResumeLayout(false);
             this.groupBoxRule.PerformLayout();
-            this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
+            this.groupBoxPreview.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

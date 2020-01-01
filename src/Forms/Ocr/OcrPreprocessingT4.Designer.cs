@@ -38,17 +38,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
-            this.numericUpDownScaling = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
-            this.groupBoxColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).BeginInit();
+            this.groupBoxColors.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelDescription
@@ -100,7 +100,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(741, 558);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -112,7 +112,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(660, 558);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -163,26 +163,23 @@
             this.groupBoxBinaryImageCompareThreshold.TabIndex = 29;
             this.groupBoxBinaryImageCompareThreshold.TabStop = false;
             // 
-            // groupBoxColors
+            // label4
             // 
-            this.groupBoxColors.Controls.Add(this.checkBoxInvertColors);
-            this.groupBoxColors.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxColors.Name = "groupBoxColors";
-            this.groupBoxColors.Size = new System.Drawing.Size(326, 216);
-            this.groupBoxColors.TabIndex = 31;
-            this.groupBoxColors.TabStop = false;
-            this.groupBoxColors.Text = "Colors";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(83, 183);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(15, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "%";
             // 
-            // checkBoxInvertColors
+            // label1
             // 
-            this.checkBoxInvertColors.AutoSize = true;
-            this.checkBoxInvertColors.Location = new System.Drawing.Point(9, 19);
-            this.checkBoxInvertColors.Name = "checkBoxInvertColors";
-            this.checkBoxInvertColors.Size = new System.Drawing.Size(84, 17);
-            this.checkBoxInvertColors.TabIndex = 27;
-            this.checkBoxInvertColors.Text = "Invert colors";
-            this.checkBoxInvertColors.UseVisualStyleBackColor = true;
-            this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 165);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Scaling";
             // 
             // numericUpDownScaling
             // 
@@ -207,23 +204,26 @@
             0});
             this.numericUpDownScaling.ValueChanged += new System.EventHandler(this.numericUpDownScaling_ValueChanged);
             // 
-            // label1
+            // groupBoxColors
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 165);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Scaling";
+            this.groupBoxColors.Controls.Add(this.checkBoxInvertColors);
+            this.groupBoxColors.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxColors.Name = "groupBoxColors";
+            this.groupBoxColors.Size = new System.Drawing.Size(326, 216);
+            this.groupBoxColors.TabIndex = 31;
+            this.groupBoxColors.TabStop = false;
+            this.groupBoxColors.Text = "Colors";
             // 
-            // label4
+            // checkBoxInvertColors
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(83, 183);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(15, 13);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "%";
+            this.checkBoxInvertColors.AutoSize = true;
+            this.checkBoxInvertColors.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxInvertColors.Name = "checkBoxInvertColors";
+            this.checkBoxInvertColors.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxInvertColors.TabIndex = 27;
+            this.checkBoxInvertColors.Text = "Invert colors";
+            this.checkBoxInvertColors.UseVisualStyleBackColor = true;
+            this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
             // 
             // OcrPreprocessingT4
             // 
@@ -252,9 +252,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
             this.groupBoxColors.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownScaling)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

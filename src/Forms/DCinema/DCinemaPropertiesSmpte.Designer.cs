@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
         /// </summary>
         private void InitializeComponent()
         {
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -123,14 +123,14 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 8;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // labelStartTime
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonToday.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonToday.Location = new System.Drawing.Point(461, 134);
             this.buttonToday.Name = "buttonToday";
-            this.buttonToday.Size = new System.Drawing.Size(100, 21);
+            this.buttonToday.Size = new System.Drawing.Size(100, 23);
             this.buttonToday.TabIndex = 5;
             this.buttonToday.Text = "Now";
             this.buttonToday.UseVisualStyleBackColor = true;
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonGenerateID.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGenerateID.Location = new System.Drawing.Point(461, 29);
             this.buttonGenerateID.Name = "buttonGenerateID";
-            this.buttonGenerateID.Size = new System.Drawing.Size(100, 21);
+            this.buttonGenerateID.Size = new System.Drawing.Size(100, 23);
             this.buttonGenerateID.TabIndex = 1;
             this.buttonGenerateID.Text = "Generate ID";
             this.buttonGenerateID.UseVisualStyleBackColor = true;
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonGenFontUri.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGenFontUri.Location = new System.Drawing.Point(454, 41);
             this.buttonGenFontUri.Name = "buttonGenFontUri";
-            this.buttonGenFontUri.Size = new System.Drawing.Size(100, 21);
+            this.buttonGenFontUri.Size = new System.Drawing.Size(100, 23);
             this.buttonGenFontUri.TabIndex = 2;
             this.buttonGenFontUri.Text = "Generate";
             this.buttonGenFontUri.UseVisualStyleBackColor = true;
@@ -578,7 +578,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(521, 529);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(440, 529);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

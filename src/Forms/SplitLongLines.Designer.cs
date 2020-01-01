@@ -72,6 +72,7 @@
             this.columnHeader5,
             this.columnHeader7});
             this.listViewFixes.FullRowSelect = true;
+            this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(738, 171);
@@ -142,7 +143,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(606, 581);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 6;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -155,7 +156,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(687, 581);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -245,6 +246,7 @@
             // 
             // SubtitleListview1
             // 
+            this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -253,6 +255,7 @@
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(12, 270);
             this.SubtitleListview1.Name = "SubtitleListview1";

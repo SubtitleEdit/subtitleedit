@@ -64,7 +64,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(644, 300);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -94,9 +94,9 @@
             // buttonAddBetterMatch
             // 
             this.buttonAddBetterMatch.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 89);
+            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 93);
             this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
-            this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 21);
+            this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 23);
             this.buttonAddBetterMatch.TabIndex = 28;
             this.buttonAddBetterMatch.Text = "Add better match";
             this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
@@ -143,9 +143,9 @@
             // buttonDelete
             // 
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDelete.Location = new System.Drawing.Point(120, 62);
+            this.buttonDelete.Location = new System.Drawing.Point(120, 64);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(140, 21);
+            this.buttonDelete.Size = new System.Drawing.Size(140, 23);
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -156,7 +156,7 @@
             this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(140, 21);
+            this.buttonUpdate.Size = new System.Drawing.Size(140, 23);
             this.buttonUpdate.TabIndex = 3;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -195,7 +195,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(563, 300);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 7;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

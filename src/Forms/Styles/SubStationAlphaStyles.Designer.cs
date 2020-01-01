@@ -218,7 +218,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(895, 569);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -230,7 +230,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(814, 569);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -260,7 +260,7 @@
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonExport.Location = new System.Drawing.Point(16, 311);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(82, 21);
+            this.buttonExport.Size = new System.Drawing.Size(82, 23);
             this.buttonExport.TabIndex = 6;
             this.buttonExport.Text = "Export...";
             this.buttonExport.UseVisualStyleBackColor = true;
@@ -272,7 +272,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(104, 311);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(82, 21);
+            this.buttonImport.Size = new System.Drawing.Size(82, 23);
             this.buttonImport.TabIndex = 5;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -284,7 +284,7 @@
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCopy.Location = new System.Drawing.Point(192, 311);
             this.buttonCopy.Name = "buttonCopy";
-            this.buttonCopy.Size = new System.Drawing.Size(82, 21);
+            this.buttonCopy.Size = new System.Drawing.Size(82, 23);
             this.buttonCopy.TabIndex = 1;
             this.buttonCopy.Text = "Copy";
             this.buttonCopy.UseVisualStyleBackColor = true;
@@ -296,7 +296,7 @@
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemoveAll.Location = new System.Drawing.Point(456, 311);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 21);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
             this.buttonRemoveAll.TabIndex = 4;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
@@ -308,7 +308,7 @@
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonAdd.Location = new System.Drawing.Point(280, 311);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(82, 21);
+            this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 2;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
@@ -320,7 +320,7 @@
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemove.Location = new System.Drawing.Point(368, 311);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(82, 21);
+            this.buttonRemove.Size = new System.Drawing.Size(82, 23);
             this.buttonRemove.TabIndex = 3;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -549,7 +549,7 @@
             // 
             this.buttonBackColor.Location = new System.Drawing.Point(212, 49);
             this.buttonBackColor.Name = "buttonBackColor";
-            this.buttonBackColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonBackColor.Size = new System.Drawing.Size(112, 23);
             this.buttonBackColor.TabIndex = 6;
             this.buttonBackColor.Text = "Shadow";
             this.buttonBackColor.UseVisualStyleBackColor = true;
@@ -568,7 +568,7 @@
             // 
             this.buttonOutlineColor.Location = new System.Drawing.Point(212, 22);
             this.buttonOutlineColor.Name = "buttonOutlineColor";
-            this.buttonOutlineColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonOutlineColor.Size = new System.Drawing.Size(112, 23);
             this.buttonOutlineColor.TabIndex = 4;
             this.buttonOutlineColor.Text = "Outline";
             this.buttonOutlineColor.UseVisualStyleBackColor = true;
@@ -587,7 +587,7 @@
             // 
             this.buttonSecondaryColor.Location = new System.Drawing.Point(7, 49);
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
-            this.buttonSecondaryColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonSecondaryColor.Size = new System.Drawing.Size(112, 23);
             this.buttonSecondaryColor.TabIndex = 2;
             this.buttonSecondaryColor.Text = "S&econdary";
             this.buttonSecondaryColor.UseVisualStyleBackColor = true;
@@ -606,7 +606,7 @@
             // 
             this.buttonPrimaryColor.Location = new System.Drawing.Point(7, 22);
             this.buttonPrimaryColor.Name = "buttonPrimaryColor";
-            this.buttonPrimaryColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonPrimaryColor.Size = new System.Drawing.Size(112, 23);
             this.buttonPrimaryColor.TabIndex = 0;
             this.buttonPrimaryColor.Text = "&Primary";
             this.buttonPrimaryColor.UseVisualStyleBackColor = true;

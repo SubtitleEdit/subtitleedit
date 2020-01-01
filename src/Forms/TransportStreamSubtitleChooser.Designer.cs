@@ -38,12 +38,12 @@
             this.vobSubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dOSTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSubtitleAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxSubtitles = new System.Windows.Forms.ListBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.textBoxTeletext = new System.Windows.Forms.TextBox();
-            this.saveSubtitleAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripListview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -126,6 +126,13 @@
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with HTML index view...";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
+            // saveSubtitleAsToolStripMenuItem
+            // 
+            this.saveSubtitleAsToolStripMenuItem.Name = "saveSubtitleAsToolStripMenuItem";
+            this.saveSubtitleAsToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.saveSubtitleAsToolStripMenuItem.Text = "Save subtitle as...";
+            this.saveSubtitleAsToolStripMenuItem.Click += new System.EventHandler(this.saveSubtitleAsToolStripMenuItem_Click);
+            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -133,7 +140,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(526, 450);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 60;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
@@ -144,7 +151,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(445, 450);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 54;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -184,13 +191,6 @@
             this.textBoxTeletext.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxTeletext.Size = new System.Drawing.Size(589, 273);
             this.textBoxTeletext.TabIndex = 61;
-            // 
-            // saveSubtitleAsToolStripMenuItem
-            // 
-            this.saveSubtitleAsToolStripMenuItem.Name = "saveSubtitleAsToolStripMenuItem";
-            this.saveSubtitleAsToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
-            this.saveSubtitleAsToolStripMenuItem.Text = "Save subtitle as...";
-            this.saveSubtitleAsToolStripMenuItem.Click += new System.EventHandler(this.saveSubtitleAsToolStripMenuItem_Click);
             // 
             // TransportStreamSubtitleChooser
             // 

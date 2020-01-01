@@ -175,7 +175,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(329, 373);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -188,7 +188,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(410, 373);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -942,7 +942,7 @@
             this.buttonAbort.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonAbort.Location = new System.Drawing.Point(491, 373);
             this.buttonAbort.Name = "buttonAbort";
-            this.buttonAbort.Size = new System.Drawing.Size(75, 21);
+            this.buttonAbort.Size = new System.Drawing.Size(75, 23);
             this.buttonAbort.TabIndex = 4;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
@@ -965,7 +965,7 @@
             this.buttonExpandSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonExpandSelection.Location = new System.Drawing.Point(453, 2);
             this.buttonExpandSelection.Name = "buttonExpandSelection";
-            this.buttonExpandSelection.Size = new System.Drawing.Size(112, 21);
+            this.buttonExpandSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonExpandSelection.TabIndex = 20;
             this.buttonExpandSelection.Text = "Expand selection";
             this.buttonExpandSelection.UseVisualStyleBackColor = true;
@@ -977,7 +977,7 @@
             this.buttonShrinkSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonShrinkSelection.Location = new System.Drawing.Point(335, 2);
             this.buttonShrinkSelection.Name = "buttonShrinkSelection";
-            this.buttonShrinkSelection.Size = new System.Drawing.Size(112, 21);
+            this.buttonShrinkSelection.Size = new System.Drawing.Size(112, 23);
             this.buttonShrinkSelection.TabIndex = 21;
             this.buttonShrinkSelection.Text = "Shrink selection";
             this.buttonShrinkSelection.UseVisualStyleBackColor = true;
@@ -989,7 +989,7 @@
             this.buttonLastEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonLastEdit.Location = new System.Drawing.Point(329, 345);
             this.buttonLastEdit.Name = "buttonLastEdit";
-            this.buttonLastEdit.Size = new System.Drawing.Size(156, 21);
+            this.buttonLastEdit.Size = new System.Drawing.Size(156, 23);
             this.buttonLastEdit.TabIndex = 22;
             this.buttonLastEdit.Text = "Edit:";
             this.buttonLastEdit.UseVisualStyleBackColor = true;
@@ -1011,7 +1011,7 @@
             this.buttonGuess.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGuess.Location = new System.Drawing.Point(211, 373);
             this.buttonGuess.Name = "buttonGuess";
-            this.buttonGuess.Size = new System.Drawing.Size(112, 21);
+            this.buttonGuess.Size = new System.Drawing.Size(112, 23);
             this.buttonGuess.TabIndex = 24;
             this.buttonGuess.Text = "Best guess";
             this.buttonGuess.UseVisualStyleBackColor = true;

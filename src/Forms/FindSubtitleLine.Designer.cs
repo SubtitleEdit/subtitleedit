@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(453, 315);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(534, 315);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonFind.Location = new System.Drawing.Point(196, 32);
             this.buttonFind.Name = "buttonFind";
-            this.buttonFind.Size = new System.Drawing.Size(75, 21);
+            this.buttonFind.Size = new System.Drawing.Size(75, 23);
             this.buttonFind.TabIndex = 1;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonFindNext.Location = new System.Drawing.Point(277, 32);
             this.buttonFindNext.Name = "buttonFindNext";
-            this.buttonFindNext.Size = new System.Drawing.Size(75, 21);
+            this.buttonFindNext.Size = new System.Drawing.Size(75, 23);
             this.buttonFindNext.TabIndex = 2;
             this.buttonFindNext.Text = "Find next";
             this.buttonFindNext.UseVisualStyleBackColor = true;

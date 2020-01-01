@@ -323,7 +323,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(625, 505);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -335,7 +335,7 @@
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSplit.Location = new System.Drawing.Point(544, 505);
             this.buttonSplit.Name = "buttonSplit";
-            this.buttonSplit.Size = new System.Drawing.Size(75, 21);
+            this.buttonSplit.Size = new System.Drawing.Size(75, 23);
             this.buttonSplit.TabIndex = 4;
             this.buttonSplit.Text = "&Split";
             this.buttonSplit.UseVisualStyleBackColor = true;
@@ -347,7 +347,7 @@
             this.buttonBasic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonBasic.Location = new System.Drawing.Point(440, 505);
             this.buttonBasic.Name = "buttonBasic";
-            this.buttonBasic.Size = new System.Drawing.Size(98, 21);
+            this.buttonBasic.Size = new System.Drawing.Size(98, 23);
             this.buttonBasic.TabIndex = 3;
             this.buttonBasic.Text = "&Basic";
             this.buttonBasic.UseVisualStyleBackColor = true;

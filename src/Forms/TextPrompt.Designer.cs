@@ -40,7 +40,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(166, 68);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -61,23 +61,23 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(85, 68);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // labelVoiceName
+            // labelDescription
             // 
             this.labelDescription.AutoSize = true;
             this.labelDescription.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelDescription.Location = new System.Drawing.Point(9, 20);
-            this.labelDescription.Name = "labelVoiceName";
+            this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(76, 13);
             this.labelDescription.TabIndex = 3;
             this.labelDescription.Text = "Name of voice";
             // 
-            // WebVttNewVoice
+            // TextPrompt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -90,7 +90,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "WebVttNewVoice";
+            this.Name = "TextPrompt";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

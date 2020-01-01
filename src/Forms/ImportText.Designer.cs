@@ -95,7 +95,7 @@
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOpenText.Location = new System.Drawing.Point(475, 19);
             this.buttonOpenText.Name = "buttonOpenText";
-            this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
+            this.buttonOpenText.Size = new System.Drawing.Size(143, 23);
             this.buttonOpenText.TabIndex = 4;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;
@@ -582,7 +582,7 @@
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRefresh.Location = new System.Drawing.Point(774, 735);
             this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
+            this.buttonRefresh.Size = new System.Drawing.Size(102, 23);
             this.buttonRefresh.TabIndex = 103;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
@@ -652,7 +652,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(963, 735);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 105;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -664,7 +664,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(882, 735);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 104;
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;

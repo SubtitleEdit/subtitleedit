@@ -224,7 +224,7 @@
             // 
             this.buttonFontColor.Location = new System.Drawing.Point(13, 127);
             this.buttonFontColor.Name = "buttonFontColor";
-            this.buttonFontColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonFontColor.Size = new System.Drawing.Size(112, 23);
             this.buttonFontColor.TabIndex = 4;
             this.buttonFontColor.Text = "Font color";
             this.buttonFontColor.UseVisualStyleBackColor = true;
@@ -260,7 +260,7 @@
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemoveAll.Location = new System.Drawing.Point(401, 328);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 21);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
             this.buttonRemoveAll.TabIndex = 3;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
@@ -272,7 +272,7 @@
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonAdd.Location = new System.Drawing.Point(225, 328);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(82, 21);
+            this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 1;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
@@ -284,7 +284,7 @@
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRemove.Location = new System.Drawing.Point(313, 328);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(82, 21);
+            this.buttonRemove.Size = new System.Drawing.Size(82, 23);
             this.buttonRemove.TabIndex = 2;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -344,7 +344,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(756, 373);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -356,7 +356,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(675, 373);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

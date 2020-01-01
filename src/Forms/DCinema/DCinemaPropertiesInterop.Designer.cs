@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonGenerateID.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonGenerateID.Location = new System.Drawing.Point(371, 29);
             this.buttonGenerateID.Name = "buttonGenerateID";
-            this.buttonGenerateID.Size = new System.Drawing.Size(100, 21);
+            this.buttonGenerateID.Size = new System.Drawing.Size(100, 23);
             this.buttonGenerateID.TabIndex = 1;
             this.buttonGenerateID.Text = "Generate ID";
             this.buttonGenerateID.UseVisualStyleBackColor = true;
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             // 
             this.buttonFontEffectColor.Location = new System.Drawing.Point(133, 128);
             this.buttonFontEffectColor.Name = "buttonFontEffectColor";
-            this.buttonFontEffectColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonFontEffectColor.Size = new System.Drawing.Size(112, 23);
             this.buttonFontEffectColor.TabIndex = 5;
             this.buttonFontEffectColor.Text = "Choose color";
             this.buttonFontEffectColor.UseVisualStyleBackColor = true;
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             // 
             this.buttonFontColor.Location = new System.Drawing.Point(133, 75);
             this.buttonFontColor.Name = "buttonFontColor";
-            this.buttonFontColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonFontColor.Size = new System.Drawing.Size(112, 23);
             this.buttonFontColor.TabIndex = 2;
             this.buttonFontColor.Text = "Choose color";
             this.buttonFontColor.UseVisualStyleBackColor = true;
@@ -479,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(597, 481);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -491,7 +491,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(516, 481);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

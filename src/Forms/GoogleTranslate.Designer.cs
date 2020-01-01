@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonTranslate.Location = new System.Drawing.Point(624, 34);
             this.buttonTranslate.Name = "buttonTranslate";
-            this.buttonTranslate.Size = new System.Drawing.Size(75, 21);
+            this.buttonTranslate.Size = new System.Drawing.Size(75, 23);
             this.buttonTranslate.TabIndex = 5;
             this.buttonTranslate.Text = "Translate";
             this.buttonTranslate.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(754, 529);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 6;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(835, 529);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;

@@ -54,8 +54,8 @@
             this.twolettercountrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.threelettercontrycodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twolettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelFileEndingSample = new System.Windows.Forms.Label();
             this.threelettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelFileEndingSample = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -69,7 +69,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(403, 278);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 90;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -82,7 +82,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(484, 278);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 100;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -306,7 +306,7 @@
             this.twolettercountrycodeuppercaseToolStripMenuItem,
             this.threelettercountrycodeuppercaseToolStripMenuItem});
             this.contextMenuStripFileNameAppend.Name = "contextMenuStripFileNameAppend";
-            this.contextMenuStripFileNameAppend.Size = new System.Drawing.Size(278, 114);
+            this.contextMenuStripFileNameAppend.Size = new System.Drawing.Size(278, 92);
             // 
             // twolettercountrycodeToolStripMenuItem
             // 
@@ -329,6 +329,13 @@
             this.twolettercountrycodeuppercaseToolStripMenuItem.Text = "{two-letter-country-code-uppercase}";
             this.twolettercountrycodeuppercaseToolStripMenuItem.Click += new System.EventHandler(this.TwoLetterCountryCodeUppercaseToolStripMenuItemClick);
             // 
+            // threelettercountrycodeuppercaseToolStripMenuItem
+            // 
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Name = "threelettercountrycodeuppercaseToolStripMenuItem";
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Text = "{three-letter-country-code-uppercase}";
+            this.threelettercountrycodeuppercaseToolStripMenuItem.Click += new System.EventHandler(this.ThreeLetterCountryCodeUppercaseToolStripMenuItemClick);
+            // 
             // labelFileEndingSample
             // 
             this.labelFileEndingSample.AutoSize = true;
@@ -338,13 +345,6 @@
             this.labelFileEndingSample.Size = new System.Drawing.Size(174, 13);
             this.labelFileEndingSample.TabIndex = 104;
             this.labelFileEndingSample.Text = "File name ending (before extension)";
-            // 
-            // threelettercountrycodeuppercaseToolStripMenuItem
-            // 
-            this.threelettercountrycodeuppercaseToolStripMenuItem.Name = "threelettercountrycodeuppercaseToolStripMenuItem";
-            this.threelettercountrycodeuppercaseToolStripMenuItem.Size = new System.Drawing.Size(277, 22);
-            this.threelettercountrycodeuppercaseToolStripMenuItem.Text = "{three-letter-country-code-uppercase}";
-            this.threelettercountrycodeuppercaseToolStripMenuItem.Click += new System.EventHandler(this.ThreeLetterCountryCodeUppercaseToolStripMenuItemClick);
             // 
             // BatchConvertTsSettings
             // 
