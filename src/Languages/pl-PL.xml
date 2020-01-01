@@ -177,8 +177,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <InputDescription>Pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
     <Status>Status</Status>
     <Output>Wyjście</Output>
-    <ChooseOutputFolder>Wybierz folder wyjściowy</ChooseOutputFolder>
-    <OverwriteExistingFiles>Nadpisz istniejące pliki</OverwriteExistingFiles>
+    <SaveInSourceFolder>Zapisz w folderze pliku źródłowego</SaveInSourceFolder>
+    <SaveInOutputFolder>Zapisz w folderze wyjściowym poniżej</SaveInOutputFolder>
+    <OverwriteFiles>Nadpisz pliki</OverwriteFiles>
     <Style>Styl...</Style>
     <UseStyleFromSource>Użyj stylu ze źródła</UseStyleFromSource>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
@@ -209,6 +210,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>Pliki SubRip (.srt) bez nagłówka UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
+    <FilterFileNameContains>Nazwa pliku zawiera...</FilterFileNameContains>
     <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Wielokrotne zastąpienia: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
@@ -581,6 +583,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixOverlappingDisplayTimes>Popraw zachodzące na siebie czasy wyświetlania</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Popraw zbyt krótkie czasy wyświetlania</FixShortDisplayTimes>
     <FixLongDisplayTimes>Popraw zbyt długie czasy wyświetlania</FixLongDisplayTimes>
+    <FixShortGaps>Popraw zbyt krótkie przerwy</FixShortGaps>
     <FixInvalidItalicTags>Popraw błędne tagi kursywy</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Usuń niepotrzebne spacje</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Usuń niepotrzebne kropki</RemoveUnneededPeriods>
@@ -618,7 +621,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <NothingToFix>Nie ma nic do poprawienia :-)</NothingToFix>
     <FixesFoundX>Znalezionych błędów: {0}</FixesFoundX>
     <XFixesApplied>Zastosowanych poprawek: {0}</XFixesApplied>
-    <NothingToFixBut>Nic nie poprawiono, ale jest kilka elementów, które można poprawić - zobacz szczegóły w Dzienniku</NothingToFixBut>
+    <NothingFixableBut>Nic nie mogło zostać naprawione automatycznie. Napisy zawierają błędy - szczegółowe informacje znajdują się w dzienniku.</NothingFixableBut>
+    <XFixedBut>{0} problem(-y/-ów) zostało naprawionych, ale napisy nadal zawierają błędy - szczegółowe informacje znajdują się w dzienniku</XFixedBut>
+    <XCouldBeFixedBut>{0} problem (-y/-ów) może zostać naprawionych, ale napisy nadal będą zawierały błędy - szczegółowe informacje znajdują się w dzienniku</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>Odznaczono "Popraw osamotnione małe litery 'i' na 'I' (angielski)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>Zmieniono {0} 'i' na wielkie litery</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Popraw pierwszą literę na wielką po akapicie</FixFirstLetterToUppercaseAfterParagraph>
@@ -630,6 +635,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixInvalidItalicTag>Popraw błędny tag kursywy</FixInvalidItalicTag>
     <FixShortDisplayTime>Popraw zbyt krótki czas wyświetlania</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Popraw zachodzące na siebie czasy wyświetlania</FixOverlappingDisplayTime>
+    <FixShortGap>Popraw zbyt krótkie przerwy</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hej   ty , tam. -&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej, ty!. -&gt; Hej, ty!</RemoveUnneededPeriodsExample>
@@ -644,6 +650,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <XDisplayTimesProlonged>Wydłużono {0} czasów wyświetlania</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>Poprawiono {0} błędnych tagów HTML</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Skrócono {0} czasów wyświetlania</XDisplayTimesShortned>
+    <XGapsFixed>Poprawiono {0} zbyt krótkich przerw</XGapsFixed>
     <XLinesUnbreaked>Usunięto {0} znaków łamania linii</XLinesUnbreaked>
     <UnneededSpace>Niepotrzebne spacje</UnneededSpace>
     <XUnneededSpacesRemoved>Usunięto {0} niepotrzebnych spacji</XUnneededSpacesRemoved>
@@ -1514,6 +1521,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Wstawianie napisów w pozycji waveform spowoduje zachodzenie na siebie napisów!
 
 Kontynuować mimo to?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Napisy zawierają ujemny czas trwania w wierszu(-ach): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Ustaw szybkość odtwarzania na {0}%</SetPlayRateX>
     <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a Subtitle Edit może otworzyć tylko plik .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
@@ -1784,6 +1792,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToPreviousBookmark>Przejdź do poprzedniej zakładki</GoToPreviousBookmark>
     <GoToNextBookmark>Przejdź do następnej zakładki</GoToNextBookmark>
     <ChooseProfile>Wybierz profil</ChooseProfile>
+    <DuplicateLine>Duplikat linii</DuplicateLine>
     <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
@@ -1994,6 +2003,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformSeekSilenceBack>Szukaj ciszy wstecz</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodaj tutaj tekst (dla nowego zaznaczenia)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Dodaj tutaj tekst (dla nowego zaznaczenia ze schowka)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>Ustaw bieżący jako nowy wybór</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
@@ -2033,6 +2043,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SyntaxColorTextIfTooLong>Koloruj tekst, jeśli jest zbyt długi</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Koloruj tekst, jeśli jest więcej niż {0} linii</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Koloruj nakładające się kody czasowe</SyntaxColorOverlap>
+    <SyntaxColorGap>Koloruj przerwy, jeśli są zbyt krótkie</SyntaxColorGap>
     <SyntaxErrorColor>Kolor błędu</SyntaxErrorColor>
     <GoToFirstSelectedLine>Przejdź do pierwszej zaznaczonej linii</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Przejdź do następnej pustej linii</GoToNextEmptyLine>
@@ -2065,6 +2076,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Przenieś w dół ostatnie słowo z pierwszej linii (bieżące napisy)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Zaznacz do wielkich liter</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>Zaznacz do Ruby (japoński)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Przełącz na automatyczny czas trwania</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Przełam na pierwszej spacji od pozycji kursora</MainTextBoxAutoBreakFromPos>
@@ -2074,6 +2086,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Miscellaneous>Inne</Miscellaneous>
     <CpsIncludesSpace>Znaków/sekundę (ZNS), włączając spacje</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Użyj listy wykluczeń (do auto łamania linii)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Przełam po znaku zakończenia linii (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Przełam wg szerokości w pikselach</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Prefeuj dolną linię większą</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Przełam przed myślnikiem dialogowym</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Przełam po przecinku</BreakEarlyForComma>
     <GoogleTranslate>Tłumacz Google</GoogleTranslate>
     <GoogleTranslateApiKey>Klucz API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Tłumacz Microsoft</MicrosoftBingTranslator>
@@ -2083,6 +2100,10 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <FontNote>Uwaga: Te ustawienia czcionek dotyczą tylko interfejsu użytkownika Subtitle Edit.
 Ustawienie czcionki napisów zwykle wykonywane jest w odtwarzaczu wideo, ale można to również zrobić w przypadku używania formatu napisów 
 z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha" lub poprzez eksport do formatów opartych na obrazie.</FontNote>
+    <RestoreDefaultSettings>Przywróć domyślne ustawienia</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Wszystkie ustawienia zostaną przywrócone do wartości domyślnych.
+
+Kontynuować?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>Ustawienia mpv</Title>
@@ -2156,8 +2177,12 @@ z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha"
     <GlyphCheckReport>Znaleziono nieprawidłowy znak {0} w kolumnie {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Znaleziono nieprawidłową spację w kolumnie {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Przeczytaj pełny raport tutaj: {0}.</ReportPrompt>
+    <OpenReportInFolder>Otwórz raport w folderze</OpenReportInFolder>
     <FoundXIssues>Kontrola jakości Netflix znalazła {0} problem/ów.</FoundXIssues>
     <CheckOk>Kontrola jakości Netflix OK :-)</CheckOk>
+    <MaximumXCharsPerSecond>Maksymalnie {0} znaków na sekundę (bez białych spacji)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Maksymalna długość linii ({0})</MaximumLineLength>
+    <MinimumDuration>Minimalny czas trwania: 5/6 sekund (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Podziel</Title>
@@ -2318,7 +2343,8 @@ z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha"
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Selektor napisów strumienia transportowego - {0}</Title>
-    <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
+    <PidLineImage>Obrazy - Identyfikator pakietu transportowego (PID) = {0}, język = {1}, ilość napisów = {2}</PidLineImage>
+    <PidLineTeletext>Teletekst - Identyfikator pakietu transportowego (PID) = {1}, strona {0}, język = {2}, ilość napisów = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} obraz(y)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2482,6 +2508,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <ZoomOut>Pomniejsz</ZoomOut>
     <AddParagraphHere>Dodaj tutaj tekst</AddParagraphHere>
     <AddParagraphHereAndPasteText>Dodaj tutaj tekst ze schowka systemowego</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Ustaw bieżący jako nowy wybór</SetParagraphAsSelection>
     <FocusTextBox>Koncentruj uwagę na polu tekstowym</FocusTextBox>
     <DeleteParagraph>Usuń tekst</DeleteParagraph>
     <Split>Podziel</Split>
