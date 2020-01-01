@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.listViewExportStyles = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.saveFileDialogStyle = new System.Windows.Forms.SaveFileDialog();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelStyles = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -45,6 +45,7 @@
             this.listViewExportStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listViewExportStyles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewExportStyles.HideSelection = false;
             this.listViewExportStyles.Location = new System.Drawing.Point(12, 38);
             this.listViewExportStyles.Name = "listViewExportStyles";
             this.listViewExportStyles.Size = new System.Drawing.Size(258, 187);
@@ -58,7 +59,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(111, 231);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -71,7 +72,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(195, 231);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;

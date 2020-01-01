@@ -124,7 +124,7 @@
             this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 204);
             this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
-            this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 23);
             this.buttonReplacesInverseSelection.TabIndex = 12;
             this.buttonReplacesInverseSelection.Text = "&Inverse selection";
             this.buttonReplacesInverseSelection.UseVisualStyleBackColor = true;
@@ -136,7 +136,7 @@
             this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 204);
             this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
-            this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonReplacesSelectAll.TabIndex = 11;
             this.buttonReplacesSelectAll.Text = "Select &all";
             this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
@@ -272,7 +272,7 @@
             this.buttonUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUpdate.Location = new System.Drawing.Point(704, 201);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(99, 21);
+            this.buttonUpdate.Size = new System.Drawing.Size(99, 23);
             this.buttonUpdate.TabIndex = 7;
             this.buttonUpdate.Text = "&Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -283,7 +283,7 @@
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.Location = new System.Drawing.Point(599, 201);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(99, 21);
+            this.buttonAdd.Size = new System.Drawing.Size(99, 23);
             this.buttonAdd.TabIndex = 6;
             this.buttonAdd.Text = "&Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
@@ -473,7 +473,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(804, 251);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 14;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -485,7 +485,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(885, 251);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 15;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -533,7 +533,7 @@
             this.buttonExportGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonExportGroups.Location = new System.Drawing.Point(118, 230);
             this.buttonExportGroups.Name = "buttonExportGroups";
-            this.buttonExportGroups.Size = new System.Drawing.Size(99, 21);
+            this.buttonExportGroups.Size = new System.Drawing.Size(99, 23);
             this.buttonExportGroups.TabIndex = 3;
             this.buttonExportGroups.Text = "Export";
             this.buttonExportGroups.UseVisualStyleBackColor = true;
@@ -544,7 +544,7 @@
             this.buttonImportGroups.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonImportGroups.Location = new System.Drawing.Point(8, 230);
             this.buttonImportGroups.Name = "buttonImportGroups";
-            this.buttonImportGroups.Size = new System.Drawing.Size(104, 21);
+            this.buttonImportGroups.Size = new System.Drawing.Size(104, 23);
             this.buttonImportGroups.TabIndex = 2;
             this.buttonImportGroups.Text = "Import";
             this.buttonImportGroups.UseVisualStyleBackColor = true;
@@ -555,7 +555,7 @@
             this.buttonNewGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonNewGroup.Location = new System.Drawing.Point(8, 203);
             this.buttonNewGroup.Name = "buttonNewGroup";
-            this.buttonNewGroup.Size = new System.Drawing.Size(209, 21);
+            this.buttonNewGroup.Size = new System.Drawing.Size(209, 23);
             this.buttonNewGroup.TabIndex = 1;
             this.buttonNewGroup.Text = "New";
             this.buttonNewGroup.UseVisualStyleBackColor = true;
@@ -684,7 +684,7 @@
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonApply.Location = new System.Drawing.Point(966, 251);
             this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(75, 21);
+            this.buttonApply.Size = new System.Drawing.Size(75, 23);
             this.buttonApply.TabIndex = 16;
             this.buttonApply.Text = "Apply";
             this.buttonApply.UseVisualStyleBackColor = true;

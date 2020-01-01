@@ -451,9 +451,9 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(506, 528);
+            this.buttonOK.Location = new System.Drawing.Point(506, 526);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -463,9 +463,9 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(587, 528);
+            this.buttonCancel.Location = new System.Drawing.Point(587, 526);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -1589,7 +1589,7 @@
             // 
             this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 224);
             this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
-            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
+            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 23);
             this.buttonListViewSyntaxColorError.TabIndex = 7;
             this.buttonListViewSyntaxColorError.Text = "Error color";
             this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
@@ -4446,9 +4446,9 @@
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReset.Location = new System.Drawing.Point(668, 528);
+            this.buttonReset.Location = new System.Drawing.Point(668, 526);
             this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(185, 21);
+            this.buttonReset.Size = new System.Drawing.Size(185, 23);
             this.buttonReset.TabIndex = 2;
             this.buttonReset.Text = "Restore default settings";
             this.buttonReset.UseVisualStyleBackColor = true;

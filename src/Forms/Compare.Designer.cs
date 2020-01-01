@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(884, 561);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(84, 21);
+            this.buttonOK.Size = new System.Drawing.Size(84, 23);
             this.buttonOK.TabIndex = 22;
             this.buttonOK.Text = "&Close";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOpenSubtitle1.Location = new System.Drawing.Point(9, 8);
             this.buttonOpenSubtitle1.Name = "buttonOpenSubtitle1";
-            this.buttonOpenSubtitle1.Size = new System.Drawing.Size(28, 22);
+            this.buttonOpenSubtitle1.Size = new System.Drawing.Size(28, 23);
             this.buttonOpenSubtitle1.TabIndex = 0;
             this.buttonOpenSubtitle1.Text = "...";
             this.buttonOpenSubtitle1.UseVisualStyleBackColor = true;
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOpenSubtitle2.Location = new System.Drawing.Point(491, 8);
             this.buttonOpenSubtitle2.Name = "buttonOpenSubtitle2";
-            this.buttonOpenSubtitle2.Size = new System.Drawing.Size(28, 22);
+            this.buttonOpenSubtitle2.Size = new System.Drawing.Size(28, 23);
             this.buttonOpenSubtitle2.TabIndex = 1;
             this.buttonOpenSubtitle2.Text = "...";
             this.buttonOpenSubtitle2.UseVisualStyleBackColor = true;
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNextDifference.Enabled = false;
             this.buttonNextDifference.Location = new System.Drawing.Point(168, 549);
             this.buttonNextDifference.Name = "buttonNextDifference";
-            this.buttonNextDifference.Size = new System.Drawing.Size(156, 21);
+            this.buttonNextDifference.Size = new System.Drawing.Size(156, 23);
             this.buttonNextDifference.TabIndex = 9;
             this.buttonNextDifference.Text = "&Next difference";
             this.buttonNextDifference.UseVisualStyleBackColor = true;
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPreviousDifference.Enabled = false;
             this.buttonPreviousDifference.Location = new System.Drawing.Point(6, 549);
             this.buttonPreviousDifference.Name = "buttonPreviousDifference";
-            this.buttonPreviousDifference.Size = new System.Drawing.Size(156, 21);
+            this.buttonPreviousDifference.Size = new System.Drawing.Size(156, 23);
             this.buttonPreviousDifference.TabIndex = 8;
             this.buttonPreviousDifference.Text = "&Previous difference";
             this.buttonPreviousDifference.UseVisualStyleBackColor = true;
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.Location = new System.Drawing.Point(774, 561);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(104, 21);
+            this.buttonExport.Size = new System.Drawing.Size(104, 23);
             this.buttonExport.TabIndex = 20;
             this.buttonExport.Text = "Export";
             this.buttonExport.UseVisualStyleBackColor = true;

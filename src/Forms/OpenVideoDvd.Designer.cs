@@ -52,9 +52,9 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(374, 133);
-            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(56, 20);
+            this.buttonCancel.Size = new System.Drawing.Size(56, 23);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -65,9 +65,9 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(314, 133);
-            this.buttonOK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(2);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(56, 20);
+            this.buttonOK.Size = new System.Drawing.Size(56, 23);
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -80,7 +80,7 @@
             this.PanelDrive.Controls.Add(this.comboBoxDrive);
             this.PanelDrive.Controls.Add(this.labelChooseDrive);
             this.PanelDrive.Location = new System.Drawing.Point(82, 31);
-            this.PanelDrive.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.PanelDrive.Margin = new System.Windows.Forms.Padding(2);
             this.PanelDrive.Name = "PanelDrive";
             this.PanelDrive.Size = new System.Drawing.Size(332, 81);
             this.PanelDrive.TabIndex = 1;
@@ -90,7 +90,7 @@
             this.comboBoxDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDrive.FormattingEnabled = true;
             this.comboBoxDrive.Location = new System.Drawing.Point(5, 24);
-            this.comboBoxDrive.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBoxDrive.Margin = new System.Windows.Forms.Padding(2);
             this.comboBoxDrive.Name = "comboBoxDrive";
             this.comboBoxDrive.Size = new System.Drawing.Size(288, 21);
             this.comboBoxDrive.TabIndex = 1;
@@ -112,7 +112,7 @@
             this.PanelFolder.Controls.Add(this.labelChooseFolder);
             this.PanelFolder.Controls.Add(this.textBoxFolder);
             this.PanelFolder.Location = new System.Drawing.Point(29, 76);
-            this.PanelFolder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.PanelFolder.Margin = new System.Windows.Forms.Padding(2);
             this.PanelFolder.Name = "PanelFolder";
             this.PanelFolder.Size = new System.Drawing.Size(332, 81);
             this.PanelFolder.TabIndex = 2;
@@ -148,7 +148,7 @@
             this.radioButtonDisc.AutoSize = true;
             this.radioButtonDisc.Checked = true;
             this.radioButtonDisc.Location = new System.Drawing.Point(11, 31);
-            this.radioButtonDisc.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonDisc.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonDisc.Name = "radioButtonDisc";
             this.radioButtonDisc.Size = new System.Drawing.Size(46, 17);
             this.radioButtonDisc.TabIndex = 0;
@@ -161,7 +161,7 @@
             // 
             this.radioButtonFolder.AutoSize = true;
             this.radioButtonFolder.Location = new System.Drawing.Point(11, 54);
-            this.radioButtonFolder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonFolder.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonFolder.Name = "radioButtonFolder";
             this.radioButtonFolder.Size = new System.Drawing.Size(54, 17);
             this.radioButtonFolder.TabIndex = 1;
@@ -177,9 +177,9 @@
             this.groupBoxOpenDvdFrom.Controls.Add(this.PanelFolder);
             this.groupBoxOpenDvdFrom.Controls.Add(this.PanelDrive);
             this.groupBoxOpenDvdFrom.Location = new System.Drawing.Point(9, 10);
-            this.groupBoxOpenDvdFrom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxOpenDvdFrom.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxOpenDvdFrom.Name = "groupBoxOpenDvdFrom";
-            this.groupBoxOpenDvdFrom.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBoxOpenDvdFrom.Padding = new System.Windows.Forms.Padding(2);
             this.groupBoxOpenDvdFrom.Size = new System.Drawing.Size(422, 118);
             this.groupBoxOpenDvdFrom.TabIndex = 0;
             this.groupBoxOpenDvdFrom.TabStop = false;
@@ -195,7 +195,7 @@
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OpenVideoDvd";

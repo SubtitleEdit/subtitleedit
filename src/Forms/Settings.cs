@@ -656,7 +656,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
 
-            groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak;
+            groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak.Replace("&", string.Empty);
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
             checkBoxToolsBreakEarlyComma.Text = language.BreakEarlyForComma;
             checkBoxToolsBreakEarlyDash.Text = language.BreakEarlyForDashDialog;

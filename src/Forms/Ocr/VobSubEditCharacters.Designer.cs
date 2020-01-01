@@ -85,7 +85,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(420, 397);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -95,7 +95,7 @@
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(120, 62);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(88, 21);
+            this.buttonDelete.Size = new System.Drawing.Size(88, 23);
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -193,7 +193,7 @@
             this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(88, 21);
+            this.buttonUpdate.Size = new System.Drawing.Size(88, 23);
             this.buttonUpdate.TabIndex = 3;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -249,7 +249,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(501, 397);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -271,7 +271,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(453, 27);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(123, 21);
+            this.buttonImport.Size = new System.Drawing.Size(123, 23);
             this.buttonImport.TabIndex = 9;
             this.buttonImport.Text = "&Import";
             this.buttonImport.UseVisualStyleBackColor = true;

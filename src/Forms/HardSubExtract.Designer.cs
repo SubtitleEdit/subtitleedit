@@ -26,6 +26,8 @@
             this.numericUpDownPixelsBottom = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.contextMenuStripScreenshot = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelClickOnTextColor = new System.Windows.Forms.Label();
             this.openFileDialogVideo = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -45,17 +47,15 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.buttonStop = new System.Windows.Forms.Button();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.contextMenuStripScreenshot = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustomColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.contextMenuStripScreenshot.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.contextMenuStripScreenshot.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -176,6 +176,20 @@
             this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
             this.pictureBox2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseClick);
             // 
+            // contextMenuStripScreenshot
+            // 
+            this.contextMenuStripScreenshot.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageAsToolStripMenuItem});
+            this.contextMenuStripScreenshot.Name = "contextMenuStripScreenshot";
+            this.contextMenuStripScreenshot.Size = new System.Drawing.Size(158, 26);
+            // 
+            // saveImageAsToolStripMenuItem
+            // 
+            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
+            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
+            // 
             // labelClickOnTextColor
             // 
             this.labelClickOnTextColor.AutoSize = true;
@@ -193,7 +207,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(797, 695);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 25;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -205,7 +219,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(716, 695);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 24;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -336,6 +350,7 @@
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.mediaPlayer.CurrentPosition = 0D;
             this.mediaPlayer.FontSizeFactor = 1F;
+            this.mediaPlayer.LastParagraph = null;
             this.mediaPlayer.Location = new System.Drawing.Point(369, 19);
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
@@ -343,6 +358,7 @@
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
             this.mediaPlayer.Size = new System.Drawing.Size(503, 247);
+            this.mediaPlayer.SmpteMode = false;
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 23;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -350,20 +366,6 @@
             this.mediaPlayer.VideoPlayer = null;
             this.mediaPlayer.VideoWidth = 0;
             this.mediaPlayer.Volume = 0D;
-            // 
-            // contextMenuStripScreenshot
-            // 
-            this.contextMenuStripScreenshot.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveImageAsToolStripMenuItem});
-            this.contextMenuStripScreenshot.Name = "contextMenuStripScreenshot";
-            this.contextMenuStripScreenshot.Size = new System.Drawing.Size(158, 26);
-            // 
-            // saveImageAsToolStripMenuItem
-            // 
-            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
-            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
             // HardSubExtract
             // 
@@ -397,11 +399,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCustomMaxDiff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsBottom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.contextMenuStripScreenshot.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.contextMenuStripScreenshot.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

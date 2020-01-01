@@ -288,7 +288,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(788, 577);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 9;
             this.buttonCancel.Text = "&OK";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -300,7 +300,7 @@
             this.buttonSaveAsPes.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSaveAsPes.Location = new System.Drawing.Point(633, 577);
             this.buttonSaveAsPes.Name = "buttonSaveAsPes";
-            this.buttonSaveAsPes.Size = new System.Drawing.Size(149, 21);
+            this.buttonSaveAsPes.Size = new System.Drawing.Size(149, 23);
             this.buttonSaveAsPes.TabIndex = 8;
             this.buttonSaveAsPes.Text = "Write as PES packets...";
             this.buttonSaveAsPes.UseVisualStyleBackColor = true;
@@ -1443,7 +1443,7 @@
             this.buttonSaveAsM2ts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSaveAsM2ts.Location = new System.Drawing.Point(478, 577);
             this.buttonSaveAsM2ts.Name = "buttonSaveAsM2ts";
-            this.buttonSaveAsM2ts.Size = new System.Drawing.Size(149, 21);
+            this.buttonSaveAsM2ts.Size = new System.Drawing.Size(149, 23);
             this.buttonSaveAsM2ts.TabIndex = 113;
             this.buttonSaveAsM2ts.Text = "Write as M2TS packets...";
             this.buttonSaveAsM2ts.UseVisualStyleBackColor = true;

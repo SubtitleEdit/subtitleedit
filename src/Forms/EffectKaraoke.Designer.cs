@@ -109,18 +109,18 @@
             // 
             this.buttonCancel.BackColor = System.Drawing.SystemColors.Control;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(353, 181);
+            this.buttonCancel.Location = new System.Drawing.Point(353, 173);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 44;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(272, 181);
+            this.buttonOK.Location = new System.Drawing.Point(272, 173);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 43;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -156,7 +156,7 @@
             // 
             this.buttonPreview.Location = new System.Drawing.Point(12, 154);
             this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(100, 21);
+            this.buttonPreview.Size = new System.Drawing.Size(100, 23);
             this.buttonPreview.TabIndex = 39;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;

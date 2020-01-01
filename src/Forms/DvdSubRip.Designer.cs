@@ -111,7 +111,7 @@
             // 
             this.buttonClear.Location = new System.Drawing.Point(446, 133);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(92, 22);
+            this.buttonClear.Size = new System.Drawing.Size(92, 23);
             this.buttonClear.TabIndex = 9;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -178,7 +178,7 @@
             // 
             this.ButtonRemoveVob.Location = new System.Drawing.Point(447, 105);
             this.ButtonRemoveVob.Name = "ButtonRemoveVob";
-            this.ButtonRemoveVob.Size = new System.Drawing.Size(91, 22);
+            this.ButtonRemoveVob.Size = new System.Drawing.Size(91, 23);
             this.ButtonRemoveVob.TabIndex = 8;
             this.ButtonRemoveVob.Text = "Remove";
             this.ButtonRemoveVob.UseVisualStyleBackColor = true;
@@ -188,7 +188,7 @@
             // 
             this.ButtonMoveVobDown.Location = new System.Drawing.Point(446, 189);
             this.ButtonMoveVobDown.Name = "ButtonMoveVobDown";
-            this.ButtonMoveVobDown.Size = new System.Drawing.Size(92, 22);
+            this.ButtonMoveVobDown.Size = new System.Drawing.Size(92, 23);
             this.ButtonMoveVobDown.TabIndex = 12;
             this.ButtonMoveVobDown.Text = "Move down";
             this.ButtonMoveVobDown.UseVisualStyleBackColor = true;
@@ -198,7 +198,7 @@
             // 
             this.ButtonMoveVobUp.Location = new System.Drawing.Point(447, 161);
             this.ButtonMoveVobUp.Name = "ButtonMoveVobUp";
-            this.ButtonMoveVobUp.Size = new System.Drawing.Size(91, 22);
+            this.ButtonMoveVobUp.Size = new System.Drawing.Size(91, 23);
             this.ButtonMoveVobUp.TabIndex = 10;
             this.ButtonMoveVobUp.Text = "Move up";
             this.ButtonMoveVobUp.UseVisualStyleBackColor = true;
@@ -208,7 +208,7 @@
             // 
             this.buttonAddVobFile.Location = new System.Drawing.Point(447, 77);
             this.buttonAddVobFile.Name = "buttonAddVobFile";
-            this.buttonAddVobFile.Size = new System.Drawing.Size(91, 22);
+            this.buttonAddVobFile.Size = new System.Drawing.Size(91, 23);
             this.buttonAddVobFile.TabIndex = 5;
             this.buttonAddVobFile.Text = "Add...";
             this.buttonAddVobFile.UseVisualStyleBackColor = true;

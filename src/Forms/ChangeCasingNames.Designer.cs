@@ -31,6 +31,9 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxNames = new System.Windows.Forms.GroupBox();
+            this.buttonAddCustomNames = new System.Windows.Forms.Button();
+            this.textBoxExtraNames = new System.Windows.Forms.TextBox();
+            this.labelExtraNames = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
             this.listViewNames = new System.Windows.Forms.ListView();
@@ -43,9 +46,6 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelXLinesSelected = new System.Windows.Forms.Label();
-            this.labelExtraNames = new System.Windows.Forms.Label();
-            this.textBoxExtraNames = new System.Windows.Forms.TextBox();
-            this.buttonAddCustomNames = new System.Windows.Forms.Button();
             this.groupBoxNames.SuspendLayout();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +55,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(591, 602);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 14;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -67,7 +67,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(672, 602);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 15;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -89,13 +89,42 @@
             this.groupBoxNames.TabStop = false;
             this.groupBoxNames.Text = "Names found in subtitle";
             // 
+            // buttonAddCustomNames
+            // 
+            this.buttonAddCustomNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddCustomNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAddCustomNames.Location = new System.Drawing.Point(640, 262);
+            this.buttonAddCustomNames.Name = "buttonAddCustomNames";
+            this.buttonAddCustomNames.Size = new System.Drawing.Size(100, 23);
+            this.buttonAddCustomNames.TabIndex = 11;
+            this.buttonAddCustomNames.Text = "Add";
+            this.buttonAddCustomNames.UseVisualStyleBackColor = true;
+            this.buttonAddCustomNames.Click += new System.EventHandler(this.buttonAddCustomNames_Click);
+            // 
+            // textBoxExtraNames
+            // 
+            this.textBoxExtraNames.Location = new System.Drawing.Point(10, 263);
+            this.textBoxExtraNames.Name = "textBoxExtraNames";
+            this.textBoxExtraNames.Size = new System.Drawing.Size(624, 21);
+            this.textBoxExtraNames.TabIndex = 10;
+            // 
+            // labelExtraNames
+            // 
+            this.labelExtraNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelExtraNames.AutoSize = true;
+            this.labelExtraNames.Location = new System.Drawing.Point(7, 246);
+            this.labelExtraNames.Name = "labelExtraNames";
+            this.labelExtraNames.Size = new System.Drawing.Size(172, 13);
+            this.labelExtraNames.TabIndex = 17;
+            this.labelExtraNames.Text = "Extra names (separate by comma)";
+            // 
             // buttonInverseSelection
             // 
             this.buttonInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonInverseSelection.Location = new System.Drawing.Point(88, 202);
             this.buttonInverseSelection.Name = "buttonInverseSelection";
-            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 23);
             this.buttonInverseSelection.TabIndex = 9;
             this.buttonInverseSelection.Text = "Inverse selection";
             this.buttonInverseSelection.UseVisualStyleBackColor = true;
@@ -107,7 +136,7 @@
             this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSelectAll.Location = new System.Drawing.Point(7, 202);
             this.buttonSelectAll.Name = "buttonSelectAll";
-            this.buttonSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonSelectAll.TabIndex = 8;
             this.buttonSelectAll.Text = "Select all";
             this.buttonSelectAll.UseVisualStyleBackColor = true;
@@ -205,35 +234,6 @@
             this.labelXLinesSelected.Size = new System.Drawing.Size(78, 13);
             this.labelXLinesSelected.TabIndex = 16;
             this.labelXLinesSelected.Text = "XLinesSelected";
-            // 
-            // labelExtraNames
-            // 
-            this.labelExtraNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelExtraNames.AutoSize = true;
-            this.labelExtraNames.Location = new System.Drawing.Point(7, 246);
-            this.labelExtraNames.Name = "labelExtraNames";
-            this.labelExtraNames.Size = new System.Drawing.Size(172, 13);
-            this.labelExtraNames.TabIndex = 17;
-            this.labelExtraNames.Text = "Extra names (separate by comma)";
-            // 
-            // textBoxExtraNames
-            // 
-            this.textBoxExtraNames.Location = new System.Drawing.Point(10, 263);
-            this.textBoxExtraNames.Name = "textBoxExtraNames";
-            this.textBoxExtraNames.Size = new System.Drawing.Size(624, 21);
-            this.textBoxExtraNames.TabIndex = 10;
-            // 
-            // buttonAddCustomNames
-            // 
-            this.buttonAddCustomNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAddCustomNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddCustomNames.Location = new System.Drawing.Point(640, 262);
-            this.buttonAddCustomNames.Name = "buttonAddCustomNames";
-            this.buttonAddCustomNames.Size = new System.Drawing.Size(100, 21);
-            this.buttonAddCustomNames.TabIndex = 11;
-            this.buttonAddCustomNames.Text = "Add";
-            this.buttonAddCustomNames.UseVisualStyleBackColor = true;
-            this.buttonAddCustomNames.Click += new System.EventHandler(this.buttonAddCustomNames_Click);
             // 
             // ChangeCasingNames
             // 

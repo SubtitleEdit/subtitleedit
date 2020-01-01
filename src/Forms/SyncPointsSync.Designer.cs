@@ -85,7 +85,7 @@
             this.buttonFindTextOther.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFindTextOther.Location = new System.Drawing.Point(976, 407);
             this.buttonFindTextOther.Name = "buttonFindTextOther";
-            this.buttonFindTextOther.Size = new System.Drawing.Size(106, 21);
+            this.buttonFindTextOther.Size = new System.Drawing.Size(106, 23);
             this.buttonFindTextOther.TabIndex = 34;
             this.buttonFindTextOther.Text = "Find text...";
             this.buttonFindTextOther.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@
             this.buttonFindText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFindText.Location = new System.Drawing.Point(369, 407);
             this.buttonFindText.Name = "buttonFindText";
-            this.buttonFindText.Size = new System.Drawing.Size(106, 21);
+            this.buttonFindText.Size = new System.Drawing.Size(106, 23);
             this.buttonFindText.TabIndex = 33;
             this.buttonFindText.Text = "Find text...";
             this.buttonFindText.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@
             this.buttonRemoveSyncPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.buttonRemoveSyncPoint.Location = new System.Drawing.Point(484, 170);
             this.buttonRemoveSyncPoint.Name = "buttonRemoveSyncPoint";
-            this.buttonRemoveSyncPoint.Size = new System.Drawing.Size(138, 21);
+            this.buttonRemoveSyncPoint.Size = new System.Drawing.Size(138, 23);
             this.buttonRemoveSyncPoint.TabIndex = 14;
             this.buttonRemoveSyncPoint.Text = "Remove sync point";
             this.buttonRemoveSyncPoint.UseVisualStyleBackColor = true;
@@ -178,9 +178,9 @@
             // buttonSetSyncPoint
             // 
             this.buttonSetSyncPoint.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.buttonSetSyncPoint.Location = new System.Drawing.Point(484, 143);
+            this.buttonSetSyncPoint.Location = new System.Drawing.Point(484, 141);
             this.buttonSetSyncPoint.Name = "buttonSetSyncPoint";
-            this.buttonSetSyncPoint.Size = new System.Drawing.Size(138, 21);
+            this.buttonSetSyncPoint.Size = new System.Drawing.Size(138, 23);
             this.buttonSetSyncPoint.TabIndex = 13;
             this.buttonSetSyncPoint.Text = "Set sync point";
             this.buttonSetSyncPoint.UseVisualStyleBackColor = true;
@@ -229,7 +229,7 @@
             this.buttonApplySync.Enabled = false;
             this.buttonApplySync.Location = new System.Drawing.Point(1029, 452);
             this.buttonApplySync.Name = "buttonApplySync";
-            this.buttonApplySync.Size = new System.Drawing.Size(80, 21);
+            this.buttonApplySync.Size = new System.Drawing.Size(80, 23);
             this.buttonApplySync.TabIndex = 15;
             this.buttonApplySync.Text = "Apply";
             this.buttonApplySync.UseVisualStyleBackColor = true;
@@ -241,7 +241,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(948, 452);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 19;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -253,7 +253,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(867, 452);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 18;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;

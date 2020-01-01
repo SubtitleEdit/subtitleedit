@@ -44,6 +44,7 @@
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
+            this.buttonSwapFrameRate = new System.Windows.Forms.Button();
             this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
             this.labelToFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
@@ -97,7 +98,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.buttonSwapFrameRate = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxMergeShortLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
@@ -118,7 +118,7 @@
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonConvert.Location = new System.Drawing.Point(844, 618);
             this.buttonConvert.Name = "buttonConvert";
-            this.buttonConvert.Size = new System.Drawing.Size(98, 21);
+            this.buttonConvert.Size = new System.Drawing.Size(98, 23);
             this.buttonConvert.TabIndex = 2;
             this.buttonConvert.Text = "&Convert";
             this.buttonConvert.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(948, 618);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "&Done";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -294,6 +294,17 @@
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             this.groupBoxChangeFrameRate.Visible = false;
+            // 
+            // buttonSwapFrameRate
+            // 
+            this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSwapFrameRate.Location = new System.Drawing.Point(237, 28);
+            this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
+            this.buttonSwapFrameRate.Size = new System.Drawing.Size(23, 28);
+            this.buttonSwapFrameRate.TabIndex = 9;
+            this.buttonSwapFrameRate.Text = "🡙";
+            this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
+            this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
             // 
             // comboBoxFrameRateTo
             // 
@@ -873,17 +884,6 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // buttonSwapFrameRate
-            // 
-            this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSwapFrameRate.Location = new System.Drawing.Point(237, 28);
-            this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
-            this.buttonSwapFrameRate.Size = new System.Drawing.Size(23, 28);
-            this.buttonSwapFrameRate.TabIndex = 9;
-            this.buttonSwapFrameRate.Text = "🡙";
-            this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
-            this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
             // 
             // BatchConvert
             // 

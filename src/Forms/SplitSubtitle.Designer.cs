@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonGetFrameRate = new System.Windows.Forms.Button();
             this.buttonDone = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
@@ -44,7 +45,7 @@
             // 
             this.buttonGetFrameRate.Location = new System.Drawing.Point(137, 69);
             this.buttonGetFrameRate.Name = "buttonGetFrameRate";
-            this.buttonGetFrameRate.Size = new System.Drawing.Size(24, 22);
+            this.buttonGetFrameRate.Size = new System.Drawing.Size(25, 23);
             this.buttonGetFrameRate.TabIndex = 8;
             this.buttonGetFrameRate.Text = "...";
             this.buttonGetFrameRate.UseVisualStyleBackColor = true;
@@ -56,7 +57,7 @@
             this.buttonDone.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDone.Location = new System.Drawing.Point(239, 109);
             this.buttonDone.Name = "buttonDone";
-            this.buttonDone.Size = new System.Drawing.Size(75, 21);
+            this.buttonDone.Size = new System.Drawing.Size(75, 23);
             this.buttonDone.TabIndex = 18;
             this.buttonDone.Text = "&Done";
             this.buttonDone.UseVisualStyleBackColor = true;
@@ -66,7 +67,7 @@
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSplit.Location = new System.Drawing.Point(158, 109);
             this.buttonSplit.Name = "buttonSplit";
-            this.buttonSplit.Size = new System.Drawing.Size(75, 21);
+            this.buttonSplit.Size = new System.Drawing.Size(75, 23);
             this.buttonSplit.TabIndex = 17;
             this.buttonSplit.Text = "&Split";
             this.buttonSplit.UseVisualStyleBackColor = true;
@@ -107,18 +108,28 @@
             // 
             this.splitTimeUpDownAdjust.AutoSize = true;
             this.splitTimeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.splitTimeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(29, 69);
             this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
-            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
+            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
             this.splitTimeUpDownAdjust.TabIndex = 21;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.splitTimeUpDownAdjust.TimeCode = timeCode1;
+            this.splitTimeUpDownAdjust.UseVideoOffset = false;
             // 
             // buttonAdvanced
             // 
             this.buttonAdvanced.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonAdvanced.Location = new System.Drawing.Point(54, 109);
             this.buttonAdvanced.Name = "buttonAdvanced";
-            this.buttonAdvanced.Size = new System.Drawing.Size(98, 21);
+            this.buttonAdvanced.Size = new System.Drawing.Size(98, 23);
             this.buttonAdvanced.TabIndex = 23;
             this.buttonAdvanced.Text = "&Advanced";
             this.buttonAdvanced.UseVisualStyleBackColor = true;

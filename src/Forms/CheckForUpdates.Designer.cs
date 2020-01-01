@@ -67,7 +67,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(556, 90);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "C&ancel";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -78,7 +78,7 @@
             this.buttonDownloadAndInstall.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDownloadAndInstall.Location = new System.Drawing.Point(224, 90);
             this.buttonDownloadAndInstall.Name = "buttonDownloadAndInstall";
-            this.buttonDownloadAndInstall.Size = new System.Drawing.Size(160, 21);
+            this.buttonDownloadAndInstall.Size = new System.Drawing.Size(160, 23);
             this.buttonDownloadAndInstall.TabIndex = 0;
             this.buttonDownloadAndInstall.Text = "&OK";
             this.buttonDownloadAndInstall.UseVisualStyleBackColor = true;
@@ -94,7 +94,7 @@
             this.buttonDontCheckUpdates.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDontCheckUpdates.Location = new System.Drawing.Point(390, 90);
             this.buttonDontCheckUpdates.Name = "buttonDontCheckUpdates";
-            this.buttonDontCheckUpdates.Size = new System.Drawing.Size(160, 21);
+            this.buttonDontCheckUpdates.Size = new System.Drawing.Size(160, 23);
             this.buttonDontCheckUpdates.TabIndex = 1;
             this.buttonDontCheckUpdates.Text = "Don\'t check for updates";
             this.buttonDontCheckUpdates.UseVisualStyleBackColor = true;

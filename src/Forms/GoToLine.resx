@@ -147,10 +147,10 @@
     <value>3</value>
   </data>
   <data name="buttonOK.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 51</value>
+    <value>12, 52</value>
   </data>
   <data name="buttonOK.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 21</value>
+    <value>75, 23</value>
   </data>
   <data name="buttonOK.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -196,10 +196,10 @@
     <value>NoControl</value>
   </data>
   <data name="buttonCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>96, 51</value>
+    <value>93, 52</value>
   </data>
   <data name="buttonCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 21</value>
+    <value>75, 23</value>
   </data>
   <data name="buttonCancel.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -226,7 +226,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>235, 84</value>
+    <value>243, 88</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Tahoma, 8.25pt</value>

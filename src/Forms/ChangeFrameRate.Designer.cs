@@ -47,7 +47,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(262, 115);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -57,7 +57,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(181, 115);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@
             // 
             this.buttonGetFrameRateFrom.Location = new System.Drawing.Point(272, 45);
             this.buttonGetFrameRateFrom.Name = "buttonGetFrameRateFrom";
-            this.buttonGetFrameRateFrom.Size = new System.Drawing.Size(28, 22);
+            this.buttonGetFrameRateFrom.Size = new System.Drawing.Size(28, 23);
             this.buttonGetFrameRateFrom.TabIndex = 5;
             this.buttonGetFrameRateFrom.Text = "...";
             this.buttonGetFrameRateFrom.UseVisualStyleBackColor = true;
@@ -121,7 +121,7 @@
             // 
             this.buttonGetFrameRateTo.Location = new System.Drawing.Point(272, 73);
             this.buttonGetFrameRateTo.Name = "buttonGetFrameRateTo";
-            this.buttonGetFrameRateTo.Size = new System.Drawing.Size(28, 22);
+            this.buttonGetFrameRateTo.Size = new System.Drawing.Size(28, 23);
             this.buttonGetFrameRateTo.TabIndex = 7;
             this.buttonGetFrameRateTo.Text = "...";
             this.buttonGetFrameRateTo.UseVisualStyleBackColor = true;

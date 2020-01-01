@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 564);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(893, 10);
+            this.progressBar1.Size = new System.Drawing.Size(885, 10);
             this.progressBar1.TabIndex = 7;
             // 
             // labelStatus
@@ -403,9 +403,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(911, 548);
+            this.buttonOK.Location = new System.Drawing.Point(903, 544);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(83, 23);
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -416,20 +416,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(992, 548);
+            this.buttonCancel.Location = new System.Drawing.Point(992, 544);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(85, 23);
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
             // groupBoxOcrMethod
             // 
-            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -609,7 +609,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 97);
             this.buttonLineOcrEditLanguage.Name = "buttonLineOcrEditLanguage";
-            this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 23);
             this.buttonLineOcrEditLanguage.TabIndex = 41;
             this.buttonLineOcrEditLanguage.Text = "Edit";
             this.buttonLineOcrEditLanguage.UseVisualStyleBackColor = true;
@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 97);
             this.buttonLineOcrNewLanguage.Name = "buttonLineOcrNewLanguage";
-            this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 23);
             this.buttonLineOcrNewLanguage.TabIndex = 40;
             this.buttonLineOcrNewLanguage.Text = "New";
             this.buttonLineOcrNewLanguage.UseVisualStyleBackColor = true;
@@ -882,9 +882,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // buttonEditCharacterDatabase
             // 
-            this.buttonEditCharacterDatabase.Location = new System.Drawing.Point(278, 46);
+            this.buttonEditCharacterDatabase.Location = new System.Drawing.Point(278, 48);
             this.buttonEditCharacterDatabase.Name = "buttonEditCharacterDatabase";
-            this.buttonEditCharacterDatabase.Size = new System.Drawing.Size(68, 21);
+            this.buttonEditCharacterDatabase.Size = new System.Drawing.Size(76, 23);
             this.buttonEditCharacterDatabase.TabIndex = 3;
             this.buttonEditCharacterDatabase.Text = "Edit";
             this.buttonEditCharacterDatabase.UseVisualStyleBackColor = true;
@@ -922,7 +922,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.buttonNewCharacterDatabase.Location = new System.Drawing.Point(278, 19);
             this.buttonNewCharacterDatabase.Name = "buttonNewCharacterDatabase";
-            this.buttonNewCharacterDatabase.Size = new System.Drawing.Size(68, 21);
+            this.buttonNewCharacterDatabase.Size = new System.Drawing.Size(76, 23);
             this.buttonNewCharacterDatabase.TabIndex = 2;
             this.buttonNewCharacterDatabase.Text = "New";
             this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
@@ -978,7 +978,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStop.Location = new System.Drawing.Point(11, 52);
             this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(105, 22);
+            this.buttonStop.Size = new System.Drawing.Size(105, 23);
             this.buttonStop.TabIndex = 2;
             this.buttonStop.Text = "Stop OCR";
             this.buttonStop.UseVisualStyleBackColor = true;
@@ -990,7 +990,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonStartOcr.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStartOcr.Location = new System.Drawing.Point(11, 24);
             this.buttonStartOcr.Name = "buttonStartOcr";
-            this.buttonStartOcr.Size = new System.Drawing.Size(105, 22);
+            this.buttonStartOcr.Size = new System.Drawing.Size(105, 23);
             this.buttonStartOcr.TabIndex = 0;
             this.buttonStartOcr.Text = "Start OCR";
             this.buttonStartOcr.UseVisualStyleBackColor = true;

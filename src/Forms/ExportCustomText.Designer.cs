@@ -142,7 +142,7 @@
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(216, 339);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(117, 22);
+            this.buttonDelete.Size = new System.Drawing.Size(117, 23);
             this.buttonDelete.TabIndex = 2;
             this.buttonDelete.Text = "Delete";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -154,7 +154,7 @@
             this.buttonEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonEdit.Location = new System.Drawing.Point(93, 339);
             this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(117, 22);
+            this.buttonEdit.Size = new System.Drawing.Size(117, 23);
             this.buttonEdit.TabIndex = 1;
             this.buttonEdit.Text = "&Edit";
             this.buttonEdit.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@
             this.buttonNew.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonNew.Location = new System.Drawing.Point(339, 339);
             this.buttonNew.Name = "buttonNew";
-            this.buttonNew.Size = new System.Drawing.Size(117, 22);
+            this.buttonNew.Size = new System.Drawing.Size(117, 23);
             this.buttonNew.TabIndex = 3;
             this.buttonNew.Text = "&New";
             this.buttonNew.UseVisualStyleBackColor = true;
@@ -222,7 +222,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(852, 410);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 22);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -234,7 +234,7 @@
             this.buttonSave.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSave.Location = new System.Drawing.Point(729, 410);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(117, 22);
+            this.buttonSave.Size = new System.Drawing.Size(117, 23);
             this.buttonSave.TabIndex = 4;
             this.buttonSave.Text = "&Save as...";
             this.buttonSave.UseVisualStyleBackColor = true;

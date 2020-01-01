@@ -66,7 +66,7 @@
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(551, 227);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@
             // 
             this.buttonTranslate.Location = new System.Drawing.Point(553, 12);
             this.buttonTranslate.Name = "buttonTranslate";
-            this.buttonTranslate.Size = new System.Drawing.Size(75, 21);
+            this.buttonTranslate.Size = new System.Drawing.Size(75, 23);
             this.buttonTranslate.TabIndex = 2;
             this.buttonTranslate.Text = "Translate";
             this.buttonTranslate.UseVisualStyleBackColor = true;

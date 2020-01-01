@@ -83,7 +83,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(337, 493);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(125, 21);
+            this.buttonImport.Size = new System.Drawing.Size(125, 23);
             this.buttonImport.TabIndex = 4;
             this.buttonImport.Text = "I&mport";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -96,7 +96,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(759, 493);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesSelectAll.Location = new System.Drawing.Point(12, 493);
             this.buttonFixesSelectAll.Name = "buttonFixesSelectAll";
-            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonFixesSelectAll.TabIndex = 105;
             this.buttonFixesSelectAll.Text = "Select &all";
             this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
@@ -129,7 +129,7 @@
             this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesInverse.Location = new System.Drawing.Point(93, 493);
             this.buttonFixesInverse.Name = "buttonFixesInverse";
-            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 21);
+            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 23);
             this.buttonFixesInverse.TabIndex = 106;
             this.buttonFixesInverse.Text = "&Inverse selection";
             this.buttonFixesInverse.UseVisualStyleBackColor = true;
@@ -183,7 +183,7 @@
             this.buttonDone.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDone.Location = new System.Drawing.Point(628, 493);
             this.buttonDone.Name = "buttonDone";
-            this.buttonDone.Size = new System.Drawing.Size(125, 21);
+            this.buttonDone.Size = new System.Drawing.Size(125, 23);
             this.buttonDone.TabIndex = 109;
             this.buttonDone.Text = "&Done";
             this.buttonDone.UseVisualStyleBackColor = true;

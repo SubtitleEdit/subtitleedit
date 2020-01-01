@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(759, 575);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNextFinish.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonNextFinish.Location = new System.Drawing.Point(678, 575);
             this.buttonNextFinish.Name = "buttonNextFinish";
-            this.buttonNextFinish.Size = new System.Drawing.Size(75, 21);
+            this.buttonNextFinish.Size = new System.Drawing.Size(75, 23);
             this.buttonNextFinish.TabIndex = 9;
             this.buttonNextFinish.Text = "&Next >";
             this.buttonNextFinish.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonBack.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonBack.Location = new System.Drawing.Point(597, 575);
             this.buttonBack.Name = "buttonBack";
-            this.buttonBack.Size = new System.Drawing.Size(75, 21);
+            this.buttonBack.Size = new System.Drawing.Size(75, 23);
             this.buttonBack.TabIndex = 8;
             this.buttonBack.Text = "< &Back";
             this.buttonBack.UseVisualStyleBackColor = true;
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonResetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonResetDefault.Location = new System.Drawing.Point(193, 530);
             this.buttonResetDefault.Name = "buttonResetDefault";
-            this.buttonResetDefault.Size = new System.Drawing.Size(100, 21);
+            this.buttonResetDefault.Size = new System.Drawing.Size(100, 23);
             this.buttonResetDefault.TabIndex = 12;
             this.buttonResetDefault.Text = "Select default";
             this.buttonResetDefault.UseVisualStyleBackColor = true;
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonInverseSelection.Location = new System.Drawing.Point(87, 530);
             this.buttonInverseSelection.Name = "buttonInverseSelection";
-            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 23);
             this.buttonInverseSelection.TabIndex = 3;
             this.buttonInverseSelection.Text = "Inverse selection";
             this.buttonInverseSelection.UseVisualStyleBackColor = true;
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSelectAll.Location = new System.Drawing.Point(6, 530);
             this.buttonSelectAll.Name = "buttonSelectAll";
-            this.buttonSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonSelectAll.TabIndex = 2;
             this.buttonSelectAll.Text = "Select all";
             this.buttonSelectAll.UseVisualStyleBackColor = true;
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesApply.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesApply.Location = new System.Drawing.Point(628, 206);
             this.buttonFixesApply.Name = "buttonFixesApply";
-            this.buttonFixesApply.Size = new System.Drawing.Size(165, 21);
+            this.buttonFixesApply.Size = new System.Drawing.Size(165, 23);
             this.buttonFixesApply.TabIndex = 108;
             this.buttonFixesApply.Text = "Apply &selected fixes";
             this.buttonFixesApply.UseVisualStyleBackColor = true;
@@ -381,7 +381,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonRefreshFixes.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRefreshFixes.Location = new System.Drawing.Point(457, 206);
             this.buttonRefreshFixes.Name = "buttonRefreshFixes";
-            this.buttonRefreshFixes.Size = new System.Drawing.Size(165, 21);
+            this.buttonRefreshFixes.Size = new System.Drawing.Size(165, 23);
             this.buttonRefreshFixes.TabIndex = 106;
             this.buttonRefreshFixes.Text = "&Refresh available fixes";
             this.buttonRefreshFixes.UseVisualStyleBackColor = true;
@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesSelectAll.Location = new System.Drawing.Point(3, 206);
             this.buttonFixesSelectAll.Name = "buttonFixesSelectAll";
-            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonFixesSelectAll.Size = new System.Drawing.Size(75, 23);
             this.buttonFixesSelectAll.TabIndex = 102;
             this.buttonFixesSelectAll.Text = "Select &all";
             this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
@@ -405,7 +405,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesInverse.Location = new System.Drawing.Point(84, 206);
             this.buttonFixesInverse.Name = "buttonFixesInverse";
-            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 21);
+            this.buttonFixesInverse.Size = new System.Drawing.Size(100, 23);
             this.buttonFixesInverse.TabIndex = 104;
             this.buttonFixesInverse.Text = "&Inverse selection";
             this.buttonFixesInverse.UseVisualStyleBackColor = true;
@@ -494,9 +494,9 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
-            this.buttonSplitLine.Location = new System.Drawing.Point(627, 60);
+            this.buttonSplitLine.Location = new System.Drawing.Point(627, 62);
             this.buttonSplitLine.Name = "buttonSplitLine";
-            this.buttonSplitLine.Size = new System.Drawing.Size(96, 21);
+            this.buttonSplitLine.Size = new System.Drawing.Size(96, 23);
             this.buttonSplitLine.TabIndex = 124;
             this.buttonSplitLine.Text = "Split line";
             this.buttonSplitLine.UseVisualStyleBackColor = true;
@@ -514,9 +514,9 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(627, 36);
+            this.buttonUnBreak.Location = new System.Drawing.Point(627, 37);
             this.buttonUnBreak.Name = "buttonUnBreak";
-            this.buttonUnBreak.Size = new System.Drawing.Size(96, 21);
+            this.buttonUnBreak.Size = new System.Drawing.Size(96, 23);
             this.buttonUnBreak.TabIndex = 122;
             this.buttonUnBreak.Text = "&Unbreak";
             this.buttonUnBreak.UseVisualStyleBackColor = true;
@@ -527,7 +527,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAutoBreak.Location = new System.Drawing.Point(627, 12);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(96, 21);
+            this.buttonAutoBreak.Size = new System.Drawing.Size(96, 23);
             this.buttonAutoBreak.TabIndex = 120;
             this.buttonAutoBreak.Text = "Auto &br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
@@ -695,8 +695,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
+            this.Controls.Add(this.groupBox2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;

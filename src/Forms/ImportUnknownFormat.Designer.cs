@@ -54,7 +54,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(858, 603);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 9;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(777, 603);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 8;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -87,6 +87,7 @@
             // 
             // SubtitleListview1
             // 
+            this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -95,12 +96,16 @@
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(909, 187);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
@@ -167,7 +172,7 @@
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRefresh.Location = new System.Drawing.Point(6, 124);
             this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
+            this.buttonRefresh.Size = new System.Drawing.Size(102, 23);
             this.buttonRefresh.TabIndex = 6;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
@@ -204,7 +209,7 @@
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOpenText.Location = new System.Drawing.Point(419, 15);
             this.buttonOpenText.Name = "buttonOpenText";
-            this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
+            this.buttonOpenText.Size = new System.Drawing.Size(143, 23);
             this.buttonOpenText.TabIndex = 0;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;

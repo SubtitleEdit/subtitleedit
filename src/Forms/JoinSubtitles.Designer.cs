@@ -147,7 +147,7 @@
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonClear.Location = new System.Drawing.Point(682, 73);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(74, 21);
+            this.buttonClear.Size = new System.Drawing.Size(74, 23);
             this.buttonClear.TabIndex = 104;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -158,7 +158,7 @@
             this.buttonRemoveFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemoveFile.Location = new System.Drawing.Point(683, 46);
             this.buttonRemoveFile.Name = "buttonRemoveFile";
-            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 21);
+            this.buttonRemoveFile.Size = new System.Drawing.Size(74, 23);
             this.buttonRemoveFile.TabIndex = 103;
             this.buttonRemoveFile.Text = "Remove";
             this.buttonRemoveFile.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@
             this.buttonAddFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAddFile.Location = new System.Drawing.Point(683, 19);
             this.buttonAddFile.Name = "buttonAddFile";
-            this.buttonAddFile.Size = new System.Drawing.Size(73, 21);
+            this.buttonAddFile.Size = new System.Drawing.Size(73, 23);
             this.buttonAddFile.TabIndex = 102;
             this.buttonAddFile.Text = "Add...";
             this.buttonAddFile.UseVisualStyleBackColor = true;

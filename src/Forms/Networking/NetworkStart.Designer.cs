@@ -45,7 +45,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(312, 147);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -63,7 +63,7 @@
             this.buttonStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStart.Location = new System.Drawing.Point(231, 147);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(75, 21);
+            this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 3;
             this.buttonStart.Text = "&Start";
             this.buttonStart.UseVisualStyleBackColor = true;

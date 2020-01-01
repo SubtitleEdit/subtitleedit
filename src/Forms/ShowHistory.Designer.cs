@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.listViewHistory = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonRollback = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,7 +47,7 @@
             this.listViewHistory.HideSelection = false;
             this.listViewHistory.Location = new System.Drawing.Point(12, 37);
             this.listViewHistory.Name = "listViewHistory";
-            this.listViewHistory.Size = new System.Drawing.Size(472, 327);
+            this.listViewHistory.Size = new System.Drawing.Size(472, 324);
             this.listViewHistory.TabIndex = 0;
             this.listViewHistory.UseCompatibleStateImageBehavior = false;
             this.listViewHistory.View = System.Windows.Forms.View.Details;
@@ -66,9 +66,9 @@
             // buttonRollback
             // 
             this.buttonRollback.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRollback.Location = new System.Drawing.Point(490, 343);
+            this.buttonRollback.Location = new System.Drawing.Point(489, 338);
             this.buttonRollback.Name = "buttonRollback";
-            this.buttonRollback.Size = new System.Drawing.Size(98, 21);
+            this.buttonRollback.Size = new System.Drawing.Size(98, 23);
             this.buttonRollback.TabIndex = 6;
             this.buttonRollback.Text = "&Rollback";
             this.buttonRollback.UseVisualStyleBackColor = true;
@@ -78,9 +78,9 @@
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(594, 343);
+            this.buttonCancel.Location = new System.Drawing.Point(594, 338);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -98,9 +98,9 @@
             // 
             this.buttonCompare.Enabled = false;
             this.buttonCompare.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCompare.Location = new System.Drawing.Point(490, 198);
+            this.buttonCompare.Location = new System.Drawing.Point(489, 200);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(179, 21);
+            this.buttonCompare.Size = new System.Drawing.Size(179, 23);
             this.buttonCompare.TabIndex = 4;
             this.buttonCompare.Text = "&Compare with current";
             this.buttonCompare.UseVisualStyleBackColor = true;
@@ -112,7 +112,7 @@
             this.buttonCompareHistory.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCompareHistory.Location = new System.Drawing.Point(490, 171);
             this.buttonCompareHistory.Name = "buttonCompareHistory";
-            this.buttonCompareHistory.Size = new System.Drawing.Size(179, 21);
+            this.buttonCompareHistory.Size = new System.Drawing.Size(179, 23);
             this.buttonCompareHistory.TabIndex = 2;
             this.buttonCompareHistory.Text = "&Compare history items";
             this.buttonCompareHistory.UseVisualStyleBackColor = true;

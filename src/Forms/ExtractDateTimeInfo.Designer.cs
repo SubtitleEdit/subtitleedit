@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonOpenVideo = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -66,7 +68,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(303, 269);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 13;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -77,7 +79,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(130, 269);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(167, 21);
+            this.buttonOK.Size = new System.Drawing.Size(167, 23);
             this.buttonOK.TabIndex = 12;
             this.buttonOK.Text = "&Generate subtitle";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -179,21 +181,41 @@
             // 
             this.timeUpDownDuration.AutoSize = true;
             this.timeUpDownDuration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownDuration.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownDuration.Location = new System.Drawing.Point(252, 87);
             this.timeUpDownDuration.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownDuration.Name = "timeUpDownDuration";
-            this.timeUpDownDuration.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownDuration.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownDuration.TabIndex = 7;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownDuration.TimeCode = timeCode1;
+            this.timeUpDownDuration.UseVideoOffset = false;
             // 
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(118, 86);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 24);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 5;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // ExtractDateTimeInfo
             // 

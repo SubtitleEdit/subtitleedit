@@ -34,10 +34,10 @@
             this.columnHeaderDateTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelInfo = new System.Windows.Forms.Label();
             this.linkLabelOpenContainingFolder = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -47,7 +47,7 @@
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(552, 383);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -58,7 +58,7 @@
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(471, 383);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -100,6 +100,12 @@
             this.columnHeaderExtension.Text = "Extension";
             this.columnHeaderExtension.Width = 80;
             // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderSize.Width = 101;
+            // 
             // labelInfo
             // 
             this.labelInfo.AutoSize = true;
@@ -130,12 +136,6 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // columnHeaderSize
-            // 
-            this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderSize.Width = 101;
             // 
             // RestoreAutoBackup
             // 
