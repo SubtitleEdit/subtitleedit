@@ -161,6 +161,11 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             foreach (var packetId in teletextPesList.Keys) // teletext from PES packets
             {
+                if (!teletextPages.ContainsKey(packetId))
+                {
+                    continue;
+                }
+
                 foreach (var page in teletextPages[packetId].OrderBy(p => p))
                 {
                     var pageBcd = Teletext.DecToBec(page);
