@@ -360,7 +360,8 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamOverrideYPosition = "Override original Y position",
                 TransportStreamOverrideVideoSize = "Override original video size",
                 TransportStreamFileNameEnding = "File name ending",
-                TransportStreamSettingsButton = "TS settings..."
+                TransportStreamSettingsButton = "TS settings...",
+                RemoveLineBreaks = "remove line-breaks"
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -1693,7 +1694,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeWithLineBefore = "Merge with line before",
                         MergeWithLineAfter = "Merge with line after",
                         RemoveFormatting = "Remove formatting",
-                        RemoveFormattingAll = "Remove all formattings",
+                        RemoveFormattingAll = "Remove all formatting",
                         RemoveFormattingItalic = "Remove italic",
                         RemoveFormattingBold = "Remove bold",
                         RemoveFormattingUnderline = "Remove underline",

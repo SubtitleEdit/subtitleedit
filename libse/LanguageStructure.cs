@@ -231,6 +231,7 @@
             public string TransportStreamOverrideVideoSize { get; set; }
             public string TransportStreamFileNameEnding { get; set; }
             public string TransportStreamSettingsButton { get; set; }
+            public string RemoveLineBreaks { get; set; }
         }
 
         public class Beamer

@@ -604,6 +604,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/TransportStreamSettingsButton":
                     language.BatchConvert.TransportStreamSettingsButton = reader.Value;
                     break;
+                case "BatchConvert/RemoveLineBreaks":
+                    language.BatchConvert.RemoveLineBreaks = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
