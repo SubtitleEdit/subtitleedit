@@ -174,8 +174,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <InputDescription>Input filer (gennemse eller drag'n'drop)</InputDescription>
     <Status>Status</Status>
     <Output>Output</Output>
-    <ChooseOutputFolder>Vælg output mappe</ChooseOutputFolder>
-    <OverwriteExistingFiles>Overskriv eksisterende filer</OverwriteExistingFiles>
+    <SaveInSourceFolder>Gem i kildefilmappen</SaveInSourceFolder>
+    <SaveInOutputFolder>Gem i outputmappen nedenfor</SaveInOutputFolder>
+    <OverwriteFiles>Overskriv filer</OverwriteFiles>
     <Style>Style...</Style>
     <UseStyleFromSource>Benyt "style" fra kilde</UseStyleFromSource>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
@@ -206,6 +207,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>SubRip (.srt) filer uden UTF-8 BOM header</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Mere end to linjer i en undertekst</FilterMoreThanTwoLines>
     <FilterContains>Tekst indeholder...</FilterContains>
+    <FilterFileNameContains>Filnavn indeholder...</FilterFileNameContains>
     <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
@@ -216,6 +218,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TransportStreamOverrideVideoSize>Overstyr den originale videostørrelse</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>Filnavn slutter</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS-indstillinger...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Fjern linjeskift</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -578,6 +581,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixOverlappingDisplayTimes>Ret overlappende visningstider</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Ret korte visningstider</FixShortDisplayTimes>
     <FixLongDisplayTimes>Ret lange visningstider</FixLongDisplayTimes>
+    <FixShortGaps>Fix korte huller</FixShortGaps>
     <FixInvalidItalicTags>Ret ugyldige kursiv tags</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Fjern unødvendige mellemrum</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Fjern unødvendige punktummer</RemoveUnneededPeriods>
@@ -615,7 +619,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <NothingToFix>Intet at rette :)</NothingToFix>
     <FixesFoundX>Rettelser fundet: {0}</FixesFoundX>
     <XFixesApplied>Rettelser udført: {0}</XFixesApplied>
-    <NothingToFixBut>Intet at rette, men nogle ting kan forbedres - se log for detailjer</NothingToFixBut>
+    <NothingFixableBut>Intet kunne rettes automatisk.  Underteksten indeholder fejl - se log for detaljer</NothingFixableBut>
+    <XFixedBut>{0} problem(er) rettet, men underteksten indeholder stadig fejl - se log for detaljer</XFixedBut>
+    <XCouldBeFixedBut>{0} problem(er) kunne rettes, men underteksten vil stadig indeholde fejl - se log for detaljer</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>"Ret alene små bogstaver 'i' til 'I' (engelsk)" er ikke længere valgt</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i'er skiftet til store bogstaver</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Ret første bogstav til stort bogstav efter afsnit</FixFirstLetterToUppercaseAfterParagraph>
@@ -627,6 +633,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixInvalidItalicTag>Ret ugyldig kursiv tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Ret kort visningstid</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlappende visningstid</FixOverlappingDisplayTime>
+    <FixShortGap>Korte huller</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Hvad skal jeg dog lave?&lt;i&gt; -&gt; &lt;i&gt;Hvad skal jeg dog lave?&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hej  du , der. -&gt; Hej du, der.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej du!. -&gt; Hej du!</RemoveUnneededPeriodsExample>
@@ -641,6 +648,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <XDisplayTimesProlonged>{0} visningstider forlænget</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} ugyldig HTML tags rettet</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} visningstider forkortet</XDisplayTimesShortned>
+    <XGapsFixed></XGapsFixed>
     <XLinesUnbreaked>{0} linjer har fået linjeskift fjernet</XLinesUnbreaked>
     <UnneededSpace>Unødigt mellemrum</UnneededSpace>
     <XUnneededSpacesRemoved>{0} unødvendige mellemrum fjernet</XUnneededSpacesRemoved>
@@ -1510,6 +1518,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Indsæt undertekst ved bølgeform position vil forårsage overlapning!
 
 Fortsæt alligevel?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX></SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Afspilningshastighed er {0}%</SetPlayRateX>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
@@ -1779,6 +1788,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
     <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
     <ChooseProfile>Vælg profil</ChooseProfile>
+    <DuplicateLine></DuplicateLine>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
@@ -1989,6 +1999,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Tilføj tekst her (fra klippebordet)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection></SetParagraphAsSelection>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
@@ -2028,6 +2039,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Farve - tekst, hvis mere end {0} linjer</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
+    <SyntaxColorGap></SyntaxColorGap>
     <SyntaxErrorColor>Fejl farve</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Gå til næste tomme linje</GoToNextEmptyLine>
@@ -2061,6 +2073,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby></MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Toggle auto varighed</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Bryd ved første mellemrum fra markørposition</MainTextBoxAutoBreakFromPos>
@@ -2070,6 +2083,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Miscellaneous>Diverse</Miscellaneous>
     <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding></BreakEarlyForLineEnding>
+    <BreakByPixelWidth></BreakByPixelWidth>
+    <BreakPreferBottomHeavy></BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog></BreakEarlyForDashDialog>
+    <BreakEarlyForComma></BreakEarlyForComma>
     <GoogleTranslate>Google Oversæt</GoogleTranslate>
     <GoogleTranslateApiKey>API-nøgle</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
@@ -2079,6 +2097,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <FontNote>Bemærk: Disse skrifttypeindstillinger er kun til undertekst Rediger brugergrænsefladen.
 Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, men det kan også gøres ved brug af et undertekstformat med indbygget skriftinformation som f.eks.
 "Advanced Sub Station Alpha" eller via eksport til billedbaserede formater.</FontNote>
+    <RestoreDefaultSettings></RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg></RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
@@ -2152,8 +2172,12 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <GlyphCheckReport>Ugyldigt tegn {0} findes i kolonne {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Ugyldigt mellemrum fundet ved kolonne {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Se hele rapporten her: {0}.</ReportPrompt>
+    <OpenReportInFolder></OpenReportInFolder>
     <FoundXIssues>Netflix kvalitetstjek fundet {0} problemstillinger.</FoundXIssues>
     <CheckOk>Netflix kvalitetstjek OK :)</CheckOk>
+    <MaximumXCharsPerSecond></MaximumXCharsPerSecond>
+    <MaximumLineLength></MaximumLineLength>
+    <MinimumDuration></MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
@@ -2314,7 +2338,8 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream undertikst vælger - {0}</Title>
-    <PidLine>Transport Packet Identifier (PID) = {0}, antal undertekster = {1}</PidLine>
+    <PidLineImage></PidLineImage>
+    <PidLineTeletext></PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} billede(r)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2476,6 +2501,7 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <ZoomOut>Zoom ud</ZoomOut>
     <AddParagraphHere>Tilføj tekst her</AddParagraphHere>
     <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection></SetParagraphAsSelection>
     <FocusTextBox>Gå til tekstboks</FocusTextBox>
     <DeleteParagraph>Slet tekst</DeleteParagraph>
     <Split>Split</Split>
