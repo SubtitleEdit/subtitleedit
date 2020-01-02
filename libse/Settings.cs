@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertAutoBalance { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public bool BatchConvertMergeShortLines { get; set; }
+        public bool BatchConvertRemoveLineBreaks { get; set; }
         public bool BatchConvertMergeSameText { get; set; }
         public bool BatchConvertMergeSameTimeCodes { get; set; }
         public bool BatchConvertChangeFrameRate { get; set; }
@@ -3127,6 +3128,12 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertMergeShortLines = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("BatchConvertRemoveLineBreaks");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveLineBreaks = Convert.ToBoolean(subNode.InnerText);
+            }
+            
             subNode = node.SelectSingleNode("BatchConvertMergeSameText");
             if (subNode != null)
             {
@@ -6465,6 +6472,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeShortLines", settings.Tools.BatchConvertMergeShortLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveLineBreaks", settings.Tools.BatchConvertRemoveLineBreaks.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeSameText", settings.Tools.BatchConvertMergeSameText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeSameTimeCodes", settings.Tools.BatchConvertMergeSameTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));

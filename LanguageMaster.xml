@@ -221,6 +221,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamOverrideVideoSize>Override original video size</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>remove line-breaks</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -1180,7 +1181,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
         <RemoveFormatting>Remove formatting</RemoveFormatting>
-        <RemoveFormattingAll>Remove all formattings</RemoveFormattingAll>
+        <RemoveFormattingAll>Remove all formatting</RemoveFormattingAll>
         <RemoveFormattingBold>Remove bold</RemoveFormattingBold>
         <RemoveFormattingItalic>Remove italic</RemoveFormattingItalic>
         <RemoveFormattingUnderline>Remove underline</RemoveFormattingUnderline>

@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Text = l.RedoCasing,
                     Checked = Configuration.Settings.Tools.BatchConvertFixCasing,
-                    Action = CommandLineConverter.BatchAction.ReDoCasing
+                    Action = CommandLineConverter.BatchAction.RedoCasing
                 },
                 new FixActionItem
                 {
@@ -351,6 +351,12 @@ namespace Nikse.SubtitleEdit.Forms
                     Text = Configuration.Settings.Language.MergedShortLines.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertMergeShortLines,
                     Action = CommandLineConverter.BatchAction.MergeShortLines
+                },
+                new FixActionItem
+                {
+                    Text = Configuration.Settings.Language.BatchConvert.RemoveLineBreaks,
+                    Checked = Configuration.Settings.Tools.BatchConvertRemoveLineBreaks,
+                    Action = CommandLineConverter.BatchAction.RemoveLineBreaks
                 },
                 new FixActionItem
                 {
@@ -1073,7 +1079,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 sub.RemoveEmptyLines(); //TODO: only for image export?
                             }
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.ReDoCasing))
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing))
                             {
                                 _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
                                 _changeCasingNames.Initialize(sub);
@@ -1087,6 +1093,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     sub.Paragraphs.Clear();
                                     sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
+                                }
+                            }
+
+                            if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveLineBreaks))
+                            {
+                                foreach (var paragraph in sub.Paragraphs)
+                                {
+                                    paragraph.Text = Utilities.UnbreakLine(paragraph.Text);
                                 }
                             }
 
@@ -1220,7 +1234,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool AllowImageToImage()
         {
             return !IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines) &&
-                   !IsActionEnabled(CommandLineConverter.BatchAction.ReDoCasing) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.FixRtl) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace) &&
@@ -1844,7 +1858,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _abort = true;
             }
 
-            Configuration.Settings.Tools.BatchConvertFixCasing = IsActionEnabled(CommandLineConverter.BatchAction.ReDoCasing);
+            Configuration.Settings.Tools.BatchConvertFixCasing = IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing);
             Configuration.Settings.Tools.BatchConvertFixCommonErrors = IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors);
             Configuration.Settings.Tools.BatchConvertMultipleReplace = IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace);
             Configuration.Settings.Tools.BatchConvertFixRtl = IsActionEnabled(CommandLineConverter.BatchAction.FixRtl);
@@ -1863,6 +1877,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
             Configuration.Settings.Tools.BatchConvertSaveInSourceFolder = radioButtonSaveInSourceFolder.Checked;
             Configuration.Settings.Tools.BatchConvertMergeShortLines = IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines);
+            Configuration.Settings.Tools.BatchConvertRemoveLineBreaks = IsActionEnabled(CommandLineConverter.BatchAction.RemoveLineBreaks);
             Configuration.Settings.Tools.BatchConvertMergeSameText = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts);
             Configuration.Settings.Tools.BatchConvertMergeSameTimeCodes = IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes);
             Configuration.Settings.Tools.BatchConvertChangeSpeed = IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed);
@@ -2207,7 +2222,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case CommandLineConverter.BatchAction.RemoveFormatting:
                     break;
-                case CommandLineConverter.BatchAction.ReDoCasing:
+                case CommandLineConverter.BatchAction.RedoCasing:
                     break;
                 case CommandLineConverter.BatchAction.ReverseRtlStartEnd:
                     break;

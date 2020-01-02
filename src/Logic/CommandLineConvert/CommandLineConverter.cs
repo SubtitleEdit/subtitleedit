@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             MergeSameTimeCodes,
             RemoveTextForHI,
             RemoveFormatting,
-            ReDoCasing,
+            RedoCasing,
             ReverseRtlStartEnd,
             BridgeGaps,
             MultipleReplace,
@@ -46,7 +46,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             ChangeFrameRate,
             OffsetTimeCodes,
             ChangeSpeed,
-            ApplyDurationLimits
+            ApplyDurationLimits,
+            RemoveLineBreaks
         }
 
         internal static void ConvertOrReturn(string productIdentifier, string[] commandLineArguments)
@@ -133,15 +134,16 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
                 _stdOutWriter.WriteLine("      from left to right, and can be specified multiple times.");
-                _stdOutWriter.WriteLine("        /ApplyDurationLimits");
-                _stdOutWriter.WriteLine("        /FixCommonErrors");
-                _stdOutWriter.WriteLine("        /MergeSameTimeCodes");
-                _stdOutWriter.WriteLine("        /MergeSameTexts");
-                _stdOutWriter.WriteLine("        /MergeShortLines");
-                _stdOutWriter.WriteLine("        /ReverseRtlStartEnd");
-                _stdOutWriter.WriteLine("        /RemoveFormatting");
-                _stdOutWriter.WriteLine("        /RemoveTextForHI");
-                _stdOutWriter.WriteLine("        /RedoCasing");
+                _stdOutWriter.WriteLine("        /" + BatchAction.ApplyDurationLimits);
+                _stdOutWriter.WriteLine("        /" + BatchAction.FixCommonErrors);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveLineBreaks);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTimeCodes);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeSameTexts);
+                _stdOutWriter.WriteLine("        /" + BatchAction.MergeShortLines);
+                _stdOutWriter.WriteLine("        /" + BatchAction.ReverseRtlStartEnd);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveFormatting);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RemoveTextForHI);
+                _stdOutWriter.WriteLine("        /" + BatchAction.RedoCasing);
                 _stdOutWriter.WriteLine();
                 _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                 _stdOutWriter.WriteLine("    show this usage message: SubtitleEdit /help");
@@ -1098,7 +1100,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
                                 }
                                 break;
-                            case BatchAction.ReDoCasing:
+                            case BatchAction.RedoCasing:
                                 using (var changeCasing = new ChangeCasing())
                                 {
                                     changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
@@ -1141,6 +1143,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 {
                                     sub.Paragraphs.Clear();
                                     sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
+                                }
+                                break;
+                            case BatchAction.RemoveLineBreaks:
+                                foreach (var p in sub.Paragraphs)
+                                {
+                                    p.Text = Utilities.RemoveLineBreaks(p.Text);
                                 }
                                 break;
                         }
