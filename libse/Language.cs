@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamOverrideVideoSize = "Override original video size",
                 TransportStreamFileNameEnding = "File name ending",
                 TransportStreamSettingsButton = "TS settings...",
-                RemoveLineBreaks = "remove line-breaks"
+                RemoveLineBreaks = "Remove line-breaks"
             };
 
             Beamer = new LanguageStructure.Beamer
