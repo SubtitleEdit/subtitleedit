@@ -31,7 +31,7 @@
                     var wantedEndMs = p.StartTime.TotalMilliseconds + _minDurationMs;
                     if (next == null || wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
-                        p.Duration.TotalMilliseconds = wantedEndMs;
+                        p.EndTime.TotalMilliseconds = wantedEndMs;
                     }
                 }
             }
@@ -45,7 +45,7 @@
                 var displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime > _maxDurationMs)
                 {
-                    p.Duration.TotalMilliseconds = _maxDurationMs;
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _maxDurationMs;
                 }
             }
         }

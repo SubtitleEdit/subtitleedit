@@ -33,6 +33,11 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxChangeCasing = new System.Windows.Forms.GroupBox();
+            this.radioButtonFixOnlyNames = new System.Windows.Forms.RadioButton();
+            this.radioButtonLowercase = new System.Windows.Forms.RadioButton();
+            this.radioButtonUppercase = new System.Windows.Forms.RadioButton();
+            this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.groupBoxMergeShortLines = new System.Windows.Forms.GroupBox();
             this.checkBoxOnlyContinuationLines = new System.Windows.Forms.CheckBox();
             this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
@@ -99,6 +104,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxChangeCasing.SuspendLayout();
             this.groupBoxMergeShortLines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
@@ -140,6 +146,7 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
@@ -153,6 +160,64 @@
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // groupBoxChangeCasing
+            // 
+            this.groupBoxChangeCasing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonFixOnlyNames);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonLowercase);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonUppercase);
+            this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
+            this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
+            this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 253);
+            this.groupBoxChangeCasing.TabIndex = 308;
+            this.groupBoxChangeCasing.TabStop = false;
+            this.groupBoxChangeCasing.Text = "Change casing to";
+            // 
+            // radioButtonFixOnlyNames
+            // 
+            this.radioButtonFixOnlyNames.AutoSize = true;
+            this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 43);
+            this.radioButtonFixOnlyNames.Name = "radioButtonFixOnlyNames";
+            this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(263, 17);
+            this.radioButtonFixOnlyNames.TabIndex = 6;
+            this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\names.xml)";
+            this.radioButtonFixOnlyNames.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonLowercase
+            // 
+            this.radioButtonLowercase.AutoSize = true;
+            this.radioButtonLowercase.Location = new System.Drawing.Point(11, 89);
+            this.radioButtonLowercase.Name = "radioButtonLowercase";
+            this.radioButtonLowercase.Size = new System.Drawing.Size(86, 17);
+            this.radioButtonLowercase.TabIndex = 10;
+            this.radioButtonLowercase.Text = "all lowercase";
+            this.radioButtonLowercase.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonUppercase
+            // 
+            this.radioButtonUppercase.AutoSize = true;
+            this.radioButtonUppercase.Location = new System.Drawing.Point(11, 66);
+            this.radioButtonUppercase.Name = "radioButtonUppercase";
+            this.radioButtonUppercase.Size = new System.Drawing.Size(112, 17);
+            this.radioButtonUppercase.TabIndex = 8;
+            this.radioButtonUppercase.Text = "ALL UPPERCASE";
+            this.radioButtonUppercase.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonNormal
+            // 
+            this.radioButtonNormal.AutoSize = true;
+            this.radioButtonNormal.Checked = true;
+            this.radioButtonNormal.Location = new System.Drawing.Point(11, 18);
+            this.radioButtonNormal.Name = "radioButtonNormal";
+            this.radioButtonNormal.Size = new System.Drawing.Size(282, 17);
+            this.radioButtonNormal.TabIndex = 0;
+            this.radioButtonNormal.TabStop = true;
+            this.radioButtonNormal.Text = "Normal casing. Sentences begin with uppercase letter.";
+            this.radioButtonNormal.UseVisualStyleBackColor = true;
             // 
             // groupBoxMergeShortLines
             // 
@@ -270,6 +335,7 @@
             this.listViewConvertOptions.TabIndex = 301;
             this.listViewConvertOptions.UseCompatibleStateImageBehavior = false;
             this.listViewConvertOptions.View = System.Windows.Forms.View.Details;
+            this.listViewConvertOptions.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewConvertOptions_ItemChecked);
             this.listViewConvertOptions.SelectedIndexChanged += new System.EventHandler(this.listViewConvertOptions_SelectedIndexChanged);
             // 
             // ActionCheckBox
@@ -905,6 +971,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxChangeCasing.ResumeLayout(false);
+            this.groupBoxChangeCasing.PerformLayout();
             this.groupBoxMergeShortLines.ResumeLayout(false);
             this.groupBoxMergeShortLines.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
@@ -998,5 +1066,10 @@
         private System.Windows.Forms.Label labelMaxMillisecondsBetweenLines;
         private System.Windows.Forms.Label labelMaxCharacters;
         private System.Windows.Forms.Button buttonSwapFrameRate;
+        private System.Windows.Forms.GroupBox groupBoxChangeCasing;
+        private System.Windows.Forms.RadioButton radioButtonFixOnlyNames;
+        private System.Windows.Forms.RadioButton radioButtonLowercase;
+        private System.Windows.Forms.RadioButton radioButtonUppercase;
+        private System.Windows.Forms.RadioButton radioButtonNormal;
     }
 }
