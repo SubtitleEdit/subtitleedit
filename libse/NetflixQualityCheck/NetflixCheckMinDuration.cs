@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         // we can fix duration
                         fixedParagraph = new Paragraph(p, false);
-                        fixedParagraph.Duration.TotalMilliseconds = 834;
+                        fixedParagraph.EndTime.TotalMilliseconds = fixedParagraph.StartTime.TotalMilliseconds + 834;
                     }
                     string comment = "Minimum duration: 5/6 second (833 ms)";
                     controller.AddRecord(p, fixedParagraph, comment);

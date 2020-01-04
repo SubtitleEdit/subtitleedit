@@ -17701,7 +17701,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs[index].EndTime = TimeCode.FromSeconds(videoPosition);
                     if (_subtitle.Paragraphs[index].Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
-                        _subtitle.Paragraphs[index].Duration.TotalMilliseconds = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                        _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                     }
                 }
 

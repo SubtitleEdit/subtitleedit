@@ -220,6 +220,24 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonSaveInOutputFolder.Checked = true;
             }
 
+            groupBoxChangeCasing.Text = Configuration.Settings.Language.ChangeCasing.ChangeCasingTo;
+            radioButtonNormal.Text = Configuration.Settings.Language.ChangeCasing.NormalCasing;
+            radioButtonFixOnlyNames.Text = Configuration.Settings.Language.ChangeCasing.FixOnlyNamesCasing;
+            radioButtonUppercase.Text = Configuration.Settings.Language.ChangeCasing.AllUppercase;
+            radioButtonLowercase.Text = Configuration.Settings.Language.ChangeCasing.AllLowercase;
+            if (Configuration.Settings.Tools.ChangeCasingChoice == "NamesOnly")
+            {
+                radioButtonFixOnlyNames.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.ChangeCasingChoice == "Uppercase")
+            {
+                radioButtonUppercase.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.ChangeCasingChoice == "Lowercase")
+            {
+                radioButtonLowercase.Checked = true;
+            }
+
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
             _removeTextForHiSettings = _removeTextForHearingImpaired.Settings;
 
@@ -402,6 +420,8 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewItem.Checked = fixItem.Checked;
                 listViewConvertOptions.Items.Add(listViewItem);
             }
+
+            listViewConvertOptions_SelectedIndexChanged(null, null);
         }
 
         public class FixActionItem
@@ -712,6 +732,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            UpdateChangeCasingSettings();
             UpdateRtlSettings();
             UpdateActionEnabledCache();
             if (listViewInputFiles.Items.Count == 0)
@@ -1189,6 +1210,26 @@ namespace Nikse.SubtitleEdit.Forms
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
         }
 
+        private void UpdateChangeCasingSettings()
+        {
+            if (radioButtonNormal.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "Normal";
+            }
+            else if (radioButtonFixOnlyNames.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "NamesOnly";
+            }
+            else if (radioButtonUppercase.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "Uppercase";
+            }
+            else if (radioButtonLowercase.Checked)
+            {
+                Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
+            }
+        }
+
         private Dictionary<CommandLineConverter.BatchAction, bool> _actionEnabledCache;
 
         private void UpdateActionEnabledCache()
@@ -1240,7 +1281,11 @@ namespace Nikse.SubtitleEdit.Forms
                    !IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting) &&
                    !IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines) &&
-                   !IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI);
+                   !IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines) &&
+                   !IsActionEnabled(CommandLineConverter.BatchAction.RemoveLineBreaks);
         }
 
         internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Idx idx)
@@ -2195,6 +2240,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxOffsetTimeCodes.Visible = false;
             buttonConvertOptionsSettings.Visible = false;
             groupBoxFixRtl.Visible = false;
+            groupBoxChangeCasing.Visible = false;
             if (listViewConvertOptions.SelectedIndices.Count != 1)
             {
                 return;
@@ -2223,6 +2269,8 @@ namespace Nikse.SubtitleEdit.Forms
                 case CommandLineConverter.BatchAction.RemoveFormatting:
                     break;
                 case CommandLineConverter.BatchAction.RedoCasing:
+                    groupBoxChangeCasing.Visible = true;
+                    groupBoxChangeCasing.BringToFront();
                     break;
                 case CommandLineConverter.BatchAction.ReverseRtlStartEnd:
                     break;
@@ -2255,6 +2303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 case CommandLineConverter.BatchAction.ChangeSpeed:
                     groupBoxSpeed.Visible = true;
                     groupBoxSpeed.BringToFront();
+                    break;
                     break;
             }
         }
@@ -2306,6 +2355,19 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxFrameRateFrom.Text = newFrameRate;
             comboBoxFrameRateTo.Text = oldFrameRate;
+        }
+
+        private void listViewConvertOptions_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            var count = listViewConvertOptions.CheckedItems.Count;
+            if (count > 0)
+            {
+                groupBoxConvertOptions.Text = Configuration.Settings.Language.BatchConvert.ConvertOptions + "  " + count;
+            }
+            else
+            {
+                groupBoxConvertOptions.Text = Configuration.Settings.Language.BatchConvert.ConvertOptions;
+            }
         }
     }
 }
