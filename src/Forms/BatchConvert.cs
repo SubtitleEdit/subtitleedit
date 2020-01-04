@@ -2304,7 +2304,6 @@ namespace Nikse.SubtitleEdit.Forms
                     groupBoxSpeed.Visible = true;
                     groupBoxSpeed.BringToFront();
                     break;
-                    break;
             }
         }
 
