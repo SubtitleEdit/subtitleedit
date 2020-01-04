@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core
             "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고"
         };
 
-        private static readonly string[] AutoDetectWordsMarcedonian =
+        private static readonly string[] AutoDetectWordsMacedonian =
         {
             "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер",
             "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат", "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe",
@@ -593,10 +593,10 @@ namespace Nikse.SubtitleEdit.Core
                 return "sl";
             }
 
-            count = GetCount(text, AutoDetectWordsMarcedonian);
+            count = GetCount(text, AutoDetectWordsMacedonian);
             if (count > bestCount)
             {
-                return "mk"; // Markedonian
+                return "mk";
             }
 
             return string.Empty;
@@ -1027,8 +1027,8 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "mk_mk": // Markedonian
-                        count = GetCount(text, AutoDetectWordsMarcedonian);
+                    case "mk_mk": // Macedonian
+                        count = GetCount(text, AutoDetectWordsMacedonian);
                         if (count > bestCount)
                         {
                             languageName = shortName;
