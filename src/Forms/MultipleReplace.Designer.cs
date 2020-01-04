@@ -703,7 +703,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1040, 582);
+            this.MinimumSize = new System.Drawing.Size(910, 582);
             this.Name = "MultipleReplace";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
