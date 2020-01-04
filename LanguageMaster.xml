@@ -221,7 +221,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamOverrideVideoSize>Override original video size</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
-    <RemoveLineBreaks>remove line-breaks</RemoveLineBreaks>
+    <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
