@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 //fix missing spaces in "Hey...move it!" to "Hey... move it!"
                 int index = p.Text.IndexOf("...", StringComparison.Ordinal);
-                if (index >= 0 && p.Text.Length > 5)
+                if (index > 0 && p.Text.Length > 5)
                 {
                     string newText = p.Text;
                     while (index != -1)

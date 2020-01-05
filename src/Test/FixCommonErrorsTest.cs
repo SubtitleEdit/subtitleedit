@@ -1038,12 +1038,23 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "-Person one speaks." + Environment.NewLine +
-                    "-The other person starts speaking and continues" + Environment.NewLine +
-                    "to speak loudly for a little white.");
+                                                      "-The other person starts speaking and continues" + Environment.NewLine +
+                                                      "to speak loudly for a little white.");
                 new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("- Person one speaks." + Environment.NewLine +
-                    "- The other person starts speaking and continues" + Environment.NewLine +
-                    "to speak loudly for a little white.", _subtitle.Paragraphs[0].Text);
+                                "- The other person starts speaking and continues" + Environment.NewLine +
+                                "to speak loudly for a little white.", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesStartEllipsisDoNotTouch()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "...I'm fine.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("...I'm fine.", _subtitle.Paragraphs[0].Text);
             }
         }
 
