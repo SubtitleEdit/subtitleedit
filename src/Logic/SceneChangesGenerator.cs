@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core;
@@ -26,11 +27,17 @@ namespace Nikse.SubtitleEdit.Logic
         {
             Log = new StringBuilder();
             TimeCodes = new StringBuilder();
+            var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
+            if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
+            {
+                ffmpegLocation = "ffmpeg";
+            }
+
             var process = new Process
             {
                 StartInfo =
                 {
-                    FileName = Configuration.Settings.General.FFmpegLocation,
+                    FileName = ffmpegLocation,
                     Arguments = $"-i \"{videoFileName}\" -vf \"select=gt(scene\\," + threshold.ToString(CultureInfo.InvariantCulture) + "),showinfo\" -vsync vfr -f null -",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
