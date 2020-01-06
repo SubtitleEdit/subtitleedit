@@ -79,6 +79,8 @@
     <Size>大小</Size>
     <Search>搜索</Search>
     <DeleteCurrentLine>删除当前行</DeleteCurrentLine>
+    <Width>宽</Width>
+    <Height>高</Height>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -158,8 +160,8 @@ Command line: {1} {2}
     <ExtractingAudioUsingX>使用{0}提取音频...</ExtractingAudioUsingX>
     <ExtractingTextUsingX>使用{0}从音频中提取文字...</ExtractingTextUsingX>
     <ProgessViaXy>使用{0}提取文字进度：{1}%</ProgessViaXy>
-    <ShowLess>显示更少</ShowLess>
-    <ShowMore>显示更多</ShowMore>
+    <ShowLess>显示更少 ▲</ShowLess>
+    <ShowMore>显示更多 ▼</ShowMore>
   </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>自动平衡所选行</TitleAutoBreak>
@@ -174,8 +176,9 @@ Command line: {1} {2}
     <InputDescription>输入文件 (浏览或拖放)</InputDescription>
     <Status>状态</Status>
     <Output>输出</Output>
-    <ChooseOutputFolder>选择输出文件夹</ChooseOutputFolder>
-    <OverwriteExistingFiles>覆盖已有文件</OverwriteExistingFiles>
+    <SaveInSourceFolder>保存到源文件夹</SaveInSourceFolder>
+    <SaveInOutputFolder>保存到下方的导出文件夹</SaveInOutputFolder>
+    <OverwriteFiles>覆盖文件</OverwriteFiles>
     <Style>样式...</Style>
     <UseStyleFromSource>使用来自源文件的样式</UseStyleFromSource>
     <ConvertOptions>转换选项</ConvertOptions>
@@ -206,10 +209,18 @@ Command line: {1} {2}
     <FilterSrtNoUtf8BOM>不带UTF-8 BOM数据头的SubRip (.srt) 文件</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
     <FilterContains>文字内容包含...</FilterContains>
+    <FilterFileNameContains>文件名包含...</FilterFileNameContains>
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>偏移时间码</OffsetTimeCodes>
+    <TransportStreamSettings>传输流设置</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>覆盖原始 X 向位置</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>覆盖原始 Y 向位置</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>覆盖原始视频尺寸</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>文件名结尾</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>传输流设定</TransportStreamSettingsButton>
+    <RemoveLineBreaks>移除换行</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
@@ -572,6 +583,7 @@ Command line: {1} {2}
     <FixOverlappingDisplayTimes>修复重叠的显示时间</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>修正过短的显示时间</FixShortDisplayTimes>
     <FixLongDisplayTimes>修正过长的显示时间</FixLongDisplayTimes>
+    <FixShortGaps>修复短间隔</FixShortGaps>
     <FixInvalidItalicTags>修复无效的斜体标签</FixInvalidItalicTags>
     <RemoveUnneededSpaces>删除不需要的空格</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>删除不需要的句号</RemoveUnneededPeriods>
@@ -607,9 +619,11 @@ Command line: {1} {2}
     <X3PlusLinesFixed>已修复超过两行的字幕: {0}</X3PlusLinesFixed>
     <Analysing>正在分析...</Analysing>
     <NothingToFix>没有什么要修复 :)</NothingToFix>
-    <FixesFoundX>已找到修复: {0}</FixesFoundX>
-    <XFixesApplied>已应用修复: {0}</XFixesApplied>
-    <NothingToFixBut>没有什么需要修复，但有几个问题可以改进 - 详见记录</NothingToFixBut>
+    <FixesFoundX>已找到的修复项: {0}</FixesFoundX>
+    <XFixesApplied>已应用的修复项: {0}</XFixesApplied>
+    <NothingFixableBut>没有可被自动修复的内容。该字幕包含错误 - 详见日志</NothingFixableBut>
+    <XFixedBut>已修复 {0} 个问题，但该字幕仍包含错误 - 详见日志</XFixedBut>
+    <XCouldBeFixedBut>可修复 {0} 个问题，但该字幕仍包含错误 - 详见日志</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>已取消选中“单独的小写 'i' 修复为 'I' (英语)”</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} 个 'i' 已更改为大写</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>修复段落后的首字母为大写</FixFirstLetterToUppercaseAfterParagraph>
@@ -621,6 +635,7 @@ Command line: {1} {2}
     <FixInvalidItalicTag>修复无效的斜体</FixInvalidItalicTag>
     <FixShortDisplayTime>修复过短的显示时间</FixShortDisplayTime>
     <FixOverlappingDisplayTime>修复重叠的显示时间</FixOverlappingDisplayTime>
+    <FixShortGap>修复短间隔</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
@@ -635,6 +650,7 @@ Command line: {1} {2}
     <XDisplayTimesProlonged>{0} 个显示时间已延长</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} 个无效 HTML 标签已修复</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} 个显示时间已缩短</XDisplayTimesShortned>
+    <XGapsFixed>已修复 {0} 个短间隔</XGapsFixed>
     <XLinesUnbreaked>{0} 行已取消断开</XLinesUnbreaked>
     <UnneededSpace>不需要的空格</UnneededSpace>
     <XUnneededSpacesRemoved>{0} 个不需要的空格已删除</XUnneededSpacesRemoved>
@@ -777,7 +793,9 @@ Command line: {1} {2}
     <FileName>文件名</FileName>
     <Join>合并</Join>
     <TotalNumberOfLinesX>总行数: {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>注意：须先保证文件的时间码无误。</Note>
+    <AlreadyCorrectTimeCodes>文件已包含正确的时间码</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>添加上一个文件的结束时间</AppendTimeCodes>
+    <AddMs>在各个文件后添加毫秒</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>未指定</NotSpecified>
@@ -1496,7 +1514,8 @@ Command line: {1} {2}
     <PromptInsertSubtitleOverlap>在波形位置处插入字幕将导致重叠！
 
 是否仍要继续？</PromptInsertSubtitleOverlap>
-    <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
+    <SubtitleContainsNegativeDurationsX>字幕包含负值持续时间，位于第 {0} 行</SubtitleContainsNegativeDurationsX>
+    <SetPlayRateX>将播放速度设为 {0}%</SetPlayRateX>
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
@@ -1763,6 +1782,8 @@ Command line: {1} {2}
     <GoToBookmark>转到书签</GoToBookmark>
     <GoToPreviousBookmark>转到上一书签</GoToPreviousBookmark>
     <GoToNextBookmark>转到下一书签</GoToNextBookmark>
+    <ChooseProfile>选择预设方案</ChooseProfile>
+    <DuplicateLine>复制行</DuplicateLine>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
@@ -1973,6 +1994,7 @@ Command line: {1} {2}
     <WaveformSeekSilenceBack>向后搜索静音</WaveformSeekSilenceBack>
     <WaveformAddTextHere>添加文本到此处 (用于选中的内容)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>将文本添加到此处（用剪贴板内容替换选中的内容）</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>将当前对象设为新选中项</SetParagraphAsSelection>
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
@@ -1999,6 +2021,7 @@ Command line: {1} {2}
     <Fullscreen>全屏幕</Fullscreen>
     <PlayRateSlower>减慢播放速度</PlayRateSlower>
     <PlayRateFaster>加快播放速度</PlayRateFaster>
+    <VideoResetSpeedAndZoom>重置速度/缩放</VideoResetSpeedAndZoom>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
     <CustomSearch3>翻译、自定义搜索 3</CustomSearch3>
@@ -2010,7 +2033,8 @@ Command line: {1} {2}
     <SyntaxColorDurationIfTooLarge>若时长太长则用颜色标注</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>若文本太长则用颜色标注</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>若文本长度超过 {0} 则用颜色标注</SyntaxColorTextMoreThanMaxLines>
-    <SyntaxColorOverlap>时间码重叠涂色</SyntaxColorOverlap>
+    <SyntaxColorOverlap>若时间码重叠则用颜色标注</SyntaxColorOverlap>
+    <SyntaxColorGap>若间隔过短则用颜色标注</SyntaxColorGap>
     <SyntaxErrorColor>错误项颜色</SyntaxErrorColor>
     <GoToFirstSelectedLine>转到首个所选行</GoToFirstSelectedLine>
     <GoToNextEmptyLine>转到下一个空白行</GoToNextEmptyLine>
@@ -2044,6 +2068,7 @@ Command line: {1} {2}
     <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>选中的内容转Ruby（日本）</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>切换自动间隔</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>在指针后的第一个空格处换行</MainTextBoxAutoBreakFromPos>
@@ -2053,14 +2078,22 @@ Command line: {1} {2}
     <Miscellaneous>杂项</Miscellaneous>
     <CpsIncludesSpace>字词/秒 （CPS）含空格</CpsIncludesSpace>
     <UseDoNotBreakAfterList>使用不在后面断行的列表</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>在句末标点（.|?）之前断行</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>按像素宽度断行</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>偏重于底部</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>在对话短划线前断行</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>在逗号前断行</BreakEarlyForComma>
     <GoogleTranslate>谷歌翻译</GoogleTranslate>
     <GoogleTranslateApiKey>API密钥</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>微软 Bing 翻译引擎</MicrosoftBingTranslator>
     <HowToSignUp>如何注册</HowToSignUp>
     <MicrosoftTranslateApiKey>API密钥</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>通证终结点</MicrosoftTranslateTokenEndpoint>
     <FontNote>注意：这些字体设置仅用于Subtitle Edit的用户界面。
 字幕字体通常在视频播放器中设置，但也可以通过包含内建字体信息的字幕来设置。
 例如“Advance Sub Station Alpha”格式，或导出为图像字幕格式。</FontNote>
+    <RestoreDefaultSettings>还原默认设置</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>全部的设置将被还原到默认值，是否继续？</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>mpv 设置</Title>
@@ -2134,8 +2167,12 @@ Command line: {1} {2}
     <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
     <WhiteSpaceCheckReport>{1} 栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
     <ReportPrompt>完整报告请看这里: {0}</ReportPrompt>
+    <OpenReportInFolder>在文件夹中打开报告</OpenReportInFolder>
     <FoundXIssues>Netflix 品质检查找到 {0} 个问题</FoundXIssues>
     <CheckOk>Netflix品质检查通过 :)</CheckOk>
+    <MaximumXCharsPerSecond>每秒字数最大值 {0} (不含空格)</MaximumXCharsPerSecond>
+    <MaximumLineLength>最大行长（{0}）</MaximumLineLength>
+    <MinimumDuration>最短区间: 5/6秒（833毫秒）</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>分割</Title>
@@ -2296,7 +2333,8 @@ Command line: {1} {2}
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>传输流字幕选择器 - {0}</Title>
-    <PidLine>传输包识别符 (PID) = {}，字幕行数= {1}</PidLine>
+    <PidLineImage>图像 - 传输包标识符（PID）= {0}，语言 = {1}，字幕行数 = {2}</PidLineImage>
+    <PidLineTeletext>图文电视（Teletext） - 传输包标识符（PID） = {1}，页{0}，语言 = {2}，字幕行数 = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} 张图片</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2384,6 +2422,7 @@ Command line: {1} {2}
     <UseTimeCodesFromIdx>从 .idx 文件使用时间码</UseTimeCodesFromIdx>
     <NoMatch>&lt;不匹配&gt;</NoMatch>
     <AutoTransparentBackground>自动透明背景</AutoTransparentBackground>
+    <CaptureTopAlign>捕捉顶对齐</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>为当前图像检查比较匹配数...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>编辑上个图像比较附加...</EditLastAdditions>
     <SetUnitalicFactor>设置非倾斜因数...</SetUnitalicFactor>
@@ -2392,6 +2431,7 @@ Command line: {1} {2}
     <MinLineSplitHeight>最低行高 （分割）</MinLineSplitHeight>
     <FallbackToX>回退到 {0}</FallbackToX>
     <ImagePreProcessing>图像预处理...</ImagePreProcessing>
+    <EditImageDb>编辑图像数据库</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
@@ -2423,6 +2463,20 @@ Command line: {1} {2}
     <Title>设置非倾斜因数</Title>
     <Description>调节此值，直到文本样式为正常且不倾斜为止。注意：原始图像应为倾斜样式。</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR图像处理</Title>
+    <Colors>颜色</Colors>
+    <AdjustAlpha>调节数值直到文本显示清晰（数值区间通常为200~300）</AdjustAlpha>
+    <OriginalImage>原始图像</OriginalImage>
+    <PostImage>图像后处理</PostImage>
+    <BinaryThreshold>二值图像比较阈值</BinaryThreshold>
+    <InvertColors>反转颜色</InvertColors>
+    <YellowToWhite>黄色转白色</YellowToWhite>
+    <ColorToWhite>彩色转白色</ColorToWhite>
+    <ColorToRemove>要移除的颜色</ColorToRemove>
+    <Cropping>裁剪</Cropping>
+    <CropTransparentColors>裁剪透明色</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>水印</Title>
     <WatermarkX>水印:{0}</WatermarkX>
@@ -2442,6 +2496,7 @@ Command line: {1} {2}
     <ZoomOut>缩小</ZoomOut>
     <AddParagraphHere>添加文本到此处</AddParagraphHere>
     <AddParagraphHereAndPasteText>从剪贴板添加文本到此处</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>将当前对象设为新选中项</SetParagraphAsSelection>
     <FocusTextBox>聚焦到文本框</FocusTextBox>
     <DeleteParagraph>删除文本</DeleteParagraph>
     <Split>分割</Split>
