@@ -422,6 +422,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewConvertOptions_SelectedIndexChanged(null, null);
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                buttonSwapFrameRate.Text = "🡙";
+            }
+            else
+            {
+                buttonSwapFrameRate.Text = "<->";
+                buttonSwapFrameRate.Width = 35;
+                buttonSwapFrameRate.Font = new Font(Font.FontFamily, Font.Size);
+            }
         }
 
         public class FixActionItem

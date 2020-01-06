@@ -146,14 +146,14 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxMergeShortLines);
             this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
             this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 275);
@@ -364,11 +364,11 @@
             // buttonSwapFrameRate
             // 
             this.buttonSwapFrameRate.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSwapFrameRate.Location = new System.Drawing.Point(237, 28);
+            this.buttonSwapFrameRate.Location = new System.Drawing.Point(207, 28);
             this.buttonSwapFrameRate.Name = "buttonSwapFrameRate";
-            this.buttonSwapFrameRate.Size = new System.Drawing.Size(23, 28);
+            this.buttonSwapFrameRate.Size = new System.Drawing.Size(27, 28);
             this.buttonSwapFrameRate.TabIndex = 9;
-            this.buttonSwapFrameRate.Text = "🡙";
+            this.buttonSwapFrameRate.Text = "<->";
             this.buttonSwapFrameRate.UseVisualStyleBackColor = true;
             this.buttonSwapFrameRate.Click += new System.EventHandler(this.buttonSwapFrameRate_Click);
             // 
@@ -377,7 +377,7 @@
             this.comboBoxFrameRateTo.FormattingEnabled = true;
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(130, 46);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
-            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(101, 21);
+            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(71, 21);
             this.comboBoxFrameRateTo.TabIndex = 3;
             // 
             // labelToFrameRate
@@ -394,7 +394,7 @@
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
             this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(130, 17);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
-            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(101, 21);
+            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(71, 21);
             this.comboBoxFrameRateFrom.TabIndex = 1;
             // 
             // labelFromFrameRate

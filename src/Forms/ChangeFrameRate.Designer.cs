@@ -45,7 +45,7 @@
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(262, 115);
+            this.buttonCancel.Location = new System.Drawing.Point(277, 113);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
@@ -55,7 +55,7 @@
             // buttonOK
             // 
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(181, 115);
+            this.buttonOK.Location = new System.Drawing.Point(194, 113);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
@@ -76,14 +76,14 @@
             // comboBoxFrameRateFrom
             // 
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(145, 45);
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(148, 45);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
             this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateFrom.TabIndex = 4;
             // 
             // labelFromFrameRate
             // 
-            this.labelFromFrameRate.Location = new System.Drawing.Point(0, 45);
+            this.labelFromFrameRate.Location = new System.Drawing.Point(3, 45);
             this.labelFromFrameRate.Name = "labelFromFrameRate";
             this.labelFromFrameRate.Size = new System.Drawing.Size(145, 21);
             this.labelFromFrameRate.TabIndex = 6;
@@ -93,14 +93,14 @@
             // comboBoxFrameRateTo
             // 
             this.comboBoxFrameRateTo.FormattingEnabled = true;
-            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(145, 74);
+            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(148, 74);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateTo.TabIndex = 6;
             // 
             // labelToFrameRate
             // 
-            this.labelToFrameRate.Location = new System.Drawing.Point(3, 74);
+            this.labelToFrameRate.Location = new System.Drawing.Point(6, 74);
             this.labelToFrameRate.Name = "labelToFrameRate";
             this.labelToFrameRate.Size = new System.Drawing.Size(142, 17);
             this.labelToFrameRate.TabIndex = 8;
@@ -109,7 +109,7 @@
             // 
             // buttonGetFrameRateFrom
             // 
-            this.buttonGetFrameRateFrom.Location = new System.Drawing.Point(272, 45);
+            this.buttonGetFrameRateFrom.Location = new System.Drawing.Point(275, 45);
             this.buttonGetFrameRateFrom.Name = "buttonGetFrameRateFrom";
             this.buttonGetFrameRateFrom.Size = new System.Drawing.Size(28, 23);
             this.buttonGetFrameRateFrom.TabIndex = 5;
@@ -119,7 +119,7 @@
             // 
             // buttonGetFrameRateTo
             // 
-            this.buttonGetFrameRateTo.Location = new System.Drawing.Point(272, 73);
+            this.buttonGetFrameRateTo.Location = new System.Drawing.Point(275, 73);
             this.buttonGetFrameRateTo.Name = "buttonGetFrameRateTo";
             this.buttonGetFrameRateTo.Size = new System.Drawing.Size(28, 23);
             this.buttonGetFrameRateTo.TabIndex = 7;
@@ -134,11 +134,11 @@
             // buttonSwap
             // 
             this.buttonSwap.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSwap.Location = new System.Drawing.Point(314, 56);
+            this.buttonSwap.Location = new System.Drawing.Point(312, 57);
             this.buttonSwap.Name = "buttonSwap";
-            this.buttonSwap.Size = new System.Drawing.Size(23, 28);
+            this.buttonSwap.Size = new System.Drawing.Size(25, 28);
             this.buttonSwap.TabIndex = 8;
-            this.buttonSwap.Text = "🡙";
+            this.buttonSwap.Text = "<->";
             this.buttonSwap.UseVisualStyleBackColor = true;
             this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
             // 
@@ -146,7 +146,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 148);
+            this.ClientSize = new System.Drawing.Size(364, 148);
             this.Controls.Add(this.buttonSwap);
             this.Controls.Add(this.buttonGetFrameRateTo);
             this.Controls.Add(this.buttonGetFrameRateFrom);

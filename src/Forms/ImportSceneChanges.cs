@@ -61,6 +61,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _log = new StringBuilder();
             textBoxLog.Visible = false;
+            if (!Configuration.IsRunningOnWindows)
+            {
+                buttonDownloadFfmpeg.Visible = false;
+                buttonImportWithFfmpeg.Enabled = true;
+                numericUpDownThreshold.Enabled = true;
+            }
         }
 
         public sealed override string Text
