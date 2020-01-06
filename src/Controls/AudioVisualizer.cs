@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -773,7 +774,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static string GetDisplayTime(double seconds)
         {
-            TimeSpan ts = TimeSpan.FromSeconds(seconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+            var ts = TimeSpan.FromSeconds(seconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
             if (ts.Minutes == 0 && ts.Hours == 0)
             {
                 return ts.Seconds.ToString(CultureInfo.InvariantCulture);
@@ -1025,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Controls
                     SetMinMaxViaSeconds(seconds);
                 }
                 else if (SetParagraphBorderHit(milliseconds, _selectedParagraph) ||
-                         SetParagrapBorderHit(milliseconds, _displayableParagraphs))
+                         SetParagraphBorderHit(milliseconds, _displayableParagraphs))
                 {
                     NewSelectionParagraph = null;
                     if (_mouseDownParagraph != null)
@@ -1182,9 +1183,10 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Paragraph prev = null;
                 Paragraph next = null;
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                var paragraphs = _subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                for (int i = 0; i < paragraphs.Count; i++)
                 {
-                    Paragraph p2 = _subtitle.Paragraphs[i];
+                    var p2 = paragraphs[i];
                     if (p2.StartTime.TotalSeconds < seconds)
                     {
                         prev = p2;
@@ -1213,16 +1215,17 @@ namespace Nikse.SubtitleEdit.Controls
             _wholeParagraphMaxMilliseconds = double.MaxValue;
             if (_subtitle != null && _mouseDownParagraph != null)
             {
-                int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                var paragraphs = _subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                int curIdx = paragraphs.IndexOf(_mouseDownParagraph);
                 if (curIdx >= 0)
                 {
                     if (curIdx > 0)
                     {
-                        _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        _wholeParagraphMinMilliseconds = paragraphs[curIdx - 1].EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
                     {
-                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        _wholeParagraphMaxMilliseconds = paragraphs[curIdx + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                 }
             }
@@ -1234,11 +1237,12 @@ namespace Nikse.SubtitleEdit.Controls
             _wholeParagraphMaxMilliseconds = double.MaxValue;
             if (_subtitle != null && _mouseDownParagraph != null)
             {
-                int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                var paragraphs = _subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                int curIdx = paragraphs.IndexOf(_mouseDownParagraph);
                 if (curIdx >= 0)
                 {
-                    var gap = Math.Abs(_subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx].StartTime.TotalMilliseconds);
-                    _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].StartTime.TotalMilliseconds + gap + 200;
+                    var gap = Math.Abs(paragraphs[curIdx - 1].EndTime.TotalMilliseconds - paragraphs[curIdx].StartTime.TotalMilliseconds);
+                    _wholeParagraphMinMilliseconds = paragraphs[curIdx - 1].StartTime.TotalMilliseconds + gap + 200;
                 }
             }
         }
@@ -1249,21 +1253,22 @@ namespace Nikse.SubtitleEdit.Controls
             _wholeParagraphMaxMilliseconds = double.MaxValue;
             if (_subtitle != null && _mouseDownParagraph != null)
             {
-                int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                var paragraphs = _subtitle.Paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+                int curIdx = paragraphs.IndexOf(_mouseDownParagraph);
                 if (curIdx >= 0)
                 {
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
                     {
-                        var gap = Math.Abs(_subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds);
-                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].EndTime.TotalMilliseconds - gap - 200;
+                        var gap = Math.Abs(paragraphs[curIdx].EndTime.TotalMilliseconds - paragraphs[curIdx + 1].StartTime.TotalMilliseconds);
+                        _wholeParagraphMaxMilliseconds = paragraphs[curIdx + 1].EndTime.TotalMilliseconds - gap - 200;
                     }
                 }
             }
         }
 
-        private bool SetParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
+        private bool SetParagraphBorderHit(int milliseconds, List<Paragraph> paragraphs)
         {
-            foreach (Paragraph p in paragraphs)
+            foreach (var p in paragraphs)
             {
                 bool hit = SetParagraphBorderHit(milliseconds, p);
                 if (hit)
@@ -1277,16 +1282,16 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph GetParagraphAtMilliseconds(int milliseconds)
         {
             Paragraph p = null;
-            if (IsParagrapHit(milliseconds, _selectedParagraph))
+            if (IsParagraphHit(milliseconds, _selectedParagraph))
             {
                 p = _selectedParagraph;
             }
 
             if (p == null)
             {
-                foreach (Paragraph pNext in _displayableParagraphs)
+                foreach (var pNext in _displayableParagraphs)
                 {
-                    if (IsParagrapHit(milliseconds, pNext))
+                    if (IsParagraphHit(milliseconds, pNext))
                     {
                         p = pNext;
                         break;
@@ -1724,7 +1729,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private static bool IsParagrapHit(int milliseconds, Paragraph paragraph)
+        private static bool IsParagraphHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
             {
