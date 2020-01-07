@@ -17716,10 +17716,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs[index].EndTime = TimeCode.FromSeconds(videoPosition);
-                    if (_subtitle.Paragraphs[index].Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                    {
-                        _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                    }
                 }
 
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
