@@ -24,10 +24,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             const string expectedChars = @"""”<.";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
 
                 // missing space after comma ","
-                Match match = FixMissingSpacesReComma.Match(p.Text);
+                var match = FixMissingSpacesReComma.Match(p.Text);
                 while (match.Success)
                 {
                     bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("O,τι", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("Ό,τι", StringComparison.Ordinal) ||
-                         p.Text.Substring(match.Index).StartsWith("Ο,ΤΙ", StringComparison.Ordinal) || 
+                         p.Text.Substring(match.Index).StartsWith("Ο,ΤΙ", StringComparison.Ordinal) ||
                          p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                     {
                         doFix = false;
@@ -246,7 +246,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         string newText = p.Text;
                         int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
                         bool isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
-                        if (!isAfterAssTag && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
+                        bool isAfterEllipsis = start >= 3 && newText.Substring(start - 3, 3) == "...";
+                        if (!isAfterAssTag && !isAfterEllipsis && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
                         {
                             if (indexOfFontTag < 0 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
