@@ -1058,6 +1058,17 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesStartEllipsisDoNotTouch2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "...\"litigious need not apply.\"");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("...\"litigious need not apply.\"", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
