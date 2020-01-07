@@ -584,8 +584,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string language = null)
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
-            checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
+            checkBoxShowOnlyForced.Checked = forcedOnly;
             checkBoxPromptForUnknownWords.Checked = false;
 
             _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
