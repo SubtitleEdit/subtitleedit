@@ -20,49 +20,48 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return @"<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <tt xml:lang='ja' xmlns='http://www.w3.org/ns/ttml' ttp:contentProfiles='http://www.w3.org/ns/ttml/profile/imsc1.1/text' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' ttp:timeBase='media' ttp:frameRate='24' ttp:frameRateMultiplier='1000 1001' ttp:tickRate='10000000' xmlns:ebutts='urn:ebu:tt:style' xmlns:itts='http://www.w3.org/ns/ttml/profile/imsc1#styling' xmlns:ittp='http://www.w3.org/ns/ttml/profile/imsc1#parameter' xmlns:ittm='http://www.w3.org/ns/ttml/profile/imsc1#metadata' ittp:aspectRatio='16 9'>
-	<head>
-		<styling>
-			<initial tts:color='white' tts:fontFamily='proportionalSansSerif' tts:fontSize='100%' tts:rubyReserve='outside' xml:id='initialStyles'/>
-			<style tts:shear='16.6667%' xml:id='italic'/>
+  <head>
+    <styling>
+      <initial tts:color='white' tts:fontFamily='proportionalSansSerif' tts:fontSize='100%' tts:rubyReserve='outside' xml:id='initialStyles'/>
+      <style tts:shear='16.6667%' xml:id='italic'/>
 
-			<!-- Variants of bouten styles -->
-			<style tts:textEmphasis='dot before' xml:id='bouten-dot-before'/>
-			<style tts:textEmphasis='dot after' xml:id='bouten-dot-after'/>
-			<style tts:textEmphasis='dot outside' xml:id='bouten-dot-outside'/>
-			<style tts:textEmphasis='filled circle outside' xml:id='bouten-filled-circle-outside'/>
-			<style tts:textEmphasis='open circle outside' xml:id='bouten-open-circle-outside'/>
-			<style tts:textEmphasis='open dot outside' xml:id='bouten-open-dot-outside'/>
-			<style tts:textEmphasis='filled sesame outside' xml:id='bouten-filled-sesame-outside'/>
-			<style tts:textEmphasis='open sesame outside' xml:id='bouten-open-sesame-outside'/>
-			<style tts:textEmphasis='auto outside' xml:id='bouten-auto-outside'/>
-			<style tts:textEmphasis='auto' xml:id='bouten-auto'/>
+      <!-- Variants of bouten styles -->
+      <style tts:textEmphasis='dot before' xml:id='bouten-dot-before'/>
+      <style tts:textEmphasis='dot after' xml:id='bouten-dot-after'/>
+      <style tts:textEmphasis='dot outside' xml:id='bouten-dot-outside'/>
+      <style tts:textEmphasis='filled circle outside' xml:id='bouten-filled-circle-outside'/>
+      <style tts:textEmphasis='open circle outside' xml:id='bouten-open-circle-outside'/>
+      <style tts:textEmphasis='open dot outside' xml:id='bouten-open-dot-outside'/>
+      <style tts:textEmphasis='filled sesame outside' xml:id='bouten-filled-sesame-outside'/>
+      <style tts:textEmphasis='open sesame outside' xml:id='bouten-open-sesame-outside'/>
+      <style tts:textEmphasis='auto outside' xml:id='bouten-auto-outside'/>
+      <style tts:textEmphasis='auto' xml:id='bouten-auto'/>
 
-			<style tts:textCombine='all' xml:id='horizontalDigit'/>
-			<style tts:ruby='base' xml:id='ruby-base'/>
-			<style tts:ruby='text' xml:id='ruby-text'/>
-			<style tts:ruby='text' xml:id='ruby-text-after'/>
-			<style tts:ruby='base' tts:shear='16.6667%' xml:id='ruby-base-italic'/>
-			<style tts:ruby='text' tts:shear='16.6667%' xml:id='ruby-text-italic'/>
-			<style tts:ruby='container' xml:id='ruby-container'/>
-		</styling>
-		<layout>
-			<region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='bottom-left-justified'/>
-           
-            <!-- This region is used to display English text events which divide this document into the various sections outlined in Netflix's Japanese Timed-Text Style Guide. Top-center-justified positioning shall not be used for Japanese authoring -->
-			<region tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='top-center-justified'/>
-           
-            <!-- In exceptional cases, some forced narrative events may be positioned creatively to mimic on-screen text as referenced in Section I.3 'Alignment' -->
-			<region ebutts:multiRowAlign='end' tts:displayAlign='before' tts:extent='50.000% 50.000%' tts:origin='30.000% 50.000%' tts:textAlign='center' tts:shear='16.6667%' xml:id='force-narrative-example-region'/>
+      <style tts:textCombine='all' xml:id='horizontalDigit'/>
+      <style tts:ruby='base' xml:id='ruby-base'/>
+      <style tts:ruby='text' xml:id='ruby-text'/>
+      <style tts:ruby='text' xml:id='ruby-text-after'/>
+      <style tts:ruby='base' tts:shear='16.6667%' xml:id='ruby-base-italic'/>
+      <style tts:ruby='text' tts:shear='16.6667%' xml:id='ruby-text-italic'/>
+      <style tts:ruby='container' xml:id='ruby-container'/>
+    </styling>
+    <layout>
+      <region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='bottom-left-justified'/>
 
+      <!-- This region is used to display English text events which divide this document into the various sections outlined in Netflix's Japanese Timed-Text Style Guide. Top-center-justified positioning shall not be used for Japanese authoring -->
+      <region tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='center' xml:id='top-center-justified'/>
 
-			<region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='left'/>
-			<region ebutts:multiRowAlign='start' tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='right'/>
-		</layout>
-	</head>
-	<body>
-	   <div>
-	    </div>
-	</body>
+      <!-- In exceptional cases, some forced narrative events may be positioned creatively to mimic on-screen text as referenced in Section I.3 'Alignment' -->
+      <region ebutts:multiRowAlign='end' tts:displayAlign='before' tts:extent='50.000% 50.000%' tts:origin='30.000% 50.000%' tts:textAlign='center' tts:shear='16.6667%' xml:id='force-narrative-example-region'/>
+
+      <region ebutts:multiRowAlign='start' tts:displayAlign='after' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='left'/>
+      <region ebutts:multiRowAlign='start' tts:displayAlign='before' tts:extent='80.000% 80.000%' tts:origin='10.000% 10.000%' tts:textAlign='start' tts:writingMode='tbrl' xml:id='right'/>
+    </layout>
+  </head>
+  <body>
+    <div>
+    </div>
+  </body>
 </tt>
 ".Replace('\'', '"');
         }

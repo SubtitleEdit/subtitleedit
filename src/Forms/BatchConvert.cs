@@ -2074,7 +2074,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var fi = new FileInfo(fileName);
                         if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
                         {
-                            // skip 
+                            // skip
                         }
                         else if (ext == ".sub" && FileUtil.IsVobSub(fileName))
                         {

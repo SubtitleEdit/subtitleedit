@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralGoToPreviousBookmark { get; set; }
         public Keys MainGeneralGoToNextBookmark { get; set; }
         public Keys MainGeneralChooseProfile { get; set; }
-        public Keys MainGeneralDuplicateLine { get; set; }        
+        public Keys MainGeneralDuplicateLine { get; set; }
         public Keys MainTextBoxSplitAtCursor { get; set; }
         public Keys MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public Keys MainTextBoxSplitSelectedLineBilingual { get; set; }

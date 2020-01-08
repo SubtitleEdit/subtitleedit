@@ -1359,7 +1359,7 @@ namespace Nikse.SubtitleEdit.Controls
                     item.SubItems[ColumnIndexGap].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
                 else
-                {                    
+                {
                     item.SubItems[ColumnIndexGap].BackColor = BackColor;
                 }
             }
