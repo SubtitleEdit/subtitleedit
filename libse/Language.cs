@@ -2396,8 +2396,8 @@ can edit in same subtitle file (collaboration)",
                            "Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like " + Environment.NewLine +
                            "\"Advanced Sub Station Alpha\" or via export to image based formats.",
                 RestoreDefaultSettings = "Restore default settings",
-                RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine + 
-                                            Environment.NewLine + 
+                RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine +
+                                            Environment.NewLine +
                                             "Continue?"
             };
 

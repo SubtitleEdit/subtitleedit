@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             catch
             {
-                // ignore errors   
+                // ignore errors
             }
 
             _quartzFilgraphManager = new FilgraphManager();

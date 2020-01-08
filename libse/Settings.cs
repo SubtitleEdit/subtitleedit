@@ -3133,7 +3133,7 @@ $HorzAlign          =   Center
             {
                 settings.Tools.BatchConvertRemoveLineBreaks = Convert.ToBoolean(subNode.InnerText);
             }
-            
+
             subNode = node.SelectSingleNode("BatchConvertMergeSameText");
             if (subNode != null)
             {

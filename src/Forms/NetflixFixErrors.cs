@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBox17CharsPerSecond.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
             checkBoxMaxLineLength.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
-        } 
+        }
 
         private void InitializeLanguages(string language)
         {

@@ -82,9 +82,9 @@ namespace Nikse.SubtitleEdit.Logic
                 //form.FormBorderStyle = FormBorderStyle.None;
                 //var title = new PictureBox
                 //{
-                //    Location = new Point(0,0), 
-                //    Width = form.Width, 
-                //    Height = 50, 
+                //    Location = new Point(0, 0),
+                //    Width = form.Width,
+                //    Height = 50,
                 //    BackColor = Color.Black,
                 //    Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left
                 //};
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 //var minimize = new Label
                 //{
-                //    Text = "🗕", 
+                //    Text = "🗕",
                 //    Location = new Point(form.Width - 60, 5),
                 //    ForeColor = ForeColor,
                 //    BackColor = Color.Black, // BackColor,
