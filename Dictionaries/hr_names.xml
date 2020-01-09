@@ -1,16 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <names>
+  <blacklist />
   <name>Adrijana</name>
   <name>Agata</name>
   <name>Agneza</name>
   <name>Aleksandar</name>
+  <name>Aleksandar Isajevič Solženjicin</name>
+  <name>Aleksandar Solženjicin</name>
   <name>Aleksandra</name>
   <name>Alen</name>
-  <name>Aljoša</name>
   <name>Alma</name>
   <name>Alojz</name>
   <name>Alojzija</name>
   <name>Alojzije</name>
+  <name>Aljoša</name>
   <name>Amalija</name>
   <name>Anamarija</name>
   <name>Anastazija</name>
@@ -32,6 +35,7 @@
   <name>Barica</name>
   <name>Bartol</name>
   <name>Bartolomej</name>
+  <name>Barun Münchhausen</name>
   <name>Berislav</name>
   <name>Bernarda</name>
   <name>Biljana</name>
@@ -64,6 +68,7 @@
   <name>Cila</name>
   <name>Cvijeta</name>
   <name>Cvita</name>
+  <name>Čajkovski</name>
   <name>Dajana</name>
   <name>Dalibor</name>
   <name>Daliborka</name>
@@ -94,6 +99,7 @@
   <name>Dorijan</name>
   <name>Dorotea</name>
   <name>Doroteja</name>
+  <name>Dostojevski</name>
   <name>Draga</name>
   <name>Dragan</name>
   <name>Dragana</name>
@@ -124,12 +130,14 @@
   <name>Filip</name>
   <name>Filipa</name>
   <name>Finka</name>
+  <name>Fjodor Dostojevski</name>
+  <name>Fjodor Mihajlovič Dostojevski</name>
   <name>Florijan</name>
   <name>Frane</name>
-  <name>Franjo</name>
   <name>Franka</name>
   <name>Franko</name>
   <name>Frano</name>
+  <name>Franjo</name>
   <name>Gabriela</name>
   <name>Gabrijel</name>
   <name>Gabrijela</name>
@@ -157,8 +165,8 @@
   <name>Jagoda</name>
   <name>Jakov</name>
   <name>Jakša</name>
-  <name>Janja</name>
   <name>Janko</name>
+  <name>Janja</name>
   <name>Jasmina</name>
   <name>Jasminka</name>
   <name>Jasna</name>
@@ -172,10 +180,10 @@
   <name>Jolanda</name>
   <name>Josip</name>
   <name>Josipa</name>
-  <name>Joško</name>
   <name>Joso</name>
-  <name>Jožica</name>
+  <name>Joško</name>
   <name>Jozo</name>
+  <name>Jožica</name>
   <name>Julija</name>
   <name>Julijana</name>
   <name>Juraj</name>
@@ -202,7 +210,14 @@
   <name>Ksenija</name>
   <name>Ladislav</name>
   <name>Larisa</name>
+  <name>Lav Nikolajevič Tolstoj</name>
+  <name>Lav Tolstoj</name>
   <name>Lidija</name>
+  <name>Lovre</name>
+  <name>Lovrenco</name>
+  <name>Lovro</name>
+  <name>Lucija</name>
+  <name>Lucijan</name>
   <name>Ljerka</name>
   <name>Ljiljana</name>
   <name>Ljuba</name>
@@ -210,11 +225,6 @@
   <name>Ljubica</name>
   <name>Ljubo</name>
   <name>Ljubomir</name>
-  <name>Lovre</name>
-  <name>Lovrenco</name>
-  <name>Lovro</name>
-  <name>Lucija</name>
-  <name>Lucijan</name>
   <name>Magda</name>
   <name>Majda</name>
   <name>Manda</name>
@@ -250,10 +260,10 @@
   <name>Milenko</name>
   <name>Milica</name>
   <name>Milivoj</name>
-  <name>Miljenko</name>
   <name>Milka</name>
   <name>Milorad</name>
   <name>Miloš</name>
+  <name>Miljenko</name>
   <name>Miodrag</name>
   <name>Mirela</name>
   <name>Mirjam</name>
@@ -297,4 +307,8 @@
   <name>Ognjen</name>
   <name>Olgica</name>
   <name>Olivera</name>
+  <name>Petar Čajkovski</name>
+  <name>Petar Iljič Čajkovski</name>
+  <name>Solženjicin</name>
+  <name>Tolstoj</name>
 </names>

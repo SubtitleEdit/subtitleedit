@@ -730,6 +730,7 @@ This file is case sensitive.
   <name>Bila Tserkva</name>
   <name>Bilal</name>
   <name>Bilbao</name>
+  <name>Bill</name>
   <name>Bill Clinton</name>
   <name>Bill Gates</name>
   <name>Billie</name>
@@ -1721,7 +1722,7 @@ This file is case sensitive.
   <name>Donna</name>
   <name>Donnas</name>
   <name>Donnelly</name>
-  <name>Donnelys</name>
+  <name>Donnellys</name>
   <name>Donnie</name>
   <name>Donny</name>
   <name>Donohue</name>
@@ -1736,8 +1737,6 @@ This file is case sensitive.
   <name>Doris</name>
   <name>Dorota</name>
   <name>Dorothy</name>
-  <name>Dostojevskij</name>
-  <name>Dostojevskijs</name>
   <name>Dothraki</name>
   <name>Doug</name>
   <name>Dougie</name>
@@ -1824,6 +1823,7 @@ This file is case sensitive.
   <name>Edisons</name>
   <name>Edith</name>
   <name>Edmond</name>
+  <name>Edmond Dantès</name>
   <name>Edmonton</name>
   <name>Edmund</name>
   <name>Ed's</name>
@@ -2193,6 +2193,7 @@ This file is case sensitive.
   <name>Gambian</name>
   <name>Gandalf</name>
   <name>Gandhi</name>
+  <name>Gandi SAS</name>
   <name>Ganesh</name>
   <name>Ganges</name>
   <name>Ganwar</name>
@@ -2379,6 +2380,7 @@ This file is case sensitive.
   <name>Gunnars</name>
   <name>Gunneson</name>
   <name>Gunther</name>
+  <name>Günther</name>
   <name>Gurdeep</name>
   <name>Gurkha</name>
   <name>Gurkhas</name>
@@ -2682,7 +2684,7 @@ This file is case sensitive.
   <name>Instagram</name>
   <name>Insulin</name>
   <name>Internet</name>
-  <name>Interpool</name>
+  <name>Interpol</name>
   <name>iOS</name>
   <name>Iowa</name>
   <name>iPad</name>
@@ -4040,8 +4042,9 @@ This file is case sensitive.
   <name>Mullholand</name>
   <name>Mumbai</name>
   <name>Munchausen</name>
-  <name>Münchausens</name>
   <name>München</name>
+  <name>Münchhausen</name>
+  <name>Münchhausens</name>
   <name>Mundy</name>
   <name>Munich</name>
   <name>Muray</name>
@@ -5031,6 +5034,7 @@ This file is case sensitive.
   <name>Severus</name>
   <name>Seville</name>
   <name>Sewell</name>
+  <name>Seychellen</name>
   <name>Seychelles</name>
   <name>Seymour</name>
   <name>Shaheed</name>
@@ -5125,6 +5129,7 @@ This file is case sensitive.
   <name>Singulair</name>
   <name>Siobbhan</name>
   <name>Siobhan</name>
+  <name>Siobhán</name>
   <name>Siri</name>
   <name>Sirius</name>
   <name>Sithandra</name>
@@ -5529,7 +5534,6 @@ This file is case sensitive.
   <name>Toland</name>
   <name>Tolbert</name>
   <name>Toledo</name>
-  <name>Tolstoy</name>
   <name>Tom Cruise</name>
   <name>Tomasson</name>
   <name>Tome</name>
@@ -5809,7 +5813,6 @@ This file is case sensitive.
   <name>Wedecks</name>
   <name>Wednesday</name>
   <name>Weidermans</name>
-  <name>Weinerschnitzel</name>
   <name>Weir</name>
   <name>Weisfelt</name>
   <name>Weisz</name>
@@ -5852,6 +5855,7 @@ This file is case sensitive.
   <name>Widmore</name>
   <name>Widmores</name>
   <name>Wien</name>
+  <name>Wienerschnitzel</name>
   <name>Wiesbaden</name>
   <name>WiFi</name>
   <name>Wi-Fi</name>
@@ -5985,6 +5989,7 @@ This file is case sensitive.
   <name>Zack</name>
   <name>Zagreb</name>
   <name>Zaire</name>
+  <name>Zaïre</name>
   <name>Zalewski</name>
   <name>Zambarloukos</name>
   <name>Zambia</name>

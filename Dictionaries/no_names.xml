@@ -48,6 +48,8 @@
   <name>Alan</name>
   <name>Albert</name>
   <name>Aleksander</name>
+  <name>Aleksandr Isajevitsj Solzjenitsyn</name>
+  <name>Aleksandr Solzjenitsyn</name>
   <name>Aleksandra</name>
   <name>Alette</name>
   <name>Alex</name>
@@ -260,6 +262,7 @@
   <name>Barbro</name>
   <name>Bardu</name>
   <name>Barkåker</name>
+  <name>Barun Münchhausen</name>
   <name>Bastian</name>
   <name>Batnfjordsøra</name>
   <name>Beata</name>
@@ -485,6 +488,7 @@
   <name>Dorota</name>
   <name>Dorthe</name>
   <name>Dorthea</name>
+  <name>Dostojevskij</name>
   <name>Dovre</name>
   <name>Drag</name>
   <name>Dragsund</name>
@@ -673,6 +677,8 @@
   <name>Fjellsrud</name>
   <name>Fjellstad</name>
   <name>Fjellstrand</name>
+  <name>Fjodor Dostojevskij</name>
+  <name>Fjodor Mikhajlovitsj Dostojevskij</name>
   <name>Flakstad</name>
   <name>Flatanger</name>
   <name>Flateby</name>
@@ -1464,6 +1470,8 @@
   <name>Ler</name>
   <name>Lervik</name>
   <name>Lesja</name>
+  <name>Lev Nikolajevitsj Tolstoj</name>
+  <name>Lev Tolstoj</name>
   <name>Levanger</name>
   <name>Levi</name>
   <name>Li</name>
@@ -1959,6 +1967,8 @@
   <name>Phuong</name>
   <name>Pia</name>
   <name>Piotr</name>
+  <name>Pjotr Iljitsj Tsjajkovskij</name>
+  <name>Pjotr Tsjajkovskij</name>
   <name>Ploganes</name>
   <name>Pollestad</name>
   <name>Porsanger</name>
@@ -2286,6 +2296,7 @@
   <name>Solveig Marie</name>
   <name>Solvor</name>
   <name>Solvår</name>
+  <name>Solzjenitsyn</name>
   <name>Sommarøy</name>
   <name>Sondre</name>
   <name>Songdalen</name>
@@ -2508,6 +2519,7 @@
   <name>Tofte</name>
   <name>Tokke</name>
   <name>Tolga</name>
+  <name>Tolstoj</name>
   <name>Tom Erik</name>
   <name>Tomas</name>
   <name>Tomb</name>
@@ -2595,6 +2607,7 @@
   <name>Trøgstad</name>
   <name>Trømborg</name>
   <name>Trøndelag</name>
+  <name>Tsjajkovskij</name>
   <name>Turi</name>
   <name>Turid</name>
   <name>Tuva</name>

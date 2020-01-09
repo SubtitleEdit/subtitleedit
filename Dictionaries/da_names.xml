@@ -4,10 +4,13 @@
   <blacklist>
     <name>Rabat</name>
   </blacklist>
+  <name>Aleksandr Isaejvitj Solzjenitsyn</name>
+  <name>Aleksandr Solzjenitsyn</name>
   <name>Aquarium</name>
   <name>Armfeldt</name>
   <name>Asgård</name>
   <name>Bahnhofstrasse</name>
+  <name>Baron von Münchhausen</name>
   <name>Bartok</name>
   <name>Beaudine</name>
   <name>Beyonces</name>
@@ -26,12 +29,15 @@
   <name>Diagonalstræde</name>
   <name>Dickens</name>
   <name>DiLaurentis</name>
+  <name>Dostojevskij</name>
   <name>Egerman</name>
   <name>England</name>
   <name>Erlandson</name>
   <name>Falcon</name>
   <name>Falconberg</name>
   <name>Fields</name>
+  <name>Fjodor Dostojevskij</name>
+  <name>Fjodor Mikhajlovitj Dostojevskij</name>
   <name>Forrester</name>
   <name>Frankrig</name>
   <name>Fulton</name>
@@ -49,6 +55,8 @@
   <name>Kretzinsky</name>
   <name>København</name>
   <name>Leningrad</name>
+  <name>Lev Nikolaevitj Tolstoj</name>
+  <name>Lev Tolstoj</name>
   <name>Lyman</name>
   <name>Lymans</name>
   <name>Magnoliavej</name>
@@ -65,6 +73,8 @@
   <name>Nadjim</name>
   <name>Neumann</name>
   <name>Petterson</name>
+  <name>Pjotr Ilitj Tjajkovskij</name>
+  <name>Pjotr Tjajkovskij</name>
   <name>Pransky</name>
   <name>Primulavænget</name>
   <name>Puttanesca</name>
@@ -75,10 +85,13 @@
   <name>Sheng</name>
   <name>Silverton</name>
   <name>Slytherins</name>
+  <name>Solzjenitsyn</name>
   <name>Splendini</name>
   <name>Strombel</name>
   <name>Tianjins</name>
   <name>Tinsley</name>
+  <name>Tjajkovskij</name>
+  <name>Tolstoj</name>
   <name>Trinity</name>
   <name>Ullman</name>
   <name>Uzés</name>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names/words with specific casing - and specific to Dutch only -->
+<names>
+  <blacklist>
+    <name>Anders</name>
+    <name>April</name>
+    <name>Ben</name>
+    <name>Dan</name>
+    <name>Doe</name>
+    <name>El</name>
+    <name>Gore</name>
+    <name>Jeep</name>
+    <name>Jen</name>
+    <name>Marge</name>
+    <name>Mars</name>
+    <name>Mei</name>
+    <name>Metro</name>
+    <name>Tor</name>
+    <name>Welk</name>
+  </blacklist>
+  <name>Aleksandr Isajevitsj Solzjenitsyn</name>
+  <name>Aleksandr Solzjenitsyn</name>
+  <name>Baron van Münchhausen</name>
+  <name>Baron von Münchhausen</name>
+  <name>Dostojevski</name>
+  <name>Fjodor Dostojevski</name>
+  <name>Fjodor Michajlovitsj Dostojevski</name>
+  <name>Leo Tolstoj</name>
+  <name>Lev Nikolajevitsj Tolstoj</name>
+  <name>Pjotr Iljitsj Tsjajkovski</name>
+  <name>Pjotr Tsjajkovski</name>
+  <name>Solzjenitsyn</name>
+  <name>Tolstoj</name>
+  <name>Tsjajkovski</name>
+</names>

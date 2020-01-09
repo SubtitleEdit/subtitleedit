@@ -50,6 +50,8 @@
   <name>Aleena</name>
   <name>Aleigha</name>
   <name>Alejandra</name>
+  <name>Aleksandr Isayevich Solzhenitsyn</name>
+  <name>Aleksandr Solzhenitsyn</name>
   <name>Alena</name>
   <name>Alexia</name>
   <name>Algerian</name>
@@ -170,6 +172,7 @@
   <name>Barbadian</name>
   <name>Barbadians</name>
   <name>Barbudans</name>
+  <name>Baron Munchausen</name>
   <name>Baruchel</name>
   <name>Basques</name>
   <name>Batswana</name>
@@ -393,6 +396,7 @@
   <name>Dominican</name>
   <name>Dominicans</name>
   <name>Dominik</name>
+  <name>Dostoevsky</name>
   <name>Dr. Grey</name>
   <name>Dublin</name>
   <name>Dulce</name>
@@ -487,6 +491,8 @@
   <name>French citizens</name>
   <name>Freya</name>
   <name>Froot Loops</name>
+  <name>Fyodor Dostoevsky</name>
+  <name>Fyodor Mikhailovich Dostoevsky</name>
   <name>Gabonese</name>
   <name>Gabor</name>
   <name>Gabriela</name>
@@ -922,10 +928,12 @@
   <name>Leilani</name>
   <name>Leland</name>
   <name>Leningrad</name>
+  <name>Leo Tolstoy</name>
   <name>Leona</name>
   <name>Leonel</name>
   <name>Leonidas</name>
   <name>Lesly</name>
+  <name>Lev Nikolayevich Tolstoy</name>
   <name>Levi</name>
   <name>Leyla</name>
   <name>L'Hermitage</name>
@@ -1231,6 +1239,8 @@
   <name>Pusan</name>
   <name>Pycroft</name>
   <name>Pyongyang</name>
+  <name>Pyotr Ilyich Tchaikovsky</name>
+  <name>Pyotr Tchaikovsky</name>
   <name>Qatari</name>
   <name>Quebec</name>
   <name>Quebecers</name>
@@ -1382,6 +1392,7 @@
   <name>Smithers</name>
   <name>Solomon Islander</name>
   <name>Solomon Islanders</name>
+  <name>Solzhenitsyn</name>
   <name>Somali</name>
   <name>Somalilanders</name>
   <name>Somalis</name>
@@ -1429,6 +1440,7 @@
   <name>Taryn</name>
   <name>Tatum</name>
   <name>Tauriel</name>
+  <name>Tchaikovsky</name>
   <name>Teagan</name>
   <name>Tegan</name>
   <name>Tehran</name>
@@ -1454,6 +1466,7 @@
   <name>Tobagonians</name>
   <name>Tofino</name>
   <name>Togolese</name>
+  <name>Tolstoy</name>
   <name>Tom</name>
   <name>Tomas</name>
   <name>Tongan</name>
