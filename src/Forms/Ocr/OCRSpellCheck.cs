@@ -154,9 +154,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)
         {
-            groupBoxEditWholeText.BringToFront();
+            groupBoxEditWholeText.Visible = true;
             groupBoxEditWholeText.Enabled = true;
-            GroupBoxEditWord.SendToBack();
+            GroupBoxEditWord.Visible = false;
             GroupBoxEditWord.Enabled = false;
             buttonEditWord.Enabled = true;
             buttonEditWholeText.Enabled = false;
@@ -165,9 +165,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonEditWordClick(object sender, EventArgs e)
         {
-            groupBoxEditWholeText.SendToBack();
+            groupBoxEditWholeText.Visible = false;
             groupBoxEditWholeText.Enabled = false;
-            GroupBoxEditWord.BringToFront();
+            GroupBoxEditWord.Visible = true;
             GroupBoxEditWord.Enabled = true;
             buttonEditWord.Enabled = false;
             buttonEditWholeText.Enabled = true;
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.OK;
         }
 
-        private void addXToNamesnoiseListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void addXToNamesNoiseListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
@@ -353,6 +353,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;
             addXToUserDictionaryToolStripMenuItem.Visible = showAddItems;
+        }
+
+        private void OcrSpellCheck_Shown(object sender, EventArgs e)
+        {
+            HighLightWord(richTextBoxParagraph, textBoxWord.Text);
+            ButtonEditWordClick(null, null);
         }
     }
 }

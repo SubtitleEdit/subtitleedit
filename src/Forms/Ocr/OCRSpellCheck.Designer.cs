@@ -71,7 +71,7 @@
             // buttonAbort
             // 
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAbort.Location = new System.Drawing.Point(623, 442);
+            this.buttonAbort.Location = new System.Drawing.Point(624, 438);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 23);
             this.buttonAbort.TabIndex = 4;
@@ -94,9 +94,9 @@
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
-            this.groupBoxSuggestions.Location = new System.Drawing.Point(320, 249);
+            this.groupBoxSuggestions.Location = new System.Drawing.Point(320, 240);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(388, 187);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(389, 192);
             this.groupBoxSuggestions.TabIndex = 3;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -104,7 +104,7 @@
             // buttonUseSuggestionAlways
             // 
             this.buttonUseSuggestionAlways.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(291, 16);
+            this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(292, 16);
             this.buttonUseSuggestionAlways.Name = "buttonUseSuggestionAlways";
             this.buttonUseSuggestionAlways.Size = new System.Drawing.Size(87, 23);
             this.buttonUseSuggestionAlways.TabIndex = 1;
@@ -115,7 +115,7 @@
             // buttonUseSuggestion
             // 
             this.buttonUseSuggestion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUseSuggestion.Location = new System.Drawing.Point(206, 16);
+            this.buttonUseSuggestion.Location = new System.Drawing.Point(207, 16);
             this.buttonUseSuggestion.Name = "buttonUseSuggestion";
             this.buttonUseSuggestion.Size = new System.Drawing.Size(79, 23);
             this.buttonUseSuggestion.TabIndex = 0;
@@ -130,7 +130,7 @@
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 43);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(372, 121);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(373, 121);
             this.listBoxSuggestions.TabIndex = 2;
             // 
             // GroupBoxEditWord
@@ -144,16 +144,16 @@
             this.GroupBoxEditWord.Controls.Add(this.textBoxWord);
             this.GroupBoxEditWord.Controls.Add(this.buttonSkipOnce);
             this.GroupBoxEditWord.Controls.Add(this.buttonAddToNames);
-            this.GroupBoxEditWord.Location = new System.Drawing.Point(12, 249);
+            this.GroupBoxEditWord.Location = new System.Drawing.Point(12, 240);
             this.GroupBoxEditWord.Name = "GroupBoxEditWord";
-            this.GroupBoxEditWord.Size = new System.Drawing.Size(302, 187);
+            this.GroupBoxEditWord.Size = new System.Drawing.Size(302, 192);
             this.GroupBoxEditWord.TabIndex = 2;
             this.GroupBoxEditWord.TabStop = false;
             this.GroupBoxEditWord.Text = "Word not found";
             // 
             // buttonGoogleIt
             // 
-            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 97);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 103);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(141, 23);
             this.buttonGoogleIt.TabIndex = 4;
@@ -163,7 +163,7 @@
             // 
             // buttonAddToDictionary
             // 
-            this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 151);
+            this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 161);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
             this.buttonAddToDictionary.Size = new System.Drawing.Size(290, 23);
             this.buttonAddToDictionary.TabIndex = 7;
@@ -183,7 +183,7 @@
             // 
             // buttonChange
             // 
-            this.buttonChange.Location = new System.Drawing.Point(6, 72);
+            this.buttonChange.Location = new System.Drawing.Point(6, 74);
             this.buttonChange.Name = "buttonChange";
             this.buttonChange.Size = new System.Drawing.Size(141, 23);
             this.buttonChange.TabIndex = 2;
@@ -193,7 +193,7 @@
             // 
             // buttonSkipAll
             // 
-            this.buttonSkipAll.Location = new System.Drawing.Point(155, 97);
+            this.buttonSkipAll.Location = new System.Drawing.Point(155, 103);
             this.buttonSkipAll.Name = "buttonSkipAll";
             this.buttonSkipAll.Size = new System.Drawing.Size(141, 23);
             this.buttonSkipAll.TabIndex = 5;
@@ -213,7 +213,7 @@
             // 
             // buttonSkipOnce
             // 
-            this.buttonSkipOnce.Location = new System.Drawing.Point(155, 72);
+            this.buttonSkipOnce.Location = new System.Drawing.Point(155, 74);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
             this.buttonSkipOnce.Size = new System.Drawing.Size(141, 23);
             this.buttonSkipOnce.TabIndex = 3;
@@ -223,7 +223,7 @@
             // 
             // buttonAddToNames
             // 
-            this.buttonAddToNames.Location = new System.Drawing.Point(6, 124);
+            this.buttonAddToNames.Location = new System.Drawing.Point(6, 132);
             this.buttonAddToNames.Name = "buttonAddToNames";
             this.buttonAddToNames.Size = new System.Drawing.Size(290, 23);
             this.buttonAddToNames.TabIndex = 6;
@@ -238,9 +238,9 @@
             this.groupBoxEditWholeText.Controls.Add(this.buttonSkipText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonChangeWholeText);
             this.groupBoxEditWholeText.Controls.Add(this.textBoxWholeText);
-            this.groupBoxEditWholeText.Location = new System.Drawing.Point(12, 248);
+            this.groupBoxEditWholeText.Location = new System.Drawing.Point(12, 240);
             this.groupBoxEditWholeText.Name = "groupBoxEditWholeText";
-            this.groupBoxEditWholeText.Size = new System.Drawing.Size(302, 188);
+            this.groupBoxEditWholeText.Size = new System.Drawing.Size(302, 192);
             this.groupBoxEditWholeText.TabIndex = 37;
             this.groupBoxEditWholeText.TabStop = false;
             this.groupBoxEditWholeText.Text = "Edit whole text";
@@ -293,7 +293,7 @@
             this.groupBoxTextAsImage.Controls.Add(this.pictureBoxText);
             this.groupBoxTextAsImage.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTextAsImage.Name = "groupBoxTextAsImage";
-            this.groupBoxTextAsImage.Size = new System.Drawing.Size(696, 152);
+            this.groupBoxTextAsImage.Size = new System.Drawing.Size(697, 141);
             this.groupBoxTextAsImage.TabIndex = 0;
             this.groupBoxTextAsImage.TabStop = false;
             this.groupBoxTextAsImage.Text = "Image text";
@@ -305,7 +305,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxText.Location = new System.Drawing.Point(6, 18);
             this.pictureBoxText.Name = "pictureBoxText";
-            this.pictureBoxText.Size = new System.Drawing.Size(684, 127);
+            this.pictureBoxText.Size = new System.Drawing.Size(685, 116);
             this.pictureBoxText.TabIndex = 32;
             this.pictureBoxText.TabStop = false;
             // 
@@ -317,9 +317,9 @@
             this.groupBoxText.Controls.Add(this.richTextBoxParagraph);
             this.groupBoxText.Controls.Add(this.buttonEditWholeText);
             this.groupBoxText.Controls.Add(this.buttonEditWord);
-            this.groupBoxText.Location = new System.Drawing.Point(12, 170);
+            this.groupBoxText.Location = new System.Drawing.Point(12, 159);
             this.groupBoxText.Name = "groupBoxText";
-            this.groupBoxText.Size = new System.Drawing.Size(696, 72);
+            this.groupBoxText.Size = new System.Drawing.Size(697, 76);
             this.groupBoxText.TabIndex = 500;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
@@ -339,7 +339,7 @@
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxParagraph.ContextMenuStrip = this.contextMenuStrip1;
             this.richTextBoxParagraph.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxParagraph.Location = new System.Drawing.Point(6, 12);
+            this.richTextBoxParagraph.Location = new System.Drawing.Point(6, 15);
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
             this.richTextBoxParagraph.ReadOnly = true;
             this.richTextBoxParagraph.Size = new System.Drawing.Size(296, 54);
@@ -361,7 +361,7 @@
             this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
             this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
-            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.addXToNamesnoiseListToolStripMenuItem_Click);
+            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.addXToNamesNoiseListToolStripMenuItem_Click);
             // 
             // addXToUserDictionaryToolStripMenuItem
             // 
@@ -372,7 +372,7 @@
             // 
             // buttonEditWholeText
             // 
-            this.buttonEditWholeText.Location = new System.Drawing.Point(308, 17);
+            this.buttonEditWholeText.Location = new System.Drawing.Point(308, 15);
             this.buttonEditWholeText.Name = "buttonEditWholeText";
             this.buttonEditWholeText.Size = new System.Drawing.Size(128, 23);
             this.buttonEditWholeText.TabIndex = 401;
@@ -382,7 +382,7 @@
             // 
             // buttonEditWord
             // 
-            this.buttonEditWord.Location = new System.Drawing.Point(308, 43);
+            this.buttonEditWord.Location = new System.Drawing.Point(308, 44);
             this.buttonEditWord.Name = "buttonEditWord";
             this.buttonEditWord.Size = new System.Drawing.Size(128, 23);
             this.buttonEditWord.TabIndex = 402;
@@ -394,7 +394,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(720, 473);
+            this.ClientSize = new System.Drawing.Size(721, 473);
             this.Controls.Add(this.groupBoxText);
             this.Controls.Add(this.groupBoxTextAsImage);
             this.Controls.Add(this.buttonAbort);
@@ -409,6 +409,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR spell check";
+            this.Shown += new System.EventHandler(this.OcrSpellCheck_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OcrSpellCheck_KeyDown);
             this.groupBoxSuggestions.ResumeLayout(false);
             this.GroupBoxEditWord.ResumeLayout(false);
