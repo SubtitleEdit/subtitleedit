@@ -28,6 +28,8 @@
   <name>Alcalá</name>
   <name>Aldust</name>
   <name>Alejandría</name>
+  <name>Aleksandr Isáyevich Solzhenitsyn</name>
+  <name>Aleksandr Solzhenitsyn</name>
   <name>Alí</name>
   <name>Alicie</name>
   <name>Allahh</name>
@@ -76,6 +78,7 @@
   <name>Barnabis</name>
   <name>Barnowsky</name>
   <name>Baron</name>
+  <name>Barón de Münchhausen</name>
   <name>Baroncelli</name>
   <name>Bartlett</name>
   <name>Basora</name>
@@ -176,6 +179,7 @@
   <name>Celso</name>
   <name>Cemre</name>
   <name>CEO</name>
+  <name>Chaikovski</name>
   <name>Champagne</name>
   <name>Charger</name>
   <name>Chateau</name>
@@ -229,6 +233,7 @@
   <name>Donatello</name>
   <name>Donati</name>
   <name>Dorthe</name>
+  <name>Dostoyevski</name>
   <name>Dotcom</name>
   <name>Dr</name>
   <name>Dra</name>
@@ -284,6 +289,8 @@
   <name>Filius</name>
   <name>Finnegan</name>
   <name>Finsen</name>
+  <name>Fiódor Dostoyevski</name>
+  <name>Fiódor Mijáilovich Dostoyevski</name>
   <name>Fischer</name>
   <name>Florencia</name>
   <name>Fong</name>
@@ -501,9 +508,11 @@
   <name>Lebech</name>
   <name>LeFevre</name>
   <name>Leif</name>
+  <name>León Tolstói</name>
   <name>Leonie</name>
   <name>Leonore</name>
   <name>Lerches</name>
+  <name>Lev Nikoláievich Tolstói</name>
   <name>Levi</name>
   <name>Leyla</name>
   <name>Lilian</name>
@@ -533,6 +542,7 @@
   <name>Lycosidae</name>
   <name>Lyngby</name>
   <name>Lynge</name>
+  <name>Lyov Nikoláievich Tolstói</name>
   <name>Maalin</name>
   <name>Madaki</name>
   <name>Madame</name>
@@ -703,6 +713,8 @@
   <name>Pilsner</name>
   <name>Ping</name>
   <name>Piotr</name>
+  <name>Piotr Chaikovski</name>
+  <name>Piotr Ilich Chaikovski</name>
   <name>Piratininga</name>
   <name>Pitch</name>
   <name>Playboy</name>
@@ -834,6 +846,7 @@
   <name>Sodoma</name>
   <name>Sokka</name>
   <name>Soloviov</name>
+  <name>Solzhenitsyn</name>
   <name>Søren</name>
   <name>Sørensen</name>
   <name>SOS</name>
@@ -905,6 +918,7 @@
   <name>Tolfan</name>
   <name>Tolin</name>
   <name>Tolkien</name>
+  <name>Tolstói</name>
   <name>Tolya</name>
   <name>Tom</name>
   <name>Tomás</name>

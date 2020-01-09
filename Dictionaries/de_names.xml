@@ -63,6 +63,8 @@
   <name>Aldrik</name>
   <name>Aleda</name>
   <name>Aleida</name>
+  <name>Alexander Issajewitsch Solschenizyn</name>
+  <name>Alexander Solschenizyn</name>
   <name>Alfonsine</name>
   <name>Alfreda</name>
   <name>Alger</name>
@@ -160,6 +162,7 @@
   <name>Bannan</name>
   <name>Bannruod</name>
   <name>Barnard</name>
+  <name>Baron Münchhausen</name>
   <name>Bartram</name>
   <name>Bathild</name>
   <name>Bathilda</name>
@@ -261,6 +264,7 @@
   <name>Dietz</name>
   <name>Dirk</name>
   <name>Dolphus</name>
+  <name>Dostojewski</name>
   <name>Drud</name>
   <name>Drugi</name>
   <name>Eadaion</name>
@@ -358,6 +362,8 @@
   <name>Felda</name>
   <name>Felisberta</name>
   <name>Fernanda</name>
+  <name>Fjodor Dostojewski</name>
+  <name>Fjodor Michailowitsch Dostojewski</name>
   <name>Fonsie</name>
   <name>Fonso</name>
   <name>Fonzell</name>
@@ -370,6 +376,7 @@
   <name>Frederica</name>
   <name>Frederika</name>
   <name>Fredrika</name>
+  <name>Freiherr von Münchhausen</name>
   <name>Fremont</name>
   <name>Frieda</name>
   <name>Friedrich</name>
@@ -618,6 +625,7 @@
   <name>Laurenz</name>
   <name>Lenard</name>
   <name>Lennard</name>
+  <name>Leo Tolstoi</name>
   <name>Leoda</name>
   <name>Leonore</name>
   <name>Leopolda</name>
@@ -625,6 +633,7 @@
   <name>Leopoldine</name>
   <name>Leopoldo</name>
   <name>Leota</name>
+  <name>Lew Nikolajewitsch Tolstoi</name>
   <name>Lewy</name>
   <name>Liezel</name>
   <name>Lilli</name>
@@ -764,6 +773,8 @@
   <name>Petronille</name>
   <name>Philipinna</name>
   <name>Philippine</name>
+  <name>Pjotr Iljitsch Tschaikowski</name>
+  <name>Pjotr Tschaikowski</name>
   <name>Raimond</name>
   <name>Raimundo</name>
   <name>Rainart</name>
@@ -879,6 +890,7 @@
   <name>Sigwald</name>
   <name>Sigwalt</name>
   <name>Silvester</name>
+  <name>Solschenizyn</name>
   <name>Solvig</name>
   <name>Spengler</name>
   <name>Steiner</name>
@@ -900,6 +912,7 @@
   <name>Tibelde</name>
   <name>Tibeldie</name>
   <name>Tihalt</name>
+  <name>Tolstoi</name>
   <name>Treffen</name>
   <name>Trennen</name>
   <name>Tresa</name>
@@ -907,6 +920,7 @@
   <name>Truda</name>
   <name>Trudchen</name>
   <name>Trude</name>
+  <name>Tschaikowski</name>
   <name>Tugenda</name>
   <name>Ubel</name>
   <name>Uli</name>

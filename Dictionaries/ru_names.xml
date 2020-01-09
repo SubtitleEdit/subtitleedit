@@ -167,6 +167,8 @@
   <name>Акулина</name>
   <name>Алевтина</name>
   <name>Александр</name>
+  <name>Александр Исаевич Солженицын</name>
+  <name>Александр Солженицын</name>
   <name>Александра</name>
   <name>Александрина</name>
   <name>Александрович</name>
@@ -441,6 +443,7 @@
   <name>Бажен</name>
   <name>Баженович</name>
   <name>Баженовна</name>
+  <name>барон фон Мю́нхгаузен</name>
   <name>Беата</name>
   <name>Беатриса</name>
   <name>Белла</name>
@@ -941,6 +944,7 @@
   <name>Досифеевна</name>
   <name>Досифей</name>
   <name>Досифея</name>
+  <name>Достоевский</name>
   <name>Дросида</name>
   <name>Дуклида</name>
   <name>Ева</name>
@@ -1487,6 +1491,8 @@
   <name>Лариса</name>
   <name>Лаура</name>
   <name>Лев</name>
+  <name>Лев Николаевич Толстой</name>
+  <name>Лев Толстой</name>
   <name>Леда</name>
   <name>Лейла</name>
   <name>Лемира</name>
@@ -2041,6 +2047,8 @@
   <name>Перфильевич</name>
   <name>Перфильевна</name>
   <name>Пётр</name>
+  <name>Пётр Ильи́ч Чайко́вский</name>
+  <name>Пётр Чайко́вский</name>
   <name>Петра</name>
   <name>Петрина</name>
   <name>Петрович</name>
@@ -2403,6 +2411,7 @@
   <name>Сократович</name>
   <name>Сократовна</name>
   <name>Сола</name>
+  <name>Солженицын</name>
   <name>Соломон</name>
   <name>Соломонида</name>
   <name>Соломония</name>
@@ -2520,6 +2529,7 @@
   <name>Тихонович</name>
   <name>Тихоновна</name>
   <name>Тихослава</name>
+  <name>Толстой</name>
   <name>Тома</name>
   <name>Томила</name>
   <name>Транквиллина</name>
@@ -2582,7 +2592,9 @@
   <name>Февронья</name>
   <name>Федоза</name>
   <name>Фёдор</name>
+  <name>Фёдор Михайлович Достоевский</name>
   <name>Федора</name>
+  <name>ФёдорДостоевский</name>
   <name>Фёдорович</name>
   <name>Фёдоровна</name>
   <name>Федос</name>
@@ -2787,6 +2799,7 @@
   <name>Цветана</name>
   <name>Целестина</name>
   <name>Цецилия</name>
+  <name>Чайко́вский</name>
   <name>Шарлотта</name>
   <name>Шушаника</name>
   <name>Эвелина</name>
