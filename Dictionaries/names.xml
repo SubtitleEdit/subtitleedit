@@ -4042,9 +4042,9 @@ This file is case sensitive.
   <name>Mullholand</name>
   <name>Mumbai</name>
   <name>Munchausen</name>
-  <name>Münchausen</name>
-  <name>Münchausens</name>
   <name>München</name>
+  <name>Münchhausen</name>
+  <name>Münchhausens</name>
   <name>Mundy</name>
   <name>Munich</name>
   <name>Muray</name>
@@ -5534,7 +5534,6 @@ This file is case sensitive.
   <name>Toland</name>
   <name>Tolbert</name>
   <name>Toledo</name>
-  <name>Tolstoy</name>
   <name>Tom Cruise</name>
   <name>Tomasson</name>
   <name>Tome</name>
