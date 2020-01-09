@@ -4,6 +4,7 @@
   <blacklist>
     <name>Anders</name>
     <name>April</name>
+    <name>Ben</name>
     <name>Dan</name>
     <name>Doe</name>
     <name>El</name>
@@ -17,10 +18,18 @@
     <name>Tor</name>
     <name>Welk</name>
   </blacklist>
+  <name>Aleksandr Isajevitsj Solzjenitsyn</name>
+  <name>Aleksandr Solzjenitsyn</name>
+  <name>Baron van Münchhausen</name>
+  <name>Baron von Münchhausen</name>
   <name>Dostojevski</name>
   <name>Fjodor Dostojevski</name>
   <name>Fjodor Michajlovitsj Dostojevski</name>
+  <name>Leo Tolstoj</name>
+  <name>Lev Nikolajevitsj Tolstoj</name>
   <name>Pjotr Iljitsj Tsjajkovski</name>
   <name>Pjotr Tsjajkovski</name>
+  <name>Solzjenitsyn</name>
+  <name>Tolstoj</name>
   <name>Tsjajkovski</name>
 </names>
