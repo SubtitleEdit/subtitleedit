@@ -166,7 +166,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Geselecteerde teksten uitlĳnen</TitleAutoBreak>
-    <TitleUnbreak>Regelafbrekingen uit geselecteerde teksten verwĳderen</TitleUnbreak>
+    <TitleUnbreak>Regeleinden uit geselecteerde teksten verwĳderen</TitleUnbreak>
     <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Regel afbreken indien langer dan</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Regels samenvoegen indien tekst langer dan</OnlyUnbreakLinesLongerThan>
@@ -312,7 +312,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1:0.##}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1:0.##}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
-    <IgnoreLineBreaks>Regelafbrekingen negeren</IgnoreLineBreaks>
+    <IgnoreLineBreaks>Regeleinden negeren</IgnoreLineBreaks>
     <IgnoreFormatting>Formateringstekens negeren</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Alleen tekstverschillen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Vergelĳken met op beeld gebaseerde ondertitels is niet mogelĳk</CannotCompareWithImageBasedSubtitles>
@@ -526,7 +526,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <UnbreakLines>Regeleinden verwĳderen</UnbreakLines>
     <RemoveStyling>Stĳl verwĳderen</RemoveStyling>
     <ShowLineNumbers>Regelnummers tonen</ShowLineNumbers>
-    <AddNewLineAfterLineNumber>Nieuwe regel toevoegen na regel nummer</AddNewLineAfterLineNumber>
+    <AddNewLineAfterLineNumber>Nieuwe regel toevoegen na tekst nummer</AddNewLineAfterLineNumber>
     <ShowTimeCode>Tĳdcode tonen</ShowTimeCode>
     <AddNewLineAfterTimeCode>Nieuwe regel toevoegen na tĳdcode</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Nieuwe regel toevoegen na tekst</AddNewLineAfterTexts>
@@ -589,8 +589,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <RemoveUnneededPeriods>Onnodige punten verwĳderen</RemoveUnneededPeriods>
     <FixMissingSpaces>Ontbrekende spaties invoegen</FixMissingSpaces>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
-    <RemoveLineBreaks>Regelafbreking in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Regelafbreking in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
+    <RemoveLineBreaks>Regeleinde in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Regeleinde in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in klein geschreven woorden (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
@@ -612,7 +612,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixHyphensAdd>Streepje (-) toevoegen aan regelparen met slechts één streepje</FixHyphensAdd>
     <FixHyphen>Tekst die met streepje (-) begint corrigeren</FixHyphen>
     <XHyphensFixed>Streepjes verwĳderd: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Hoe gaat het? -&gt; "Hoe gaat het?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Hoe gaat het? ⇒ "Hoe gaat het?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aanhalingstekens toegevoegd: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Ondertitels met meer dan twee regels corrigeren</Fix3PlusLines>
     <Fix3PlusLine>Ondertitel met meer dan twee regels corrigeren</Fix3PlusLine>
@@ -629,19 +629,19 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixFirstLetterToUppercaseAfterParagraph>Eerste letter na alinea wordt hoofdletter</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Korte regels samenvoegen (enkele zin)</MergeShortLine>
     <MergeShortLineAll>Korte regels samenvoegen (behalve dialogen)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} regelafbrekingen toegevoegd</XLineBreaksAdded>
+    <XLineBreaksAdded>{0} regeleinden toegevoegd</XLineBreaksAdded>
     <BreakLongLine>Lange regel afbreken</BreakLongLine>
     <FixLongDisplayTime>Lange weergavetĳd corrigeren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ongeldige cursief-tag corrigeren</FixInvalidItalicTag>
     <FixShortDisplayTime>Korte weergavetĳd corrigeren</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Overlappende weergavetĳd corrigeren</FixOverlappingDisplayTime>
     <FixShortGap>Te korte tussenruimte corrigeren</FixShortGap>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; ⇒ &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hey   you , there. ⇒ Hey you, there.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Hey you!. ⇒ Hey you!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hey.You. ⇒ Hey. You.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. ⇒ The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. ⇒ What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst nummer {0}: Starttĳd is later dan eindtĳd: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Kan tekst nummer {0} niet corrigeren: starttĳd is later dan eindtĳd: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} gecorrigeerd naar: {1} {2}</XFixedToYZ>
@@ -651,7 +651,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <XInvalidHtmlTagsFixed>{0} ongeldige HTML-tags gecorrigeerd</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} weergavetĳden verkort</XDisplayTimesShortned>
     <XGapsFixed>{0} tussenruimtes bĳgewerkt</XGapsFixed>
-    <XLinesUnbreaked>{0} regelafbrekingen verwĳderd</XLinesUnbreaked>
+    <XLinesUnbreaked>{0} regeleinden verwĳderd</XLinesUnbreaked>
     <UnneededSpace>Onnodige spatie</UnneededSpace>
     <XUnneededSpacesRemoved>{0} onnodige spaties verwĳderd</XUnneededSpacesRemoved>
     <UnneededPeriod>Onnodige punt</UnneededPeriod>
@@ -677,16 +677,16 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <XFixEllipsesStart>{0} ‘...’ verwĳderd</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} ontbrekende ‘[’ ingevoegd</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} muzieksymbolen vervangen</XFixMusicNotation>
-    <FixDoubleDashExample>‘Whoa-- um yeah!’ -&gt; ‘Whoa... um yeah!’</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>‘&gt;&gt; Robert: Sup dude!’ -&gt; ‘Robert: Sup dude!’</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>‘... and then we’ -&gt; ‘and then we’</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>‘clanks] Look out!’ -&gt; ‘[clanks] Look out!’</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>‘âTª sweet dreams are’ -&gt; ‘♫ sweet dreams are’</FixMusicNotationExample>
+    <FixDoubleDashExample>‘Whoa-- um yeah!’ ⇒ ‘Whoa... um yeah!’</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>‘&gt;&gt; Robert: Sup dude!’ ⇒ ‘Robert: Sup dude!’</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>‘... and then we’ ⇒ ‘and then we’</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>‘clanks] Look out!’ ⇒ ‘[clanks] Look out!’</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>‘âTª sweet dreams are’ ⇒ ‘♫ sweet dreams are’</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} belangrĳke logmeldingen!</NumberOfImportantLogMessages>
     <FixedOkXY>Gecorrigeerd en oké – ‘{0}’: {1}</FixedOkXY>
-    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
-    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <FixOcrErrorExample>D0n't ⇒ Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 ⇒ 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! ⇒ Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Standaard kiezen</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
@@ -1702,8 +1702,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NonSpaceCharacter>Geen witruimte (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
-    <InCharacterGroup>In tekengroep ([test])</InCharacterGroup>
-    <NotInCharacterGroup>Niet in tekengroep ([^test])</NotInCharacterGroup>
+    <InCharacterGroup>In tekengroep ([a-z])</InCharacterGroup>
+    <NotInCharacterGroup>Niet in tekengroep ([^a-z])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Tekst voor doven en slechthorenden verwĳderen</Title>
@@ -1939,7 +1939,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <StartSceneIndex>Startscène ondertitel is</StartSceneIndex>
     <EndSceneIndex>Eindscène ondertitel is</EndSceneIndex>
     <FirstPlusX>Eerste + {0}</FirstPlusX>
-    <LastMinusX>Laatste - {0}</LastMinusX>
+    <LastMinusX>Laatste – {0}</LastMinusX>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
     <RemoveTextForHi>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHi>
     <MergeLinesShorterThan>Samenvoegen indien korter dan</MergeLinesShorterThan>
@@ -2350,8 +2350,8 @@ Probeer het later opnieuw a.u.b.</XDownloadFailed>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Transportstroom ondertitel kiezen – {0}</Title>
-    <PidLineImage>Afbeeldingen - Transport Packet Identifier (PID) = {0}, taal = {1}, aantal ondertitels = {2}</PidLineImage>
-    <PidLineTeletext>Teletekst - Transport Packet Identifier (PID) = {1}, pagina {0}, taal = {2}, aantal ondertitels = {3}</PidLineTeletext>
+    <PidLineImage>Afbeeldingen – Transport Packet Identifier (PID) = {0}, taal = {1}, aantal ondertitels = {2}</PidLineImage>
+    <PidLineTeletext>Teletekst – Transport Packet Identifier (PID) = {1}, pagina {0}, taal = {2}, aantal ondertitels = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} afbeelding(en)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2420,7 +2420,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <TransparentMinAlpha>Min. alfa-waarde (0 = transparant, 255 = volledig zichtbaar)</TransparentMinAlpha>
     <TransportStream>Transportstroom</TransportStream>
     <TransportStreamGrayscale>Grĳswaarden</TransportStreamGrayscale>
-    <TransportStreamGetColor>Kleur gebruiken (ook bĳ enkele regelafbrekingen)</TransportStreamGetColor>
+    <TransportStreamGetColor>Kleur gebruiken (ook bĳ enkele regeleinden)</TransportStreamGetColor>
     <PromptForUnknownWords>Vraag naar onbekende woorden</PromptForUnknownWords>
     <TryToGuessUnkownWords>Probeer onbekende woorden te raden</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto einde paragraaf als er meer dan twee regels zĳn</AutoBreakSubtitleIfMoreThanTwoLines>
@@ -2492,7 +2492,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <InvertColors>Kleuren inverteren</InvertColors>
     <YellowToWhite>Geel naar wit</YellowToWhite>
     <ColorToWhite>Kleur naar wit</ColorToWhite>
-    <ColorToRemove>Kleur verwĳderen</ColorToRemove>
+    <ColorToRemove>Te verwĳderen kleur</ColorToRemove>
     <Cropping>Bĳsnĳden</Cropping>
     <CropTransparentColors>Doorzichtige kleuren bĳsnĳden</CropTransparentColors>
   </OcrPreprocessing>
@@ -2552,7 +2552,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <Other>Overige</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
-    <Title>WebVTT – installeer nieuwe stem</Title>
+    <Title>WebVTT – Nieuwe stem instellen</Title>
     <VoiceName>Naam van de stem</VoiceName>
   </WebVttNewVoice>
 </Language>
