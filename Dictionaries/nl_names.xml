@@ -18,18 +18,377 @@
     <name>Tor</name>
     <name>Welk</name>
   </blacklist>
+  <name>Afghanistan</name>
+  <name>Afrika</name>
+  <name>Åland</name>
+  <name>Albanië</name>
   <name>Aleksandr Isajevitsj Solzjenitsyn</name>
   <name>Aleksandr Solzjenitsyn</name>
+  <name>Algerije</name>
+  <name>Algerĳe</name>
+  <name>Amerika</name>
+  <name>Amerikaanse Maagdeneilanden</name>
+  <name>Amerikaans-Samoa</name>
+  <name>Andorra</name>
+  <name>Angola</name>
+  <name>Anguilla</name>
+  <name>Antarctica</name>
+  <name>Antarctische Oceaan</name>
+  <name>Antigua en Barbuda</name>
+  <name>Arctische Oceaan</name>
+  <name>Argentinië</name>
+  <name>Armenië</name>
+  <name>Aruba</name>
+  <name>Ascension</name>
+  <name>Atlantische Oceaan</name>
+  <name>Australazië</name>
+  <name>Australië</name>
+  <name>Azerbeidzjan</name>
+  <name>Azië</name>
+  <name>Bahama’s</name>
+  <name>Bahrein</name>
+  <name>Bangladesh</name>
+  <name>Barbados</name>
   <name>Baron van Münchhausen</name>
   <name>Baron von Münchhausen</name>
+  <name>Belarus</name>
+  <name>België</name>
+  <name>Belize</name>
+  <name>Benin</name>
+  <name>Bermuda</name>
+  <name>Bhutan</name>
+  <name>Birma</name>
+  <name>Bolivia</name>
+  <name>Bosnië</name>
+  <name>Bosnië en Herzegovina</name>
+  <name>Botswana</name>
+  <name>Bouveteiland</name>
+  <name>Brazilië</name>
+  <name>Brits Indische Oceaanterritorium</name>
+  <name>Britse Maagdeneilanden</name>
+  <name>Brunei</name>
+  <name>Bulgarije</name>
+  <name>Bulgarĳe</name>
+  <name>Burkina Faso</name>
+  <name>Burundi</name>
+  <name>Caicoseilanden</name>
+  <name>Cambodja</name>
+  <name>Canada</name>
+  <name>Canarische Eilanden</name>
+  <name>Caribisch gebied</name>
+  <name>Caribisch Nederland</name>
+  <name>Centraal-Afrika</name>
+  <name>Centraal-Afrikaanse Republiek</name>
+  <name>Centraal-Azië</name>
+  <name>Ceuta en Melilla</name>
+  <name>Chili</name>
+  <name>China</name>
+  <name>Christmaseiland</name>
+  <name>Clipperton</name>
+  <name>Cocoseilanden</name>
+  <name>Colombia</name>
+  <name>Comoren</name>
+  <name>Congo</name>
+  <name>Congo-Brazzaville</name>
+  <name>Congo-Kinshasa</name>
+  <name>Cookeilanden</name>
+  <name>Corsica</name>
+  <name>Costa Rica</name>
+  <name>Cuba</name>
+  <name>Curaçao</name>
+  <name>Cyprus</name>
+  <name>Democratische Republiek Congo</name>
+  <name>Democratische Republiek Oost-Timor</name>
+  <name>Denemarken</name>
+  <name>Diego Garcia</name>
+  <name>Djibouti</name>
+  <name>Dominica</name>
+  <name>Dominicaanse Republiek</name>
   <name>Dostojevski</name>
+  <name>DRC</name>
+  <name>Duitsland</name>
+  <name>Ecuador</name>
+  <name>Egypte</name>
+  <name>El Salvador</name>
+  <name>Equatoriaal-Guinea</name>
+  <name>Eritrea</name>
+  <name>Estland</name>
+  <name>eSwatini</name>
+  <name>Ethiopië</name>
+  <name>Europa</name>
+  <name>Europese Unie</name>
+  <name>Faeröer</name>
+  <name>Falklandeilanden</name>
+  <name>Fiji</name>
+  <name>Filipijnen</name>
+  <name>Filipĳnen</name>
+  <name>Finland</name>
   <name>Fjodor Dostojevski</name>
   <name>Fjodor Michajlovitsj Dostojevski</name>
+  <name>Frankrijk</name>
+  <name>Frankrĳk</name>
+  <name>Franse Gebieden in de zuidelijke Indische Oceaan</name>
+  <name>Franse Gebieden in de zuidelĳke Indische Oceaan</name>
+  <name>Frans-Guyana</name>
+  <name>Frans-Polynesië</name>
+  <name>Gabon</name>
+  <name>Gambia</name>
+  <name>Georgië</name>
+  <name>Ghana</name>
+  <name>Gibraltar</name>
+  <name>Grenada</name>
+  <name>Griekenland</name>
+  <name>Groenland</name>
+  <name>Groot-Brittannië</name>
+  <name>Grote Markt</name>
+  <name>Grote Oceaan</name>
+  <name>Guadeloupe</name>
+  <name>Guam</name>
+  <name>Guatemala</name>
+  <name>Guernsey</name>
+  <name>Guinee</name>
+  <name>Guinee-Bissau</name>
+  <name>Guyana</name>
+  <name>Haïti</name>
+  <name>Heard en McDonaldeilanden</name>
+  <name>Herzegovina</name>
+  <name>Honduras</name>
+  <name>Hongarije</name>
+  <name>Hongarĳe</name>
+  <name>Hongkong</name>
+  <name>Ierland</name>
+  <name>IJsland</name>
+  <name>Ĳsland</name>
+  <name>India</name>
+  <name>Indische Oceaan</name>
+  <name>Indonesië</name>
+  <name>Irak</name>
+  <name>Iran</name>
+  <name>Islas Malvinas</name>
+  <name>Isle of Man</name>
+  <name>Israël</name>
+  <name>Italië</name>
+  <name>Ivoorkust</name>
+  <name>Jamaica</name>
+  <name>Jan Mayen</name>
+  <name>Japan</name>
+  <name>Jemen</name>
+  <name>Jersey</name>
+  <name>Jordanië</name>
+  <name>Kaaimaneilanden</name>
+  <name>Kaapverdië</name>
+  <name>Kaapverdische Eilanden</name>
+  <name>Kameroen</name>
+  <name>Kazachstan</name>
+  <name>Kenia</name>
+  <name>Kirgizië</name>
+  <name>Kiribati</name>
+  <name>Koeweit</name>
+  <name>Kopenhagen</name>
+  <name>Kosovo</name>
+  <name>Kroatië</name>
+  <name>Laos</name>
+  <name>Latijns-Amerika</name>
+  <name>Latĳns-Amerika</name>
   <name>Leo Tolstoj</name>
+  <name>Lesotho</name>
+  <name>Letland</name>
   <name>Lev Nikolajevitsj Tolstoj</name>
+  <name>Libanon</name>
+  <name>Liberia</name>
+  <name>Libië</name>
+  <name>Liechtenstein</name>
+  <name>Litouwen</name>
+  <name>Luxemburg</name>
+  <name>Macau</name>
+  <name>Macau SAR van China</name>
+  <name>Madagaskar</name>
+  <name>Malawi</name>
+  <name>Maldiven</name>
+  <name>Maleisië</name>
+  <name>Mali</name>
+  <name>Malta</name>
+  <name>Marokko</name>
+  <name>Marshalleilanden</name>
+  <name>Martinique</name>
+  <name>Mauritanië</name>
+  <name>Mauritius</name>
+  <name>Mayotte</name>
+  <name>Melanesië</name>
+  <name>Mexico</name>
+  <name>Micronesia</name>
+  <name>Micronesische regio</name>
+  <name>Midden-Amerika</name>
+  <name>Moldavië</name>
+  <name>Monaco</name>
+  <name>Mongolië</name>
+  <name>Montenegro</name>
+  <name>Montserrat</name>
+  <name>Mozambique</name>
+  <name>München</name>
+  <name>Myanmar</name>
+  <name>Namibië</name>
+  <name>Nauru</name>
+  <name>Nederland</name>
+  <name>Nepal</name>
+  <name>Nicaragua</name>
+  <name>Nieuw-Caledonië</name>
+  <name>Nieuw-Zeeland</name>
+  <name>Niger</name>
+  <name>Nigeria</name>
+  <name>Niue</name>
+  <name>Noord-Afrika</name>
+  <name>Noord-Amerika</name>
+  <name>Noordelijk Amerika</name>
+  <name>Noordelĳk Amerika</name>
+  <name>Noordelijke IJszee</name>
+  <name>Noordelĳke Ĳszee</name>
+  <name>Noordelijke Marianen</name>
+  <name>Noordelĳke Marianen</name>
+  <name>Noord-Europa</name>
+  <name>Noord-Ierland</name>
+  <name>Noord-Korea</name>
+  <name>Noord-Macedonië</name>
+  <name>Noorwegen</name>
+  <name>Norfolk</name>
+  <name>Oceanië</name>
+  <name>Oeganda</name>
+  <name>Oekraïne</name>
+  <name>Oezbekistan</name>
+  <name>Oman</name>
+  <name>Oost-Afrika</name>
+  <name>Oost-Azië</name>
+  <name>Oostenrijk</name>
+  <name>Oostenrĳk</name>
+  <name>Oost-Europa</name>
+  <name>Oost-Timor</name>
+  <name>Pakistan</name>
+  <name>Palau</name>
+  <name>Palestijnse gebieden</name>
+  <name>Palestĳnse gebieden</name>
+  <name>Palestina</name>
+  <name>Panama</name>
+  <name>Papoea-Nieuw-Guinea</name>
+  <name>Paraguay</name>
+  <name>Parijs</name>
+  <name>Parĳs</name>
+  <name>Peru</name>
+  <name>Pitcairneilanden</name>
   <name>Pjotr Iljitsj Tsjajkovski</name>
   <name>Pjotr Tsjajkovski</name>
+  <name>Polen</name>
+  <name>Polynesië</name>
+  <name>Portugal</name>
+  <name>Puerto Rico</name>
+  <name>Qatar</name>
+  <name>Republiek Congo</name>
+  <name>Republiek Ivoorkust</name>
+  <name>Republiek Kaapverdië</name>
+  <name>Réunion</name>
+  <name>Roemenië</name>
+  <name>Rusland</name>
+  <name>Rwanda</name>
+  <name>Saint Kitts en Nevis</name>
+  <name>Saint Lucia</name>
+  <name>Saint Vincent en de Grenadines</name>
+  <name>Saint-Barthélemy</name>
+  <name>Saint-Martin</name>
+  <name>Saint-Pierre en Miquelon</name>
+  <name>Salomonseilanden</name>
+  <name>Samoa</name>
+  <name>San Marino</name>
+  <name>Sao Tomé en Principe</name>
+  <name>Saoedi-Arabië</name>
+  <name>Sardinië</name>
+  <name>Senegal</name>
+  <name>Servië</name>
+  <name>Seychellen</name>
+  <name>Siberië</name>
+  <name>Sicilië</name>
+  <name>Sierra Leone</name>
+  <name>Singapore</name>
+  <name>Sint-Helena</name>
+  <name>Sint-Maarten</name>
+  <name>Slovenië</name>
+  <name>Slowakije</name>
+  <name>Slowakĳe</name>
+  <name>Soedan</name>
   <name>Solzjenitsyn</name>
+  <name>Somalië</name>
+  <name>Spanje</name>
+  <name>Spitsbergen</name>
+  <name>Sri Lanka</name>
+  <name>Stille Oceaan</name>
+  <name>Stille Zuidzee</name>
+  <name>Sub-Saharaans Afrika</name>
+  <name>Suriname</name>
+  <name>Swaziland</name>
+  <name>Syrië</name>
+  <name>Tadzjikistan</name>
+  <name>Taiwan</name>
+  <name>Tanzania</name>
+  <name>Tasmanië</name>
+  <name>Thailand</name>
+  <name>Togo</name>
+  <name>Tokelau</name>
   <name>Tolstoj</name>
+  <name>Tonga</name>
+  <name>Trinidad en Tobago</name>
+  <name>Tristan da Cunha</name>
+  <name>Tsjaad</name>
   <name>Tsjajkovski</name>
+  <name>Tsjechië</name>
+  <name>Tsjechische Republiek</name>
+  <name>Tsjetsjenië</name>
+  <name>Tunesië</name>
+  <name>Turkije</name>
+  <name>Turkĳe</name>
+  <name>Turkmenistan</name>
+  <name>Turks- en Caicoseilanden</name>
+  <name>Turkseilanden</name>
+  <name>Tuvalu</name>
+  <name>Uruguay</name>
+  <name>Vanuatu</name>
+  <name>Vaticaanstad</name>
+  <name>Venetië</name>
+  <name>Venezuela</name>
+  <name>Verenigd Koninkrijk</name>
+  <name>Verenigd Koninkrĳk</name>
+  <name>Verenigde Arabische Emiraten</name>
+  <name>Verenigde Naties</name>
+  <name>Verenigde Staten</name>
+  <name>Vietnam</name>
+  <name>VK</name>
+  <name>VN</name>
+  <name>VS</name>
+  <name>Wallis en Futuna</name>
+  <name>Wenen</name>
+  <name>West-Afrika</name>
+  <name>West-Azië</name>
+  <name>Westelijke Sahara</name>
+  <name>Westelĳke Sahara</name>
+  <name>West-Europa</name>
+  <name>Zambia</name>
+  <name>Zimbabwe</name>
+  <name>Zuid-Afrika</name>
+  <name>Zuid-Amerika</name>
+  <name>Zuid-Azië</name>
+  <name>Zuidelijk Afrika</name>
+  <name>Zuidelĳk Afrika</name>
+  <name>Zuidelijke IJszee</name>
+  <name>Zuidelĳke Ĳszee</name>
+  <name>Zuidelijke Oceaan</name>
+  <name>Zuidelĳke Oceaan</name>
+  <name>Zuidelijke Sandwicheilanden</name>
+  <name>Zuidelĳke Sandwicheilanden</name>
+  <name>Zuid-Europa</name>
+  <name>Zuid-Georgia</name>
+  <name>Zuid-Georgia en Zuidelijke Sandwicheilanden</name>
+  <name>Zuid-Georgia en Zuidelĳke Sandwicheilanden</name>
+  <name>Zuid-Korea</name>
+  <name>Zuidoost-Azië</name>
+  <name>Zuidpoolzee</name>
+  <name>Zuid-Soedan</name>
+  <name>Zweden</name>
+  <name>Zwitserland</name>
 </names>
