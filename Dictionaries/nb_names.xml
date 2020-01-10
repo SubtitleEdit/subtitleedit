@@ -26,6 +26,9 @@
   <name>Adolf</name>
   <name>Adrian</name>
   <name>Adriana</name>
+  <name>Afghanistan</name>
+  <name>Afrika</name>
+  <name>Afrika sør for Sahara</name>
   <name>Agata</name>
   <name>Agathe</name>
   <name>Agdenes</name>
@@ -46,6 +49,7 @@
   <name>Aksdal</name>
   <name>Aksel</name>
   <name>Alan</name>
+  <name>Albania</name>
   <name>Albert</name>
   <name>Aleksander</name>
   <name>Aleksandr Isajevitsj Solzjenitsyn</name>
@@ -59,6 +63,7 @@
   <name>Alfhild</name>
   <name>Alfred</name>
   <name>Algarheim</name>
+  <name>Algerie</name>
   <name>Ali</name>
   <name>Alice</name>
   <name>Alicia</name>
@@ -82,6 +87,8 @@
   <name>Amalie</name>
   <name>Amanda</name>
   <name>Amelia</name>
+  <name>Amerika</name>
+  <name>Amerikansk Samoa</name>
   <name>Amina</name>
   <name>Amir</name>
   <name>Amira</name>
@@ -95,6 +102,7 @@
   <name>Andebu</name>
   <name>Andenes</name>
   <name>Anders</name>
+  <name>Andorra</name>
   <name>Andre</name>
   <name>Andrea</name>
   <name>Andreas</name>
@@ -113,6 +121,8 @@
   <name>Angelica</name>
   <name>Angelika</name>
   <name>Angelina</name>
+  <name>Angola</name>
+  <name>Anguilla</name>
   <name>Anine</name>
   <name>Anita</name>
   <name>Anja</name>
@@ -176,16 +186,20 @@
   <name>Ann-Mari</name>
   <name>Anny</name>
   <name>Ansgar</name>
+  <name>Antarktis</name>
   <name>Anthony</name>
+  <name>Antigua og Barbuda</name>
   <name>Anton</name>
   <name>Antonio</name>
   <name>Are</name>
   <name>Aremark</name>
   <name>Arendal</name>
   <name>Arent</name>
+  <name>Argentina</name>
   <name>Ariana</name>
   <name>Ariel</name>
   <name>Arild</name>
+  <name>Armenia</name>
   <name>Arna</name>
   <name>Arne</name>
   <name>Arnfinn</name>
@@ -198,12 +212,16 @@
   <name>Aron</name>
   <name>Arthur</name>
   <name>Artur</name>
+  <name>Aruba</name>
   <name>Arve</name>
   <name>Arvid</name>
   <name>Asbjørg</name>
   <name>Asbjørn</name>
+  <name>Ascension</name>
+  <name>Aserbajdsjan</name>
   <name>Asgeir</name>
   <name>Asha</name>
+  <name>Asia</name>
   <name>Ask</name>
   <name>Asker</name>
   <name>Askgrenda</name>
@@ -241,6 +259,8 @@
   <name>Austevoll</name>
   <name>Austmarka</name>
   <name>Austnes</name>
+  <name>Australasia</name>
+  <name>Australia</name>
   <name>Austreim</name>
   <name>Austrheim</name>
   <name>Ausvika</name>
@@ -252,12 +272,16 @@
   <name>Ayse</name>
   <name>Baard</name>
   <name>Bagn</name>
+  <name>Bahamas</name>
+  <name>Bahrain</name>
   <name>Balestrand</name>
   <name>Ballangen</name>
   <name>Ballstad</name>
   <name>Balsfjord</name>
   <name>Bamble</name>
+  <name>Bangladesh</name>
   <name>Bangsund</name>
+  <name>Barbados</name>
   <name>Barbara</name>
   <name>Barbro</name>
   <name>Bardu</name>
@@ -274,11 +298,15 @@
   <name>Beitostølen</name>
   <name>Bekkelaget</name>
   <name>Bekkjarvik</name>
+  <name>Belgia</name>
+  <name>Belgisk Kongo</name>
   <name>Belinda</name>
+  <name>Belize</name>
   <name>Bendik</name>
   <name>Benedicte</name>
   <name>Benedikte</name>
   <name>Bengt</name>
+  <name>Benin</name>
   <name>Benjamin</name>
   <name>Benny</name>
   <name>Bent</name>
@@ -295,6 +323,7 @@
   <name>Berit</name>
   <name>Berkåk</name>
   <name>Berlevåg</name>
+  <name>Bermuda</name>
   <name>Bernhard</name>
   <name>Bernt</name>
   <name>Berta</name>
@@ -304,6 +333,7 @@
   <name>Betina</name>
   <name>Bettina</name>
   <name>Betty</name>
+  <name>Bhutan</name>
   <name>Bianca</name>
   <name>Bilal</name>
   <name>Bindal</name>
@@ -348,20 +378,26 @@
   <name>Bodø</name>
   <name>Bogen</name>
   <name>Bokn</name>
+  <name>Bolivia</name>
   <name>Borgar</name>
   <name>Borgen</name>
   <name>Borghild</name>
   <name>Borgny</name>
   <name>Borkenes</name>
+  <name>Bosnia-Hercegovina</name>
   <name>Botngård</name>
+  <name>Botswana</name>
   <name>Botten</name>
+  <name>Bouvetøya</name>
   <name>Brage</name>
   <name>Brandal</name>
   <name>Brandbu</name>
   <name>Brandsøy</name>
+  <name>Brasil</name>
   <name>Braskereidfoss</name>
   <name>Bratsberg</name>
   <name>Brattvåg</name>
+  <name>Brazzaville</name>
   <name>Brede</name>
   <name>Breivikbotn</name>
   <name>Brekkeåsen</name>
@@ -379,6 +415,7 @@
   <name>Bru</name>
   <name>Bruflat</name>
   <name>Brumunddal</name>
+  <name>Brunei</name>
   <name>Brunstad</name>
   <name>Brusand</name>
   <name>Bryggja</name>
@@ -391,7 +428,11 @@
   <name>Brønnøysund</name>
   <name>Brårud</name>
   <name>Bud</name>
+  <name>Bulgaria</name>
   <name>Burfjord</name>
+  <name>Burkina Faso</name>
+  <name>Burma</name>
+  <name>Burundi</name>
   <name>Buskerud</name>
   <name>Buskogen</name>
   <name>Buvika</name>
@@ -412,6 +453,7 @@
   <name>Bård</name>
   <name>Båtsfjord</name>
   <name>Camilla</name>
+  <name>Canada</name>
   <name>Carina</name>
   <name>Carine</name>
   <name>Carl</name>
@@ -429,13 +471,16 @@
   <name>Cathrine</name>
   <name>Cato</name>
   <name>Catrine</name>
+  <name>Caymanøyene</name>
   <name>Cecilia</name>
   <name>Cecilie</name>
   <name>Celina</name>
   <name>Celine</name>
   <name>Cesilie</name>
+  <name>Ceuta og Melilla</name>
   <name>Charles</name>
   <name>Charlotte</name>
+  <name>Chile</name>
   <name>Chris</name>
   <name>Christel</name>
   <name>Christen</name>
@@ -445,6 +490,7 @@
   <name>Christin</name>
   <name>Christina</name>
   <name>Christine</name>
+  <name>Christmasøya</name>
   <name>Christoffer</name>
   <name>Christopher</name>
   <name>Cicilie</name>
@@ -452,9 +498,15 @@
   <name>Clara</name>
   <name>Claudia</name>
   <name>Claus</name>
+  <name>Clippertonøya</name>
+  <name>Colombia</name>
   <name>Connie</name>
+  <name>Cookøyene</name>
   <name>Cornelia</name>
+  <name>Costa Rica</name>
   <name>Cristina</name>
+  <name>Cuba</name>
+  <name>Curaçao</name>
   <name>Dagfinn</name>
   <name>Dagfrid</name>
   <name>Dagmar</name>
@@ -467,21 +519,35 @@
   <name>Daniel</name>
   <name>Daniela</name>
   <name>Daniella</name>
+  <name>Danmark</name>
   <name>Danuta</name>
   <name>Darbu</name>
   <name>Daria</name>
   <name>Davanger</name>
   <name>David</name>
+  <name>De amerikanske jomfruøyene</name>
+  <name>De britiske jomfruøyene</name>
+  <name>De forente arabiske emirater</name>
+  <name>De franske sørterritorier</name>
   <name>Degernes</name>
+  <name>Den demokratiske republikken Kongo</name>
+  <name>Den dominikanske republikk</name>
+  <name>Den sentralafrikanske republikk</name>
+  <name>Den tsjekkiske republikk</name>
   <name>Dennis</name>
   <name>Desiree</name>
+  <name>Det britiske territoriet i Indiahavet</name>
+  <name>Det palestinske området</name>
   <name>Diana</name>
   <name>Didrik</name>
+  <name>Diego Garcia</name>
   <name>Dimmelsvik</name>
   <name>Dina</name>
   <name>Disenå</name>
+  <name>Djibouti</name>
   <name>Dokka</name>
   <name>Dombås</name>
+  <name>Dominica</name>
   <name>Dominika</name>
   <name>Dordi</name>
   <name>Doris</name>
@@ -490,6 +556,7 @@
   <name>Dorthea</name>
   <name>Dostojevskij</name>
   <name>Dovre</name>
+  <name>DR Kongo</name>
   <name>Drag</name>
   <name>Dragsund</name>
   <name>Drammen</name>
@@ -498,6 +565,7 @@
   <name>Dyrøy</name>
   <name>Dønna</name>
   <name>Ebba</name>
+  <name>Ecuador</name>
   <name>Eddie</name>
   <name>Edel</name>
   <name>Edgar</name>
@@ -516,6 +584,7 @@
   <name>Egersund</name>
   <name>Eggkleiva</name>
   <name>Egil</name>
+  <name>Egypt</name>
   <name>Eid</name>
   <name>Eidbukta</name>
   <name>Eide</name>
@@ -546,12 +615,15 @@
   <name>Ekaterina</name>
   <name>Ekeberg</name>
   <name>Ekne</name>
+  <name>Ekvatorial-Guinea</name>
+  <name>El Salvador</name>
   <name>Elbjørg</name>
   <name>Eldar</name>
   <name>Eldbjørg</name>
   <name>Eldrid</name>
   <name>Elen</name>
   <name>Elena</name>
+  <name>Elfenbenskysten</name>
   <name>Elfrid</name>
   <name>Eli</name>
   <name>Elias</name>
@@ -604,6 +676,7 @@
   <name>Erich</name>
   <name>Erik</name>
   <name>Erika</name>
+  <name>Eritrea</name>
   <name>Erland</name>
   <name>Erle</name>
   <name>Erlend</name>
@@ -618,8 +691,14 @@
   <name>Espen</name>
   <name>Ester</name>
   <name>Esther</name>
+  <name>Estland</name>
+  <name>Eswatini</name>
+  <name>Etiopia</name>
   <name>Etne</name>
   <name>Etnedal</name>
+  <name>EU</name>
+  <name>Europa</name>
+  <name>eurosonen</name>
   <name>Eva</name>
   <name>Eva Marie</name>
   <name>Evald</name>
@@ -640,6 +719,7 @@
   <name>Fagerliåsen</name>
   <name>Fagernes</name>
   <name>Fagerstrand</name>
+  <name>Falklandsøyene</name>
   <name>Fanahammeren</name>
   <name>Fannrem</name>
   <name>Fanny</name>
@@ -658,10 +738,13 @@
   <name>Ferkingstad</name>
   <name>Fetsund</name>
   <name>Figgjo</name>
+  <name>Fiji</name>
   <name>Fiksdal</name>
   <name>Filip</name>
   <name>Filippa</name>
+  <name>Filippinene</name>
   <name>Fillan</name>
+  <name>Finland</name>
   <name>Finn</name>
   <name>Finnbråtan</name>
   <name>Finnestad</name>
@@ -691,6 +774,7 @@
   <name>Flora</name>
   <name>Florø</name>
   <name>Flå</name>
+  <name>FN</name>
   <name>Foldrøy</name>
   <name>Folkestad</name>
   <name>Follafoss</name>
@@ -707,6 +791,9 @@
   <name>Fossnes</name>
   <name>Fotlandsvåg</name>
   <name>Frank</name>
+  <name>Frankrike</name>
+  <name>Fransk Guyana</name>
+  <name>Fransk Polynesia</name>
   <name>Freddy</name>
   <name>Frederik</name>
   <name>Fredrick</name>
@@ -718,6 +805,7 @@
   <name>Frida</name>
   <name>Fride</name>
   <name>Fridtjof</name>
+  <name>Fristaten Kongo</name>
   <name>Frithjof</name>
   <name>Frits</name>
   <name>Fritz</name>
@@ -735,16 +823,19 @@
   <name>Fusa</name>
   <name>Fyresdal</name>
   <name>Færder</name>
+  <name>Færøyene</name>
   <name>Førde</name>
   <name>Førdesfjorden</name>
   <name>Fåberg</name>
   <name>Fåvang</name>
+  <name>Gabon</name>
   <name>Gabriel</name>
   <name>Gabriela</name>
   <name>Gabriele</name>
   <name>Gabriella</name>
   <name>Gabrielle</name>
   <name>Galina</name>
+  <name>Gambia</name>
   <name>Gamvik</name>
   <name>Gangstadhaugen</name>
   <name>Gard</name>
@@ -760,11 +851,14 @@
   <name>Geithus</name>
   <name>Georg</name>
   <name>George</name>
+  <name>Georgia</name>
   <name>Gerd</name>
   <name>Gerda</name>
   <name>Gerhard</name>
   <name>Gert</name>
+  <name>Ghana</name>
   <name>Gibostad</name>
+  <name>Gibraltar</name>
   <name>Gildeskål</name>
   <name>Gilja</name>
   <name>Gina</name>
@@ -801,6 +895,7 @@
   <name>Gratangen</name>
   <name>Gravdal</name>
   <name>Grazyna</name>
+  <name>Grenada</name>
   <name>Greta</name>
   <name>Grete</name>
   <name>Gretha</name>
@@ -815,12 +910,19 @@
   <name>Gry</name>
   <name>Gryllefjord</name>
   <name>Grøa</name>
+  <name>Grønland</name>
   <name>Grønlund</name>
+  <name>Guadeloupe</name>
+  <name>Guam</name>
+  <name>Guatemala</name>
   <name>Gudbrand</name>
   <name>Gudmund</name>
   <name>Gudny</name>
   <name>Gudrun</name>
   <name>Gudveig</name>
+  <name>Guernsey</name>
+  <name>Guinea</name>
+  <name>Guinea-Bissau</name>
   <name>Gulbrand</name>
   <name>Gulen</name>
   <name>Gullhaug</name>
@@ -841,6 +943,7 @@
   <name>Guro</name>
   <name>Gustav</name>
   <name>Guttorm</name>
+  <name>Guyana</name>
   <name>Gvarv</name>
   <name>Gyda</name>
   <name>Gøran</name>
@@ -851,6 +954,7 @@
   <name>Hafslo</name>
   <name>Haga</name>
   <name>Haganes</name>
+  <name>Haiti</name>
   <name>Halden</name>
   <name>Haldis</name>
   <name>Haldor</name>
@@ -912,6 +1016,7 @@
   <name>Hauknes</name>
   <name>Hausvik</name>
   <name>Havøysund</name>
+  <name>Heard- og McDonaldøyene</name>
   <name>Hedda</name>
   <name>Hedmark</name>
   <name>Hedvig</name>
@@ -931,6 +1036,7 @@
   <name>Helgelandsmoen</name>
   <name>Helgeroa</name>
   <name>Hell</name>
+  <name>Hellas</name>
   <name>Helle</name>
   <name>Hellesylt</name>
   <name>Hellvik</name>
@@ -997,7 +1103,10 @@
   <name>Hommelstø</name>
   <name>Hommelvik</name>
   <name>Hommersåk</name>
+  <name>Honduras</name>
   <name>Hong</name>
+  <name>Hongkong</name>
+  <name>Hongkong S.A.R. Kina</name>
   <name>Honningsvåg</name>
   <name>Hordaland</name>
   <name>Hordnes</name>
@@ -1018,6 +1127,7 @@
   <name>Husøy</name>
   <name>Hvaler</name>
   <name>Hvasser</name>
+  <name>Hviterussland</name>
   <name>Hvittingfoss</name>
   <name>Hyggen</name>
   <name>Hylla</name>
@@ -1057,6 +1167,8 @@
   <name>Iman</name>
   <name>Ina</name>
   <name>Inderøy</name>
+  <name>India</name>
+  <name>Indonesia</name>
   <name>Indre Fosen</name>
   <name>Ine</name>
   <name>Ines</name>
@@ -1100,11 +1212,14 @@
   <name>Inndyr</name>
   <name>Innfjorden</name>
   <name>Innvik</name>
+  <name>Irak</name>
+  <name>Iran</name>
   <name>Iren</name>
   <name>Irena</name>
   <name>Irene</name>
   <name>Irina</name>
   <name>Iris</name>
+  <name>Irland</name>
   <name>Irma</name>
   <name>Irmelin</name>
   <name>Isa</name>
@@ -1117,7 +1232,11 @@
   <name>Isebakke</name>
   <name>Iselin</name>
   <name>Isfjorden</name>
+  <name>Island</name>
+  <name>Islas Malvinas</name>
   <name>Ismail</name>
+  <name>Israel</name>
+  <name>Italia</name>
   <name>Ivan</name>
   <name>Ivar</name>
   <name>Iveland</name>
@@ -1129,6 +1248,7 @@
   <name>Jacqueline</name>
   <name>Jahn</name>
   <name>Jakob</name>
+  <name>Jamaica</name>
   <name>Jamal</name>
   <name>James</name>
   <name>Jan</name>
@@ -1154,6 +1274,7 @@
   <name>Jannicke</name>
   <name>Jannike</name>
   <name>Jansberg</name>
+  <name>Japan</name>
   <name>Jarand</name>
   <name>Jardar</name>
   <name>Jaren</name>
@@ -1165,10 +1286,12 @@
   <name>Jeanette</name>
   <name>Jelena</name>
   <name>Jelsnes</name>
+  <name>Jemen</name>
   <name>Jennie</name>
   <name>Jennifer</name>
   <name>Jenny</name>
   <name>Jens</name>
+  <name>Jersey</name>
   <name>Jesper</name>
   <name>Jessheim</name>
   <name>Jessica</name>
@@ -1204,6 +1327,7 @@
   <name>Jone</name>
   <name>Jonn</name>
   <name>Jonny</name>
+  <name>Jordan</name>
   <name>Jorid</name>
   <name>Jortveit</name>
   <name>Jorun</name>
@@ -1245,16 +1369,22 @@
   <name>Kajsa</name>
   <name>Kaland</name>
   <name>Kalvåg</name>
+  <name>Kambodsja</name>
+  <name>Kamerun</name>
   <name>Kamila</name>
   <name>Kamilla</name>
   <name>Kampå</name>
+  <name>Kanariøyene</name>
   <name>Kapp</name>
+  <name>Kapp Verde</name>
   <name>Karasjok</name>
   <name>Karen</name>
   <name>Karen Marie</name>
   <name>Kari</name>
   <name>Karianne</name>
   <name>Kari-Anne</name>
+  <name>Karibia</name>
+  <name>Karibisk Nederland</name>
   <name>Karin</name>
   <name>Karina</name>
   <name>Karine</name>
@@ -1270,6 +1400,7 @@
   <name>Karsten</name>
   <name>Kart</name>
   <name>Kart Anne</name>
+  <name>Kasakhstan</name>
   <name>Kasper</name>
   <name>Katarina</name>
   <name>Katarzyna</name>
@@ -1291,6 +1422,7 @@
   <name>Kennet</name>
   <name>Kenneth</name>
   <name>Kent</name>
+  <name>Kenya</name>
   <name>Kerstin</name>
   <name>Ketil</name>
   <name>Kevin</name>
@@ -1302,9 +1434,13 @@
   <name>Kim</name>
   <name>Kim Andre</name>
   <name>Kim-Andre</name>
+  <name>Kina</name>
   <name>Kine</name>
   <name>Kinga</name>
   <name>Kinsarvik</name>
+  <name>Kinshasa</name>
+  <name>Kirgisistan</name>
+  <name>Kiribati</name>
   <name>Kirkebygda</name>
   <name>Kirkebygden</name>
   <name>Kirkegrenda</name>
@@ -1348,11 +1484,16 @@
   <name>Knut Arne</name>
   <name>Knut Erik</name>
   <name>Kodal</name>
+  <name>Kokosøyene</name>
   <name>Kolbjørn</name>
   <name>Kolbu</name>
   <name>Kolnes</name>
   <name>Kolvereid</name>
+  <name>Komorene</name>
   <name>Konglungen</name>
+  <name>Kongo</name>
+  <name>Kongo-Brazzaville</name>
+  <name>Kongo-Kinshasa</name>
   <name>Kongsberg</name>
   <name>Kongsvinger</name>
   <name>Konrad</name>
@@ -1363,6 +1504,7 @@
   <name>Kornelia</name>
   <name>Korsvegen</name>
   <name>Korsvik</name>
+  <name>Kosovo</name>
   <name>Kragerø</name>
   <name>Kristel</name>
   <name>Kristen</name>
@@ -1376,6 +1518,7 @@
   <name>Kristina</name>
   <name>Kristine</name>
   <name>Kristoffer</name>
+  <name>Kroatia</name>
   <name>Krokeidet</name>
   <name>Kroksund</name>
   <name>Krossberg</name>
@@ -1387,6 +1530,7 @@
   <name>Krødsherad</name>
   <name>Kråkstad</name>
   <name>Kurt</name>
+  <name>Kuwait</name>
   <name>Kvalsund</name>
   <name>Kvaløysletta</name>
   <name>Kvam</name>
@@ -1401,6 +1545,7 @@
   <name>Kvænangen</name>
   <name>Kvål</name>
   <name>Kylstad</name>
+  <name>Kypros</name>
   <name>Kyrkjebø</name>
   <name>Kyrksæterøra</name>
   <name>Kyrre</name>
@@ -1419,6 +1564,7 @@
   <name>Langhaugane</name>
   <name>Langset</name>
   <name>Langørjan</name>
+  <name>Laos</name>
   <name>Lara</name>
   <name>Larkollen</name>
   <name>Lars</name>
@@ -1429,6 +1575,8 @@
   <name>Larsnes</name>
   <name>Larvik</name>
   <name>Lasse</name>
+  <name>Latin-Amerika</name>
+  <name>Latvia</name>
   <name>Laura</name>
   <name>Laurits</name>
   <name>Lauritz</name>
@@ -1470,6 +1618,7 @@
   <name>Ler</name>
   <name>Lervik</name>
   <name>Lesja</name>
+  <name>Lesotho</name>
   <name>Lev Nikolajevitsj Tolstoj</name>
   <name>Lev Tolstoj</name>
   <name>Levanger</name>
@@ -1477,7 +1626,11 @@
   <name>Li</name>
   <name>Lia</name>
   <name>Liabø</name>
+  <name>Libanon</name>
+  <name>Liberia</name>
+  <name>Libya</name>
   <name>Lidia</name>
+  <name>Liechtenstein</name>
   <name>Lier</name>
   <name>Lierne</name>
   <name>Liknes</name>
@@ -1509,6 +1662,7 @@
   <name>Lisbeth</name>
   <name>Lise</name>
   <name>Liss</name>
+  <name>Litauen</name>
   <name>Liv</name>
   <name>Liv Karin</name>
   <name>Liv Marit</name>
@@ -1541,6 +1695,7 @@
   <name>Lunner</name>
   <name>Lurøy</name>
   <name>Luster</name>
+  <name>Luxemburg</name>
   <name>Lydia</name>
   <name>Lyefjell</name>
   <name>Lykke</name>
@@ -1563,6 +1718,9 @@
   <name>Løstad</name>
   <name>Løten</name>
   <name>Ma</name>
+  <name>Macao</name>
+  <name>Macao S.A.R. Kina</name>
+  <name>Madagaskar</name>
   <name>Madeleine</name>
   <name>Madelen</name>
   <name>Madelene</name>
@@ -1583,6 +1741,9 @@
   <name>Maiken</name>
   <name>Maj</name>
   <name>Maja</name>
+  <name>Malawi</name>
+  <name>Malaysia</name>
+  <name>Maldivene</name>
   <name>Malena</name>
   <name>Malene</name>
   <name>Malgorzata</name>
@@ -1590,8 +1751,10 @@
   <name>Malin</name>
   <name>Malm</name>
   <name>Malme</name>
+  <name>Malta</name>
   <name>Malvik</name>
   <name>Malvin</name>
+  <name>Man</name>
   <name>Mandal</name>
   <name>Manger</name>
   <name>Marco</name>
@@ -1631,7 +1794,9 @@
   <name>Marlen</name>
   <name>Marlene</name>
   <name>Marnardal</name>
+  <name>Marokko</name>
   <name>Marry</name>
+  <name>Marshalløyene</name>
   <name>Marta</name>
   <name>Marte</name>
   <name>Martha</name>
@@ -1640,6 +1805,7 @@
   <name>Martin</name>
   <name>Martina</name>
   <name>Martine</name>
+  <name>Martinique</name>
   <name>Martinus</name>
   <name>Martyna</name>
   <name>Marvin</name>
@@ -1661,17 +1827,21 @@
   <name>Mattis</name>
   <name>Maud</name>
   <name>Maura</name>
+  <name>Mauritania</name>
+  <name>Mauritius</name>
   <name>Max</name>
   <name>May</name>
   <name>May Britt</name>
   <name>Maya</name>
   <name>May-Britt</name>
   <name>May-Liss</name>
+  <name>Mayotte</name>
   <name>Mebonden</name>
   <name>Mehamn</name>
   <name>Mehmet</name>
   <name>Meland</name>
   <name>Melandsvågen</name>
+  <name>Melanesia</name>
   <name>Melanie</name>
   <name>Melbu</name>
   <name>Meldal</name>
@@ -1679,6 +1849,7 @@
   <name>Melina</name>
   <name>Melinda</name>
   <name>Melissa</name>
+  <name>Mellom-Amerika</name>
   <name>Melsomvik</name>
   <name>Meløy</name>
   <name>Merete</name>
@@ -1686,6 +1857,7 @@
   <name>Meråker</name>
   <name>Mesnali</name>
   <name>Mette</name>
+  <name>Mexico</name>
   <name>Mia</name>
   <name>Michael</name>
   <name>Michel</name>
@@ -1697,6 +1869,8 @@
   <name>Mikael</name>
   <name>Mikal</name>
   <name>Mikkel</name>
+  <name>Mikronesia</name>
+  <name>Mikronesiaføderasjonen</name>
   <name>Miland</name>
   <name>Mildrid</name>
   <name>Milena</name>
@@ -1725,17 +1899,23 @@
   <name>Moi</name>
   <name>Molde</name>
   <name>Moldekleiv</name>
+  <name>Moldova</name>
   <name>Molly</name>
   <name>Moltustranda</name>
   <name>Momoen</name>
   <name>Mona</name>
+  <name>Monaco</name>
+  <name>Mongolia</name>
   <name>Monica</name>
   <name>Monika</name>
   <name>Mons</name>
   <name>Monssveen</name>
+  <name>Montenegro</name>
+  <name>Montserrat</name>
   <name>Morgan</name>
   <name>Mork</name>
   <name>Morten</name>
+  <name>Mosambik</name>
   <name>Mosjøen</name>
   <name>Moskenes</name>
   <name>Moss</name>
@@ -1748,6 +1928,7 @@
   <name>Muruvik</name>
   <name>Mustafa</name>
   <name>My</name>
+  <name>Myanmar</name>
   <name>Myklebost</name>
   <name>Myra</name>
   <name>Myre</name>
@@ -1767,6 +1948,7 @@
   <name>Naima</name>
   <name>Nakkerud</name>
   <name>Namdalseid</name>
+  <name>Namibia</name>
   <name>Namnå</name>
   <name>Namsos</name>
   <name>Namsskogan</name>
@@ -1781,10 +1963,13 @@
   <name>Natalie</name>
   <name>Natasha</name>
   <name>Nathalie</name>
+  <name>Nauru</name>
   <name>Naustdal</name>
+  <name>Nederland</name>
   <name>Nedre Eiker</name>
   <name>Nedstrand</name>
   <name>Nelly</name>
+  <name>Nepal</name>
   <name>Nes</name>
   <name>Nesbyen</name>
   <name>Nesbygda</name>
@@ -1798,7 +1983,9 @@
   <name>Nesseby</name>
   <name>Nesset</name>
   <name>Nevlunghamn</name>
+  <name>New Zealand</name>
   <name>Ngoc</name>
+  <name>Nicaragua</name>
   <name>Nicholas</name>
   <name>Nicklas</name>
   <name>Niclas</name>
@@ -1808,6 +1995,8 @@
   <name>Nicole</name>
   <name>Nicoline</name>
   <name>Niels</name>
+  <name>Niger</name>
+  <name>Nigeria</name>
   <name>Niklas</name>
   <name>Nikolai</name>
   <name>Nikolas</name>
@@ -1817,6 +2006,7 @@
   <name>Ninni</name>
   <name>Nissedal</name>
   <name>Nittedal</name>
+  <name>Niue</name>
   <name>Njål</name>
   <name>Noah</name>
   <name>Nodeland</name>
@@ -1825,18 +2015,25 @@
   <name>Nora</name>
   <name>Norah</name>
   <name>Noralf</name>
+  <name>Nord-Afrika</name>
   <name>Nordagutu</name>
+  <name>Nord-Amerika</name>
   <name>Nord-Aurdal</name>
   <name>Norddal</name>
   <name>Norderhaug</name>
   <name>Norderhov</name>
+  <name>Nord-Europa</name>
   <name>Nordfjordeid</name>
   <name>Nord-Fron</name>
   <name>Nordkapp</name>
   <name>Nordkisa</name>
   <name>Nordkjosbotn</name>
+  <name>Nord-Korea</name>
   <name>Nordland</name>
   <name>Nordlia</name>
+  <name>Nordlige Amerika</name>
+  <name>Nord-Makedonia</name>
+  <name>Nord-Marianene</name>
   <name>Nord-Odal</name>
   <name>Nordre Land</name>
   <name>Nordreisa</name>
@@ -1845,6 +2042,8 @@
   <name>Nordvågen</name>
   <name>Nore og Uvdal</name>
   <name>Noresund</name>
+  <name>Norfolkøya</name>
+  <name>Norge</name>
   <name>Norheimsund</name>
   <name>Norma</name>
   <name>Normann</name>
@@ -1852,6 +2051,7 @@
   <name>Norvald</name>
   <name>Notodden</name>
   <name>Nybergsund</name>
+  <name>Ny-Caledonia</name>
   <name>Nykirke</name>
   <name>Nypan</name>
   <name>Nærbø</name>
@@ -1910,6 +2110,7 @@
   <name>Oluf</name>
   <name>Olve</name>
   <name>Oma</name>
+  <name>Oman</name>
   <name>Omar</name>
   <name>Opakermoen</name>
   <name>Oppdal</name>
@@ -1922,6 +2123,7 @@
   <name>Ormåsen</name>
   <name>Os</name>
   <name>Oscar</name>
+  <name>Oseania</name>
   <name>Osen</name>
   <name>Oskar</name>
   <name>Oslo</name>
@@ -1939,6 +2141,12 @@
   <name>Ove</name>
   <name>Overhalla</name>
   <name>Paal</name>
+  <name>Pakistan</name>
+  <name>Palau</name>
+  <name>Palestina</name>
+  <name>Panama</name>
+  <name>Papua Ny-Guinea</name>
+  <name>Paraguay</name>
   <name>Patricia</name>
   <name>Patrick</name>
   <name>Patrik</name>
@@ -1959,6 +2167,7 @@
   <name>Per-Arne</name>
   <name>Per-Erik</name>
   <name>Pernille</name>
+  <name>Peru</name>
   <name>Peter</name>
   <name>Petra</name>
   <name>Petter</name>
@@ -1967,12 +2176,16 @@
   <name>Phuong</name>
   <name>Pia</name>
   <name>Piotr</name>
+  <name>Pitcairnøyene</name>
   <name>Pjotr Iljitsj Tsjajkovskij</name>
   <name>Pjotr Tsjajkovskij</name>
   <name>Ploganes</name>
+  <name>Polen</name>
   <name>Pollestad</name>
+  <name>Polynesia</name>
   <name>Porsanger</name>
   <name>Porsgrunn</name>
+  <name>Portugal</name>
   <name>Poul</name>
   <name>Poverudbyen</name>
   <name>Preben</name>
@@ -1980,7 +2193,9 @@
   <name>Prestfoss</name>
   <name>Prestmoen</name>
   <name>Preststranda</name>
+  <name>Puerto Rico</name>
   <name>Pål</name>
+  <name>Qatar</name>
   <name>Rachel</name>
   <name>Radøy</name>
   <name>Rafsbotn</name>
@@ -2035,6 +2250,8 @@
   <name>Rennebu</name>
   <name>Rennesøy</name>
   <name>Rensvik</name>
+  <name>Republikken Kongo</name>
+  <name>Réunion</name>
   <name>Revetal</name>
   <name>Richard</name>
   <name>Rigmor</name>
@@ -2065,6 +2282,7 @@
   <name>Rolf</name>
   <name>Rollag</name>
   <name>Rolv</name>
+  <name>Romania</name>
   <name>Romedal</name>
   <name>Ronald</name>
   <name>Ronja</name>
@@ -2085,8 +2303,10 @@
   <name>Rudolf</name>
   <name>Runa</name>
   <name>Runar</name>
+  <name>Russland</name>
   <name>Rut</name>
   <name>Ruth</name>
+  <name>Rwanda</name>
   <name>Rygge</name>
   <name>Ryggebyen</name>
   <name>Rykene</name>
@@ -2117,14 +2337,21 @@
   <name>Sagvåg</name>
   <name>Sahra</name>
   <name>Said</name>
+  <name>Saint Kitts og Nevis</name>
+  <name>Saint-Barthélemy</name>
+  <name>Saint-Martin</name>
+  <name>Saint-Pierre-et-Miquelon</name>
   <name>Salangen</name>
   <name>Salma</name>
+  <name>Salomonøyene</name>
   <name>Saltdal</name>
   <name>Sam</name>
   <name>Samir</name>
   <name>Samira</name>
   <name>Samnanger</name>
+  <name>Samoa</name>
   <name>Samuel</name>
+  <name>San Marino</name>
   <name>Sana</name>
   <name>Sand</name>
   <name>Sandane</name>
@@ -2143,10 +2370,12 @@
   <name>Sandøya</name>
   <name>Sanna</name>
   <name>Sanne</name>
+  <name>São Tomé og Príncipe</name>
   <name>Sara</name>
   <name>Sarah</name>
   <name>Sarpsborg</name>
   <name>Sauda</name>
+  <name>Saudi-Arabia</name>
   <name>Sauherad</name>
   <name>Scott</name>
   <name>Sean</name>
@@ -2165,13 +2394,19 @@
   <name>Selma</name>
   <name>Selvik</name>
   <name>Sem</name>
+  <name>Senegal</name>
   <name>Senjehopen</name>
+  <name>Sentral-Afrika</name>
+  <name>Sentral-Asia</name>
+  <name>Serbia</name>
   <name>Serina</name>
   <name>Serine</name>
   <name>Sessvollmoen</name>
   <name>Setermoen</name>
   <name>Severin</name>
+  <name>Seychellene</name>
   <name>Sidsel</name>
+  <name>Sierra Leone</name>
   <name>Sigbjørn</name>
   <name>Sigdal</name>
   <name>Sigerfjord</name>
@@ -2201,6 +2436,8 @@
   <name>Simone</name>
   <name>Sina</name>
   <name>Sindre</name>
+  <name>Singapore</name>
+  <name>Sint Maarten</name>
   <name>Sira</name>
   <name>Sirdal</name>
   <name>Siren</name>
@@ -2264,6 +2501,8 @@
   <name>Slevik</name>
   <name>Slidre</name>
   <name>Slitu</name>
+  <name>Slovakia</name>
+  <name>Slovenia</name>
   <name>Slåttevik</name>
   <name>Smestad</name>
   <name>Smøla</name>
@@ -2297,6 +2536,7 @@
   <name>Solvor</name>
   <name>Solvår</name>
   <name>Solzjenitsyn</name>
+  <name>Somalia</name>
   <name>Sommarøy</name>
   <name>Sondre</name>
   <name>Songdalen</name>
@@ -2305,12 +2545,17 @@
   <name>Sophia</name>
   <name>Sophie</name>
   <name>Sortland</name>
+  <name>Spania</name>
   <name>Sparbu</name>
   <name>Spetalen</name>
   <name>Spillum</name>
   <name>Spongdal</name>
   <name>Sponvika</name>
   <name>Spydeberg</name>
+  <name>Sri Lanka</name>
+  <name>St. Helena</name>
+  <name>St. Lucia</name>
+  <name>St. Vincent og Grenadinene</name>
   <name>Stamsund</name>
   <name>Stange</name>
   <name>Stanghelle</name>
@@ -2345,6 +2590,7 @@
   <name>Stokke</name>
   <name>Stokmarknes</name>
   <name>Storbakken</name>
+  <name>Storbritannia</name>
   <name>Stord</name>
   <name>Stordal</name>
   <name>Storebø</name>
@@ -2366,6 +2612,7 @@
   <name>Sturla</name>
   <name>Støren</name>
   <name>Ståle</name>
+  <name>Sudan</name>
   <name>Sula</name>
   <name>Suldal</name>
   <name>Sulitjelma</name>
@@ -2377,12 +2624,14 @@
   <name>Sunndal</name>
   <name>Sunndalsøra</name>
   <name>Sunniva</name>
+  <name>Surinam</name>
   <name>Surnadal</name>
   <name>Susan</name>
   <name>Susann</name>
   <name>Susanna</name>
   <name>Susanne</name>
   <name>Suzanne</name>
+  <name>Svalbard og Jan Mayen</name>
   <name>Svalia</name>
   <name>Svanhild</name>
   <name>Svarstad</name>
@@ -2394,6 +2643,7 @@
   <name>Svein-Erik</name>
   <name>Sveinung</name>
   <name>Sveio</name>
+  <name>Sveits</name>
   <name>Svelgen</name>
   <name>Svelvik</name>
   <name>Sven</name>
@@ -2402,6 +2652,7 @@
   <name>Svenevik</name>
   <name>Svenn</name>
   <name>Svennevik</name>
+  <name>Sverige</name>
   <name>Sverre</name>
   <name>Svetlana</name>
   <name>Sviland</name>
@@ -2410,6 +2661,7 @@
   <name>Svorkmo</name>
   <name>Svortland</name>
   <name>Svøo</name>
+  <name>Swaziland</name>
   <name>Syed</name>
   <name>Sykkylven</name>
   <name>Sylling</name>
@@ -2421,6 +2673,7 @@
   <name>Synneva</name>
   <name>Synnøve</name>
   <name>Synøve</name>
+  <name>Syria</name>
   <name>Sysle</name>
   <name>Syver</name>
   <name>Sæbøvik</name>
@@ -2432,25 +2685,38 @@
   <name>Sømna</name>
   <name>Søndre Land</name>
   <name>Sønsterud</name>
+  <name>Sør-Afrika</name>
+  <name>Sør-Amerika</name>
+  <name>Sør-Asia</name>
   <name>Sør-Aurdal</name>
   <name>Sørbygdafeltet</name>
   <name>Søre Øyane</name>
   <name>Søren</name>
+  <name>Sør-Europa</name>
   <name>Sørfold</name>
   <name>Sør-Fron</name>
+  <name>Sør-Georgia</name>
+  <name>Sør-Georgia og Sør-Sandwichøyene</name>
   <name>Sørkjosen</name>
+  <name>Sør-Korea</name>
   <name>Sørland</name>
+  <name>Sørlige Afrika</name>
   <name>Sør-Odal</name>
   <name>Sørreisa</name>
+  <name>Sør-Sandwichøyene</name>
+  <name>Sør-Sudan</name>
   <name>Sør-Trøndelag</name>
   <name>Sørum</name>
   <name>Sørumsand</name>
   <name>Sør-Varanger</name>
   <name>Sørvågen</name>
+  <name>Sørøst-Asia</name>
   <name>Søvik</name>
   <name>Sånum</name>
   <name>Såstadbråten</name>
+  <name>Tadsjikistan</name>
   <name>Tage</name>
+  <name>Taiwan</name>
   <name>Tale</name>
   <name>Talvik</name>
   <name>Tamara</name>
@@ -2460,6 +2726,7 @@
   <name>Tangen</name>
   <name>Tanja</name>
   <name>Tanya</name>
+  <name>Tanzania</name>
   <name>Tara</name>
   <name>Tarald</name>
   <name>Tarjei</name>
@@ -2476,6 +2743,7 @@
   <name>Terese</name>
   <name>Terje</name>
   <name>Terråk</name>
+  <name>Thailand</name>
   <name>Thale</name>
   <name>Thanh</name>
   <name>Thea</name>
@@ -2501,6 +2769,7 @@
   <name>Tilde</name>
   <name>Tim</name>
   <name>Time</name>
+  <name>Timor-Leste</name>
   <name>Tina</name>
   <name>Tine</name>
   <name>Tingnes</name>
@@ -2517,6 +2786,8 @@
   <name>Tobias</name>
   <name>Toft</name>
   <name>Tofte</name>
+  <name>Togo</name>
+  <name>Tokelau</name>
   <name>Tokke</name>
   <name>Tolga</name>
   <name>Tolstoj</name>
@@ -2530,6 +2801,7 @@
   <name>Tomter</name>
   <name>Tomteråsen</name>
   <name>Tone</name>
+  <name>Tonga</name>
   <name>Tonje</name>
   <name>Tonny</name>
   <name>Tonstad</name>
@@ -2587,6 +2859,8 @@
   <name>Trine</name>
   <name>Trine Lise</name>
   <name>Trine-Lise</name>
+  <name>Trinidad og Tobago</name>
+  <name>Tristan da Cunha</name>
   <name>Trofors</name>
   <name>Trolla</name>
   <name>Trolldalen</name>
@@ -2607,10 +2881,16 @@
   <name>Trøgstad</name>
   <name>Trømborg</name>
   <name>Trøndelag</name>
+  <name>Tsjad</name>
   <name>Tsjajkovskij</name>
+  <name>Tsjekkia</name>
+  <name>Tunisia</name>
   <name>Turi</name>
   <name>Turid</name>
+  <name>Turkmenistan</name>
+  <name>Turks- og Caicosøyene</name>
   <name>Tuva</name>
+  <name>Tuvalu</name>
   <name>Tvedestrand</name>
   <name>Tveit</name>
   <name>Tveitsund</name>
@@ -2620,7 +2900,9 @@
   <name>Tynset</name>
   <name>Tyra</name>
   <name>Tyristrand</name>
+  <name>Tyrkia</name>
   <name>Tysfjord</name>
+  <name>Tyskland</name>
   <name>Tysnes</name>
   <name>Tyssedal</name>
   <name>Tysvær</name>
@@ -2628,7 +2910,9 @@
   <name>Tønnes</name>
   <name>Tønsberg</name>
   <name>Ubergsmoen</name>
+  <name>Uganda</name>
   <name>Uggdalseidet</name>
+  <name>Ukraina</name>
   <name>Ulefoss</name>
   <name>Ulf</name>
   <name>Ulla</name>
@@ -2641,8 +2925,13 @@
   <name>Ulvik</name>
   <name>Una</name>
   <name>Undheim</name>
+  <name>Ungarn</name>
   <name>Unn</name>
   <name>Unni</name>
+  <name>Uruguay</name>
+  <name>USA</name>
+  <name>USAs ytre øyer</name>
+  <name>Usbekistan</name>
   <name>Uskedal</name>
   <name>Utgård</name>
   <name>Uthaug</name>
@@ -2661,12 +2950,14 @@
   <name>Vangsåsen</name>
   <name>Vanja</name>
   <name>Vanse</name>
+  <name>Vanuatu</name>
   <name>Vanvikan</name>
   <name>Vanylven</name>
   <name>Vardø</name>
   <name>Varhaug</name>
   <name>Vassenden</name>
   <name>Vassøy</name>
+  <name>Vatikanstaten</name>
   <name>Vatne</name>
   <name>Vear</name>
   <name>Vebjørn</name>
@@ -2679,6 +2970,7 @@
   <name>Velde</name>
   <name>Vemund</name>
   <name>Venche</name>
+  <name>Venezuela</name>
   <name>Venke</name>
   <name>Vennesla</name>
   <name>Vera</name>
@@ -2690,15 +2982,19 @@
   <name>Veronika</name>
   <name>Verran</name>
   <name>Veslemøy</name>
+  <name>Vest-Afrika</name>
   <name>Vest-Agder</name>
+  <name>Vest-Asia</name>
   <name>Vestby</name>
   <name>Vestbygda</name>
+  <name>Vest-Europa</name>
   <name>Vestfold</name>
   <name>Vestfossen</name>
   <name>Vestnes</name>
   <name>Vestre Jakobselv</name>
   <name>Vestre Slidre</name>
   <name>Vestre Toten</name>
+  <name>Vest-Sahara</name>
   <name>Vestvågøy</name>
   <name>Vetle</name>
   <name>Vevelstad</name>
@@ -2708,6 +3004,7 @@
   <name>Victoria</name>
   <name>Vida</name>
   <name>Vidar</name>
+  <name>Vietnam</name>
   <name>Vigdis</name>
   <name>Vigeland</name>
   <name>Viggja</name>
@@ -2764,6 +3061,7 @@
   <name>Vår</name>
   <name>Våre</name>
   <name>Vårin</name>
+  <name>Wallis og Futuna</name>
   <name>Walter</name>
   <name>Wanja</name>
   <name>Wenche</name>
@@ -2788,10 +3086,14 @@
   <name>Yngve</name>
   <name>Yngvild</name>
   <name>Ytre Enebakk</name>
+  <name>Ytre Oseania</name>
   <name>Yusuf</name>
   <name>Yvonne</name>
   <name>Zahra</name>
   <name>Zainab</name>
+  <name>Zaïre</name>
+  <name>Zambia</name>
+  <name>Zimbabwe</name>
   <name>Zuzanna</name>
   <name>Øistein</name>
   <name>Øivind</name>
@@ -2806,11 +3108,16 @@
   <name>Ørnulf</name>
   <name>Ørskog</name>
   <name>Ørsta</name>
+  <name>Øst-Afrika</name>
+  <name>Øst-Asia</name>
   <name>Østenstad</name>
+  <name>Østerrike</name>
   <name>Østersund</name>
+  <name>Øst-Europa</name>
   <name>Østfold</name>
   <name>Østhusvik</name>
   <name>Østre Toten</name>
+  <name>Øst-Timor</name>
   <name>Øverbø</name>
   <name>Øvre Eiker</name>
   <name>Øvre Årdal</name>
@@ -2832,6 +3139,7 @@
   <name>Ågotnes</name>
   <name>Åkrehamn</name>
   <name>Åkrene</name>
+  <name>Åland</name>
   <name>Ålesund</name>
   <name>Ålgård</name>
   <name>Ålvik</name>
