@@ -68,6 +68,9 @@
   <name>Аврелия</name>
   <name>Аврея</name>
   <name>Аврора</name>
+  <name>Австралазия</name>
+  <name>Австралия</name>
+  <name>Австрия</name>
   <name>Автоном</name>
   <name>Автономович</name>
   <name>Автономовна</name>
@@ -132,6 +135,8 @@
   <name>Азарьевич</name>
   <name>Азарьевна</name>
   <name>Азелла</name>
+  <name>Азербайджан</name>
+  <name>Азия</name>
   <name>Аида</name>
   <name>Акакиевич</name>
   <name>Акакиевна</name>
@@ -165,6 +170,8 @@
   <name>Аксиния</name>
   <name>Аксинья</name>
   <name>Акулина</name>
+  <name>Аландские о-ва</name>
+  <name>Албания</name>
   <name>Алевтина</name>
   <name>Александр</name>
   <name>Александр Исаевич Солженицын</name>
@@ -181,6 +188,7 @@
   <name>Алексий</name>
   <name>Алексина</name>
   <name>Алёна</name>
+  <name>Алжир</name>
   <name>Алина</name>
   <name>Алиса</name>
   <name>Алла</name>
@@ -204,6 +212,8 @@
   <name>Амвросьевич</name>
   <name>Амвросьевна</name>
   <name>Амелфа</name>
+  <name>Америка</name>
+  <name>Американское Самоа</name>
   <name>Амос</name>
   <name>Амосович</name>
   <name>Амосовна</name>
@@ -232,7 +242,10 @@
   <name>Ангела</name>
   <name>Ангелика</name>
   <name>Ангелина</name>
+  <name>Ангилья</name>
+  <name>Ангола</name>
   <name>Анджела</name>
+  <name>Андорра</name>
   <name>Андреевич</name>
   <name>Андреевна</name>
   <name>Андрей</name>
@@ -281,7 +294,9 @@
   <name>Анисьевна</name>
   <name>Анисья</name>
   <name>Анна</name>
+  <name>Антарктида</name>
   <name>Антигона</name>
+  <name>Антигуа и Барбуда</name>
   <name>Антиох</name>
   <name>Антиохович</name>
   <name>Антиоховна</name>
@@ -338,6 +353,7 @@
   <name>Апрелия</name>
   <name>Апфия</name>
   <name>Аргентея</name>
+  <name>Аргентина</name>
   <name>Ардалион</name>
   <name>Ардалионович</name>
   <name>Ардалионовна</name>
@@ -369,6 +385,7 @@
   <name>Аркадий</name>
   <name>Аркадьевич</name>
   <name>Аркадьевна</name>
+  <name>Армения</name>
   <name>Арминия</name>
   <name>Арнольд</name>
   <name>Арнольдович</name>
@@ -406,6 +423,7 @@
   <name>Артур</name>
   <name>Артурович</name>
   <name>Артуровна</name>
+  <name>Аруба</name>
   <name>Архип</name>
   <name>Архипович</name>
   <name>Архиповна</name>
@@ -430,40 +448,54 @@
   <name>Афанасия</name>
   <name>Афанасьевич</name>
   <name>Афанасьевна</name>
+  <name>Афганистан</name>
   <name>Афиноген</name>
   <name>Афиногенович</name>
   <name>Афиногеновна</name>
   <name>Афинодор</name>
   <name>Афинодорович</name>
   <name>Афинодоровна</name>
+  <name>Африка</name>
   <name>Африкан</name>
   <name>Африканович</name>
   <name>Африкановна</name>
   <name>Аэлита</name>
+  <name>Багамы</name>
   <name>Бажен</name>
   <name>Баженович</name>
   <name>Баженовна</name>
+  <name>Бангладеш</name>
+  <name>Барбадос</name>
   <name>барон фон Мю́нхгаузен</name>
+  <name>Бахрейн</name>
   <name>Беата</name>
   <name>Беатриса</name>
+  <name>Беларусь</name>
+  <name>Белиз</name>
   <name>Белла</name>
+  <name>Бельгия</name>
   <name>Бенедикт</name>
   <name>Бенедикта</name>
   <name>Бенедиктович</name>
   <name>Бенедиктовна</name>
+  <name>Бенин</name>
+  <name>Бермудские о-ва</name>
   <name>Берта</name>
+  <name>Бирма</name>
   <name>Бландина</name>
   <name>Богдан</name>
   <name>Богдана</name>
   <name>Богданович</name>
   <name>Богдановна</name>
   <name>Божена</name>
+  <name>Болгария</name>
   <name>Болеслав</name>
   <name>Болеслава</name>
   <name>Болеславич</name>
   <name>Болеславна</name>
   <name>Болеславович</name>
   <name>Болеславовна</name>
+  <name>Боливия</name>
   <name>Бонифат</name>
   <name>Бонифатиевич</name>
   <name>Бонифатиевна</name>
@@ -472,6 +504,7 @@
   <name>Бонифатовна</name>
   <name>Бонифатьевич</name>
   <name>Бонифатьевна</name>
+  <name>Бонэйр, Синт-Эстатиус и Саба</name>
   <name>Борис</name>
   <name>Борислав</name>
   <name>Борислава</name>
@@ -481,16 +514,26 @@
   <name>Бориславовна</name>
   <name>Борисович</name>
   <name>Борисовна</name>
+  <name>Босния</name>
+  <name>Босния и Герцеговина</name>
+  <name>Ботсвана</name>
   <name>Бояна</name>
+  <name>Бразилия</name>
+  <name>Британия</name>
+  <name>Британская территория в Индийском океане</name>
   <name>Бронислав</name>
   <name>Бронислава</name>
   <name>Брониславич</name>
   <name>Брониславна</name>
   <name>Брониславович</name>
   <name>Брониславовна</name>
+  <name>Бруней-Даруссалам</name>
   <name>Будимир</name>
   <name>Будимирович</name>
   <name>Будимировна</name>
+  <name>Буркина-Фасо</name>
+  <name>Бурунди</name>
+  <name>Бутан</name>
   <name>Вавила</name>
   <name>Вавилич</name>
   <name>Вавилична</name>
@@ -517,6 +560,7 @@
   <name>Валерьянович</name>
   <name>Валерьяновна</name>
   <name>Ванда</name>
+  <name>Вануату</name>
   <name>Варвара</name>
   <name>Варлам</name>
   <name>Варламиевич</name>
@@ -553,21 +597,25 @@
   <name>Вассиан</name>
   <name>Вассианович</name>
   <name>Вассиановна</name>
+  <name>Ватикан</name>
   <name>Вацлава</name>
   <name>Вевея</name>
   <name>Велизар</name>
   <name>Велизарович</name>
   <name>Велизаровна</name>
+  <name>Великобритания</name>
   <name>Велимир</name>
   <name>Велимира</name>
   <name>Велимирович</name>
   <name>Велимировна</name>
   <name>Велислава</name>
+  <name>Венгрия</name>
   <name>Венедикт</name>
   <name>Венедикта</name>
   <name>Венедиктович</name>
   <name>Венедиктовна</name>
   <name>Венера</name>
+  <name>Венесуэла</name>
   <name>Вениамин</name>
   <name>Вениаминович</name>
   <name>Вениаминовна</name>
@@ -628,6 +676,8 @@
   <name>Виола</name>
   <name>Виолетта</name>
   <name>Виргиния</name>
+  <name>Виргинские о-ва (Великобритания)</name>
+  <name>Виргинские о-ва (США)</name>
   <name>Виринея</name>
   <name>Виссарион</name>
   <name>Виссарионович</name>
@@ -678,6 +728,8 @@
   <name>Власта</name>
   <name>Власьевич</name>
   <name>Власьевна</name>
+  <name>Внешние малые о-ва (США)</name>
+  <name>Внешняя Океания</name>
   <name>Воислава</name>
   <name>Воля</name>
   <name>Вонифат</name>
@@ -688,6 +740,10 @@
   <name>Вонифатовна</name>
   <name>Вонифатьевич</name>
   <name>Вонифатьевна</name>
+  <name>Восточная Азия</name>
+  <name>Восточная Африка</name>
+  <name>Восточная Европа</name>
+  <name>Восточный Тимор</name>
   <name>Всеволод</name>
   <name>Всеволодович</name>
   <name>Всеволодовна</name>
@@ -705,12 +761,14 @@
   <name>Вышеславна</name>
   <name>Вышеславович</name>
   <name>Вышеславовна</name>
+  <name>Вьетнам</name>
   <name>Вячеслав</name>
   <name>Вячеславич</name>
   <name>Вячеславна</name>
   <name>Вячеславович</name>
   <name>Вячеславовна</name>
   <name>Гаафа</name>
+  <name>Габон</name>
   <name>Гавриил</name>
   <name>Гавриилович</name>
   <name>Гаврииловна</name>
@@ -718,6 +776,8 @@
   <name>Гаврила</name>
   <name>Гаврилович</name>
   <name>Гавриловна</name>
+  <name>Гайана</name>
+  <name>Гаити</name>
   <name>Гала</name>
   <name>Галактион</name>
   <name>Галактионович</name>
@@ -728,7 +788,13 @@
   <name>Галина</name>
   <name>Галла</name>
   <name>Галя</name>
+  <name>Гамбия</name>
+  <name>Гана</name>
   <name>Гая</name>
+  <name>Гваделупа</name>
+  <name>Гватемала</name>
+  <name>Гвинея</name>
+  <name>Гвинея-Бисау</name>
   <name>Гедеон</name>
   <name>Гедеонович</name>
   <name>Гедеоновна</name>
@@ -773,11 +839,13 @@
   <name>Гервасьевна</name>
   <name>Герман</name>
   <name>Германа</name>
+  <name>Германия</name>
   <name>Германович</name>
   <name>Германовна</name>
   <name>Гермоген</name>
   <name>Гермогенович</name>
   <name>Гермогеновна</name>
+  <name>Гернси</name>
   <name>Геронтиевич</name>
   <name>Геронтиевна</name>
   <name>Геронтий</name>
@@ -788,6 +856,7 @@
   <name>Гиацинт</name>
   <name>Гиацинтович</name>
   <name>Гиацинтовна</name>
+  <name>Гибралтар</name>
   <name>Глафира</name>
   <name>Глеб</name>
   <name>Глебович</name>
@@ -795,7 +864,10 @@
   <name>Гликерия</name>
   <name>Глориоза</name>
   <name>Голиндуха</name>
+  <name>Гондурас</name>
   <name>Гонеста</name>
+  <!-- <name>Гонконг (САР)</name> -->
+  <name>Гонконг</name>
   <name>Гонората</name>
   <name>Горациевич</name>
   <name>Горациевна</name>
@@ -820,10 +892,15 @@
   <name>Гремиславна</name>
   <name>Гремиславович</name>
   <name>Гремиславовна</name>
+  <name>Гренада</name>
+  <name>Гренландия</name>
   <name>Грета</name>
+  <name>Греция</name>
   <name>Григорий</name>
   <name>Григорьевич</name>
   <name>Григорьевна</name>
+  <name>Грузия</name>
+  <name>Гуам</name>
   <name>Гуриевич</name>
   <name>Гуриевна</name>
   <name>Гурий</name>
@@ -850,6 +927,7 @@
   <name>Данила</name>
   <name>Данилович</name>
   <name>Даниловна</name>
+  <name>Дания</name>
   <name>Дария</name>
   <name>Дарья</name>
   <name>Дебора</name>
@@ -863,6 +941,7 @@
   <name>Демид</name>
   <name>Демидович</name>
   <name>Демидовна</name>
+  <name>Демократи́ческая Респу́блика Ко́нго</name>
   <name>Демьян</name>
   <name>Демьянович</name>
   <name>Демьяновна</name>
@@ -878,8 +957,11 @@
   <name>Деодор</name>
   <name>Деодорович</name>
   <name>Деодоровна</name>
+  <name>Джерси</name>
+  <name>Джибути</name>
   <name>Диана</name>
   <name>Дигна</name>
+  <name>Диего-Гарсия</name>
   <name>Димитриевич</name>
   <name>Димитриевна</name>
   <name>Димитрий</name>
@@ -913,6 +995,7 @@
   <name>Довмонтовна</name>
   <name>Доминик</name>
   <name>Доминика</name>
+  <name>Доминиканская Республика</name>
   <name>Доминикович</name>
   <name>Доминиковна</name>
   <name>Домитилла</name>
@@ -945,6 +1028,8 @@
   <name>Досифей</name>
   <name>Досифея</name>
   <name>Достоевский</name>
+  <name>ДР Конго (ДРК)</name>
+  <name>ДРК</name>
   <name>Дросида</name>
   <name>Дуклида</name>
   <name>Ева</name>
@@ -993,6 +1078,9 @@
   <name>Евникия</name>
   <name>Евномия</name>
   <name>Евпраксия</name>
+  <name>еврозона</name>
+  <name>Европа</name>
+  <name>Европейский союз</name>
   <name>Евсевия</name>
   <name>Евсеевич</name>
   <name>Евсеевна</name>
@@ -1035,6 +1123,7 @@
   <name>Евфимьевич</name>
   <name>Евфимьевна</name>
   <name>Евфросиния</name>
+  <name>Египет</name>
   <name>Егор</name>
   <name>Егориевич</name>
   <name>Егориевна</name>
@@ -1119,6 +1208,11 @@
   <name>Жанна</name>
   <name>Женя</name>
   <name>Жозефина</name>
+  <name>Замбия</name>
+  <name>Западная Азия</name>
+  <name>Западная Африка</name>
+  <name>Западная Европа</name>
+  <name>Западная Сахара</name>
   <name>Зара</name>
   <name>Зарема</name>
   <name>Зарина</name>
@@ -1138,6 +1232,7 @@
   <name>Зенона</name>
   <name>Зенонович</name>
   <name>Зеноновна</name>
+  <name>Зимбабве</name>
   <name>Зина</name>
   <name>Зинаида</name>
   <name>Зиновиевич</name>
@@ -1180,6 +1275,7 @@
   <name>Игорь</name>
   <name>Ида</name>
   <name>Идея</name>
+  <name>Йемен</name>
   <name>Иероним</name>
   <name>Иеронимович</name>
   <name>Иеронимовна</name>
@@ -1197,6 +1293,7 @@
   <name>Изот</name>
   <name>Изотович</name>
   <name>Изотовна</name>
+  <name>Израиль</name>
   <name>Изяслав</name>
   <name>Изяславич</name>
   <name>Изяславна</name>
@@ -1220,6 +1317,8 @@
   <name>Ильичом</name>
   <name>Илья</name>
   <name>Инга</name>
+  <name>Индия</name>
+  <name>Индонезия</name>
   <name>Инесса</name>
   <name>Инна</name>
   <name>Иннокентиевич</name>
@@ -1240,6 +1339,7 @@
   <name>Иона</name>
   <name>Ионич</name>
   <name>Ионична</name>
+  <name>Иордания</name>
   <name>Иосафат</name>
   <name>Иосафатович</name>
   <name>Иосафатовна</name>
@@ -1259,9 +1359,11 @@
   <name>Ипполитович</name>
   <name>Ипполитовна</name>
   <name>Ираида</name>
+  <name>Ирак</name>
   <name>Ираклиевич</name>
   <name>Ираклиевна</name>
   <name>Ираклий</name>
+  <name>Иран</name>
   <name>Ирина</name>
   <name>Иринарх</name>
   <name>Иринархович</name>
@@ -1269,6 +1371,7 @@
   <name>Иринеевич</name>
   <name>Иринеевна</name>
   <name>Ириней</name>
+  <name>Ирландия</name>
   <name>Ирма</name>
   <name>Иродион</name>
   <name>Иродионович</name>
@@ -1292,11 +1395,16 @@
   <name>Исидора</name>
   <name>Исидорович</name>
   <name>Исидоровна</name>
+  <name>Исландия</name>
+  <name>Испания</name>
+  <name>Италия</name>
   <name>Иустин</name>
   <name>Иустинович</name>
   <name>Иустиновна</name>
   <name>Ифигения</name>
   <name>Ия</name>
+  <name>Кабо-Верде</name>
+  <name>Казахстан</name>
   <name>Каздоя</name>
   <name>Казимир</name>
   <name>Казимира</name>
@@ -1329,7 +1437,11 @@
   <name>Калуфович</name>
   <name>Калуфовна</name>
   <name>Кама</name>
+  <name>Камбоджа</name>
+  <name>Камерун</name>
   <name>Камилла</name>
+  <name>Канада</name>
+  <name>Канарские о-ва</name>
   <name>Кандида</name>
   <name>Кандидиевич</name>
   <name>Кандидиевна</name>
@@ -1346,6 +1458,7 @@
   <name>Капитон</name>
   <name>Капитонович</name>
   <name>Капитоновна</name>
+  <name>Карибы</name>
   <name>Карина</name>
   <name>Карион</name>
   <name>Карионович</name>
@@ -1366,7 +1479,9 @@
   <name>Касьян</name>
   <name>Касьянович</name>
   <name>Касьяновна</name>
+  <name>Катар</name>
   <name>Келестина</name>
+  <name>Кения</name>
   <name>Керкира</name>
   <name>Кетевань</name>
   <name>Киликия</name>
@@ -1374,16 +1489,19 @@
   <name>Кима</name>
   <name>Кимович</name>
   <name>Кимовна</name>
+  <name>Кипр</name>
   <name>Киприан</name>
   <name>Киприанович</name>
   <name>Киприановна</name>
   <name>Кир</name>
   <name>Кира</name>
+  <name>Киргизия</name>
   <name>Кириак</name>
   <name>Кириакия</name>
   <name>Кириакович</name>
   <name>Кириаковна</name>
   <name>Кириана</name>
+  <name>Кирибати</name>
   <name>Кирик</name>
   <name>Кирикович</name>
   <name>Кириковна</name>
@@ -1400,6 +1518,7 @@
   <name>Кирьякович</name>
   <name>Кирьяковна</name>
   <name>Кирьяна</name>
+  <name>Китай</name>
   <name>Клавдиевич</name>
   <name>Клавдиевна</name>
   <name>Клавдий</name>
@@ -1419,6 +1538,13 @@
   <name>Климентьевна</name>
   <name>Климович</name>
   <name>Климовна</name>
+  <name>КНДР</name>
+  <name>Кокосовые о-ва</name>
+  <name>Колумбия</name>
+  <name>Коморы</name>
+  <name>Ко́нго</name>
+  <name>Конго-Браззавиль</name>
+  <name>Конго-Киншаса</name>
   <name>Кондрат</name>
   <name>Кондратиевич</name>
   <name>Кондратиевна</name>
@@ -1455,12 +1581,17 @@
   <name>Корниловна</name>
   <name>Корнильевич</name>
   <name>Корнильевна</name>
+  <name>Косово</name>
+  <name>Коста-Рика</name>
+  <name>Кот-д’Ивуар</name>
   <name>Кристина</name>
   <name>Ксанфиппа</name>
   <name>Ксения</name>
   <name>Ксенофонт</name>
   <name>Ксенофонтович</name>
   <name>Ксенофонтовна</name>
+  <name>Куба</name>
+  <name>Кувейт</name>
   <name>Кузьма</name>
   <name>Кузьминична</name>
   <name>Кузьмич</name>
@@ -1468,6 +1599,7 @@
   <name>Куприян</name>
   <name>Куприянович</name>
   <name>Куприяновна</name>
+  <name>Кюрасао</name>
   <name>Лавиния</name>
   <name>Лавр</name>
   <name>Лавра</name>
@@ -1485,10 +1617,13 @@
   <name>Лазаревич</name>
   <name>Лазаревна</name>
   <name>Лазарь</name>
+  <name>Лаос</name>
   <name>Ларион</name>
   <name>Ларионович</name>
   <name>Ларионовна</name>
   <name>Лариса</name>
+  <name>Латвия</name>
+  <name>Латинская Америка</name>
   <name>Лаура</name>
   <name>Лев</name>
   <name>Лев Николаевич Толстой</name>
@@ -1519,14 +1654,19 @@
   <name>Леопольд</name>
   <name>Леопольдович</name>
   <name>Леопольдовна</name>
+  <name>Лесото</name>
   <name>Лея</name>
   <name>Лиана</name>
+  <name>Либерия</name>
+  <name>Ливан</name>
   <name>Ливия</name>
   <name>Лидия</name>
   <name>Лилиана</name>
   <name>Лилия</name>
   <name>Лина</name>
   <name>Лира</name>
+  <name>Литва</name>
+  <name>Лихтенштейн</name>
   <name>Лия</name>
   <name>Логвин</name>
   <name>Логвинович</name>
@@ -1577,6 +1717,7 @@
   <name>Любомыслович</name>
   <name>Любомысловна</name>
   <name>Людмила</name>
+  <name>Люксембург</name>
   <name>Люциан</name>
   <name>Люцианович</name>
   <name>Люциановна</name>
@@ -1589,6 +1730,7 @@
   <name>Маврикий</name>
   <name>Маврикьевич</name>
   <name>Маврикьевна</name>
+  <name>Мавритания</name>
   <name>Маврович</name>
   <name>Мавровна</name>
   <name>Мавродиевич</name>
@@ -1599,11 +1741,15 @@
   <name>Магда</name>
   <name>Магдалина</name>
   <name>Магна</name>
+  <name>Мадагаскар</name>
   <name>Маевич</name>
   <name>Маевна</name>
   <name>Май</name>
   <name>Маина</name>
+  <name>Майотта</name>
   <name>Майя</name>
+  <!-- <name>Макао (САР)</name> -->
+  <name>Макао</name>
   <name>Макар</name>
   <name>Макариевич</name>
   <name>Макариевна</name>
@@ -1634,13 +1780,19 @@
   <name>Максимильяновна</name>
   <name>Максимович</name>
   <name>Максимовна</name>
+  <name>Малави</name>
+  <name>Малайзия</name>
   <name>Малания</name>
   <name>Маланья</name>
+  <name>Мали</name>
   <name>Малина</name>
   <name>Малх</name>
   <name>Малхович</name>
   <name>Малховна</name>
   <name>Мальвина</name>
+  <name>Мальвинские о-ва</name>
+  <name>Мальдивы</name>
+  <name>Мальта</name>
   <name>Мамелфа</name>
   <name>Манефа</name>
   <name>Мануил</name>
@@ -1686,6 +1838,7 @@
   <name>Марлена</name>
   <name>Марленович</name>
   <name>Марленовна</name>
+  <name>Марокко</name>
   <name>Марта</name>
   <name>Мартимьян</name>
   <name>Мартимьянович</name>
@@ -1696,6 +1849,7 @@
   <name>Мартиниана</name>
   <name>Мартинианович</name>
   <name>Мартиниановна</name>
+  <name>Мартиника</name>
   <name>Мартинович</name>
   <name>Мартиновна</name>
   <name>Мартириевич</name>
@@ -1710,6 +1864,7 @@
   <name>Мартьянович</name>
   <name>Мартьяновна</name>
   <name>Марфа</name>
+  <name>Маршалловы Острова</name>
   <name>Марья</name>
   <name>Марьяна</name>
   <name>Мастридия</name>
@@ -1721,6 +1876,8 @@
   <name>Матрона</name>
   <name>Мая</name>
   <name>Медея</name>
+  <name>Мексика</name>
+  <name>Меланезия</name>
   <name>Мелания</name>
   <name>Меланья</name>
   <name>Мелентиевич</name>
@@ -1754,6 +1911,7 @@
   <name>Мечиславна</name>
   <name>Мечиславович</name>
   <name>Мечиславовна</name>
+  <name>Микронезия</name>
   <name>Милан</name>
   <name>Милана</name>
   <name>Миланович</name>
@@ -1813,6 +1971,7 @@
   <name>Модеста</name>
   <name>Модестович</name>
   <name>Модестовна</name>
+  <name>Мозамбик</name>
   <name>Моика</name>
   <name>Моисеевич</name>
   <name>Моисеевна</name>
@@ -1823,7 +1982,11 @@
   <name>Мокиевич</name>
   <name>Мокиевна</name>
   <name>Мокий</name>
+  <name>Молдова</name>
+  <name>Монако</name>
+  <name>Монголия</name>
   <name>Моника</name>
+  <name>Монтсеррат</name>
   <name>Мстислав</name>
   <name>Мстислава</name>
   <name>Мстиславич</name>
@@ -1831,6 +1994,7 @@
   <name>Мстиславович</name>
   <name>Мстиславовна</name>
   <name>Муза</name>
+  <name>Мьянма</name>
   <name>Нада</name>
   <name>Надежда</name>
   <name>Назар</name>
@@ -1841,11 +2005,13 @@
   <name>Назаровна</name>
   <name>Назарьевич</name>
   <name>Назарьевна</name>
+  <name>Намибия</name>
   <name>Нана</name>
   <name>Наркис</name>
   <name>Наркисович</name>
   <name>Наркисовна</name>
   <name>Наркисса</name>
+  <name>Народная Республика Конго</name>
   <name>Настасия</name>
   <name>Настасья</name>
   <name>Наталия</name>
@@ -1856,9 +2022,11 @@
   <name>Наум</name>
   <name>Наумович</name>
   <name>Наумовна</name>
+  <name>Науру</name>
   <name>Нелли</name>
   <name>Ненила</name>
   <name>Неонила</name>
+  <name>Непал</name>
   <name>Нестер</name>
   <name>Нестерович</name>
   <name>Нестеровна</name>
@@ -1868,7 +2036,10 @@
   <name>Нефёд</name>
   <name>Нефёдович</name>
   <name>Нефёдовна</name>
+  <name>Нигер</name>
+  <name>Нигерия</name>
   <name>Нида</name>
+  <name>Нидерланды</name>
   <name>Ника</name>
   <name>Никандр</name>
   <name>Никандрович</name>
@@ -1876,6 +2047,7 @@
   <name>Никанор</name>
   <name>Никанорович</name>
   <name>Никаноровна</name>
+  <name>Никарагуа</name>
   <name>Никита</name>
   <name>Никитич</name>
   <name>Никитична</name>
@@ -1898,14 +2070,30 @@
   <name>Нимфодора</name>
   <name>Нина</name>
   <name>Нинель</name>
+  <name>Ниуэ</name>
   <name>Нифонт</name>
   <name>Нифонтович</name>
   <name>Нифонтовна</name>
+  <name>Новая Зеландия</name>
+  <name>Новая Каледония</name>
   <name>Новелла</name>
   <name>Нонна</name>
+  <name>Норвегия</name>
   <name>Ноэми</name>
   <name>Ноябрина</name>
   <name>Нунехия</name>
+  <name>ОАЭ</name>
+  <name>о-в Буве</name>
+  <name>о-в Вознесения</name>
+  <name>о-в Клиппертон</name>
+  <name>о-в Мэн</name>
+  <name>о-в Норфолк</name>
+  <name>о-в Рождества</name>
+  <name>о-в Св. Елены</name>
+  <name>о-ва Питкэрн</name>
+  <name>о-ва Тёркс и Кайкос</name>
+  <name>о-ва Херд и Макдональд</name>
+  <name>Океания</name>
   <name>Оксана</name>
   <name>Октавия</name>
   <name>Октябрина</name>
@@ -1923,6 +2111,7 @@
   <name>Олимпия</name>
   <name>Ольга</name>
   <name>Ольда</name>
+  <name>Оман</name>
   <name>Онисим</name>
   <name>Онисимович</name>
   <name>Онисимовна</name>
@@ -1932,6 +2121,8 @@
   <name>Онуфриевич</name>
   <name>Онуфриевна</name>
   <name>Онуфрий</name>
+  <name>ООН</name>
+  <name>Организация Объединенных Наций</name>
   <name>Орест</name>
   <name>Орестович</name>
   <name>Орестовна</name>
@@ -1944,6 +2135,8 @@
   <name>Остап</name>
   <name>Остапович</name>
   <name>Остаповна</name>
+  <name>Острова Кайман</name>
+  <name>Острова Кука</name>
   <name>Остромир</name>
   <name>Остромирович</name>
   <name>Остромировна</name>
@@ -1962,6 +2155,10 @@
   <name>Паисия</name>
   <name>Паисьевич</name>
   <name>Паисьевна</name>
+  <name>Пакистан</name>
+  <name>Палау</name>
+  <name>Палестина</name>
+  <name>Палестинские территории</name>
   <name>Паллада</name>
   <name>Палладиевич</name>
   <name>Палладиевна</name>
@@ -1978,6 +2175,7 @@
   <name>Памфиловна</name>
   <name>Памфильевич</name>
   <name>Памфильевна</name>
+  <name>Панама</name>
   <name>Панкрат</name>
   <name>Панкратиевич</name>
   <name>Панкратиевна</name>
@@ -1995,6 +2193,8 @@
   <name>Панфил</name>
   <name>Панфилович</name>
   <name>Панфиловна</name>
+  <name>Па́пуа-Но́вая Гвине́я</name>
+  <name>Парагвай</name>
   <name>Парамон</name>
   <name>Парамонович</name>
   <name>Парамоновна</name>
@@ -2041,6 +2241,7 @@
   <name>Пелагея</name>
   <name>Перегрина</name>
   <name>Перпетуя</name>
+  <name>Перу</name>
   <name>Перфилиевич</name>
   <name>Перфилиевна</name>
   <name>Перфилий</name>
@@ -2086,7 +2287,10 @@
   <name>Поликсена</name>
   <name>Поликсения</name>
   <name>Полина</name>
+  <name>Полинезия</name>
+  <name>Польша</name>
   <name>Поплия</name>
+  <name>Португалия</name>
   <name>Порфир</name>
   <name>Порфириевич</name>
   <name>Порфириевна</name>
@@ -2140,6 +2344,7 @@
   <name>Прохоровна</name>
   <name>Пульхерия</name>
   <name>Пульхерья</name>
+  <name>Пуэрто-Рико</name>
   <name>Рада</name>
   <name>Радана</name>
   <name>Радиевич</name>
@@ -2183,6 +2388,9 @@
   <name>Ремович</name>
   <name>Ремовна</name>
   <name>Рената</name>
+  <name>Республика Конго</name>
+  <name>Республика Корея</name>
+  <name>Реюньон</name>
   <name>Римма</name>
   <name>Рипсимия</name>
   <name>Роберт</name>
@@ -2203,12 +2411,14 @@
   <name>Романа</name>
   <name>Романович</name>
   <name>Романовна</name>
+  <name>Россия</name>
   <name>Ростислав</name>
   <name>Ростислава</name>
   <name>Ростиславич</name>
   <name>Ростиславна</name>
   <name>Ростиславович</name>
   <name>Ростиславовна</name>
+  <name>Руанда</name>
   <name>Рубен</name>
   <name>Рубенович</name>
   <name>Рубеновна</name>
@@ -2218,6 +2428,7 @@
   <name>Рудольф</name>
   <name>Рудольфович</name>
   <name>Рудольфовна</name>
+  <name>Румыния</name>
   <name>Русана</name>
   <name>Руслан</name>
   <name>Руслана</name>
@@ -2270,7 +2481,9 @@
   <name>Салтам</name>
   <name>Салтамович</name>
   <name>Салтамовна</name>
+  <name>Сальвадор</name>
   <name>Сальвия</name>
+  <name>Самоа</name>
   <name>Самойла</name>
   <name>Самойлович</name>
   <name>Самойловна</name>
@@ -2286,8 +2499,12 @@
   <name>Самуил</name>
   <name>Самуилович</name>
   <name>Самуиловна</name>
+  <name>Сан-Марино</name>
+  <name>Сан-Томе и Принсипи</name>
   <name>Сарра</name>
   <name>Сатира</name>
+  <name>Саудовская Аравия</name>
+  <name>Свазиленд</name>
   <name>Светислава</name>
   <name>Светлана</name>
   <name>Светозар</name>
@@ -2317,9 +2534,16 @@
   <name>Северина</name>
   <name>Северинович</name>
   <name>Севериновна</name>
+  <name>Северная Америка</name>
+  <name>Северная Африка</name>
+  <name>Северная Европа</name>
+  <name>Северная Македония</name>
+  <name>Северные Марианские о-ва</name>
+  <name>Североамериканский регион</name>
   <name>Северьян</name>
   <name>Северьянович</name>
   <name>Северьяновна</name>
+  <name>Сейшельские Острова</name>
   <name>Секлетея</name>
   <name>Секлетинья</name>
   <name>Селена</name>
@@ -2340,6 +2564,13 @@
   <name>Семион</name>
   <name>Семионович</name>
   <name>Семионовна</name>
+  <name>Сен-Бартелеми</name>
+  <name>Сенегал</name>
+  <name>Сен-Мартен</name>
+  <name>Сен-Пьер и Микелон</name>
+  <name>Сент-Винсент и Гренадины</name>
+  <name>Сент-Китс и Невис</name>
+  <name>Сент-Люсия</name>
   <name>Серапион</name>
   <name>Серапионович</name>
   <name>Серапионовна</name>
@@ -2347,9 +2578,11 @@
   <name>Серафима</name>
   <name>Серафимович</name>
   <name>Серафимовна</name>
+  <name>Сербия</name>
   <name>Сергеевич</name>
   <name>Сергеевна</name>
   <name>Сергей</name>
+  <name>Сеута и Мелилья</name>
   <name>Сибилла</name>
   <name>Сигизмунд</name>
   <name>Сигизмундович</name>
@@ -2388,14 +2621,20 @@
   <name>Симона</name>
   <name>Симонович</name>
   <name>Симоновна</name>
+  <name>Сингапур</name>
   <name>Синклитикия</name>
+  <name>Синт-Мартен</name>
   <name>Сира</name>
+  <name>Сирия</name>
   <name>Слава</name>
+  <name>Словакия</name>
+  <name>Словения</name>
   <name>Смарагд</name>
   <name>Смарагдович</name>
   <name>Смарагдовна</name>
   <name>Снадулия</name>
   <name>Снежана</name>
+  <name>Соединенные Штаты</name>
   <name>Созон</name>
   <name>Созонович</name>
   <name>Созоновна</name>
@@ -2417,6 +2656,8 @@
   <name>Соломония</name>
   <name>Соломонович</name>
   <name>Соломоновна</name>
+  <name>Соломоновы Острова</name>
+  <name>Сомали</name>
   <name>Сосипатр</name>
   <name>Сосипатра</name>
   <name>Сосипатрович</name>
@@ -2476,15 +2717,23 @@
   <name>Стратоник</name>
   <name>Стратоникович</name>
   <name>Стратониковна</name>
+  <name>Судан</name>
+  <name>Суринам</name>
   <name>Сусанна</name>
+  <name>США</name>
   <name>Сысоевич</name>
   <name>Сысоевна</name>
   <name>Сысой</name>
+  <name>Сьерра-Леоне</name>
   <name>Сюзанна</name>
   <name>Тавифа</name>
+  <name>Таджикистан</name>
+  <name>Тайвань</name>
+  <name>Таиланд</name>
   <name>Таисия</name>
   <name>Таисья</name>
   <name>Тамара</name>
+  <name>Танзания</name>
   <name>Тарас</name>
   <name>Тарасия</name>
   <name>Тарасович</name>
@@ -2515,6 +2764,7 @@
   <name>Тигриевна</name>
   <name>Тигрий</name>
   <name>Тигрия</name>
+  <name>Тимор-Лесте</name>
   <name>Тимофеевич</name>
   <name>Тимофеевна</name>
   <name>Тимофей</name>
@@ -2529,11 +2779,16 @@
   <name>Тихонович</name>
   <name>Тихоновна</name>
   <name>Тихослава</name>
+  <name>Того</name>
+  <name>Токелау</name>
   <name>Толстой</name>
   <name>Тома</name>
   <name>Томила</name>
+  <name>Тонга</name>
   <name>Транквиллина</name>
+  <name>Тринидад и Тобаго</name>
   <name>Тристан</name>
+  <name>Тристан-да-Кунья</name>
   <name>Тристанович</name>
   <name>Тристановна</name>
   <name>Трифена</name>
@@ -2545,23 +2800,33 @@
   <name>Трифон</name>
   <name>Трифонович</name>
   <name>Трифоновна</name>
+  <name>Тропическая Африка</name>
   <name>Трофим</name>
   <name>Трофима</name>
   <name>Трофимович</name>
   <name>Трофимовна</name>
+  <name>Тувалу</name>
+  <name>Тунис</name>
+  <name>Туркменистан</name>
+  <name>Турция</name>
   <name>Уар</name>
   <name>Уарович</name>
   <name>Уаровна</name>
   <name>Увар</name>
   <name>Уварович</name>
   <name>Уваровна</name>
+  <name>Уганда</name>
+  <name>Узбекистан</name>
+  <name>Украина</name>
   <name>Улита</name>
   <name>Ульян</name>
   <name>Ульяна</name>
   <name>Ульянович</name>
   <name>Ульяновна</name>
+  <name>Уоллис и Футуна</name>
   <name>Урбана</name>
   <name>Урсула</name>
+  <name>Уругвай</name>
   <name>Устин</name>
   <name>Устина</name>
   <name>Устиния</name>
@@ -2585,11 +2850,13 @@
   <name>Фалалеевна</name>
   <name>Фалалей</name>
   <name>Фантина</name>
+  <name>Фарерские о-ва</name>
   <name>Фатьян</name>
   <name>Фатьянович</name>
   <name>Фатьяновна</name>
   <name>Феврония</name>
   <name>Февронья</name>
+  <name>Федеративные Штаты Микронезии</name>
   <name>Федоза</name>
   <name>Фёдор</name>
   <name>Фёдор Михайлович Достоевский</name>
@@ -2681,6 +2948,7 @@
   <name>Фея</name>
   <name>Фива</name>
   <name>Фивея</name>
+  <name>Фиджи</name>
   <name>Филарет</name>
   <name>Филарета</name>
   <name>Филаретович</name>
@@ -2696,6 +2964,7 @@
   <name>Филипий</name>
   <name>Филипп</name>
   <name>Филиппа</name>
+  <name>Филиппины</name>
   <name>Филиппия</name>
   <name>Филиппович</name>
   <name>Филипповна</name>
@@ -2707,6 +2976,7 @@
   <name>Филофеевна</name>
   <name>Филофей</name>
   <name>Филофея</name>
+  <name>Финляндия</name>
   <name>Фирс</name>
   <name>Фирсович</name>
   <name>Фирсовна</name>
@@ -2735,6 +3005,7 @@
   <name>Фока</name>
   <name>Фокич</name>
   <name>Фокична</name>
+  <name>Фолклендские о-ва</name>
   <name>Фома</name>
   <name>Фомаида</name>
   <name>Фоминична</name>
@@ -2752,6 +3023,10 @@
   <name>Фотьевич</name>
   <name>Фотьевна</name>
   <name>Франциска</name>
+  <name>Франция</name>
+  <name>Французская Гвиана</name>
+  <name>Французская Полинезия</name>
+  <name>Французские Южные территории</name>
   <name>Фрида</name>
   <name>Фридерика</name>
   <name>Фридрих</name>
@@ -2785,6 +3060,7 @@
   <name>Харлампьевич</name>
   <name>Харлампьевна</name>
   <name>Хиония</name>
+  <name>Хорватия</name>
   <name>Хриса</name>
   <name>Хрисанф</name>
   <name>Хрисанфович</name>
@@ -2798,9 +3074,22 @@
   <name>Цвета</name>
   <name>Цветана</name>
   <name>Целестина</name>
+  <name>Центральная Азия</name>
+  <name>Центральная Америка</name>
+  <name>Центральная Африка</name>
+  <name>Центрально-Африканская Республика</name>
   <name>Цецилия</name>
+  <name>Чад</name>
   <name>Чайко́вский</name>
+  <name>Черногория</name>
+  <name>Чехия</name>
+  <name>Чешская Республика</name>
+  <name>Чили</name>
   <name>Шарлотта</name>
+  <name>Швейцария</name>
+  <name>Швеция</name>
+  <name>Шпицберген и Ян-Майен</name>
+  <name>Шри-Ланка</name>
   <name>Шушаника</name>
   <name>Эвелина</name>
   <name>Эгина</name>
@@ -2809,6 +3098,8 @@
   <name>Эдуард</name>
   <name>Эдуардович</name>
   <name>Эдуардовна</name>
+  <name>Эквадор</name>
+  <name>Экваториальная Гвинея</name>
   <name>Элеонора</name>
   <name>Элисса</name>
   <name>Элла</name>
@@ -2838,6 +3129,7 @@
   <name>Эраст</name>
   <name>Эрастович</name>
   <name>Эрастовна</name>
+  <name>Эритрея</name>
   <name>Эрна</name>
   <name>Эрнест</name>
   <name>Эрнеста</name>
@@ -2847,14 +3139,25 @@
   <name>Эрнст</name>
   <name>Эрнстович</name>
   <name>Эрнстовна</name>
+  <name>Эсватини</name>
   <name>Эсмеральда</name>
+  <name>Эстония</name>
   <name>Эсфирь</name>
+  <name>Эфиопия</name>
   <name>Ювеналиевич</name>
   <name>Ювеналиевна</name>
   <name>Ювеналий</name>
   <name>Ювенальевич</name>
   <name>Ювенальевна</name>
+  <name>Юго-Восточная Азия</name>
   <name>Юдифь</name>
+  <name>Южная Азия</name>
+  <name>Южная Америка</name>
+  <name>Южная Африка</name>
+  <name>Южная Георгия и Южные Сандвичевы о-ва</name>
+  <name>Южная Европа</name>
+  <name>Южно-Африканская Республика</name>
+  <name>Южный Судан</name>
   <name>Юлиан</name>
   <name>Юлиана</name>
   <name>Юлиания</name>
@@ -2886,6 +3189,7 @@
   <name>Якуб</name>
   <name>Якубович</name>
   <name>Якубовна</name>
+  <name>Ямайка</name>
   <name>Ян</name>
   <name>Яна</name>
   <name>Янина</name>
@@ -2896,6 +3200,7 @@
   <name>Януарий</name>
   <name>Януарьевич</name>
   <name>Януарьевна</name>
+  <name>Япония</name>
   <name>Ярополк</name>
   <name>Ярополкович</name>
   <name>Ярополковна</name>
