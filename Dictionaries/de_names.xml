@@ -40,18 +40,23 @@
   <name>Adne</name>
   <name>Adolpha</name>
   <name>Adriane</name>
+  <name>Afghanistan</name>
+  <name>Afrika</name>
   <name>Agathe</name>
   <name>Agustine</name>
+  <name>Ägypten</name>
   <name>Ahren</name>
   <name>Ailbe</name>
   <name>Aili</name>
   <name>Ailis</name>
   <name>Ailse</name>
   <name>Aksel</name>
+  <name>Ålandinseln</name>
   <name>Alarica</name>
   <name>Alarice</name>
   <name>Alarick</name>
   <name>Alarik</name>
+  <name>Albanien</name>
   <name>Alberta</name>
   <name>Albertina</name>
   <name>Albertine</name>
@@ -68,6 +73,7 @@
   <name>Alfonsine</name>
   <name>Alfreda</name>
   <name>Alger</name>
+  <name>Algerien</name>
   <name>Alhmanic</name>
   <name>Alhsom</name>
   <name>Alhwin</name>
@@ -104,6 +110,10 @@
   <name>Amdt</name>
   <name>Ame</name>
   <name>Amell</name>
+  <name>Amerika</name>
+  <name>Amerikanische Jungferninseln</name>
+  <name>Amerikanische Überseeinseln</name>
+  <name>Amerikanisch-Samoa</name>
   <name>Amery</name>
   <name>Amet</name>
   <name>Amett</name>
@@ -117,7 +127,10 @@
   <name>Amot</name>
   <name>Amott</name>
   <name>Amwolf</name>
+  <name>Andorra</name>
   <name>Angelika</name>
+  <name>Angola</name>
+  <name>Anguilla</name>
   <name>Annamaria</name>
   <name>Annemarie</name>
   <name>Anni</name>
@@ -126,8 +139,11 @@
   <name>Anselmo</name>
   <name>Ansgar</name>
   <name>Anson</name>
+  <name>Antarktis</name>
+  <name>Antigua und Barbuda</name>
   <name>Antonie</name>
   <name>Apsel</name>
+  <name>Äquatorialguinea</name>
   <name>Arabella</name>
   <name>Ararinda</name>
   <name>Archard</name>
@@ -136,13 +152,20 @@
   <name>Are</name>
   <name>Aren</name>
   <name>Arend</name>
+  <name>Argentinien</name>
   <name>Aric</name>
   <name>Arick</name>
   <name>Arik</name>
   <name>Arleigh</name>
+  <name>Armenien</name>
   <name>Armina</name>
   <name>Arnt</name>
+  <name>Aruba</name>
   <name>Arvin</name>
+  <name>Ascension</name>
+  <name>Aserbaidschan</name>
+  <name>Asien</name>
+  <name>Äthiopien</name>
   <name>Audric</name>
   <name>Audrick</name>
   <name>Audwin</name>
@@ -150,6 +173,11 @@
   <name>Augustine</name>
   <name>Aurick</name>
   <name>Aurik</name>
+  <name>Äußeres Ozeanien</name>
+  <name>Australasien</name>
+  <name>Australien</name>
+  <name>Bahamas</name>
+  <name>Bahrain</name>
   <name>Baldemar</name>
   <name>Baldhart</name>
   <name>Baldric</name>
@@ -159,19 +187,25 @@
   <name>Baltasar</name>
   <name>Bamard</name>
   <name>Bamey</name>
+  <name>Bangladesch</name>
   <name>Bannan</name>
   <name>Bannruod</name>
+  <name>Barbados</name>
   <name>Barnard</name>
   <name>Baron Münchhausen</name>
   <name>Bartram</name>
   <name>Bathild</name>
   <name>Bathilda</name>
   <name>Bathilde</name>
+  <name>Belarus</name>
+  <name>Belgien</name>
+  <name>Belize</name>
   <name>Bem</name>
   <name>Bemadette</name>
   <name>Bemelle</name>
   <name>Bemot</name>
   <name>Benat</name>
+  <name>Benin</name>
   <name>Ber</name>
   <name>Berchtwald</name>
   <name>Berdina</name>
@@ -182,6 +216,7 @@
   <name>Berinhard</name>
   <name>Berit</name>
   <name>Berlyn</name>
+  <name>Bermuda</name>
   <name>Bernardyn</name>
   <name>Bernd</name>
   <name>Berne</name>
@@ -191,6 +226,7 @@
   <name>Berrin</name>
   <name>Berthold</name>
   <name>Bertina</name>
+  <name>Bhutan</name>
   <name>Bing</name>
   <name>Binga</name>
   <name>Binge</name>
@@ -201,20 +237,41 @@
   <name>Boell</name>
   <name>Bogart</name>
   <name>Bogohardt</name>
+  <name>Bolivien</name>
+  <name>Bonaire, Sint Eustatius und Saba</name>
+  <name>Bosnien</name>
+  <name>Bosnien und Herzegowina</name>
+  <name>Botsuana</name>
+  <name>Bouvetinsel</name>
   <name>Brand</name>
+  <name>Brasilien</name>
+  <name>Brazzaville</name>
   <name>Bren</name>
   <name>Brendis</name>
+  <name>Bretagne</name>
+  <name>Britannien</name>
+  <name>Britische Jungferninseln</name>
+  <name>Britisches Territorium im Indischen Ozean</name>
   <name>Bruna</name>
   <name>Brune</name>
+  <name>Brunei Darussalam</name>
   <name>Brunhild</name>
   <name>Brunhilda</name>
   <name>Brunhilde</name>
   <name>Brunon</name>
+  <name>Bulgarien</name>
   <name>Burhardt</name>
   <name>Burkhart</name>
+  <name>Burkina Faso</name>
   <name>Burlin</name>
   <name>Burnard</name>
   <name>Burnell</name>
+  <name>Burundi</name>
+  <name>Cabo Verde</name>
+  <name>Caicos-Inseln</name>
+  <name>Ceuta und Melilla</name>
+  <name>Chile</name>
+  <name>China</name>
   <name>Chlodwig</name>
   <name>Chriselda</name>
   <name>Clarimond</name>
@@ -223,6 +280,7 @@
   <name>Claudelle</name>
   <name>Claudette</name>
   <name>Claudine</name>
+  <name>Clipperton-Insel</name>
   <name>Clotilda</name>
   <name>Clotilde</name>
   <name>Clovis</name>
@@ -230,12 +288,17 @@
   <name>Conradina</name>
   <name>Conradine</name>
   <name>Conrado</name>
+  <name>Cookinseln</name>
   <name>Cord</name>
   <name>Corrado</name>
   <name>Cort</name>
+  <name>Costa Rica</name>
+  <name>Côte d’Ivoire</name>
+  <name>Curaçao</name>
   <name>Dagmar</name>
   <name>Dagoberto</name>
   <name>Dagomar</name>
+  <name>Dänemark</name>
   <name>Darek</name>
   <name>Dearg</name>
   <name>Dedric</name>
@@ -246,6 +309,7 @@
   <name>Delmi</name>
   <name>Delmira</name>
   <name>Delmy</name>
+  <name>Demokratische Republik Kongo</name>
   <name>Dereck</name>
   <name>Derick</name>
   <name>Derik</name>
@@ -255,18 +319,24 @@
   <name>Deryck</name>
   <name>Deryk</name>
   <name>Deutsch</name>
+  <name>Deutschland</name>
   <name>Dick</name>
   <name>Didrika</name>
   <name>Diederich</name>
   <name>Diedrick</name>
+  <name>Diego Garcia</name>
   <name>Dierck</name>
   <name>Dieter</name>
   <name>Dietz</name>
   <name>Dirk</name>
   <name>Dolphus</name>
+  <name>Dominica</name>
+  <name>Dominikanische Republik</name>
   <name>Dostojewski</name>
+  <name>DR Kongo</name>
   <name>Drud</name>
   <name>Drugi</name>
+  <name>Dschibuti</name>
   <name>Eadaion</name>
   <name>Earnest</name>
   <name>Eartha</name>
@@ -275,6 +345,7 @@
   <name>Eberhardt</name>
   <name>Eburhardt</name>
   <name>Eckerd</name>
+  <name>Ecuador</name>
   <name>Edda</name>
   <name>Edel</name>
   <name>Edelina</name>
@@ -293,7 +364,9 @@
   <name>Einhardt</name>
   <name>Ekerd</name>
   <name>Ekhard</name>
+  <name>El Salvador</name>
   <name>Elbert</name>
+  <name>Elfenbeinküste</name>
   <name>Elfrida</name>
   <name>Elica</name>
   <name>Elke</name>
@@ -334,6 +407,7 @@
   <name>Erhard</name>
   <name>Erhardt</name>
   <name>Erich</name>
+  <name>Eritrea</name>
   <name>Erkerd</name>
   <name>Erma</name>
   <name>Erna</name>
@@ -343,10 +417,15 @@
   <name>Errol</name>
   <name>Erroll</name>
   <name>Ertha</name>
+  <name>Estland</name>
+  <name>Eswatini</name>
   <name>Ethelinda</name>
   <name>Ethelinde</name>
   <name>Etta</name>
   <name>Eugen</name>
+  <name>Europa</name>
+  <name>Europäische Union</name>
+  <name>Eurozone</name>
   <name>Everard</name>
   <name>Evert</name>
   <name>Evon</name>
@@ -359,9 +438,13 @@
   <name>Falk</name>
   <name>Falke</name>
   <name>Falken</name>
+  <name>Falklandinseln</name>
+  <name>Färöer</name>
   <name>Felda</name>
   <name>Felisberta</name>
   <name>Fernanda</name>
+  <name>Fidschi</name>
+  <name>Finnland</name>
   <name>Fjodor Dostojewski</name>
   <name>Fjodor Michailowitsch Dostojewski</name>
   <name>Fonsie</name>
@@ -369,8 +452,12 @@
   <name>Fonzell</name>
   <name>Fonzie</name>
   <name>Fonzo</name>
+  <name>Frankreich</name>
   <name>Frantz</name>
   <name>Franziska</name>
+  <name>Französische Süd- und Antarktisgebiete</name>
+  <name>Französisch-Guayana</name>
+  <name>Französisch-Polynesien</name>
   <name>Fredda</name>
   <name>Freddi</name>
   <name>Frederica</name>
@@ -384,9 +471,11 @@
   <name>Frimunt</name>
   <name>Fritzi</name>
   <name>Gabriele</name>
+  <name>Gabun</name>
   <name>Gaelle</name>
   <name>Galiana</name>
   <name>Galiena</name>
+  <name>Gambia</name>
   <name>Garan</name>
   <name>Garen</name>
   <name>Garey</name>
@@ -400,12 +489,14 @@
   <name>Garron</name>
   <name>Garry</name>
   <name>Garvyn</name>
+  <name>GB</name>
   <name>Geneve</name>
   <name>Genevie</name>
   <name>Genivee</name>
   <name>Genoveva</name>
   <name>Genowefa</name>
   <name>Geomar</name>
+  <name>Georgien</name>
   <name>Geraldina</name>
   <name>Geralyn</name>
   <name>Geralynn</name>
@@ -427,8 +518,10 @@
   <name>Gertrut</name>
   <name>Gerwalt</name>
   <name>Gerwalta</name>
+  <name>Ghana</name>
   <name>Ghislain</name>
   <name>Ghislaine</name>
+  <name>Gibraltar</name>
   <name>Gilberta</name>
   <name>Gilleasbuig</name>
   <name>Giomar</name>
@@ -437,9 +530,11 @@
   <name>Gisilberhta</name>
   <name>Gofried</name>
   <name>Gottfried</name>
+  <name>Grenada</name>
   <name>Greta</name>
   <name>Gretel</name>
   <name>Gricelda</name>
+  <name>Griechenland</name>
   <name>Griselde</name>
   <name>Grisella</name>
   <name>Grisjahilde</name>
@@ -447,18 +542,28 @@
   <name>Griswalda</name>
   <name>Griswalde</name>
   <name>Griswold</name>
+  <name>Grönland</name>
+  <name>Großbritannien</name>
   <name>Gryselda</name>
+  <name>Guadeloupe</name>
+  <name>Guam</name>
+  <name>Guatemala</name>
   <name>Gudrun</name>
   <name>Gudruna</name>
+  <name>Guernsey</name>
   <name>Guida</name>
   <name>Guilaine</name>
+  <name>Guinea</name>
+  <name>Guinea-Bissau</name>
   <name>Gunnel</name>
   <name>Gustave</name>
   <name>Gustel</name>
+  <name>Guyana</name>
   <name>Hacket</name>
   <name>Hackett</name>
   <name>Hadu</name>
   <name>Haduwig</name>
+  <name>Haiti</name>
   <name>Halag</name>
   <name>Halfrid</name>
   <name>Halfrida</name>
@@ -478,6 +583,7 @@
   <name>Harti</name>
   <name>Hartman</name>
   <name>Hartmann</name>
+  <name>Heard und McDonaldinseln</name>
   <name>Hedda</name>
   <name>Hedy</name>
   <name>Heida</name>
@@ -489,6 +595,7 @@
   <name>Herrick</name>
   <name>Herta</name>
   <name>Hertha</name>
+  <name>Herzegowina</name>
   <name>Hewlett</name>
   <name>Hewlitt</name>
   <name>Hida</name>
@@ -513,6 +620,8 @@
   <name>Holda</name>
   <name>Holde</name>
   <name>Holle</name>
+  <name>Honduras</name>
+  <name>Hongkong</name>
   <name>How</name>
   <name>Howe</name>
   <name>Huberta</name>
@@ -536,10 +645,15 @@
   <name>Ilse</name>
   <name>Ilyse</name>
   <name>Immanuel</name>
+  <name>Indien</name>
+  <name>Indonesien</name>
   <name>Ingall</name>
   <name>Ingel</name>
   <name>Ingelbert</name>
   <name>Inglebert</name>
+  <name>Irak</name>
+  <name>Iran</name>
+  <name>Irland</name>
   <name>Irmgard</name>
   <name>Irmigard</name>
   <name>Irmina</name>
@@ -548,26 +662,42 @@
   <name>Isa</name>
   <name>Isana</name>
   <name>Isane</name>
+  <name>Island</name>
+  <name>Isle of Man</name>
   <name>Isold</name>
   <name>Isolda</name>
   <name>Isole</name>
+  <name>Israel</name>
+  <name>Italien</name>
   <name>Izaak</name>
   <name>Jaecar</name>
   <name>Jakoba</name>
   <name>Jakobe</name>
   <name>Jakobie</name>
+  <name>Jamaika</name>
+  <name>Jan Mayen</name>
   <name>Jantis</name>
+  <name>Japan</name>
   <name>Jarman</name>
   <name>Jarmann</name>
   <name>Jaye</name>
+  <name>Jemen</name>
+  <name>Jersey</name>
   <name>Johann</name>
   <name>Johannah</name>
   <name>Jolan</name>
   <name>Jolanka</name>
   <name>Joli</name>
+  <name>Jordanien</name>
   <name>Josefa</name>
   <name>Jurgen</name>
+  <name>Kaimaninseln</name>
   <name>Kaiser</name>
+  <name>Kambodscha</name>
+  <name>Kamerun</name>
+  <name>Kanada</name>
+  <name>Kanarische Inseln</name>
+  <name>Karibik</name>
   <name>Karla</name>
   <name>Karlee</name>
   <name>Karleen</name>
@@ -586,25 +716,41 @@
   <name>Karola</name>
   <name>Karolina</name>
   <name>Karoline</name>
+  <name>Kasachstan</name>
+  <name>Katar</name>
   <name>Katchen</name>
   <name>Katharina</name>
   <name>Kathe</name>
   <name>Keefer</name>
   <name>Kelby</name>
+  <name>Kenia</name>
   <name>Kiefer</name>
   <name>Kikka</name>
+  <name>Kinshasa</name>
+  <name>Kirgisistan</name>
+  <name>Kiribati</name>
+  <name>Kleinbritannien</name>
   <name>Koby</name>
   <name>Koen</name>
   <name>Koenraad</name>
+  <name>Kokosinseln</name>
   <name>Kolby</name>
   <name>Kolt</name>
   <name>Kolten</name>
   <name>Koltin</name>
   <name>Kolton</name>
+  <name>Kolumbien</name>
+  <name>Komoren</name>
+  <name>Kongo</name>
+  <name>Kongo-Brazzaville</name>
+  <name>Kongo-Kinshasa</name>
   <name>Konni</name>
   <name>Konrad</name>
   <name>Kord</name>
   <name>Kort</name>
+  <name>Kosovo</name>
+  <name>Kroatien</name>
+  <name>Kuba</name>
   <name>Kuhlbert</name>
   <name>Kulbart</name>
   <name>Kulbert</name>
@@ -612,6 +758,7 @@
   <name>Kunz</name>
   <name>Kuonrada</name>
   <name>Kurtis</name>
+  <name>Kuwait</name>
   <name>Lamar</name>
   <name>Lamarr</name>
   <name>Lambart</name>
@@ -621,7 +768,9 @@
   <name>Lambrett</name>
   <name>Landmari</name>
   <name>Landra</name>
+  <name>Laos</name>
   <name>Larenzo</name>
+  <name>Lateinamerika</name>
   <name>Laurenz</name>
   <name>Lenard</name>
   <name>Lennard</name>
@@ -633,8 +782,14 @@
   <name>Leopoldine</name>
   <name>Leopoldo</name>
   <name>Leota</name>
+  <name>Lesotho</name>
+  <name>Lettland</name>
   <name>Lew Nikolajewitsch Tolstoi</name>
   <name>Lewy</name>
+  <name>Libanon</name>
+  <name>Liberia</name>
+  <name>Libyen</name>
+  <name>Liechtenstein</name>
   <name>Liezel</name>
   <name>Lilli</name>
   <name>Lind</name>
@@ -643,6 +798,7 @@
   <name>Lindie</name>
   <name>Lisa</name>
   <name>Lise</name>
+  <name>Litauen</name>
   <name>Lorah</name>
   <name>Loraine</name>
   <name>Loralei</name>
@@ -677,6 +833,9 @@
   <name>Lurlina</name>
   <name>Lurline</name>
   <name>Lutz</name>
+  <name>Luxemburg</name>
+  <name>Macau</name>
+  <name>Madagaskar</name>
   <name>Maddalen</name>
   <name>Maddalena</name>
   <name>Maddalene</name>
@@ -691,8 +850,14 @@
   <name>Magnilda</name>
   <name>Magnilde</name>
   <name>Malakkastraße</name>
+  <name>Malawi</name>
+  <name>Malaysia</name>
+  <name>Malediven</name>
   <name>Malene</name>
+  <name>Mali</name>
   <name>Mallory</name>
+  <name>Malta</name>
+  <name>Malwinen</name>
   <name>Mandel</name>
   <name>Manfred</name>
   <name>Manfried</name>
@@ -722,46 +887,98 @@
   <name>Marline</name>
   <name>Marlis</name>
   <name>Marlisa</name>
+  <name>Marokko</name>
+  <name>Marshallinseln</name>
   <name>Martel</name>
   <name>Martell</name>
+  <name>Martinique</name>
   <name>Mathild</name>
   <name>Mathilda</name>
   <name>Matilda</name>
+  <name>Mauretanien</name>
+  <name>Mauritius</name>
   <name>Maximillian</name>
   <name>Maynard</name>
   <name>Mayne</name>
   <name>Maynor</name>
+  <name>Mayotte</name>
   <name>Meinhard</name>
   <name>Meinke</name>
   <name>Meino</name>
   <name>Meinrad</name>
   <name>Meinyard</name>
+  <name>Melanesien</name>
   <name>Melisande</name>
+  <name>Mexiko</name>
+  <name>Mikronesien</name>
+  <name>Mikronesisches Inselgebiet</name>
   <name>Mina</name>
   <name>Mindy</name>
   <name>Minna</name>
   <name>Minne</name>
+  <name>Mittelamerika</name>
   <name>Mitzi</name>
+  <name>Monaco</name>
+  <name>Mongolei</name>
+  <name>Montenegro</name>
+  <name>Montserrat</name>
+  <name>Mosambik</name>
+  <name>München</name>
+  <name>Myanmar</name>
   <name>Nadetta</name>
   <name>Nadette</name>
   <name>Nadina</name>
   <name>Nadja</name>
+  <name>Namibia</name>
   <name>Nardo</name>
+  <name>Nauru</name>
   <name>Nef</name>
   <name>Nefen</name>
   <name>Neff</name>
   <name>Nefin</name>
+  <name>Nepal</name>
+  <name>Neukaledonien</name>
+  <name>Neuseeland</name>
+  <name>Nicaragua</name>
   <name>Nickolaus</name>
+  <name>Niederlande</name>
+  <name>Niger</name>
+  <name>Nigeria</name>
   <name>Nikolaus</name>
+  <name>Niue</name>
   <name>Nixie</name>
   <name>Norberaht</name>
   <name>Norbert</name>
   <name>Norberta</name>
   <name>Norberte</name>
   <name>Norberto</name>
+  <name>Nordafrika</name>
+  <name>Nordamerika</name>
+  <name>Nordeuropa</name>
   <name>Nordica</name>
   <name>Nordika</name>
+  <name>Nordirland</name>
+  <name>Nordkorea</name>
+  <name>Nördliche Marianen</name>
+  <name>Nördliches Amerika</name>
+  <name>Nordmazedonien</name>
+  <name>Norfolkinsel</name>
   <name>Normand</name>
+  <name>Norwegen</name>
+  <name>Oman</name>
+  <name>Ostafrika</name>
+  <name>Ostasien</name>
+  <name>Österreich</name>
+  <name>Osteuropa</name>
+  <name>Osttimor</name>
+  <name>Ozeanien</name>
+  <name>Pakistan</name>
+  <name>Palästina</name>
+  <name>Palästinensische Autonomiegebiete</name>
+  <name>Palau</name>
+  <name>Panama</name>
+  <name>Papua-Neuguinea</name>
+  <name>Paraguay</name>
   <name>Peer</name>
   <name>Penn</name>
   <name>Penrod</name>
@@ -769,12 +986,19 @@
   <name>Peppi</name>
   <name>Per</name>
   <name>Perahta</name>
+  <name>Peru</name>
   <name>Petronilla</name>
   <name>Petronille</name>
   <name>Philipinna</name>
   <name>Philippine</name>
+  <name>Philippinen</name>
+  <name>Pitcairninseln</name>
   <name>Pjotr Iljitsch Tschaikowski</name>
   <name>Pjotr Tschaikowski</name>
+  <name>Polen</name>
+  <name>Polynesien</name>
+  <name>Portugal</name>
+  <name>Puerto Rico</name>
   <name>Raimond</name>
   <name>Raimundo</name>
   <name>Rainart</name>
@@ -794,6 +1018,9 @@
   <name>Reinhard</name>
   <name>Renard</name>
   <name>Renke</name>
+  <name>Republik Kongo</name>
+  <name>Republik Moldau</name>
+  <name>Réunion</name>
   <name>Reymond</name>
   <name>Reymundo</name>
   <name>Reynald</name>
@@ -851,34 +1078,51 @@
   <name>Royce</name>
   <name>Rozmonda</name>
   <name>Rozomund</name>
+  <name>Ruanda</name>
   <name>Rudella</name>
   <name>Rudelle</name>
   <name>Rudiger</name>
+  <name>Rumänien</name>
   <name>Rune</name>
   <name>Ruodrik</name>
   <name>Ruomhildi</name>
   <name>Rupetta</name>
   <name>Rupette</name>
   <name>Ruprecht</name>
+  <name>Russland</name>
   <name>Rutger</name>
   <name>Ryszard</name>
   <name>Saelac</name>
+  <name>Salomonen</name>
+  <name>Sambia</name>
+  <name>Samoa</name>
+  <name>San Marino</name>
+  <name>São Tomé und Príncipe</name>
   <name>Sarohildi</name>
+  <name>Saudi-Arabien</name>
   <name>Schaeffer</name>
   <name>Schaffer</name>
+  <name>Schweden</name>
+  <name>Schweiz</name>
   <name>Selig</name>
   <name>Selik</name>
+  <name>Senegal</name>
   <name>Senta</name>
   <name>Sente</name>
+  <name>Serbien</name>
   <name>Serhild</name>
   <name>Serhilda</name>
   <name>Serihilda</name>
   <name>Serihilde</name>
   <name>Serilda</name>
+  <name>Seychellen</name>
   <name>Sherman</name>
   <name>Shermon</name>
+  <name>Sibirien</name>
+  <name>Sicilien</name>
   <name>Siegfried</name>
   <name>Siegmund</name>
+  <name>Sierra Leone</name>
   <name>Sigfreda</name>
   <name>Sigfrid</name>
   <name>Sigfrieda</name>
@@ -890,16 +1134,55 @@
   <name>Sigwald</name>
   <name>Sigwalt</name>
   <name>Silvester</name>
+  <name>Simbabwe</name>
+  <name>Singapur</name>
+  <name>Sint Maarten</name>
+  <name>Slowakei</name>
+  <name>Slowenien</name>
   <name>Solschenizyn</name>
   <name>Solvig</name>
+  <name>Somalia</name>
+  <name>Sonderverwaltungsregion Hongkong</name>
+  <name>Sonderverwaltungsregion Macau</name>
+  <name>Spanien</name>
   <name>Spengler</name>
+  <name>Spitzbergen</name>
+  <name>Spitzbergen und Jan Mayen</name>
+  <name>Sri Lanka</name>
+  <name>St. Barthélemy</name>
+  <name>St. Helena</name>
+  <name>St. Kitts und Nevis</name>
+  <name>St. Lucia</name>
+  <name>St. Martin</name>
+  <name>St. Pierre und Miquelon</name>
+  <name>St. Vincent und die Grenadinen</name>
   <name>Steiner</name>
   <name>Sterling</name>
   <name>Sterlyn</name>
   <name>Stirling</name>
+  <name>Subsahara-Afrika</name>
+  <name>Südafrika</name>
+  <name>Südamerika</name>
+  <name>Sudan</name>
+  <name>Südasien</name>
+  <name>Südeuropa</name>
+  <name>Südgeorgien</name>
+  <name>Südgeorgien und die Südlichen Sandwichinseln</name>
+  <name>Südkorea</name>
+  <name>Südlichen Sandwichinseln</name>
+  <name>Südliches Afrika</name>
+  <name>Südostasien</name>
+  <name>Südsudan</name>
+  <name>Suriname</name>
+  <name>Swasiland</name>
+  <name>Syrien</name>
   <name>Tab</name>
   <name>Tabbart</name>
+  <name>Tadschikistan</name>
   <name>Tahbert</name>
+  <name>Taiwan</name>
+  <name>Tansania</name>
+  <name>Tasmanien</name>
   <name>Tavin</name>
   <name>Tedrick</name>
   <name>Terell</name>
@@ -908,38 +1191,72 @@
   <name>Terrell</name>
   <name>Terrelle</name>
   <name>Terrill</name>
+  <name>Thailand</name>
   <name>Tibelda</name>
   <name>Tibelde</name>
   <name>Tibeldie</name>
   <name>Tihalt</name>
+  <name>Timor-Leste</name>
+  <name>Tjetjenien</name>
+  <name>Togo</name>
+  <name>Tokelau</name>
   <name>Tolstoi</name>
+  <name>Tonga</name>
   <name>Treffen</name>
   <name>Trennen</name>
   <name>Tresa</name>
   <name>Tretan</name>
+  <name>Trinidad und Tobago</name>
+  <name>Tristan da Cunha</name>
   <name>Truda</name>
   <name>Trudchen</name>
   <name>Trude</name>
+  <name>Tschad</name>
   <name>Tschaikowski</name>
+  <name>Tschechien</name>
+  <name>Tschechische Republik</name>
   <name>Tugenda</name>
+  <name>Tunesien</name>
+  <name>Türkei</name>
+  <name>Turkmenistan</name>
+  <name>Turks- und Caicosinseln</name>
+  <name>Turks-Inseln</name>
+  <name>Tuvalu</name>
   <name>Ubel</name>
+  <name>Uganda</name>
+  <name>Ukraine</name>
   <name>Uli</name>
   <name>Ulka</name>
   <name>Ulrica</name>
   <name>Ulrich</name>
   <name>Ulrike</name>
   <name>Ulz</name>
+  <name>UN</name>
+  <name>Ungarn</name>
+  <name>Uruguay</name>
+  <name>USA</name>
+  <name>Usbekistan</name>
   <name>Valborga</name>
   <name>Valdemarr</name>
   <name>Vanda</name>
   <name>Vande</name>
+  <name>Vanuatu</name>
+  <name>Vatikanstadt</name>
   <name>Vemados</name>
+  <name>Venedig</name>
+  <name>Venezuela</name>
+  <name>Vereinigte Arabische Emirate</name>
+  <name>Vereinigte Staaten</name>
+  <name>Vereinigtes Königreich</name>
+  <name>Vereinte Nationen</name>
   <name>Verena</name>
   <name>Verene</name>
   <name>Verina</name>
+  <name>Vietnam</name>
   <name>Viheke</name>
   <name>Viveka</name>
   <name>Volker</name>
+  <name>Volksrepublik Kongo</name>
   <name>Volney</name>
   <name>Volny</name>
   <name>Walborgd</name>
@@ -957,6 +1274,7 @@
   <name>Walfrid</name>
   <name>Wallache</name>
   <name>Waller</name>
+  <name>Wallis und Futuna</name>
   <name>Walmond</name>
   <name>Walten</name>
   <name>Walthari</name>
@@ -967,11 +1285,17 @@
   <name>Waren</name>
   <name>Warenhari</name>
   <name>Weber</name>
+  <name>Weihnachtsinsel</name>
   <name>Welda</name>
   <name>Wendale</name>
   <name>Wendall</name>
   <name>Wendel</name>
+  <name>Westafrika</name>
+  <name>Westasien</name>
+  <name>Westeuropa</name>
+  <name>Westsahara</name>
   <name>Wido</name>
+  <name>Wien</name>
   <name>Wilbart</name>
   <name>Wilber</name>
   <name>Wilbert</name>
@@ -1010,4 +1334,8 @@
   <name>Yseult</name>
   <name>Zacharia</name>
   <name>Zelig</name>
+  <name>Zentralafrika</name>
+  <name>Zentralafrikanische Republik</name>
+  <name>Zentralasien</name>
+  <name>Zypern</name>
 </names>
