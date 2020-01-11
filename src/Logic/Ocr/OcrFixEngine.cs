@@ -484,42 +484,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
-                if (_expectedChars.Contains(text[i]))
+                if (text[i] != '.' && _expectedChars.Contains(text[i]))
                 {
                     if (word.Length > 0)
                     {
-                        string fixedWord;
-                        if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
-                        {
-                            fixedWord = word.ToString();
-                        }
-                        else
-                        {
-                            bool doFixWord = !(word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'));
-                            if (doFixWord)
-                            {
-                                fixedWord = FixWordViaReplaceList(word.ToString());
-                                fixedWord = _ocrFixReplaceList.FixCommonWordErrors(fixedWord);
-
-                                // Try using wordlists for uppercase i inside words, e.g. "NIkolaj" to "Nikolaj"
-                                if (fixedWord.Contains('I'))
-                                {
-                                    var temp = fixedWord.Replace('I', 'i');
-                                    if (temp != fixedWord.ToUpperInvariant())
-                                    {
-                                        if (_nameList.Contains(temp))
-                                        {
-                                            fixedWord = temp;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                fixedWord = word.ToString();
-                            }
-                        }
-                        sb.Append(fixedWord);
+                        var fixedWord = FixOcrErrorsWord(lastWord, word, sb);
                         lastWord = fixedWord;
                         word.Clear();
                     }
@@ -532,18 +501,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             if (word.Length > 0) // last word
             {
-                string fixedWord;
-                bool doFixWord = !(word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'));
-                if (doFixWord)
-                {
-                    fixedWord = _ocrFixReplaceList.FixCommonWordErrors(word.ToString());
-                }
-                else
-                {
-                    fixedWord = word.ToString();
-                }
-
-                sb.Append(fixedWord);
+                FixOcrErrorsWord(lastWord, word, sb);
             }
 
             text = FixCommonOcrLineErrors(sb.ToString(), lastLine);
@@ -570,6 +528,59 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = Utilities.RemoveSpaceBetweenNumbers(text);
             }
             return text;
+        }
+
+        private string FixOcrErrorsWord(string lastWord, StringBuilder word, StringBuilder sb)
+        {
+            string fixedWord;
+            if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
+            {
+                fixedWord = word.ToString();
+            }
+            else
+            {
+                var doFixWord = !(word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'));
+                if (doFixWord)
+                {
+                    fixedWord = word.ToString();
+
+                    var post = string.Empty;
+                    if (fixedWord.EndsWith('.') && fixedWord.IndexOf('.') == fixedWord.Length - 1)
+                    {
+                        post = ".";
+                        fixedWord = fixedWord.Substring(0, fixedWord.Length - 1);
+                    }
+                    else if (fixedWord.EndsWith("...", StringComparison.Ordinal))
+                    {
+                        post = "...";
+                        fixedWord = fixedWord.Substring(0, fixedWord.Length - 3);
+                    }
+
+                    fixedWord = FixWordViaReplaceList(fixedWord);
+                    fixedWord = _ocrFixReplaceList.FixCommonWordErrors(fixedWord);
+
+                    // Try using word lists for uppercase i inside words, e.g. "NIkolaj" to "Nikolaj"
+                    if (fixedWord.Contains('I'))
+                    {
+                        var temp = fixedWord.Replace('I', 'i');
+                        if (temp != fixedWord.ToUpperInvariant())
+                        {
+                            if (_nameList.Contains(temp))
+                            {
+                                fixedWord = temp;
+                            }
+                        }
+                    }
+                    fixedWord += post;
+                }
+                else
+                {
+                    fixedWord = word.ToString();
+                }
+            }
+
+            sb.Append(fixedWord);
+            return fixedWord;
         }
 
         private string FixWordViaReplaceList(string word)
