@@ -551,6 +551,17 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixCommonOcrErrorsEndBoldTag()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<b>This is a good ship.</b>");
+                target.FixOcrErrorsViaReplaceList("eng");
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<b>This is a good ship.</b>");
+            }
+        }
+
+        [TestMethod]
         public void FixCommonOcrErrorsDashedWords()
         {
             using (var target = GetFixCommonErrorsLib())
