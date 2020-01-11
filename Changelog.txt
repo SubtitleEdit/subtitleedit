@@ -14,6 +14,10 @@
    * Update Korean translation - thx domddol
    * Update Bulgarian translation - thx KalinM
    * Update Brazilian translation - thx igor
+   * Update Spanish translations - thx paconaranjo
+   * Update Russian translation - thx Elheym
+   * Update Chinese translation - thx LeonCheung
+   * Update Dutch translation - thx xylographe
    * Add new functions to batch-convert and cmd-line-convert
    * Improve reading of faulty .srt files a little - thx andradadad
    * Allow invert colors + resize pre-processing for T4 - thx rookiefromspace/OmrSi
@@ -27,6 +31,7 @@
    * Add "swap frame rate" button - thx Flitskikker
    * Add more rule profiles - thx Flitskikker
    * Resize color picker so all 256 colors are available - thx Johan
+   * More Linux/Mono improvements/fixes - thx shag00
 * FIXED:
    * Fix list view initialization issue - thx AlexandreMT
    * Fix "Replace" issue - thx loyaldragon
@@ -40,6 +45,10 @@
    * Fix crash in cmd line FixCommonErrors - thx Rouzax
    * Fix crash when deleting last line in FCE - thx sir qrcz
    * Minor fixes for export to "Spumux" - thx Isak
+   * Fix crash in "cmd line convert" with vobsub/forcedonly - thx Toby
+   * Fix issue with "Fix common OCR errors" and "</b>" tag - thx btsix
+   * Fix issue with start ellipsis and "add missing space" - thx btsix
+   * Fix for generic json sub parser - thx kyuntot
 
 
 3.5.11 (27th October 2019)
