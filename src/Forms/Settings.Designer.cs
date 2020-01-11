@@ -552,7 +552,7 @@
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 427);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 426);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
             this.checkBoxAutoSave.TabIndex = 28;
@@ -563,7 +563,7 @@
             // 
             this.comboBoxSaveAsFileNameFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSaveAsFileNameFrom.FormattingEnabled = true;
-            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(442, 360);
+            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(442, 359);
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
             this.comboBoxSaveAsFileNameFrom.TabIndex = 23;
@@ -571,7 +571,7 @@
             // labelSaveAsFileNameFrom
             // 
             this.labelSaveAsFileNameFrom.AutoSize = true;
-            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(439, 344);
+            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(439, 343);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
             this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
             this.labelSaveAsFileNameFrom.TabIndex = 22;
@@ -928,7 +928,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 395);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 394);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 27;
@@ -936,7 +936,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 398);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 397);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 26;
@@ -945,7 +945,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 427);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 426);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 29;
@@ -969,7 +969,7 @@
             this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
             "HH:MM:SS:MSEC (00:00:00.000)",
             "HH:MM:SS:FF (00:00:00.00)"});
-            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 262);
+            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 261);
             this.comboBoxTimeCodeMode.Name = "comboBoxTimeCodeMode";
             this.comboBoxTimeCodeMode.Size = new System.Drawing.Size(207, 21);
             this.comboBoxTimeCodeMode.TabIndex = 19;
@@ -977,7 +977,7 @@
             // labelTimeCodeMode
             // 
             this.labelTimeCodeMode.AutoSize = true;
-            this.labelTimeCodeMode.Location = new System.Drawing.Point(438, 265);
+            this.labelTimeCodeMode.Location = new System.Drawing.Point(438, 264);
             this.labelTimeCodeMode.Name = "labelTimeCodeMode";
             this.labelTimeCodeMode.Size = new System.Drawing.Size(84, 13);
             this.labelTimeCodeMode.TabIndex = 18;
@@ -1008,7 +1008,7 @@
             // 
             // textBoxShowLineBreaksAs
             // 
-            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(594, 234);
+            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(594, 233);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(60, 21);
@@ -1017,7 +1017,7 @@
             // checkBoxAutoWrapWhileTyping
             // 
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
-            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(441, 211);
+            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(441, 210);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
             this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 15;
@@ -1027,7 +1027,7 @@
             // checkBoxPromptDeleteLines
             // 
             this.checkBoxPromptDeleteLines.AutoSize = true;
-            this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(441, 188);
+            this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(441, 187);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
             this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 14;
@@ -1037,7 +1037,7 @@
             // checkBoxAllowEditOfOriginalSubtitle
             // 
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
-            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(441, 165);
+            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(441, 164);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 13;
@@ -1066,7 +1066,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 395);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 394);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 25;
@@ -1074,7 +1074,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 398);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 397);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 24;
@@ -1083,7 +1083,7 @@
             // checkBoxRememberSelectedLine
             // 
             this.checkBoxRememberSelectedLine.AutoSize = true;
-            this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(449, 70);
+            this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(449, 69);
             this.checkBoxRememberSelectedLine.Name = "checkBoxRememberSelectedLine";
             this.checkBoxRememberSelectedLine.Size = new System.Drawing.Size(139, 17);
             this.checkBoxRememberSelectedLine.TabIndex = 9;
@@ -1093,7 +1093,7 @@
             // checkBoxRemoveBlankLinesWhenOpening
             // 
             this.checkBoxRemoveBlankLinesWhenOpening.AutoSize = true;
-            this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(441, 142);
+            this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(441, 141);
             this.checkBoxRemoveBlankLinesWhenOpening.Name = "checkBoxRemoveBlankLinesWhenOpening";
             this.checkBoxRemoveBlankLinesWhenOpening.Size = new System.Drawing.Size(225, 17);
             this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 12;
@@ -1118,7 +1118,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 311);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 310);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 21;
@@ -1126,7 +1126,7 @@
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 295);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 294);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 20;
@@ -1135,7 +1135,7 @@
             // labelShowLineBreaksAs
             // 
             this.labelShowLineBreaksAs.AutoSize = true;
-            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(438, 237);
+            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(438, 236);
             this.labelShowLineBreaksAs.Name = "labelShowLineBreaksAs";
             this.labelShowLineBreaksAs.Size = new System.Drawing.Size(150, 13);
             this.labelShowLineBreaksAs.TabIndex = 16;
@@ -1144,7 +1144,7 @@
             // checkBoxRememberWindowPosition
             // 
             this.checkBoxRememberWindowPosition.AutoSize = true;
-            this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(441, 96);
+            this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(441, 95);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
             this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 10;
@@ -1154,7 +1154,7 @@
             // checkBoxStartInSourceView
             // 
             this.checkBoxStartInSourceView.AutoSize = true;
-            this.checkBoxStartInSourceView.Location = new System.Drawing.Point(441, 119);
+            this.checkBoxStartInSourceView.Location = new System.Drawing.Point(441, 118);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
             this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
             this.checkBoxStartInSourceView.TabIndex = 11;
@@ -1164,7 +1164,7 @@
             // checkBoxReopenLastOpened
             // 
             this.checkBoxReopenLastOpened.AutoSize = true;
-            this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(449, 47);
+            this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(449, 46);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
             this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
             this.checkBoxReopenLastOpened.TabIndex = 8;
@@ -1174,7 +1174,7 @@
             // checkBoxRememberRecentFiles
             // 
             this.checkBoxRememberRecentFiles.AutoSize = true;
-            this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(441, 23);
+            this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(441, 22);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
             this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 7;
