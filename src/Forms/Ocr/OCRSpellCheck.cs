@@ -359,6 +359,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             HighLightWord(richTextBoxParagraph, textBoxWord.Text);
             ButtonEditWordClick(null, null);
+            textBoxWord.SelectAll();
         }
     }
 }
