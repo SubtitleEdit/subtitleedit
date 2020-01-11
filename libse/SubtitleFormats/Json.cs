@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     endIndex = res.Length - 1;
                 }
 
-                if (endIndex < 0)
+                if (endIndex <= 0)
                 {
                     return null;
                 }
