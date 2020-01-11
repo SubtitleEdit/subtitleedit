@@ -2270,13 +2270,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveOcrFixClick(object sender, EventArgs e)
         {
-            var sidx = comboBoxWordListLanguage.SelectedIndex;
-            if (sidx < 0)
+            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
+            if (languageIndex < 0)
             {
                 return;
             }
 
-            if (!(comboBoxWordListLanguage.Items[sidx] is ComboBoxLanguage cb))
+            if (!(comboBoxWordListLanguage.Items[languageIndex] is ComboBoxLanguage))
             {
                 return;
             }
@@ -2306,11 +2306,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (result == DialogResult.Yes)
                 {
+                    listBoxOcrFixList.BeginUpdate();
                     for (int idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxOcrFixList.SelectedIndices[idx];
                         text = listBoxOcrFixList.Items[index].ToString();
-                        key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
+                        key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
 
                         if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
                         {
@@ -2318,6 +2319,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         listBoxOcrFixList.Items.RemoveAt(index);
                     }
+                    listBoxOcrFixList.EndUpdate();
 
                     LoadOcrFixList(false);
                     buttonRemoveOcrFix.Enabled = false;

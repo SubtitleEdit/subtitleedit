@@ -812,15 +812,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public bool RemoveWordOrPartial(string word)
         {
-            if (word.Contains(' '))
+            if (PartialLineWordBoundaryReplaceList.ContainsKey(word))
             {
                 if (DeletePartialLineFromWordList(word))
                 {
-                    if (PartialLineWordBoundaryReplaceList.ContainsKey(word))
-                    {
-                        PartialLineWordBoundaryReplaceList.Remove(word);
-                    }
-
+                    PartialLineWordBoundaryReplaceList.Remove(word);
                     return true;
                 }
                 return false;
@@ -831,7 +827,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     WordReplaceList.Remove(word);
                 }
-
                 return true;
             }
             return false;
@@ -875,7 +870,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             bool removed = false;
-            if (userDictionary.ContainsKey((word)))
+            if (userDictionary.ContainsKey(word))
             {
                 userDictionary.Remove(word);
                 XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode(replaceListName);
@@ -900,7 +895,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     removed = true;
                 }
             }
-            if (dictionary.ContainsKey((word)))
+            if (dictionary.ContainsKey(word))
             {
                 XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode("Removed" + replaceListName);
                 if (wholeWordsNode != null)
