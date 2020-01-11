@@ -552,7 +552,7 @@
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 435);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 428);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
             this.checkBoxAutoSave.TabIndex = 28;
@@ -563,7 +563,7 @@
             // 
             this.comboBoxSaveAsFileNameFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSaveAsFileNameFrom.FormattingEnabled = true;
-            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(442, 364);
+            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(442, 361);
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
             this.comboBoxSaveAsFileNameFrom.TabIndex = 23;
@@ -571,7 +571,7 @@
             // labelSaveAsFileNameFrom
             // 
             this.labelSaveAsFileNameFrom.AutoSize = true;
-            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(439, 348);
+            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(439, 345);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
             this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
             this.labelSaveAsFileNameFrom.TabIndex = 22;
@@ -928,7 +928,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 402);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 396);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 27;
@@ -936,7 +936,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 405);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 399);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 26;
@@ -945,7 +945,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 435);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 428);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 29;
@@ -969,7 +969,7 @@
             this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
             "HH:MM:SS:MSEC (00:00:00.000)",
             "HH:MM:SS:FF (00:00:00.00)"});
-            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 265);
+            this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 263);
             this.comboBoxTimeCodeMode.Name = "comboBoxTimeCodeMode";
             this.comboBoxTimeCodeMode.Size = new System.Drawing.Size(207, 21);
             this.comboBoxTimeCodeMode.TabIndex = 19;
@@ -977,7 +977,7 @@
             // labelTimeCodeMode
             // 
             this.labelTimeCodeMode.AutoSize = true;
-            this.labelTimeCodeMode.Location = new System.Drawing.Point(438, 268);
+            this.labelTimeCodeMode.Location = new System.Drawing.Point(438, 266);
             this.labelTimeCodeMode.Name = "labelTimeCodeMode";
             this.labelTimeCodeMode.Size = new System.Drawing.Size(84, 13);
             this.labelTimeCodeMode.TabIndex = 18;
@@ -992,7 +992,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxEncoding.Location = new System.Drawing.Point(205, 407);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(205, 400);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(188, 21);
             this.comboBoxEncoding.TabIndex = 4;
@@ -1000,7 +1000,7 @@
             // checkBoxAutoDetectAnsiEncoding
             // 
             this.checkBoxAutoDetectAnsiEncoding.AutoSize = true;
-            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(205, 436);
+            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(205, 429);
             this.checkBoxAutoDetectAnsiEncoding.Name = "checkBoxAutoDetectAnsiEncoding";
             this.checkBoxAutoDetectAnsiEncoding.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoDetectAnsiEncoding.TabIndex = 6;
@@ -1008,7 +1008,7 @@
             // 
             // textBoxShowLineBreaksAs
             // 
-            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(594, 237);
+            this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(594, 235);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(60, 21);
@@ -1066,7 +1066,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 402);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 396);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 25;
@@ -1074,7 +1074,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 405);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 399);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 24;
@@ -1103,7 +1103,7 @@
             // labelAutoDetectAnsiEncoding
             // 
             this.labelAutoDetectAnsiEncoding.AutoSize = true;
-            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(8, 435);
+            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(8, 428);
             this.labelAutoDetectAnsiEncoding.Name = "labelAutoDetectAnsiEncoding";
             this.labelAutoDetectAnsiEncoding.Size = new System.Drawing.Size(137, 13);
             this.labelAutoDetectAnsiEncoding.TabIndex = 5;
@@ -1118,7 +1118,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 314);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 312);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 21;
@@ -1126,7 +1126,7 @@
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 298);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 296);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 20;
@@ -1135,7 +1135,7 @@
             // labelShowLineBreaksAs
             // 
             this.labelShowLineBreaksAs.AutoSize = true;
-            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(438, 240);
+            this.labelShowLineBreaksAs.Location = new System.Drawing.Point(438, 238);
             this.labelShowLineBreaksAs.Name = "labelShowLineBreaksAs";
             this.labelShowLineBreaksAs.Size = new System.Drawing.Size(150, 13);
             this.labelShowLineBreaksAs.TabIndex = 16;
@@ -1185,7 +1185,7 @@
             // labelDefaultFileEncoding
             // 
             this.labelDefaultFileEncoding.AutoSize = true;
-            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 411);
+            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 404);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
             this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
@@ -1194,7 +1194,7 @@
             // comboBoxFrameRate
             // 
             this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 379);
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 372);
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 2;
@@ -1202,7 +1202,7 @@
             // labelDefaultFrameRate
             // 
             this.labelDefaultFrameRate.AutoSize = true;
-            this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 384);
+            this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 377);
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
             this.labelDefaultFrameRate.Size = new System.Drawing.Size(96, 13);
             this.labelDefaultFrameRate.TabIndex = 1;
