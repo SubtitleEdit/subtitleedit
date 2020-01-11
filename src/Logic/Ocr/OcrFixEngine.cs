@@ -1261,7 +1261,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             var trimChars = p.ToArray();
             bool hasAllUpperWord = false;
-            foreach (var w in line.Split(' ', '\r', '\n'))
+            foreach (var w in HtmlUtil.RemoveHtmlTags(line, true).Split(' ', '\r', '\n'))
             {
                 var word = w.Trim(trimChars);
                 if (word.Length > 1 && word == word.ToUpperInvariant())
@@ -1296,7 +1296,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             var words = new List<string>();
             var splitChars = SpellCheckWordLists.SplitChars.Where(ch => ch != '/').ToArray();
-            foreach (var w in tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(splitChars))
+            foreach (var w in tempLine
+                .Replace("<i>", string.Empty).Replace("</i>", string.Empty)
+                .Replace("<b>", string.Empty).Replace("</b>", string.Empty)
+                .Replace("<u>", string.Empty).Replace("</u>", string.Empty)
+                .Split(splitChars))
             {
                 words.Add(w.Trim(trimChars));
             }
