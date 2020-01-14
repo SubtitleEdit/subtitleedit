@@ -22,7 +22,7 @@
    * Improve reading of faulty .srt files a little - thx andradadad
    * Allow invert colors + resize pre-processing for T4 - thx rookiefromspace/OmrSi
    * Improve line mergning of 3+ lines - thx taxen
-   * Improve read speed of .ts/.m2ts files
+   * Improve read performance of .ts/.m2ts files
    * Use display-friendly language name in "Fix common errors" - thx Zoltan
    * Allow "Typewriter effect" for multiple lines - thx andradadad
    * Improve overwrite setting in "Batch convert" - thx mgutt/xylographe
@@ -49,6 +49,7 @@
    * Fix issue with "Fix common OCR errors" and "</b>" tag - thx btsix
    * Fix issue with start ellipsis and "add missing space" - thx btsix
    * Fix for generic json sub parser - thx kyuntot
+   * Fix "remove dash" in split dialog in original - thx OmrSi
 
 
 3.5.11 (27th October 2019)
