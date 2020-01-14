@@ -828,7 +828,11 @@ $HorzAlign          =   Center
             DefaultFrameRate = 23.976;
             CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
-            if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
+            if (Configuration.IsRunningOnLinux)
+            {
+                SubtitleFontName = "DejaVu Serif";
+            }
+            else if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
                 SubtitleFontName = "Times New Roman";
             }
