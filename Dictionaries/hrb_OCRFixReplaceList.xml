@@ -1616,6 +1616,7 @@
     <RegEx find="([sS])rec(a?)n" replaceWith="$1ret$2n" />
     <RegEx find="spijun" replaceWith="špijun" />
     <RegEx find="Spijun" replaceWith="Špijun" />
+    <RegEx find="spjesn" replaceWith="špješn" />
     <RegEx find="([sS])rusi" replaceWith="$1ruši" />
     <RegEx find="\b([sS])tac([eu])" replaceWith="$1tat ć$2" />
     <RegEx find="stanes" replaceWith="staneš" />
