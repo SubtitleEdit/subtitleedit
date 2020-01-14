@@ -54,7 +54,7 @@
             // 
             this.labelProduct.AutoSize = true;
             this.labelProduct.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelProduct.Location = new System.Drawing.Point(11, 16);
+            this.labelProduct.Location = new System.Drawing.Point(13, 16);
             this.labelProduct.Name = "labelProduct";
             this.labelProduct.Size = new System.Drawing.Size(140, 19);
             this.labelProduct.TabIndex = 26;

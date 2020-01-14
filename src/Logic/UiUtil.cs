@@ -455,6 +455,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var font = SystemFonts.MessageBoxFont;
+
+                if (Configuration.IsRunningOnLinux)
+                {
+                    font = new Font("DejaVu Serif", 9F);
+                }
+
                 try
                 {
                     // Bold + italic + regular must be present

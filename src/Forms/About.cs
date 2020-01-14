@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]} NEXT, beta";
-                linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
+                linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width;
                 linkLabelGitBuildHash.Text = revisionNumber;
                 tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
                 linkLabelGitBuildHash.Font = labelProduct.Font;
