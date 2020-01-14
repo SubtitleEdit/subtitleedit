@@ -1395,7 +1395,6 @@
     <Word from="slećemo" to="slijećemo" />
     <Word from="sleva" to="slijeva" />
     <Word from="sećanjima" to="sjećanjima" />
-    <Word from="sečivo" to="sječivo" />
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
     <Word from="sem" to="osim" />
@@ -2061,9 +2060,7 @@
     <Word from="Džozi" to="Josie" />
     <Word from="Džes" to="Jess" />
     <Word from="Džen" to="Jen" />
-    <Word from="Džej" to="Jay" />
     <Word from="Džeja" to="Jaya" />
-    <Word from="Džeju" to="Jayu" />
     <Word from="Džejn" to="Jane" />
     <Word from="Džil" to="Jill" />
     <Word from="Džodi" to="Jody" />
@@ -3057,7 +3054,6 @@
     <RegEx find="\b([rR])i?j?ečni([kcč])" replaceWith="$1ječni$2" />
     <RegEx find="\b([rR])j?eš([ei]o?|il[aeio]|it[ei]|imo?|i[mš]|en|en[aeiou])\b" replaceWith="$1iješ$2" />
     <RegEx find="\b([rR])j?etk([aiou])" replaceWith="$1ijetk$2" />
-    <RegEx find="rofn" replaceWith="rafn" />
     <RegEx find="sačeka" replaceWith="pričeka" />
     <RegEx find="Sačeka" replaceWith="Pričeka" />
     <RegEx find="aglasno" replaceWith="uglasno" />
