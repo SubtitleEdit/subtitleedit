@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var item = new ListViewItem(name.Trim('.')) { Tag = pluginFileName };
                         item.SubItems.Add(description);
-                        item.SubItems.Add(version.ToString());
+                        item.SubItems.Add(version.ToString(CultureInfo.InvariantCulture));
                         item.SubItems.Add(actionType);
                         listViewInstalledPlugins.Items.Add(item);
                     }
