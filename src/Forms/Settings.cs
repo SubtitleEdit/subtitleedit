@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFont.BeginUpdate();
             comboBoxFontName.Items.Clear();
             comboBoxSubtitleFont.Items.Clear();
-            foreach (var x in FontFamily.Families)
+            foreach (var x in FontFamily.Families.OrderBy(p=>p.Name))
             {
                 comboBoxFontName.Items.Add(x.Name);
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
