@@ -223,6 +223,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamOverrideVideoSize>Замяна на оригиналния размер на видеото</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>Край на името на файла</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Настройки на TS...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Премахване прекъсвания на редове</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Проектор</Title>
@@ -585,6 +586,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixOverlappingDisplayTimes>Поправяне на застъпващи се времена на показване</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправяне на кратки времена на показване</FixShortDisplayTimes>
     <FixLongDisplayTimes>Поправяне на дълги времена на показване</FixLongDisplayTimes>
+    <FixShortGaps>Поправяне на кратки интервали</FixShortGaps>
     <FixInvalidItalicTags>Поправяне на невалидни курсив тагове</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Изтриване на ненужни интервали</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Изтриване на ненужни точки</RemoveUnneededPeriods>
@@ -636,6 +638,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Поправяне на невалиден курсив таг</FixInvalidItalicTag>
     <FixShortDisplayTime>Поправяне на кратко време на показване</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Поправяне на застъпващо се време на показване</FixOverlappingDisplayTime>
+    <FixShortGap>Поправяне на кратък интервал</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Какво ме интересува.&lt;i&gt; -&gt; &lt;i&gt;Какво ме интересува.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Хей   ти , там. -&gt; Хей ти, там.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Хей ти!. -&gt; Хей ти!</RemoveUnneededPeriodsExample>
@@ -650,6 +653,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XDisplayTimesProlonged>{0} времена на показване са удължени</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} невалидни HTML тага са поправени</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} времена на показване са намалени</XDisplayTimesShortned>
+    <XGapsFixed>{0} кратки интервали са поправени</XGapsFixed>
     <XLinesUnbreaked>{0} редове са обединени</XLinesUnbreaked>
     <UnneededSpace>Ненужни интервали</UnneededSpace>
     <XUnneededSpacesRemoved>{0} ненужни интервала са премахнати</XUnneededSpacesRemoved>
@@ -2048,6 +2052,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SyntaxColorTextIfTooLong>Цвят за твърде Дълъг ред</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Цвят на текста при повече от {0} реда</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Цвят за презастъпване на времената</SyntaxColorOverlap>
+    <SyntaxColorGap>Без цвят, ако са твърде кратки</SyntaxColorGap>
     <SyntaxErrorColor>Цвят за грешките</SyntaxErrorColor>
     <GoToFirstSelectedLine>Преминаване на първия избран ред</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Преминаване на следващия празен ред</GoToNextEmptyLine>
@@ -2105,6 +2110,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontNote>Забележка: Тези настройки на шрифта са само за потребителския интерфейс за редактиране на субтитрите.
 Настройването на шрифта за субтитрите обикновено се извършва във видеоплеъра, но може да бъде направено и при използване на формат на субтитрите с вградена информация за шрифта, като
 "Advanced Sub Station Alpha" или чрез експортиране на формати, базирани на изображения.</FontNote>
+    <RestoreDefaultSettings>Възстановяване на настройките по подразбиране</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Всички настройки ще бъдат възстановени до стойностите по подразбиране
+
+Ще продължите ли?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>Настройки за mpv</Title>
@@ -2178,8 +2187,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GlyphCheckReport>Невалидни символи {0} намерени в колона {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Невалидни интервали намерени в колона {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Виж пълният отчет тук: {0}.</ReportPrompt>
-    <FoundXIssues>Качественият контрол на Netflix е намерил {0} проблема.</FoundXIssues>
+    <OpenReportInFolder>Отваряне на отчета в папка</OpenReportInFolder>
+    <FoundXIssues>Качественият контрол на Netflix е намерил {0:#,###} проблема.</FoundXIssues>
     <CheckOk>Качественият контрол на Netflix е OK :)</CheckOk>
+    <MaximumXCharsPerSecond>Максимален брой символи {0}/сек (без интервалите)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Максимална дължина на ред ({0})</MaximumLineLength>
+    <MinimumDuration>Минимална продължителност: 5/6 секунда (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Повече настройки за Разделяне на субтитри</Title>
