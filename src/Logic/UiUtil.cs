@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (Configuration.IsRunningOnLinux)
                 {
-                    font = new Font("DejaVu Serif", 9F);
+                    font = new Font(Configuration.DefaultLinuxFontName, 9F);
                 }
 
                 try
@@ -546,12 +546,54 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
             }
 
+            if (form is ContextMenuStrip cms)
+            {
+                foreach (var item in cms.Items)
+                {
+                    if (item is ToolStripMenuItem tsmi)
+                    {
+                        tsmi.Font = GetDefaultFont();
+                        if (tsmi.HasDropDownItems)
+                        {
+                            foreach (var innerItem in tsmi.DropDownItems)
+                            {
+                                if (innerItem is ToolStripMenuItem innerTsmi)
+                                {
+                                    innerTsmi.Font = GetDefaultFont();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (form is TimeUpDown timeUpDown)
+            {
+                using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    var width = g.MeasureString("00:00:00.000", form.Font).Width;
+                    if (timeUpDown.MaskedTextBox.Width < width - 3)
+                    {
+                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
+                    }
+                    width = g.MeasureString("00:00:00.000", form.Font).Width;
+                    if (timeUpDown.MaskedTextBox.Width < width - 3)
+                    {
+                        timeUpDown.MaskedTextBox.Font = new Font(timeUpDown.MaskedTextBox.Font.FontFamily, timeUpDown.MaskedTextBox.Font.Size - 1);
+                    }
+                }
+            }
+
             foreach (Control c in form.Controls)
             {
                 if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
                 {
                     c.Font = GetDefaultFont();
                 }
+
+               
+
+
                 foreach (Control inner in c.Controls)
                 {
                     FixFontsInner(inner, iterations - 1);

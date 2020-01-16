@@ -4169,6 +4169,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
+                    if (subtitleListView1.SelectedItems.Count != 1 || subtitleListView1.SelectedItems[0].Index != index)
+                    {
+                        subtitleListView1.SelectIndexAndEnsureVisible(index);
+                    }
                     line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, autoGuessLevel);
                 }
 
@@ -6243,6 +6247,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
+                    if (subtitleListView1.SelectedItems.Count != 1 || subtitleListView1.SelectedItems[0].Index != index)
+                    {
+                        subtitleListView1.SelectIndexAndEnsureVisible(index);
+                    }
                     line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 

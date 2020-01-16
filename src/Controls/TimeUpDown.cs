@@ -67,7 +67,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public TimeUpDown()
         {
-            AutoScaleMode = AutoScaleMode.Dpi;
             Font = UiUtil.GetDefaultFont();
             InitializeComponent();
             UiUtil.FixFonts(this);
