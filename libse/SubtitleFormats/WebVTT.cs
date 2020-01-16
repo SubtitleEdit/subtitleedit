@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             },
         };
 
-        private static readonly string[] KnownLanguages = new[] { "arabic", "hebrew", "simplifiedchinese", "traditionalchinese", "thai", "korean", "Japanese" };
+        private static readonly string[] KnownLanguages = new[] { "arabic", "hebrew", "simplifiedchinese", "traditionalchinese", "thai", "korean", "Japanese", "hungarian", "czech", "vietnamese" };
 
         public override string Extension => ".vtt";
 
