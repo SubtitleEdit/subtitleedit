@@ -483,6 +483,10 @@ namespace Nikse.SubtitleEdit.Core
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
+            if (Configuration.IsRunningOnLinux)
+            {
+                SsaFontName = Configuration.DefaultLinuxFontName;
+            }
             SsaFontSize = 20;
             SsaFontColorArgb = Color.FromArgb(255, 255, 255).ToArgb();
             SsaOutline = 2;
@@ -830,7 +834,7 @@ $HorzAlign          =   Center
             SubtitleFontName = "Tahoma";
             if (Configuration.IsRunningOnLinux)
             {
-                SubtitleFontName = "DejaVu Serif";
+                SubtitleFontName = Configuration.DefaultLinuxFontName;
             }
             else if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {

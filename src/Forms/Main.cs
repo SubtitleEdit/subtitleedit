@@ -211,6 +211,9 @@ namespace Nikse.SubtitleEdit.Forms
         protected override void OnLoad(EventArgs e)
         {
             UiUtil.FixFonts(this, 10000);
+            UiUtil.FixFonts(contextMenuStripListview);
+            UiUtil.FixFonts(contextMenuStripTextBoxListView);
+            UiUtil.FixFonts(contextMenuStripWaveform);
             UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
             UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
             UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
@@ -22257,6 +22260,23 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemHorizontalDigits.Visible = false;
                 }
             }
+            else if (formatType == typeof(Sami))
+            {
+                boldToolStripMenuItem1.Visible = false;
+                underlineToolStripMenuItem1.Visible = false;
+                colorToolStripMenuItem1.Visible = false;
+                fontNameToolStripMenuItem.Visible = false;
+                toolStripMenuItemHorizontalDigits.Visible = false;
+                toolStripMenuItemBouten.Visible = false;
+                if (tb.SelectionLength > 0)
+                {
+                    toolStripMenuItemRuby.Visible = true;
+                }
+                else
+                {
+                    toolStripMenuItemRuby.Visible = true;
+                }
+            }
             else
             {
                 boldToolStripMenuItem1.Visible = true;
@@ -26169,7 +26189,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     rubyText = "<ruby-text>" + rubyText + "</ruby-text>";
                 }
-                tb.Text = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after;
+                var rubyHtml = before + "<ruby-container><ruby-base>" + form.RubyBaseText + "</ruby-base>" + rubyText + "</ruby-container>" + after;  // sami ruby tag fix
+                var formatType = GetCurrentSubtitleFormat().GetType();
+                if (formatType == typeof(Sami)) // sami ruby tag fix
+                {
+                    rubyHtml = rubyHtml.Replace("ruby-container", "ruby")
+                        .Replace("ruby-text", "rt")
+                        .Replace("<ruby-base>", string.Empty)
+                        .Replace("</ruby-base>", string.Empty) // sami ruby tag fix rp remove
+                        .Replace("<ruby-base-italic>", string.Empty) // sami ruby tag fix italic remove
+                        .Replace("</ruby-base-italic>", string.Empty)
+                        .Replace("<ruby-text-italic>", string.Empty)
+                        .Replace("</ruby-text-italic>", string.Empty);
+                }
+                tb.Text = rubyHtml;
             }
         }
 

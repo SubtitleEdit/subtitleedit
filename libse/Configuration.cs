@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
 
+        public static readonly string DefaultLinuxFontName = "DejaVu Serif";
 
         private Configuration()
         {
