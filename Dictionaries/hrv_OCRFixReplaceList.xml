@@ -3437,6 +3437,7 @@
     <RegEx find="hvač" replaceWith="hvać" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
+    <RegEx find="ijd" replaceWith="idj" />
     <RegEx find="ijo([absdegknptz])" replaceWith="io$1" />
     <RegEx find="([ai])nić" replaceWith="$1nit ć" />
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
