@@ -395,8 +395,11 @@
     <Word from="htedoh" to="htjedoh" />
     <Word from="Htjeo" to="Htio" />
     <Word from="Hteo" to="Htio" />
+    <Word from="htijela" to="htjela" />
+    <Word from="Htijela" to="Htjela" />
     <Word from="htjeo" to="htio" />
     <Word from="hteo" to="htio" />
+    <Word from="iamti" to="imati" />
     <Word from="Ii" to="li" />
     <Word from="iči" to="ići" />
     <Word from="Iči" to="Ići" />
@@ -3243,7 +3246,7 @@
     <!-- bez e, jer mijenja veče(r) u veće, što je gnjavaža -->
     <RegEx find="\b([vV])eč([aiu]|[ei][mg]|ih|ima|in[iu]|inom|o[mj])?\b" replaceWith="$1eć$2" />
     <RegEx find="([vV])e[čć]n" replaceWith="$1ječn" />
-    <RegEx find="([vV])ečit" replaceWith="$1ječit" />
+    <RegEx find="([vV])eči([tn])" replaceWith="$1ječi$2" />
     <RegEx find="([vV])enča" replaceWith="$1jenča" />
     <RegEx find="\b([vV])er([ova|ns])" replaceWith="$1jer$2" />
     <RegEx find="([nN])ever(?!b)" replaceWith="$1evjer" />
@@ -3434,6 +3437,7 @@
     <RegEx find="hvač" replaceWith="hvać" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
+    <RegEx find="ijd" replaceWith="idj" />
     <RegEx find="ijo([absdegknptz])" replaceWith="io$1" />
     <RegEx find="([ai])nić" replaceWith="$1nit ć" />
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
@@ -3637,6 +3641,7 @@
     <RegEx find="visić" replaceWith="visit ć" />
     <RegEx find="visa([lt])" replaceWith="vira$1" />
     <RegEx find="([vV])jeov" replaceWith="$1jerov" />
+    <RegEx find="vješč" replaceWith="vješć" />
     <RegEx find="vljstv" replaceWith="voljstv" />
     <RegEx find="v([or])dić" replaceWith="v$1dit ć" />
     <RegEx find="(?&lt;![ČčĆć])vorić" replaceWith="vorit ć" />
