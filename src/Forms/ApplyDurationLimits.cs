@@ -39,6 +39,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
+            numericUpDownDurationMin.Left = checkBoxMinDuration.Left + checkBoxMinDuration.Width + 6;
+            numericUpDownDurationMax.Left = checkBoxMaxDuration.Left + checkBoxMaxDuration.Width + 6;
+            if (Math.Abs(numericUpDownDurationMin.Left - numericUpDownDurationMax.Left) < 10)
+            {
+                numericUpDownDurationMin.Left = Math.Max(numericUpDownDurationMin.Left, numericUpDownDurationMax.Left);
+                numericUpDownDurationMax.Left = Math.Max(numericUpDownDurationMin.Left, numericUpDownDurationMax.Left);
+            }
             FixLargeFonts();
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
