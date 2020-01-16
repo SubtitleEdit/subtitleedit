@@ -1503,6 +1503,7 @@
     <RegEx find="slobodić" replaceWith="slobodit ć" />
     <RegEx find="([oO])sta[čć]([eu])" replaceWith="$1stat ć$2" />
     <RegEx find="([oO])svj?ez" replaceWith="$1svjež" />
+    <RegEx find="otesk" replaceWith="otešk" />
     <RegEx find="tkri[cč]" replaceWith="tkrić" />
     <RegEx find="([oOSs])tici" replaceWith="$1tići" />
     <RegEx find="([oO])tis([al])" replaceWith="$1tiš$2" />
@@ -1575,6 +1576,7 @@
     <RegEx find="arud[zž]bin" replaceWith="arudžb" />
     <RegEx find="([rR])uck([auo])" replaceWith="$1učk$2" />
     <RegEx find="\b([Rr])uca([lt])" replaceWith="$1uča$2" />
+    <RegEx find="rzis" replaceWith="ržiš" />
     <RegEx find="saceka" replaceWith="pričeka" />
     <RegEx find="Saceka" replaceWith="Pričeka" />
     <RegEx find="sagarep" replaceWith="mrkv" />
