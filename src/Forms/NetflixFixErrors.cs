@@ -65,30 +65,25 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxLanguage.BeginUpdate();
             comboBoxLanguage.Items.Clear();
-            var ci = CultureInfo.GetCultureInfo(language);
-            foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures())
             {
-                if (!string.IsNullOrWhiteSpace(x.ToString()) && !x.EnglishName.Contains("("))
-                {
-                    comboBoxLanguage.Items.Add(new LanguageItem(x, x.EnglishName));
-                }
+                comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
             }
             comboBoxLanguage.Sorted = true;
+            var languageCulture = CultureInfo.GetCultureInfo(language);
             int languageIndex = 0;
-            int j = 0;
-            foreach (var x in comboBoxLanguage.Items)
+            for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
             {
-                var li = (LanguageItem)x;
-                if (li.Code.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                var li = comboBoxLanguage.Items[i] as LanguageItem;
+                if (li.Code.TwoLetterISOLanguageName == languageCulture.TwoLetterISOLanguageName)
                 {
-                    languageIndex = j;
+                    languageIndex = i;
                     break;
                 }
                 if (li.Code.TwoLetterISOLanguageName == "en")
                 {
-                    languageIndex = j;
+                    languageIndex = i;
                 }
-                j++;
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
             comboBoxLanguage.SelectedIndexChanged += RuleCheckedChanged;
