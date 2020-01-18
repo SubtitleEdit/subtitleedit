@@ -8166,7 +8166,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 indices.Add(idx);
             }
-
             indices.Reverse();
 
             if (_mp4List != null)
@@ -8254,6 +8253,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
+            UpdateLogLineNumbersAfterDelete(listBoxUnknownWords, indices);
+            UpdateLogLineNumbersAfterDelete(listBoxLog, indices);
+            UpdateLogLineNumbersAfterDelete(listBoxLogSuggestions, indices);
+
             foreach (int idx in indices)
             {
                 _subtitle.Paragraphs.RemoveAt(idx);
@@ -8280,6 +8283,34 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             subtitleListView1.EndUpdate();
+        }
+
+        private void UpdateLogLineNumbersAfterDelete(ListBox listBox, List<int> indices)
+        {
+            listBox.BeginUpdate();
+            for (int i = listBox.Items.Count - 1; i >= 0; i--)
+            {
+                string text = listBox.Items[i].ToString();
+                if (text.Contains(':'))
+                {
+                    string numberAsString = text.Substring(1, text.IndexOf(':') - 1);
+                    if (int.TryParse(numberAsString, out var number))
+                    {
+                        if (indices.Contains(number - 1))
+                        {
+                            listBox.Items.RemoveAt(i);
+                        }
+                        else if (indices.Any(p => p < number - 1))
+                        {
+                            var oldText = text.Remove(0, text.IndexOf(':') + 1).TrimStart();
+                            var newNumber = number - indices.Count(p => p < number - 1);
+                            var newText = "#" + newNumber + ": " + oldText;
+                            listBox.Items[i] = newText;
+                        }
+                    }
+                }
+            }
+            listBox.EndUpdate();
         }
 
         private void buttonUknownToNames_Click(object sender, EventArgs e)
