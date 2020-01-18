@@ -86,13 +86,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
+            if (Configuration.Settings.General.UseFFmpegForWaveExtraction && (File.Exists(Configuration.Settings.General.FFmpegLocation)) || !Configuration.IsRunningOnWindows)
             {
                 encoderName = "FFmpeg";
                 string audioParameter = string.Empty;
                 if (audioTrackNumber > 0)
                 {
-                    audioParameter = string.Format("-map 0:a:{0}", audioTrackNumber);
+                    audioParameter = $"-map 0:a:{audioTrackNumber}";
                 }
 
                 const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav {2} \"{1}\"";
@@ -106,6 +106,10 @@ namespace Nikse.SubtitleEdit.Forms
                 // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream
 
                 exeFilePath = Configuration.Settings.General.FFmpegLocation;
+                if (!Configuration.IsRunningOnWindows)
+                {
+                    exeFilePath = "ffmpeg";
+                }
                 parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
             }
             return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
