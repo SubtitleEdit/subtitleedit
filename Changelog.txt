@@ -6,7 +6,7 @@
    * Auto break options "pixel width" (not by #characters) + "bottom heavy"
    * Auto break options now available in UI via Options -> Settings -> Tools
    * Add new format Netflix IMSC 1.1 Japanese
-   * Add new format psl
+   * Add new format psl - thx Christopher
    * Add new sub format - thx Magnus
    * Add Macedonian translation - thx Numberguy
 * IMPROVED:
@@ -27,7 +27,7 @@
    * Allow "Typewriter effect" for multiple lines - thx andradadad
    * Improve overwrite setting in "Batch convert" - thx mgutt/xylographe
    * Improve frame rate conversion precision - thx gru123
-   * Move Tools -> "Set minimum display time between paragraphs" to FCE - thx Flitskikker
+   * Add "Set minimum display time between paragraphs" to FCE - thx Flitskikker
    * Add "swap frame rate" button - thx Flitskikker
    * Add more rule profiles - thx Flitskikker
    * Resize color picker so all 256 colors are available - thx Johan
@@ -37,7 +37,7 @@
    * Fix "Replace" issue - thx loyaldragon
    * Fix extracting correct audio track with VLC
    * Fix remove empty lines after "Multiple replace" in "Batch convert"
-   * Fix "Fix ocr errors" in "Fix common errors" via "Batch convert" - thx  JySzE
+   * Fix "Fix OCR errors" in "Fix common errors" via "Batch convert" - thx  JySzE
    * Fix issue with PAC reading - thx s3ncha
    * Fix possible crash when going from src view to list view
    * Fix "Save selected lines as..." issues - thx Milenko
@@ -50,6 +50,8 @@
    * Fix issue with start ellipsis and "add missing space" - thx btsix
    * Fix for generic json sub parser - thx kyuntot
    * Fix "remove dash" in split dialog in original - thx OmrSi
+   * Fix OCR log line numbers after delete - thx xylographe
+   * Fix saving OCR'ed .sup to source folder - thx aaaxx/mgutt
 
 
 3.5.11 (27th October 2019)
