@@ -535,13 +535,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
             buttonDownloadFfmpeg.Text = language.DownloadFFmpeg;
-            if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
+            if (!Configuration.IsRunningOnWindows)
             {
                 buttonDownloadFfmpeg.Visible = false;
-            }
+                labelFFmpegPath.Visible = false;
+                textBoxFFmpegPath.Visible = false;
+                buttonBrowseToFFmpeg.Visible = false;
 
-            if (Configuration.IsRunningOnLinux)
-            {
                 buttonMpvSettings.Visible = false;
                 radioButtonVideoPlayerDirectShow.Enabled = false;
                 radioButtonVideoPlayerMpcHc.Enabled = false;
