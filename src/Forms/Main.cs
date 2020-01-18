@@ -2987,11 +2987,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 videoFileLoaded = _videoFileName != null;
 
-                if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
-                    Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
-                {
-                }
-                else
+                if (Configuration.Settings.RecentFiles.Files.Count <= 0 || Configuration.Settings.RecentFiles.Files[0].FileName != fileName)
                 {
                     Configuration.Settings.RecentFiles.Add(fileName, _videoFileName, _subtitleAlternateFileName);
                     Configuration.Settings.Save();
@@ -20202,7 +20198,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
-                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, GetCurrentSubtitleFormat().Extension);
+                    _fileName = Path.ChangeExtension(fileName, GetCurrentSubtitleFormat().Extension);
                     SetTitle();
                     _converted = true;
 
