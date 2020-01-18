@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract4Version = "4.1.0";
+        private string Tesseract4Version = "4.1.1";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) <= 2)
+                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (Utilities.GetNumberOfLines(text) <= 2)
+                    if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -850,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) <= 2)
+                if (checkBoxAutoBreakLines.Checked && Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -859,7 +859,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (Utilities.GetNumberOfLines(text) <= 2)
+                    if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -5197,7 +5197,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 // max allow 2 lines
-                if (_autoBreakLines && Utilities.GetNumberOfLines(text) <= 2)
+                if (_autoBreakLines && Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -5206,7 +5206,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
 
-                    if (Utilities.GetNumberOfLines(text) <= 2)
+                    if (Utilities.GetNumberOfLines(text) > 2)
                     {
                         text = Utilities.AutoBreakLine(text);
                     }
@@ -5357,7 +5357,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             // max allow 2 lines
-            if (_autoBreakLines && Utilities.GetNumberOfLines(text) <= 2)
+            if (_autoBreakLines && Utilities.GetNumberOfLines(text) > 2)
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -5366,7 +5366,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 }
 
-                if (Utilities.GetNumberOfLines(text) <= 2)
+                if (Utilities.GetNumberOfLines(text) > 2)
                 {
                     text = Utilities.AutoBreakLine(text);
                 }
@@ -7044,8 +7044,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
                 checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
-                if (Configuration.IsRunningOnWindows &&
-                    !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
+                if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
                     if (MessageBox.Show("Download Tesseract " + Tesseract4Version, "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
@@ -7073,7 +7072,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract302";
                 comboBoxTesseractEngineMode.Visible = false;
                 labelTesseractEngineMode.Visible = false;
-                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 4.00");
+                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract " + Tesseract4Version);
                 if (!File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")))
                 {
                     if (MessageBox.Show("Download Tesseract 3.02", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
