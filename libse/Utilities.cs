@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Authentication;
@@ -752,6 +753,23 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return list;
+        }
+
+        public static IEnumerable<CultureInfo> GetSubtitleLanguageCultures()
+        {
+            var prospects = new List<CultureInfo>();
+            var excludes = new HashSet<string>();
+
+            foreach (var ci in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            {
+                if (ci.Name.Length < 4 && ci.Name == ci.IetfLanguageTag)
+                {
+                    excludes.Add(ci.Parent.Name);
+                    prospects.Add(ci);
+                }
+            }
+
+            return prospects.Where(ci => !excludes.Contains(ci.Name));
         }
 
         public static double GetOptimalDisplayMilliseconds(string text)

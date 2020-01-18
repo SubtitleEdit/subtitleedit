@@ -135,17 +135,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxLanguage.Items.Add(firstItem);
             }
-            foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            foreach (var ci in Utilities.GetSubtitleLanguageCultures())
             {
-                if (!string.IsNullOrWhiteSpace(x.ToString()) && !x.EnglishName.Contains("("))
-                {
-                    comboBoxLanguage.Items.Add(new LanguageItem(x, x.EnglishName));
-                }
+                comboBoxLanguage.Items.Add(new LanguageItem(ci, ci.EnglishName));
             }
             comboBoxLanguage.Sorted = true;
             comboBoxLanguage.EndUpdate();
         }
-
 
         public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
         {
