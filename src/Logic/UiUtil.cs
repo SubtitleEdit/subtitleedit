@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (Configuration.IsRunningOnLinux)
                 {
-                    font = new Font(Configuration.DefaultLinuxFontName, 9F);
+                    font = new Font(Configuration.DefaultLinuxFontName, 8F);
                 }
 
                 try
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Logic
                     c.Font = GetDefaultFont();
                 }
 
-               
+
 
 
                 foreach (Control inner in c.Controls)
