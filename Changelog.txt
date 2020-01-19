@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.12 (xth January 2020) BETA
+3.5.12 (19th January 2020)
 * NEW:
    * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare/xylographe
    * Auto break options "pixel width" (not by #characters) + "bottom heavy"
