@@ -9947,7 +9947,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentParagraph = _subtitle.Paragraphs[firstIndex];
                 string text = sb.ToString();
                 text = HtmlUtil.FixInvalidItalicTags(text);
-                text = ChangeAllLinesItalictoSingleItalic(text);
+                text = ChangeAllLinesTagsToSingleTag(text, "i");
+                text = ChangeAllLinesTagsToSingleTag(text, "b");
+                text = ChangeAllLinesTagsToSingleTag(text, "u");
                 if (breakMode == BreakMode.Unbreak)
                 {
                     text = Utilities.UnbreakLine(text);
@@ -10015,7 +10017,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         original.Text = originalTexts.ToString().Replace("  ", " ");
-                        original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
+                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
+                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
+                        original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
 
                         if (breakMode == BreakMode.Unbreak)
                         {
@@ -10063,22 +10067,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string ChangeAllLinesItalictoSingleItalic(string text)
+        private static string ChangeAllLinesTagsToSingleTag(string text, string tag)
         {
-            if (!text.Contains("<i>"))
+            if (!text.Contains("<" + tag +">"))
             {
                 return text;
             }
 
             foreach (var line in text.SplitToLines())
             {
-                if (!line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) || !line.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
+                if (!line.TrimStart().StartsWith("<" + tag + ">", StringComparison.Ordinal) || !line.TrimEnd().EndsWith("</" + tag + ">", StringComparison.Ordinal))
                 {
                     return text;
                 }
             }
 
-            return "<i>" + HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim() + "</i>";
+            return "<" + tag + ">" + HtmlUtil.RemoveOpenCloseTags(text, tag).Trim() + "</" + tag + ">";
         }
 
         private void MergeAfterToolStripMenuItemClick(object sender, EventArgs e)
@@ -10166,7 +10170,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
 
-                                original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
+                                original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "i");
+                                original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "b");
+                                original.Text = ChangeAllLinesTagsToSingleTag(original.Text, "u");
 
                                 if (string.IsNullOrWhiteSpace(old1))
                                 {
@@ -10224,7 +10230,9 @@ namespace Nikse.SubtitleEdit.Forms
                                                  nextParagraph.Text.Trim()).Trim();
                     }
 
-                    currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
+                    currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "i");
+                    currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "b");
+                    currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "u");
 
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
