@@ -20283,7 +20283,15 @@ namespace Nikse.SubtitleEdit.Forms
                 var lines = text.SplitToLines();
 
                 // Get current line index (the line where the cursor is current located).
-                int selectedLineIdx = tb.GetLineFromCharIndex(tb.SelectionStart);
+                int numberOfNewLines = 0;
+                for (int i = 0; i < tb.SelectionStart && i < text.Length; i++)
+                {
+                    if (text[i] == '\n')
+                    {
+                        numberOfNewLines++;
+                    }
+                }
+                int selectedLineIdx = numberOfNewLines; // Do not use 'GetLineFromCharIndex' as it also counts when lines are wrapped
 
                 // Get line from index.
                 string selectedLine = lines[selectedLineIdx];
