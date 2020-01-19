@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 int minLength = 2;
-                if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+                if (Configuration.Settings.Tools.CheckOneLetterWords)
                 {
                     minLength = 1;
                 }
