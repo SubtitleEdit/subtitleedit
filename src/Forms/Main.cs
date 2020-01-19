@@ -20400,6 +20400,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var tb = GetFocusedTextBox();
             string text = tb.SelectedText;
+            if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
+            {
+                text = tb.Text;
+                tb.SelectAll();
+            }
             int selectionStart = tb.SelectionStart;
 
             string color;
@@ -20483,6 +20488,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             // font name
             string text = tb.SelectedText;
+            if (string.IsNullOrEmpty(text) && tb.Text.Length > 0)
+            {
+                text = tb.Text;
+                tb.SelectAll();
+            }
             int selectionStart = tb.SelectionStart;
 
             using (var form = new ChooseFontName())
