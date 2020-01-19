@@ -1300,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             int minLength = 2;
-            if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+            if (Configuration.Settings.Tools.CheckOneLetterWords)
             {
                 minLength = 1;
             }
@@ -1324,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
                     var correct = false;
-                    if (word.Length > minLength)
+                    if (word.Length > 1)
                     {
                         if (_wordSpellOkList.Contains(word))
                         {
@@ -1346,6 +1346,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             correct = DoSpell(word.TrimEnd('s'));
                         }
+                    }
+                    else
+                    {
+                        correct = !Configuration.Settings.Tools.CheckOneLetterWords; // hunspell allows too many single letter words
                     }
 
                     if (!correct && _userWordList.Contains(word))
@@ -1900,7 +1904,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             int minLength = 2;
-            if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+            if (Configuration.Settings.Tools.CheckOneLetterWords)
             {
                 minLength = 1;
             }
