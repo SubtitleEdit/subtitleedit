@@ -3170,6 +3170,7 @@
     <Beginning from="W-wh" to="W-Wh" />
     <Beginning from="I-i-i " to="I-I-I " />
     <Beginning from="I-i " to="I-I " />
+    <Beginning from="H m, " to="Hm, " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
