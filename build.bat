@@ -11,6 +11,12 @@ IF /I "%~1" == "--help" GOTO ShowHelp
 IF /I "%~1" == "/?"     GOTO ShowHelp
 IF /I "%~1" == "-?"     GOTO ShowHelp
 
+ECHO Getting latest changes...
+git pull
+ECHO.
+
+ECHO Starting compilation...
+
 REM Set environment variables for Visual Studio command line if necessary
 :SetVsCmdLineEnv
 IF DEFINED VSINSTALLDIR IF EXIST "%VSINSTALLDIR%" (
