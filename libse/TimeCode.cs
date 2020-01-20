@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
                 var newTs = new TimeSpan(ts.Ticks);
-                newTs.Add(new TimeSpan(0, 0, 1));
+                newTs = newTs.Add(new TimeSpan(0, 0, 1));
                 s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00}:{0:00}";
             }
             else
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Core
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
                 var newTs = new TimeSpan(ts.Ticks);
-                newTs.Add(new TimeSpan(0, 0, 1));
+                newTs = newTs.Add(new TimeSpan(0, 0, 1));
                 s = $"{newTs.Days * 24 + newTs.Hours:00}:{newTs.Minutes:00}:{newTs.Seconds:00}.{0:00}";
             }
             else
