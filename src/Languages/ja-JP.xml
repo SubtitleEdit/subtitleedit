@@ -129,6 +129,11 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <LowDiskSpace>ディスクの空き容量が残りわずかです！</LowDiskSpace>
     <FreeDiskSpace>空き容量 {0}</FreeDiskSpace>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Calculating>計算しています...</Calculating>
+    <Done>完了</Done>
+    <Error>エラー</Error>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>表示時間の調整</Title>
     <AdjustVia>調整の基準</AdjustVia>
@@ -160,8 +165,9 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <InputDescription>入力ファイル (参照またはドラッグ アンド ドロップします)</InputDescription>
     <Status>状態</Status>
     <Output>出力</Output>
-    <ChooseOutputFolder>出力フォルダーの選択</ChooseOutputFolder>
-    <OverwriteExistingFiles>既存のファイルを上書きする</OverwriteExistingFiles>
+    <SaveInSourceFolder>Save in source file folder</SaveInSourceFolder>
+    <SaveInOutputFolder>Save in output folder below</SaveInOutputFolder>
+    <OverwriteFiles>ファイルを上書き</OverwriteFiles>
     <Style>スタイル...</Style>
     <UseStyleFromSource>変換元のスタイルを使用</UseStyleFromSource>
     <ConvertOptions>変換オプション</ConvertOptions>
@@ -263,6 +269,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <Language>言語</Language>
     <IssueDate>発行日</IssueDate>
     <EditRate>編集レート</EditRate>
+    <TimeCodeRate>タイムコードレート</TimeCodeRate>
     <StartTime>開始時間</StartTime>
     <Font>フォント</Font>
     <FontId>ID</FontId>
@@ -317,6 +324,8 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <TranslatorsName>訳者名</TranslatorsName>
     <SubtitleListReferenceCode>字幕リスト参照コード</SubtitleListReferenceCode>
     <CountryOfOrigin>製作国</CountryOfOrigin>
+    <TimeCodeStatus>タイムコードの状態</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>タイムコード: プログラムの開始</TimeCodeStartOfProgramme>
     <RevisionNumber>リビジョン番号</RevisionNumber>
     <MaxNoOfDisplayableChars>1 行あたりの最大文字数</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>最大行数</MaxNumberOfDisplayableRows>
@@ -345,6 +354,27 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
     <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
     <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectTypewriter>
+  <ExportCustomText>
+    <Formats>フォーマット</Formats>
+    <New>新規</New>
+    <Edit>編集</Edit>
+    <Delete>削除</Delete>
+    <SaveAs>名前を付けて保存(&amp;A)...</SaveAs>
+    <SaveSubtitleAs>名前を付けて字幕を保存...</SaveSubtitleAs>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Template>テンプレート</Template>
+    <Header>ヘッダー</Header>
+    <TimeCode>タイムコード</TimeCode>
+    <NewLine>改行</NewLine>
+    <Footer>フッター</Footer>
+    <DoNotModify>[変更しないでください]</DoNotModify>
+  </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <FontName>フォント名</FontName>
+    <FontSize>フォントサイズ</FontSize>
+    <Alignment>配置</Alignment>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN XML/PNG のエクスポート</Title>
     <ImageSettings>イメージの設定</ImageSettings>
@@ -852,7 +882,7 @@ C# ソースコードは https://github.com/SubtitleEdit/subtitleedit にあり�
         <ChangeSpeedInPercent>速度の変更 (パーセント)...</ChangeSpeedInPercent>
         <MergeShortLines>短い行の結合...</MergeShortLines>
         <SplitLongLines>長い行の分割...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>段落間の最小表示時間...</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>字幕間の最小表示時間...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>並べ替え</SortBy>
         <Number>番号</Number>
         <StartTime>開始時間</StartTime>
@@ -1494,10 +1524,10 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <MaxVolume>無音とみなさない最小音量</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>段落間の最小表示時間の設定</Title>
-    <PreviewLinesModifiedX>プレビュー - 変更された段落: {0}</PreviewLinesModifiedX>
+    <Title>字幕間の最小表示時間を設定</Title>
+    <PreviewLinesModifiedX>プレビュー - 変更された字幕: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>変更された行のみ表示する</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>行間の最大ミリ秒数</MinimumMillisecondsBetweenParagraphs>
+    <MinimumMillisecondsBetweenParagraphs>行間の最小ミリ秒数</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>フレームレート情報</FrameInfo>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
