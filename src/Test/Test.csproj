@@ -52,6 +52,7 @@
     <Compile Include="Core\PlainTextImporterTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
     <Compile Include="Core\NikseBitmapTest.cs" />
+    <Compile Include="Core\SubtitleFormatTest.cs" />
     <Compile Include="Core\SubtitleTest.cs" />
     <Compile Include="Core\RichTextToPlainTextTest.cs" />
     <Compile Include="Logic\BridgeGapsTest.cs" />

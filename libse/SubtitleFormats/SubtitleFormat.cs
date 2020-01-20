@@ -395,7 +395,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / GetFrameForCalculation(Configuration.Settings.General.CurrentFrameRate)));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
             {
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
