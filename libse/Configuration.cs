@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -84,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static int GetPlatform()
         {
-            // Current versions of Mono report the platform as Unix
+            // Current versions of Mono report MacOSX platform as Unix
             return Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users"))
                  ? _platformMac
                  : Environment.OSVersion.Platform == PlatformID.Unix
@@ -116,14 +117,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetBaseDirectory()
         {
-            var assembly = System.Reflection.Assembly.GetEntryAssembly();
-            var baseDirectory = Path.GetDirectoryName(assembly == null
-                ? System.Reflection.Assembly.GetExecutingAssembly().Location
-                : assembly.Location);
+            var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
 
-            return baseDirectory.EndsWith(Path.DirectorySeparatorChar)
-                ? baseDirectory
-                : baseDirectory + Path.DirectorySeparatorChar;
+            return Path.GetDirectoryName(assembly.Location) + Path.DirectorySeparatorChar;
         }
 
         private static string GetDataDirectory()
@@ -235,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core
                     // though advertised, this code page is not supported
                 }
             }
-            return encodings;
+            return encodings.AsEnumerable();
         }
 
     }
