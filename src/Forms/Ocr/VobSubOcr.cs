@@ -1116,8 +1116,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         break;
                     }
 
-                    if (tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("spannish", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("españo", StringComparison.OrdinalIgnoreCase)) ||
-                        tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("esp", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Spanish", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("spanish", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("españo", StringComparison.OrdinalIgnoreCase)) ||
+                        tl.Text.StartsWith("Spanish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("esp", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
