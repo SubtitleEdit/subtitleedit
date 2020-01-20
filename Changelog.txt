@@ -1,8 +1,16 @@
 ﻿Subtitle Edit Changelog
 
+3.5.13 (20th January 2020)
+* IMPROVED:
+   * Update Japanese translation - thx ScratchBuild
+* FIXED:
+   * Fix issue with frames - thx Jose/darnn
+   * Fix load of translation pair with time offset - thx darnn
+
+
 3.5.12 (19th January 2020)
 * NEW:
-   * Teletext support (use File -> Open... choose .ts/.m2ts file) - thx HeartWare/xylographe
+   * Teletext support (use File -> Open...) - thx HeartWare/xylographe
    * Auto break options "pixel width" (not by #characters) + "bottom heavy"
    * Auto break options now available in UI via Options -> Settings -> Tools
    * Add new format Netflix IMSC 1.1 Japanese
