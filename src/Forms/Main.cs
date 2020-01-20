@@ -2074,24 +2074,7 @@ namespace Nikse.SubtitleEdit.Forms
             var rfe = Configuration.Settings.RecentFiles.Files.FirstOrDefault(p => p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
             if (rfe != null)
             {
-                OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
-                Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
-                if (rfe.VideoOffsetInMs != 0)
-                {
-                    _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                    _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
-                    {
-                        _subtitleAlternate.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                        _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    }
-                    else
-                    {
-                        SubtitleListview1.Fill(_subtitle);
-                    }
-                }
-
+                OpenRecentFile(rfe);
                 GotoSubPosAndPause();
                 SubtitleListview1.EndUpdate();
                 SetRecentIndices(fileName);
@@ -3391,14 +3374,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
-                    Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
-                    if (rfe.VideoOffsetInMs != 0)
-                    {
-                        _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                        _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                        SubtitleListview1.Fill(_subtitle);
-                    }
+                    OpenRecentFile(rfe);
                 }
 
                 GotoSubPosAndPause();
@@ -3411,6 +3387,27 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                     }
+                }
+            }
+        }
+
+        private void OpenRecentFile(RecentFileEntry rfe)
+        {
+            OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
+            Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
+            if (rfe.VideoOffsetInMs != 0)
+            {
+                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    _subtitleAlternate.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                    _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                else
+                {
+                    SubtitleListview1.Fill(_subtitle);
                 }
             }
         }
@@ -10078,7 +10075,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ChangeAllLinesTagsToSingleTag(string text, string tag)
         {
-            if (!text.Contains("<" + tag +">"))
+            if (!text.Contains("<" + tag + ">"))
             {
                 return text;
             }
