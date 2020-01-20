@@ -2080,7 +2080,16 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                     _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                    SubtitleListview1.Fill(_subtitle);
+                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        _subtitleAlternate.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                        _changeAlternateSubtitleHash = _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    }
+                    else
+                    {
+                        SubtitleListview1.Fill(_subtitle);
+                    }
                 }
 
                 GotoSubPosAndPause();
