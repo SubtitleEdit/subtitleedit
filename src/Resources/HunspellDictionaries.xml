@@ -240,10 +240,16 @@
     <Description>Zestaw polskich słowników do OpenOffice.org 3.0 - 2014-10-06</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Portuguese (Brazilian)</EnglishName>
+    <EnglishName>Portuguese (Brazilian) - Libreoffice</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/3.2/@@download/file/VeroptBRV320AOC.oxt</DownloadLink>
-    <Description>Brazilian Portuguese Spelling Dictionary - 1990 Spelling Agreement - V3.2</Description>
+    <Description>Brazilian Portuguese Spelling Dictionary V3.2 - Libreoffice</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Portuguese (Brazilian) - Firefox</EnglishName>
+    <NativeName>Português (do Brasil)</NativeName>
+    <DownloadLink>https://hg.mozilla.org/releases/l10n/mozilla-aurora/pt-BR/archive/81d9d556fa78.zip/extensions/spellcheck/hunspell/</DownloadLink>
+    <Description>Brazilian Portuguese Spelling Dictionary 2009 José João de Almeida - Firefox</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (European Portuguese Dictionary)</EnglishName>
