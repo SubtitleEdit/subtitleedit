@@ -1,6 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -12,9 +15,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Core.SpellCheck;
-using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private class AutoGuess : LogItem
         {
             public AutoGuess(int index, string word, string guess, string line)
-                : base(index + 1, $"{word} ⇒ {guess} via 'OCRFixReplaceList.xml' in line: {line.Replace(Environment.NewLine, " ")}")
+                : base(index + 1, string.Format(Configuration.Settings.Language.VobSubOcr.UnknownWordToGuessInLine, word, guess, line.Replace(Environment.NewLine, " ")))
             {
             }
         }

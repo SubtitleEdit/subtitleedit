@@ -340,11 +340,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool _autoBreakLines;
         private bool _hasForcedSubtitles;
 
-        private readonly int _ocrMethodTesseract4;
-        private readonly int _ocrMethodModi;
-        private readonly int _ocrMethodBinaryImageCompare;
-        private readonly int _ocrMethodNocr;
-        private readonly int _ocrMethodTesseract302;
+        private readonly int _ocrMethodBinaryImageCompare = -1;
+        private readonly int _ocrMethodTesseract302 = -1;
+        private readonly int _ocrMethodTesseract4 = -1;
+        private readonly int _ocrMethodModi = -1;
+        private readonly int _ocrMethodNocr = -1;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -370,6 +370,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Text = language.Title;
             groupBoxOcrMethod.Text = language.OcrMethod;
             labelTesseractLanguage.Text = language.Language;
+            labelTesseractEngineMode.Text = language.TesseractEngineMode;
             labelImageDatabase.Text = language.ImageDatabase;
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
             labelMaxErrorPercent.Text = language.MaxErrorPercent;
@@ -449,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
-            comboBoxOcrMethod.Items.Add("Binary image compare");
+            _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
                 Tesseract4Version = "4";
@@ -460,34 +461,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                comboBoxOcrMethod.Items.Add("Tesseract 3.02");
+                _ocrMethodTesseract302 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, "3.02"));
             }
-            comboBoxOcrMethod.Items.Add("Tesseract " + Tesseract4Version);
+            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract4Version));
             if (_modiEnabled)
             {
-                comboBoxOcrMethod.Items.Add(language.OcrViaModi);
+                _ocrMethodModi = comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             }
-
             if (Configuration.Settings.General.ShowBetaStuff)
             {
-                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-                comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
+                _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
             }
-
-            _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.IndexOf("Binary image compare");
-            _ocrMethodTesseract302 = comboBoxOcrMethod.Items.IndexOf("Tesseract 3.02");
-            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.IndexOf("Tesseract " + Tesseract4Version);
-            _ocrMethodModi = comboBoxOcrMethod.Items.IndexOf(language.OcrViaModi);
-            _ocrMethodNocr = comboBoxOcrMethod.Items.IndexOf(language.OcrViaNOCR);
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
+
+            comboBoxTesseractEngineMode.Items.Clear();
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeLegacy);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeNeural);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeBoth);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeDefault);
             if (Configuration.Settings.VobSubOcr.TesseractEngineMode >= 0 &&
                 Configuration.Settings.VobSubOcr.TesseractEngineMode < comboBoxTesseractEngineMode.Items.Count)
             {
                 comboBoxTesseractEngineMode.SelectedIndex = Configuration.Settings.VobSubOcr.TesseractEngineMode;
             }
-
             comboBoxTesseractEngineMode.Left = labelTesseractEngineMode.Left + labelTesseractEngineMode.Width + 5;
             comboBoxTesseractEngineMode.Width = GroupBoxTesseractMethod.Width - comboBoxTesseractEngineMode.Left - 10;
 
