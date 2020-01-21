@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly Dictionary<string, string> _beginLineReplaceList;
         private readonly Dictionary<string, string> _endLineReplaceList;
         private readonly Dictionary<string, string> _wholeLineReplaceList;
-        private readonly Dictionary<string, string> _partialWordReplaceListAlways;
+        private readonly Dictionary<string, string> _partialWordAlwaysReplaceList;
         private readonly Dictionary<string, string> _partialWordReplaceList;
         private readonly Dictionary<string, string> _regExList;
         private readonly string _replaceListXmlFileName;
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             _beginLineReplaceList = new Dictionary<string, string>();
             _endLineReplaceList = new Dictionary<string, string>();
             _wholeLineReplaceList = new Dictionary<string, string>();
-            _partialWordReplaceListAlways = new Dictionary<string, string>();
+            _partialWordAlwaysReplaceList = new Dictionary<string, string>();
             _partialWordReplaceList = new Dictionary<string, string>();
             _regExList = new Dictionary<string, string>();
 
@@ -46,10 +46,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var userDoc = LoadXmlReplaceListUserDocument();
 
             WordReplaceList = LoadReplaceList(doc, "WholeWords");
-            _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
+            _partialWordAlwaysReplaceList = LoadReplaceList(doc, "PartialWordsAlways");
             _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
             PartialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
-            _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialAlwaysLines");
+            _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialLinesAlways");
             _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
             _endLineReplaceList = LoadReplaceList(doc, "EndLines");
             _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
@@ -427,9 +427,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             //always replace list
-            foreach (string letter in _partialWordReplaceListAlways.Keys)
+            foreach (string letter in _partialWordAlwaysReplaceList.Keys)
             {
-                word = word.Replace(letter, _partialWordReplaceListAlways[letter]);
+                word = word.Replace(letter, _partialWordAlwaysReplaceList[letter]);
             }
 
             string pre = string.Empty;
@@ -711,9 +711,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var word = input;
 
             //always replace list
-            foreach (string letter in _partialWordReplaceListAlways.Keys)
+            foreach (string letter in _partialWordAlwaysReplaceList.Keys)
             {
-                word = word.Replace(letter, _partialWordReplaceListAlways[letter]);
+                word = word.Replace(letter, _partialWordAlwaysReplaceList[letter]);
             }
 
             string pre = string.Empty;
