@@ -22,7 +22,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             _namesMultiList = new HashSet<string>();
             _blackList = new HashSet<string>();
 
-            LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture insensitive)
+            LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
+            LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
             if (useOnlinenames && !string.IsNullOrEmpty(namesUrl))
             {
                 try
@@ -70,6 +71,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return _namesMultiList;
         }
 
+        private string GetLocalNamesUserFileName()
+        {
+            var fileName = GetLocalNamesFileName();
+            return fileName.Remove(fileName.Length - 4) + "_user.xml";
+        }
+
         /// <summary>
         /// Returns two letters ISO language name (Neutral culture).
         /// </summary>
@@ -94,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return;
             }
 
-            using (XmlReader reader = XmlReader.Create(fileNameOrUrl))
+            using (var reader = XmlReader.Create(fileNameOrUrl))
             {
                 reader.MoveToContent();
                 while (reader.Read())
@@ -103,17 +110,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     {
                         if (reader.Name == "name")
                         {
-                            string name = reader.ReadElementContentAsString().Trim();
+                            var name = reader.ReadElementContentAsString().Trim();
                             if (name.Length > 0)
                             {
                                 if (name.Contains(' '))
                                 {
-                                    if (!_namesMultiList.Contains(name))
-                                    {
-                                        _namesMultiList.Add(name);
-                                    }
+                                    _namesMultiList.Add(name);
                                 }
-                                else if (!_namesList.Contains(name))
+                                else
                                 {
                                     _namesList.Add(name);
                                 }
@@ -123,12 +127,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         {
                             while (reader.Read() && reader.NodeType != XmlNodeType.EndElement)
                             {
-                                if (reader.Name == "name")
+                                if (reader.NodeType == XmlNodeType.Element && !reader.IsEmptyElement)
                                 {
-                                    string name = reader.ReadElementContentAsString().Trim();
-                                    if (name.Length > 0 && !_blackList.Contains(name))
+                                    if (reader.Name == "name")
                                     {
-                                        _blackList.Add(name);
+                                        var name = reader.ReadElementContentAsString().Trim();
+                                        if (name.Length > 0)
+                                        {
+                                            _blackList.Add(name);
+                                        }
                                     }
                                 }
                             }
@@ -147,8 +154,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 _namesList.Remove(name);
                 _namesMultiList.Remove(name);
 
-                var fileName = GetLocalNamesFileName();
-                var nameListXml = new XmlDocument();
+                var fileName = GetLocalNamesUserFileName();
+                var nameListXml = new XmlDocument { XmlResolver = null };
                 if (File.Exists(fileName))
                 {
                     nameListXml.Load(fileName);
@@ -159,12 +166,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
 
                 // Add removed name to blacklist
-                XmlNode xnode = nameListXml.CreateElement("name");
+                var xnode = nameListXml.CreateElement("name");
                 xnode.InnerText = name;
                 if (nameListXml.DocumentElement != null)
                 {
                     nameListXml.DocumentElement.SelectSingleNode("blacklist")?.AppendChild(xnode);
-                    XmlNode nodeToRemove = null;
+                    var nodeToRemove = default(XmlNode);
 
                     // Remove remove-name from name-list
                     var nameNodes = nameListXml.DocumentElement.SelectNodes("name");
@@ -230,8 +237,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
 
             // <two-letter-iso-code>_names.xml, e.g "en_names.xml"
-            var fileName = GetLocalNamesFileName();
-            var nameListXml = new XmlDocument();
+            var fileName = GetLocalNamesUserFileName();
+            var nameListXml = new XmlDocument { XmlResolver = null };
             if (File.Exists(fileName))
             {
                 nameListXml.Load(fileName);
@@ -241,10 +248,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 nameListXml.LoadXml("<names><blacklist></blacklist></names>");
             }
 
-            XmlNode de = nameListXml.DocumentElement;
+            var de = nameListXml.DocumentElement;
             if (de != null)
             {
-                XmlNode node = nameListXml.CreateElement("name");
+                var node = nameListXml.CreateElement("name");
                 node.InnerText = name;
                 de.AppendChild(node);
                 nameListXml.Save(fileName);
