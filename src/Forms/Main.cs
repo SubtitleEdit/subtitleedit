@@ -516,6 +516,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ToolStripMenuItemRightToLeftModeClick(null, null);
                 }
+
+                numericUpDownDuration.Left = textBoxListViewText.Left - numericUpDownDuration.Width - 18;
+                labelDuration.Left = numericUpDownDuration.Left;
+                timeUpDownStartTime.SetAutoWidth();
+                timeUpDownStartTime.Left = numericUpDownDuration.Left - timeUpDownStartTime.Width - 8;
+                labelStartTime.Left = timeUpDownStartTime.Left;
+                buttonPrevious.Left = timeUpDownStartTime.Left;
+                buttonNext.Left = buttonPrevious.Left + buttonPrevious.Width + 5;
+
             }
             catch (Exception exception)
             {
@@ -3696,10 +3705,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if ((format.GetType() == typeof(WebVTT) || format.GetType() == typeof(WebVTTFileWithLineNumber)))
+                // force encoding
+                if (format.GetType() == typeof(WebVTT) || format.GetType() == typeof(WebVTTFileWithLineNumber))
                 {
                     SetEncoding(Encoding.UTF8);
                     currentEncoding = Encoding.UTF8;
+                }
+                else if (format.GetType() == typeof(SwiftInterchange2))
+                {
+                    SetEncoding(Encoding.Unicode);
+                    currentEncoding = Encoding.Unicode;
                 }
 
                 if (format.Extension == ".rtf")

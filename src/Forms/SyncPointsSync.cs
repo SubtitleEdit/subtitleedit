@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxSyncPoints.Anchor = AnchorStyles.Right;
             groupBoxImportResult.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
             buttonFindText.Left = SubtitleListview1.Left + SubtitleListview1.Width - buttonFindText.Width;
-            Width = 800;
+            Width = 900;
             groupBoxImportResult.Width = Width - groupBoxImportResult.Left * 3;
             labelAdjustFactor.Left = listBoxSyncPoints.Left;
             labelAdjustFactor.Anchor = listBoxSyncPoints.Anchor;

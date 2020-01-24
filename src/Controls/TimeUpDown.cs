@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -48,6 +49,24 @@ namespace Nikse.SubtitleEdit.Controls
 
                 return TimeMode.HHMMSSMS;
             }
+        }
+
+        public void SetAutoWidth()
+        {
+            int width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                var widthOfUpDown = 25;
+                if (Configuration.IsRunningOnLinux)
+                {
+                    widthOfUpDown += 20;
+                }
+                var actualWidth = g.MeasureString("00:00:00:000", Font).Width;
+                width = (int)Math.Round(actualWidth + widthOfUpDown);
+            }
+            var diff = Width - width;
+            maskedTextBox1.Width -= diff;
+            numericUpDown1.Width -= diff;
         }
 
         private static char[] GetSplitChars()
