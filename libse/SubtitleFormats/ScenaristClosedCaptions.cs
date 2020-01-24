@@ -118,7 +118,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("6b",                  "k" ),
             new KeyValuePair<string, string>("ec",                  "l" ),
             new KeyValuePair<string, string>("6d",                  "m" ),
-            new KeyValuePair<string, string>("6e",                  "n" ),
             new KeyValuePair<string, string>("ef",                  "o" ),
             new KeyValuePair<string, string>("70",                  "p" ),
             new KeyValuePair<string, string>("f1",                  "q" ),
@@ -132,7 +131,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("fb",                  "ç" ),
             new KeyValuePair<string, string>("79",                  "y" ),
             new KeyValuePair<string, string>("7a",                  "z" ),
-            new KeyValuePair<string, string>("fb",                  ""  ),
             new KeyValuePair<string, string>("7c",                  ""  ),
             new KeyValuePair<string, string>("fd",                  "Ñ" ),
             new KeyValuePair<string, string>("fe",                  "ñ" ),
@@ -152,10 +150,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("77",                  "w" ),
             new KeyValuePair<string, string>("78",                  "x" ),
             new KeyValuePair<string, string>("91b0",                ""  ),
-            new KeyValuePair<string, string>("9131",                "°" ),
-            new KeyValuePair<string, string>("9132",                "½" ),
             new KeyValuePair<string, string>("91b3",                ""  ),
-            new KeyValuePair<string, string>("9134",                ""  ),
             new KeyValuePair<string, string>("91b5",                ""  ),
             new KeyValuePair<string, string>("91b6",                "£" ),
             new KeyValuePair<string, string>("9137",                "♪" ),
@@ -193,9 +188,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("9237",                "Î" ),
             new KeyValuePair<string, string>("9238",                "Ï" ),
             new KeyValuePair<string, string>("92b9",                "ï" ),
-            new KeyValuePair<string, string>("92b3",                "ô" ),
             new KeyValuePair<string, string>("923b",                "Ù" ),
-            new KeyValuePair<string, string>("92b3",                "ù" ),
             new KeyValuePair<string, string>("923d",                "Û" ),
             new KeyValuePair<string, string>("923e",                ""  ),
             new KeyValuePair<string, string>("92bf",                ""  ),
@@ -247,13 +240,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("1337",                "|" ),
             new KeyValuePair<string, string>("1338",                "Å" ),
             new KeyValuePair<string, string>("13b9",                "å" ),
-            new KeyValuePair<string, string>("13b3",                "Ø" ),
+            new KeyValuePair<string, string>("4f80 13ba 13ba",      "Ø" ),
             new KeyValuePair<string, string>("133b",                "ø" ),
-            new KeyValuePair<string, string>("13b3",                ""  ),
             new KeyValuePair<string, string>("133d",                ""  ),
             new KeyValuePair<string, string>("133e",                ""  ),
             new KeyValuePair<string, string>("13bf",                ""  ),
-            new KeyValuePair<string, string>("9420",                ""  ), //9420=RCL, Resume Caption Loadin
+            new KeyValuePair<string, string>("9420",                ""  ), //9420=RCL, Resume Caption Loading
             new KeyValuePair<string, string>("94ae",                ""  ), //94ae=Clear Buffer
             new KeyValuePair<string, string>("942c",                ""  ), //942c=Clear Caption
             new KeyValuePair<string, string>("8080",                ""  ), //8080=Wait One Frame
@@ -264,7 +256,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("9470",                ""  ), //9470=?
             new KeyValuePair<string, string>("94d0",                ""  ), //94d0=?
             new KeyValuePair<string, string>("94d6",                ""  ), //94d6=?
-            new KeyValuePair<string, string>("942f",                ""  ), //942f=End of Caption
             new KeyValuePair<string, string>("94f2",                ""  ),
             new KeyValuePair<string, string>("94f4",                ""  ),
             new KeyValuePair<string, string>("9723",                " " ), // ?
@@ -285,7 +276,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("1136",                "£" ),
             new KeyValuePair<string, string>("1137",                "♪" ),
             new KeyValuePair<string, string>("1138",                "à" ),
-            new KeyValuePair<string, string>("1138",                " " ), // transparent space
             new KeyValuePair<string, string>("113a",                "è" ),
             new KeyValuePair<string, string>("113b",                "â" ),
             new KeyValuePair<string, string>("113c",                "ê" ),
@@ -299,14 +289,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("9134",                "TM"),
             new KeyValuePair<string, string>("9135",                "¢" ),
             new KeyValuePair<string, string>("9136",                "£" ),
-            new KeyValuePair<string, string>("9137",                "♪" ),
-            new KeyValuePair<string, string>("9138",                "à" ),
-            new KeyValuePair<string, string>("9138",                " " ), // transparent space
             new KeyValuePair<string, string>("913a",                "è" ),
-            new KeyValuePair<string, string>("913b",                "â" ),
             new KeyValuePair<string, string>("913c",                "ê" ),
-            new KeyValuePair<string, string>("913d",                "î" ),
-            new KeyValuePair<string, string>("913e",                "ô" ),
             new KeyValuePair<string, string>("913f",                "û" ),
             new KeyValuePair<string, string>("a180 92a7 92a7",      "¡" ),
             new KeyValuePair<string, string>("92a7 92a7",           "¡" ),
@@ -356,7 +340,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("6f80 13b3 13b3",      "ö"),
 
             new KeyValuePair<string, string>("7580 13b3 13b3",      "ù"), //u=75
-            new KeyValuePair<string, string>("13b3 13b3",           "ù"),
 
             new KeyValuePair<string, string>("7580 92bc 92bc",      "ù"),
             new KeyValuePair<string, string>("92bc 92bc",           "ù"),
@@ -373,9 +356,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("c180 1338 1338",      "Å"), //c1=A
             new KeyValuePair<string, string>("1338 1338",           "Å"),
 
-            new KeyValuePair<string, string>("c180 1338 1338",      "Å"),
-            new KeyValuePair<string, string>("1338 1338",           "Å"),
-
             new KeyValuePair<string, string>("c180 92b0 92b0",      "À"),
             new KeyValuePair<string, string>("92b0 92b0",           "À"),
 
@@ -384,12 +364,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             new KeyValuePair<string, string>("c180 9231 9231",      "Â"),
             new KeyValuePair<string, string>("9231 9231",           "Â"),
-
-            new KeyValuePair<string, string>("c180 1320 1320",      "Ã"),
-            new KeyValuePair<string, string>("1320 1320",           "Ã"),
-
-            new KeyValuePair<string, string>("c180 13b0 13b0",      "Ä"),
-            new KeyValuePair<string, string>("13b0 13b0",           "Ä"),
 
             new KeyValuePair<string, string>("c180 1320 1320",      "Ã"),
             new KeyValuePair<string, string>("1320 1320",           "Ã"),
@@ -436,9 +410,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("4f80 1332 1332",      "Ö"),
             new KeyValuePair<string, string>("1332 1332",           "Ö"),
 
-            new KeyValuePair<string, string>("d580 923b 923b",      "Ù"), //d5=U
-            new KeyValuePair<string, string>("923b 923b",           "Ù"),
-
             new KeyValuePair<string, string>("d580 9223 9223",      "Ú"),
             new KeyValuePair<string, string>("923d 923d",           "Û"),
 
@@ -449,8 +420,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string, string>("92a4 92a4",           "Ü"),
 
             new KeyValuePair<string, string>("d580 923d 923d",      "Û"),
-            new KeyValuePair<string, string>("923d 923d",           "Û"),
         };
+
+        private static readonly Dictionary<string, string> LettersCodeLookup = LetterDictionary.ToDictionary(p => p.Key, p => p.Value);
 
         public override string Extension => ".scc";
 
@@ -487,14 +459,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (count < 4)
                 {
-                    if (line.Length > 32)
-                    {
-                        sb.AppendLine(line.Substring(0, 32));
-                    }
-                    else
-                    {
-                        sb.AppendLine(line);
-                    }
+                    sb.AppendLine(line.Length > 32 ? line.Substring(0, 32) : line);
                 }
                 count++;
             }
@@ -543,40 +508,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.AppendLine(s.Substring(0, i));
                 s = s.Remove(0, i).Trim();
-                if (s.Length <= maxLength)
-                {
-                    i = s.Length;
-                }
-                else
-                {
-                    i = GetLastIndexOfSpace(s, maxLength);
-                }
+                i = s.Length <= maxLength ? s.Length : GetLastIndexOfSpace(s, maxLength);
 
                 if (i > 0)
                 {
                     sb.AppendLine(s.Substring(0, i));
                     s = s.Remove(0, i).Trim();
-                    if (s.Length <= maxLength)
-                    {
-                        i = s.Length;
-                    }
-                    else
-                    {
-                        i = GetLastIndexOfSpace(s, maxLength);
-                    }
+                    i = s.Length <= maxLength ? s.Length : GetLastIndexOfSpace(s, maxLength);
 
                     if (i > 0)
                     {
                         sb.AppendLine(s.Substring(0, i));
                         s = s.Remove(0, i).Trim();
-                        if (s.Length <= maxLength)
-                        {
-                            i = s.Length;
-                        }
-                        else
-                        {
-                            i = GetLastIndexOfSpace(s, maxLength);
-                        }
+                        i = s.Length <= maxLength ? s.Length : GetLastIndexOfSpace(s, maxLength);
 
                         if (i > 0)
                         {
@@ -606,13 +550,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine(string.Format("{0}\t94ae 94ae 9420 9420 {1} 942f 942f", ToTimeCode(p.StartTime.TotalMilliseconds), ToSccText(p.Text, language)));
+                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t94ae 94ae 9420 9420 {ToSccText(p.Text, language)} 942f 942f");
                 sb.AppendLine();
 
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {
-                    sb.AppendLine(string.Format("{0}\t942c 942c", ToTimeCode(p.EndTime.TotalMilliseconds)));
+                    sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t942c 942c");
                     sb.AppendLine();
                 }
             }
@@ -772,13 +716,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetLetterFromCode(string hexCode)
         {
-            var letter = LetterDictionary.FirstOrDefault(x => x.Key == hexCode.ToLowerInvariant());
-            if (letter.Equals(new KeyValuePair<string, string>()))
-            {
-                return null;
-            }
-
-            return letter.Value;
+            return LettersCodeLookup.TryGetValue(hexCode, out var letter) ? letter : null;
         }
 
         public static string GetCenterCodes(string text, int lineNumber, int totalLines)
@@ -1654,7 +1592,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "946e" && part != "91ce" && part != "13ce" && part != "9425" && part != "9429")
                     {
 
-                        // skewed apos "’"
+                        // skewed apostrophe "’"
                         if (part == "9229" && k < parts.Length - 1 && parts[k + 1] == "9229" && sb.EndsWith('\''))
                         {
                             sb.Remove(sb.Length - 1, 1);
@@ -1759,7 +1697,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     {
                                         sb.Append(GetLetterFromCode(part.Substring(0, 2)));
                                         var secondPart = part.Substring(2, 2) + "80";
-                                        var foundSecondPart = false;
 
                                         // 3 codes
                                         if (k < parts.Length - 2)
@@ -1774,7 +1711,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         }
 
                                         // two codes
-                                        if (k < parts.Length - 1 && !foundSecondPart)
+                                        if (k < parts.Length - 1)
                                         {
                                             var letter = GetLetterFromCode(secondPart + " " + parts[k + 1]);
                                             if (letter != null)
