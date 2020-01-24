@@ -6448,20 +6448,35 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/OcrMethod":
                     language.VobSubOcr.OcrMethod = reader.Value;
                     break;
+                case "VobSubOcr/OcrViaTesseractVersionX":
+                    language.VobSubOcr.OcrViaTesseractVersionX = reader.Value;
+                    break;
+                case "VobSubOcr/OcrViaImageCompare":
+                    language.VobSubOcr.OcrViaImageCompare = reader.Value;
+                    break;
                 case "VobSubOcr/OcrViaModi":
                     language.VobSubOcr.OcrViaModi = reader.Value;
-                    break;
-                case "VobSubOcr/OcrViaTesseract":
-                    language.VobSubOcr.OcrViaTesseract = reader.Value;
                     break;
                 case "VobSubOcr/OcrViaNOCR":
                     language.VobSubOcr.OcrViaNOCR = reader.Value;
                     break;
+                case "VobSubOcr/TesseractEngineMode":
+                    language.VobSubOcr.TesseractEngineMode = reader.Value;
+                    break;
+                case "VobSubOcr/TesseractEngineModeLegacy":
+                    language.VobSubOcr.TesseractEngineModeLegacy = reader.Value;
+                    break;
+                case "VobSubOcr/TesseractEngineModeNeural":
+                    language.VobSubOcr.TesseractEngineModeNeural = reader.Value;
+                    break;
+                case "VobSubOcr/TesseractEngineModeBoth":
+                    language.VobSubOcr.TesseractEngineModeBoth = reader.Value;
+                    break;
+                case "VobSubOcr/TesseractEngineModeDefault":
+                    language.VobSubOcr.TesseractEngineModeDefault = reader.Value;
+                    break;
                 case "VobSubOcr/Language":
                     language.VobSubOcr.Language = reader.Value;
-                    break;
-                case "VobSubOcr/OcrViaImageCompare":
-                    language.VobSubOcr.OcrViaImageCompare = reader.Value;
                     break;
                 case "VobSubOcr/ImageDatabase":
                     language.VobSubOcr.ImageDatabase = reader.Value;
@@ -6546,6 +6561,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "VobSubOcr/UnknownWords":
                     language.VobSubOcr.UnknownWords = reader.Value;
+                    break;
+                case "VobSubOcr/UnknownWordToGuessInLine":
+                    language.VobSubOcr.UnknownWordToGuessInLine = reader.Value;
                     break;
                 case "VobSubOcr/OcrAutoCorrectionSpellChecking":
                     language.VobSubOcr.OcrAutoCorrectionSpellChecking = reader.Value;

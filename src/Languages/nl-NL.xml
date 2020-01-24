@@ -2394,11 +2394,16 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <Title>Importeer/OCR VobSub (sub/idx) ondertitel</Title>
     <TitleBluRay>Importeer/OCR blu-ray (sup) ondertitel</TitleBluRay>
     <OcrMethod>OCR-methode</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (vereist Microsoft Office)</OcrViaModi>
-    <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
+    <OcrViaImageCompare>Beeldvergelĳking</OcrViaImageCompare>
+    <OcrViaModi>Microsoft Office Document Imaging (vereist Microsoft Office)</OcrViaModi>
+    <OcrViaNOCR>nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Conversietype</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Traditioneel (herkent cursief)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Neuraal netwerk (LSTM)</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Traditioneel + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Standaard (LSTM indien disponibel)</TesseractEngineModeDefault>
     <Language>Taal</Language>
-    <OcrViaImageCompare>OCR via beeldvergelĳking</OcrViaImageCompare>
     <ImageDatabase>Afbeeldingsdatabank</ImageDatabase>
     <NoOfPixelsIsSpace>Aantal pixels is ruimte</NoOfPixelsIsSpace>
     <MaxErrorPercent>Max. fout%</MaxErrorPercent>
@@ -2427,6 +2432,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <AllFixes>Alle correcties</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' in tekst: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Herstel OCR-fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bĳpassende tĳdcodes...</ImportTextWithMatchingTimeCodes>
