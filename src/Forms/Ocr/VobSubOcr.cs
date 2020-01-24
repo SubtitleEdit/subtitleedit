@@ -26,6 +26,8 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
+    using LogItem = OcrFixEngine.LogItem;
+
     public sealed partial class VobSubOcr : PositionAndSizeForm
     {
         internal class CompareItem
@@ -226,6 +228,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public int Language { get; set; }
         }
 
+        private class OcrFix : LogItem
+        {
+            public OcrFix(int index, string oldLine, string newLine)
+                : base(index + 1, $"{oldLine.Replace(Environment.NewLine, " ")} ⇒ {newLine.Replace(Environment.NewLine, " ")}")
+            {
+            }
+        }
+
         public delegate void ProgressCallbackDelegate(string progress);
         public ProgressCallbackDelegate ProgressCallback { get; set; }
 
@@ -330,11 +340,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool _autoBreakLines;
         private bool _hasForcedSubtitles;
 
-        private readonly int _ocrMethodTesseract4;
-        private readonly int _ocrMethodModi;
-        private readonly int _ocrMethodBinaryImageCompare;
-        private readonly int _ocrMethodNocr;
-        private readonly int _ocrMethodTesseract302;
+        private readonly int _ocrMethodBinaryImageCompare = -1;
+        private readonly int _ocrMethodTesseract302 = -1;
+        private readonly int _ocrMethodTesseract4 = -1;
+        private readonly int _ocrMethodModi = -1;
+        private readonly int _ocrMethodNocr = -1;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -360,6 +370,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Text = language.Title;
             groupBoxOcrMethod.Text = language.OcrMethod;
             labelTesseractLanguage.Text = language.Language;
+            labelTesseractEngineMode.Text = language.TesseractEngineMode;
             labelImageDatabase.Text = language.ImageDatabase;
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
             labelMaxErrorPercent.Text = language.MaxErrorPercent;
@@ -439,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             InitializeModi();
             comboBoxOcrMethod.Items.Clear();
-            comboBoxOcrMethod.Items.Add("Binary image compare");
+            _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             if (Configuration.IsRunningOnLinux || Configuration.IsRunningOnMac)
             {
                 Tesseract4Version = "4";
@@ -450,34 +461,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                comboBoxOcrMethod.Items.Add("Tesseract 3.02");
+                _ocrMethodTesseract302 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, "3.02"));
             }
-            comboBoxOcrMethod.Items.Add("Tesseract " + Tesseract4Version);
+            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.Add(string.Format(language.OcrViaTesseractVersionX, Tesseract4Version));
             if (_modiEnabled)
             {
-                comboBoxOcrMethod.Items.Add(language.OcrViaModi);
+                _ocrMethodModi = comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             }
-
             if (Configuration.Settings.General.ShowBetaStuff)
             {
-                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-                comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
+                _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
             }
-
-            _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.IndexOf("Binary image compare");
-            _ocrMethodTesseract302 = comboBoxOcrMethod.Items.IndexOf("Tesseract 3.02");
-            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.IndexOf("Tesseract " + Tesseract4Version);
-            _ocrMethodModi = comboBoxOcrMethod.Items.IndexOf(language.OcrViaModi);
-            _ocrMethodNocr = comboBoxOcrMethod.Items.IndexOf(language.OcrViaNOCR);
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
+
+            comboBoxTesseractEngineMode.Items.Clear();
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeLegacy);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeNeural);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeBoth);
+            comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeDefault);
             if (Configuration.Settings.VobSubOcr.TesseractEngineMode >= 0 &&
                 Configuration.Settings.VobSubOcr.TesseractEngineMode < comboBoxTesseractEngineMode.Items.Count)
             {
                 comboBoxTesseractEngineMode.SelectedIndex = Configuration.Settings.VobSubOcr.TesseractEngineMode;
             }
-
             comboBoxTesseractEngineMode.Left = labelTesseractEngineMode.Left + labelTesseractEngineMode.Width + 5;
             comboBoxTesseractEngineMode.Width = GroupBoxTesseractMethod.Width - comboBoxTesseractEngineMode.Left - 10;
 
@@ -1989,7 +1997,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             catch
             {
-                // can crash is user is clicking around...
+                // can crash if user is clicking around...
             }
         }
 
@@ -3902,7 +3910,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-
         private long _ocrCount;
         private double _ocrHeight = 20;
 
@@ -4142,8 +4149,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     var tempLine = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
-                    var oldAutoGuessesUsed = new List<string>(_ocrFixEngine.AutoGuessesUsed);
-                    var oldUnknownWordsFound = new List<string>(_ocrFixEngine.UnknownWordsFound);
+                    var oldAutoGuessesUsed = new List<LogItem>(_ocrFixEngine.AutoGuessesUsed);
+                    var oldUnknownWordsFound = new List<LogItem>(_ocrFixEngine.UnknownWordsFound);
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
                     if (checkBoxAutoFixCommonErrors.Checked)
@@ -4186,7 +4193,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 // Log used word guesses (via word replace list)
-                foreach (string guess in _ocrFixEngine.AutoGuessesUsed)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
                 {
                     listBoxLogSuggestions.Items.Add(guess);
                 }
@@ -4458,7 +4465,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 // Log used word guesses (via word replace list)
-                foreach (string guess in _ocrFixEngine.AutoGuessesUsed)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
                 {
                     listBoxLogSuggestions.Items.Add(guess);
                 }
@@ -5512,7 +5519,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return unItaliced;
         }
 
-        TesseractRunner _tesseractRunner;
+        private TesseractRunner _tesseractRunner;
 
         private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode, int tesseractEngineMode)
         {
@@ -5694,7 +5701,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (wordsNotFound > 0 || correctWords == 0)
                 {
-                    var oldUnkownWords = new List<string>();
+                    var oldUnkownWords = new List<LogItem>();
                     oldUnkownWords.AddRange(_ocrFixEngine.UnknownWordsFound);
                     _ocrFixEngine.UnknownWordsFound.Clear();
 
@@ -6258,7 +6265,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 // Log used word guesses (via word replace list)
-                foreach (string guess in _ocrFixEngine.AutoGuessesUsed)
+                foreach (var guess in _ocrFixEngine.AutoGuessesUsed)
                 {
                     listBoxLogSuggestions.Items.Add(guess);
                 }
@@ -6345,7 +6352,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void LogUnknownWords()
         {
-            foreach (string unknownWord in _ocrFixEngine.UnknownWordsFound)
+            foreach (var unknownWord in _ocrFixEngine.UnknownWordsFound)
             {
                 listBoxUnknownWords.Items.Add(unknownWord);
             }
@@ -6374,7 +6381,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void LogOcrFix(int index, string oldLine, string newLine)
         {
-            listBoxLog.Items.Add($"#{index + 1}: {oldLine.Replace(Environment.NewLine, " ")} -> {newLine.Replace(Environment.NewLine, " ")}");
+            listBoxLog.Items.Add(new OcrFix(index, oldLine, newLine));
         }
 
         private string CallModi(int i)
@@ -7158,17 +7165,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ListBoxLogSelectedIndexChanged(object sender, EventArgs e)
         {
-            var lb = sender as ListBox;
-            if (lb == null || lb.SelectedIndex < 0)
+            if (sender is ListBox lb && lb.SelectedIndex >= 0)
             {
-                return;
-            }
-
-            string text = lb.Items[lb.SelectedIndex].ToString();
-            if (text.Contains(':'))
-            {
-                string number = text.Substring(1, text.IndexOf(':') - 1);
-                subtitleListView1.SelectIndexAndEnsureVisible(int.Parse(number) - 1);
+                if (lb.Items[lb.SelectedIndex] is LogItem item && item.Line > 0)
+                {
+                    subtitleListView1.SelectIndexAndEnsureVisible(item.Line - 1);
+                }
             }
         }
 
@@ -7365,18 +7367,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
 
-        Subtitle _beforeOnlyForced;
+        private Subtitle _beforeOnlyForced;
 
         private void checkBoxShowOnlyForced_CheckedChanged(object sender, EventArgs e)
         {
             if (_tesseractThreadRunner != null)
             {
                 _tesseractThreadRunner.Cancel();
-                int i = 0;
-                while (i < 10)
+                for (int i = 0; i < 10; i++)
                 {
                     System.Threading.Thread.Sleep(100);
-                    i++;
                 }
 
                 _tesseractAsyncStrings = null;
@@ -7404,8 +7404,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                Paragraph current = _subtitle.Paragraphs[i];
-                foreach (Paragraph old in oldSubtitle.Paragraphs)
+                var current = _subtitle.Paragraphs[i];
+                foreach (var old in oldSubtitle.Paragraphs)
                 {
                     if (Math.Abs(current.StartTime.TotalMilliseconds - old.StartTime.TotalMilliseconds) < 0.01 &&
                         Math.Abs(current.Duration.TotalMilliseconds - old.Duration.TotalMilliseconds) < 0.01)
@@ -7420,7 +7420,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    Paragraph current = _subtitle.Paragraphs[i];
+                    var current = _subtitle.Paragraphs[i];
                     var old = _beforeOnlyForced.Paragraphs[i];
                     if (string.IsNullOrEmpty(current.Text))
                     {
@@ -7435,12 +7435,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void checkBoxUseTimeCodesFromIdx_CheckedChanged(object sender, EventArgs e)
         {
-            Subtitle oldSubtitle = new Subtitle(_subtitle);
+            var oldSubtitle = new Subtitle(_subtitle);
             subtitleListView1.BeginUpdate();
             LoadVobRip();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = oldSubtitle.GetParagraphOrDefault(i);
+                var p = oldSubtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text.Length > 0)
                 {
                     _subtitle.Paragraphs[i].Text = p.Text;
@@ -7455,21 +7455,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             get
             {
-                if (comboBoxDictionaries.SelectedItem == null)
+                if (comboBoxDictionaries.SelectedItem != null)
                 {
-                    return null;
+                    var name = comboBoxDictionaries.SelectedItem.ToString();
+                    int start = name.LastIndexOf('[') + 1;
+                    int end = name.LastIndexOf(']');
+                    if (start > 0 && end > start)
+                    {
+                        return name.Substring(start, end - start);
+                    }
                 }
-
-                string name = comboBoxDictionaries.SelectedItem.ToString();
-                int start = name.LastIndexOf('[');
-                int end = name.LastIndexOf(']');
-                if (start >= 0 && end > start)
-                {
-                    start++;
-                    name = name.Substring(start, end - start);
-                    return name;
-                }
-
                 return null;
             }
         }
@@ -8282,25 +8277,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void UpdateLogLineNumbersAfterDelete(ListBox listBox, List<int> indices)
         {
+            int index;
             listBox.BeginUpdate();
             for (int i = listBox.Items.Count - 1; i >= 0; i--)
             {
-                string text = listBox.Items[i].ToString();
-                if (text.Contains(':'))
+                if (listBox.Items[i] is LogItem item && (index = item.Line - 1) >= 0)
                 {
-                    string numberAsString = text.Substring(1, text.IndexOf(':') - 1);
-                    if (int.TryParse(numberAsString, out var number))
+                    if (indices.Contains(index))
                     {
-                        if (indices.Contains(number - 1))
+                        listBox.Items.RemoveAt(i);
+                    }
+                    else
+                    {
+                        var c = indices.Count(p => p < index);
+                        if (c > 0)
                         {
-                            listBox.Items.RemoveAt(i);
-                        }
-                        else if (indices.Any(p => p < number - 1))
-                        {
-                            var oldText = text.Remove(0, text.IndexOf(':') + 1).TrimStart();
-                            var newNumber = number - indices.Count(p => p < number - 1);
-                            var newText = "#" + newNumber + ": " + oldText;
-                            listBox.Items[i] = newText;
+                            item.Line -= c;
                         }
                     }
                 }
@@ -8312,18 +8304,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
-                string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(':'))
+                if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
                     if (_ocrFixEngine == null)
                     {
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
                     }
 
-                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     using (var form = new AddToNameList())
                     {
-                        form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
+                        form.Initialize(_subtitle, comboBoxDictionaries.Text, uw.Text);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
@@ -8372,13 +8362,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
-                string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(':'))
+                if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
-                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLowerInvariant();
                     using (var form = new AddToUserDic())
                     {
-                        form.Initialize(comboBoxDictionaries.Text, text);
+                        form.Initialize(comboBoxDictionaries.Text, uw.Text.ToLowerInvariant());
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
@@ -8398,13 +8386,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
-                string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(':'))
+                if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
-                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     using (var form = new AddToOcrReplaceList())
                     {
-                        form.Initialize(_languageId, comboBoxDictionaries.Text, text);
+                        form.Initialize(_languageId, comboBoxDictionaries.Text, uw.Text);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
@@ -8423,11 +8409,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
-                string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(':'))
+                if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
-                    text = text.Substring(text.IndexOf(':') + 1).Trim();
-                    Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                    Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(uw.Text));
                 }
             }
         }
@@ -8436,8 +8420,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
             {
-                ListBox lb = sender as ListBox;
-                if (lb != null && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
+                if (sender is ListBox lb && lb.Items.Count > 0 && lb.SelectedItems.Count > 0)
                 {
                     try
                     {

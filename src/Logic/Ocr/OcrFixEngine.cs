@@ -1,6 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -12,14 +15,44 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Core.SpellCheck;
-using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class OcrFixEngine : IDisposable, IDoSpell
     {
+        public abstract class LogItem
+        {
+            public int Line { get; set; }
+            public string Text { get; }
+
+            protected LogItem(int line, string text)
+            {
+                Line = line;
+                Text = text.Trim();
+            }
+
+            public override string ToString()
+            {
+                return $"#{Line}: {Text}";
+            }
+        }
+
+        private class AutoGuess : LogItem
+        {
+            public AutoGuess(int index, string word, string guess, string line)
+                : base(index + 1, string.Format(Configuration.Settings.Language.VobSubOcr.UnknownWordToGuessInLine, word, guess, line.Replace(Environment.NewLine, " ")))
+            {
+            }
+        }
+
+        private class UnknownWord : LogItem
+        {
+            public UnknownWord(int index, string word)
+                : base(index + 1, word)
+            {
+            }
+        }
+
         public enum AutoGuessLevel
         {
             None,
@@ -57,8 +90,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public bool Abort { get; set; }
         public OcrSpellCheck.Action LastAction { get; set; } = OcrSpellCheck.Action.Abort;
         public bool IsBinaryImageCompare { get; set; }
-        public List<string> AutoGuessesUsed { get; set; }
-        public List<string> UnknownWordsFound { get; set; }
+        public List<LogItem> AutoGuessesUsed { get; set; }
+        public List<LogItem> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
 
         public CultureInfo DictionaryCulture { get; private set; }
@@ -90,8 +123,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(threeLetterIsoLanguageName);
             LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
 
-            AutoGuessesUsed = new List<string>();
-            UnknownWordsFound = new List<string>();
+            AutoGuessesUsed = new List<LogItem>();
+            UnknownWordsFound = new List<LogItem>();
         }
 
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
@@ -1443,7 +1476,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                             if (nf.Trim().Length > 0)
                             {
-                                UnknownWordsFound.Add($"#{index + 1}: {nf}");
+                                UnknownWordsFound.Add(new UnknownWord(index, nf));
                             }
                         }
 
@@ -1540,7 +1573,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     {
                                         if (log)
                                         {
-                                            AutoGuessesUsed.Add($"#{index + 1}: {word} -> {guess} in line via \'OCRFixReplaceList.xml\': {line.Replace(Environment.NewLine, " ")}");
+                                            AutoGuessesUsed.Add(new AutoGuess(index, word, guess, line));
                                         }
 
                                         line = replacedLine;

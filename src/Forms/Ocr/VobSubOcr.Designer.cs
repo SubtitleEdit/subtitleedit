@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxTesseractEngineMode.FormattingEnabled = true;
             this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
             "Original Tesseract only (can detect italic)",
-            "Neural nets LSTM only ",
+            "Neural nets LSTM only",
             "Tesseract + LSTM",
             "Default, based on what is available"});
             this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);

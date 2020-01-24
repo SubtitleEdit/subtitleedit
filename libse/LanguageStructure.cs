@@ -2590,11 +2590,16 @@
             public string Title { get; set; }
             public string TitleBluRay { get; set; }
             public string OcrMethod { get; set; }
-            public string OcrViaModi { get; set; }
-            public string OcrViaTesseract { get; set; }
-            public string OcrViaNOCR { get; set; }
-            public string Language { get; set; }
+            public string OcrViaTesseractVersionX { get; set; }
             public string OcrViaImageCompare { get; set; }
+            public string OcrViaModi { get; set; }
+            public string OcrViaNOCR { get; set; }
+            public string TesseractEngineMode { get; set; }
+            public string TesseractEngineModeLegacy { get; set; }
+            public string TesseractEngineModeNeural { get; set; }
+            public string TesseractEngineModeBoth { get; set; }
+            public string TesseractEngineModeDefault { get; set; }
+            public string Language { get; set; }
             public string ImageDatabase { get; set; }
             public string NoOfPixelsIsSpace { get; set; }
             public string MaxErrorPercent { get; set; }
@@ -2623,6 +2628,7 @@
             public string AllFixes { get; set; }
             public string GuessesUsed { get; set; }
             public string UnknownWords { get; set; }
+            public string UnknownWordToGuessInLine { get; set; }
             public string OcrAutoCorrectionSpellChecking { get; set; }
             public string FixOcrErrors { get; set; }
             public string ImportTextWithMatchingTimeCodes { get; set; }
