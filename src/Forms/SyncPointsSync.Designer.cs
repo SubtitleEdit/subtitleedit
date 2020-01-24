@@ -105,7 +105,7 @@
             // labelOtherSubtitleFileName
             // 
             this.labelOtherSubtitleFileName.AutoSize = true;
-            this.labelOtherSubtitleFileName.Location = new System.Drawing.Point(626, 17);
+            this.labelOtherSubtitleFileName.Location = new System.Drawing.Point(626, 15);
             this.labelOtherSubtitleFileName.Name = "labelOtherSubtitleFileName";
             this.labelOtherSubtitleFileName.Size = new System.Drawing.Size(136, 13);
             this.labelOtherSubtitleFileName.TabIndex = 21;
@@ -114,7 +114,7 @@
             // labelSubtitleFileName
             // 
             this.labelSubtitleFileName.AutoSize = true;
-            this.labelSubtitleFileName.Location = new System.Drawing.Point(6, 17);
+            this.labelSubtitleFileName.Location = new System.Drawing.Point(6, 15);
             this.labelSubtitleFileName.Name = "labelSubtitleFileName";
             this.labelSubtitleFileName.Size = new System.Drawing.Size(108, 13);
             this.labelSubtitleFileName.TabIndex = 20;

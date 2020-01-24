@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(754, 488);
+            this.buttonOK.Location = new System.Drawing.Point(754, 490);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTip.Location = new System.Drawing.Point(12, 477);
+            this.labelTip.Location = new System.Drawing.Point(12, 473);
             this.labelTip.Name = "labelTip";
             this.labelTip.Size = new System.Drawing.Size(332, 13);
             this.labelTip.TabIndex = 15;
