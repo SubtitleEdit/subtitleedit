@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            if (original == null || original.Paragraphs == null || original.Paragraphs.Count == 0)
+            if (original?.Paragraphs == null || original.Paragraphs.Count == 0)
             {
                 _subtitle = subtitle;
             }
@@ -69,8 +69,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public sealed override string Text
         {
-            get { return base.Text; }
-            set { base.Text = value; }
+            get => base.Text;
+            set => base.Text = value;
         }
 
         private void ShowTemplates(List<string> templates)
@@ -229,14 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
             }
 
-            if (title == null)
-            {
-                title = string.Empty;
-            }
-            else
-            {
-                title = Path.GetFileNameWithoutExtension(title);
-            }
+            title = title == null ? string.Empty : Path.GetFileNameWithoutExtension(title);
 
             try
             {
@@ -255,15 +248,24 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[1]));
             string template = ExportCustomTextFormat.GetParagraphTemplate(arr[2]);
+            var isXml = arr[1].Contains("<?xml version=", StringComparison.OrdinalIgnoreCase);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string start = ExportCustomTextFormat.GetTimeCode(p.StartTime, arr[3]);
                 string end = ExportCustomTextFormat.GetTimeCode(p.EndTime, arr[3]);
-                string text = ExportCustomTextFormat.GetText(p.Text, arr[4]);
+
+                string text = p.Text;
+                if (isXml)
+                {
+                    text = text.Replace("<", "&lt;")
+                               .Replace(">", "&gt;")
+                               .Replace("&", "&amp;");
+                }
+                text = ExportCustomTextFormat.GetText(text, arr[4]);
 
                 string translationText = string.Empty;
-                if (translation != null && translation.Paragraphs != null && translation.Paragraphs.Count > 0)
+                if (translation?.Paragraphs != null && translation.Paragraphs.Count > 0)
                 {
                     var trans = Utilities.GetOriginalParagraph(i, p, translation.Paragraphs);
                     if (trans != null)
