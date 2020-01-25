@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string GenerateId()
+        private static string GenerateId()
         {
             var s = Guid.NewGuid().ToString();
             return s.Remove(0, s.Length - 10);
@@ -87,13 +87,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private double GetTimeCode(SeJsonParser parser, string timeObject)
+        private static double GetTimeCode(SeJsonParser parser, string timeObject)
         {
             var h = parser.GetAllTagsByNameAsStrings(timeObject, "h").FirstOrDefault();
             var m = parser.GetAllTagsByNameAsStrings(timeObject, "m").FirstOrDefault();
             var s = parser.GetAllTagsByNameAsStrings(timeObject, "s").FirstOrDefault();
             var f = parser.GetAllTagsByNameAsStrings(timeObject, "f").FirstOrDefault();
-            if (h != null && m != null & s != null && f != null &&
+            if (h != null && m != null && s != null && f != null &&
                 int.TryParse(h, NumberStyles.Integer, CultureInfo.InvariantCulture, out var hNumber) &&
                 int.TryParse(m, NumberStyles.Integer, CultureInfo.InvariantCulture, out var mNumber) &&
                 int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var sNumber) &&
