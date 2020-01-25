@@ -22303,12 +22303,12 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemHorizontalDigits.Visible = false;
                 }
             }
-            else if (formatType == typeof(Sami))
+            else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
             {
-                boldToolStripMenuItem1.Visible = false;
-                underlineToolStripMenuItem1.Visible = false;
-                colorToolStripMenuItem1.Visible = false;
-                fontNameToolStripMenuItem.Visible = false;
+                boldToolStripMenuItem1.Visible = true;
+                underlineToolStripMenuItem1.Visible = true;
+                colorToolStripMenuItem1.Visible = true;
+                fontNameToolStripMenuItem.Visible = true;
                 toolStripMenuItemHorizontalDigits.Visible = false;
                 toolStripMenuItemBouten.Visible = false;
                 if (tb.SelectionLength > 0)
