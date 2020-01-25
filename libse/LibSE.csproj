@@ -213,6 +213,7 @@
     <Compile Include="SubtitleFormats\DCinemaSmpte2014.cs" />
     <Compile Include="SubtitleFormats\ESubXf.cs" />
     <Compile Include="SubtitleFormats\EZTSubtitlesProject.cs" />
+    <Compile Include="SubtitleFormats\JsonType16.cs" />
     <Compile Include="SubtitleFormats\JsonType15.cs" />
     <Compile Include="SubtitleFormats\AwsTranscribeJson.cs" />
     <Compile Include="SubtitleFormats\JsonType8b.cs" />
