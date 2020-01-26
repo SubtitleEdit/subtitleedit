@@ -566,6 +566,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ToSccText(string text, string language)
         {
             text = FixMax4LinesAndMax32CharsPerLine(text, language);
+            var topAlign = text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                           text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                           text.StartsWith("{\\an9}", StringComparison.Ordinal);
+            text = Utilities.RemoveSsaTags(text);
             var lines = text.Trim().SplitToLines();
             int italic = 0;
             var sb = new StringBuilder();
@@ -578,7 +582,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(' ');
                 }
 
-                sb.Append(GetCenterCodes(text, count, lines.Count));
+                sb.Append(GetCenterCodes(text, count, lines.Count, topAlign));
                 count++;
                 int i = 0;
                 string code = string.Empty;
@@ -719,10 +723,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return LettersCodeLookup.TryGetValue(hexCode, out var letter) ? letter : null;
         }
 
-        public static string GetCenterCodes(string text, int lineNumber, int totalLines)
+        public static string GetCenterCodes(string text, int lineNumber, int totalLines, bool topAlign)
         {
             int row = 14 - (totalLines - lineNumber);
-
+            //if (topAlign)
+            //{
+            //    row = 1;
+            //}
             var rowCodes = new List<string> { "91", "91", "92", "92", "15", "15", "16", "16", "97", "97", "10", "13", "13", "94", "94" };
             string rowCode = rowCodes[row];
 
@@ -1584,6 +1591,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool first = true;
             bool italicOn = false;
             int k = 0;
+            var alignment = string.Empty;
+
             while (k < parts.Length)
             {
                 string part = parts[k];
@@ -1644,6 +1653,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (cp.Y > 0)
                             {
                                 y = cp.Y;
+                            }
+
+                            if (y == 1)
+                            {
+                                alignment = "{\\an8}";
                             }
 
                             if ((cp.Style & FontStyle.Italic) == FontStyle.Italic && !italicOn)
@@ -1750,7 +1764,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res += "</i>";
             }
 
-            return HtmlUtil.FixInvalidItalicTags(res);
+            return alignment + HtmlUtil.FixInvalidItalicTags(res);
         }
 
         private static TimeCode ParseTimeCode(string start)
@@ -1758,6 +1772,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
-
     }
 }
