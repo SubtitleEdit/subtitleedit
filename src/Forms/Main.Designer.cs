@@ -4237,7 +4237,7 @@
             // 
             this.labelDurationWarning.AutoSize = true;
             this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelDurationWarning.Location = new System.Drawing.Point(123, 64);
+            this.labelDurationWarning.Location = new System.Drawing.Point(122, 64);
             this.labelDurationWarning.Name = "labelDurationWarning";
             this.labelDurationWarning.Size = new System.Drawing.Size(109, 13);
             this.labelDurationWarning.TabIndex = 17;
@@ -4247,7 +4247,7 @@
             // 
             this.labelStartTimeWarning.AutoSize = true;
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelStartTimeWarning.Location = new System.Drawing.Point(9, 50);
+            this.labelStartTimeWarning.Location = new System.Drawing.Point(8, 50);
             this.labelStartTimeWarning.Name = "labelStartTimeWarning";
             this.labelStartTimeWarning.Size = new System.Drawing.Size(114, 13);
             this.labelStartTimeWarning.TabIndex = 18;
@@ -4726,7 +4726,7 @@
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
@@ -4749,7 +4749,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(123, 27);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 27);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -4767,7 +4767,7 @@
             // 
             // buttonPrevious
             // 
-            this.buttonPrevious.Location = new System.Drawing.Point(9, 78);
+            this.buttonPrevious.Location = new System.Drawing.Point(8, 78);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(64, 23);
             this.buttonPrevious.TabIndex = 2;
@@ -4777,7 +4777,7 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(75, 78);
+            this.buttonNext.Location = new System.Drawing.Point(74, 78);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(64, 23);
             this.buttonNext.TabIndex = 3;
@@ -4819,7 +4819,7 @@
             // labelDuration
             // 
             this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(123, 11);
+            this.labelDuration.Location = new System.Drawing.Point(122, 11);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(47, 13);
             this.labelDuration.TabIndex = 4;
