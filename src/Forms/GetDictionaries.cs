@@ -38,11 +38,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
-			// Disable "Open Dictionaries folder" link on Linux & Mac, it crashes 
-			if (!Configuration.IsRunningOnWindows)
-			{
-				linkLabelOpenDictionaryFolder.Visible = false;
-			}
+            // Disable "Open Dictionaries folder" link on Linux & Mac, it crashes
+            if (!Configuration.IsRunningOnWindows)
+            {
+                linkLabelOpenDictionaryFolder.Visible = false;
+            }
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif

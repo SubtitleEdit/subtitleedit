@@ -29,12 +29,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
-			// Disable "Open Dictionaries folder" link on Linux & Mac, it crashes 
+			// Disable "Open Dictionaries folder" link on Linux & Mac, it crashes
 			if (!Configuration.IsRunningOnWindows)
-			{
-				linkLabelOpenDictionaryFolder.Visible = false;
-			}
-			_dictionaries = TesseractDictionary.List();
+            {
+                linkLabelOpenDictionaryFolder.Visible = false;
+            }
+            _dictionaries = TesseractDictionary.List();
             LoadDictionaryList(first);
         }
 

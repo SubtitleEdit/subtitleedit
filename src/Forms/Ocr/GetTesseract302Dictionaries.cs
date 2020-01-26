@@ -31,12 +31,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-			// Disable "Open Dictionaries folder" link on Linux & Mac, it crashes 
-			if (!Configuration.IsRunningOnWindows)
-			{
-				linkLabelOpenDictionaryFolder.Visible = false;
-			}
-			LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
+            // Disable "Open Dictionaries folder" link on Linux & Mac, it crashes
+            if (!Configuration.IsRunningOnWindows)
+            {
+                linkLabelOpenDictionaryFolder.Visible = false;
+            }
+            LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
             FixLargeFonts();
         }
 
