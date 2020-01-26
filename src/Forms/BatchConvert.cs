@@ -2226,8 +2226,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Directory.Exists(textBoxOutputFolder.Text))
             {
-                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
-            }
+                try
+                {
+                    System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Cannot open folder: {textBoxOutputFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+                }
+        }
             else
             {
                 MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));

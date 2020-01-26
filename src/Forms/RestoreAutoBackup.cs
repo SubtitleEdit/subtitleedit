@@ -150,7 +150,14 @@ namespace Nikse.SubtitleEdit.Forms
             string folderName = Configuration.AutoBackupDirectory;
             if (Utilities.IsRunningOnMono())
             {
-                System.Diagnostics.Process.Start(folderName);
+                try
+                {
+                    System.Diagnostics.Process.Start(folderName);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Cannot open folder: {folderName}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+                }
             }
             else
             {
@@ -161,7 +168,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(folderName);
+                    try
+                    {
+                        System.Diagnostics.Process.Start(folderName);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show($"Cannot open folder: {folderName}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+                    }
                 }
             }
         }

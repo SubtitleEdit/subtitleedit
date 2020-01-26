@@ -2849,8 +2849,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
-
-            Process.Start(dictionaryFolder);
+            try
+            {
+                Process.Start(dictionaryFolder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open folder: {dictionaryFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+            }
         }
 
         private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)

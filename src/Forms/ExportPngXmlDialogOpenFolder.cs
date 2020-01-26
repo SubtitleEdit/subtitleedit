@@ -46,7 +46,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_folder);
+            try
+            {
+                Process.Start(_folder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open folder: {_folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+            }
         }
     }
 }

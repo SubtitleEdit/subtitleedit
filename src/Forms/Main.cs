@@ -18518,7 +18518,14 @@ namespace Nikse.SubtitleEdit.Forms
             string folderName = Path.GetDirectoryName(_fileName);
             if (Utilities.IsRunningOnMono())
             {
-                System.Diagnostics.Process.Start(folderName);
+                try
+                {
+                    System.Diagnostics.Process.Start(folderName);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Cannot open folder: {folderName}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+                }
             }
             else
             {

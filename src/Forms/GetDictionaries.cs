@@ -124,11 +124,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
-
-            System.Diagnostics.Process.Start(dictionaryFolder);
+            try
+            {
+                System.Diagnostics.Process.Start(dictionaryFolder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open folder: {dictionaryFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+            }
         }
 
-        private void buttonDownload_Click(object sender, EventArgs e)
+		private void buttonDownload_Click(object sender, EventArgs e)
         {
             try
             {

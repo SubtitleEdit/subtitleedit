@@ -202,8 +202,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
-
-            System.Diagnostics.Process.Start(dictionaryFolder);
+            try
+            {
+                System.Diagnostics.Process.Start(dictionaryFolder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open folder: {dictionaryFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+            }
         }
 
         private void GetTesseractDictionaries_KeyDown(object sender, KeyEventArgs e)
