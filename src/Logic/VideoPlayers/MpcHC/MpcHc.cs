@@ -279,6 +279,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         private static string GetMpcHcFileName(string fileNameSuffix)
         {
+            if (!Configuration.IsRunningOnWindows) //short circuit on Linux to resolve issues with read-only filesystems
+            {
+                return null;
+            }
             if (IntPtr.Size == 8) // 64-bit
             {
                 var fileName = $"mpc-hc64{fileNameSuffix}.exe";
