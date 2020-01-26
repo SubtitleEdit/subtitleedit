@@ -517,14 +517,10 @@ namespace Nikse.SubtitleEdit.Forms
                     ToolStripMenuItemRightToLeftModeClick(null, null);
                 }
 
-                numericUpDownDuration.Left = textBoxListViewText.Left - numericUpDownDuration.Width - 18;
-                labelDuration.Left = numericUpDownDuration.Left;
                 timeUpDownStartTime.SetAutoWidth();
-                timeUpDownStartTime.Left = numericUpDownDuration.Left - timeUpDownStartTime.Width - 8;
-                labelStartTime.Left = timeUpDownStartTime.Left;
-                buttonPrevious.Left = timeUpDownStartTime.Left;
-                buttonNext.Left = buttonPrevious.Left + buttonPrevious.Width + 5;
-
+                numericUpDownDuration.Left = timeUpDownStartTime.Right + 4;
+                labelDurationWarning.Left = numericUpDownDuration.Left;
+                labelDuration.Left = labelDurationWarning.Left;
             }
             catch (Exception exception)
             {
