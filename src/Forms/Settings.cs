@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFont.BeginUpdate();
             comboBoxFontName.Items.Clear();
             comboBoxSubtitleFont.Items.Clear();
-            foreach (var x in FontFamily.Families.OrderBy(p=>p.Name))
+            foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
             {
                 comboBoxFontName.Items.Add(x.Name);
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
@@ -2850,7 +2850,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            Process.Start(dictionaryFolder);
+            UiUtil.OpenFolder(dictionaryFolder);
         }
 
         private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)

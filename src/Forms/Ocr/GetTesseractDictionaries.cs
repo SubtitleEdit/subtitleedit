@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            System.Diagnostics.Process.Start(dictionaryFolder);
+            UiUtil.OpenFolder(dictionaryFolder);
         }
 
         private void GetTesseractDictionaries_KeyDown(object sender, KeyEventArgs e)

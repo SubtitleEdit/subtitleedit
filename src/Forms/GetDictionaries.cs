@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
-            System.Diagnostics.Process.Start(dictionaryFolder);
+            UiUtil.OpenFolder(dictionaryFolder);
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)

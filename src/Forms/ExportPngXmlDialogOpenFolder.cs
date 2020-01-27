@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
@@ -46,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_folder);
+            UiUtil.OpenFolder(_folder);
         }
     }
 }
