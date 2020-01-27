@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
     /// </summary>
     public class MP4Parser : Box
     {
-        public string FileName { get; private set; }
+        public string FileName { get; }
         public Moov Moov { get; private set; }
 
         public List<Trak> GetSubtitleTracks()
@@ -120,12 +120,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 ParseMp4(fs);
                 fs.Close();
             }
-        }
-
-        public MP4Parser(Stream fs)
-        {
-            FileName = null;
-            ParseMp4(fs);
         }
 
         private void ParseMp4(Stream fs)

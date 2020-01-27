@@ -638,7 +638,7 @@
     <Compile Include="VobSub\VobSubWriter.cs" />
     <Compile Include="WaveToVisualizer.cs" />
     <Compile Include="XmlDeserializerGenerator.cs" />
-    <Compile Include="XSub.cs" />
+    <Compile Include="ContainerFormats\XSub.cs" />
     <Compile Include="ZipExtractor.cs" />
   </ItemGroup>
   <ItemGroup>

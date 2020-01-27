@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
     public class XSub
     {
         public TimeCode Start { get; set; }
         public TimeCode End { get; set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public int Width { get; }
+        public int Height { get; }
 
         private readonly byte[] _colorBuffer;
         private readonly byte[] _rleBuffer;
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
-        private static int GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
+        private static void GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
         {
             int w = bmp.Width;
             int h = bmp.Height;
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (nibbleOffset >= nibbleEnd)
                 {
-                    return -1;
+                    return;
                 }
 
                 var v = GetNibble(buf, nibbleOffset++);
@@ -89,7 +89,6 @@ namespace Nikse.SubtitleEdit.Core
                     nibbleOffset += (nibbleOffset & 1);
                 }
             }
-            return 0;
         }
 
         private static int GetNibble(byte[] buf, int nibbleOffset)
@@ -124,6 +123,5 @@ namespace Nikse.SubtitleEdit.Core
         {
             return GetImage(Color.Transparent, GetColor(3), GetColor(6), GetColor(9));
         }
-
     }
 }
