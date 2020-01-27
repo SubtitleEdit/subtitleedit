@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Nikse.SubtitleEdit.Core.TransportStream
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class RegionClutSegmentEntry
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nikse.SubtitleEdit.Core.TransportStream
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     /// <summary>
     /// http://www.mpucoder.com/DVD/pes-hdr.html

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Nikse.SubtitleEdit.Core.TransportStream
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class ProgramMapTable
     {

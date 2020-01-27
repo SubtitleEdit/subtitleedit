@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 
-namespace Nikse.SubtitleEdit.Core.TransportStream
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class DvbSubPes
     {
