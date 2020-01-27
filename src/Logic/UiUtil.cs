@@ -1036,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch (Exception exception)
             {
-                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}");
             }
         }
     }
