@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Core.TransportStream;
 using System.IO;
 using System.Linq;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 
 namespace Test.Logic.TransportStream
 {

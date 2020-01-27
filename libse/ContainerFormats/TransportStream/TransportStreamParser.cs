@@ -1,12 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.VobSub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.VobSub;
 
-namespace Nikse.SubtitleEdit.Core.TransportStream
+namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     /// <summary>
     /// MPEG transport stream parser

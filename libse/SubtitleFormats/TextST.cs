@@ -1,12 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Helper = Nikse.SubtitleEdit.Core.TransportStream.Helper;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
+using Helper = Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream.Helper;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {

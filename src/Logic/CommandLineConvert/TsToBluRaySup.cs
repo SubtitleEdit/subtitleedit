@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
