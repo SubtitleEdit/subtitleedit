@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Directory.Exists(textBoxOutputFolder.Text))
             {
-                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+                UiUtil.OpenFolder(textBoxOutputFolder.Text);
             }
             else
             {

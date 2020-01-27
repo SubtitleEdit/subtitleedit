@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             string folderName = Configuration.AutoBackupDirectory;
             if (Utilities.IsRunningOnMono())
             {
-                System.Diagnostics.Process.Start(folderName);
+                UiUtil.OpenFolder(folderName);
             }
             else
             {
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(folderName);
+                    UiUtil.OpenFolder(folderName);
                 }
             }
         }

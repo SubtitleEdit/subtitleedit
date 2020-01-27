@@ -394,14 +394,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
-            try
-            {
-                System.Diagnostics.Process.Start(pluginsFolder);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($"Cannot open folder: {pluginsFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
-            }
+            UiUtil.OpenFolder(pluginsFolder);
         }
 
         private void PluginsGet_KeyDown(object sender, KeyEventArgs e)

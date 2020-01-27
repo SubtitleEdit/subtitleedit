@@ -18518,7 +18518,7 @@ namespace Nikse.SubtitleEdit.Forms
             string folderName = Path.GetDirectoryName(_fileName);
             if (Utilities.IsRunningOnMono())
             {
-                System.Diagnostics.Process.Start(folderName);
+                UiUtil.OpenFolder(folderName);
             }
             else
             {

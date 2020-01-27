@@ -1027,5 +1027,17 @@ namespace Nikse.SubtitleEdit.Logic
         public static Color BackColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.BackColor : Control.DefaultBackColor;
 
         public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.ForeColor : Control.DefaultForeColor;
+
+        public static void OpenFolder(string folder)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(folder);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
+            }
+        }
     }
 }
