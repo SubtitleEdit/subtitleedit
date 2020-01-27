@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.13</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [30-08-2019]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [18-01-2020]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -79,6 +79,8 @@
     <Size>Koko</Size>
     <Search>Etsi</Search>
     <DeleteCurrentLine>Poista nykyinen rivi</DeleteCurrentLine>
+    <Width>Leveys</Width>
+    <Height>Korkeus</Height>
   </General>
   <About>
     <Title>Tietoja</Title>
@@ -170,8 +172,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <InputDescription>Lähdetiedostot (selaa tai pudota)</InputDescription>
     <Status>Tila</Status>
     <Output>Kohde</Output>
-    <ChooseOutputFolder>Valitse kohdekansio</ChooseOutputFolder>
-    <OverwriteExistingFiles>Korvaa aiemmat tiedostot</OverwriteExistingFiles>
+    <SaveInSourceFolder>Tallenna lähdetiedoston kansioon</SaveInSourceFolder>
+    <SaveInOutputFolder>Tallenna seuraavaan kansioon:</SaveInOutputFolder>
+    <OverwriteFiles>Korvaa tiedostot</OverwriteFiles>
     <Style>Tyyli</Style>
     <UseStyleFromSource>Käytä lähteen tyyliä</UseStyleFromSource>
     <ConvertOptions>Muunnosasetukset</ConvertOptions>
@@ -202,10 +205,18 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>SubRip -tiedostosta puuttuu UTF-9 BOM -otsikko</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Suodata useita rivejä</FilterMoreThanTwoLines>
     <FilterContains>Sisältö</FilterContains>
+    <FilterFileNameContains>Tiedoston nimessä esiintyy</FilterFileNameContains>
     <FixCommonErrorsErrorX>Yleisten virheiden korjaus epäonnistui: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Monen korvaus epäonnistui: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automaattinen tasoittaminen epäonnistui: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Aikaleimojen siirtymä</OffsetTimeCodes>
+    <TransportStreamSettings>Striimaus-asetukset</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Korvaa alkuperäinen vaakasijainti</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Korvaa alkuperäinen pystysijainti</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Korvaa alkuperäinen kuvakoko</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Tiedoston nimi päättyy</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>Striimaus-asetukset...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Poista rivinvaihdot</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Videotykki</Title>
@@ -568,6 +579,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixOverlappingDisplayTimes>Korjaa päällekkäiset näyttöajat</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Korjaa lyhyet näyttöajat</FixShortDisplayTimes>
     <FixLongDisplayTimes>Korjaa pitkät näyttöajat</FixLongDisplayTimes>
+    <FixShortGaps>Korjaa lyhyet välit</FixShortGaps>
     <FixInvalidItalicTags>Korjaa virheelliset kursivoinnit</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Poista tarpeettomat välilyönnit</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Poista tarpeettomat pisteet</RemoveUnneededPeriods>
@@ -605,7 +617,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <NothingToFix>Ei korjattavaa :)</NothingToFix>
     <FixesFoundX>Korjattavia löytyi: {0}</FixesFoundX>
     <XFixesApplied>Korjauksia tehty: {0}</XFixesApplied>
-    <NothingToFixBut>Mitään korjattavaa ei löytynyt, mutta jotain voisi parantaa - lisätietoja lokissa</NothingToFixBut>
+    <NothingFixableBut>Tekstityksessä on virheitä, joita ei voitu korjata automaattisesti. Lisätietoja tapahtumalokissa.</NothingFixableBut>
+    <XFixedBut>Tekstityksestä korjattiin {0} virhettä, mutta siihen jäi vielä niitä. Lisätietoja tapahtumalokissa.</XFixedBut>
+    <XCouldBeFixedBut>Tekstityksestä voidaan korjata {0} virhettä, mutta siihen jää vielä niitä. Lisätietoja tapahtumalokissa.</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>Merkitsemätön "Korjaa yksinäiset pienet kirjaimet 'i' -&gt; 'I' (englanti)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i't muutettu isoiksi kirjaimiksi</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Korjaa ensimmäiset kirjaimet isoiksi kappaleen jälkeen</FixFirstLetterToUppercaseAfterParagraph>
@@ -617,6 +631,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixInvalidItalicTag>Korjaa virheellinen kursiivitunniste</FixInvalidItalicTag>
     <FixShortDisplayTime>Korjaa lyhyt näyttöaika</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Korjaa päällekkäinen näyttöaaika</FixOverlappingDisplayTime>
+    <FixShortGap>Korjaa lyhyt väli</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Mitä minä välitän.&lt;i&gt; -&gt; &lt;i&gt;Mitä minä välitän.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hei sinä , siellä. -&gt; Hei sinä, siellä.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hei siellä!. -&gt; Hei siellä!</RemoveUnneededPeriodsExample>
@@ -631,6 +646,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <XDisplayTimesProlonged>Pidennetty {0} näyttöaikaa</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>Korjattu {0} virheellistä HTML-tunnistetta</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Lyhennetty {0} näyttöaikaa</XDisplayTimesShortned>
+    <XGapsFixed>{0} lyhyttä väliä korjattu</XGapsFixed>
     <XLinesUnbreaked>{0} riviä yhdistetty</XLinesUnbreaked>
     <UnneededSpace>Tarpeeton välilyönti</UnneededSpace>
     <XUnneededSpacesRemoved>{0} tarpeettomia välilyöntejä poistettu</XUnneededSpacesRemoved>
@@ -672,7 +688,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
     <DescriptionLine1>Oikeinkirjoituksen tarkistus perustuu NHunspell-moottoriin,</DescriptionLine1>
-    <DescriptionLine2>joka käyttää LibreOffice:n oikeinkirjoitussanastoja.</DescriptionLine2>
+    <DescriptionLine2>joka käyttää Open Office:n oikeinkirjoitussanastoja.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Valitse kieli ja napsauta 'Lataa'</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Avaa sanastokansio</OpenDictionariesFolder>
     <Download>Lataa</Download>
@@ -774,6 +790,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FileName>Tiedostonimi</FileName>
     <Join>Yhdistä</Join>
     <TotalNumberOfLinesX>Rivejä yhteensä: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>Tiedostojen aikaleimat on jo korjattu</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Lisää edellisen tiedoston päättymisaika</AppendTimeCodes>
+    <AddMs>Lisää joka tiedoston loppuun millisekunteja</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Ei määritetty</NotSpecified>
@@ -1485,6 +1504,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <XPercentCompleted>{0}% valmiina</XPercentCompleted>
     <NextX>Seuraava: {0}</NextX>
     <PromptInsertSubtitleOverlap>Tekstityksen lisääminen aaltomuodon kohdalle aiheuttaa päällekkäisyyttä! Jatketaanko silti?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Tekstityksessä esiintyy negatiivisia kestoja riveillä {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Toistonopeus {0}%</SetPlayRateX>
     <ErrorLoadIdx>Idx-tiedostojen luku tai muokkaus epäonnistui, mutta sub-tiedoston avaus onnistuu. idx-tiedostot ovat osa idx/sub -tiedostoparia (nk VobSub).</ErrorLoadIdx>
     <ErrorLoadRar>Tiedostoa on pakattu rar-pakkauksella, joten sitä ei voida avata.</ErrorLoadRar>
@@ -1753,6 +1773,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToPreviousBookmark>Siirry edelliseen kirjanmerkkiin</GoToPreviousBookmark>
     <GoToNextBookmark>Siirry seuraavaan kirjanmerkkiin</GoToNextBookmark>
     <ChooseProfile>Valitse profiili</ChooseProfile>
+    <DuplicateLine>Kahdenna rivi</DuplicateLine>
     <FontInUi>Käyttöliittymäfontti</FontInUi>
     <ShowFrameRate>Näytä kuvataajuus</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
@@ -1963,6 +1984,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformSeekSilenceBack>Hae hiljaisuus takaisinpäin</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Lisää tekstiä tähän (uudelle valinnalle)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Lisää tekstiä tähän (leikepöydältä uudelle valinnalle)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>Aseta nykyinen uudeksi valinnaksi</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
@@ -2002,6 +2024,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SyntaxColorTextIfTooLong>Korosta teksti, jos se on liian pitkä</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Korosta teksti jos sen rivimäärä yli {0}</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Korosta aikaleimojen päällekkäisyys</SyntaxColorOverlap>
+    <SyntaxColorGap>Korosta liian lyhyet välit</SyntaxColorGap>
     <SyntaxErrorColor>Korostusväri</SyntaxErrorColor>
     <GoToFirstSelectedLine>Siirry ensimmäiselle valitulle riville</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Siirry seuraavalle tyhjälle riville</GoToNextEmptyLine>
@@ -2034,6 +2057,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MainTextBoxMoveLastWordDownCurrent>Siirrä viimeinen sana ensimmäiseltä riviltä toiselle (nykyinen)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Valittu pieniksi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Valittu isoiksi</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>Valittu Ruby:ksi (Japanilainen)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Automaattinen kesto päälle/pois</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Rivitä automaattisesti</MainTextBoxAutoBreak>
     <MainTextBoxAutoBreakFromPos>Rivitä automaattisesti alkaen kohdasta</MainTextBoxAutoBreakFromPos>
@@ -2043,12 +2067,20 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Miscellaneous>Sekalaiset</Miscellaneous>
     <CpsIncludesSpace>Sisällytä välilyönnit 'merkkiä sekunnissa' -arvoon</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Käytä rivinvaihdon kieltoluetteloa (automaattiselle rivinvaihdolle)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Katkaise aikaisemmin lauseen loppuessa (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Katkaise pisteleveyteen</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Suosi alariviä</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Katkaise aikaisemmin vuoropuheluviivaan</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Katkaise aikaisemmin pilkkuun</BreakEarlyForComma>
     <GoogleTranslate>Google-kääntäjä</GoogleTranslate>
     <GoogleTranslateApiKey>API-avain</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing -kääntäjä</MicrosoftBingTranslator>
     <HowToSignUp>Tilinluontiohje</HowToSignUp>
     <MicrosoftTranslateApiKey>Avain</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Avainten tarjontapalvelu</MicrosoftTranslateTokenEndpoint>
     <FontNote>HUOM! Nämä fonttiasetukset vaikuttavat ainostaan Subtitle Editorin käyttöliittymään. Tekstityksen fontti määritetään yleensä videosoittimessa, mutta se voidaan määrittää myös käyttäen tekstitysmuotoa "Advanced Sub Station Alfa". </FontNote>
+    <RestoreDefaultSettings>Palauta oletusarvoihin</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Palautetaanko kaikki asetukset oletusarvoihinsa?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>mpv:n asetukset</Title>
@@ -2122,8 +2154,12 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GlyphCheckReport>Ei-kelpaava merkki [0] sarakkessa {1}.</GlyphCheckReport>
     <WhiteSpaceCheckReport>Ei-kelpaava välilyönti sarakkessa {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Lue koko raportti: {0}.</ReportPrompt>
+    <OpenReportInFolder>Avaa raportti kansiossa</OpenReportInFolder>
     <FoundXIssues>Netflix-laaduntarkastuksessa {0} ongelmaa.</FoundXIssues>
     <CheckOk>Netflix-laaduntarkastus kunnossa.</CheckOk>
+    <MaximumXCharsPerSecond>Enintään {0} merkkiä sekunnissa (ilman tyhjätilamerkkejä)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Suurin rivipituus {{0}}</MaximumLineLength>
+    <MinimumDuration>Pienin kesto: 5/5 sek. (833 msek)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Jakaminen</Title>
@@ -2284,7 +2320,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Siirtovirtauksen valinta - {0}</Title>
-    <PidLine>Pakettitunnus (PID) = {0}, tekstityksien määrä = {1}</PidLine>
+    <PidLineImage>Kuvien siirtovirtaustunniste (PID) = {0}, kieli= {1}, tekstityksiä = {2}</PidLineImage>
+    <PidLineTeletext>Teksti-TV siirtovirtaustunniste (PID) = {1}, sivu {0}, kieli = {2}, tekstityksiä = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} kuvaa</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
@@ -2372,6 +2409,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <UseTimeCodesFromIdx>Käytä aikaleimoja .idx-tiedostosta</UseTimeCodesFromIdx>
     <NoMatch>&lt;Ei vastaa&gt;</NoMatch>
     <AutoTransparentBackground>Automaattinen läpinäkyvä tausta</AutoTransparentBackground>
+    <CaptureTopAlign>Kiinnitä yläreunan tasaus</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Tarkista vertailuvastaavuudet nykyisessä kuvassa</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Muokkaa viimeisen kuvan vertailulisäyksiä</EditLastAdditions>
     <SetUnitalicFactor>Poista kursivointi</SetUnitalicFactor>
@@ -2380,6 +2418,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MinLineSplitHeight>Pienin sallittu rivikorkeus jaettaessa</MinLineSplitHeight>
     <FallbackToX>Siirry vanhempaan</FallbackToX>
     <ImagePreProcessing>Kuvankäsittely</ImagePreProcessing>
+    <EditImageDb>Muokkaa kuvatietokantaa</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - manuaalinen kuva tekstiksi</Title>
@@ -2411,6 +2450,20 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Säädä kursivoinninpoistoa</Title>
     <Description>Säädä tekstitystä normaaliksi, ei kursivoiduksi (HUOM Alkuperäinen kuva säilyy kursivoituna)</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR tektintunnistus</Title>
+    <Colors>Värit</Colors>
+    <AdjustAlpha>Säädä arvoa kunnes teksti näkyy terävästi (yleensä 200 - 300)</AdjustAlpha>
+    <OriginalImage>Alkuperäinen kuva</OriginalImage>
+    <PostImage>Esikäsitelty kuva</PostImage>
+    <BinaryThreshold>Kuvien vertailukynnys</BinaryThreshold>
+    <InvertColors>Käänteiset värit</InvertColors>
+    <YellowToWhite>Keltaisesta valkoiseksi</YellowToWhite>
+    <ColorToWhite>Värillisestä valkoiseksi</ColorToWhite>
+    <ColorToRemove>Poistettava väri</ColorToRemove>
+    <Cropping>Rajaus</Cropping>
+    <CropTransparentColors>Rajaa läpikuultavat värit</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Vesileima</Title>
     <WatermarkX>Vesileima: {0}</WatermarkX>
@@ -2430,6 +2483,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ZoomOut>Loitonna</ZoomOut>
     <AddParagraphHere>Lisää teksti tähän</AddParagraphHere>
     <AddParagraphHereAndPasteText>Lisää teksti leikepöydältä tähän</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Määritä uudeksi valinnaksi</SetParagraphAsSelection>
     <FocusTextBox>Tarkka tekstilaatikko</FocusTextBox>
     <DeleteParagraph>Poista teksti</DeleteParagraph>
     <Split>Katkaise</Split>
