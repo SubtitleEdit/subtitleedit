@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     fontWeight = "bold";
                                 }
 
-                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
+                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
                                 convertedFromSubStationAlpha = true;
                             }
                             catch
@@ -118,7 +118,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <style xml:id='basic' tts:color='white' tts:fontFamily='Arial' tts:backgroundColor='transparent' tts:fontSize='21' tts:fontWeight='normal' tts:fontStyle='normal' />
         </styling>
         <layout>
-            <region xml:id='bottom' tts:backgroundColor='transparent' tts:showBackground='whenActive' tts:origin='80% 80%' tts:extent='80% 80%' tts:displayAlign='after' />
+            <region xml:id='bottom' tts:backgroundColor='transparent' tts:showBackground='whenActive' tts:origin='10% 55%' tts:extent='80% 80%' tts:displayAlign='after' />
+            <region xml:id='top' tts:backgroundColor='transparent' tts:showBackground='whenActive' tts:origin='10% 10%' tts:extent='80% 80%' tts:displayAlign='before' />
         </layout>
     </head>
     <body>
@@ -157,7 +158,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     hasBottomCenterRegion = true;
                 }
 
-                if (id != null && id == "topCenter")
+                if (id != null && (id == "topCenter" || id == "top"))
                 {
                     hasTopCenterRegion = true;
                 }
@@ -179,6 +180,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlAttribute style = xml.CreateAttribute("style");
                 style.InnerText = "basic";
                 paragraph.Attributes.Append(style);
+
+                XmlAttribute textAlign = xml.CreateAttribute("textAlign");
+                textAlign.InnerText = "center";
+                paragraph.Attributes.Append(textAlign);
 
                 XmlAttribute regionP = xml.CreateAttribute("region");
                 if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
