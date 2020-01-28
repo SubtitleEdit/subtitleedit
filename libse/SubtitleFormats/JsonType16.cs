@@ -59,7 +59,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var text = sb.ToString().TrimStart();
             if (!text.StartsWith("[", StringComparison.Ordinal))
             {
-                return;
+                var tag = "\"subtitles\":";
+                var startTag = text.IndexOf(tag, StringComparison.Ordinal);
+                if (startTag >= 0)
+                {
+                    text = text.Remove(0, startTag + tag.Length).TrimStart();
+                }
+                if (!text.StartsWith("[", StringComparison.Ordinal))
+                {
+                    return;
+                }
             }
 
             var parser = new SeJsonParser();
