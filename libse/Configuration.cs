@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -34,7 +36,8 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
 
-        public static readonly string DefaultLinuxFontName = "DejaVu Serif";
+        public static readonly string DefaultLinuxFontName = GetDefaultLinuxFontName();
+        public static readonly float DefaultLinuxFontSizeUI = GetDefaultLinuxFontSizeUI();
 
         private Configuration()
         {
@@ -233,6 +236,43 @@ namespace Nikse.SubtitleEdit.Core
             }
             return encodings.AsEnumerable();
         }
+        private static string GetDefaultLinuxFontName()
+        {
+            // Chooses from a series of default system fonts for Ubuntu, Manjaro, Fedora/GNOME, others
+            string[] FontList = { "Ubuntu", "Noto Sans", "Cantarell", "DejaVu Sans" };
 
+            FontFamily[] families = new InstalledFontCollection().Families;
+            
+            foreach (string font in FontList)
+            {
+                FontFamily[] matchingFamilies = Array.FindAll(families, f => f.Name == font);
+                foreach (FontFamily family in matchingFamilies)
+                {
+                    // if it doesn't have all the styles we can't use it.
+                    if (family.Name == font &&
+                        family.IsStyleAvailable(FontStyle.Regular) &&
+                        family.IsStyleAvailable(FontStyle.Bold) &&
+                        family.IsStyleAvailable(FontStyle.Italic))
+                    {
+                        return font;
+                    }
+                }
+            }
+            // fallback to what Mono thinks it is if we didn't find it. It's usually wrong, but it exists.
+            return SystemFonts.DefaultFont.Name;
+        }
+        private static float GetDefaultLinuxFontSizeUI()
+        {
+            string defaultFont = GetDefaultLinuxFontName();
+            // default sizes for system fonts on these distros
+            if (defaultFont == "Ubuntu")
+            {
+                return 11F;
+            }
+            else if (defaultFont == "Noto Sans" || defaultFont == "Cantarell" ){
+                return 10F;
+            }
+            return 8F;
+        }
     }
 }
