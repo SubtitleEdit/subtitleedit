@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class UnknownSubtitle12 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCode = new Regex(@"^\d+.\d\d\t\t\d+.\d\d\t*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+\.\d\d\t\t\d+\.\d\d\t*$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string MakeTimeCode(TimeCode tc)
         {
-            return $"{tc.TotalSeconds:0.00}";
+            return string.Format(CultureInfo.InvariantCulture, "{0:0.00}", tc.TotalSeconds);
         }
 
         public override string ToText(Subtitle subtitle, string title)

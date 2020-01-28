@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -8,9 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class UnknownSubtitle25 : SubtitleFormat
     {
         //79.29 1.63
-        private static readonly Regex RegexTimeCode1 = new Regex(@"^\d+.[0-9]{1,2} \d+.[0-9]{1,2}$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCode2 = new Regex(@"^\d+ \d+.[0-9]{1,2}$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCode3 = new Regex(@"^\d+.[0-9]{1,2} \d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1 = new Regex(@"^\d+\.[0-9]{1,2} \d+\.[0-9]{1,2}$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode2 = new Regex(@"^\d+ \d+\.[0-9]{1,2}$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode3 = new Regex(@"^\d+\.[0-9]{1,2} \d+$", RegexOptions.Compiled);
 
         public override string Extension => ".sub";
 
@@ -30,7 +31,7 @@ NOTE=
             Paragraph last = null;
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"{MakeTimeCode(p.StartTime, last)} {p.Duration.Seconds + p.Duration.Milliseconds / TimeCode.BaseUnit:0.0#}\r\n{p.Text}\r\n");
+                sb.AppendLine($"{MakeTimeCode(p.StartTime, last)} {MakeTimeCode(p.Duration.TotalSeconds)}\r\n{p.Text}\r\n");
                 last = p;
             }
             return sb.ToString().Trim().Replace(Environment.NewLine, "\n");
@@ -44,7 +45,12 @@ NOTE=
                 start = last.EndTime.TotalSeconds;
             }
 
-            return $"{timeCode.TotalSeconds - start:0.0#}";
+            return MakeTimeCode(timeCode.TotalSeconds - start);
+        }
+
+        private static string MakeTimeCode(double seconds)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}", seconds);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
