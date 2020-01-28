@@ -612,7 +612,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _mpvTerminateDestroy(_mpvHandle);
             _mpvHandle = IntPtr.Zero;
-            NativeMethods.CrossFreeLibrary(_libMpvDll);
+          //  NativeMethods.CrossFreeLibrary(_libMpvDll); - Seems to make SE crash...
             _libMpvDll = IntPtr.Zero;
         }
 
