@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -129,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SetEndTimeAndStartTime(name, p);
                 Subtitle.Paragraphs.Add(p);
             }
+            Subtitle.Sort(SubtitleSortCriteria.StartTime);
             DialogResult = DialogResult.OK;
         }
 
