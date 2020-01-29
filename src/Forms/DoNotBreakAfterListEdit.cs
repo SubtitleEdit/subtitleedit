@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _noBreakAfterList = new List<NoBreakAfterItem>();
                 var doc = new XmlDocument();
                 doc.Load(_languages[idx]);
-                foreach (XmlNode node in doc.DocumentElement)
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
