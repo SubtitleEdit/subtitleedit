@@ -210,6 +210,7 @@
     <Compile Include="SeJsonParser.cs" />
     <Compile Include="SeLogger.cs" />
     <Compile Include="RulesProfile.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle94.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle93.cs" />
     <Compile Include="SubtitleFormats\DCinemaSmpte2014.cs" />
     <Compile Include="SubtitleFormats\ESubXf.cs" />
