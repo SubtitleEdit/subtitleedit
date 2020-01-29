@@ -128,7 +128,12 @@ namespace Nikse.SubtitleEdit.Core
 
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
+                var dataFolderOverride = Environment.GetEnvironmentVariable("DATA_FOLDER_OVERRIDE");
+                if (!string.IsNullOrEmpty(dataFolderOverride) && Directory.Exists(dataFolderOverride))
+                {
+                    appDataRoamingPath = Path.Combine(dataFolderOverride, "");
+                }
+                else if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
                 {
                     try
                     {
@@ -177,6 +182,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (IsRunningOnLinux || IsRunningOnMac)
             {
+                var tesseract4Override = Environment.GetEnvironmentVariable("TESSERACT4_OVERRIDE");
+                if (!string.IsNullOrEmpty(tesseract4Override) && Directory.Exists(tesseract4Override))
+                {
+                    return tesseract4Override;
+                }
                 if (Directory.Exists("/usr/share/tesseract-ocr/4.00/tessdata"))
                 {
                     return "/usr/share/tesseract-ocr/4.00/tessdata";
@@ -199,6 +209,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (IsRunningOnLinux || IsRunningOnMac)
             {
+                var tesseract3Override = Environment.GetEnvironmentVariable("TESSERACT302_OVERRIDE");
+                if (!string.IsNullOrEmpty(tesseract3Override) && Directory.Exists(tesseract3Override))
+                {
+                    return tesseract3Override;
+                }
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                 {
                     return "/usr/share/tesseract-ocr/tessdata";
