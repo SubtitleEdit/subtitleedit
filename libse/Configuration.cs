@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -34,7 +36,8 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
         public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
 
-        public static readonly string DefaultLinuxFontName = "DejaVu Serif";
+        public static readonly string DefaultLinuxFontName = GetDefaultLinuxFontName();
+        public static readonly float DefaultLinuxFontSize = GetDefaultLinuxFontSize();
 
         private Configuration()
         {
@@ -125,15 +128,14 @@ namespace Nikse.SubtitleEdit.Core
         private static string GetDataDirectory()
         {
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
-
+            var dataFolderOverride = Environment.GetEnvironmentVariable("SE_DATA_FOLDER_OVERRIDE");
+            if (!string.IsNullOrEmpty(dataFolderOverride) && Directory.Exists(dataFolderOverride))
+            {
+                return Path.Combine(dataFolderOverride, "") + Path.DirectorySeparatorChar; // containerized installation
+            }
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var dataFolderOverride = Environment.GetEnvironmentVariable("DATA_FOLDER_OVERRIDE");
-                if (!string.IsNullOrEmpty(dataFolderOverride) && Directory.Exists(dataFolderOverride))
-                {
-                    appDataRoamingPath = Path.Combine(dataFolderOverride, "");
-                }
-                else if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
+                if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))
                 {
                     try
                     {
@@ -180,13 +182,13 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetTesseractDataDirectory()
         {
+            var tesseract4Override = Environment.GetEnvironmentVariable("SE_TESSERACT4_OVERRIDE");
+            if (!string.IsNullOrEmpty(tesseract4Override) && Directory.Exists(tesseract4Override))
+            {
+                return tesseract4Override;
+            }
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var tesseract4Override = Environment.GetEnvironmentVariable("TESSERACT4_OVERRIDE");
-                if (!string.IsNullOrEmpty(tesseract4Override) && Directory.Exists(tesseract4Override))
-                {
-                    return tesseract4Override;
-                }
                 if (Directory.Exists("/usr/share/tesseract-ocr/4.00/tessdata"))
                 {
                     return "/usr/share/tesseract-ocr/4.00/tessdata";
@@ -207,13 +209,13 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetTesseract302DataDirectory()
         {
+            var tesseract3Override = Environment.GetEnvironmentVariable("SE_TESSERACT302_OVERRIDE");
+            if (!string.IsNullOrEmpty(tesseract3Override) && Directory.Exists(tesseract3Override))
+            {
+                return tesseract3Override;
+            }
             if (IsRunningOnLinux || IsRunningOnMac)
             {
-                var tesseract3Override = Environment.GetEnvironmentVariable("TESSERACT302_OVERRIDE");
-                if (!string.IsNullOrEmpty(tesseract3Override) && Directory.Exists(tesseract3Override))
-                {
-                    return tesseract3Override;
-                }
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                 {
                     return "/usr/share/tesseract-ocr/tessdata";
@@ -248,6 +250,25 @@ namespace Nikse.SubtitleEdit.Core
             }
             return encodings.AsEnumerable();
         }
-
+        private static string GetDefaultLinuxFontName()
+        {
+            var defaultLinuxFontNameOverride = Environment.GetEnvironmentVariable("SE_DEFAULT_LINUX_FONT_NAME_OVERRIDE");
+            
+            if (!string.IsNullOrEmpty(defaultLinuxFontNameOverride))
+            {
+                return defaultLinuxFontNameOverride;
+            }
+            // fallback to DejaVu Sans
+            return "DejaVu Sans";
+        }
+        private static float GetDefaultLinuxFontSize()
+        {
+            var defaultLinuxFontSizeOverride = Environment.GetEnvironmentVariable("SE_DEFAULT_LINUX_FONT_SIZE_OVERRIDE");
+            if (!string.IsNullOrEmpty(defaultLinuxFontSizeOverride))
+            {
+                return float.Parse(defaultLinuxFontSizeOverride, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+            }
+            return 8F;
+        }
     }
 }

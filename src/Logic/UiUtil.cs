@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (Configuration.IsRunningOnLinux)
                 {
-                    font = new Font(Configuration.DefaultLinuxFontName, 8F);
+                    font = new Font(Configuration.DefaultLinuxFontName, Configuration.DefaultLinuxFontSize);
                 }
 
                 try
