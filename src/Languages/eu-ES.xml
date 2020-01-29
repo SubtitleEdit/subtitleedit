@@ -33,6 +33,7 @@
     <Number>Zenbakia</Number>
     <Text>Idatzia</Text>
     <HourMinutesSecondsMilliseconds>Ordu:min:seg:sm</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>Ordu:min:seg:frame</HourMinutesSecondsFrames>
     <Bold>Lodia</Bold>
     <Italic>E&amp;tzana</Italic>
     <Underline>Azpimarratua</Underline>
@@ -54,12 +55,11 @@
     <OverlapNextX>Gainjarrita hurrengoari ({0:#,##0.###})</OverlapNextX>
     <Negative>Ken</Negative>
     <RegularExpressionIsNotValid>Adiera arrunta ez da baliozkoa!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Azpidatzia gordeta</SubtitleSaved>
     <CurrentSubtitle>Oraingo azpidatzia</CurrentSubtitle>
     <OriginalText>Jatorrizko idatzia</OriginalText>
     <OpenOriginalSubtitleFile>Ireki jatorrizko azpidatzi agiria...</OpenOriginalSubtitleFile>
     <PleaseWait>Mesedez itxaron...</PleaseWait>
-    <SessionKey>Saio Giltza:</SessionKey>
+    <SessionKey>Saio Gakoa:</SessionKey>
     <UserName>Erabiltzaile izena:</UserName>
     <UserNameAlreadyInUse>Erabiltzaile izena jadanik erabilia da</UserNameAlreadyInUse>
     <WebServiceUrl>Webzerbitzu url-a:</WebServiceUrl>
@@ -77,6 +77,10 @@
     <Before>Aurretik</Before>
     <After>Ondoren</After>
     <Size>Neurria</Size>
+    <Search>Bilatu</Search>
+    <DeleteCurrentLine>Ezabatu uneko lerroa</DeleteCurrentLine>
+    <Width>Zabalera</Width>
+    <Height>Garaiera</Height>
   </General>
   <About>
     <Title>Subtitle Edit Buruz</Title>
@@ -140,13 +144,23 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <AddSeconds>Gehitu segunduak</AddSeconds>
     <SetAsPercent>Ezarri iraupenaren ehunekoa</SetAsPercent>
     <Note>Oharra: Erakuspen denbora ez zaio hurrengo idatziaren hasiera denborari gainjarriko</Note>
-    <PleaseSelectAValueFromTheDropDownList>Mesedez hautatu goitibeherako zerrendaren balioa</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>Zuzenduta</Fixed>
+    <Milliseconds>Segundumilaen</Milliseconds>
+    <ExtendOnly>Hedatu bakarrik</ExtendOnly>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ezarri denbora mugak</Title>
     <FixesAvailable>Zuzenketa eskuragarri: {0}</FixesAvailable>
     <UnableToFix>Zuzendu ezinak: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Audioa idazkira</Title>
+    <ExtractingAudioUsingX>Audioa ateratzen erabiliz {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Idazkia audiotik ateratzen erabiliz {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Idazkia ateratzen {0} bidez, garapena: {1}%</ProgessViaXy>
+    <ShowLess>Erakutsi gutxiago  ▲</ShowLess>
+    <ShowMore>Erakutsi gehiago  ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Berez orekatu hautaturiko lerroak</TitleAutoBreak>
     <TitleUnbreak>Kendu lerro hausteak hautaturiko lerroetan</TitleUnbreak>
@@ -160,8 +174,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <InputDescription>Sarrera agiriak (bilatu edo arrastatu eta askatu)</InputDescription>
     <Status>Egoera</Status>
     <Output>Irteera</Output>
-    <ChooseOutputFolder>Hautatu irteera agiritegia:</ChooseOutputFolder>
-    <OverwriteExistingFiles>&amp;Gainidatzi dauden agiriak</OverwriteExistingFiles>
+    <SaveInSourceFolder>Gorde iturburu agiri agiritegian</SaveInSourceFolder>
+    <SaveInOutputFolder>Gorde irteera agiritegian azpian</SaveInOutputFolder>
+    <OverwriteFiles>Gainidatzi agiriak</OverwriteFiles>
     <Style>Estiloa...</Style>
     <UseStyleFromSource>Erabili estiloa iturburutik</UseStyleFromSource>
     <ConvertOptions>Bihurketa aukerak</ConvertOptions>
@@ -175,6 +190,10 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <NotConverted>Hutsegitea</NotConverted>
     <Converted>Bihurtuta</Converted>
     <Settings>Ezarpenak</Settings>
+    <FixRtl>Zuzendu ESEZ</FixRtl>
+    <FixRtlAddUnicode>Zuzendu ESEZ Unicode etiketen bidez</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Kendu ESEZ Unicode etiketak</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Alderantzizkatu ESEZ hasiera/amaiera</FixRtlReverseStartEnd>
     <SplitLongLines>Banandu lerro luzeak</SplitLongLines>
     <AutoBalance>Berez orekatu lerroak</AutoBalance>
     <ScanFolder>Agiritegi mihaketa...</ScanFolder>
@@ -188,14 +207,27 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>SubRip (.srt) agiriak UTF-8 BOM idazburu gabe</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Bi lerro baino gehiago azpidatzi batean</FilterMoreThanTwoLines>
     <FilterContains>Idazkiak du...</FilterContains>
+    <FilterFileNameContains>Agiriaren izenak du...</FilterFileNameContains>
     <FixCommonErrorsErrorX>Zuzendu akats arruntak: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Ordezte anitza: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Berez orekatzea: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Orekatu denbora kodeak</OffsetTimeCodes>
+    <TransportStreamSettings>Transport Stream ezarpenak</TransportStreamSettings>
+    <TransportStreamOverrideXPosition>Ezeztatu jatorrizko X kokapena</TransportStreamOverrideXPosition>
+    <TransportStreamOverrideYPosition>Ezeztatu jatorrizko Y kokapena</TransportStreamOverrideYPosition>
+    <TransportStreamOverrideVideoSize>Ezeztatu jatorrizko bideo neurria</TransportStreamOverrideVideoSize>
+    <TransportStreamFileNameEnding>Agiri izen amaiera</TransportStreamFileNameEnding>
+    <TransportStreamSettingsButton>TS ezarpenak...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>Kendu lerro-hausteak</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Editatu lastermarka</EditBookmark>
+    <AddBookmark>Gehitu lastermarka</AddBookmark>
+    <GoToBookmark>Joan lastermarkara</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Aldatu hizkia</Title>
     <ChangeCasingTo>Aldatu hizkia hona</ChangeCasingTo>
@@ -388,6 +420,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <TextLeftJustifiedText>Idazkia ezkerrera baztertuta</TextLeftJustifiedText>
     <TextCenteredText>Idazkia erdiratuta</TextCenteredText>
     <TextRightJustifiedText>Idazkia erdira baztertuta</TextRightJustifiedText>
+    <UseBoxForOneNewLine>Hautatu 'Erabili kutxatila idazkiaren inguruan; lerro-berri bat bakarrerako</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke eragina</Title>
@@ -425,6 +458,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FontName>Hizki izena</FontName>
     <FontSize>Hizki neurria</FontSize>
     <FontFace>Hizki aldea</FontFace>
+    <FontFaceRegular>Erregularra</FontFaceRegular>
     <Alignment>Lerrokapena</Alignment>
     <Baseline>Ohinlerroa</Baseline>
   </ExportFcpXmlAdvanced>
@@ -459,6 +493,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Right>Eskuinean</Right>
     <Center>Erdian</Center>
     <CenterLeftJustify>Erdian, ezkerrean lerrokatuz</CenterLeftJustify>
+    <CenterTopJustify>Erdian, goian lerrokatuz</CenterTopJustify>
     <BottomMargin>Beheko bazterra:</BottomMargin>
     <LeftRightMargin>Ezker/eskuin bazterra</LeftRightMargin>
     <SaveBluRraySupAs>Hautatu Blu-ray sup agiri izena</SaveBluRraySupAs>
@@ -539,11 +574,13 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <RemovedEmptyLine>Kendu lerro hutsak</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Kenduta goiko lerro hutsa</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Kenduta beheko lerro hutsa</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Kendu erdiko lerro hutsa</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Kendu lerro hutsak/ez erabilitako lerro hautsiak</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Kendutako lerro hutsak: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Zuzendu erakus denbora gainjartzea</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Zuzendu erakus denbora laburrak</FixShortDisplayTimes>
     <FixLongDisplayTimes>Zuzendu erakus denbora luzeak</FixLongDisplayTimes>
+    <FixShortGaps>Zuzendu tarte laburrak</FixShortGaps>
     <FixInvalidItalicTags>Zuzendu etiketa etzan okerrak</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Kendu beharrekoak ez diren tarteak</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Kendu beharrezkoak ez diren puntuak</RemoveUnneededPeriods>
@@ -581,9 +618,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <NothingToFix>Ezer ez zuzentzeko :)</NothingToFix>
     <FixesFoundX>Aurkitutako zuzenketak: {0}</FixesFoundX>
     <XFixesApplied>Zuzenketak ezarrita: {0}</XFixesApplied>
-    <NothingToFixBut>Ezer ez zuzentzeko baina gauza gutxi batzuk hobetu daitezke</NothingToFixBut>
-    <Continue>Jarraitu</Continue>
-    <ContinueAnyway>Jarraitu edonola?</ContinueAnyway>
+    <NothingFixableBut>Ezin da ezer zuzendu berezgaitasunez. Azpidatziak akatsak ditu - ikusi oharra xehetasunetarako</NothingFixableBut>
+    <XFixedBut>{0} arazo zuzenduta baina azpidatziak akatsak ditu oraindik - ikusi oharra xehetasunetarako</XFixedBut>
+    <XCouldBeFixedBut>{0} arazo ezin dira zuzendu baina azpidatziak akatsak izango ditu oraindik - ikusi oharra xehetasunetarako</XCouldBeFixedBut>
     <UncheckedFixLowercaseIToUppercaseI>Egiaztatu gabe "Zuzendu 'i' hizki xehea 'I' -ra (Ingelera)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>Aldatuta {0} hizki larrira</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Zuzendu lehen hizkia hizki larrira esaldi baten ondoren</FixFirstLetterToUppercaseAfterParagraph>
@@ -595,6 +632,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixInvalidItalicTag>Zuzendu etiketa etzanak</FixInvalidItalicTag>
     <FixShortDisplayTime>Zuzendu erakus denbora laburrak</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Zuzendu erakus denbora gainjarpenak</FixOverlappingDisplayTime>
+    <FixShortGap>Zuzendu tarte laburra</FixShortGap>
     <FixInvalidItalicTagsExample>&lt;i&gt;Ez zait axola.&lt;i&gt; -&gt; &lt;i&gt;Ez zait axola.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Kaixo  Xabier , han. -&gt; Kaixo Xabier, han.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Kaixo Xabier!. -&gt; Kaixo Xabier!</RemoveUnneededPeriodsExample>
@@ -609,6 +647,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <XDisplayTimesProlonged>{0} erakus denbora luzatuta</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} baliogabeko HTML etiketak zuzenduta</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} erakus denbora laburtuta</XDisplayTimesShortned>
+    <XGapsFixed>{0} tarte labur zuzenduta</XGapsFixed>
     <XLinesUnbreaked>{0} lerro hautsi gabe</XLinesUnbreaked>
     <UnneededSpace>Ezbeharrezko tartea</UnneededSpace>
     <XUnneededSpacesRemoved>{0} ezbeharrezko tarte kenduta</XUnneededSpacesRemoved>
@@ -650,8 +689,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   <GetDictionaries>
     <Title>Hiztegiak behar dituzu?</Title>
     <DescriptionLine1>Subtitle Edit-en idaz-egiaztapena NHunspell motorean ohinarriturik dago.</DescriptionLine1>
-    <DescriptionLine2>Erabili idaz egiaztapen hiztegiak LibreOfficetik.</DescriptionLine2>
-    <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
+    <DescriptionLine2>Erabili idaz egiaztapen hiztegiak Open Officetik.</DescriptionLine2>
     <ChooseLanguageAndClickDownload>Hautatu zure hizkuntza eta klikatu jeitsi</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ireki 'Hiztegi' agiritegia</OpenDictionariesFolder>
     <Download>&amp;Jeitsi</Download>
@@ -674,7 +712,14 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Translate>&amp;Itzuli</Translate>
     <PleaseWait>Mesedez itxaron... denbora apur bat hartu dezake</PleaseWait>
     <PoweredByGoogleTranslate>Google translatek sostengatuta</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Microsoft translatek sostengatuta</PoweredByMicrosoftTranslate>
+    <PoweredByMicrosoftTranslate>Microsoft itzulpenak sostengatuta</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Barkatu, Bing bezero sekretu bat behar duzu Microsoft-ik azken Bing Itzulpena erabiltzeko.
+
+Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Bing bezero sekretua sartzeko.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Barkatu, API gako bat behar duzu Google-tik azken Google Itzulpena erabiltzeko.
+
+Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sartzeko.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>API gakorik gabe itzultzen saiatzen... (astiroa eta datu mugatuak)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft itzulpena</Title>
@@ -700,13 +745,17 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   <ImportSceneChanges>
     <Title>Inportatu agerraldi aldaketak</Title>
     <OpenTextFile>&amp;Inportatu idazki agiria...</OpenTextFile>
-    <ImportOptions>Inportatu aukerak</ImportOptions>
+    <Generate>Sortu agerraldi aldaketak</Generate>
+    <Import>Inportatu agerraldi aldaketak</Import>
     <TextFiles>Idazki agiriak</TextFiles>
     <TimeCodes>Denbora kodeak</TimeCodes>
     <Frames>Frame</Frames>
     <Seconds>Segundu</Seconds>
     <Milliseconds>Segundumilaen</Milliseconds>
     <GetSceneChangesWithFfmpeg>Lortu agerraldi aldaketak FFmpeg-tik</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Sentikortasuna</Sensitivity>
+    <SensitivityDescription>Balio apalagoek agerraldi aldaketa gehiago ematen dute</SensitivityDescription>
+    <NoSceneChangesFound>Ez da agerraldi aldaketarik aurkitu.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
@@ -717,6 +766,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Splitting>Banantzen</Splitting>
     <AutoSplitText>Berez banantze idatzia</AutoSplitText>
     <OneLineIsOneSubtitle>Lerro bat azpidatzi bat da</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Bi lerro azpidatzi bat dira</TwoLinesAreOneSubtitle>
     <LineBreak>Lerro haustea</LineBreak>
     <SplitAtBlankLines>Banandu lerro hutsetan</SplitAtBlankLines>
     <MergeShortLines>Batu jarraipena duten lerro laburrak</MergeShortLines>
@@ -730,6 +780,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <TextFiles>Idatzi agiriak</TextFiles>
     <PreviewLinesModifiedX>Aurreikuspena - esaldi aldatuak: {0}</PreviewLinesModifiedX>
     <TimeCodes>Denbora kodeak</TimeCodes>
+    <SplitAtEndChars>Banandu hizki amaieran</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Hasperen-hitzak</Title>
@@ -743,6 +794,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FileName>Agiri izena</FileName>
     <Join>Batu</Join>
     <TotalNumberOfLinesX>Lerro zenbatekoa guztira: {0:#,###,###}</TotalNumberOfLinesX>
+    <AlreadyCorrectTimeCodes>Agiriak jadanik denbora kode zuzenak ditu</AlreadyCorrectTimeCodes>
+    <AppendTimeCodes>Gehitu aurreko agiriaren amaiera denborak</AppendTimeCodes>
+    <AddMs>Gehitu segundumilaenak agiri bakoitzaren ondoren</AddMs>
   </JoinSubtitles>
   <LanguageNames>
     <NotSpecified>Adierazi gabea</NotSpecified>
@@ -902,6 +956,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Advan&amp;ced Sub Station Alpha ezaugarriak...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Stati&amp;on Alpha ezaugarriak...</SubStationAlphaProperties>
         <EbuProperties>EBU STL ezaugarriak...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro ezaugarriak...</DvdStuioProProperties>
+        <TimedTextProperties>Denboratutako Idazki ezaugarriak...</TimedTextProperties>
         <PacProperties>PAC ezaugarriak...</PacProperties>
         <OpenOriginal>Ireki &amp;jatorrizko azpidatzia (itzultzaile eran)...</OpenOriginal>
         <SaveOriginal>G&amp;orde jatorrizko azpidatzia</SaveOriginal>
@@ -980,6 +1036,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <SplitLongLines>&amp;Banandu lerro luzeak...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>&amp;Gutxiengo erakus denbora esaldi artean...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Antolatu h&amp;onela</SortBy>
+        <NetflixQualityCheck>Netflix ontasun egiaztapena...</NetflixQualityCheck>
         <Number>Zenbakia</Number>
         <StartTime>Hasiera denbora</StartTime>
         <EndTime>Amaiera denbora</EndTime>
@@ -1004,12 +1061,14 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
       <Video>
         <Title>&amp;Bideoa</Title>
         <OpenVideo>&amp;Ireki bideo agiria...</OpenVideo>
+        <OpenVideoFromUrl>Ireki bideoa url-tik...</OpenVideoFromUrl>
         <OpenDvd>Ireki DVD-a...</OpenDvd>
         <ChooseAudioTrack>Hautatu audio bidea</ChooseAudioTrack>
         <CloseVideo>It&amp;xi bideo agiria</CloseVideo>
         <SetVideoOffset>Ezarri bideo oreka...</SetVideoOffset>
         <SmptTimeMode>SMPTE denborapena (eror framea)</SmptTimeMode>
-        <ImportSceneChanges>I&amp;nportatu agerraldi aldaketak...</ImportSceneChanges>
+        <GenerateTextFromVideo>Sortu idazkia bideotik...</GenerateTextFromVideo>
+        <GenerateImportSceneChanges>Sortu/inportatu agerraldi aldaketak</GenerateImportSceneChanges>
         <RemoveSceneChanges>Kendu agerraldi aldaketak</RemoveSceneChanges>
         <WaveformBatchGenerate>Multzo uhinera sortzea...</WaveformBatchGenerate>
         <ShowHideVideo>E&amp;rakutsi/ezkutatu bideoa</ShowHideVideo>
@@ -1117,10 +1176,20 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Batu lerroak elkarrizketa bezala</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Batu aur&amp;reko lerroarekin</MergeWithLineBefore>
         <MergeWithLineAfter>Batu hurre&amp;ngo lerroarekin</MergeWithLineAfter>
-        <Normal>Arrunta</Normal>
+        <RemoveFormatting>Kendu formateatzea</RemoveFormatting>
+        <RemoveFormattingAll>Kendu formateatze guztiak</RemoveFormattingAll>
+        <RemoveFormattingBold>Kendu lodia</RemoveFormattingBold>
+        <RemoveFormattingItalic>Kendu etzana</RemoveFormattingItalic>
+        <RemoveFormattingUnderline>Kendu azpimarra</RemoveFormattingUnderline>
+        <RemoveFormattingColor>Kendu margoa</RemoveFormattingColor>
+        <RemoveFormattingFontName>Kendu hizki izena</RemoveFormattingFontName>
+        <RemoveFormattingAlignment>Kendu lerrokatzea</RemoveFormattingAlignment>
         <Underline>Az&amp;pimarratua</Underline>
+        <Box>Kutxatila</Box>
         <Color>Margoa...</Color>
         <FontName>Hizki izena...</FontName>
+        <Superscript>Gaineskripta</Superscript>
+        <Subscript>Azpieskripta</Subscript>
         <Alignment>Lerr&amp;okapena</Alignment>
         <AutoBalanceSelectedLines>Berez orekatu hautaturiko lerroak...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Kendu lerro-hautsiak hautaturiko lerroetatik...</RemoveLineBreaksFromSelectedLines>
@@ -1129,7 +1198,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <ShowSelectedLinesEarlierLater>Erakutsi hautaturiko lerroak lehenago&amp;/geroago...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Ikus albiberetu hautaturiko lerroak...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Mi&amp;crosoft itzulpena jatorrizko lerroan</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Googl&amp;ekin itzuli hautaturiko lerroak...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Itzuli hautaturiko lerroak...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Zehaztu &amp;iraupena hautaturiko lerroetan...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Zuzendu akats arruntak hautatur&amp;iko lerroetan...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Al&amp;datu hizkiak hautaturiko lerroetan...</ChangeCasingForSelectedLines>
@@ -1138,6 +1207,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <WebVTTRemoveVoices>Kendu ahotsak</WebVTTRemoveVoices>
         <NewActor>Antzezle berria...</NewActor>
         <RemoveActors>Kendu antzezleak</RemoveActors>
+        <EditBookmark>Editatu lastermarka</EditBookmark>
+        <RemoveBookmark>Kendu lastermarka</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1153,6 +1224,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     </Controls>
     <VideoControls>
       <Translate>Itzuli</Translate>
+      <CreateAndAdjust>Sortu/zehaztu</CreateAndAdjust>
       <Create>Sortu</Create>
       <Adjust>Zehaztu</Adjust>
       <SelectCurrentElementWhilePlaying>Hautatu oraingo azpidatzia irakurtzerakoa&amp;n</SelectCurrentElementWhilePlaying>
@@ -1190,8 +1262,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Bideo kokapena:</VideoPosition>
       <TranslateTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</TranslateTip>
-      <CreateTip>Aholkua: Erabili &lt;ktrl+ezk/esk geziak&gt;</CreateTip>
-      <AdjustTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</AdjustTip>
       <BeforeChangingTimeInWaveformX>Uhineran denbora aldatu baino lehen: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Idatzi berria gehituta: {0}</NewTextInsertAtX>
       <Center>Erdiratu</Center>
@@ -1293,7 +1363,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <RedoPerformed>Berregitea eginda</RedoPerformed>
     <NothingToUndo>Ezer ez desegiteko</NothingToUndo>
     <InvalidLanguageNameX>Hizkuntza izen baliogabea: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Ezin da hizkuntza aldatu!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Ez erakutsi mezu hau berriro</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Zuzendutako hitz zenbatekoa: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Jauzitako hitz zenbatekoa: {0}</NumberOfSkippedWords>
@@ -1316,7 +1385,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <BeforeInsertLine>Lerroa gehitu aurretik</BeforeInsertLine>
     <LineInserted>Lerroa gehituta</LineInserted>
     <BeforeLineUpdatedInListView>Lerroa ikus-zerrendan eguneratu aurretik</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Hizkia arrunt ezarri aurretik</BeforeSettingFontToNormal>
     <BeforeSplitLine>Lerroa banandu aurretik</BeforeSplitLine>
     <LineSplitted>Lerroa bananduta</LineSplitted>
     <BeforeMergeLines>Lerroak batu aurretik</BeforeMergeLines>
@@ -1337,7 +1405,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Azpiatzia Matroska agiritik inportatuta</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Jeiste agiria '{0}' ez onartuta - agiria handiegia da</DropFileXNotAccepted>
     <DropOnlyOneFile>Agiri bakar bat bakarrik jeitsi dezakezu</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Lerroak sortu/zehaztu aurretik</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Ireki azpidatzia...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Azala aldatu aurretik</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Azala aldatutako lerro zenbatekoa: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1364,7 +1431,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Erakutsi hautaturiko lerroak {0:0.0##} segundu geroago</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Erakutsi hautapena eta aurrera {0:0.0##} segundu lehenago</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Erakutsi hautapena eta aurrera {0:0.0##} segundu geroago</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Erakutsi lehenago/geroago eginikoa hautaturiko lerroetan</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Hitz bikoitzak regex bidez {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Antolatu aurretik: {0}</BeforeSortX>
     <SortedByX>Antolatuta honela: {0}</SortedByX>
@@ -1382,7 +1448,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' OCR ordezpen zerrenda parea EZ da OCR ordezpen zerrendara gehitu</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lerro hautatuta</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Azpidatziak unicode musika notak ditu. ANSI agiri kodeaketa erabiliz gordez gero galdu egingo dira. Jarraitu gordetzearekin?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Azpidatziak unicode hizkiak ditu. ANSI agiri kodeaketa erabiliz gordetzeak hauek galduaraziko ditu. Jarraitu gordetzearekin?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Azpidatziak ken denbora kodeak ditu. Gordetzearekin jarraitu?</NegativeTimeWarning>
     <BeforeMergeShortLines>Lerro laburrak batu aurretik</BeforeMergeShortLines>
     <MergedShortLinesX>Batutako lerro zenbatekoa: {0}</MergedShortLinesX>
@@ -1414,10 +1479,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <UserAndAction>Erabiltzailea/ekintza</UserAndAction>
     <NetworkMode>Sarean eran</NetworkMode>
     <XStartedSessionYAtZ>{0}: Saioa hasita {1} {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Idaz-egiaztapena Word erabiliz {0} - lerroa {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Ezin da Microsoft Word abiarazi</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Idaz-egiaztapena utzita. {0} lerro aldatuta.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Idaz-egiaztapena osatuta. {0} lerro aldatuta.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ireki beste azpidatzi bat</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Elkarrizketa marratxoak aldatu aurretik</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Esportatu idatzi laua honela</ExportPlainTextAs>
@@ -1433,6 +1494,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <BeforeColumnImportText>Zutabe idatzi inportazioaren aurretik</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Zutabe gelaxkak behera aldatu aurretik</BeforeColumnShiftCellsDown>
     <BeforeX>Aurretik: {0}</BeforeX>
+    <LinesUpdatedX>Lerro eguneratuta: {0}</LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Akatsa plugina gertatzerakoan: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Plugina ekin aurretik: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Ezinezkoa azpidatzi emaitza pluginetik irakurtzea!</UnableToReadPluginResult>
@@ -1451,6 +1513,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Azpidatzia uhineraren kokapenean txertatzeak gainjartzea eragingo du!
 
 Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
+    <SubtitleContainsNegativeDurationsX>Azpidatzaik iraupen negatiboa du hurrengo lerro(et)an: {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Ezarri irakurketa neurria (abidura) honela {0}%</SetPlayRateX>
     <ErrorLoadIdx>Ezinezkoa da .idx agiriak irakurtzea/editatzea. Idx agiriak idx/sub agiri bikote baten atal dira (VobSub deitua ere), eta Subtitle Edit-ek ireki dezake .sub agiria.</ErrorLoadIdx>
     <ErrorLoadRar>Agiri honek .rar agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik ireki.</ErrorLoadRar>
@@ -1527,6 +1590,8 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <RegEx>Esaera arrunta</RegEx>
     <UnequalLines>Lerro ezberdinak</UnequalLines>
     <EqualLines>Lerro berdinak</EqualLines>
+    <DurationLessThan>Iraupena hau baino gutxiago</DurationLessThan>
+    <DurationGreaterThan>Iraupena hau baino gehiago</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Ordezte anitza</Title>
@@ -1694,6 +1759,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <WordLists>Hitz zerrendak</WordLists>
     <SsaStyle>ASS/SSA Estiloa</SsaStyle>
     <Network>Sarea</Network>
+    <Rules>Arauak</Rules>
     <ShowToolBarButtons>Erakutsi tresnabarra botoiak</ShowToolBarButtons>
     <New>Berria</New>
     <Open>Ireki</Open>
@@ -1707,11 +1773,25 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <SettingsName>Ezarpenak</SettingsName>
     <Help>Laguntza</Help>
     <UnbreakNoSpace>Deshautsi tarterik gabe (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Aldatu lastermarkak</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Aldatu lastermarkak - gehitu aipamena</ToggleBookmarksWithComment>
+    <ClearBookmarks>Garbitu lastermarkak</ClearBookmarks>
+    <GoToBookmark>Joan lastermarkara</GoToBookmark>
+    <GoToPreviousBookmark>Joan aurreko lastermarkara</GoToPreviousBookmark>
+    <GoToNextBookmark>Joan hurrengo lastermarkara</GoToNextBookmark>
+    <ChooseProfile>Hautatu profila</ChooseProfile>
+    <DuplicateLine>Bikoiztu lerroa</DuplicateLine>
+    <FontInUi>EI Hizkia</FontInUi>
     <ShowFrameRate>Erakutsi frame neurria tresnabarran</ShowFrameRate>
     <DefaultFrameRate>Berezko frame neurria:</DefaultFrameRate>
     <DefaultFileEncoding>Berezko agiri kodeaketa:</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Berez atzeman ANSI kodeaketa:</AutoDetectAnsiEncoding>
+    <Profile>Profila</Profile>
+    <Profiles>Profilak</Profiles>
+    <ImportProfiles>Inportatu profilak</ImportProfiles>
+    <ExportProfiles>Esportatu profilak</ExportProfiles>
     <SubtitleLineMaximumLength>Lerro bakarraren geh. luzera:</SubtitleLineMaximumLength>
+    <OptimalCharactersPerSecond>Hizkirri/seg hoberena</OptimalCharactersPerSecond>
     <MaximumCharactersPerSecond>Geh. hizkirri/seg:</MaximumCharactersPerSecond>
     <MaximumWordssPerMinute>Geh. hitz/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Berez-bildu idazterakoan</AutoWrapWhileTyping>
@@ -1723,6 +1803,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <SubtitleFontSize>Azpidatzi hizki neurria:</SubtitleFontSize>
     <SubtitleBold>Lodia</SubtitleBold>
     <VideoAutoOpen>Berez-ireki bideo agiria azpidatzia irekitzerakoan</VideoAutoOpen>
+    <AllowVolumeBoost>Ahalbidetu bolumen bultzada</AllowVolumeBoost>
     <SubtitleCenter>Erdian</SubtitleCenter>
     <SubtitleFontColor>Azpidatzi hizki margoa:</SubtitleFontColor>
     <SubtitleBackgroundColor>Azpidatzi barren margoa:</SubtitleBackgroundColor>
@@ -1734,6 +1815,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <StartInSourceView>Hasi iturburu ikuspenean</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Kendu lerro hutsak azpidatzia irekitzerakoan</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Erakutsi lerro hautsiak zerrenda ikuspegian honela:</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"Gorde honela..." agiri izena erabiltzen du hemendik</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Klik bikoitza lerroan leiho nagusian zerrenda ikuspegian izango da:</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Hautatu zerrenda ikuspegi zutabe ikusgarriak</MainListViewColumnsInfo>
     <MainListViewNothing>Ezer ez</MainListViewNothing>
@@ -1744,15 +1826,18 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Joan bideo kokapenera - 0.5 seg. eta pausatu</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Joan bideo kokapenera - 1 seg. eta irakurri</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Joan edizio kutxara eta pausatu bideo kokapenean</MainListViewEditTextAndPause>
+    <VideoFileName>Bideo agiriaren izena</VideoFileName>
+    <ExistingFileName>Edizio agiriaren izena</ExistingFileName>
     <AutoBackup>Berez-babeskopia:</AutoBackup>
     <AutoBackupEveryMinute>Minutuoro</AutoBackupEveryMinute>
-    <AutoBackupEveryFiveMinutes>5 minututik behin</AutoBackupEveryFiveMinutes>
-    <AutoBackupEveryFifteenMinutes>15 minututik behin</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Kendu ondoren</AutoBackupDeleteAfter>
+    <AutoBackupEveryFiveMinutes>5 min behin</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>15 min behin</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Kendu:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 hilabete</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 hilabete</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 hilabete</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Egiaztatu eguneraketak</CheckForUpdates>
+    <AutoSave>Berez gorde</AutoSave>
     <AllowEditOfOriginalSubtitle>Ahalbidetu jatorrizko azpidatzia editatzea</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Ohartu lerro ezabaketaz</PromptDeleteLines>
     <TimeCodeMode>Denbora kode modua:</TimeCodeMode>
@@ -1800,6 +1885,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <SpectrogramOneColorGradient>Margo gradiente bat</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasikoa</SpectrogramClassic>
     <WaveformUseFFmpeg>Erabili FFmpeg uhinera aterapenerako</WaveformUseFFmpeg>
+    <DownloadFFmpeg>Jeitsi FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>FFmpeg-rako helburua</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Bilatu FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bilatu VLC eramangarria</WaveformBrowseToVLC>
@@ -1851,10 +1937,13 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <Alt>Alt</Alt>
     <Shift>Aldatu</Shift>
     <Key>Tekla:</Key>
+    <ListViewAndTextBox>Zerrenda ikuspegia eta idazkutxa</ListViewAndTextBox>
+    <ListView>Zerrenda Ikuspegia</ListView>
     <TextBox>Idazkutxa</TextBox>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>Zehaztu amaiera kokapenaren bidez</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Zehaztu amaiera kokap bidez eta joan hurr.</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ezarri amaiera eta joan hurrengora</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ezarri hasiera, berez iraupena eta joan hurrengora</AdjustSetStartAutoDurationAndGoToNext>
@@ -1881,7 +1970,17 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoToNextSubtitleAndFocusVideo>Joan hurrengo lerrora eta ezarri bideo kokapena</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
     <ToggleDialogDashes>Aldatu elkarrizketa marratxoak</ToggleDialogDashes>
+    <ToggleMusicSymbols>Aldatu musika ikurrak</ToggleMusicSymbols>
     <Alignment>Lerrokapena (hautaturiko lerroak)</Alignment>
+    <AlignmentN1>Lerrokatu behe ezkerrean - {\an1}</AlignmentN1>
+    <AlignmentN2>Lerrokatu behe erdian - {\an2}</AlignmentN2>
+    <AlignmentN3>Lerrokatu behe eskuinean - {\an3}</AlignmentN3>
+    <AlignmentN4>Lerrokatu erdi ezkerrean - {\an4}</AlignmentN4>
+    <AlignmentN5>Lerrokatu erdi erdian - {\an5}</AlignmentN5>
+    <AlignmentN6>Lerrokatu erdi eskuinean - {\an6}</AlignmentN6>
+    <AlignmentN7>Lerrokatu goi ezkerrean - {\an7}</AlignmentN7>
+    <AlignmentN8>Lerrokatu goi erdian - {\an8}</AlignmentN8>
+    <AlignmentN9>Lerrokatu goi eskuinean - {\an9}</AlignmentN9>
     <CopyTextOnly>Kopiatu idatzia bakarrik gakora (hautaturiko lerroak)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiatu idazki jatorrizkotik oraingora</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Berez-iraupena (hautaturiko lerroak)</AutoDurationSelectedLines>
@@ -1892,11 +1991,11 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <WaveformSeekSilenceBack>Bilatu aurreko isilunea</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Gehitu idatzia hemen (hautapen berrirako)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Gehitu idazkia hemen (hautapen berrirako gakotik)</WaveformAddTextHereFromClipboard>
+    <SetParagraphAsSelection>Ezarri oraingoa hautapen berria bezala</SetParagraphAsSelection>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Joan hurrengo azpidatzira (bideo kokapenetik)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Joan aurreko agerraldi aldaketara</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
@@ -1912,17 +2011,19 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GoForward1Second>Segundu bat aurrera</GoForward1Second>
     <GoBack5Seconds>Bost segundu atzera</GoBack5Seconds>
     <GoForward5Seconds>Bost segundu aurrera</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>Joan aurreko azpidatzira (bideo kokapenetik)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Joan hurrengo azpidatzira (bideo kokapenetik)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Aldatu irakurri/pausatu</TogglePlayPause>
     <Pause>Pausatu</Pause>
     <Fullscreen>Ikusleiho-osoan</Fullscreen>
     <PlayRateSlower>Irakurketa neurria astiroago</PlayRateSlower>
     <PlayRateFaster>Irakurketa neurria azkarrago</PlayRateFaster>
+    <VideoResetSpeedAndZoom>Berrezarri abiadura/zooma</VideoResetSpeedAndZoom>
     <CustomSearch1>Itzulpena, norbere bilaketa 1</CustomSearch1>
     <CustomSearch2>Itzulpena, norbere bilaketa 2</CustomSearch2>
     <CustomSearch3>Itzulpena, norbere bilaketa 3</CustomSearch3>
     <CustomSearch4>Itzulpena, norbere bilaketa 4</CustomSearch4>
     <CustomSearch5>Itzulpena, norbere bilaketa 5</CustomSearch5>
-    <CustomSearch6>Itzulpena, norbere bilaketa 6</CustomSearch6>
     <SyntaxColoring>Joskera margoa</SyntaxColoring>
     <ListViewSyntaxColoring>Zerrenda ikuspegiko joskera margoa</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Marg. iraup. labur. bada</SyntaxColorDurationIfTooSmall>
@@ -1930,11 +2031,17 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <SyntaxColorTextIfTooLong>Margotu idatzia luzeegia bada</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanMaxLines>Margotu idatzia {0} lerro baino gehiago baditu</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Margotu denbora kode gainjarpena</SyntaxColorOverlap>
+    <SyntaxColorGap>Margotu tartea laburregia bada</SyntaxColorGap>
     <SyntaxErrorColor>Akats margoa</SyntaxErrorColor>
     <GoToFirstSelectedLine>Joan lehenik hautaturiko lerrora</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Joan hurrengo lerro hutsera</GoToNextEmptyLine>
     <MergeSelectedLines>Batu hautaturiko lerroak</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>Batu hautaturiko lerroak eta berez-hautsi</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>Batu hautaturiko lerroak eta deshautsi</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Batu hautaturiko lerroak eta deshautsi tarterik gabe (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Batu hautaturiko lerroak, heutsi lehen idazki ez-hutsari bakarrik</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>Batu hautaturiko lerroak elebitan</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>Banandu hautaturiko lerroa elebitan</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Aldatu itzulpen modua</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Aldatu jatorrizkoa eta itzulpena</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Batu jatorrizkoa eta itzulpena</MergeOriginalAndTranslation>
@@ -1943,6 +2050,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <ShortcutIsAlreadyDefinedX>Lastertekla jadanik zehaztuta: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Aldatu itzulpena eta jatorrizkoa bideo/audio aurreikuspenean</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Zutabea, ezabatu idatzia</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>Zutabea, ezabatu idazkia eta aldatu gora</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Zutabea, txertatu idatzia</ListViewColumnInsert>
     <ListViewColumnPaste>Zutabea, itsatsi</ListViewColumnPaste>
     <ListViewColumnTextUp>Zutabea, idazkia gora</ListViewColumnTextUp>
@@ -1956,17 +2064,32 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <MainTextBoxMoveLastWordDownCurrent>Mugitu hurrengo lerroko lehen hitza lerroan behera (uneko azpidatzia)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Hautapena hizki-xehez</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Hautapena hizki-larriz</MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToRuby>Hautapena Ruby-ra (Japoniera)</MainTextBoxSelectionToRuby>
     <MainTextBoxToggleAutoDuration>Aldatu berez iraupena</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Berez hautsi idatzia</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakFromPos>Hautsi lehen tartean kutsorearen kokapenetik</MainTextBoxAutoBreakFromPos>
+    <MainTextBoxAutoBreakFromPosAndGoToNext>Hautsi lehen tartean kutsorearen kokapenetik eta joan hurrengora</MainTextBoxAutoBreakFromPosAndGoToNext>
     <MainTextBoxUnbreak>Deshautsi idatzia</MainTextBoxUnbreak>
     <MainFileSaveAll>Gode denak</MainFileSaveAll>
     <Miscellaneous>Askotarikoa</Miscellaneous>
     <CpsIncludesSpace>Hizkr/seg (HS-KO) tarteak barne</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Erabili ez-hautsi zerrendaren ondoren (berez-hausterako)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Ez-hautsi zerr. ondoren (berez-haust.)</UseDoNotBreakAfterList>
+    <BreakEarlyForLineEnding>Hautsi aurretik esaldi amaiera bada (.!?)</BreakEarlyForLineEnding>
+    <BreakByPixelWidth>Hautsi pixel zabaleraz</BreakByPixelWidth>
+    <BreakPreferBottomHeavy>Hobetsi behekoa astuna</BreakPreferBottomHeavy>
+    <BreakEarlyForDashDialog>Hautsi aurretik elkarrizketa marratxoa bada</BreakEarlyForDashDialog>
+    <BreakEarlyForComma>Hautsi aurretik kakotxa bada</BreakEarlyForComma>
+    <GoogleTranslate>Google Itzulpena</GoogleTranslate>
+    <GoogleTranslateApiKey>API giltza</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing Itzultzailea</MicrosoftBingTranslator>
     <HowToSignUp>Nola hasi saioa</HowToSignUp>
-    <GoogleTranslateUrl>Google itzultzailea url-a</GoogleTranslateUrl>
-    <MicrosoftTranslateApiKey>Giltza</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateApiKey>Gakoa</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateTokenEndpoint>Lekukoaren amaiera-puntua</MicrosoftTranslateTokenEndpoint>
+    <FontNote>Oharra: Hizki ezarpen hauek Subtitle Edit EI-rako besterik ez dira.
+Azpidatzi batentzako hizki bat ezartzea arrunt bideo irakurgailuan egiten da, baina egin daiteke ere "Advanced Sub Station Alpha"-k
+bezala hizkiaren argibideak barnebiltzen dituen azpidatzi heuskarri bat erabiliz edo irudi ohinarriko heuskarrietatik esportatuz.</FontNote>
+    <RestoreDefaultSettings>Leheneratu berezko ezarpenetara</RestoreDefaultSettings>
+    <RestoreDefaultSettingsMsg>Ezarpen guztiak leheneratuko dira berezko ezarpenetara. Jarraitu?</RestoreDefaultSettingsMsg>
   </Settings>
   <SettingsMpv>
     <Title>mpv ezarpenak</Title>
@@ -1974,6 +2097,11 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <DownloadMpvFailed>Ezinezkoa mpv jeistea - mesedez saiatu berriro geroago!</DownloadMpvFailed>
     <DownloadMpvOk>mpv lib jeitsi da eta erabiltzeko gertu dago</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>Jeitsi FFmpeg</Title>
+    <XDownloadFailed>Ezinezkoa {0} jeistea - mesedez saiatu berriro geroago!</XDownloadFailed>
+    <XDownloadOk>{0} jeitsi da eta erabiltzeko gertu dago.</XDownloadOk>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Ezarri bideo oreka</Title>
     <Description>Ezarri bideo oreka (azpidatziak ez du bideoaren egizko denbora jarraitu behar, baina adib. + 10 ordu)</Description>
@@ -2024,6 +2152,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <AutoFixNames>Berez zuze&amp;ndu azalean bakarrik ezberd. diren izenak</AutoFixNames>
     <CheckOneLetterWords>Galdetu hizkirri ezezagunak</CheckOneLetterWords>
     <TreatINQuoteAsING>Tratatu " in' " hitz amaiera " ing " bezala (Ingelera bakarrik)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Gogoratu "Betik erabili" zerrenda</RememberUseAlwaysList>
     <ImageText>Irudi idatzia</ImageText>
     <SpellCheckCompleted>Idaz-egiaztapena osatuta.</SpellCheckCompleted>
     <SpellCheckAborted>Idaz-egiaztapena utzita</SpellCheckAborted>
@@ -2034,8 +2163,12 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <GlyphCheckReport>{0} hizkirri baliogabea aurkitu da {1} zutabean</GlyphCheckReport>
     <WhiteSpaceCheckReport>Zuriune baliogabea aurkitu da {0} zutabean.</WhiteSpaceCheckReport>
     <ReportPrompt>Mesedez ikusi jakinarazpen osoa hemen: {0}.</ReportPrompt>
+    <OpenReportInFolder>Ireki jakinarazpena agiritegian</OpenReportInFolder>
     <FoundXIssues>Netflix ontasun egiaztapenak {0} arazo aurkitu ditu.</FoundXIssues>
     <CheckOk>Netflix ontasun egiaztapena ONGI :)</CheckOk>
+    <MaximumXCharsPerSecond>Gehienez {0} hizkirri segunduko (zuriuneak kenduta)</MaximumXCharsPerSecond>
+    <MaximumLineLength>Gehienezko lerro luzera ({0})</MaximumLineLength>
+    <MinimumDuration>Gutxienezko iraupena: 5/6 segundu (833 sm)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>Banandu</Title>
@@ -2165,7 +2298,7 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <Margins>Bazterrak</Margins>
     <MarginLeft>Ezk. bazterra</MarginLeft>
     <MarginRight>Esk. bazterra</MarginRight>
-    <MarginVertical>Zutikako bazterra</MarginVertical>
+    <MarginVertical>Zut. bazterra</MarginVertical>
     <Border>Hertza</Border>
     <PlusShadow>+ Itzala</PlusShadow>
     <OpaqueBox>Kutxa argikaitza (inguru margoa erabiliz)</OpaqueBox>
@@ -2196,12 +2329,14 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Garraio jario azpidatzi hautatzailea - {0}</Title>
-    <PidLine>Garraio Pakete Ezagutarazlea (PID) = {0}, azpidatzi zenbatekoa = {1}</PidLine>
+    <PidLineImage>Irudi - Transport Packet Identifier (PID) = {0}, hizkuntza = {1}, azpidatzi zenbatekoa = {2}</PidLineImage>
+    <PidLineTeletext>Teletestoa - Transport Packet Identifier (PID) = {1}, orrialde {0}, hizkuntza = {2}, azpidatzi zenbatekoa = {3}</PidLineTeletext>
     <SubLine>{0}: {1} -&gt; {2}, {3} irudi</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Azpidatzi mota ezezaguna</Title>
     <Message>Zuzenketa hau nahi baduzu mesedez bidali mezu bat:niksedk@gmail.com-era eta gehitu azpidatziaren kopia bat.</Message>
+    <ImportAsPlainText>Inportatu idazki lau bezala...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Ikus aldiberetzea</Title>
@@ -2237,11 +2372,16 @@ Gorde aldaketak?</KeepChangesMessage>
     <Title>Inportatu/OCR VobSub (sub/idx) azpidatzia</Title>
     <TitleBluRay>Inportatu/OCR Blu-ray (.sup) azpidatzia</TitleBluRay>
     <OcrMethod>OCR metodoa</OcrMethod>
-    <OcrViaModi>OCR Microsoft Office Document Imaging (MODI) bidez. Beharrezkoa da Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR Tesseract bidez</OcrViaTesseract>
-    <OcrViaNOCR>OCR nOCR bidez</OcrViaNOCR>
-    <Language>Hizkuntza</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR irudi alderaketa bidez</OcrViaImageCompare>
+    <OcrViaModi>OCR Microsoft Office Document Imaging (MODI) bidez. Beharrezkoa da Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR nOCR bidez</OcrViaNOCR>
+    <TesseractEngineMode>Gailu modua</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Jatorrizko Tesseract bakarrik (etzanak atzeman ditzake)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Neural nets LSTM bakarrik</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Berezkoa, eskuragarria dagoenaz oinarrituz</TesseractEngineModeDefault>
+    <Language>Hizkuntza</Language>
     <ImageDatabase>Irudi datubasea</ImageDatabase>
     <NoOfPixelsIsSpace>Pixel zenbatekoa tartean</NoOfPixelsIsSpace>
     <MaxErrorPercent>Geh. akats%</MaxErrorPercent>
@@ -2270,6 +2410,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <AllFixes>Zuzenketa denak</AllFixes>
     <GuessesUsed>Erabilitako adiera asmatuak</GuessesUsed>
     <UnknownWords>Hitz ezezagunak</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} honen bidez: 'OCRFixReplaceList.xml' lerro honetan: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR berez zuzenketa / idaz egiaztapena</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Zuzendu OCR akatsak</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Inportatu idatzia bat datozen denbora kodeekin...</ImportTextWithMatchingTimeCodes>
@@ -2278,19 +2419,22 @@ Gorde aldaketak?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Gorde irudi guztiak (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Gorde irudi guztiak HTML aurkibidearekin...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} irudi gordeta hemen {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Saiatu Microsoft MODI OCR-a hitz ezezagunekin</TryModiForUnknownWords>
     <DictionaryX>Hiztegia: {0}</DictionaryX>
     <RightToLeft>Eskuinetik ezkerrera</RightToLeft>
     <ShowOnlyForcedSubtitles>Erakutsi bakarrik behartutako azpidatziak</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Erabili denbora kodeak .idx agiritik</UseTimeCodesFromIdx>
     <NoMatch>&lt;Ez datoz bat&gt;</NoMatch>
     <AutoTransparentBackground>Barren berez gardena</AutoTransparentBackground>
+    <CaptureTopAlign>Harpenaren goi lerrokapena</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Aztertu oraingo irudiaren alderatutako emaitzak...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editatu azken irudiaren alderaketa gehigarriak...</EditLastAdditions>
     <SetUnitalicFactor>Ezarri ez-etzana ezaugarria...</SetUnitalicFactor>
     <DiscardTitle>Baztertu OCR-an egindako aldaketak?</DiscardTitle>
     <DiscardText>Baztetzea nahi dituzu oraingo OCR saioan egindako aldaketak?</DiscardText>
     <MinLineSplitHeight>Gutx. lerro garaiera (banandu)</MinLineSplitHeight>
+    <FallbackToX>Atzera hona {0}</FallbackToX>
+    <ImagePreProcessing>Irudi aurre-prozesapena...</ImagePreProcessing>
+    <EditImageDb>Editatu irudiaren db-a</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Eskuzko irudia idatzira</Title>
@@ -2322,6 +2466,20 @@ Gorde aldaketak?</KeepChangesMessage>
     <Title>Ezarri ez-etzana ezaugarria</Title>
     <Description>Zehaztu balioa idazkiaren estiloa arrunta izan arte eta ez etzana. Ohartu jatorrizko irudia etzana izan behar dela:</Description>
   </VobSubOcrSetItalicFactor>
+  <OcrPreprocessing>
+    <Title>OCR irudi aurreprozesapena</Title>
+    <Colors>Margoak</Colors>
+    <AdjustAlpha>Zehaztu balioa idazkia argi erakutsi arte (arrunt 200eta 300 arteko balioak)</AdjustAlpha>
+    <OriginalImage>Jatorrizko irudia</OriginalImage>
+    <PostImage>Irudia aurreprozesatu ondoren</PostImage>
+    <BinaryThreshold>Irudi binarioaren alderaketa muga</BinaryThreshold>
+    <InvertColors>Alderantzizkatu margoak</InvertColors>
+    <YellowToWhite>Horia zurira</YellowToWhite>
+    <ColorToWhite>Margoa zurira</ColorToWhite>
+    <ColorToRemove>Margoa kentzera</ColorToRemove>
+    <Cropping>Mozketa</Cropping>
+    <CropTransparentColors>Moztu margo gardenak</CropTransparentColors>
+  </OcrPreprocessing>
   <Watermark>
     <Title>Urmarka</Title>
     <WatermarkX>Urmarka: {0}</WatermarkX>
@@ -2341,6 +2499,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <ZoomOut>Gutxitu zooma</ZoomOut>
     <AddParagraphHere>Gehitu idazkia hemen</AddParagraphHere>
     <AddParagraphHereAndPasteText>Gehitu idazkia gakotik hemen</AddParagraphHereAndPasteText>
+    <SetParagraphAsSelection>Ezarri oraingoa hautapen berri bezala</SetParagraphAsSelection>
     <FocusTextBox>Fokutu idazki kutxa</FocusTextBox>
     <DeleteParagraph>Ezabatu idazkia</DeleteParagraph>
     <Split>Banandu</Split>
