@@ -112,9 +112,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 temp = temp.Remove(index, 1).TrimEnd();
                             }
 
-                            if (index > 2 && temp.Length > index - 2 && temp.Substring(index - 2) == ", .")
+                            if (index > 2 && temp.Length > index - 2)
                             {
-                                temp = temp.Remove(index - 2, 2);
+                                var ending = temp.Substring(index - 2);
+                                if (ending == ", ." || ending == ", !" || ending == ", ?" || 
+                                    ending == ", !?" || ending == ", ..." || ending == ", —" || ending == ", -" || ending == ", …")
+                                {
+                                    temp = temp.Remove(index - 2, 2);
+                                }
                             }
 
                             string pre = string.Empty;
