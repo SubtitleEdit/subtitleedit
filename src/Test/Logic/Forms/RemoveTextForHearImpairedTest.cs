@@ -1843,21 +1843,21 @@ namespace Test.Logic.Forms
         public void RemoveInterjectionsAfterComma2()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh!", onlyInSeparatedLine: false));
-            Assert.AreEqual("Hey.", actual);
+            Assert.AreEqual("Hey!", actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionsAfterComma3()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh?", onlyInSeparatedLine: false));
-            Assert.AreEqual("Hey.", actual);
+            Assert.AreEqual("Hey?", actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionsAfterComma4()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh!?", onlyInSeparatedLine: false));
-            Assert.AreEqual("Hey.", actual);
+            Assert.AreEqual("Hey!?", actual);
         }
     }
 }
