@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core
             if (File.Exists(noBreakAfterFileName))
             {
                 doc.Load(noBreakAfterFileName);
-                foreach (XmlNode node in doc.DocumentElement)
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
