@@ -1,4 +1,6 @@
-﻿<words>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Set "Update" attribute to "Merge" (default), "Never" or "Replace" -->
+<words Update="Merge">
   <word>А</word>
   <word>Ага</word>
   <word>Ай</word>
