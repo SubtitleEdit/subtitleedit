@@ -183,54 +183,57 @@ Name: associate_srt;      Description: {cm:tsk_SetFileTypes};      GroupDescript
 
 
 [Files]
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\deu_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fin_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fra_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hrb_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hrv_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hun_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\mkd_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nob_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pol_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\srp_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\da_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\de_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\es_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fi_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nb_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nl_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pt_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ru_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\names.xml;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ar_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\bg_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\da_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\el_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\hr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\nl_NL_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
-Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
+; Start with the SetupSupport assembly in the interests of efficiency
+Source: SetupSupport\bin\Release\SetupSupport.dll; Flags: dontcopy
+
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\deu_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\fin_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\fra_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\hrb_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\hrv_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\hun_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\mkd_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\nob_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\pol_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\srp_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\da_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\de_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\en_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\es_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\fi_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\fr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\hr_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\nb_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\nl_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\pt_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\ru_names.xml;              DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\names.xml;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate
+Source: ..\Dictionaries\ar_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\bg_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\da_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\el_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\en_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\hr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\mk_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\pt_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\sr_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\nl_NL_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
+Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main; Check: CanUpdate; AfterInstall: Merge
 Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist; Components: main
 
@@ -404,7 +407,7 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 [Run]
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
-Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: {app}\SubtitleEdit.exe;             Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: https://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
@@ -476,6 +479,22 @@ Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: str
 
 
 [Code]
+function CanUpdateWordlist(FileName: String): Boolean;
+external 'CanUpdateWordlist@files:SetupSupport.dll stdcall setuponly';
+
+function MergeWordlist(FileName: String): Boolean;
+external 'MergeWordlist@files:SetupSupport.dll stdcall setuponly';
+
+function CanUpdate(): Boolean;
+begin
+  Result := CanUpdateWordlist(ExpandConstant(CurrentFilename));
+end;
+
+procedure Merge();
+begin
+  MergeWordlist(ExpandConstant(CurrentFilename));
+end;
+
 // Check if subkey exists in HKLM registry hive
 function HklmKeyExists(const KeyName: String): Boolean;
 begin
@@ -652,7 +671,8 @@ end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if CurStep = ssInstall then begin
+  if CurStep = ssInstall then
+  begin
     if IsTaskSelected('reset_dictionaries') then
       CleanUpDictionaries();
   end;
@@ -731,7 +751,8 @@ begin
     ExpandConstant('{dotnet40}');
   except
     begin
-      if not WizardSilent() then begin
+      if not WizardSilent() then
+      begin
         if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
           ShellExec('open','http://download.microsoft.com/download/5/6/2/562A10F9-C9F4-4313-A044-9C94E0A8FAC8/dotNetFx40_Client_x86_x64.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
         Result := False;
