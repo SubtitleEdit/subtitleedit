@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<names>
+<!-- This list contains names with specific casing - and specific to Croatian only -->
+<!-- Set "Update" attribute to "Replace" (default) or "Never" -->
+<names Update="Replace">
   <blacklist />
   <name>Adrijana</name>
   <name>Afganistan</name>
