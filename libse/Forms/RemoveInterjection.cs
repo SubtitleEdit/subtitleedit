@@ -455,6 +455,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
+            if (!oldText.Contains("  "))
+            {
+                while (text.Contains("  "))
+                {
+                    text = text.Replace("  ", " ");
+                }
+            }
+
             return text;
         }
     }
