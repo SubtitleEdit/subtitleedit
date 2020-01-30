@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- This list contains names with specific casing - and specific to Norwegian only -->
-<names>
+<!-- This list contains names with specific casing - and specific to Norwegian Bokmål only -->
+<!-- Set "Update" attribute to "Replace" (default) or "Never" -->
+<names Update="Replace">
   <blacklist>
     <name>Ben</name>
     <name>Bo</name>
