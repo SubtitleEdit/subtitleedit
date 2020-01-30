@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
-<OCRFixReplaceList>
+<!-- Set "Update" attribute to "Replace" (default) or "Never" -->
+<OCRFixReplaceList Update="Replace">
   <WholeWords>
     <Word from="ču" to="ću" />
     <Word from="češ" to="ćeš" />

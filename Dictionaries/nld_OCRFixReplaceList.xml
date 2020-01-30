@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<OCRFixReplaceList>
+<!-- Set "Update" attribute to "Replace" (default) or "Never" -->
+<OCRFixReplaceList Update="Replace">
   <WholeWords>
     <Word from="aandachtmag" to="aandacht mag" />
     <Word from="agrariers" to="agrariërs" />
