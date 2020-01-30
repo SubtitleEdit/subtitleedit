@@ -3256,6 +3256,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             {
                                 ok = true;
                             }
+                            else
+                            {
+                                ok = false;
+                                break;
+                            }
                         }
                         else
                         {
