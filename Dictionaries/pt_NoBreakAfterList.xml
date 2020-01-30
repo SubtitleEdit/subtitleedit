@@ -1,45 +1,47 @@
-﻿<NoBreakAfterList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Set "Update" attribute to "Merge" (default), "Never" or "Replace" -->
+<NoBreakAfterList Update="Merge">
   <Item>D.</Item>
   <Item>D.ª</Item>
+  <Item>decr.</Item>
   <Item>Dr</Item>
   <Item>Dr.</Item>
+  <Item>dr.ª</Item>
   <Item>Dr.ª</Item>
   <Item>Dra.</Item>
+  <Item>exmo.</Item>
   <Item>Exmo.</Item>
+  <Item>frei</Item>
   <Item>Frei</Item>
+  <Item>gram.</Item>
+  <Item>jr.</Item>
   <Item>Jr.</Item>
   <Item>Miss</Item>
+  <Item>mna.</Item>
   <Item>Mna.</Item>
+  <Item>mno.</Item>
   <Item>Mno.</Item>
+  <Item>mr.</Item>
+  <Item>mrs.</Item>
   <Item>P.</Item>
+  <Item>pe.</Item>
   <Item>Pe.</Item>
+  <Item>prof.</Item>
   <Item>Prof.</Item>
+  <Item>prof.ª</Item>
   <Item>Prof.ª</Item>
   <Item>Santa</Item>
   <Item>Santo</Item>
   <Item>Sr</Item>
+  <Item>sr.</Item>
   <Item>Sr.</Item>
+  <Item>sr.ª</Item>
   <Item>Sr.ª</Item>
+  <Item>sra.</Item>
   <Item>Sra.</Item>
+  <Item>srs.</Item>
   <Item>Srs.</Item>
   <Item>St.</Item>
-  <Item>decr.</Item>
-  <Item>dr.ª</Item>
-  <Item>exmo.</Item>
-  <Item>frei</Item>
-  <Item>gram.</Item>
-  <Item>jr.</Item>
-  <Item>mna.</Item>
-  <Item>mno.</Item>
-  <Item>mr.</Item>
-  <Item>mrs.</Item>
-  <Item>pe.</Item>
-  <Item>prof.</Item>
-  <Item>prof.ª</Item>
-  <Item>sr.</Item>
-  <Item>sr.ª</Item>
-  <Item>sra.</Item>
-  <Item>srs.</Item>
   <Item>vol.</Item>
   <Item>vols.</Item>
 </NoBreakAfterList>
