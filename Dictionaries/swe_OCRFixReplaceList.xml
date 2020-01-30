@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<OCRFixReplaceList>
+<!-- Set "Update" attribute to "Replace" (default) or "Never" -->
+<OCRFixReplaceList Update="Replace">
   <WholeWords>
     <Word from="lârt" to="lärt" />
     <Word from="hedervårda" to="hedervärda" />
