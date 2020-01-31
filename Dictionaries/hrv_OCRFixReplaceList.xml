@@ -1207,6 +1207,7 @@
     <Word from="prezentovano" to="prezentirano" />
     <Word from="pridonjeti" to="pridonijeti" />
     <Word from="prijatan" to="ugodan" />
+    <Word from="Prijatan" to="Ugodan" />
     <Word from="primećivao" to="primjećivao" />
     <Word from="primedbi" to="primjedbi" />
     <Word from="primjete" to="primijete" />
@@ -1787,9 +1788,11 @@
     <Word from="ušunjate" to="ušuljate" />
     <Word from="utehe" to="utjehe" />
     <Word from="utopiće" to="utopit će" />
+    <Word from="utopićeš" to="utopit ćeš" />
     <Word from="uveče" to="navečer" />
     <Word from="uvek" to="uvijek" />
     <Word from="Uvek" to="Uvijek" />
+    <Word from="uvijet" to="uvjet" />
     <Word from="uvjek" to="uvijek" />
     <Word from="Uvjek" to="Uvijek" />
     <Word from="uvijet" to="uvjet" />
@@ -2256,11 +2259,13 @@
     <Word from="Vejnu" to="Wayneu" />
     <Word from="Viljems" to="Williams" />
     <Word from="Vins" to="Vince" />
+    <Word from="Vinston" to="Winston" />
     <Word from="Volte" to="Walte" />
     <Word from="Voren" to="Warren" />
     <Word from="Vrajt" to="Wright" />
     <Word from="Vud" to="Wood" />
     <Word from="Žak" to="Jacques" />
+    <Word from="Židovinu" to="Židovu" />
     <Word from="Žil" to="Jules" />
     <!-- imena mjeseci -->
     <Word from="januar" to="siječanj" />
@@ -2776,6 +2781,7 @@
     <RegEx find="ritikuje" replaceWith="ritizira" />
     <RegEx find="rofn" replaceWith="rafn" />
     <RegEx find="rompir" replaceWith="rumpir" />
+    <RegEx find="rpovj" replaceWith="provj" />
     <RegEx find="rstašk" replaceWith="rižarsk" />
     <RegEx find="([kK])učk" replaceWith="$1uj" />
     <RegEx find="([kKlL])upić" replaceWith="$1upit ć" />
