@@ -36,12 +36,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 VerticalAlignment = verticalAlignment;
             }
 
-            internal int GetVerticalPositionAsNumber()
+            internal double GetVerticalPositionAsNumber()
             {
-                double d;
-                if (double.TryParse(VerticalPosition, out d))
+                if (double.TryParse(VerticalPosition, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
                 {
-                    return (int)d;
+                    return d;
                 }
                 return 0;
             }
@@ -740,13 +739,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string text;
-                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "top"))
+                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "bottom"))
                     {
-                        text = string.Join(Environment.NewLine, textLines.OrderBy(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                        text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
                     }
                     else
                     {
-                        text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                        text = string.Join(Environment.NewLine, textLines.OrderBy(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
                     }
 
                     text = text.Replace(Environment.NewLine + "{\\an1}", Environment.NewLine);
