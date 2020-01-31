@@ -499,9 +499,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
                 _videoLoadedTimer.Start();
 
-                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+                System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(500), () =>
                 {
-                    SetVideoOwner(ownerControl);
+                    try
+                    {
+                        SetVideoOwner(ownerControl);
+                    }
+                    catch 
+                    {
+                        // ignore
+                    }
                 });
             }
         }
@@ -513,6 +520,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 int iterations = 25;
                 int returnCode = -1;
                 int mpvFormatInt64 = 4;
+                if (ownerControl.IsDisposed)
+                {
+                    return;
+                }
                 var windowId = ownerControl.Handle.ToInt64();
                 while (returnCode != 0 && iterations > 0)
                 {
@@ -578,12 +589,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         DoMpvCommand("quit");
                         Application.DoEvents();
                         Application.DoEvents();
-
-                        //if (_mpvHandle != IntPtr.Zero)
-                        //{
-                        //    _mpvTerminateDestroy(_mpvHandle);
-                        //    _mpvHandle = IntPtr.Zero;
-                        //}
+                        System.Threading.Thread.Sleep(10);
+                        if (_mpvHandle != IntPtr.Zero)
+                        {
+                            _mpvTerminateDestroy(_mpvHandle);
+                            _mpvHandle = IntPtr.Zero;
+                        }
                     }
                 }
             }
