@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var oldSub = subtitle;
                         subtitle = new Subtitle(subtitle);
-                        if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
+                        if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
                         {
                             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {

@@ -17523,7 +17523,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
-                    if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitleAlternate))
+                    if (LanguageAutoDetect.CouldBeRightToLeftLanguage(_subtitleAlternate))
                     {
                         textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
                     }
@@ -17533,7 +17533,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitle))
+                if (LanguageAutoDetect.CouldBeRightToLeftLanguage(_subtitle))
                 {
                     textBoxListViewText.RightToLeft = RightToLeft.Yes;
                     textBoxSource.RightToLeft = RightToLeft.Yes;
