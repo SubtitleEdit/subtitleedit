@@ -24,13 +24,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 sb.AppendLine();
                 sb.Append("{");
-                sb.Append("\"endTime\": { \"f\": " + p.EndTime.Hours + ", \"h\": " + p.EndTime.Minutes + ", \"m\": " + p.EndTime.Seconds + ", \"s\": " + MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds) + " },");
+                sb.Append("\"endTime\": { \"f\": " + MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds) + ", \"h\": " + p.EndTime.Hours + ", \"m\": " + p.EndTime.Minutes + ", \"s\": " + p.EndTime.Seconds + " },");
                 sb.Append("\"id\":\"" + GenerateId() + "\",");
                 sb.Append("\"isSequelToNextSubtitle\":false,");
                 sb.Append("\"isSequelToPrevSubtitle\":false,");
                 sb.Append("\"isStartingNewSmartText\":false,");
                 sb.Append("\"speechOptions\":null,");
-                sb.Append("\"startTime\": { \"f\": " + p.StartTime.Hours + ", \"h\": " + p.StartTime.Minutes + ", \"m\": " + p.StartTime.Seconds + ", \"s\": " + MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds) + " },");
+                sb.Append("\"startTime\": { \"f\": " + MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds) + ", \"h\": " + p.StartTime.Hours + ", \"m\": " + p.StartTime.Minutes + ", \"s\": " + p.StartTime.Seconds + " },");
                 sb.Append("\"text\":\"" + Json.EncodeJsonText(p.Text) + "\"");
                 sb.Append("}");
                 count++;
