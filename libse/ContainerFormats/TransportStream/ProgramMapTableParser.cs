@@ -8,7 +8,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
     public class ProgramMapTableParser
     {
         private List<ProgramMapTable> _programMapTables;
+
         public Exception Exception { get; set; }
+
         public ProgramMapTableParser()
         {
             _programMapTables = new List<ProgramMapTable>();
@@ -39,7 +41,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             try
             {
-
                 ms.Position = 0;
                 const int packetLength = 188;
                 var isM2TransportStream = TransportStreamParser.IsM3TransportStream(ms);
@@ -101,33 +102,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public List<int> GetSubtitlePacketIds()
         {
-            var list = new List<int>();
-            foreach (var programMapTable in _programMapTables)
+            var lookupList = new HashSet<int>();
+            foreach (var stream in _programMapTables.SelectMany(p => p.Streams))
             {
-                foreach (var stream in programMapTable.Streams)
+                if (stream.StreamType == ProgramMapTableStream.StreamTypePrivateData && !lookupList.Contains(stream.ElementaryPid))
                 {
-                    if (stream.StreamType == ProgramMapTableStream.StreamTypePrivateData && !list.Contains(stream.ElementaryPid))
-                    {
-                        list.Add(stream.ElementaryPid);
-                    }
+                    lookupList.Add(stream.ElementaryPid);
                 }
             }
-            return list;
+            return lookupList.ToList();
         }
 
         public string GetSubtitleLanguage(int packetId)
         {
-            foreach (var programMapTable in _programMapTables)
-            {
-                foreach (var stream in programMapTable.Streams)
-                {
-                    if (stream.ElementaryPid == packetId)
-                    {
-                        return stream.GetLanguage();
-                    }
-                }
-            }
-            return string.Empty;
+            return _programMapTables.SelectMany(p => p.Streams)
+                .FirstOrDefault(stream => stream.ElementaryPid == packetId)?
+                .GetLanguage();
         }
 
         public string GetSubtitleLanguageTwoLetter(int packetId)
