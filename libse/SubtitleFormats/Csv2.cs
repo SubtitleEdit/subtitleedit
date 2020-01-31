@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const string Separator = ",";
 
         //1,01:00:10:03,01:00:15:25,I thought I should let my sister-in-law know.
-        private static readonly Regex CsvLine = new Regex(@"^\d+" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator, RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator, RegexOptions.Compiled);
 
         public override string Extension => ".csv";
 
@@ -18,31 +18,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            int fine = 0;
-            int failed = 0;
+            // track the number of paragraph read successfully
+            int readCount = 0;
             bool continuation = false;
-            foreach (string line in lines)
+
+            int i = 0;
+
+            // skip the header (Number,Start time (hh:mm:ss:ff),End time (hh:mm:ss:ff),"Text")
+            if (lines.Count > 0 && lines[0].StartsWith("Number,", StringComparison.OrdinalIgnoreCase))
             {
-                Match m = CsvLine.Match(line);
+                i++;
+            }
+
+            // failed read count
+            _errorCount = 0;
+
+            int count = lines.Count / 2 + 1;
+            for (; i < count; i++)
+            {
+                string line = lines[i];
+
+                Match m = RegexTimeCode.Match(line);
                 if (m.Success)
                 {
-                    fine++;
-                    string s = line.Remove(0, m.Length);
-                    continuation = s.StartsWith('"');
+                    readCount++;
+                    continuation = line.Remove(0, m.Length).StartsWith('"');
                 }
-                else if (!string.IsNullOrWhiteSpace(line))
+                else if (!string.IsNullOrWhiteSpace(line) && continuation)
                 {
-                    if (continuation)
-                    {
-                        continuation = false;
-                    }
-                    else
-                    {
-                        failed++;
-                    }
+                    continuation = false;
+                }
+                else
+                {
+                    _errorCount++;
                 }
             }
-            return fine > failed;
+
+            return readCount > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -64,38 +76,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            int preCount = subtitle.Paragraphs.Count;
+            var timeSplitChars = new[] { '.', ':' };
             _errorCount = 0;
             bool continuation = false;
             Paragraph p = null;
             foreach (string line in lines)
             {
-                Match m = CsvLine.Match(line);
+                Match m = RegexTimeCode.Match(line);
                 if (m.Success)
                 {
-                    string[] parts = line.Substring(0, m.Length).Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 3)
+                    string[] parts = line.Substring(0, m.Length).Split(Separator[0]);
+                    try
                     {
-                        try
-                        {
-                            var start = DecodeTimeCode(parts[1]);
-                            var end = DecodeTimeCode(parts[2]);
-                            string text = line.Remove(0, m.Length);
-                            continuation = text.StartsWith('"') && !text.EndsWith('"');
-                            text = text.Trim('"');
-                            p = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(p);
-                        }
-                        catch
-                        {
-                            _errorCount++;
-                        }
+                        var start = DecodeTimeCode(parts[1], timeSplitChars);
+                        var end = DecodeTimeCode(parts[2], timeSplitChars);
+                        string text = line.Substring(m.Length);
+                        continuation = text.StartsWith('"') && !text.EndsWith('"');
+                        text = text.Trim('"');
+                        p = new Paragraph(start, end, text);
+                        subtitle.Paragraphs.Add(p);
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
                     {
-                        if (p != null && p.Text.Length < 300)
+                        if (p?.Text.Length < 300)
                         {
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
                         }
@@ -108,18 +119,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            subtitle.Renumber();
+
+            if (subtitle.Paragraphs.Count != preCount)
+            {
+                subtitle.Renumber();
+            }
         }
 
-        private static TimeCode DecodeTimeCode(string part)
+        private static TimeCode DecodeTimeCode(string part, char[] timeSplitChars)
         {
-            string[] parts = part.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] tokens = part.Split(timeSplitChars, StringSplitOptions.RemoveEmptyEntries);
 
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            string hour = tokens[0];
+            string minutes = tokens[1];
+            string seconds = tokens[2];
+            string frames = tokens[3];
 
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
