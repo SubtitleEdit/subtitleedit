@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class IsoCountryCodes
+    public static class IsoCountryCodes
     {
         public static Dictionary<string, string> ThreeToTweLetterLookup = new Dictionary<string, string>
         {
