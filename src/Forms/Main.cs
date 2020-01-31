@@ -12242,7 +12242,7 @@ namespace Nikse.SubtitleEdit.Forms
                             OpenVideo(fileName);
                         }
 
-                        _fileName = Path.GetFileNameWithoutExtension(fileName);
+                        _fileName = Path.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                         _converted = true;
                         SetTitle();
                         return true;
