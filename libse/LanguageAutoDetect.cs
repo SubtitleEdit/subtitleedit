@@ -1101,6 +1101,12 @@ namespace Nikse.SubtitleEdit.Core
                     return encoding1250;
                 }
 
+                var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
+                if (GetCount(encoding1252.GetString(buffer), AutoDetectWordsPolish) > buffer.Length / 300)
+                {
+                    return encoding1252;
+                }
+
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                 {
@@ -1114,25 +1120,24 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
-                var hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
+                var hebrewEncoding = Encoding.GetEncoding(28598); // Hebrew
                 if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
                 {
-                    if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
+                    if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
                     {
-                        return hewbrewEncoding;
+                        return hebrewEncoding;
                     }
 
                     return arabicEncoding;
                 }
-                if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
+                if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                 {
-                    return hewbrewEncoding;
+                    return hebrewEncoding;
                 }
 
-                var romanianEncoding = Encoding.GetEncoding(1250); // Romanian
-                if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
+                if (GetCount(encoding1250.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
                 {
-                    return romanianEncoding;
+                    return encoding1250;
                 }
 
                 var koreanEncoding = Encoding.GetEncoding(949); // Korean
@@ -1281,7 +1286,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
-        public static bool CouldBeRightToLeftLanguge(Subtitle subtitle)
+        public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
             var text = subtitle.GetAllTexts();
             if (text.Length > 1000)
