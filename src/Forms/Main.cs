@@ -12217,6 +12217,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileName = Path.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                 _converted = true;
+                SetTitle();
                 return true;
             }
 
@@ -12243,6 +12244,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _fileName = Path.GetFileNameWithoutExtension(fileName);
                         _converted = true;
+                        SetTitle();
                         return true;
                     }
 
@@ -12293,12 +12295,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(fileName);
                         }
-
                         _converted = true;
                     }
-
-                    Text = Title;
-
+                    SetTitle();
                     Configuration.Settings.Save();
                     return true;
                 }
@@ -12306,7 +12305,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _exitWhenLoaded = _loading;
             return false;
-
         }
 
         private bool ImportSubtitleFromMp4(string fileName)
@@ -12528,9 +12526,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _fileDateTime = new DateTime();
-
                 _converted = true;
-
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (_subtitle.Paragraphs.Count > 0)
                 {
@@ -14155,6 +14151,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle = form.ImportedSubitle;
                             _fileName = null;
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            SetTitle();
                         }
                     }
                 }
@@ -16456,6 +16453,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             _fileName = importText.VideoFileName;
                             _converted = true;
+                            SetTitle();
                         }
 
                         _subtitleListViewIndex = -1;
