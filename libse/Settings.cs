@@ -36,6 +36,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
             var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
             int index = 0;
             foreach (var oldRecentFile in Files)
@@ -52,6 +57,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
