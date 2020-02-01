@@ -36,16 +36,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return;
-            }
-
             var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (!string.IsNullOrEmpty(fileName) && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                if (fileName != null && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
@@ -57,28 +52,23 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return;
-            }
-
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
-                if (fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
+                if (fileName != null && fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
             }
             if (newList.Count == 0)
             {
-                newList.Add(new RecentFileEntry { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                newList.Add(new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
 
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                if (fileName != null && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
@@ -87,7 +77,6 @@ namespace Nikse.SubtitleEdit.Core
             }
             Files = newList;
         }
-
     }
 
     public class ToolsSettings
