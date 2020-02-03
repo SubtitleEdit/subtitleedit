@@ -137,7 +137,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam"
+            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
+            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć", "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie",
+            "przebieralni", "który"
         };
 
         private static readonly string[] AutoDetectWordsGreek =
@@ -1096,15 +1098,19 @@ namespace Nikse.SubtitleEdit.Core
                     return encoding1250;
                 }
 
-                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish) > buffer.Length / 300)
-                {
-                    return encoding1250;
-                }
-
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
-                if (GetCount(encoding1252.GetString(buffer), AutoDetectWordsPolish) > buffer.Length / 300)
+                var pol1252Count = GetCount(encoding1252.GetString(buffer), AutoDetectWordsPolish);
+                var pol1250Count = GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish);
+                var encoding28592 = Encoding.GetEncoding(28592);
+                var pol28592Count = GetCount(encoding28592.GetString(buffer), AutoDetectWordsPolish);
+                if (pol1252Count > buffer.Length / 300 || pol1250Count > buffer.Length / 300)
                 {
-                    return encoding1252;
+                    if (pol28592Count > pol1250Count && pol28592Count > pol1252Count)
+                    {
+                        return encoding28592;
+                    }
+
+                    return pol1252Count > pol1250Count ? encoding1252 : encoding1250;
                 }
 
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
