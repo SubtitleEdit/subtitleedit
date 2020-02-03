@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CsvNuendo : SubtitleFormat
     {
-        private static readonly Regex CsvLine = new Regex("^.*,[+\\d+:]+,[+\\d+:]+,\".+", RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex("^(\"(.*)\")*,\\d+:\\d+:\\d+:\\d+,\\d+:\\d+:\\d+:\\d+,(\"(.*)\")*", RegexOptions.Compiled);
         private const string LineFormat = "{1}{0}{2}{0}{3}{0}{4}";
-        private static string Header = string.Format(LineFormat, ",", "\"Character\"", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
+        private static readonly string Header = string.Format(LineFormat, ",", "\"Character\"", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
 
         public override string Extension => ".csv";
 
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 sb.Append(line);
-                if (CsvLine.IsMatch(line))
+                if (line.IndexOf(':') > 0 && CsvLine.IsMatch(line))
                 {
                     fine++;
                 }
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTime(string s)
+        private static TimeCode DecodeTime(string s)
         {
             return DecodeTimeCodeFramesFourParts(s.Split(':'));
         }
