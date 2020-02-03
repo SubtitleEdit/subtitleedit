@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -17,7 +18,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -2181,14 +2181,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (removeCount > 0)
                     {
                         words.Sort();
-                        var doc = new XmlDocument();
+                        var doc = new XmlDocument { XmlResolver = null };
                         doc.Load(userWordFileName);
-                        doc.DocumentElement.RemoveAll();
+                        // Remove child nodes, keep attributes
+                        var root = doc.DocumentElement.CloneNode(false);
+                        doc.ReplaceChild(root, doc.DocumentElement);
                         foreach (string word in words)
                         {
-                            XmlNode node = doc.CreateElement("word");
+                            var node = doc.CreateElement("word");
                             node.InnerText = word;
-                            doc.DocumentElement.AppendChild(node);
+                            root.AppendChild(node);
                         }
                         doc.Save(userWordFileName);
                         LoadUserWords(language, false); // reload
