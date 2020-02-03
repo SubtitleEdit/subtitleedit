@@ -2323,14 +2323,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (removeCount > 0)
                     {
                         words.Sort();
-                        var doc = new XmlDocument();
+                        var doc = new XmlDocument { XmlResolver = null };
                         doc.Load(userWordFileName);
-                        doc.DocumentElement.RemoveAll();
+                        // Remove child nodes, keep attributes
+                        var root = doc.DocumentElement.CloneNode(false);
+                        doc.ReplaceChild(root, doc.DocumentElement);
                         foreach (string word in words)
                         {
-                            XmlNode node = doc.CreateElement("word");
+                            var node = doc.CreateElement("word");
                             node.InnerText = word;
-                            doc.DocumentElement.AppendChild(node);
+                            root.AppendChild(node);
                         }
                         doc.Save(userWordFileName);
                         LoadUserWords(language, false); // reload

@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core
 
             //load words via xml
             string noBreakAfterFileName = DictionaryFolder + languageName + "_NoBreakAfterList.xml";
-            var doc = new XmlDocument();
+            var doc = new XmlDocument { XmlResolver = null };
             if (File.Exists(noBreakAfterFileName))
             {
                 doc.Load(noBreakAfterFileName);
@@ -1047,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Core
             if (word.Length > 0)
             {
                 string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
-                var userWords = new XmlDocument();
+                var userWords = new XmlDocument { XmlResolver = null };
                 if (File.Exists(userWordsXmlFileName))
                 {
                     userWords.Load(userWordsXmlFileName);
@@ -1075,12 +1075,14 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (userWords.DocumentElement != null)
                 {
-                    userWords.DocumentElement.RemoveAll();
+                    // Remove child nodes, keep attributes
+                    var root = userWords.DocumentElement.CloneNode(false);
+                    userWords.ReplaceChild(root, userWords.DocumentElement);
                     foreach (string w in words)
                     {
-                        XmlNode node = userWords.CreateElement("word");
+                        var node = userWords.CreateElement("word");
                         node.InnerText = w;
-                        userWords.DocumentElement.AppendChild(node);
+                        root.AppendChild(node);
                     }
                 }
 
@@ -1094,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Core
             if (word.Length > 0)
             {
                 string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
-                var userWords = new XmlDocument();
+                var userWords = new XmlDocument { XmlResolver = null };
                 if (File.Exists(userWordsXmlFileName))
                 {
                     userWords.Load(userWordsXmlFileName);
@@ -1127,12 +1129,14 @@ namespace Nikse.SubtitleEdit.Core
 
                     words.Sort();
 
-                    userWords.DocumentElement.RemoveAll();
+                    // Remove child nodes, keep attributes
+                    var root = userWords.DocumentElement.CloneNode(false);
+                    userWords.ReplaceChild(root, userWords.DocumentElement);
                     foreach (string w in words)
                     {
-                        XmlNode node = userWords.CreateElement("word");
+                        var node = userWords.CreateElement("word");
                         node.InnerText = w;
-                        userWords.DocumentElement.AppendChild(node);
+                        root.AppendChild(node);
                     }
                 }
 
@@ -1143,7 +1147,7 @@ namespace Nikse.SubtitleEdit.Core
         public static string LoadUserWordList(List<string> userWordList, string languageName)
         {
             userWordList.Clear();
-            var userWordDictionary = new XmlDocument();
+            var userWordDictionary = new XmlDocument { XmlResolver = null };
             string userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
             if (File.Exists(userWordListXmlFileName))
             {
@@ -1163,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Core
         public static string LoadUserWordList(HashSet<string> userWordList, string languageName)
         {
             userWordList.Clear();
-            var userWordDictionary = new XmlDocument();
+            var userWordDictionary = new XmlDocument { XmlResolver = null };
             string userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
             if (File.Exists(userWordListXmlFileName))
             {

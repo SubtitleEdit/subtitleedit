@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (idx >= 0)
             {
                 _noBreakAfterList = new List<NoBreakAfterItem>();
-                var doc = new XmlDocument();
+                var doc = new XmlDocument { XmlResolver = null };
                 doc.Load(_languages[idx]);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
                 {
@@ -143,17 +143,25 @@ namespace Nikse.SubtitleEdit.Forms
             int idx = comboBoxDictionaries.SelectedIndex;
             if (idx >= 0)
             {
-                var doc = new XmlDocument();
-                doc.LoadXml("<NoBreakAfterList />");
-                foreach (NoBreakAfterItem item in _noBreakAfterList)
+                var doc = new XmlDocument { XmlResolver = null };
+                try
                 {
-                    XmlNode node = doc.CreateElement("Item");
+                    doc.Load(_languages[idx]);
+                    // Remove child nodes, keep attributes
+                    var root = doc.DocumentElement.CloneNode(false);
+                    doc.ReplaceChild(root, doc.DocumentElement);
+                }
+                catch
+                {
+                    doc.LoadXml("<NoBreakAfterList />");
+                }
+                foreach (var item in _noBreakAfterList)
+                {
+                    var node = doc.CreateElement("Item");
                     node.InnerText = item.Text;
                     if (item.Regex != null)
                     {
-                        XmlAttribute attribute = doc.CreateAttribute("RegEx");
-                        attribute.InnerText = true.ToString();
-                        node.Attributes.Append(attribute);
+                        node.SetAttribute("RegEx", true.ToString());
                     }
                     doc.DocumentElement.AppendChild(node);
                 }
