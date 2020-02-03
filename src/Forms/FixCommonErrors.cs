@@ -1,9 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,8 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -97,9 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public Subtitle Subtitle;
         private SubtitleFormat _format;
-        public Encoding Encoding { get; set; }
         private int _totalFixes;
         private int _totalErrors;
         private List<FixItem> _fixActions;
@@ -116,6 +114,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SubtitleFormat Format => _format;
 
+        public Encoding Encoding { get; private set; }
+        public Subtitle Subtitle { get; private set; }
+        public Subtitle FixedSubtitle { get; private set; }
+
         public void AddToTotalErrors(int count)
         {
             _totalErrors += count;
@@ -124,8 +126,6 @@ namespace Nikse.SubtitleEdit.Forms
         public void AddToDeleteIndices(int index)
         {
         }
-
-        public Subtitle FixedSubtitle { get; private set; }
 
         private void InitializeLanguageNames(LanguageItem firstItem = null)
         {
@@ -602,15 +602,16 @@ namespace Nikse.SubtitleEdit.Forms
             return _abbreviationList;
         }
 
-        OcrFixEngine _ocrFixEngine;
-        string _ocrFixEngineLanguage;
+        private OcrFixEngine _ocrFixEngine;
+        private string _ocrFixEngineLanguage;
 
         public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
         {
             if (_ocrFixEngine == null || _ocrFixEngineLanguage != threeLetterIsoLanguageName)
             {
-                _ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this);
+                _ocrFixEngine?.Dispose();
                 _ocrFixEngineLanguage = threeLetterIsoLanguageName;
+                _ocrFixEngine = new OcrFixEngine(_ocrFixEngineLanguage, null, this);
             }
 
             string fixAction = _language.FixCommonOcrErrors;
@@ -1798,6 +1799,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_ocrFixEngine != null)
+            {
+                _ocrFixEngine.Dispose();
+                _ocrFixEngine = null;
+            }
             Owner = null;
         }
 
