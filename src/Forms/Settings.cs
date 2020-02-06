@@ -771,14 +771,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxMergeShortLineLength.Items.Clear();
-            for (int i = 10; i < 100; i++)
+            for (int i = 5; i < 100; i++)
             {
                 comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (gs.MergeLinesShorterThan >= 10 && gs.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
+            if (gs.MergeLinesShorterThan >= 5 && gs.MergeLinesShorterThan - 5 < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan - 10;
+                comboBoxMergeShortLineLength.SelectedIndex = gs.MergeLinesShorterThan - 5;
             }
             else
             {
@@ -1625,7 +1625,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.VerifyPlaySeconds = comboBoxToolsVerifySeconds.SelectedIndex + 2;
             toolsSettings.StartSceneIndex = comboBoxToolsStartSceneIndex.SelectedIndex;
             toolsSettings.EndSceneIndex = comboBoxToolsEndSceneIndex.SelectedIndex;
-            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
+            gs.MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             if (gs.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
             {
                 gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
@@ -3103,9 +3103,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxNumberOfLines.Value = numericUpDownMaxNumberOfLines.Minimum;
             }
-            if (profile.MergeLinesShorterThan >= 10 && profile.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
+            if (profile.MergeLinesShorterThan >= 5 && profile.MergeLinesShorterThan - 5 < comboBoxMergeShortLineLength.Items.Count)
             {
-                comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan - 10;
+                comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan - 5;
             }
             else
             {
@@ -3132,7 +3132,7 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].MaxNumberOfLines = (int)numericUpDownMaxNumberOfLines.Value;
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
-            _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
+            _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
