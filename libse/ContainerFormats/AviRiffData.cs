@@ -2,16 +2,15 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
-    internal struct AviStreamHeader
+    internal class AviStreamHeader
     {
-        public int FccType; // stream type codes
-        public int FccHandler;
-        public short Language;
-        public int Scale;
-        public int Rate; // Rate/Scale is stream tick rate in ticks/s
-        public int Start;
-        public int Length;
-        public int SampleSize;
+        public int FccType { get; set; }  // stream type codes
+        public int FccHandler { get; set; }
+        public int Scale { get; set; }
+        public int Rate { get; set; }  // Rate/Scale is stream tick rate in ticks/s
+        public int Start { get; set; }
+        public int Length { get; set; }
+        public int SampleSize { get; set; }
     }
 
     internal static class AviRiffData
