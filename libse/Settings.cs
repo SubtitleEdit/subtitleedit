@@ -261,6 +261,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
         public int MergeShortLinesMaxGap { get; set; }
+        public int MergeShortLinesMaxChars { get; set; }
         public bool MergeShortLinesOnlyContinuous { get; set; }
 
         public ToolsSettings()
@@ -369,6 +370,7 @@ namespace Nikse.SubtitleEdit.Core
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
             MergeShortLinesMaxGap = 250;
+            MergeShortLinesMaxChars = 50;
             MergeShortLinesOnlyContinuous = true;
         }
     }
@@ -3831,6 +3833,12 @@ $HorzAlign          =   Center
                 settings.Tools.MergeShortLinesMaxGap = Convert.ToInt32(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("MergeShortLinesMaxChars");
+            if (subNode != null)
+            {
+                settings.Tools.MergeShortLinesMaxChars = Convert.ToInt32(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MergeShortLinesOnlyContinuous");
             if (subNode != null)
             {
@@ -6595,6 +6603,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)

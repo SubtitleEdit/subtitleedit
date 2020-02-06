@@ -58,17 +58,17 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfMerges = 0;
-            if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
+            if (Configuration.Settings.Tools.MergeShortLinesMaxChars > numericUpDownMaxCharacters.Maximum)
             {
                 numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
             }
-            else if (Configuration.Settings.General.SubtitleLineMaximumLength < numericUpDownMaxCharacters.Minimum)
+            else if (Configuration.Settings.Tools.MergeShortLinesMaxChars < numericUpDownMaxCharacters.Minimum)
             {
                 numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Minimum;
             }
             else
             {
-                numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
+                numericUpDownMaxCharacters.Value = Configuration.Settings.Tools.MergeShortLinesMaxChars;
             }
             numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
@@ -298,6 +298,10 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
             Cursor = Cursors.Default;
         }
-    }
 
+        private void MergeShortLines_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.MergeShortLinesMaxChars = (int)numericUpDownMaxCharacters.Value;
+        }
+    }
 }
