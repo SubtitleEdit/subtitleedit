@@ -858,14 +858,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     tti.TextField = tti.TextField.Remove(0, startTag + 1);
                 }
 
-                tti.TimeCodeInHours = p.StartTime.Hours;
-                tti.TimeCodeInMinutes = p.StartTime.Minutes;
-                tti.TimeCodeInSeconds = p.StartTime.Seconds;
-                tti.TimeCodeInMilliseconds = p.StartTime.Milliseconds;
-                tti.TimeCodeOutHours = p.EndTime.Hours;
-                tti.TimeCodeOutMinutes = p.EndTime.Minutes;
-                tti.TimeCodeOutSeconds = p.EndTime.Seconds;
-                tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
+                if (!p.StartTime.IsMaxTime)
+                {
+                    tti.TimeCodeInHours = p.StartTime.Hours;
+                    tti.TimeCodeInMinutes = p.StartTime.Minutes;
+                    tti.TimeCodeInSeconds = p.StartTime.Seconds;
+                    tti.TimeCodeInMilliseconds = p.StartTime.Milliseconds;
+                }
+
+                if (!p.EndTime.IsMaxTime)
+                {
+                    tti.TimeCodeOutHours = p.EndTime.Hours;
+                    tti.TimeCodeOutMinutes = p.EndTime.Minutes;
+                    tti.TimeCodeOutSeconds = p.EndTime.Seconds;
+                    tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
+                }
+
                 buffer = tti.GetBytes(header);
                 stream.Write(buffer, 0, buffer.Length);
                 subtitleNumber++;
@@ -992,6 +1000,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         EndTime = new TimeCode(tti.TimeCodeOutHours, tti.TimeCodeOutMinutes, tti.TimeCodeOutSeconds, tti.TimeCodeOutMilliseconds),
                         MarginV = tti.VerticalPosition.ToString(CultureInfo.InvariantCulture)
                     };
+
+                    if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.EndTime.TotalMilliseconds) < 0.01)
+                    {
+                        p.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                        p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    }
 
                     if (lastExtensionBlockNumber != 0xff && last != null)
                     {
