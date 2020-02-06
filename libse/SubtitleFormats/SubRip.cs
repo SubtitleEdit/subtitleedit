@@ -201,6 +201,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             _paragraph.Number = n;
                         }
                     }
+                    else if (TryReadTimeCodesLine(line, null, false))
+                    {
+                        if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > 0 ||
+                            !string.IsNullOrEmpty(_paragraph.Text))
+                        {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _lastParagraph = _paragraph;
+                        }
+                        _paragraph = new Paragraph();
+                        TryReadTimeCodesLine(line, _paragraph, false);
+                        _expecting = ExpectingLine.Text;
+                    }
                     else if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
                         if (_isWsrt && !string.IsNullOrEmpty(line))

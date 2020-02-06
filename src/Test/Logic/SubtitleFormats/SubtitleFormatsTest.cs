@@ -342,6 +342,26 @@ text3b";
             Assert.AreEqual("text3a" + Environment.NewLine + "text3b", subtitle.Paragraphs[2].Text);
         }
 
+        [TestMethod]
+        public void MissingLineNumberAndEmptyLines()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"00:00:00,000 --> 00:00:10,000
+abc
+
+00:00:11,000 --> 00:00:20,000
+
+00:00:21,000 --> 00:00:30,000
+def";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+            Assert.AreEqual("abc", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("def", subtitle.Paragraphs[2].Text);
+            Assert.AreEqual(30, subtitle.Paragraphs[2].EndTime.TotalSeconds);
+        }
+
         #endregion SubRip (.srt)
 
         #region Advanced Sub Station alpha (.ass)
