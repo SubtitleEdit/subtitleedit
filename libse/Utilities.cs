@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.6+
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
             }
             catch (Exception)
             {
