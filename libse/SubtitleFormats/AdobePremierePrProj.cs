@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
-        public string LoadFromZipFile(string fileName)
+        public static string LoadFromZipFile(string fileName)
         {
             using (var fileToDecompressAsStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -101,7 +101,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//VideoClipTrackItem"))
             {
-                var objectId = node.Attributes["ObjectID"].InnerText;
                 foreach (XmlNode innerNode in node.SelectNodes("ClipTrackItem/ComponentOwner/Components"))
                 {
                     var attr = innerNode.Attributes["ObjectRef"];
