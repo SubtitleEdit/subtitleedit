@@ -2270,7 +2270,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (ext == ".prproj")
             {
                 var f = new AdobePremierePrProj();
-                var tempFileName = f.LoadFromZipFile(fileName);
+                var tempFileName = AdobePremierePrProj.LoadFromZipFile(fileName);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     var list = new List<string>(File.ReadAllLines(tempFileName, LanguageAutoDetect.GetEncodingFromFile(tempFileName)));
