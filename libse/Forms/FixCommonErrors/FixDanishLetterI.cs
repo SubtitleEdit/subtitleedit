@@ -7,8 +7,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     {
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            return; //TODO: remove - it's just for testing appveyor
-
             var language = Configuration.Settings.Language.FixCommonErrors;
             const string fixAction = "Fix Danish letter 'i'";
             int fixCount = 0;
