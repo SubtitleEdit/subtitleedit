@@ -38,6 +38,9 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -60,7 +63,7 @@
     <Compile Include="Logic\NetflixQualityCheckTest.cs" />
     <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
-    <Compile Include="FixCommonErrorsTest.cs" />
+    <Compile Include="FixCommonErrors\FixCommonErrorsTest.cs" />
     <Compile Include="Logic\LanguageTest.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParserTest.cs" />
     <Compile Include="Logic\BluRaySup\ToolBoxTest.cs" />
@@ -82,7 +85,7 @@
     <Compile Include="Logic\Forms\RemoveTextForHearImpairedTest.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
     <Compile Include="Logic\UtilitiesTest.cs" />
-    <Compile Include="XmlDictionariesTest.cs" />
+    <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libse\LibSE.csproj">
@@ -153,6 +156,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
