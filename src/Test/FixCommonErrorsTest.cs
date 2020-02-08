@@ -13,7 +13,7 @@ namespace Test
     /// This is a test class for FixCommonErrors and is intended
     /// to contain all FixCommonErrorsTest Unit Tests
     ///</summary>
-    [DeploymentItem("Files\\..")] // hack to force use of test root folder
+    //[DeploymentItem("Files\\..")] // hack to force use of test root folder
     [TestClass]
     public class FixCommonErrorsTest
     {
