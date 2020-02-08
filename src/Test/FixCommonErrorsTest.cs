@@ -10,11 +10,10 @@ using System.IO;
 namespace Test
 {
     /// <summary>
-    ///This is a test class for FixCommonErrors and is intended
-    ///to contain all FixCommonErrorsTest Unit Tests
+    /// This is a test class for FixCommonErrors and is intended
+    /// to contain all FixCommonErrorsTest Unit Tests
     ///</summary>
     [TestClass]
-    [DeploymentItem("Files\\..")] // hack to force use of test root folder
     public class FixCommonErrorsTest
     {
         /// <summary>
@@ -2279,56 +2278,56 @@ namespace Test
         [TestMethod]
         public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest1()
         {
-            const string ExpectedOuput = "<i>- Foobar! - What is it?</i>";
+            const string expectedOutput = "<i>- Foobar! - What is it?</i>";
             var p = new Paragraph("<i>- Foobar! - what is it?</i>", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest2()
         {
-            const string ExpectedOuput = "<i>- Foobar... what is it?</i>";
-            var p = new Paragraph(ExpectedOuput, 1200, 5000);
+            const string expectedOutput = "<i>- Foobar... what is it?</i>";
+            var p = new Paragraph(expectedOutput, 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest3()
         {
-            const string ExpectedOuput = "<i>- Foobar??? What is it?</i>";
+            const string expectedOutput = "<i>- Foobar??? What is it?</i>";
             var p = new Paragraph("<i>- Foobar??? what is it?</i>", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest4()
         {
-            const string ExpectedOuput = "<i>- Foobar??? 'Cause.</i>";
+            const string expectedOutput = "<i>- Foobar??? 'Cause.</i>";
             var p = new Paragraph("<i>- Foobar??? 'cause.</i>", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest5()
         {
-            const string ExpectedOuput = "<i>- Foobar??? I. Lower</i>";
+            const string expectedOutput = "<i>- Foobar??? I. Lower</i>";
             var p = new Paragraph("<i>- Foobar??? i. lower</i>", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
@@ -2386,45 +2385,45 @@ namespace Test
         [TestMethod]
         public void FixDanishLetterITest1()
         {
-            const string ExpectedOuput = "Det må I undskylde.";
+            const string expectedOutput = "Det må I undskylde.";
             var p = new Paragraph("Det må i undskylde.", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixDanishLetterITest2()
         {
-            const string ExpectedOuput = "Det må I selv om.";
+            const string expectedOutput = "Det må I selv om.";
             var p = new Paragraph("Det må i selv om.", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixDanishLetterITest3()
         {
-            const string ExpectedOuput = "I dag skal I hilse på";
+            const string expectedOutput = "I dag skal I hilse på";
             var p = new Paragraph("I dag skal i hilse på", 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         [TestMethod]
         public void FixDanishLetterITestNegative1()
         {
-            const string ExpectedOuput = "Der vil jeg ikke gå i skole.";
-            var p = new Paragraph(ExpectedOuput, 1200, 5000);
+            const string expectedOutput = "Der vil jeg ikke gå i skole.";
+            var p = new Paragraph(expectedOutput, 1200, 5000);
             var s = new Subtitle();
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(ExpectedOuput, p.Text);
+            Assert.AreEqual(expectedOutput, p.Text);
         }
 
         #endregion
