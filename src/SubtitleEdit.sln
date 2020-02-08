@@ -8,11 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "SubtitleEdi
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{766101A0-80D5-4560-BFF7-73F1559B4C47}"
-	ProjectSection(SolutionItems) = preProject
-		se.runsettings = se.runsettings
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "UpdateAssemblyInfo\UpdateAssemblyInfo.csproj", "{DBD4656C-5F40-4067-A70B-C4460DE20F77}"
@@ -20,8 +15,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E5F70420-EF49-403E-851F-700953769937}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "..\libse\LibSE.csproj", "{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}"
 	ProjectSection(ProjectDependencies) = postProject
