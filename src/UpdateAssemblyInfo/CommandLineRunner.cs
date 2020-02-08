@@ -22,7 +22,6 @@ namespace UpdateAssemblyInfo
                 }
             };
             p.OutputDataReceived += OutputDataReceived;
-
             try
             {
                 p.Start();

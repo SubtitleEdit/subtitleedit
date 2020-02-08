@@ -118,14 +118,19 @@ namespace Nikse.SubtitleEdit.Core
         private static string GetBaseDirectory()
         {
             var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
-
             return Path.GetDirectoryName(assembly.Location) + Path.DirectorySeparatorChar;
         }
 
         private static string GetDataDirectory()
         {
-            var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+            // hack for unit tests
+            var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
+            if (assembly.Location.Contains("subtitleedit\\src\\TestResults"))
+            {
+                return assembly.Location.Substring(0, assembly.Location.IndexOf("subtitleedit\\src\\TestResults")) + @"subtitleedit\src\Test\bin\Debug";
+            }
 
+            var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
             if (IsRunningOnLinux || IsRunningOnMac)
             {
                 if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))

@@ -1,18 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 14.0.23107.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleEdit", "SubtitleEdit.csproj", "{511A5B59-1C35-4719-8536-23B19AF9B21A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{766101A0-80D5-4560-BFF7-73F1559B4C47}"
-	ProjectSection(SolutionItems) = preProject
-		Local.testsettings = Local.testsettings
-		SubtitleEdit.vsmdi = SubtitleEdit.vsmdi
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7BE5B8E8-9469-4C7C-89D7-E8C884DEFC0E}"
@@ -23,9 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "Upda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E5F70420-EF49-403E-851F-700953769937}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibSE", "..\libse\LibSE.csproj", "{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibSE", "..\libse\LibSE.csproj", "{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DBD4656C-5F40-4067-A70B-C4460DE20F77} = {DBD4656C-5F40-4067-A70B-C4460DE20F77}
 		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76} = {36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}
@@ -72,6 +63,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E12BDE22-B6A4-4AB6-AF96-F3C0F89C15EC}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SubtitleEdit.vsmdi
