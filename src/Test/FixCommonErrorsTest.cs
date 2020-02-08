@@ -14,6 +14,7 @@ namespace Test
     ///to contain all FixCommonErrorsTest Unit Tests
     ///</summary>
     [TestClass]
+    [DeploymentItem("Files\\..")] // hack to force use of test root folder
     public class FixCommonErrorsTest
     {
         /// <summary>
@@ -44,12 +45,6 @@ namespace Test
             target.Initialize(_subtitle, new SubRip(), System.Text.Encoding.UTF8);
         }
 
-        #region Additional test attributes
-
-        //
-        //You can use the following additional attributes as you write your tests:
-        //
-
         /// <summary>
         /// Copies the contents of input to output. Doesn't close either stream.
         /// </summary>
@@ -63,62 +58,44 @@ namespace Test
             }
         }
 
-        //Use ClassInitialize to run code before running the first test in the class
         [ClassInitialize]
         public static void MyClassInitialize(TestContext testContext)
         {
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
 
-            if (!Directory.Exists("Directories"))
-                Directory.CreateDirectory("Dictionaries");
-            var strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
-            if (strm != null)
+            var dictionaryFolder = Configuration.DictionariesDirectory;
+            if (!Directory.Exists(dictionaryFolder))
             {
-                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "en_US.aff")))
+                Directory.CreateDirectory(dictionaryFolder);
+            }
+
+            var stream = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
+            if (stream != null)
+            {
+                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "en_US.aff")))
                 {
-                    CopyStream(strm, file);
+                    CopyStream(stream, file);
                 }
             }
 
-            strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.dic");
-            if (strm != null)
+            stream = asm.GetManifestResourceStream("Test.Dictionaries.en_US.dic");
+            if (stream != null)
             {
-                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "en_US.dic")))
+                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "en_US.dic")))
                 {
-                    CopyStream(strm, file);
+                    CopyStream(stream, file);
                 }
             }
 
-            strm = asm.GetManifestResourceStream("Test.Dictionaries.names.xml");
-            if (strm != null)
+            stream = asm.GetManifestResourceStream("Test.Dictionaries.names.xml");
+            if (stream != null)
             {
-                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names.xml")))
+                using (Stream file = File.OpenWrite(Path.Combine(dictionaryFolder, "names.xml")))
                 {
-                    CopyStream(strm, file);
+                    CopyStream(stream, file);
                 }
             }
         }
-
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
-
-        #endregion Additional test attributes
 
         #region Merge short lines
 
@@ -539,7 +516,6 @@ namespace Test
         }
 
         [TestMethod]
-        [TestCategory("Local")]
         public void FixCommonOcrErrorsSlashIsL() // requires hardcoded rules enabled
         {
             using (var target = GetFixCommonErrorsLib())
