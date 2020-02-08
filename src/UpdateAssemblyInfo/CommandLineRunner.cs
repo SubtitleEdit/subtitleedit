@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace UpdateAssemblyInfo
 {
@@ -22,7 +23,8 @@ namespace UpdateAssemblyInfo
                 }
             };
             p.OutputDataReceived += OutputDataReceived;
-
+            Console.WriteLine("UpdateAssemblyInfo: " + command + " " + arguments);
+            Debug.WriteLine("UpdateAssemblyInfo: " + command + " " + arguments);
             try
             {
                 p.Start();
