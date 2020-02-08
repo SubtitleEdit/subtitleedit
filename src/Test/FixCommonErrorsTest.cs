@@ -60,14 +60,13 @@ namespace Test
         [ClassInitialize]
         public static void MyClassInitialize(TestContext testContext)
         {
-            var asm = System.Reflection.Assembly.GetExecutingAssembly();
-
             var dictionaryFolder = Configuration.DictionariesDirectory;
             if (!Directory.Exists(dictionaryFolder))
             {
                 Directory.CreateDirectory(dictionaryFolder);
             }
 
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
             var stream = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
             if (stream != null)
             {
@@ -522,7 +521,7 @@ namespace Test
             {
                 InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
                 target.FixOcrErrorsViaReplaceList("eng");
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found or hunspell not loaded
             }
         }
 
