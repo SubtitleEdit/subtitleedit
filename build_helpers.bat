@@ -1,4 +1,4 @@
-REM @ECHO OFF
+@ECHO OFF
 SETLOCAL
 PUSHD %~dp0
 SET "ConfigurationName=%~2"
