@@ -10,8 +10,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// A ".prproj" file from Adobe Premiere (Essential Graphics).
-    /// A gzipped xml file.
+    /// Reads the xml file inside a ".prproj" file (gzipped zml) from Adobe Premiere (Essential Graphics).
     /// </summary>
     public class AdobePremierePrProj : SubtitleFormat
     {
@@ -33,6 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Helper method to unpack a .prproj file to a temp xml file
+        /// </summary>
         public static string LoadFromZipFile(string fileName)
         {
             using (var fileToDecompressAsStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
