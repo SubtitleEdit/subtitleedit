@@ -3,11 +3,14 @@ SETLOCAL
 PUSHD %~dp0
 SET "ConfigurationName=%~2"
 
+ECHO DEBUG "%~1"
+
 IF /I "%~1" == "rsrc" GOTO UpdateResourceScript
 IF /I "%~1" == "lang" GOTO UpdateLanguageFiles
 IF /I "%~1" == "rev"  GOTO UpdateAssemblyInfo
 
 :END
+ECHO BUILD_HELPERS.BAT done 
 POPD
 ENDLOCAL
 EXIT /B
