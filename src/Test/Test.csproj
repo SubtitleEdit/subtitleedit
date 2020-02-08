@@ -63,7 +63,7 @@
     <Compile Include="Logic\NetflixQualityCheckTest.cs" />
     <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
-    <Compile Include="FixCommonErrorsTest.cs" />
+    <Compile Include="FixCommonErrors\FixCommonErrorsTest.cs" />
     <Compile Include="Logic\LanguageTest.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParserTest.cs" />
     <Compile Include="Logic\BluRaySup\ToolBoxTest.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="Logic\Forms\RemoveTextForHearImpairedTest.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
     <Compile Include="Logic\UtilitiesTest.cs" />
-    <Compile Include="XmlDictionariesTest.cs" />
+    <Compile Include="Dictionaries\XmlDictionariesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libse\LibSE.csproj">
@@ -159,9 +159,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FixCommonErrors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
