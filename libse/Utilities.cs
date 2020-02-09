@@ -854,7 +854,18 @@ namespace Nikse.SubtitleEdit.Core
             }
             try
             {
-                System.Diagnostics.Process.Start(helpFile + parameter);
+                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
+                {
+                    System.Diagnostics.Process.Start(helpFile + parameter);
+                }
+                else if (Configuration.IsRunningOnLinux)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.EnableRaisingEvents = false;
+                    process.StartInfo.FileName = "xdg-open";
+                    process.StartInfo.Arguments = helpFile + parameter;
+                    process.Start();
+                }
             }
             catch (Exception exception)
             {

@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Logic.UiUtil.OpenFile(MakeReport());
+                Logic.UiUtil.OpenFolder(Path.GetDirectoryName(MakeReport()));
             }
         }
 
