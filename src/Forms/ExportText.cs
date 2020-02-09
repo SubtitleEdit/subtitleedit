@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private Encoding GetCurrentEncoding()
+        private TextEncoding GetCurrentEncoding()
         {
             return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog1.FileName, textBoxText.Text, GetCurrentEncoding());
+                FileUtil.WriteAllText(saveFileDialog1.FileName, textBoxText.Text, GetCurrentEncoding());
                 DialogResult = DialogResult.OK;
             }
         }

@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void InitializeTextEncodingComboBox(ComboBox comboBox)
         {
             var defaultEncoding = Configuration.Settings.General.DefaultEncoding;
-            var selectedItem = (TextEncodingListItem)null;
+            var selectedItem = (TextEncoding)null;
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
             using (var graphics = comboBox.CreateGraphics())
@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (encoding.CodePage >= 949 && !encoding.IsEbcdic())
                     {
-                        var item = new TextEncodingListItem(encoding);
+                        var item = new TextEncoding(encoding, null);
                         if (selectedItem == null && item.Equals(defaultEncoding))
                         {
                             selectedItem = item;
@@ -735,7 +735,19 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         if (encoding.CodePage.Equals(Encoding.UTF8.CodePage))
                         {
-                            comboBox.Items.Insert(0, item);
+                            item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                            comboBox.Items.Insert(TextEncoding.Utf8WithBomIndex, item);
+                            if (item.Equals(defaultEncoding))
+                            {
+                                selectedItem = item;
+                            }
+
+                            item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                            comboBox.Items.Insert(TextEncoding.Utf8WithoutBomIndex, item);
+                            if (item.Equals(defaultEncoding))
+                            {
+                                selectedItem = item;
+                            }
                         }
                         else
                         {
@@ -747,29 +759,61 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (selectedItem == null)
             {
-                comboBox.SelectedIndex = 0; // UTF-8 if DefaultEncoding is not found
+                comboBox.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 if DefaultEncoding is not found
+            }
+            else if (selectedItem.DisplayName == TextEncoding.Utf8WithoutBom)
+            {
+                comboBox.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
             }
             else
             {
                 comboBox.SelectedItem = selectedItem;
             }
             comboBox.EndUpdate();
-            if (comboBox.SelectedItem is TextEncodingListItem textEncodingListItem)
+            if (comboBox.SelectedItem is TextEncoding textEncodingListItem)
             {
-                Configuration.Settings.General.DefaultEncoding = textEncodingListItem.Encoding.WebName;
+                Configuration.Settings.General.DefaultEncoding = textEncodingListItem.DisplayName;
             }
             comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBox.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
-        public static Encoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
+        public static TextEncoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
         {
-            if (comboBox.SelectedIndex > 0 && comboBox.SelectedItem is TextEncodingListItem textEncodingListItem)
+            if (comboBox.SelectedIndex > 0 && comboBox.SelectedItem is TextEncoding textEncodingListItem)
             {
-                return textEncodingListItem.Encoding;
+                return textEncodingListItem;
             }
-            return Encoding.UTF8;
+            return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
         }
+
+        public static void SetTextEncoding(ToolStripComboBox comboBoxEncoding, string encodingName)
+        {
+            if (encodingName == TextEncoding.Utf8WithBom)
+            {
+                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex;
+                return;
+            }
+
+            if (encodingName == TextEncoding.Utf8WithoutBom)
+            {
+                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
+                return;
+            }
+
+            foreach (TextEncoding item in comboBoxEncoding.Items)
+            {
+                if (item.Equals(encodingName))
+                {
+                    comboBoxEncoding.SelectedItem = item;
+                    return;
+                }
+            }
+
+            comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
+        }
+
+
 
         private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|";
 

@@ -1160,7 +1160,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiauto = false)
+        public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiAuto = false)
         {
             var encoding = Encoding.Default;
 
@@ -1220,7 +1220,7 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.WebName)
+                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
@@ -1228,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Core
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
-                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiauto)
+                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
                             return DetectAnsiEncoding(buffer);
                         }

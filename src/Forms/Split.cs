@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         overwrite = true;
                     }
-                    File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                    FileUtil.WriteAllText(fileName, allText, GetCurrentEncoding());
                     number++;
                 }
             }
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Encoding GetCurrentEncoding()
+        private TextEncoding GetCurrentEncoding()
         {
             return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
