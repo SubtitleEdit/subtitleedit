@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void lblText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start((string)e.Link.LinkData);
+            UiUtil.OpenURL((string)e.Link.LinkData);
         }
 
         private void OpenFileLocation(string filePath)

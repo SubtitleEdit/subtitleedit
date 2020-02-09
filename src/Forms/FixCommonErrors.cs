@@ -838,7 +838,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             sb.Append("</table></body></html>");
             File.WriteAllText(htmlFileName, sb.ToString());
-            System.Diagnostics.Process.Start(htmlFileName);
+            UiUtil.OpenFile(htmlFileName);
         }
 
         private static string[] MakeDiffHtml(string before, string after)

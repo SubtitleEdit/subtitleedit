@@ -226,7 +226,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenReportFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("explorer.exe", $@"/select,""{MakeReport()}"" ");
+            if (Configuration.IsRunningOnWindows)
+            {
+                Process.Start("explorer.exe", $@"/select,""{MakeReport()}"" ");
+            }
+            else
+            {
+                Logic.UiUtil.OpenFile(MakeReport());
+            }
         }
 
         private string MakeReport()

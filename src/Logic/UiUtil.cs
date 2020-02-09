@@ -1036,8 +1036,32 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch (Exception exception)
             {
-                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}");
+                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        public static void OpenURL(string url)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(url);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open url: {url}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public static void OpenFile(string file)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(file);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot open file: {file}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

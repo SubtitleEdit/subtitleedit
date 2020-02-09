@@ -852,8 +852,15 @@ namespace Nikse.SubtitleEdit.Core
             {
                 helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             }
-
-            System.Diagnostics.Process.Start(helpFile + parameter);
+            try
+            {
+                System.Diagnostics.Process.Start(helpFile + parameter);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("ERROR: Cannot open help");
+                Console.Write(exception);
+            }
         }
 
         public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
