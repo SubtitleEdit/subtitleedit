@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        Process.Start("http://www.videolan.org/");
+                        UiUtil.OpenURL("http://www.videolan.org/");
                     }
                     return;
                 }

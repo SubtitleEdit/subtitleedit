@@ -2952,7 +2952,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(MicrosoftTranslator.SignUpUrl);
+            UiUtil.OpenURL(MicrosoftTranslator.SignUpUrl);
         }
 
         private void ValidateShortcut(object sender, EventArgs e)
@@ -3063,7 +3063,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelGoogleTranslateSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://www.google.com/search?q=google+cloud+get+api+key");
+            UiUtil.OpenURL("https://www.google.com/search?q=google+cloud+get+api+key");
         }
 
         private void buttonEditProfile_Click(object sender, EventArgs e)

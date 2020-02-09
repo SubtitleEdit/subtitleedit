@@ -852,8 +852,25 @@ namespace Nikse.SubtitleEdit.Core
             {
                 helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             }
-
-            System.Diagnostics.Process.Start(helpFile + parameter);
+            try
+            {
+                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
+                {
+                    System.Diagnostics.Process.Start(helpFile + parameter);
+                }
+                else if (Configuration.IsRunningOnLinux)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.EnableRaisingEvents = false;
+                    process.StartInfo.FileName = "xdg-open";
+                    process.StartInfo.Arguments = helpFile + parameter;
+                    process.Start();
+                }
+            }
+            catch
+            {
+                //Don't do anything
+            }
         }
 
         public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
