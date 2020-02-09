@@ -125,13 +125,14 @@ namespace Nikse.SubtitleEdit.Core
         {
             // hack for unit tests
             var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
-            if (assembly.Location.Contains(@"\src\TestResults"))
+            var srcTestResultsIndex = assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal);
+            if (srcTestResultsIndex > 0)
             {
                 var debugOrReleaseFolderName = "Release";
 #if DEBUG
                 debugOrReleaseFolderName = "Debug";
 #endif
-                return $@"{assembly.Location.Substring(0, assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal))}\src\Test\bin\{debugOrReleaseFolderName}";
+                return $@"{assembly.Location.Substring(0, srcTestResultsIndex)}\src\Test\bin\{debugOrReleaseFolderName}\";
             }
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
