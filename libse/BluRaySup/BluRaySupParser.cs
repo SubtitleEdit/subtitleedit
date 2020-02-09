@@ -709,6 +709,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 #endif
                             forceFirstOds = true;
                             var nextPcs = ParsePicture(buffer, segment);
+                            if (nextPcs.StartTime > 0 && pcsList.Count > 0 && pcsList.Last().EndTime == 0)
+                            {
+                                pcsList.Last().EndTime = nextPcs.StartTime;
+                            }
 #if DEBUG
                             log.AppendLine(nextPcs.Message);
 #endif
@@ -782,7 +786,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             for (int pcsIndex = 1; pcsIndex < pcsList.Count; pcsIndex++)
             {
-                pcsList[pcsIndex - 1].EndTime = pcsList[pcsIndex].StartTime;
+                var prev = pcsList[pcsIndex - 1];
+                if (prev.EndTime == 0)
+                {
+                    prev.EndTime = pcsList[pcsIndex].StartTime;
+                }
             }
 
             pcsList.RemoveAll(pcs => pcs.PcsObjects.Count == 0);
