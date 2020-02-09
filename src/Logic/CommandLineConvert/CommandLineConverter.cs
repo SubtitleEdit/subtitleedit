@@ -227,23 +227,26 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 try
                 {
                     var encodingName = GetArgument(unconsumedArguments, "encoding:");
-                    if (encodingName.Equals("utf8", StringComparison.OrdinalIgnoreCase) ||
-                        encodingName.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
-                        encodingName.Equals("utf-8-bom", StringComparison.OrdinalIgnoreCase) ||
-                        encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
-                        encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
-                    {
-                        targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
-                    }
-                    else if (encodingName.Equals("utf-8-no-bom", StringComparison.OrdinalIgnoreCase) ||
-                             encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
-                             encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
-                    {
-                        targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
-                    }
                     if (encodingName.Length > 0)
                     {
-                        targetEncoding = new TextEncoding(Encoding.GetEncoding(encodingName), null);
+                        if (encodingName.Equals("utf8", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals("utf-8-bom", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                        }
+                        else if (encodingName.Equals("utf-8-no-bom", StringComparison.OrdinalIgnoreCase) ||
+                                 encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
+                                 encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                        }
+                        else
+                        {
+                            targetEncoding = new TextEncoding(Encoding.GetEncoding(encodingName), null);
+                        }
                     }
                 }
                 catch (Exception exception)
