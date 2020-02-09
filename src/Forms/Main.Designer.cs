@@ -379,6 +379,7 @@
             this.labelVideoPosition = new System.Windows.Forms.Label();
             this.buttonSecBack1 = new System.Windows.Forms.Button();
             this.tabPageAdjust = new System.Windows.Forms.TabPage();
+            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonAdjustSetEndTime = new System.Windows.Forms.Button();
             this.buttonSetEndAndGoToNext = new System.Windows.Forms.Button();
             this.buttonSetStartAndOffsetRest = new System.Windows.Forms.Button();
@@ -396,7 +397,6 @@
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
-            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
@@ -3496,9 +3496,9 @@
             // 
             // buttonForward2
             // 
-            this.buttonForward2.Location = new System.Drawing.Point(128, 163);
+            this.buttonForward2.Location = new System.Drawing.Point(130, 163);
             this.buttonForward2.Name = "buttonForward2";
-            this.buttonForward2.Size = new System.Drawing.Size(58, 23);
+            this.buttonForward2.Size = new System.Drawing.Size(56, 23);
             this.buttonForward2.TabIndex = 10;
             this.buttonForward2.Text = " >>";
             this.buttonForward2.UseVisualStyleBackColor = true;
@@ -3512,14 +3512,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSec2.Location = new System.Drawing.Point(70, 163);
+            this.numericUpDownSec2.Location = new System.Drawing.Point(66, 164);
             this.numericUpDownSec2.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSec2.Name = "numericUpDownSec2";
-            this.numericUpDownSec2.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownSec2.Size = new System.Drawing.Size(59, 20);
             this.numericUpDownSec2.TabIndex = 9;
             this.numericUpDownSec2.Value = new decimal(new int[] {
             5000,
@@ -3532,7 +3532,7 @@
             // 
             this.buttonSecBack2.Location = new System.Drawing.Point(6, 163);
             this.buttonSecBack2.Name = "buttonSecBack2";
-            this.buttonSecBack2.Size = new System.Drawing.Size(58, 23);
+            this.buttonSecBack2.Size = new System.Drawing.Size(56, 23);
             this.buttonSecBack2.TabIndex = 8;
             this.buttonSecBack2.Text = "<<";
             this.buttonSecBack2.UseVisualStyleBackColor = true;
@@ -3540,9 +3540,9 @@
             // 
             // buttonForward1
             // 
-            this.buttonForward1.Location = new System.Drawing.Point(128, 137);
+            this.buttonForward1.Location = new System.Drawing.Point(130, 137);
             this.buttonForward1.Name = "buttonForward1";
-            this.buttonForward1.Size = new System.Drawing.Size(58, 23);
+            this.buttonForward1.Size = new System.Drawing.Size(56, 23);
             this.buttonForward1.TabIndex = 7;
             this.buttonForward1.Text = ">>";
             this.buttonForward1.UseVisualStyleBackColor = true;
@@ -3556,14 +3556,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSec1.Location = new System.Drawing.Point(70, 137);
+            this.numericUpDownSec1.Location = new System.Drawing.Point(66, 138);
             this.numericUpDownSec1.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSec1.Name = "numericUpDownSec1";
-            this.numericUpDownSec1.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownSec1.Size = new System.Drawing.Size(59, 20);
             this.numericUpDownSec1.TabIndex = 6;
             this.numericUpDownSec1.Value = new decimal(new int[] {
             500,
@@ -3586,7 +3586,7 @@
             // 
             this.buttonSecBack1.Location = new System.Drawing.Point(6, 137);
             this.buttonSecBack1.Name = "buttonSecBack1";
-            this.buttonSecBack1.Size = new System.Drawing.Size(58, 23);
+            this.buttonSecBack1.Size = new System.Drawing.Size(56, 23);
             this.buttonSecBack1.TabIndex = 5;
             this.buttonSecBack1.Text = "<<";
             this.buttonSecBack1.UseVisualStyleBackColor = true;
@@ -3594,6 +3594,7 @@
             // 
             // tabPageAdjust
             // 
+            this.tabPageAdjust.Controls.Add(this.timeUpDownVideoPositionAdjust);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSetEndTime);
             this.tabPageAdjust.Controls.Add(this.buttonSetEndAndGoToNext);
             this.tabPageAdjust.Controls.Add(this.buttonSetStartAndOffsetRest);
@@ -3611,13 +3612,32 @@
             this.tabPageAdjust.Controls.Add(this.labelVideoPosition2);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustGoToPosAndPause);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustPlayBefore);
-            this.tabPageAdjust.Controls.Add(this.timeUpDownVideoPositionAdjust);
             this.tabPageAdjust.Location = new System.Drawing.Point(4, 22);
             this.tabPageAdjust.Name = "tabPageAdjust";
             this.tabPageAdjust.Size = new System.Drawing.Size(459, 257);
             this.tabPageAdjust.TabIndex = 2;
             this.tabPageAdjust.Text = "Adjust";
             this.tabPageAdjust.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownVideoPositionAdjust
+            // 
+            this.timeUpDownVideoPositionAdjust.AutoSize = true;
+            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
+            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
+            this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
             // 
@@ -3701,9 +3721,9 @@
             // 
             // buttonAdjustSecForward2
             // 
-            this.buttonAdjustSecForward2.Location = new System.Drawing.Point(128, 188);
+            this.buttonAdjustSecForward2.Location = new System.Drawing.Point(130, 188);
             this.buttonAdjustSecForward2.Name = "buttonAdjustSecForward2";
-            this.buttonAdjustSecForward2.Size = new System.Drawing.Size(58, 23);
+            this.buttonAdjustSecForward2.Size = new System.Drawing.Size(56, 23);
             this.buttonAdjustSecForward2.TabIndex = 11;
             this.buttonAdjustSecForward2.Text = ">>";
             this.buttonAdjustSecForward2.UseVisualStyleBackColor = true;
@@ -3717,14 +3737,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSecAdjust2.Location = new System.Drawing.Point(70, 188);
+            this.numericUpDownSecAdjust2.Location = new System.Drawing.Point(66, 189);
             this.numericUpDownSecAdjust2.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSecAdjust2.Name = "numericUpDownSecAdjust2";
-            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(59, 20);
             this.numericUpDownSecAdjust2.TabIndex = 10;
             this.numericUpDownSecAdjust2.Value = new decimal(new int[] {
             5000,
@@ -3737,7 +3757,7 @@
             // 
             this.buttonAdjustSecBack2.Location = new System.Drawing.Point(6, 188);
             this.buttonAdjustSecBack2.Name = "buttonAdjustSecBack2";
-            this.buttonAdjustSecBack2.Size = new System.Drawing.Size(58, 23);
+            this.buttonAdjustSecBack2.Size = new System.Drawing.Size(56, 23);
             this.buttonAdjustSecBack2.TabIndex = 9;
             this.buttonAdjustSecBack2.Text = "<<";
             this.buttonAdjustSecBack2.UseVisualStyleBackColor = true;
@@ -3745,9 +3765,9 @@
             // 
             // buttonAdjustSecForward1
             // 
-            this.buttonAdjustSecForward1.Location = new System.Drawing.Point(128, 162);
+            this.buttonAdjustSecForward1.Location = new System.Drawing.Point(130, 162);
             this.buttonAdjustSecForward1.Name = "buttonAdjustSecForward1";
-            this.buttonAdjustSecForward1.Size = new System.Drawing.Size(58, 23);
+            this.buttonAdjustSecForward1.Size = new System.Drawing.Size(56, 23);
             this.buttonAdjustSecForward1.TabIndex = 8;
             this.buttonAdjustSecForward1.Text = ">>";
             this.buttonAdjustSecForward1.UseVisualStyleBackColor = true;
@@ -3761,14 +3781,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSecAdjust1.Location = new System.Drawing.Point(70, 162);
+            this.numericUpDownSecAdjust1.Location = new System.Drawing.Point(66, 163);
             this.numericUpDownSecAdjust1.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSecAdjust1.Name = "numericUpDownSecAdjust1";
-            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(59, 20);
             this.numericUpDownSecAdjust1.TabIndex = 7;
             this.numericUpDownSecAdjust1.Value = new decimal(new int[] {
             500,
@@ -3781,7 +3801,7 @@
             // 
             this.buttonAdjustSecBack1.Location = new System.Drawing.Point(6, 162);
             this.buttonAdjustSecBack1.Name = "buttonAdjustSecBack1";
-            this.buttonAdjustSecBack1.Size = new System.Drawing.Size(58, 23);
+            this.buttonAdjustSecBack1.Size = new System.Drawing.Size(56, 23);
             this.buttonAdjustSecBack1.TabIndex = 6;
             this.buttonAdjustSecBack1.Text = "<<";
             this.buttonAdjustSecBack1.UseVisualStyleBackColor = true;
@@ -3816,26 +3836,6 @@
             this.buttonAdjustPlayBefore.Text = "&Play from just before text";
             this.buttonAdjustPlayBefore.UseVisualStyleBackColor = true;
             this.buttonAdjustPlayBefore.Click += new System.EventHandler(this.buttonBeforeText_Click);
-            // 
-            // timeUpDownVideoPositionAdjust
-            // 
-            this.timeUpDownVideoPositionAdjust.AutoSize = true;
-            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
-            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
-            this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // ShowSubtitleTimer
             // 

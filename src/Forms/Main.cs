@@ -235,6 +235,19 @@ namespace Nikse.SubtitleEdit.Forms
                     labelDuration.Left = numericUpDownDuration.Left - 3;
                     labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
                 }
+                var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
+                if (xDiff < 0)
+                {
+                    xDiff *= -1;
+                    timeUpDownStartTime.Top += xDiff;
+                    numericUpDownDuration.Top += xDiff;
+                    pictureBoxBookmark.Top += xDiff;
+                    textBoxListViewText.Top += xDiff;
+                    textBoxListViewText.Height -= xDiff;
+                    textBoxListViewTextAlternate.Top += xDiff;
+                    textBoxListViewTextAlternate.Height -= xDiff;
+                    comboBoxAutoRepeat.Top += xDiff;
+                }
             }
 
             base.OnLoad(e);
@@ -522,6 +535,9 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.Left = timeUpDownStartTime.Right + 4;
                 labelDurationWarning.Left = numericUpDownDuration.Left;
                 labelDuration.Left = labelDurationWarning.Left;
+
+                timeUpDownVideoPosition.SetAutoWidth();
+                timeUpDownVideoPositionAdjust.SetAutoWidth();
             }
             catch (Exception exception)
             {

@@ -2014,7 +2014,7 @@
             // 
             this.buttonMpvSettings.Location = new System.Drawing.Point(510, 89);
             this.buttonMpvSettings.Name = "buttonMpvSettings";
-            this.buttonMpvSettings.Size = new System.Drawing.Size(179, 21);
+            this.buttonMpvSettings.Size = new System.Drawing.Size(179, 23);
             this.buttonMpvSettings.TabIndex = 29;
             this.buttonMpvSettings.Text = "Download mpv dll";
             this.buttonMpvSettings.UseVisualStyleBackColor = true;
