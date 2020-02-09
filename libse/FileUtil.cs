@@ -543,5 +543,20 @@ namespace Nikse.SubtitleEdit.Core
             return Path.GetTempPath() + Guid.NewGuid() + extension;
         }
 
+        public static void WriteAllText(string fileName, string contents, TextEncoding encoding)
+        {
+            if (encoding.DisplayName == TextEncoding.Utf8WithoutBom)
+            {
+                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                using (var file = new StreamWriter(fileName, false, outputEnc)) // open file with encoding
+                {
+                    file.Write(contents);
+                }
+            }
+            else
+            {
+                File.WriteAllText(fileName, contents, encoding.Encoding);
+            }
+        }
     }
 }

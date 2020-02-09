@@ -1038,7 +1038,6 @@
     <Compile Include="Logic\SpellCheck\VoikkoSpellCheck.cs" />
     <Compile Include="Logic\SpellCheck\WindowsHunspell.cs" />
     <Compile Include="Logic\SyncContextExtensions.cs" />
-    <Compile Include="Logic\TextEncodingListItem.cs" />
     <Compile Include="Logic\UiEbuSaveHelper.cs" />
     <Compile Include="Logic\UiGetPacEncoding.cs" />
     <Compile Include="Logic\UiGetYouTubeAnnotationStyles.cs" />

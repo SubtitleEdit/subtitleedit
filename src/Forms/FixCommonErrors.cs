@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLanguage.EndUpdate();
         }
 
-        public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
+        public void RunBatchSettings(Subtitle subtitle, SubtitleFormat format, TextEncoding encoding, string language)
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixedSubtitle = new Subtitle(subtitle, false); // copy constructor
             Subtitle = new Subtitle(subtitle, false); // copy constructor
             _format = format;
-            Encoding = encoding;
+            Encoding = encoding.Encoding;
             _onlyListFixes = false;
             InitUserInterface();
             groupBoxStep1.Text = string.Empty;

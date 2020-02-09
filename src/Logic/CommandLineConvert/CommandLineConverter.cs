@@ -219,13 +219,34 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     Configuration.Settings.General.CurrentFrameRate = frameRate.Value;
                 }
 
-                var targetEncoding = Encoding.UTF8;
+                var targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+                {
+                    targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                }
                 try
                 {
                     var encodingName = GetArgument(unconsumedArguments, "encoding:");
                     if (encodingName.Length > 0)
                     {
-                        targetEncoding = Encoding.GetEncoding(encodingName);
+                        if (encodingName.Equals("utf8", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals("utf-8-bom", StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
+                            encodingName.Equals(TextEncoding.Utf8WithBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                        }
+                        else if (encodingName.Equals("utf-8-no-bom", StringComparison.OrdinalIgnoreCase) ||
+                                 encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) ||
+                                 encodingName.Equals(TextEncoding.Utf8WithoutBom.Replace(" ", "-"), StringComparison.OrdinalIgnoreCase))
+                        {
+                            targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                        }
+                        else
+                        {
+                            targetEncoding = new TextEncoding(Encoding.GetEncoding(encodingName), null);
+                        }
                     }
                 }
                 catch (Exception exception)
@@ -749,7 +770,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             return null;
         }
 
-        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly, Point? resolution)
+        private static void ConvertBluRaySubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly, Point? resolution)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -778,7 +799,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly)
+        private static void ConvertVobSubSubtitle(string fileName, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions, bool forcedOnly)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -804,7 +825,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -1042,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
+        internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
                                               IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions = null,
                                               Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null)
@@ -1082,7 +1103,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                             language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
                                         }
 
-                                        fce.RunBatch(sub, format, targetEncoding, language);
+                                        fce.RunBatch(sub, format, targetEncoding.Encoding, language);
                                         sub = fce.FixedSubtitle;
                                     }
                                 }
@@ -1179,7 +1200,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                         if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
                         {
-                            targetEncoding = Encoding.UTF8;
+                            if (!targetEncoding.IsUtf8)
+                            {
+                                targetEncoding = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                            }
                         }
 
                         // Remove native formatting
@@ -1206,9 +1230,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     file.Write(sub.ToText(sf));
                                 } // save and close it
                             }
+                            else if (sf.Extension == ".rtf")
+                            {
+                                File.WriteAllText(outputFileName, sub.ToText(sf), Encoding.ASCII);
+                            }
                             else
                             {
-                                File.WriteAllText(outputFileName, sub.ToText(sf), sf.Extension == ".rtf" ? Encoding.ASCII : targetEncoding);
+                                FileUtil.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                             }
                         }
                         catch (Exception ex)
@@ -1243,7 +1271,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     }
 
                                     outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
-                                    File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                    FileUtil.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                 }
                             }
                         }
@@ -1357,7 +1385,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             AddNewAfterText2 = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
                             FormatMergeAll = Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"
                         };
-                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, exportOptions), targetEncoding);
+                        FileUtil.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, exportOptions), targetEncoding);
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
@@ -1745,7 +1773,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
                                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                                        File.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
+                                        FileUtil.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
                                         _stdOutWriter?.WriteLine(" done.");
                                         break;
                                     }
