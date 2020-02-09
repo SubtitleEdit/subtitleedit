@@ -1126,7 +1126,26 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForwardDown.Left = _pictureBoxFastForward.Left;
             _pictureBoxFastForwardOver.Left = _pictureBoxFastForward.Left;
 
-            _labelTimeCode.Left = Width - 170;
+            if (string.IsNullOrEmpty(_labelTimeCode.Text))
+            {
+                var span = TimeCode.FromSeconds(1);
+                _labelTimeCode.Text = $"{span.ToDisplayString()} / {span.ToDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
+                _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
+                if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
+                {
+                    _labelTimeCode.Font = new Font(_labelTimeCode.Font.Name, _labelTimeCode.Font.Size - 1);
+                }
+                _labelTimeCode.Text = string.Empty;
+            }
+            else
+            {
+                _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
+                if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
+                {
+                    _labelTimeCode.Font = new Font(_labelTimeCode.Font.Name, _labelTimeCode.Font.Size - 1);
+                }
+            }
+
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
             _mpvTextFileName = null;
         }
