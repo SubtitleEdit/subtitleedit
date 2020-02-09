@@ -1,5 +1,43 @@
 ﻿Subtitle Edit Changelog
 
+3.5.14 (xth March 2020) BETA
+* NEW:
+   * Installer can now update xml dictionaries - thx xylographe
+   * "UTF-8 without BOM" encoding added - thx uckthis
+   * Add some support for reading Adobe Premire .prproj files - thx Ariana
+   * Add new sub format - thx uckthis
+   * Add new sub format - thx Ingo
+   * Add new json subtitle format - thx Niraj
+* IMPROVED:
+   * Update Finnish translation - thx Teijo S.
+   * Update Basque translation - thx Azpidatziak
+   * Update Dutch translation - thx xylographe
+   * Update names lists with territories from CLDR - thx xylographe
+   * Remove (obsolete) support for SSL3
+   * Remember "merge short lines max chars" - thx taxen
+   * Make SubRip allow empty lines (even when no line numbers) - thx Niels
+   * Improve auto detect encoding for Polish language - thx Krzysztof
+   * Improve icons for dark mode (mostly help icon)
+   * Import images now sorts by start time - thx Jamakmake
+   * Improve opening folders/urls on Linux - thx NickZ
+   * Add read support of top alignment from .scc
+   * Improve speed of .scc reading
+   * Auto detect xml in "custom text export" - thx Doug
+   * Up to 3 secs "min display time" in "Apply duration limits" - thx Rudy
+   * Install Add more video files to "SupportedTypes" - thx xylographe
+* FIXED:
+   * Fix color in Sami format - thx OhaengCha/Jamakmake
+   * Fix time code in format .sif - thx Milenko
+   * Fix FCE short gap without time codes - thx OmrSi
+   * Fix crash when opening translation only from blank - thx OmrSi
+   * Fix wrong filename after teletext import [2] - thx beeeeswax
+   * Fix read "VPosition" w decimal point in DCinemaInterop - thx Marko
+   * Fix issue with extended match in "Image compare" - thx Zoltán
+   * Fix remove interjections issue - thx Waleri
+   * Fix issue with spell check "change word" - thx OmrSi
+   * Fix top alignment in format "SMPTE-TT 2052" - thx Flavia Rezende
+
+
 3.5.13 (20th January 2020)
 * IMPROVED:
    * Update Japanese translation - thx ScratchBuild
