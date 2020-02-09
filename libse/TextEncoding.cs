@@ -35,18 +35,18 @@ namespace Nikse.SubtitleEdit.Core
             return DisplayName;
         }
 
-        public bool Equals(string name)
+        public bool Equals(string other)
         {
-            return !ReferenceEquals(name, null) && (
-                   Encoding.WebName.Equals(name, StringComparison.OrdinalIgnoreCase) ||
-                   Encoding.EncodingName.Equals(name, StringComparison.OrdinalIgnoreCase) ||
-                   DisplayName.Equals(name, StringComparison.OrdinalIgnoreCase) ||
-                   Encoding.CodePage.ToString().Equals(name));
+            return !ReferenceEquals(other, null) && (
+                   Encoding.WebName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
+                   Encoding.EncodingName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
+                   DisplayName.Equals(other, StringComparison.OrdinalIgnoreCase) ||
+                   Encoding.CodePage.ToString().Equals(other));
         }
 
-        public bool Equals(Encoding encoding)
+        public bool Equals(Encoding other)
         {
-            return !ReferenceEquals(encoding, null) && Encoding.CodePage.Equals(encoding.CodePage);
+            return !ReferenceEquals(other, null) && Encoding.CodePage.Equals(other.CodePage);
         }
 
         public override bool Equals(object obj)
