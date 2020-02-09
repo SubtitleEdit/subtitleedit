@@ -127,7 +127,11 @@ namespace Nikse.SubtitleEdit.Core
             var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
             if (assembly.Location.Contains(@"\src\TestResults"))
             {
-                return $@"{assembly.Location.Substring(0, assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal))}\src\Test\bin\Debug";
+                var debugOrReleaseFolderName = "Release";
+#if DEBUG
+                debugOrReleaseFolderName = "Debug";
+#endif
+                return $@"{assembly.Location.Substring(0, assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal))}\src\Test\bin\{debugOrReleaseFolderName}";
             }
 
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
