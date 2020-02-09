@@ -867,7 +867,7 @@ namespace Nikse.SubtitleEdit.Core
                     process.Start();
                 }
             }
-            catch (Exception exception)
+            catch
             {
                 //Don't do anything
             }
