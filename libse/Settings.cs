@@ -696,7 +696,6 @@ $HorzAlign          =   Center
         public string DefaultSubtitleFormat { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoConvertToUtf8 { get; set; }
-        public bool WriteUtf8Bom { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SystemSubtitleFontNameOverride { get; set; }
         public int SystemSubtitleFontSizeOverride { get; set; }
@@ -849,9 +848,8 @@ $HorzAlign          =   Center
             SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
-            DefaultEncoding = Encoding.UTF8.WebName;
+            DefaultEncoding = TextEncoding.Utf8WithBom;
             AutoConvertToUtf8 = false;
-            WriteUtf8Bom = true;
             AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -1759,9 +1757,9 @@ $HorzAlign          =   Center
                     //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
-                    if (settings.General.AutoConvertToUtf8)
+                    if (settings.General.AutoConvertToUtf8 && !settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
                     {
-                        settings.General.DefaultEncoding = Encoding.UTF8.WebName;
+                        settings.General.DefaultEncoding = "UTF-8 with BOM";
                     }
                 }
                 catch (Exception exception)
@@ -2083,12 +2081,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AutoConvertToUtf8 = Convert.ToBoolean(subNode.InnerText);
-            }
-
-            subNode = node.SelectSingleNode("WriteUtf8Bom");
-            if (subNode != null)
-            {
-                settings.General.WriteUtf8Bom = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
@@ -6309,7 +6301,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));

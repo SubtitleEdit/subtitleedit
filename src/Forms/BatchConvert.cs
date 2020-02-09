@@ -39,14 +39,14 @@ namespace Nikse.SubtitleEdit.Forms
             public ListViewItem Item { get; set; }
             public Subtitle Subtitle { get; set; }
             public SubtitleFormat Format { get; set; }
-            public Encoding Encoding { get; set; }
+            public TextEncoding Encoding { get; set; }
             public string Language { get; set; }
             public string Error { get; set; }
             public string FileName { get; set; }
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
             public List<IBinaryParagraph> BinaryParagraphs { get; set; }
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat, List<IBinaryParagraph> binaryParagraphs)
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, TextEncoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat, List<IBinaryParagraph> binaryParagraphs)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private Encoding GetCurrentEncoding()
+        private TextEncoding GetCurrentEncoding()
         {
             return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
@@ -1494,7 +1494,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         for (int i = 0; i < 3; i++)
                         {
-                            fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, l);
+                            fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding.Encoding, l);
                             p.Subtitle = fixCommonErrors.FixedSubtitle;
                         }
                     }

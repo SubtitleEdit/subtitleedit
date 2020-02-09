@@ -719,7 +719,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEncoding(Encoding encoding)
         {
-            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
+            if (encoding == Encoding.UTF8 && Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+            {
+                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
+            }
+
+            foreach (TextEncoding item in comboBoxEncoding.Items)
             {
                 if (item.Equals(encoding))
                 {
@@ -728,26 +733,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            comboBoxEncoding.SelectedIndex = 0; // UTF-8
+            comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
         }
 
         private void SetEncoding(string encodingName)
         {
-            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
-            {
-                if (item.Equals(encodingName))
-                {
-                    comboBoxEncoding.SelectedItem = item;
-                    return;
-                }
-            }
-
-            comboBoxEncoding.SelectedIndex = 0; // UTF-8
+            UiUtil.SetTextEncoding(comboBoxEncoding, encodingName);
         }
 
         private Encoding GetCurrentEncoding()
         {
-            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox);
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).Encoding;
         }
 
         private void AudioWaveform_OnNonParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
@@ -3030,12 +3026,23 @@ namespace Nikse.SubtitleEdit.Forms
                 SetTitle();
                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                 _sourceViewChange = false;
-                if (Configuration.Settings.General.AutoConvertToUtf8)
+
+                if (Configuration.Settings.General.AutoConvertToUtf8 || encoding == Encoding.UTF8)
                 {
-                    encoding = Encoding.UTF8;
+                    if (File.Exists(_fileName) && FileUtil.HasUtf8Bom(fileName))
+                    {
+                        SetEncoding(TextEncoding.Utf8WithBom);
+                    }
+                    else
+                    {
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom ? TextEncoding.Utf8WithoutBom : TextEncoding.Utf8WithBom);
+                    }
+                }
+                else
+                {
+                    SetEncoding(encoding);
                 }
 
-                SetEncoding(encoding);
                 _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                 _converted = false;
                 ResetHistory();
@@ -3782,7 +3789,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    if (Equals(currentEncoding, Encoding.UTF8) && !Configuration.Settings.General.WriteUtf8Bom)
+                    if (comboBoxEncoding.SelectedIndex == TextEncoding.Utf8WithoutBomIndex)
                     {
                         var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                         using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
