@@ -87,24 +87,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RichTextBoxAbout1LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            try
-            {
-                Process.Start(e.LinkText);
-            }
-            catch
-            {
-                MessageBox.Show("Unable to start link: " + e.LinkText, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            UiUtil.OpenURL(e.LinkText);
         }
 
         private void buttonDonate_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.nikse.dk/Donate");
+            UiUtil.OpenURL("https://www.nikse.dk/Donate");
         }
 
         private void linkLabelGitBuildHash_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(GetGitHubHashLink());
+            UiUtil.OpenURL(GetGitHubHashLink());
         }
 
         private static string GetGitHubHashLink()

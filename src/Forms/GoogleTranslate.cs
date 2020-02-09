@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(_googleTranslate ? GoogleTranslateUrl : _translator.GetUrl());
+            UiUtil.OpenURL(_googleTranslate ? GoogleTranslateUrl : _translator.GetUrl());
         }
 
         private void ButtonOkClick(object sender, EventArgs e)

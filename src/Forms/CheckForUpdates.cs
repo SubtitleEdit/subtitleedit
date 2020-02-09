@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownloadAndInstall_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/SubtitleEdit/subtitleedit/releases");
+            UiUtil.OpenURL("https://github.com/SubtitleEdit/subtitleedit/releases");
         }
 
         private void buttonDontCheckUpdates_Click(object sender, EventArgs e)

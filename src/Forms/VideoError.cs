@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process.Start(e.LinkText);
+            UiUtil.OpenURL(e.LinkText);
         }
 
     }

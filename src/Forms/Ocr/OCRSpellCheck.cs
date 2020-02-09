@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string text = textBoxWord.Text;
             if (!string.IsNullOrWhiteSpace(text))
             {
-                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
             }
         }
 
