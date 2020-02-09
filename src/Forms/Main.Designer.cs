@@ -3209,9 +3209,9 @@
             this.groupBoxAutoContinue.Controls.Add(this.comboBoxAutoContinue);
             this.groupBoxAutoContinue.Controls.Add(this.labelAutoContinueDelay);
             this.groupBoxAutoContinue.Controls.Add(this.checkBoxAutoContinue);
-            this.groupBoxAutoContinue.Location = new System.Drawing.Point(12, 126);
+            this.groupBoxAutoContinue.Location = new System.Drawing.Point(12, 120);
             this.groupBoxAutoContinue.Name = "groupBoxAutoContinue";
-            this.groupBoxAutoContinue.Size = new System.Drawing.Size(182, 92);
+            this.groupBoxAutoContinue.Size = new System.Drawing.Size(182, 98);
             this.groupBoxAutoContinue.TabIndex = 1;
             this.groupBoxAutoContinue.TabStop = false;
             this.groupBoxAutoContinue.Text = "Auto continue";
@@ -3278,7 +3278,7 @@
             this.groupBoxAutoRepeat.Controls.Add(this.checkBoxAutoRepeatOn);
             this.groupBoxAutoRepeat.Location = new System.Drawing.Point(12, 14);
             this.groupBoxAutoRepeat.Name = "groupBoxAutoRepeat";
-            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(182, 111);
+            this.groupBoxAutoRepeat.Size = new System.Drawing.Size(182, 100);
             this.groupBoxAutoRepeat.TabIndex = 0;
             this.groupBoxAutoRepeat.TabStop = false;
             this.groupBoxAutoRepeat.Text = "Auto repeat";
@@ -3519,7 +3519,7 @@
             0,
             0});
             this.numericUpDownSec2.Name = "numericUpDownSec2";
-            this.numericUpDownSec2.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownSec2.Size = new System.Drawing.Size(58, 20);
             this.numericUpDownSec2.TabIndex = 9;
             this.numericUpDownSec2.Value = new decimal(new int[] {
             5000,
@@ -3563,7 +3563,7 @@
             0,
             0});
             this.numericUpDownSec1.Name = "numericUpDownSec1";
-            this.numericUpDownSec1.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownSec1.Size = new System.Drawing.Size(58, 20);
             this.numericUpDownSec1.TabIndex = 6;
             this.numericUpDownSec1.Value = new decimal(new int[] {
             500,
@@ -3744,7 +3744,7 @@
             0,
             0});
             this.numericUpDownSecAdjust2.Name = "numericUpDownSecAdjust2";
-            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(58, 20);
             this.numericUpDownSecAdjust2.TabIndex = 10;
             this.numericUpDownSecAdjust2.Value = new decimal(new int[] {
             5000,
@@ -3788,7 +3788,7 @@
             0,
             0});
             this.numericUpDownSecAdjust1.Name = "numericUpDownSecAdjust1";
-            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(59, 20);
+            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(58, 20);
             this.numericUpDownSecAdjust1.TabIndex = 7;
             this.numericUpDownSecAdjust1.Value = new decimal(new int[] {
             500,

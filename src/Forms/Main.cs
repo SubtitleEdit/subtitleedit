@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
                 }
                 var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
-                if (xDiff < 0)
+                if (xDiff < 0) // DPI auto-size fixes: see https://github.com/SubtitleEdit/subtitleedit/issues/3981
                 {
                     xDiff *= -1;
                     timeUpDownStartTime.Top += xDiff;
@@ -247,6 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.Top += xDiff;
                     textBoxListViewTextAlternate.Height -= xDiff;
                     comboBoxAutoRepeat.Top += xDiff;
+                    comboBoxAutoContinue.Top += xDiff;
                 }
             }
 
@@ -17423,7 +17424,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var textSize = graphics.MeasureString(buttonPlayPrevious.Text, Font);
                 if (textSize.Height > buttonPlayPrevious.Height - 4)
                 {
-                    int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
+                    int newButtonHeight = 22;
                     UiUtil.SetButtonHeight(this, newButtonHeight, -4);
 
                     // List view
