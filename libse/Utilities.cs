@@ -869,8 +869,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch (Exception exception)
             {
-                Console.WriteLine("ERROR: Cannot open help");
-                Console.Write(exception);
+                //Don't do anything
             }
         }
 
