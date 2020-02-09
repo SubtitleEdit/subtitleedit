@@ -45,9 +45,9 @@ namespace Nikse.SubtitleEdit.Core
             _settings = new Lazy<Settings>(Settings.GetSettings);
         }
 
-        private const int _platformWindows = 1;
-        private const int _platformLinux = 2;
-        private const int _platformMac = 3;
+        private const int PlatformWindows = 1;
+        private const int PlatformLinux = 2;
+        private const int PlatformMac = 3;
         private static int _platform;
 
         public static bool IsRunningOnWindows
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     _platform = GetPlatform();
                 }
-                return _platform == _platformWindows;
+                return _platform == PlatformWindows;
             }
         }
 
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     _platform = GetPlatform();
                 }
-                return _platform == _platformLinux;
+                return _platform == PlatformLinux;
             }
         }
 
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     _platform = GetPlatform();
                 }
-                return _platform == _platformMac;
+                return _platform == PlatformMac;
             }
         }
 
@@ -90,10 +90,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             // Current versions of Mono report MacOSX platform as Unix
             return Environment.OSVersion.Platform == PlatformID.MacOSX || (Environment.OSVersion.Platform == PlatformID.Unix && Directory.Exists("/Applications") && Directory.Exists("/System") && Directory.Exists("/Users"))
-                 ? _platformMac
+                 ? PlatformMac
                  : Environment.OSVersion.Platform == PlatformID.Unix
-                 ? _platformLinux
-                 : _platformWindows;
+                 ? PlatformLinux
+                 : PlatformWindows;
         }
 
         public static Settings Settings => Instance.Value._settings.Value;
@@ -121,18 +121,29 @@ namespace Nikse.SubtitleEdit.Core
         private static string GetBaseDirectory()
         {
             var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
-
             return Path.GetDirectoryName(assembly.Location) + Path.DirectorySeparatorChar;
         }
 
         private static string GetDataDirectory()
         {
+            // hack for unit tests
+            var assembly = System.Reflection.Assembly.GetEntryAssembly() ?? System.Reflection.Assembly.GetExecutingAssembly();
+            if (assembly.Location.Contains(@"\src\TestResults"))
+            {
+                var debugOrReleaseFolderName = "Release";
+#if DEBUG
+                debugOrReleaseFolderName = "Debug";
+#endif
+                return $@"{assembly.Location.Substring(0, assembly.Location.IndexOf(@"\src\TestResults", StringComparison.Ordinal))}\src\Test\bin\{debugOrReleaseFolderName}";
+            }
+
             var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
             var dataFolderOverride = Environment.GetEnvironmentVariable("SE_DATA_FOLDER_OVERRIDE");
             if (!string.IsNullOrEmpty(dataFolderOverride) && Directory.Exists(dataFolderOverride))
             {
                 return Path.Combine(dataFolderOverride, "") + Path.DirectorySeparatorChar; // containerized installation
             }
+
             if (IsRunningOnLinux || IsRunningOnMac)
             {
                 if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(BaseDirectory, ".PACKAGE-MANAGER")))

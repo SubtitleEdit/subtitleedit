@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.6+
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
             }
             catch (Exception)
             {
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core
             if (File.Exists(noBreakAfterFileName))
             {
                 doc.Load(noBreakAfterFileName);
-                foreach (XmlNode node in doc.DocumentElement)
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Item"))
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
@@ -852,8 +852,25 @@ namespace Nikse.SubtitleEdit.Core
             {
                 helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             }
-
-            System.Diagnostics.Process.Start(helpFile + parameter);
+            try
+            {
+                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
+                {
+                    System.Diagnostics.Process.Start(helpFile + parameter);
+                }
+                else if (Configuration.IsRunningOnLinux)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.EnableRaisingEvents = false;
+                    process.StartInfo.FileName = "xdg-open";
+                    process.StartInfo.Arguments = helpFile + parameter;
+                    process.Start();
+                }
+            }
+            catch
+            {
+                //Don't do anything
+            }
         }
 
         public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();

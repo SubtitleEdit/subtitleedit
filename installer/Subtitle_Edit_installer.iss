@@ -655,14 +655,21 @@ procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
-  if CurUninstallStep = usUninstall then begin
-    if SettingsExist() or DictionariesExist() then begin
-      if SuppressibleMsgBox(CustomMessage('msg_DeleteSettings'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
+  if CurUninstallStep = usUninstall then
+  begin
+    if SettingsExist() or DictionariesExist() then
+    begin
+      if SuppressibleMsgBox(CustomMessage('msg_DeleteSettings'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then
+      begin
         CleanUpDictionaries();
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
 
       // Remove tesseract
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tesseract.exe'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\configs\hocr'));
+      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract411\tessdata\*.traineddata'), False, True, False);
+      
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tesseract.exe'));
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract410\tessdata\*.traineddata'), False, True, False);
@@ -677,7 +684,7 @@ begin
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\configs\hocr'));
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\*.traineddata'), False, True, False);
 
-      // Remove possible installed mpv
+      // Remove possibly installed mpv
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\mpv-1.dll'));
 
       // Remove the dirs if they are empty

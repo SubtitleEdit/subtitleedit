@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                if (fileName != null && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
@@ -55,20 +55,20 @@ namespace Nikse.SubtitleEdit.Core
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
-                if (fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
+                if (fileName != null && fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
             }
             if (newList.Count == 0)
             {
-                newList.Add(new RecentFileEntry { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                newList.Add(new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
 
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                if (fileName != null && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
@@ -77,7 +77,6 @@ namespace Nikse.SubtitleEdit.Core
             }
             Files = newList;
         }
-
     }
 
     public class ToolsSettings
@@ -262,6 +261,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ApplyMinimumDurationLimit { get; set; }
         public bool ApplyMaximumDurationLimit { get; set; }
         public int MergeShortLinesMaxGap { get; set; }
+        public int MergeShortLinesMaxChars { get; set; }
         public bool MergeShortLinesOnlyContinuous { get; set; }
 
         public ToolsSettings()
@@ -370,6 +370,7 @@ namespace Nikse.SubtitleEdit.Core
             ApplyMinimumDurationLimit = true;
             ApplyMaximumDurationLimit = true;
             MergeShortLinesMaxGap = 250;
+            MergeShortLinesMaxChars = 50;
             MergeShortLinesOnlyContinuous = true;
         }
     }
@@ -695,7 +696,6 @@ $HorzAlign          =   Center
         public string DefaultSubtitleFormat { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoConvertToUtf8 { get; set; }
-        public bool WriteUtf8Bom { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SystemSubtitleFontNameOverride { get; set; }
         public int SystemSubtitleFontSizeOverride { get; set; }
@@ -848,9 +848,8 @@ $HorzAlign          =   Center
             SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
-            DefaultEncoding = Encoding.UTF8.WebName;
+            DefaultEncoding = TextEncoding.Utf8WithBom;
             AutoConvertToUtf8 = false;
-            WriteUtf8Bom = true;
             AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -1758,9 +1757,9 @@ $HorzAlign          =   Center
                     //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
-                    if (settings.General.AutoConvertToUtf8)
+                    if (settings.General.AutoConvertToUtf8 && !settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
                     {
-                        settings.General.DefaultEncoding = Encoding.UTF8.WebName;
+                        settings.General.DefaultEncoding = "UTF-8 with BOM";
                     }
                 }
                 catch (Exception exception)
@@ -2082,12 +2081,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.AutoConvertToUtf8 = Convert.ToBoolean(subNode.InnerText);
-            }
-
-            subNode = node.SelectSingleNode("WriteUtf8Bom");
-            if (subNode != null)
-            {
-                settings.General.WriteUtf8Bom = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
@@ -3830,6 +3823,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.MergeShortLinesMaxGap = Convert.ToInt32(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("MergeShortLinesMaxChars");
+            if (subNode != null)
+            {
+                settings.Tools.MergeShortLinesMaxChars = Convert.ToInt32(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("MergeShortLinesOnlyContinuous");
@@ -6302,7 +6301,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
@@ -6596,6 +6594,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ApplyMinimumDurationLimit", settings.Tools.ApplyMinimumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ApplyMaximumDurationLimit", settings.Tools.ApplyMaximumDurationLimit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)

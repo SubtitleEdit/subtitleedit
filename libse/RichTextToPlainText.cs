@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="inputRtf">RTF formatted text</param>
         /// <returns>Plain text from RTF</returns>
-        internal static string ConvertToText(string inputRtf)
+        public static string ConvertToText(string inputRtf)
         {
             if (inputRtf == null)
             {
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core
             return string.Join(string.Empty, outList.ToArray());
         }
 
-        internal static string ConvertToRtf(string value)
+        public static string ConvertToRtf(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -264,7 +264,5 @@ namespace Nikse.SubtitleEdit.Core
 
             return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + sb + @"\par" + Environment.NewLine + "}";
         }
-
     }
-
 }

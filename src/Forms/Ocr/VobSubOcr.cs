@@ -3256,6 +3256,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             {
                                 ok = true;
                             }
+                            else
+                            {
+                                ok = false;
+                                break;
+                            }
                         }
                         else
                         {
@@ -7748,7 +7753,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 File.WriteAllText(htmlFileName, sb.ToString(), Encoding.UTF8);
                 progressBar1.Visible = false;
                 MessageBox.Show($"{imagesSavedCount} images saved in {folderBrowserDialog1.SelectedPath}");
-                Process.Start(htmlFileName);
+                UiUtil.OpenFile(htmlFileName);
             }
         }
 
@@ -8433,7 +8438,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (listBoxUnknownWords.SelectedItems[0] is LogItem uw && uw.Line > 0)
                 {
-                    Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(uw.Text));
+                    UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(uw.Text));
                 }
             }
         }

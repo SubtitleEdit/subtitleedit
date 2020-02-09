@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 26);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
-            2000,
+            10000,
             0,
             0,
             0});
@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeShortLines";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MergeShortLines_FormClosing);
             this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();

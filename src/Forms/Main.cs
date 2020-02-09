@@ -719,7 +719,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEncoding(Encoding encoding)
         {
-            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
+            if (encoding == Encoding.UTF8 && Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+            {
+                comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithoutBomIndex;
+            }
+
+            foreach (TextEncoding item in comboBoxEncoding.Items)
             {
                 if (item.Equals(encoding))
                 {
@@ -728,26 +733,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            comboBoxEncoding.SelectedIndex = 0; // UTF-8
+            comboBoxEncoding.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 with BOM
         }
 
         private void SetEncoding(string encodingName)
         {
-            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
-            {
-                if (item.Equals(encodingName))
-                {
-                    comboBoxEncoding.SelectedItem = item;
-                    return;
-                }
-            }
-
-            comboBoxEncoding.SelectedIndex = 0; // UTF-8
+            UiUtil.SetTextEncoding(comboBoxEncoding, encodingName);
         }
 
         private Encoding GetCurrentEncoding()
         {
-            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox);
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox).Encoding;
         }
 
         private void AudioWaveform_OnNonParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
@@ -2267,6 +2263,40 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (ext == ".prproj")
+            {
+                var f = new AdobePremierePrProj();
+                var tempFileName = AdobePremierePrProj.LoadFromZipFile(fileName);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    var list = new List<string>(File.ReadAllLines(tempFileName, LanguageAutoDetect.GetEncodingFromFile(tempFileName)));
+                    try
+                    {
+                        File.Delete(tempFileName);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    if (f.IsMine(list, tempFileName))
+                    {
+                        f.LoadSubtitle(_subtitle, list, fileName);
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        SubtitleListview1.Fill(_subtitle);
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.FirstVisibleIndex = -1;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                        _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
+                        SetTitle();
+                        ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                        _converted = true;
+                        return;
+                    }
+                }
+            }
+
             if (file.Length > Subtitle.MaxFileSize)
             {
                 // retry Blu-ray sup (file with wrong extension)
@@ -2996,12 +3026,23 @@ namespace Nikse.SubtitleEdit.Forms
                 SetTitle();
                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                 _sourceViewChange = false;
-                if (Configuration.Settings.General.AutoConvertToUtf8)
+
+                if (Configuration.Settings.General.AutoConvertToUtf8 || encoding == Encoding.UTF8)
                 {
-                    encoding = Encoding.UTF8;
+                    if (File.Exists(_fileName) && FileUtil.HasUtf8Bom(fileName))
+                    {
+                        SetEncoding(TextEncoding.Utf8WithBom);
+                    }
+                    else
+                    {
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom ? TextEncoding.Utf8WithoutBom : TextEncoding.Utf8WithBom);
+                    }
+                }
+                else
+                {
+                    SetEncoding(encoding);
                 }
 
-                SetEncoding(encoding);
                 _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                 _converted = false;
                 ResetHistory();
@@ -3748,7 +3789,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    if (Equals(currentEncoding, Encoding.UTF8) && !Configuration.Settings.General.WriteUtf8Bom)
+                    if (comboBoxEncoding.SelectedIndex == TextEncoding.Utf8WithoutBomIndex)
                     {
                         var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                         using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
@@ -7031,12 +7072,12 @@ namespace Nikse.SubtitleEdit.Forms
                 while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                 {
                     bool startOk = startIndex == 0 ||
-                                   "«»“” <>-—+/'\"[](){}¿¡….,;:!?%&$£\r\n؛،؟".Contains(p.Text[startIndex - 1]) ||
+                                   "«»“” <>-—+/'\"[](){}¿¡….,;:!?%&$£\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00C2\u00A0".Contains(p.Text[startIndex - 1]) ||
                                    startIndex == p.Text.Length - oldWord.Length;
                     if (startOk)
                     {
                         int end = startIndex + oldWord.Length;
-                        if (end <= p.Text.Length && end == p.Text.Length || ("«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟").Contains(p.Text[end]))
+                        if (end <= p.Text.Length && end == p.Text.Length || ("«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00C2\u00A0").Contains(p.Text[end]))
                         {
                             var lengthBefore = p.Text.Length;
                             p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
@@ -12215,8 +12256,9 @@ namespace Nikse.SubtitleEdit.Forms
                     OpenVideo(fileName);
                 }
 
-                _fileName = Path.GetFileNameWithoutExtension(fileName);
+                _fileName = Path.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                 _converted = true;
+                SetTitle();
                 return true;
             }
 
@@ -12241,8 +12283,9 @@ namespace Nikse.SubtitleEdit.Forms
                             OpenVideo(fileName);
                         }
 
-                        _fileName = Path.GetFileNameWithoutExtension(fileName);
+                        _fileName = Path.GetFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                         _converted = true;
+                        SetTitle();
                         return true;
                     }
 
@@ -12293,12 +12336,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(fileName);
                         }
-
                         _converted = true;
                     }
-
-                    Text = Title;
-
+                    SetTitle();
                     Configuration.Settings.Save();
                     return true;
                 }
@@ -12306,7 +12346,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _exitWhenLoaded = _loading;
             return false;
-
         }
 
         private bool ImportSubtitleFromMp4(string fileName)
@@ -12528,9 +12567,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _fileDateTime = new DateTime();
-
                 _converted = true;
-
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (_subtitle.Paragraphs.Count > 0)
                 {
@@ -14155,6 +14192,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle = form.ImportedSubitle;
                             _fileName = null;
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            SetTitle();
                         }
                     }
                 }
@@ -15167,7 +15205,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RunTranslateSearch((text) =>
                 {
                     url = string.Format(url, Utilities.UrlEncode(text));
-                    System.Diagnostics.Process.Start(url);
+                    UiUtil.OpenURL(url);
                 });
             }
         }
@@ -16456,6 +16494,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             _fileName = importText.VideoFileName;
                             _converted = true;
+                            SetTitle();
                         }
 
                         _subtitleListViewIndex = -1;
@@ -17525,7 +17564,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
-                    if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitleAlternate))
+                    if (LanguageAutoDetect.CouldBeRightToLeftLanguage(_subtitleAlternate))
                     {
                         textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
                     }
@@ -17535,7 +17574,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitle))
+                if (LanguageAutoDetect.CouldBeRightToLeftLanguage(_subtitle))
                 {
                     textBoxListViewText.RightToLeft = RightToLeft.Yes;
                     textBoxSource.RightToLeft = RightToLeft.Yes;
@@ -18386,7 +18425,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            RunTranslateSearch((text) => { System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text)); });
+            RunTranslateSearch((text) => { UiUtil.OpenURL("https://www.google.com/search?q=" + Utilities.UrlEncode(text)); });
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
@@ -18394,7 +18433,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunTranslateSearch((text) =>
             {
                 string languageId = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(text));
+                UiUtil.OpenURL("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(text));
             });
         }
 

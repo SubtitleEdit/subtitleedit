@@ -137,7 +137,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsPolish =
         {
-            "Czy", "ale", "ty", "siê", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam"
+            "Czy", "ale", "ty", "siê", "się", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam", "Dziękuję", "Żołnierzyk", "Łowca", "został", "stało", "dolarów",
+            "wiadomości", "Dobrze", "będzie", "Dzień", "przyszłość", "Uratowałaś", "Cześć", "Trzeba", "zginąć", "walczyć", "ludzkość", "maszyny", "Jeszcze", "okrążenie", "wyścigu", "porządku", "detektywie",
+            "przebieralni", "który"
         };
 
         private static readonly string[] AutoDetectWordsGreek =
@@ -1096,9 +1098,19 @@ namespace Nikse.SubtitleEdit.Core
                     return encoding1250;
                 }
 
-                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish) > buffer.Length / 300)
+                var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
+                var pol1252Count = GetCount(encoding1252.GetString(buffer), AutoDetectWordsPolish);
+                var pol1250Count = GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish);
+                var encoding28592 = Encoding.GetEncoding(28592);
+                var pol28592Count = GetCount(encoding28592.GetString(buffer), AutoDetectWordsPolish);
+                if (pol1252Count > buffer.Length / 300 || pol1250Count > buffer.Length / 300)
                 {
-                    return encoding1250;
+                    if (pol28592Count > pol1250Count && pol28592Count > pol1252Count)
+                    {
+                        return encoding28592;
+                    }
+
+                    return pol1252Count > pol1250Count ? encoding1252 : encoding1250;
                 }
 
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
@@ -1114,25 +1126,24 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
-                var hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
+                var hebrewEncoding = Encoding.GetEncoding(28598); // Hebrew
                 if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
                 {
-                    if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
+                    if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
                     {
-                        return hewbrewEncoding;
+                        return hebrewEncoding;
                     }
 
                     return arabicEncoding;
                 }
-                if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
+                if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                 {
-                    return hewbrewEncoding;
+                    return hebrewEncoding;
                 }
 
-                var romanianEncoding = Encoding.GetEncoding(1250); // Romanian
-                if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
+                if (GetCount(encoding1250.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
                 {
-                    return romanianEncoding;
+                    return encoding1250;
                 }
 
                 var koreanEncoding = Encoding.GetEncoding(949); // Korean
@@ -1149,7 +1160,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiauto = false)
+        public static Encoding GetEncodingFromFile(string fileName, bool skipAnsiAuto = false)
         {
             var encoding = Encoding.Default;
 
@@ -1209,7 +1220,7 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.WebName)
+                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
@@ -1217,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Core
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
-                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiauto)
+                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
                             return DetectAnsiEncoding(buffer);
                         }
@@ -1281,7 +1292,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
 
-        public static bool CouldBeRightToLeftLanguge(Subtitle subtitle)
+        public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
             var text = subtitle.GetAllTexts();
             if (text.Length > 1000)

@@ -914,7 +914,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawParagraphText(Graphics graphics, string text, Font font, int currentRegionWidth, int padding, Action<string, int, int> drawStringOutlined, int currentRegionLeft)
         {
-            if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguge(new Subtitle(_displayableParagraphs)))
+            if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguage(new Subtitle(_displayableParagraphs)))
             {
                 text = Utilities.ReverseStartAndEndingForRightToLeft(text);
             }

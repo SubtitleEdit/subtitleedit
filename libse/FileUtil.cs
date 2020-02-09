@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsJpg(string fileName)
         {
-            // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a uknown byte (most often E0 or E1 though)
+            // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a unknown byte (most often E0 or E1 though)
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[3];
@@ -543,5 +543,20 @@ namespace Nikse.SubtitleEdit.Core
             return Path.GetTempPath() + Guid.NewGuid() + extension;
         }
 
+        public static void WriteAllText(string fileName, string contents, TextEncoding encoding)
+        {
+            if (encoding.DisplayName == TextEncoding.Utf8WithoutBom)
+            {
+                var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                using (var file = new StreamWriter(fileName, false, outputEnc)) // open file with encoding
+                {
+                    file.Write(contents);
+                }
+            }
+            else
+            {
+                File.WriteAllText(fileName, contents, encoding.Encoding);
+            }
+        }
     }
 }
