@@ -1030,36 +1030,37 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void OpenFolder(string folder)
         {
-            try
-            {
-                System.Diagnostics.Process.Start(folder);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($"Cannot open folder: {folder}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            OpenItem(folder, "folder");
         }
-
         public static void OpenURL(string url)
         {
-            try
-            {
-                System.Diagnostics.Process.Start(url);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($"Cannot open url: {url}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            OpenItem(url, "url");
         }
         public static void OpenFile(string file)
         {
+            OpenItem(file, "file");
+        }
+
+        public static void OpenItem(string item, string type)
+        {
             try
             {
-                System.Diagnostics.Process.Start(file);
+                if (Configuration.IsRunningOnWindows || Configuration.IsRunningOnMac)
+                {
+                    System.Diagnostics.Process.Start(item);
+                }
+                else if (Configuration.IsRunningOnLinux)
+                {
+                    System.Diagnostics.Process process = new System.Diagnostics.Process();
+                    process.EnableRaisingEvents = false;
+                    process.StartInfo.FileName = "xdg-open";
+                    process.StartInfo.Arguments = item;
+                    process.Start();
+                }
             }
             catch (Exception exception)
             {
-                MessageBox.Show($"Cannot open file: {file}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Cannot open {type}: {item}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

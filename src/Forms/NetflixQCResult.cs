@@ -96,7 +96,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenFileLocation(string filePath)
         {
-            Process.Start("explorer.exe", $@"/select,""{filePath}"" ");
+            if (Configuration.IsRunningOnWindows)
+            {
+                Process.Start("explorer.exe", $@"/select,""{filePath}"" ");
+            }
+            else
+            {
+                UiUtil.OpenFolder(System.IO.Path.GetDirectoryName(filePath));
+            }
         }
     }
 }
