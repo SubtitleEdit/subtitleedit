@@ -93,7 +93,7 @@ IF EXIST "%VSINSTALLDIR%MSBuild\Current\Bin\MSBuild.exe" (
   ECHO Cannot find Visual Studio 2017.
   GOTO EndWithError
 ))
-"%MSBUILD%" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
+"%MSBUILD%" SubtitleEdit.sln /r /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
