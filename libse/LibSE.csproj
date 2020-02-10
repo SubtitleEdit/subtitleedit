@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>net40;netstandard2.1</TargetFrameworks>
-    <TargetFrameworks Condition="'$(VisualStudioVersion)'=='15.0'">net40</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(VisualStudioVersion)' == '15.0' ">net40</TargetFrameworks>
     <RootNamespace>Nikse.SubtitleEdit.Core</RootNamespace>
     <AssemblyName>libse</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -23,16 +23,16 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="BeforeCompile">
+  <Target Name="InvokeBuildHelpers" BeforeTargets="BeforeCompile;CoreCompile">
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 lang %22$(ConfigurationName)%22" />
   </Target>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
@@ -44,4 +44,5 @@
   <ItemGroup>
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.4" />
   </ItemGroup>
+
 </Project>

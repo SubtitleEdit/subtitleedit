@@ -5725,6 +5725,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/RestoreDefaultSettingsMsg":
                     language.Settings.RestoreDefaultSettingsMsg = reader.Value;
                     break;
+                case "Settings/RemoveTimeCodes":
+                    language.Settings.RemoveTimeCodes = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;
