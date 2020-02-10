@@ -2398,7 +2398,8 @@ can edit in same subtitle file (collaboration)",
                 RestoreDefaultSettings = "Restore default settings",
                 RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine +
                                             Environment.NewLine +
-                                            "Continue?"
+                                            "Continue?",
+                RemoveTimeCodes = "Remove time codes"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

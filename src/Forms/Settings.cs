@@ -1126,6 +1126,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewAndTextBoxNode, language.AlignmentN8, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN8));
             AddNode(listViewAndTextBoxNode, language.AlignmentN9, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN9));
             AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveFormattingAll, nameof(Configuration.Settings.Shortcuts.MainRemoveFormatting), true);
+            AddNode(listViewAndTextBoxNode, language.RemoveTimeCodes, nameof(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes));
             if (listViewAndTextBoxNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(listViewAndTextBoxNode);
