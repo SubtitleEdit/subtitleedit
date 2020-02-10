@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.5.13</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD
-Допълнения и последваща обработка: KalinM (Email: mailto:kalinm@gbg.bg)</TranslatedBy>
+Допълнения и последваща обработка: KalinM</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -20,7 +20,7 @@
     <OpenSubtitle>Отваряне на файлове със субтитри...</OpenSubtitle>
     <OpenVideoFile>Отваряне видео файл...</OpenVideoFile>
     <OpenVideoFileTitle>Отваряне на видео файл...</OpenVideoFileTitle>
-    <NoVideoLoaded>Не е заредено видео</NoVideoLoaded>
+    <NoVideoLoaded>Няма заредено видео</NoVideoLoaded>
     <VideoInformation>Информация за видеото (Видео файла)</VideoInformation>
     <StartTime>Начално време</StartTime>
     <EndTime>Крайно време</EndTime>
@@ -1823,7 +1823,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleFontSize>Размер на шрифта</SubtitleFontSize>
     <SubtitleBold>Удебелен</SubtitleBold>
     <VideoAutoOpen>Автоматично отваряне на видео файл при отваряне на субтитри</VideoAutoOpen>
-    <AllowVolumeBoost>Позволява увеличаване на звука</AllowVolumeBoost>
+    <AllowVolumeBoost>Разрешено е увеличаване силата на звука</AllowVolumeBoost>
     <SubtitleCenter>По средата</SubtitleCenter>
     <SubtitleFontColor>Цвят на шрифта на субтитрите</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвят на фона на субтитрите</SubtitleBackgroundColor>
@@ -2396,11 +2396,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Внасяне на OCR VobSub (sub/idx) субтитри</Title>
     <TitleBluRay>Внасяне/OCR Blu-ray (.sup) субтитри</TitleBluRay>
     <OcrMethod>OCR метод</OcrMethod>
-    <OcrViaModi>OCR чрез Microsoft Office Document Imaging (MODI). Необходим е Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR чрез Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR чрез nOCR</OcrViaNOCR>
-    <Language>Език</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR чрез сравняване на изображение</OcrViaImageCompare>
+    <OcrViaModi>OCR чрез Microsoft Office Document Imaging (MODI). Необходим е Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR чрез nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Режим на машината</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Само оригинален Tesseract (може да открие наклонен)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Само невронни мрежи LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>По подразбиране, въз основа на наличното</TesseractEngineModeDefault>
+    <Language>Език</Language>
     <ImageDatabase>База данни с изображения</ImageDatabase>
     <NoOfPixelsIsSpace>Количество пиксели</NoOfPixelsIsSpace>
     <MaxErrorPercent>Макс. грешки%</MaxErrorPercent>
@@ -2429,6 +2434,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Всички поправки</AllFixes>
     <GuessesUsed>Използвани подсказки</GuessesUsed>
     <UnknownWords>Непознати думи</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} чрез „OCRFixReplaceList.xml“ на ред: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR авт. корекция / проверка правопис</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Поправяне на OCR грешки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Импорт на текст със съответните времеви кодове...</ImportTextWithMatchingTimeCodes>
