@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             int fixedCount = 0;
             if (minMsBetweenLines > maxMs)
             {
-                string message = $"{nameof(DurationsBridgeGaps)}: {nameof(minMsBetweenLines)} cannot be smaller than {nameof(maxMs)}!";
+                string message = $"{nameof(DurationsBridgeGaps)}: {nameof(minMsBetweenLines)} cannot be larger than {nameof(maxMs)}!";
                 SeLogger.Error(new InvalidOperationException(message), message);
                 return 0;
             }
