@@ -1191,22 +1191,29 @@ namespace Nikse.SubtitleEdit.Core
                 return originalParagraphs[index];
             }
 
-            foreach (Paragraph p in originalParagraphs)
+            if (paragraph.StartTime.IsMaxTime && index < originalParagraphs.Count && originalParagraphs[index].StartTime.IsMaxTime)
             {
-                if (Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01)
+                return originalParagraphs[index];
+            }
+
+            foreach (var p in originalParagraphs)
+            {
+                if (!p.StartTime.IsMaxTime && Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01)
                 {
                     return p;
                 }
             }
 
-            foreach (Paragraph p in originalParagraphs)
+            foreach (var p in originalParagraphs)
             {
-                if (p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
+                if (!p.StartTime.IsMaxTime &&
+                    p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
                     p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + TimeCode.BaseUnit)
                 {
                     return p;
                 }
             }
+
             return null;
         }
 

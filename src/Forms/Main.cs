@@ -15810,9 +15810,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs[i].EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
             }
 
+            SaveSubtitleListviewIndices();
+            _subtitleListViewIndex = -1;
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             ShowSource();
-            SubtitleListview1.SelectIndexAndEnsureVisible(0);
+            RestoreSubtitleListviewIndices();
         }
 
         private void SetAlignment(string tag, bool selectedLines)
@@ -17026,7 +17028,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     insertParagraph = new Paragraph(p);
                     insertParagraph.Text = string.Empty;
-                    insertIntoSubtitle.InsertParagraphInCorrectTimeOrder(insertParagraph);
+                    if (p.StartTime.IsMaxTime)
+                    {
+                        insertIntoSubtitle.Paragraphs.Add(new Paragraph(p, true) { Text = string.Empty });
+                    }
+                    else
+                    {
+                        insertIntoSubtitle.InsertParagraphInCorrectTimeOrder(insertParagraph);
+                    }
                 }
 
                 index++;
