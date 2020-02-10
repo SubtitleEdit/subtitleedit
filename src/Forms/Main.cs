@@ -17810,6 +17810,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateOriginalTimeCodes(oldParagraph);
                 ShowSource();
+                RefreshSelectedParagraph();
             }
         }
 
@@ -18723,6 +18724,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                     checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                     timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+                    RefreshSelectedParagraph();
                     return;
                 }
 
