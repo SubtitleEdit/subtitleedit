@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainListViewAlignmentN9 { get; set; }
         public Keys MainListViewFocusWaveform { get; set; }
         public Keys MainListViewGoToNextError { get; set; }
+        public Keys MainListViewRemoveTimeCodes { get; set; }
         public Keys MainListViewCopyText { get; set; }
         public Keys MainEditReverseStartAndEndingForRtl { get; set; }
         public Keys WaveformVerticalZoom { get; set; }
@@ -210,6 +211,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
             MainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             MainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+            MainListViewRemoveTimeCodes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewRemoveTimeCodes);
             MainEditReverseStartAndEndingForRtl = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             MainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             MainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);

@@ -9218,6 +9218,18 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewRemoveTimeCodes)
+            {
+                int i = _subtitleListViewIndex;
+                var p = _subtitle.GetParagraphOrDefault(i);
+                if (p != null)
+                {
+                    p.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    RefreshSelectedParagraph();
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
             {
                 int start = textBoxListViewText.SelectionStart;
@@ -15567,6 +15579,11 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainListViewRemoveTimeCodes)
+            {
+                RemoveTimeCodesFromSelectedLines();
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -15767,6 +15784,35 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
             }
+        }
+
+        private void RemoveTimeCodesFromSelectedLines()
+        {
+            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.RemoveTimeCodes));
+
+            var indices = new List<int>();
+            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            {
+                indices.Add(item.Index);
+            }
+            foreach (int i in indices)
+            {
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                {
+                    var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        original.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                        original.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    }
+                }
+                _subtitle.Paragraphs[i].StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                _subtitle.Paragraphs[i].EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+            }
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            ShowSource();
+            SubtitleListview1.SelectIndexAndEnsureVisible(0);
         }
 
         private void SetAlignment(string tag, bool selectedLines)

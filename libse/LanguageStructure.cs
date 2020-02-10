@@ -2267,6 +2267,7 @@
             public string FontNote { get; set; }
             public string RestoreDefaultSettings { get; set; }
             public string RestoreDefaultSettingsMsg { get; set; }
+            public string RemoveTimeCodes { get; set; }
         }
 
         public class SettingsMpv
