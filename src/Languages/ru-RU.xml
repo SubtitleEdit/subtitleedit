@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.13</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Последующие правки и дополнения перевода: Elheym (https://teamhd.org/)
- (http://forum.hqclub.net/)</TranslatedBy>
+Последующие правки и дополнения перевода: Elheym (mailto:Subs.for.everybody@gmail.com)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>https://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -353,9 +352,9 @@ https://github.com/SubtitleEdit/subtitleedit
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Устранение небольших разрывов длительностей</Title>
-    <GapsBridgedX>Количество устраненных разрывов: {0}</GapsBridgedX>
+    <GapsBridgedX>Количество устранённых разрывов: {0}</GapsBridgedX>
     <GapToNext>К следующему разрыву в сек.</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Убрать разрывы менее</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart1>Убрать разрывы более</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>миллисекунд</BridgeGapsSmallerThanXPart2>
     <MinMillisecondsBetweenLines>Минимум мс между строками</MinMillisecondsBetweenLines>
     <ProlongEndTime>Занять время разрыва предыдущим текстом</ProlongEndTime>
@@ -2409,11 +2408,16 @@ Continue?</RestoreDefaultSettingsMsg>
     <Title>Добавление / OCR VobSub (sub/idx) субтитров</Title>
     <TitleBluRay>Сохранение / OCR Blu-ray (.sup) субтитров</TitleBluRay>
     <OcrMethod>Метод OCR</OcrMethod>
-    <OcrViaModi>OCR с помощью Microsoft Office (MODI). Требуется установленный Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR с помощью Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR с помощью nOCR</OcrViaNOCR>
-    <Language>Язык</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR с помощью сравнения изображений</OcrViaImageCompare>
+    <OcrViaModi>OCR с помощью Microsoft Office (MODI). Требуется установленный Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR с помощью nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Режим работы</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Лишь ориг-ный Tesseract (определяет курсив)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Лишь нейронные сети LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>По-умолчанию, смотря что доступно</TesseractEngineModeDefault>
+    <Language>Язык</Language>
     <ImageDatabase>База изображений:</ImageDatabase>
     <NoOfPixelsIsSpace>Количество пикселей:</NoOfPixelsIsSpace>
     <MaxErrorPercent>Макс. ошибок%</MaxErrorPercent>
@@ -2442,6 +2446,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <AllFixes>Все исправления</AllFixes>
     <GuessesUsed>Предположения</GuessesUsed>
     <UnknownWords>Неизвестные слова</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} через 'OCRFixReplaceList.xml' в строке: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Исправить OCR ошибки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Добавление текста с подбором временных меток...</ImportTextWithMatchingTimeCodes>
