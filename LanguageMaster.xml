@@ -2105,6 +2105,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <RestoreDefaultSettingsMsg>All settings will be restored to default values
 
 Continue?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Remove time codes</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
