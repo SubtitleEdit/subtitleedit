@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             {
                                 j += 2;
                             }
-                            if (j >= startIndex)
+                            if (j >= startIndex && markIndex - j + 1 > 0)
                             {
                                 var part = p.Text.Substring(j, markIndex - j + 1);
 
