@@ -217,6 +217,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TransportStreamOverrideVideoSize>원본 비디오 크기 재정의</TransportStreamOverrideVideoSize>
     <TransportStreamFileNameEnding>파일 이름 끝</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS 설정...</TransportStreamSettingsButton>
+    <RemoveLineBreaks>줄바꿈 제거</RemoveLineBreaks>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -2100,6 +2101,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <RestoreDefaultSettingsMsg>모든 설정이 기본값으로 초기화 됩니다.
 
 계속하시겠습니까?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>타임코드 제거</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>mpv 설정</Title>
@@ -2173,8 +2175,12 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
     <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
     <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
-    <FoundXIssues>Netflix 품질 검사에서 {0} 문제가 발견되었습니다.</FoundXIssues>
+    <OpenReportInFolder>폴더에서 보고서 열기</OpenReportInFolder>
+    <FoundXIssues>Netflix 품질 검사에서 {0:#,###} 문제가 발견되었습니다.</FoundXIssues>
     <CheckOk>Netflix 품질 검사 OK :)</CheckOk>
+    <MaximumXCharsPerSecond>초당 최대 문자수(공백 제외): {0} </MaximumXCharsPerSecond>
+    <MaximumLineLength>최대 줄 길이: ({0})</MaximumLineLength>
+    <MinimumDuration>최소 표시시간: 5/6 초 (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
   <Split>
     <Title>* 자막 분할</Title>
@@ -2378,11 +2384,16 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Title>VobSub(sub/idx)에서 자막 가져오기 / OCR...</Title>
     <TitleBluRay>Blu-ray(.sup)에서 자막 가져오기 / OCR...</TitleBluRay>
     <OcrMethod>OCR 방식</OcrMethod>
-    <OcrViaModi>Microsoft Office 문서 이미징 (MODI)에 의한 OCR...(Microsoft Office 필요함)</OcrViaModi>
-    <OcrViaTesseract>TESSERACT 프로그램에 의한 OCR...</OcrViaTesseract>
-    <OcrViaNOCR>NOCR에 의한 OCR</OcrViaNOCR>
-    <Language>언어</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>이미지 비교에 의한 OCR...</OcrViaImageCompare>
+    <OcrViaModi>Microsoft Office 문서 이미징(MODI). Microsoft Office 필요함</OcrViaModi>
+    <OcrViaNOCR>NOCR에 의한 OCR</OcrViaNOCR>
+    <TesseractEngineMode>엔진 모드</TesseractEngineMode>
+    <TesseractEngineModeLegacy>원본 Tesseract 전용 (기울임꼴 감지 가능)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>신경망 LSTM 전용</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>기본값, 사용 가능한 것을 기반으로</TesseractEngineModeDefault>
+    <Language>언어</Language>
     <ImageDatabase>이미지 데이터베이스</ImageDatabase>
     <NoOfPixelsIsSpace>공간의 픽셀 수</NoOfPixelsIsSpace>
     <MaxErrorPercent>오류 허용(%)</MaxErrorPercent>
@@ -2411,6 +2422,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <AllFixes>수정 목록</AllFixes>
     <GuessesUsed>추측 사용</GuessesUsed>
     <UnknownWords>알 수 없는 단어</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1}, {2}행의 'OCRFixReplaceList.xml'을 통해</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>타임코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>
