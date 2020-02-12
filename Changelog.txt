@@ -8,10 +8,13 @@
    * Add new sub format - thx uckthis
    * Add new sub format - thx Ingo
    * Add new json subtitle format - thx Niraj
+   * Shortcut "remove time codes"
 * IMPROVED:
    * Update Finnish translation - thx Teijo S.
    * Update Basque translation - thx Azpidatziak
    * Update Dutch translation - thx xylographe
+   * Update Bulgarian translation - thx KalinM
+   * Update Russian translation - thx Elheym
    * Update names lists with territories from CLDR - thx xylographe
    * Remove (obsolete) support for SSL3
    * Remember "merge short lines max chars" - thx taxen
@@ -30,12 +33,14 @@
    * Fix time code in format .sif - thx Milenko
    * Fix FCE short gap without time codes - thx OmrSi
    * Fix crash when opening translation only from blank - thx OmrSi
-   * Fix wrong filename after teletext import [2] - thx beeeeswax
+   * Fix wrong filename after teletext import - thx beeeeswax
    * Fix read "VPosition" w decimal point in DCinemaInterop - thx Marko
    * Fix issue with extended match in "Image compare" - thx Zoltán
    * Fix remove interjections issue - thx Waleri
    * Fix issue with spell check "change word" - thx OmrSi
    * Fix top alignment in format "SMPTE-TT 2052" - thx Flavia Rezende
+   * Fix crash in "fix Spanish inversion marks" - thx Lokotito
+   * Fix for Blu-ray sup file end time - thx mgutt
 
 
 3.5.13 (20th January 2020)
