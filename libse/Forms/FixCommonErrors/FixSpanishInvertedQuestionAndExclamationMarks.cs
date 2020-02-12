@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
@@ -17,12 +16,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int fixCount = 0;
             var language = Configuration.Settings.Language.FixCommonErrors;
             var fixAction = language.FixSpanishInvertedQuestionAndExclamationMarks;
-            Paragraph p;
-            string oldText;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
 
                 var last = subtitle.GetParagraphOrDefault(i - 1);
                 if (last != null && p.StartTime.TotalMilliseconds - last.EndTime.TotalMilliseconds > 1000)
@@ -36,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     next = null; // to much time
                 }
 
-                oldText = p.Text;
+                var oldText = p.Text;
 
                 var isLastLineClosed = last == null || last.Text.Length > 0 && ".!?:)]".Contains(last.Text[last.Text.Length - 1]);
                 var trimmedStart = p.Text.TrimStart('-', ' ');
@@ -53,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 FixSpanishInvertedLetter('?', "¿", p, last, next, ref isLastLineClosed, callbacks);
                 FixSpanishInvertedLetter('!', "¡", p, last, next, ref isLastLineClosed, callbacks);
 
-                if (p?.Text != oldText)
+                if (p.Text != oldText)
                 {
                     if (callbacks.AllowFix(p, fixAction))
                     {
@@ -299,6 +296,5 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             return callbacks.GetAbbreviations().Contains(word + ".");
         }
-
     }
 }
