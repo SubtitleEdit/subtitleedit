@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer[14] = JustificationCode;
                 buffer[15] = CommentFlag;
 
-                var encoding = Encoding.GetEncoding(1252);
+                var encoding = GetEncoding(header.CodePageNumber);
                 if (header.LanguageCode == LanguageCodeChinese)
                 {
                     var lines = HtmlUtil.RemoveHtmlTags(TextField, true).SplitToLines();
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
             {
-                header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
+                header = ReadHeader(GetEncoding(subtitle.Header.Substring(0, 3)).GetBytes(subtitle.Header));
                 EbuUiHelper.Initialize(header, EbuUiHelper.JustificationCode, null, subtitle);
             }
             else
@@ -782,7 +782,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            byte[] buffer = Encoding.GetEncoding(1252).GetBytes(header.ToString());
+            var buffer = GetEncoding(header.CodePageNumber).GetBytes(header.ToString());
             stream.Write(buffer, 0, buffer.Length);
 
             int subtitleNumber = 0;
@@ -1031,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
-            var enc = Encoding.GetEncoding(1252);
+            var enc = GetEncoding(Encoding.ASCII.GetString(buffer, 0, 3));
             var header = new EbuGeneralSubtitleInformation
             {
                 CodePageNumber = enc.GetString(buffer, 0, 3),
@@ -1061,6 +1061,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 UserDefinedArea = enc.GetString(buffer, 448, 576)
             };
             return header;
+        }
+
+        private static Encoding GetEncoding(string codePageNumber)
+        {
+            try
+            {
+                return Encoding.GetEncoding(int.TryParse(codePageNumber, out int cp) ? cp : 437);
+            }
+            catch (NotSupportedException)
+            {
+                return Encoding.GetEncoding(437);
+            }
         }
 
         /// <summary>
