@@ -1983,7 +1983,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Alignment>정렬 (선택한 줄)</Alignment>
     <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
     <AlignmentN2>중앙 하단 정렬 - {\an2}</AlignmentN2>
-    <AlignmentN3>우측 중앙 정렬 - {\an3}</AlignmentN3>
+    <AlignmentN3>우측 하단 정렬 - {\an3}</AlignmentN3>
     <AlignmentN4>좌측 중앙 정렬 - {\an4}</AlignmentN4>
     <AlignmentN5>중앙 중심 정렬 - {\an5}</AlignmentN5>
     <AlignmentN6>우측 중앙 정렬 - {\an6}</AlignmentN6>
