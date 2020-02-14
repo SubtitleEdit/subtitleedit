@@ -272,6 +272,8 @@
     <Word from="drugare" to="prijatelje" />
     <Word from="drugčiji" to="drugačiji" />
     <Word from="drugde" to="drugdje" />
+    <Word from="ds" to="da" />
+    <Word from="dti" to="dati" />
     <Word from="duuga" to="dúga" />
     <Word from="duvan" to="duhan" />
     <Word from="duvana" to="duhana" />
@@ -911,6 +913,7 @@
     <Word from="Odjeljenje" to="Odjel" />
     <Word from="odeljenjem" to="odjelom" />
     <Word from="odevate" to="odijevate" />
+    <Word from="odličana" to="odlična" />
     <Word from="odma" to="odmah" />
     <Word from="odna" to="onda" />
     <Word from="Odneću" to="Odnijet ću" />
@@ -942,6 +945,7 @@
     <Word from="Oduvek" to="Oduvijek" />
     <Word from="oduvjek" to="oduvijek" />
     <Word from="Oduvjek" to="Oduvijek" />
+    <Word from="og" to="od" />
     <Word from="ogladneo" to="ogladnio" />
     <Word from="okoreli" to="okorjeli" />
     <Word from="omžeš" to="možeš" />
@@ -1608,6 +1612,7 @@
     <Word from="Suvu" to="Suhu" />
     <Word from="Svestan" to="Svjestan" />
     <Word from="svestan" to="svjestan" />
+    <Word from="svidja" to="sviđa" />
     <Word from="svjest" to="svijest" />
     <Word from="Svjest" to="Svijest" />
     <Word from="svjesti" to="svijesti" />
@@ -1655,6 +1660,7 @@
     <Word from="tki" to="tko" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
+    <Word from="togs" to="toga" />
     <Word from="toha" to="toga" />
     <Word from="tovj" to="tvoj" />
     <Word from="tovju" to="tvoju" />
@@ -2765,6 +2771,7 @@
     <!-- kompromitova -->
     <RegEx find="omitova" replaceWith="omitira" />
     <RegEx find="komšijsk" replaceWith="susjedn" />
+    <RegEx find="knc" replaceWith="nkc" />
     <RegEx find="onfor" replaceWith="omfor" />
     <RegEx find="konkurs" replaceWith="natječaj" />
     <RegEx find="Konkurs" replaceWith="Natječaj" />
@@ -2908,6 +2915,7 @@
     <RegEx find="\bokvasi" replaceWith="smoči" />
     <RegEx find="(?&lt;!m)onj?el" replaceWith="onijel" />
     <RegEx find="pklad" replaceWith="klad" />
+    <RegEx find="pklg" replaceWith="pogl" />
     <RegEx find="pleni" replaceWith="pljeni" />
     <RegEx find="(?&lt;![mdp])ostić" replaceWith="ostit ć" />
     <RegEx find="psedn" replaceWith="psjedn" />
@@ -3284,6 +3292,7 @@
     <RegEx find="([vV])rj?eđa" replaceWith="$1rijeđa" />
     <RegEx find="vređen" replaceWith="vrijeđen" />
     <RegEx find="([vV])rtel" replaceWith="$1rtjel" />
+    <RegEx find="vsr" replaceWith="var" />
     <RegEx find="ahtjeva([ojlmšt])" replaceWith="ahtijeva$1" />
     <RegEx find="ahtev([aeioun])" replaceWith="ahtjev$1" />
     <RegEx find="([zZ])amen" replaceWith="$1amjen" />
@@ -3674,6 +3683,8 @@
     <RegEx find="zuslov" replaceWith="zuvjet" />
     <RegEx find="zvešć" replaceWith="zvest ć" />
     <RegEx find="zvolić" replaceWith="zvolit ć" />
+    <RegEx find="zwm" replaceWith="zem" />
+    <RegEx find="žbać" replaceWith="žbat ć" />
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <RegEx find="živać" replaceWith="živat ć" />
     <RegEx find="žive([lot])" replaceWith="živi$1" />
