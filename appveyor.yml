@@ -1,18 +1,18 @@
 version: "{build}"
 
-# Variables
+image: Visual Studio 2019
+
+platform:
+  - Any CPU
+
 configuration:
-#  - Debug
   - Release
 
-# build options
-build:
-  project: src\SubtitleEdit.sln
-  verbosity: minimal
+build_script:
+  - msbuild "src\SubtitleEdit.sln" /r /v:minimal /clp:summary /p:"Platform=%PLATFORM%" /p:"Configuration=%CONFIGURATION%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
-# custom test command
 test_script:
-  - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" "%APPVEYOR_BUILD_FOLDER%\src\Test\bin\%CONFIGURATION%\Test.dll"
+  - vstest.console "src\Test\bin\%CONFIGURATION%\Test.dll" /logger:Appveyor
 
 cache:
   - 'src\packages -> **\packages.config'       # preserve the "src\packages" directory
