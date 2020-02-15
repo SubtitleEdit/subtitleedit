@@ -2107,6 +2107,7 @@ gedaan in de videospeler, tenzĳ u een ondertitelformaat gebruikt met ingebouwde
 of tĳdens het exporteren naar op beeld gebaseerde formaten.</FontNote>
     <RestoreDefaultSettings>Standaardinstellingen herstellen</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Wilt u alle instellingen op hun standaardwaarde terugzetten?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Tĳdcodes verwĳderen</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>
