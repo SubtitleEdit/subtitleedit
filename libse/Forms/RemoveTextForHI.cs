@@ -943,7 +943,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 // remove/fix dashes
                 if (subtitle != null && index >= 0)
                 {
-                    text = Helper.FixHyphensRemove(subtitle, text, index);
+                    text = Helper.FixHyphensRemoveForSingleLine(subtitle, text, index);
                 }
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
                 text = dialogHelper.FixDashesAndSpaces(text);

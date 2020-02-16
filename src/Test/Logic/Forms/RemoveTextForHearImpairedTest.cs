@@ -1303,24 +1303,23 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
-        //TODO: FIX!!
-        //[TestMethod]
-        //public void RemoveTextForHiSecondLineItalicAdvanced()
-        //{
-        //    var target = GetRemoveTextForHiLib();
-        //    target.Settings.RemoveTextBetweenBrackets = true;
-        //    target.Settings.RemoveTextBetweenCustomTags = true;
-        //    target.Settings.CustomStart = "♪";
-        //    target.Settings.CustomEnd = "♪";
-        //    target.Settings.RemoveTextBetweenBrackets = true;
-        //    Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
-        //    string text = "The meal is ready. Let's go!" + Environment.NewLine + "<i>- [Nick]</i> J. T. Lancer!";
-        //    string expected = "The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!";
-        //    var sub = new Subtitle();
-        //    sub.Paragraphs.Add(new Paragraph(text, 0, 2000));
-        //    string actual = target.RemoveTextFromHearImpaired(text, sub, 0);
-        //    Assert.AreEqual(expected, actual);
-        //}
+        [TestMethod]
+        public void RemoveTextForHiSecondLineItalicAdvanced()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+            string text = "The meal is ready. Let's go!" + Environment.NewLine + "<i>- [Nick]</i> J. T. Lancer!";
+            string expected = "- The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!";
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(text, 0, 2000));
+            string actual = target.RemoveTextFromHearImpaired(text, sub, 0);
+            Assert.AreEqual(expected, actual);
+        }
 
         [TestMethod]
         public void RemoveTextForHiInterjectionsEndDash()
