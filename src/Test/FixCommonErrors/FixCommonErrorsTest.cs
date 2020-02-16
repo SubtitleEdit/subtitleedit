@@ -954,6 +954,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesMusicSymbolInItalicDoNotTouch()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>♪</i>");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>♪</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
