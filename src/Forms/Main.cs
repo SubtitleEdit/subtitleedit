@@ -15309,11 +15309,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.Paragraphs[index];
                 var lines = p.Text.SplitToLines();
                 var sb = new StringBuilder();
-                foreach (var line in lines)
+                if (CouldBeDialog(lines))
                 {
-                    var pre = string.Empty;
-                    var s = SplitStartTags(line, ref pre);
-                    sb.AppendLine(pre + "- " + s);
+                    foreach (var line in lines)
+                    {
+                        var pre = string.Empty;
+                        var s = SplitStartTags(line, ref pre);
+                        sb.AppendLine(pre + "- " + s);
+                    }
+                }
+                else
+                {
+                    sb.Append(p.Text);
                 }
 
                 var text = sb.ToString().Trim();
@@ -15324,7 +15331,63 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxListViewText.Text = text;
                 }
+
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        sb = new StringBuilder();
+                        if (CouldBeDialog(lines))
+                        {
+                            foreach (var line in lines)
+                            {
+                                var pre = string.Empty;
+                                var s = SplitStartTags(line, ref pre);
+                                if (!line.StartsWith("-"))
+                                {
+                                    sb.AppendLine(pre + "- " + s);
+                                }
+                                else
+                                {
+                                    sb.AppendLine(pre + s);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sb.Append(original.Text);
+                        }
+
+                        text = sb.ToString().Trim();
+                        text = dialogHelper.FixDashesAndSpaces(text);
+                        _subtitleAlternate.Paragraphs[index].Text = text;
+                        SubtitleListview1.SetAlternateText(index, text);
+                        if (index == _subtitleListViewIndex)
+                        {
+                            textBoxListViewTextAlternate.Text = text;
+                        }
+                    }
+                }
             }
+        }
+
+        private static bool CouldBeDialog(List<string> lines)
+        {
+            if (lines.Count < 2 || lines.Count > 3)
+            {
+                return false;
+            }
+
+            foreach (var line in lines)
+            {
+                if (line.HasSentenceEnding())
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void RemoveDashes()
@@ -15347,6 +15410,30 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index == _subtitleListViewIndex)
                 {
                     textBoxListViewText.Text = text;
+                }
+
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        sb = new StringBuilder();
+                        foreach (var line in lines)
+                        {
+                            var pre = string.Empty;
+                            var s = SplitStartTags(line, ref pre);
+                            sb.AppendLine(pre + s.TrimStart('-').TrimStart());
+                        }
+
+                        text = sb.ToString().Trim();
+                        _subtitleAlternate.Paragraphs[index].Text = text;
+                        SubtitleListview1.SetAlternateText(index, text);
+                        if (index == _subtitleListViewIndex)
+                        {
+                            textBoxListViewTextAlternate.Text = text;
+                        }
+                    }
                 }
             }
         }
