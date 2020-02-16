@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (lines.Count == 2)
             {
-                if (l0.HasSentenceEnding() && l1.TrimStart().StartsWith(GetDashChar()))
+                if (l0.HasSentenceEnding() && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
                 }
@@ -316,9 +316,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var l2 = HtmlUtil.RemoveHtmlTags(lines[2], true);
                 if (l0.HasSentenceEnding() &&
-                    l1.TrimStart().StartsWith(GetDashChar()) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
                     l1.HasSentenceEnding() &&
-                    l2.TrimStart().StartsWith(GetDashChar()))
+                    (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
                 }
@@ -328,8 +328,8 @@ namespace Nikse.SubtitleEdit.Core
                 // - How are you?
                 if (!l0.HasSentenceEnding() &&
                     l1.HasSentenceEnding() &&
-                    !l1.TrimStart().StartsWith(GetDashChar()) &&
-                    l2.TrimStart().StartsWith(GetDashChar()))
+                    !(l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                    (l2.TrimStart().StartsWith(GetDashChar())) || l2.TrimStart().StartsWith(GetAlternateDashChar()))
                 {
                     return true;
                 }
@@ -338,9 +338,9 @@ namespace Nikse.SubtitleEdit.Core
                 // - I'm fine today, but I would have
                 // been better if I had a some candy.
                 if (l0.HasSentenceEnding() &&
-                    l1.TrimStart().StartsWith(GetDashChar()) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
                     !l1.HasSentenceEnding() &&
-                    !l2.TrimStart().StartsWith(GetDashChar()))
+                    !(l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
                 }
