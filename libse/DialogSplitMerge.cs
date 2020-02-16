@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashBothLinesWithSpace:
                         if (!l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart());
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else
                         {
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashSecondLineWithSpace:
                         if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart());
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
                         {
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashBothLinesWithoutSpace:
                         if (!l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart());
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else
                         {
@@ -229,11 +229,11 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashSecondLineWithoutSpace:
                         if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart());
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.Remove(0, l.IndexOf(GetDashChar()) + 1).TrimStart());
+                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.Remove(0, l.IndexOf(GetDashChar()) + 1).TrimStart().TrimStart(GetAlternateDashChar()));
                         }
                         else
                         {
@@ -265,12 +265,12 @@ namespace Nikse.SubtitleEdit.Core
             var pre = GetStartTags(input);
             var s = input.Remove(0, pre.Length);
 
-            if (!s.TrimStart().StartsWith('-'))
+            if (!s.TrimStart().StartsWith(GetDashChar()) || !s.TrimStart().StartsWith(GetAlternateDashChar()))
             {
                 return input;
             }
 
-            return pre + s.TrimStart().TrimStart('-').TrimStart();
+            return pre + s.TrimStart().TrimStart(GetDashChar(), GetAlternateDashChar()).TrimStart();
         }
 
 
@@ -301,13 +301,12 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            var l0 = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+            var l0 = HtmlUtil.RemoveHtmlTags(lines[0]);
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
 
             if (lines.Count == 2)
             {
-                if ((l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?')) &&
-                    l1.TrimStart().StartsWith('-'))
+                if (l0.HasSentenceEnding() && l1.TrimStart().StartsWith(GetDashChar()))
                 {
                     return true;
                 }
@@ -355,18 +354,20 @@ namespace Nikse.SubtitleEdit.Core
             switch (DialogStyle)
             {
                 case DialogType.DashBothLinesWithSpace:
-                    return "- ";
+                    return GetDashChar() + " ";
                 case DialogType.DashBothLinesWithoutSpace:
-                    return "-";
+                    return GetDashChar().ToString();
                 case DialogType.DashSecondLineWithSpace:
-                    return lineIndex == 0 ? string.Empty : "- ";
+                    return lineIndex == 0 ? string.Empty : GetDashChar() + " ";
                 case DialogType.DashSecondLineWithoutSpace:
-                    return lineIndex == 0 ? string.Empty : "-";
+                    return lineIndex == 0 ? string.Empty : GetDashChar().ToString();
                 default:
                     return string.Empty;
             }
         }
 
         private static char GetDashChar() => '-';
+
+        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash
     }
 }

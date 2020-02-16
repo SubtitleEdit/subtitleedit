@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
@@ -31,7 +32,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -15289,6 +15289,24 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (!hasStartDash && _subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        foreach (var line in lines)
+                        {
+                            var trimmed = HtmlUtil.RemoveHtmlTags(line, true).TrimStart();
+                            if (trimmed.StartsWith('-'))
+                            {
+                                hasStartDash = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 MakeHistoryForUndo(_language.BeforeToggleDialogDashes);
                 if (hasStartDash)
                 {
@@ -15375,19 +15393,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool CouldBeDialog(List<string> lines)
         {
-            if (lines.Count < 2 || lines.Count > 3)
-            {
-                return false;
-            }
-
-            foreach (var line in lines)
-            {
-                if (line.HasSentenceEnding())
-                {
-                    return true;
-                }
-            }
-            return false;
+            return (lines.Count >= 2 && lines.Count <= 3);
         }
 
         private void RemoveDashes()
