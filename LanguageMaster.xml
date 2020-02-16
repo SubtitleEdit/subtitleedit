@@ -609,10 +609,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Fix Spanish inverted question and exclamation marks</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Add missing quote (")</AddMissingQuote>
     <AddMissingQuotes>Add missing quotes (")</AddMissingQuotes>
-    <FixHyphens>Fix (remove dash) lines beginning with dash (-)</FixHyphens>
-    <FixHyphensAdd>Fix (add dash) line pairs with only one dash (-)</FixHyphensAdd>
-    <FixHyphen>Fix line beginning with dash (-)</FixHyphen>
-    <XHyphensFixed>Dashes removed: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Remove dialog hyphens in single lines</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Dialog hyphen removed in single lines: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Fix hyphens in dialogs via style: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Hyphens fixed: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
@@ -1939,6 +1939,11 @@ can edit in same subtitle file (collaboration)</Information>
     <FixCommonerrors>Fix common errors</FixCommonerrors>
     <RemoveTextForHi>Remove text for HI</RemoveTextForHi>
     <MergeLinesShorterThan>Unbreak subtitles shorter than</MergeLinesShorterThan>
+    <DialogStyle>Dialog style</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Dash both lines with space</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Dash both lines without space</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Dash second line with space</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Dash second line without space</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>

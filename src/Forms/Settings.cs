@@ -1,11 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -17,7 +18,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -645,6 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxFixCommonErrors.Text = language.FixCommonerrors;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
+            labelDialogStyle.Text = language.DialogStyle;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
@@ -784,6 +785,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
             }
+
+            SetDialogStyle(Configuration.Settings.General.DialogStyle);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -938,6 +941,31 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = false;
             UpdateSsaExample();
+        }
+
+        private void SetDialogStyle(DialogType dialogStyle)
+        {
+            comboBoxDialogStyle.Items.Clear();
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithoutSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithoutSpace);
+            comboBoxDialogStyle.SelectedIndex = 0;
+            switch (dialogStyle)
+            {
+                case DialogType.DashBothLinesWithSpace:
+                    comboBoxDialogStyle.SelectedIndex = 0;
+                    break;
+                case DialogType.DashBothLinesWithoutSpace:
+                    comboBoxDialogStyle.SelectedIndex = 1;
+                    break;
+                case DialogType.DashSecondLineWithSpace:
+                    comboBoxDialogStyle.SelectedIndex = 2;
+                    break;
+                case DialogType.DashSecondLineWithoutSpace:
+                    comboBoxDialogStyle.SelectedIndex = 3;
+                    break;
+            }
         }
 
         private Guid _oldProfileId = Guid.Empty;
@@ -1631,6 +1659,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
             }
+
+            gs.DialogStyle = GetDialogStyle();
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -3104,6 +3134,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxNumberOfLines.Value = numericUpDownMaxNumberOfLines.Minimum;
             }
+
             if (profile.MergeLinesShorterThan >= 5 && profile.MergeLinesShorterThan - 5 < comboBoxMergeShortLineLength.Items.Count)
             {
                 comboBoxMergeShortLineLength.SelectedIndex = profile.MergeLinesShorterThan - 5;
@@ -3112,6 +3143,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
             }
+
+            SetDialogStyle(profile.DialogStyle);
+
             checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
             _oldProfileId = profile.Id;
             _editProfileOn = false;
@@ -3134,6 +3168,24 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
+            _rulesProfiles[idx].DialogStyle = GetDialogStyle();
+        }
+
+        private DialogType GetDialogStyle()
+        {
+            if (comboBoxDialogStyle.SelectedIndex == 1)
+            {
+                return DialogType.DashBothLinesWithoutSpace;
+            }
+            if (comboBoxDialogStyle.SelectedIndex == 2)
+            {
+                return DialogType.DashSecondLineWithSpace;
+            }
+            if (comboBoxDialogStyle.SelectedIndex == 3)
+            {
+                return DialogType.DashSecondLineWithoutSpace;
+            }
+            return DialogType.DashBothLinesWithSpace;
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)

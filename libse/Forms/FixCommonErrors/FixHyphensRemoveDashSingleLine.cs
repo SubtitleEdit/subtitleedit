@@ -2,17 +2,17 @@
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
-    public class FixHyphensRemove : IFixCommonError
+    public class FixHyphensRemoveDashSingleLine : IFixCommonError
     {
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixHyphen;
+            string fixAction = language.FixHyphensInDialogs;
             int iFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (p.Text.SplitToLines().Count == 1 && callbacks.AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
                     string text = Helper.FixHyphensRemove(subtitle, i);
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, language.FixHyphens, language.XHyphensFixed);
+            callbacks.UpdateFixStatus(iFixes, language.RemoveHyphensSingleLine, language.XHyphensSingleLineRemoved);
         }
     }
 }

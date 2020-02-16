@@ -9438,8 +9438,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string aTrimmed = HtmlUtil.RemoveHtmlTags(a).TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
                     if (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟'))
                     {
-                        a = RemoveStartDash(a);
-                        b = RemoveStartDash(b);
+                        a = DialogSplitMerge.RemoveStartDash(a);
+                        b = DialogSplitMerge.RemoveStartDash(b);
                     }
 
                     currentParagraph.Text = Utilities.AutoBreakLine(a, language);
@@ -9471,8 +9471,8 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = "<b>" + newParagraph.Text;
                         }
 
-                        currentParagraph.Text = RemoveStartDash(currentParagraph.Text);
-                        newParagraph.Text = RemoveStartDash(newParagraph.Text);
+                        currentParagraph.Text = DialogSplitMerge.RemoveStartDash(currentParagraph.Text);
+                        newParagraph.Text = DialogSplitMerge.RemoveStartDash(newParagraph.Text);
                     }
                     else
                     {
@@ -9638,8 +9638,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟'))
                             {
-                                originalCurrent.Text = RemoveStartDash(originalCurrent.Text);
-                                originalNew.Text = RemoveStartDash(originalNew.Text);
+                                originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
+                                originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
                             }
 
                             lines.Clear();
@@ -9662,8 +9662,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
 
-                            a = RemoveStartDash(a);
-                            b = RemoveStartDash(b);
+                            a = DialogSplitMerge.RemoveStartDash(a);
+                            b = DialogSplitMerge.RemoveStartDash(b);
 
                             lines[0] = a;
                             lines[1] = b;
@@ -9714,8 +9714,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟'))
                             {
-                                a = RemoveStartDash(a);
-                                b = RemoveStartDash(b);
+                                a = DialogSplitMerge.RemoveStartDash(a);
+                                b = DialogSplitMerge.RemoveStartDash(b);
                             }
 
                             lines[0] = a;
@@ -10197,6 +10197,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeWithLineAfter(bool insertDash, BreakMode breakMode = BreakMode.Normal)
         {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
             int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
             var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -10224,10 +10225,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (insertDash)
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
-                                original.Text = InsertStartDash(s);
+                                original.Text = dialogHelper.InsertStartDash(s, 0);
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                original.Text += Environment.NewLine + InsertStartDash(s);
+                                original.Text += Environment.NewLine + dialogHelper.InsertStartDash(s,1);
 
                                 original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             }
@@ -10284,10 +10285,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertDash)
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    currentParagraph.Text = InsertStartDash(s);
+                    currentParagraph.Text = dialogHelper.InsertStartDash(s, 0);
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    currentParagraph.Text += Environment.NewLine + InsertStartDash(s);
+                    currentParagraph.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
                     currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                 }
@@ -10366,59 +10367,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static string InsertStartDash(string input)
-        {
-            string pre = string.Empty;
-
-            string s = input;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.Contains('}'))
-            {
-                var idx = s.IndexOf('}') + 1;
-                pre = s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            while (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && s.Contains('>')))
-            {
-                var idx = s.IndexOf('>') + 1;
-                pre += s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            if (s.StartsWith('-'))
-            {
-                return input;
-            }
-
-            return pre + "- " + s.TrimStart();
-        }
-
-        private static string RemoveStartDash(string input)
-        {
-            string pre = string.Empty;
-
-            string s = input;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.Contains('}'))
-            {
-                var idx = s.IndexOf('}') + 1;
-                pre = s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            while (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && s.Contains('>')))
-            {
-                var idx = s.IndexOf('>') + 1;
-                pre += s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            if (!s.TrimStart().StartsWith('-'))
-            {
-                return input;
-            }
-
-            return pre + s.TrimStart().TrimStart('-').TrimStart();
-        }
+       
 
         private void UpdateStartTimeInfo(TimeCode startTime)
         {
