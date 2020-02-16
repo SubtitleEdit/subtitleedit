@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Enums;
 using System.Collections.Generic;
 using System.Text;
 
@@ -235,6 +236,8 @@ namespace Nikse.SubtitleEdit.Core
                             sb.AppendLine(pre + l);
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             return sb.ToString().TrimEnd();

@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetDialogStyle(DialogType dialogStyle)
+        private static string GetDialogStyle(DialogType dialogStyle)
         {
             if (dialogStyle == DialogType.DashSecondLineWithoutSpace)
             {
