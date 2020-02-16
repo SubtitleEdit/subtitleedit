@@ -275,8 +275,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return isPrevEndOfLine;
         }
 
-        public static string FixHyphensRemove(Subtitle subtitle, string input, int i)
+        public static string FixHyphensRemoveForSingleLine(Subtitle subtitle, string input, int i)
         {
+            if (string.IsNullOrEmpty(input) || input.SplitToLines().Count != 1)
+            {
+                return input;
+            }
+
             var text = input;
             if (HtmlUtil.RemoveHtmlTags(text, true).TrimStart().StartsWith('-') ||
                 text.Contains(Environment.NewLine + '-') ||
