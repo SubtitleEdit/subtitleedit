@@ -609,10 +609,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Fix Spanish inverted question and exclamation marks</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Add missing quote (")</AddMissingQuote>
     <AddMissingQuotes>Add missing quotes (")</AddMissingQuotes>
-    <RemoveHyphensSingleLine>Remove dialog hyphens in single lines</RemoveHyphensSingleLine>
-    <XHyphensSingleLineRemoved>Dialog hyphen removed in single lines: {0}</XHyphensSingleLineRemoved>
-    <FixHyphensInDialogs>Fix hyphens in dialogs via style: {0}</FixHyphensInDialogs>
-    <XHyphensInDialogsFixed>Hyphens fixed: {0}</XHyphensInDialogsFixed>
+    <RemoveHyphensSingleLine>Remove dialog dashes in single lines</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Dialog dash removed in single lines: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Fix dash in dialogs via style: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Dashes fixed: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
