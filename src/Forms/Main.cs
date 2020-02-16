@@ -13284,7 +13284,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
             {
-                ToggleDashes();
+                if (textBoxListViewText.Focused)
+                {
+                    ToggleDashesTextBox(textBoxListViewText);
+                }
+                else if (textBoxListViewTextAlternate.Focused)
+                {
+                    ToggleDashesTextBox(textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    ToggleDashes();
+                }
                 e.SuppressKeyPress = true;
             }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
@@ -15319,6 +15330,58 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ToggleDashesTextBox(TextBox tb)
+        {
+            var hasStartDash = false;
+            var lines = tb.Text.TrimEnd().SplitToLines();
+            foreach (var line in lines)
+            {
+                var trimmed = HtmlUtil.RemoveHtmlTags(line, true).TrimStart();
+                if (trimmed.StartsWith('-'))
+                {
+                    hasStartDash = true;
+                    break;
+                }
+            }
+
+            MakeHistoryForUndo(_language.BeforeToggleDialogDashes);
+            var sb = new StringBuilder();
+            if (hasStartDash)
+            {
+                // remove dashes
+                foreach (var line in lines)
+                {
+                    var pre = string.Empty;
+                    var s = SplitStartTags(line, ref pre);
+                    sb.AppendLine(pre + s.TrimStart('-').TrimStart());
+                }
+
+                tb.Text = sb.ToString().Trim();
+            }
+            else
+            {
+                // add dashes
+                if (CouldBeDialog(lines))
+                {
+                    foreach (var line in lines)
+                    {
+                        var pre = string.Empty;
+                        var s = SplitStartTags(line, ref pre);
+                        sb.AppendLine(pre + "- " + s);
+                    }
+                }
+                else
+                {
+                    sb.Append(tb.Text);
+                }
+
+                var text = sb.ToString().Trim();
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                text = dialogHelper.FixDashesAndSpaces(text);
+                tb.Text = text;
+            }
+        }
+
         private void AddDashes()
         {
             var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
@@ -15393,7 +15456,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool CouldBeDialog(List<string> lines)
         {
-            return (lines.Count >= 2 && lines.Count <= 3);
+            return lines.Count >= 2 && lines.Count <= 3;
         }
 
         private void RemoveDashes()
