@@ -650,7 +650,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string input, Subtitle subtitle = null, int index = -1)
+        public string RemoveTextFromHearImpaired(string input)
+        {
+            return RemoveTextFromHearImpaired(input, null, -1);
+        }
+
+        public string RemoveTextFromHearImpaired(string input, Subtitle subtitle, int index)
         {
             if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(input, true).TrimStart(TrimStartNoiseChar)))
             {
