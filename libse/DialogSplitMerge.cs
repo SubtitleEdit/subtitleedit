@@ -74,6 +74,8 @@ namespace Nikse.SubtitleEdit.Core
                             sb.AppendLine(pre + l);
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             return sb.ToString().TrimEnd();
@@ -272,11 +274,11 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetStartTags(string input)
         {
-            var pre = string.Empty;
+            var pre = new StringBuilder();
             var s = input;
             if (s.StartsWith("{\\") && s.Contains('}'))
             {
-                pre = s.Substring(0, s.IndexOf('}') + 1);
+                pre.Append(s.Substring(0, s.IndexOf('}') + 1));
                 s = s.Remove(0, pre.Length);
             }
 
@@ -284,10 +286,10 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var htmlPre = s.Substring(0, s.IndexOf('>') + 1);
                 s = s.Remove(0, htmlPre.Length);
-                pre += htmlPre;
+                pre.Append(htmlPre);
             }
 
-            return pre;
+            return pre.ToString();
         }
 
         private static bool IsDialog(List<string> lines)

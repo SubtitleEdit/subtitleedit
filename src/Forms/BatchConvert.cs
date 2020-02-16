@@ -1081,7 +1081,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI))
                                 {
                                     _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
-                                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
+                                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
                                 }
                                 if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting))
                                 {
