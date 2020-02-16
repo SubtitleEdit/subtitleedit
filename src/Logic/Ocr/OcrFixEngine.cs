@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -1123,29 +1124,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            if (text.Length > 2 && text[0] == '-' && char.IsUpper(text[1]))
-            {
-                text = text.Insert(1, " ");
-            }
-
-            if (text.Length > 5 && text.StartsWith("<i>-", StringComparison.Ordinal) && char.IsUpper(text[4]))
-            {
-                text = text.Insert(4, " ");
-            }
-
-            int nlLen = Environment.NewLine.Length;
-            int idx = text.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 1 < text.Length && char.IsUpper(text[idx + nlLen + 1]))
-            {
-                text = text.Insert(idx + Environment.NewLine.Length + 1, " ");
-            }
-
-            idx = text.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 4 < text.Length && char.IsUpper(text[idx + nlLen + 4]))
-            {
-                text = text.Insert(idx + nlLen + 4, " ");
-            }
-
             if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith('.') ||
                 lastLine.EndsWith('!') ||
@@ -1264,7 +1242,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (text.Contains(". \"</i>" + Environment.NewLine, StringComparison.Ordinal))
             {
-                idx = text.IndexOf(". \"</i>" + Environment.NewLine, StringComparison.Ordinal);
+                var idx = text.IndexOf(". \"</i>" + Environment.NewLine, StringComparison.Ordinal);
                 if (idx > 0)
                 {
                     text = text.Remove(idx + 1, 1);

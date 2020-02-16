@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -33,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
             labelMaxLines.Text = language.MaximumLines;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
+            labelDialogStyle.Text = language.DialogStyle;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
@@ -51,6 +53,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            comboBoxDialogStyle.Left = labelDialogStyle.Left + labelDialogStyle.Width + 5;
+            comboBoxDialogStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxDialogStyle.Left);
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
@@ -243,6 +247,28 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
             }
+
+            comboBoxDialogStyle.Items.Clear();
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithoutSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace);
+            comboBoxDialogStyle.Items.Add(Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithoutSpace);
+            switch (RulesProfiles[idx].DialogStyle)
+            {
+                case DialogType.DashBothLinesWithSpace:
+                    comboBoxDialogStyle.SelectedIndex = 0;
+                    break;
+                case DialogType.DashBothLinesWithoutSpace:
+                    comboBoxDialogStyle.SelectedIndex = 1;
+                    break;
+                case DialogType.DashSecondLineWithSpace:
+                    comboBoxDialogStyle.SelectedIndex = 2;
+                    break;
+                case DialogType.DashSecondLineWithoutSpace:
+                    comboBoxDialogStyle.SelectedIndex = 3;
+                    break;
+            }
+
             _editOn = oldEditOn;
         }
 

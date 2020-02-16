@@ -2,20 +2,21 @@
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
-    public class FixHyphensAdd : IFixCommonError
+    public class FixHyphensInDialog : IFixCommonError
     {
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixHyphen;
+            string fixAction = string.Format(language.FixHyphensInDialogs, Configuration.Settings.General.DialogStyle);
             int iFixes = 0;
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = Helper.FixHyphensAdd(subtitle, i, callbacks.Language);
+                    string text = dialogHelper.FixDashesAndSpaces(p.Text);
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -24,8 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            callbacks.UpdateFixStatus(iFixes, language.FixHyphen, language.XHyphensFixed);
+            callbacks.UpdateFixStatus(iFixes, fixAction, language.XHyphensInDialogsFixed);
         }
-
     }
 }

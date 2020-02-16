@@ -1594,17 +1594,17 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/AddMissingQuotes":
                     language.FixCommonErrors.AddMissingQuotes = reader.Value;
                     break;
-                case "FixCommonErrors/FixHyphens":
-                    language.FixCommonErrors.FixHyphens = reader.Value;
+                case "FixCommonErrors/RemoveHyphensSingleLine":
+                    language.FixCommonErrors.RemoveHyphensSingleLine = reader.Value;
                     break;
-                case "FixCommonErrors/FixHyphensAdd":
-                    language.FixCommonErrors.FixHyphensAdd = reader.Value;
+                case "FixCommonErrors/XHyphensSingleLineRemoved":
+                    language.FixCommonErrors.XHyphensSingleLineRemoved = reader.Value;
                     break;
-                case "FixCommonErrors/FixHyphen":
-                    language.FixCommonErrors.FixHyphen = reader.Value;
+                case "FixCommonErrors/FixHyphensInDialogs":
+                    language.FixCommonErrors.FixHyphensInDialogs = reader.Value;
                     break;
-                case "FixCommonErrors/XHyphensFixed":
-                    language.FixCommonErrors.XHyphensFixed = reader.Value;
+                case "FixCommonErrors/XHyphensInDialogsFixed":
+                    language.FixCommonErrors.XHyphensInDialogsFixed = reader.Value;
                     break;
                 case "FixCommonErrors/AddMissingQuotesExample":
                     language.FixCommonErrors.AddMissingQuotesExample = reader.Value;
@@ -5238,6 +5238,21 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MergeLinesShorterThan":
                     language.Settings.MergeLinesShorterThan = reader.Value;
+                    break;
+                case "Settings/DialogStyle":
+                    language.Settings.DialogStyle = reader.Value;
+                    break;
+                case "Settings/DialogStyleDashBothLinesWithSpace":
+                    language.Settings.DialogStyleDashBothLinesWithSpace = reader.Value;
+                    break;
+                case "Settings/DialogStyleDashBothLinesWithoutSpace":
+                    language.Settings.DialogStyleDashBothLinesWithoutSpace = reader.Value;
+                    break;
+                case "Settings/DialogStyleDashSecondLineWithSpace":
+                    language.Settings.DialogStyleDashSecondLineWithSpace = reader.Value;
+                    break;
+                case "Settings/DialogStyleDashSecondLineWithoutSpace":
+                    language.Settings.DialogStyleDashSecondLineWithoutSpace = reader.Value;
                     break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;

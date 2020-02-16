@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
@@ -20,10 +21,12 @@ namespace Nikse.SubtitleEdit.Core
         public bool CpsIncludesSpace { get; set; }
         public int MaxNumberOfLines { get; set; }
         public int MergeLinesShorterThan { get; set; }
+        public DialogType DialogStyle { get; set; }
 
         public RulesProfile()
         {
             Id = Guid.NewGuid();
+            DialogStyle = DialogType.DashBothLinesWithSpace;
         }
 
         public RulesProfile(RulesProfile profile)
@@ -40,6 +43,7 @@ namespace Nikse.SubtitleEdit.Core
             CpsIncludesSpace = profile.CpsIncludesSpace;
             MaxNumberOfLines = profile.MaxNumberOfLines;
             MergeLinesShorterThan = profile.MergeLinesShorterThan;
+            DialogStyle = profile.DialogStyle;
         }
 
         public static string Serialize(List<RulesProfile> profiles)
@@ -66,6 +70,7 @@ namespace Nikse.SubtitleEdit.Core
                           "\"subtitleMaximumWordsPerMinute\":\"" + p.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"subtitleMinimumDisplayMilliseconds\":\"" + p.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"subtitleOptimalCharactersPerSeconds\":\"" + p.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture) + "\"" +
+                          "\"dialogStyle\":\"" + p.DialogStyle + "\"" +
                           "}");
             }
             sb.AppendLine("]}");
@@ -95,6 +100,7 @@ namespace Nikse.SubtitleEdit.Core
                 var subtitleMaximumDisplayMilliseconds = Convert.ToInt32(Json.ReadTag(p, "subtitleMaximumDisplayMilliseconds"), CultureInfo.InvariantCulture);
                 var subtitleMinimumDisplayMilliseconds = Convert.ToInt32(Json.ReadTag(p, "subtitleMinimumDisplayMilliseconds"), CultureInfo.InvariantCulture);
                 var subtitleOptimalCharactersPerSeconds = Convert.ToDecimal(Json.ReadTag(p, "subtitleOptimalCharactersPerSeconds"), CultureInfo.InvariantCulture);
+                var dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), Json.ReadTag(p, "dialogStyle"));
                 list.Add(new RulesProfile
                 {
                     Name = name,
@@ -107,12 +113,11 @@ namespace Nikse.SubtitleEdit.Core
                     SubtitleMaximumWordsPerMinute = subtitleMaximumWordsPerMinute,
                     SubtitleMaximumDisplayMilliseconds = subtitleMaximumDisplayMilliseconds,
                     SubtitleMinimumDisplayMilliseconds = subtitleMinimumDisplayMilliseconds,
-                    SubtitleOptimalCharactersPerSeconds = subtitleOptimalCharactersPerSeconds
+                    SubtitleOptimalCharactersPerSeconds = subtitleOptimalCharactersPerSeconds,
+                    DialogStyle = dialogStyle
                 });
             }
-
             return list;
         }
-
     }
 }
