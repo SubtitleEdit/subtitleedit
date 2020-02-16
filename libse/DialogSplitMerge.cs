@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core
     public class DialogSplitMerge
     {
         public DialogType DialogStyle { get; set; }
+        public bool AllowDialogWithNoSentenceEnding { get; set; }
 
         public string FixDashesAndSpaces(string input)
         {
@@ -252,6 +253,11 @@ namespace Nikse.SubtitleEdit.Core
             var pre = GetStartTags(input);
             var s = input.Remove(0, pre.Length);
 
+            if (string.IsNullOrEmpty(s))
+            {
+                return input;
+            }
+
             if (s.StartsWith(GetDashChar()))
             {
                 s = s.TrimStart(GetDashChar());
@@ -294,7 +300,7 @@ namespace Nikse.SubtitleEdit.Core
             return pre.ToString();
         }
 
-        private static bool IsDialog(List<string> lines)
+        private bool IsDialog(List<string> lines)
         {
             if (lines.Count < 2 || lines.Count > 3)
             {
@@ -306,7 +312,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (lines.Count == 2)
             {
-                if (l0.HasSentenceEnding() && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+                if ((l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
                 }
@@ -315,13 +321,6 @@ namespace Nikse.SubtitleEdit.Core
             if (lines.Count == 3)
             {
                 var l2 = HtmlUtil.RemoveHtmlTags(lines[2], true);
-                if (l0.HasSentenceEnding() &&
-                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                    l1.HasSentenceEnding() &&
-                    (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
-                {
-                    return true;
-                }
 
                 // - I'm fine today, but I would have
                 // been better if I had a some candy.
@@ -341,6 +340,14 @@ namespace Nikse.SubtitleEdit.Core
                     (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
                     !l1.HasSentenceEnding() &&
                     !(l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
+                {
+                    return true;
+                }
+
+                if ((l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) &&
+                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                    (l1.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) &&
+                    (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
                 }

@@ -10222,7 +10222,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            if (insertDash)
+                            if (insertDash && !string.IsNullOrEmpty(original.Text) && !string.IsNullOrEmpty(originalNext.Text))
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
                                 original.Text = dialogHelper.InsertStartDash(s, 0);
@@ -10230,7 +10230,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 s = Utilities.UnbreakLine(originalNext.Text);
                                 original.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
-                                original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                                original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine).TrimEnd();
                             }
                             else
                             {
@@ -10282,7 +10282,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (insertDash)
+                if (insertDash && !string.IsNullOrEmpty(currentParagraph.Text) && !string.IsNullOrEmpty(nextParagraph.Text))
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
                     currentParagraph.Text = dialogHelper.InsertStartDash(s, 0);
@@ -10290,7 +10290,7 @@ namespace Nikse.SubtitleEdit.Forms
                     s = Utilities.UnbreakLine(nextParagraph.Text);
                     currentParagraph.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
-                    currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                    currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine).TrimEnd();
                 }
                 else
                 {
@@ -10366,8 +10366,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
         }
-
-
 
         private void UpdateStartTimeInfo(TimeCode startTime)
         {
@@ -15376,7 +15374,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var text = sb.ToString().Trim();
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
                 text = dialogHelper.FixDashesAndSpaces(text);
                 tb.Text = text;
             }
@@ -15384,7 +15382,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddDashes()
         {
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
@@ -19086,6 +19084,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(toolStripSplitButtonPlayRate);
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             ShowSubtitleTimer.Start();
+
+            if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                var idx = _subtitleListViewIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
         }
 
         private void InitializePlayRateDropDown()
