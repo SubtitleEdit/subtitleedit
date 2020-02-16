@@ -169,6 +169,8 @@ namespace Nikse.SubtitleEdit.Core
                             sb.AppendLine(pre + l);
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             return sb.ToString().TrimEnd();
