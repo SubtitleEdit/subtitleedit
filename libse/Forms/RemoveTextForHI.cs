@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -649,7 +650,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string input)
+        public string RemoveTextFromHearImpaired(string input, Subtitle subtitle = null, int index = -1)
         {
             if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(input, true).TrimStart(TrimStartNoiseChar)))
             {
@@ -939,29 +940,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = text.Insert(1, " ");
                 }
 
-                if (text.Length > 5 && text.StartsWith("<i>-", StringComparison.Ordinal) && text[4] != ' ' && text[4] != '-')
+                // remove/fix dashes
+                if (subtitle != null && index >= 0)
                 {
-                    text = text.Insert(4, " ");
+                    text = Helper.FixHyphensRemove(subtitle, text, index);
                 }
-
-                int index = text.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-                if (index >= 0 && text.Length - index > 4)
-                {
-                    index += Environment.NewLine.Length + 1;
-                    if (text[index] != ' ' && text[index] != '-')
-                    {
-                        text = text.Insert(index, " ");
-                    }
-                }
-                index = text.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-                if (index >= 0 && text.Length - index > 5)
-                {
-                    index += Environment.NewLine.Length + 4;
-                    if (text[index] != ' ' && text[index] != '-')
-                    {
-                        text = text.Insert(index, " ");
-                    }
-                }
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                text = dialogHelper.FixDashesAndSpaces(text);
             }
             return text.Trim();
         }

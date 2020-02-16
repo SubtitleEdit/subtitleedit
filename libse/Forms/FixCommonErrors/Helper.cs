@@ -275,11 +275,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return isPrevEndOfLine;
         }
 
-        public static string FixHyphensRemove(Subtitle subtitle, int i)
+        public static string FixHyphensRemove(Subtitle subtitle, string input, int i)
         {
-            Paragraph p = subtitle.Paragraphs[i];
-            string text = p.Text;
-
+            var text = input;
             if (HtmlUtil.RemoveHtmlTags(text, true).TrimStart().StartsWith('-') ||
                 text.Contains(Environment.NewLine + '-') ||
                 text.Contains(Environment.NewLine + " -") ||
@@ -290,16 +288,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var noTaglines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
-                    int startHyphenCount = noTaglines.Count(line => line.TrimStart().StartsWith('-'));
+                    var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+                    int startHyphenCount = noTagLines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
                         bool remove = true;
-                        var noTagparts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                        if (noTagparts.Count == 2)
+                        var noTagParts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                        if (noTagParts.Count == 2)
                         {
-                            if (noTagparts[0].TrimStart().StartsWith('-') && noTagparts[1].Contains(": ") ||
-                                noTagparts[1].TrimStart().StartsWith('-') && noTagparts[0].Contains(": "))
+                            if (noTagParts[0].TrimStart().StartsWith('-') && noTagParts[1].Contains(": ") ||
+                                noTagParts[1].TrimStart().StartsWith('-') && noTagParts[0].Contains(": "))
                             {
                                 remove = false;
                             }

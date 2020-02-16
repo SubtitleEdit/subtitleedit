@@ -1113,7 +1113,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
                                 foreach (var p in sub.Paragraphs)
                                 {
-                                    p.Text = hiLib.RemoveTextFromHearImpaired(p.Text);
+                                    p.Text = hiLib.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
                                 }
                                 break;
                             case BatchAction.RemoveFormatting:

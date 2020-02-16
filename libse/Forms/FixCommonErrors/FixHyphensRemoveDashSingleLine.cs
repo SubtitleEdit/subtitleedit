@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Text.SplitToLines().Count == 1 && callbacks.AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = Helper.FixHyphensRemove(subtitle, i);
+                    string text = Helper.FixHyphensRemove(subtitle, p.Text,  i);
                     if (text != oldText)
                     {
                         p.Text = text;
