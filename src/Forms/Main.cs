@@ -10228,7 +10228,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 original.Text = dialogHelper.InsertStartDash(s, 0);
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                original.Text += Environment.NewLine + dialogHelper.InsertStartDash(s,1);
+                                original.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
                                 original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             }
@@ -10367,7 +10367,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-       
+
 
         private void UpdateStartTimeInfo(TimeCode startTime)
         {
@@ -15303,6 +15303,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddDashes()
         {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
@@ -15316,6 +15317,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var text = sb.ToString().Trim();
+                text = dialogHelper.FixDashesAndSpaces(text);
                 _subtitle.Paragraphs[index].Text = text;
                 SubtitleListview1.SetText(index, text);
                 if (index == _subtitleListViewIndex)
