@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -1946,11 +1947,20 @@ $HorzAlign          =   Center
 
                 var dialogStyle = DialogType.DashBothLinesWithSpace;
                 if (listNode.SelectSingleNode("DialogStyle") == null || !Enum.IsDefined(typeof(DialogType), listNode.SelectSingleNode("DialogStyle").InnerText))
-                {
-                    if (listNode.SelectSingleNode("Name") != null &&
-                        listNode.SelectSingleNode("Name").InnerText.Contains("Dutch professional", StringComparison.OrdinalIgnoreCase))
+                { //TODO: Remove after 2022
+                    if (listNode.SelectSingleNode("Name") != null)
                     {
-                        dialogStyle = DialogType.DashSecondLineWithoutSpace;
+                        var lookup = new List<RulesProfile>();
+                        GeneralSettings.AddExtraProfiles(lookup);
+                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        if (match != null)
+                        {
+                            dialogStyle = match.DialogStyle; // update style when upgrading from 3.5.13 or below
+                        }
+                        else
+                        {
+                            dialogStyle = DialogType.DashBothLinesWithSpace;
+                        }
                     }
                 }
                 else
