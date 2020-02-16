@@ -267,6 +267,8 @@ namespace Nikse.SubtitleEdit.Forms
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             _editOn = oldEditOn;
