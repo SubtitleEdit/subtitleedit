@@ -279,12 +279,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var lines = p.Text.SplitToLines();
                     for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
                     {
-                        foreach (var musicSymbol in musicSymbols)
+                        var lineNoHtmlAndMusicTags = HtmlUtil.RemoveHtmlTags(lines[lineIndex], true)
+                            .RemoveChar('#')
+                            .RemoveChar('♪')
+                            .RemoveChar('♫');
+                        if (lineNoHtmlAndMusicTags.Length > 1)
                         {
-                            var fix = !(musicSymbol == '#' && Utilities.CountTagInText(lines[lineIndex], musicSymbol) == 1 && !lines[lineIndex].EndsWith(musicSymbol));
-                            if (fix)
+                            foreach (var musicSymbol in musicSymbols)
                             {
-                                lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
+                                var fix = !(musicSymbol == '#' && Utilities.CountTagInText(lines[lineIndex], musicSymbol) == 1 && !lines[lineIndex].EndsWith(musicSymbol));
+                                if (fix)
+                                {
+                                    lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
+                                }
                             }
                         }
                     }
@@ -409,7 +416,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 text = text.Insert(1, " ");
             }
-            else if (text.Length > 4 && text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[4]))
+            else if (text.Length > 4 && text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r\n#♪♫<".Contains(text[4]))
             {
                 text = text.Insert(4, " ");
             }
@@ -419,7 +426,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 text = text.Insert(text.Length - 1, " ");
             }
-            if (text.Length > 5 && text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[text.Length - 6]))
+            if (text.Length > 5 && text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r\n#♪♫>".Contains(text[text.Length - 6]))
             {
                 text = text.Insert(text.Length - 5, " ");
             }
