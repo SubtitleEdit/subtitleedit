@@ -3044,7 +3044,18 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                 _sourceViewChange = false;
 
-                if (Configuration.Settings.General.AutoConvertToUtf8 || encoding == Encoding.UTF8)
+                if (Configuration.Settings.General.AutoConvertToUtf8)
+                {
+                    if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+                    {
+                        SetEncoding(TextEncoding.Utf8WithoutBom);
+                    }
+                    else
+                    {
+                        SetEncoding(TextEncoding.Utf8WithBom);
+                    }
+                }
+                else if (encoding == Encoding.UTF8)
                 {
                     if (File.Exists(_fileName) && FileUtil.HasUtf8Bom(fileName))
                     {
@@ -3052,7 +3063,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom ? TextEncoding.Utf8WithoutBom : TextEncoding.Utf8WithBom);
+                        SetEncoding(TextEncoding.Utf8WithoutBom);
                     }
                 }
                 else
@@ -12610,6 +12621,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (subtitleList.Count > 1)
                             {
+                                ResetSubtitle();
                                 using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
                                 {
                                     subtitleChooser.Initialize(subtitleList);
@@ -12630,6 +12642,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)) &&
                                     !Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
+                                    ResetSubtitle();
                                     OpenVideo(fileName);
                                 }
                             }
@@ -12644,12 +12657,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                     if (mp4SubtitleTracks.Count > 0)
                     {
+                        ResetSubtitle();
                         ImportSubtitleFromMp4(fileName);
                         return;
                     }
                 }
                 else if (ext == ".vob" || ext == ".ifo")
                 {
+                    ResetSubtitle();
                     ImportDvdSubtitle(fileName);
                     return;
                 }
@@ -12658,6 +12673,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
                     if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
                     {
+                        ResetSubtitle();
                         ImportAndOcrVobSubSubtitleNew(subFileName, _loading);
                         return;
                     }
@@ -12665,6 +12681,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (file.Length < Subtitle.MaxFileSize)
                 {
+                    ResetSubtitle();
                     if (!OpenFromRecentFiles(fileName))
                     {
                         OpenSubtitle(fileName, null);
@@ -12672,18 +12689,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (file.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if (file.Length < 250000000 && ext == ".sup" && FileUtil.IsBluRaySup(fileName)) // max 250 mb
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && FileUtil.IsTransportStream(fileName))
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if (ext == ".m2ts" && FileUtil.IsM2TransportStream(fileName))
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else
@@ -18853,7 +18874,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitle.Paragraphs[i].StartTime = new TimeCode(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds - offset);
                         _subtitle.Paragraphs[i].EndTime = new TimeCode(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds - offset);
-                        SubtitleListview1.SetStartTimeAndDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                        SubtitleListview1.SetStartTimeAndDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
                     }
                 }
 

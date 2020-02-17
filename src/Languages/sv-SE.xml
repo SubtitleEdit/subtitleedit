@@ -1037,7 +1037,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <Ascending>Stigande</Ascending>
         <Descending>Fallande</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Skapa tom översättning i nuvarande text</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Konvertera stycke</BatchConvert>
+        <BatchConvert>Batch-konvertera</BatchConvert>
         <GenerateTimeAsText>Generera tid som text</GenerateTimeAsText>
         <MeasurementConverter>Måttomräknare</MeasurementConverter>
         <SplitSubtitle>Splitta text</SplitSubtitle>
