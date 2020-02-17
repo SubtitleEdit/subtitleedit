@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -39,10 +40,13 @@ namespace Nikse.SubtitleEdit.Core
             if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
             {
                 fileName = originalFileName;
+                originalFileName = null;
             }
 
             if (string.IsNullOrEmpty(fileName))
             {
+                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
+                Files.Insert(0, new RecentFileEntry());
                 return;
             }
 
