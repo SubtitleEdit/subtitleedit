@@ -238,6 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxNumberOfLines.Value = numericUpDownMaxNumberOfLines.Minimum;
             }
+            if (p.SubtitleMaximumWordsPerMinute >= numericUpDownMaxWordsMin.Minimum && p.SubtitleMaximumWordsPerMinute <= numericUpDownMaxWordsMin.Maximum)
+            {
+                numericUpDownMaxWordsMin.Value = p.SubtitleMaximumWordsPerMinute;
+            }
             checkBoxCpsIncludeWhiteSpace.Checked = RulesProfiles[idx].CpsIncludesSpace;
             if (RulesProfiles[idx].MergeLinesShorterThan >= 10 && RulesProfiles[idx].MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
             {
