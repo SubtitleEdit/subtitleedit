@@ -275,9 +275,25 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return isPrevEndOfLine;
         }
 
+        public static bool IsOneSentence(string text)
+        {
+            var lines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+            if (lines.Count == 1)
+            {
+                return true;
+            }
+
+            if (lines.Count > 2)
+            {
+                return false;
+            }
+
+            return !lines[0].HasSentenceEnding();
+        }
+
         public static string FixHyphensRemoveForSingleLine(Subtitle subtitle, string input, int i)
         {
-            if (string.IsNullOrEmpty(input) || input.SplitToLines().Count != 1)
+            if (string.IsNullOrEmpty(input) || !IsOneSentence(input))
             {
                 return input;
             }

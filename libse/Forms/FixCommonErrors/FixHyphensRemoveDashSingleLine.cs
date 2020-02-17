@@ -12,10 +12,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                if (p.Text.SplitToLines().Count == 1 && callbacks.AllowFix(p, fixAction))
+                if (Helper.IsOneSentence(p.Text) && callbacks.AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = Helper.FixHyphensRemoveForSingleLine(subtitle, p.Text,  i);
+                    string text = Helper.FixHyphensRemoveForSingleLine(subtitle, p.Text, i);
                     if (text != oldText)
                     {
                         p.Text = text;
