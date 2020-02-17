@@ -12674,6 +12674,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (subtitleList.Count > 1)
                             {
+                                ResetSubtitle();
                                 using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
                                 {
                                     subtitleChooser.Initialize(subtitleList);
@@ -12694,6 +12695,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)) &&
                                     !Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
+                                    ResetSubtitle();
                                     OpenVideo(fileName);
                                 }
                             }
@@ -12708,12 +12710,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                     if (mp4SubtitleTracks.Count > 0)
                     {
+                        ResetSubtitle();
                         ImportSubtitleFromMp4(fileName);
                         return;
                     }
                 }
                 else if (ext == ".vob" || ext == ".ifo")
                 {
+                    ResetSubtitle();
                     ImportDvdSubtitle(fileName);
                     return;
                 }
@@ -12722,6 +12726,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
                     if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
                     {
+                        ResetSubtitle();
                         ImportAndOcrVobSubSubtitleNew(subFileName, _loading);
                         return;
                     }
@@ -12729,6 +12734,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (file.Length < Subtitle.MaxFileSize)
                 {
+                    ResetSubtitle();
                     if (!OpenFromRecentFiles(fileName))
                     {
                         OpenSubtitle(fileName, null);
@@ -12736,18 +12742,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (file.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if (file.Length < 250000000 && ext == ".sup" && FileUtil.IsBluRaySup(fileName)) // max 250 mb
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && FileUtil.IsTransportStream(fileName))
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else if (ext == ".m2ts" && FileUtil.IsM2TransportStream(fileName))
                 {
+                    ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
                 else
