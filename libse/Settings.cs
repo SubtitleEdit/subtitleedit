@@ -41,10 +41,13 @@ namespace Nikse.SubtitleEdit.Core
             if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
             {
                 fileName = originalFileName;
+                originalFileName = null;
             }
 
             if (string.IsNullOrEmpty(fileName))
             {
+                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
+                Files.Insert(0, new RecentFileEntry { FileName = string.Empty });
                 return;
             }
 
@@ -1789,9 +1792,9 @@ $HorzAlign          =   Center
                     //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
-                    if (settings.General.AutoConvertToUtf8 && !settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
+                    if (settings.General.DefaultEncoding.StartsWith("utf-8", StringComparison.Ordinal))
                     {
-                        settings.General.DefaultEncoding = "UTF-8 with BOM";
+                        settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
                     }
                 }
                 catch (Exception exception)
