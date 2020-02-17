@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return null;
         }
 
-        private void LoadLibVlcDynamic()
+        private void LoadLibMpvDynamic()
         {
             _mpvCreate = (MpvCreate)GetDllType(typeof(MpvCreate), "mpv_create");
             _mpvInitialize = (MpvInitialize)GetDllType(typeof(MpvInitialize), "mpv_initialize");
@@ -451,7 +451,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (LoadLib())
             {
-                LoadLibVlcDynamic();
+                LoadLibMpvDynamic();
                 if (!IsAllMethodsLoaded())
                 {
                     throw new Exception("MPV - not all needed methods found in dll file");
@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     {
                         SetVideoOwner(ownerControl);
                     }
-                    catch 
+                    catch
                     {
                         // ignore
                     }
@@ -588,13 +588,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         Application.DoEvents();
                         DoMpvCommand("quit");
                         Application.DoEvents();
+                        System.Threading.Thread.Sleep(50);
                         Application.DoEvents();
-                        System.Threading.Thread.Sleep(10);
-                        if (_mpvHandle != IntPtr.Zero)
-                        {
-                            _mpvTerminateDestroy(_mpvHandle);
-                            _mpvHandle = IntPtr.Zero;
-                        }
                     }
                 }
             }
@@ -620,10 +615,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Application.DoEvents();
             DoMpvCommand("quit");
             Application.DoEvents();
-
-            _mpvTerminateDestroy(_mpvHandle);
-            _mpvHandle = IntPtr.Zero;
-          //  NativeMethods.CrossFreeLibrary(_libMpvDll); - Seems to make SE crash...
+            System.Threading.Thread.Sleep(50);
+            Application.DoEvents();
             _libMpvDll = IntPtr.Zero;
         }
 
