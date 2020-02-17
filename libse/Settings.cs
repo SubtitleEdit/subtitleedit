@@ -36,11 +36,21 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
+            if (string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(originalFileName))
+            {
+                fileName = originalFileName;
+            }
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
             var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (fileName != null && !fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                 {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
                 }
