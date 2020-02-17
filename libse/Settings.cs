@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core
             if (string.IsNullOrEmpty(fileName))
             {
                 Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
-                Files.Insert(0, new RecentFileEntry());
+                Files.Insert(0, new RecentFileEntry { FileName = string.Empty });
                 return;
             }
 
