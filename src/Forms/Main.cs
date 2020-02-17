@@ -2152,11 +2152,7 @@ namespace Nikse.SubtitleEdit.Forms
             var ext = file.Extension.ToLowerInvariant();
 
             // save last first visible index + first selected index from listview
-            if (!string.IsNullOrEmpty(_fileName))
-            {
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, originalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-            }
-
+            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, originalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
 
             openFileDialog1.InitialDirectory = file.DirectoryName;
@@ -4097,7 +4093,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExit())
             {
-                if (Configuration.Settings.General.ShowRecentFiles && !string.IsNullOrEmpty(_fileName))
+                if (Configuration.Settings.General.ShowRecentFiles)
                 {
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                 }
