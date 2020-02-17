@@ -81,6 +81,7 @@
     <DeleteCurrentLine>Delete current line</DeleteCurrentLine>
     <Width>Width</Width>
     <Height>Height</Height>
+    <Collapse>Collapse</Collapse>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>

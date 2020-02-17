@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.tabControlSettings = new System.Windows.Forms.TabControl();
@@ -367,6 +368,8 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
+            this.contextMenuStripShortcuts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemShortcutsCollapse = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -445,6 +448,7 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
+            this.contextMenuStripShortcuts.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1497,6 +1501,7 @@
             this.treeViewShortcuts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeViewShortcuts.ContextMenuStrip = this.contextMenuStripShortcuts;
             this.treeViewShortcuts.HideSelection = false;
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
@@ -4454,6 +4459,20 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
+            // contextMenuStripShortcuts
+            // 
+            this.contextMenuStripShortcuts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemShortcutsCollapse});
+            this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 26);
+            // 
+            // toolStripMenuItemShortcutsCollapse
+            // 
+            this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(119, 22);
+            this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
+            this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4586,6 +4605,7 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
+            this.contextMenuStripShortcuts.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4932,5 +4952,7 @@
         private System.Windows.Forms.Label labelToolsBreakBottomHeavyPercent;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorGapTooSmall;
         private System.Windows.Forms.Button buttonReset;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripShortcuts;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
     }
 }
