@@ -894,7 +894,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             MakeShortcutsTreeview(language);
             ShowShortcutsTreeview();
-
+            toolStripMenuItemShortcutsCollapse.Text = Configuration.Settings.Language.General.Collapse;
             labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
             buttonShortcutsClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
@@ -3202,6 +3202,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Reset();
                 Init();
             }
+        }
+
+        private void toolStripMenuItemShortcutsCollapse_Click(object sender, EventArgs e)
+        {
+            treeViewShortcuts.CollapseAll();
         }
     }
 }

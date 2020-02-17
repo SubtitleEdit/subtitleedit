@@ -198,7 +198,8 @@ namespace Nikse.SubtitleEdit.Core
                 Search = "Search",
                 DeleteCurrentLine = "Delete current line",
                 Width = "Width",
-                Height = "Height"
+                Height = "Height",
+                Collapse = "Collapse"
             };
 
             About = new LanguageStructure.About
