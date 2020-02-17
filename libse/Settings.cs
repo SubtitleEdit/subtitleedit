@@ -1768,9 +1768,9 @@ $HorzAlign          =   Center
                     //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
-                    if (settings.General.AutoConvertToUtf8 && !settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
+                    if (settings.General.DefaultEncoding.StartsWith("utf-8", StringComparison.Ordinal))
                     {
-                        settings.General.DefaultEncoding = "UTF-8 with BOM";
+                        settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
                     }
                 }
                 catch (Exception exception)
