@@ -961,7 +961,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithoutSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1066,7 +1066,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1081,7 +1081,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1096,7 +1096,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1111,7 +1111,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1126,7 +1126,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 167,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1141,7 +1141,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 160,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1156,7 +1156,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 250,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1171,7 +1171,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 240,
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
         }
     }
