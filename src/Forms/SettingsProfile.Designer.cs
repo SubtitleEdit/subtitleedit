@@ -95,7 +95,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewProfiles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(927, 384);
+            this.groupBoxStyles.Size = new System.Drawing.Size(927, 413);
             this.groupBoxStyles.TabIndex = 1;
             this.groupBoxStyles.TabStop = false;
             // 
@@ -143,7 +143,7 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
             this.groupBoxGeneralRules.Location = new System.Drawing.Point(619, 61);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 287);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 316);
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
@@ -435,7 +435,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(6, 353);
+            this.buttonExport.Location = new System.Drawing.Point(6, 382);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(82, 23);
             this.buttonExport.TabIndex = 20;
@@ -447,7 +447,7 @@
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonImport.Location = new System.Drawing.Point(94, 353);
+            this.buttonImport.Location = new System.Drawing.Point(94, 382);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(82, 23);
             this.buttonImport.TabIndex = 30;
@@ -459,7 +459,7 @@
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(182, 353);
+            this.buttonCopy.Location = new System.Drawing.Point(182, 382);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 23);
             this.buttonCopy.TabIndex = 40;
@@ -471,7 +471,7 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 353);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 382);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
             this.buttonRemoveAll.TabIndex = 70;
@@ -483,7 +483,7 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(270, 353);
+            this.buttonAdd.Location = new System.Drawing.Point(270, 382);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 50;
@@ -495,7 +495,7 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(358, 353);
+            this.buttonRemove.Location = new System.Drawing.Point(358, 382);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(82, 23);
             this.buttonRemove.TabIndex = 60;
@@ -520,7 +520,7 @@
             this.listViewProfiles.Location = new System.Drawing.Point(6, 19);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(604, 329);
+            this.listViewProfiles.Size = new System.Drawing.Size(604, 358);
             this.listViewProfiles.TabIndex = 10;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
@@ -556,7 +556,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(864, 407);
+            this.buttonCancel.Location = new System.Drawing.Point(864, 436);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 205;
@@ -567,7 +567,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(783, 407);
+            this.buttonOK.Location = new System.Drawing.Point(783, 436);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 200;
@@ -579,7 +579,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(951, 442);
+            this.ClientSize = new System.Drawing.Size(951, 471);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
