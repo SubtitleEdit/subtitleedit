@@ -3044,7 +3044,18 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                 _sourceViewChange = false;
 
-                if (Configuration.Settings.General.AutoConvertToUtf8 || encoding == Encoding.UTF8)
+                if (Configuration.Settings.General.AutoConvertToUtf8)
+                {
+                    if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+                    {
+                        SetEncoding(TextEncoding.Utf8WithoutBom);
+                    }
+                    else
+                    {
+                        SetEncoding(TextEncoding.Utf8WithBom);
+                    }
+                }
+                else if (encoding == Encoding.UTF8)
                 {
                     if (File.Exists(_fileName) && FileUtil.HasUtf8Bom(fileName))
                     {
@@ -3052,7 +3063,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom ? TextEncoding.Utf8WithoutBom : TextEncoding.Utf8WithBom);
+                        SetEncoding(TextEncoding.Utf8WithoutBom);
                     }
                 }
                 else
