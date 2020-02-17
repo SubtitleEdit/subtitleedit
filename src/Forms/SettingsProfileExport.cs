@@ -20,6 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewExportStyles.Items.Add(new ListViewItem(profile.Name) { Checked = true, Tag = profile });
             }
 
+            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
+            inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
+
             Text = Configuration.Settings.Language.Settings.ExportProfiles;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -65,6 +68,22 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = !item.Checked;
             }
         }
     }
