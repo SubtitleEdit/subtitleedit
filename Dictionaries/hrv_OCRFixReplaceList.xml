@@ -14,6 +14,7 @@
     <Word from="Ajpoda" to="iPoda" />
     <Word from="Ajpodu" to="iPodu" />
     <Word from="akcenat" to="naglasak" />
+    <Word from="aki" to="ali" />
     <Word from="akcionara" to="dioničara" />
     <Word from="akvarijum" to="akvarij" />
     <Word from="akvarijumu" to="akvariju" />
@@ -313,6 +314,9 @@
     <Word from="Farmerke" to="Traperice" />
     <Word from="farmerkama" to="trapericama" />
     <Word from="flertuje" to="očijuka" />
+    <Word from="fjedan" to="tjedan" />
+    <Word from="fjednu" to="tjednu" />
+    <Word from="fodine" to="godine" />
     <Word from="foka" to="tuljan" />
     <Word from="foku" to="tuljana" />
     <Word from="foke" to="tuljani" />
@@ -548,6 +552,7 @@
     <Word from="klasifikuju" to="klasificiraju" />
     <Word from="klešta" to="kliješta" />
     <Word from="klješta" to="kliješta" />
+    <Word from="Kloniću" to="Klonit ću" />
     <Word from="Ko" to="Tko" />
     <Word from="koa" to="kao" />
     <Word from="koaj" to="koja" />
@@ -773,6 +778,7 @@
     <Word from="nanevši" to="nanjevši" />
     <Word from="nanjeli" to="nanijeli" />
     <Word from="napastvuje" to="napastuje" />
+    <Word from="naplačivati" to="naplaćivati" />
     <Word from="Napolje" to="Van" />
     <Word from="napolje" to="van" />
     <Word from="Napolju" to="Vani" />
@@ -956,6 +962,7 @@
     <Word from="ortakluk" to="partnerstvo" />
     <Word from="ortakluku" to="partnerstvu" />
     <Word from="osjećanja" to="osjećaje" />
+    <Word from="Osiguraćete" to="Osigurat ćete" />
     <Word from="osmeh" to="osmijeh" />
     <Word from="osmeha" to="osmjeha" />
     <Word from="osmehe" to="osmijehe" />
@@ -1039,7 +1046,10 @@
     <Word from="plačanje" to="plaćanje" />
     <Word from="plačanjem" to="plaćanjem" />
     <Word from="plačam" to="plaćam" />
+    <Word from="plačanje" to="plaćanje" />
+    <Word from="plačanju" to="plaćanju" />
     <Word from="plačaš" to="plaćaš" />
+    <Word from="plačati" to="plaćati" />
     <Word from="plaćeš" to="plačeš" />
     <Word from="plen" to="plijen" />
     <Word from="Plen" to="Plijen" />
@@ -2656,6 +2666,7 @@
     <RegEx find="fij?o[ck]" replaceWith="ladic" />
     <RegEx find="Fij?o[ck]" replaceWith="Ladic" />
     <RegEx find="inansi" replaceWith="inanci" />
+    <RegEx find="fiv" replaceWith="div" />
     <RegEx find="ormacij?on" replaceWith="ormacijsk" />
     <RegEx find="\bfu[dt]bal(?![se])" replaceWith="nogomet" />
     <RegEx find="\bFu[dt]bal(?![se])" replaceWith="Nogomet" />
@@ -2665,6 +2676,7 @@
     <RegEx find="ejsbu" replaceWith="aceboo" />
     <RegEx find="arant(uje|ova)" replaceWith="arantira" />
     <RegEx find="gelsk" replaceWith="glesk" />
+    <RegEx find="gld" replaceWith="gled" />
     <RegEx find="([gGsS])luv" replaceWith="$1luh" />
     <RegEx find="([gG])nev" replaceWith="$1njev" />
     <RegEx find="\b([gG])nj?ezd" replaceWith="$1nijezd" />
