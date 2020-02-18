@@ -2,7 +2,6 @@
 
 3.5.14 (xth March 2020) BETA
 * NEW:
-   * Installer can now update xml dictionaries - thx xylographe
    * "UTF-8 without BOM" encoding added - thx uckthis
    * Add some support for reading Adobe Premire .prproj files - thx Ariana
    * Add new sub format - thx uckthis
@@ -28,6 +27,7 @@
    * Auto detect xml in "custom text export" - thx Doug
    * Up to 3 secs "min display time" in "Apply duration limits" - thx Rudy
    * Install Add more video files to "SupportedTypes" - thx xylographe
+   * Add "Collapse" context menu for "shortcuts treeview"
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix time code in format .sif - thx Milenko
@@ -41,6 +41,11 @@
    * Fix top alignment in format "SMPTE-TT 2052" - thx Flavia Rezende
    * Fix crash in "fix Spanish inversion marks" - thx Lokotito
    * Fix for Blu-ray sup file end time - thx mgutt
+   * Fix drag'n'drop after translation mode - thx Sopor
+   * Fix for shortcut "Open original" - thx OmrSi
+   * Fix gap after "Set start and off-set the rest" - thx Flitskikker
+   * Fix add space with single music note in italic - thx btsix
+   * Fix some spelling mistakes in Hungarian - thx jtotht
 
 
 3.5.13 (20th January 2020)
