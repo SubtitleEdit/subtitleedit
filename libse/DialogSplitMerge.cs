@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Core
             var pre = GetStartTags(input);
             var s = input.Remove(0, pre.Length);
 
-            if (!s.TrimStart().StartsWith(GetDashChar()) || !s.TrimStart().StartsWith(GetAlternateDashChar()))
+            if (!s.TrimStart().StartsWith(GetDashChar()) && !s.TrimStart().StartsWith(GetAlternateDashChar()))
             {
                 return input;
             }
