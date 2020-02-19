@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds;
         private Timer _timerDoSyntaxColoring = new Timer();
-        private Timer _timerAutoBackup = new Timer();
+        private Timer _timerAutoBackup;
         private Timer _timerClearStatus = new Timer();
         private string _textAutoBackup;
         private string _textAutoBackupOriginal;
@@ -4541,6 +4541,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
+                _timerAutoBackup = _timerAutoBackup ?? new Timer();
                 _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
                 _timerAutoBackup.Start();
             }
@@ -18885,9 +18886,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
-            _timerAutoBackup.Tick += TimerAutoBackupTick;
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
+                _timerAutoBackup = new Timer();
+                _timerAutoBackup.Tick += TimerAutoBackupTick;
                 _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
                 _timerAutoBackup.Start();
             }
