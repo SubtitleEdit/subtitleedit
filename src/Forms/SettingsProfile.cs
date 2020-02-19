@@ -191,25 +191,8 @@ namespace Nikse.SubtitleEdit.Forms
             RulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             RulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
-            RulesProfiles[idx].DialogStyle = GetDialogStyle();
+            RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             UpdateRulesProfilesLine(idx);
-        }
-
-        private DialogType GetDialogStyle()
-        {
-            if (comboBoxDialogStyle.SelectedIndex == 1)
-            {
-                return DialogType.DashBothLinesWithoutSpace;
-            }
-            if (comboBoxDialogStyle.SelectedIndex == 2)
-            {
-                return DialogType.DashSecondLineWithSpace;
-            }
-            if (comboBoxDialogStyle.SelectedIndex == 3)
-            {
-                return DialogType.DashSecondLineWithoutSpace;
-            }
-            return DialogType.DashBothLinesWithSpace;
         }
 
         private void listViewProfiles_SelectedIndexChanged(object sender, EventArgs e)

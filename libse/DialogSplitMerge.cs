@@ -279,6 +279,20 @@ namespace Nikse.SubtitleEdit.Core
             return pre + s.TrimStart().TrimStart(GetDashChar(), GetAlternateDashChar()).TrimStart();
         }
 
+        public static DialogType GetDialogStyleFromIndex(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return DialogType.DashBothLinesWithoutSpace;
+                case 2:
+                    return DialogType.DashSecondLineWithSpace;
+                case 3:
+                    return DialogType.DashSecondLineWithoutSpace;
+                default:
+                    return DialogType.DashBothLinesWithSpace;
+            }
+        }
 
         private static string GetStartTags(string input)
         {
