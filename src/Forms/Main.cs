@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds;
         private Timer _timerDoSyntaxColoring = new Timer();
-        private Timer _timerAutoBackup = new Timer();
+        private Timer _timerAutoBackup;
         private Timer _timerClearStatus = new Timer();
         private string _textAutoBackup;
         private string _textAutoBackupOriginal;
@@ -4527,8 +4527,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetShortcuts();
 
-            _timerAutoBackup.Stop();
-
             CheckAndGetNewlyDownloadedMpvDlls();
 
             if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null ||
@@ -4539,11 +4537,7 @@ namespace Nikse.SubtitleEdit.Forms
                 OpenVideo(vfn);
             }
 
-            if (Configuration.Settings.General.AutoBackupSeconds > 0)
-            {
-                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoBackup.Start();
-            }
+            StartOrStopAutoBackup();
 
             SetTitle();
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
@@ -18982,6 +18976,18 @@ namespace Nikse.SubtitleEdit.Forms
             GoBackSeconds(-(double)numericUpDownSecAdjust1.Value);
         }
 
+        private void StartOrStopAutoBackup()
+        {
+            _timerAutoBackup?.Dispose();
+            if (Configuration.Settings.General.AutoBackupSeconds > 0)
+            {
+                _timerAutoBackup = new Timer();
+                _timerAutoBackup.Tick += TimerAutoBackupTick;
+                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoBackup.Start();
+            }
+        }
+
         private void Main_Shown(object sender, EventArgs e)
         {
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
@@ -18990,12 +18996,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
-            _timerAutoBackup.Tick += TimerAutoBackupTick;
-            if (Configuration.Settings.General.AutoBackupSeconds > 0)
-            {
-                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoBackup.Start();
-            }
+            StartOrStopAutoBackup();
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUndocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUndocked");
