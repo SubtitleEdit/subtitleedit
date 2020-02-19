@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     sb.Append(",");
                 }
-                sb.Append("{\"name\":" + Json.EncodeJsonText(p.Name) + "," +
+                sb.Append("{\"name\":\"" + Json.EncodeJsonText(p.Name) + "\", " +
                           "\"maxNumberOfLines\":\"" + p.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"cpsIncludesSpace\":\"" + p.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"mergeLinesShorterThan\":\"" + p.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture) + "\"," +
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core
                           "\"subtitleMaximumDisplayMilliseconds\":\"" + p.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"subtitleMaximumWordsPerMinute\":\"" + p.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"subtitleMinimumDisplayMilliseconds\":\"" + p.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture) + "\"," +
-                          "\"subtitleOptimalCharactersPerSeconds\":\"" + p.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture) + "\"" +
+                          "\"subtitleOptimalCharactersPerSeconds\":\"" + p.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture) + "\"," +
                           "\"dialogStyle\":\"" + p.DialogStyle + "\"" +
                           "}");
             }
