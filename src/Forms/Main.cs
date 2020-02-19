@@ -1379,7 +1379,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
             adjustDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.AdjustDisplayDuration;
             toolStripMenuItemApplyDurationLimits.Text = _language.Menu.Tools.ApplyDurationLimits;
-            toolStripMenuItemDurationBridgeGaps.Text = _language.Menu.Tools.DurationsBridgeGap;
+            toolStripMenuItemSubtitlesBridgeGaps.Text = _language.Menu.Tools.SubtitlesBridgeGaps;
             fixToolStripMenuItem.Text = _language.Menu.Tools.FixCommonErrors;
             startNumberingFromToolStripMenuItem.Text = _language.Menu.Tools.StartNumberingFrom;
             removeTextForHearImpairedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
@@ -19148,7 +19148,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
             toolStripMenuItemMakeEmptyFromCurrent.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
             toolStripMenuItemAutoSplitLongLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
-            toolStripMenuItemDurationBridgeGaps.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap);
+            toolStripMenuItemSubtitlesBridgeGaps.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap);
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
             startNumberingFromToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
             removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
@@ -25097,7 +25097,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemDurationBridgeGaps_Click(object sender, EventArgs e)
+        private void toolStripMenuItemBridgeGapsBetweenSubtitles_Click(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)
             {

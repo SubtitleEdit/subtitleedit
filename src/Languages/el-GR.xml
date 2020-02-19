@@ -877,7 +877,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Εργαλεία</Title>
         <AdjustDisplayDuration>&amp;Προσαρμογή διαρκειών...</AdjustDisplayDuration>
         <ApplyDurationLimits>Εφαρμογή ορίων διάρκειας...</ApplyDurationLimits>
-        <DurationsBridgeGap>Ένωση κενών στις διάρκειες...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Ένωση κενών στις διάρκειες...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Επιδιόρθωση κοινών σφαλμάτων...</FixCommonErrors>
         <StartNumberingFrom>Έναρξη αρίθμησης από...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για άτομα με προβλήματα ακοής...</RemoveTextForHearingImpaired>

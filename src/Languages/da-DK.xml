@@ -342,7 +342,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Generate>Generer</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Lap små huller i varigheder</Title>
+    <Title>Lap små huller mellem tekster</Title>
     <GapsBridgedX>antal små huller lukket: {0}</GapsBridgedX>
     <GapToNext>Gap til næste</GapToNext>
     <BridgeGapsSmallerThanXPart1>Lap huller mindre end</BridgeGapsSmallerThanXPart1>
@@ -1024,7 +1024,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <Title>Værktøj</Title>
         <AdjustDisplayDuration>&amp;Juster visningstider...</AdjustDisplayDuration>
         <ApplyDurationLimits>Overhold visnings-grænser...</ApplyDurationLimits>
-        <DurationsBridgeGap>Lap huller i varigheder...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Lap huller mellem tekster...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Ret almindelige fejl...</FixCommonErrors>
         <StartNumberingFrom>Begynd nummerering fra...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern tekst for hørehæmmede...</RemoveTextForHearingImpaired>

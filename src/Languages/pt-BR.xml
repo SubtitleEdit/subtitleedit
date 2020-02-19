@@ -1024,7 +1024,7 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
-        <DurationsBridgeGap>Ligar intervalo em durações...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Ligar intervalo em durações...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeração por...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>

@@ -1022,7 +1022,7 @@ Command line: {1} {2}
         <Title>工具(&amp;T)</Title>
         <AdjustDisplayDuration>调整时长(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>应用时长限制...</ApplyDurationLimits>
-        <DurationsBridgeGap>桥接行间间隔...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>桥接行间间隔...</SubtitlesBridgeGaps>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>

@@ -1381,7 +1381,7 @@
                     public string Title { get; set; }
                     public string AdjustDisplayDuration { get; set; }
                     public string ApplyDurationLimits { get; set; }
-                    public string DurationsBridgeGap { get; set; }
+                    public string SubtitlesBridgeGaps { get; set; }
                     public string FixCommonErrors { get; set; }
                     public string StartNumberingFrom { get; set; }
                     public string RemoveTextForHearingImpaired { get; set; }

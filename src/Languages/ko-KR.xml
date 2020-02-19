@@ -1023,7 +1023,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <Title>도구</Title>
         <AdjustDisplayDuration>표시시간 조정...</AdjustDisplayDuration>
         <ApplyDurationLimits>최대/최소 표시시간 설정...</ApplyDurationLimits>
-        <DurationsBridgeGap>작은 시간 간격 메우기</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>작은 시간 간격 메우기</SubtitlesBridgeGaps>
         <FixCommonErrors>일반적인 오류 수정...</FixCommonErrors>
         <StartNumberingFrom>자막 시작 번호 다시 매기기</StartNumberingFrom>
         <RemoveTextForHearingImpaired>청각 장애인용 텍스트 삭제...</RemoveTextForHearingImpaired>
