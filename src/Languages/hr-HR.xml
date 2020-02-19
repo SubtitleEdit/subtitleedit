@@ -969,7 +969,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <Title>&amp;Alati</Title>
         <AdjustDisplayDuration>&amp;Prilagodi trajanje…</AdjustDisplayDuration>
         <ApplyDurationLimits>Ograniči trajanje...</ApplyDurationLimits>
-        <DurationsBridgeGap>Ukupno vrijeme premošćivanja</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Ukupno vrijeme premošćivanja</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Ispravi česte pogreške…</FixCommonErrors>
         <StartNumberingFrom>Počni &amp;nabrajanje…</StartNumberingFrom>
         <RemoveTextForHearingImpaired>&amp;Ukloni tekst za gluhe…</RemoveTextForHearingImpaired>

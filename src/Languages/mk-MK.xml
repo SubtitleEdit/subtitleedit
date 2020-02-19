@@ -1020,7 +1020,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Алатки</Title>
         <AdjustDisplayDuration>Прилагоди траења...</AdjustDisplayDuration>
         <ApplyDurationLimits>Прилагоди лимити на траења...</ApplyDurationLimits>
-        <DurationsBridgeGap>Поврзи процепи во траења...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Поврзи процепи во траења...</SubtitlesBridgeGaps>
         <FixCommonErrors>Поправи чести грешки...</FixCommonErrors>
         <StartNumberingFrom>Нумерирај...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Отстрани текст за глуви...</RemoveTextForHearingImpaired>

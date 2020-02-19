@@ -972,7 +972,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <Title>Araçlar</Title>
         <AdjustDisplayDuration>&amp;Süreyi ayarla...</AdjustDisplayDuration>
         <ApplyDurationLimits>Süre limitlerini uygula...</ApplyDurationLimits>
-        <DurationsBridgeGap>Süreler içinde boşluk köprüle...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Süreler içinde boşluk köprüle...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Yaygın hataları düzelt...</FixCommonErrors>
         <StartNumberingFrom>Yeniden numaralandır...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>İşitme engelliler için metni kaldır...</RemoveTextForHearingImpaired>

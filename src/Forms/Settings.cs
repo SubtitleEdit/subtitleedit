@@ -1069,7 +1069,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var toolsNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
-            AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.DurationsBridgeGap, nameof(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap), true);
+            AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.SubtitlesBridgeGaps, nameof(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors, nameof(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom, nameof(Configuration.Settings.Shortcuts.MainToolsRenumber), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired, nameof(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI), true);

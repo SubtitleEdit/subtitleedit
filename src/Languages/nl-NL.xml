@@ -1026,7 +1026,7 @@ Open “Instellingen -&gt; Voorkeuren -&gt; Extra” voor meer informatie.</Goog
         <Title>E&amp;xtra</Title>
         <AdjustDisplayDuration>&amp;Tĳdsduur aanpassen...</AdjustDisplayDuration>
         <ApplyDurationLimits>Tĳdsduur&amp;limieten toepassen</ApplyDurationLimits>
-        <DurationsBridgeGap>Tĳdsduur&amp;hiaten overbruggen...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Tĳdsduur&amp;hiaten overbruggen...</SubtitlesBridgeGaps>
         <FixCommonErrors>Gangbare &amp;fouten corrigeren...</FixCommonErrors>
         <StartNumberingFrom>Beginnen met nummeren vanaf...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Tekst voor slechthorenden verwĳderen...</RemoveTextForHearingImpaired>

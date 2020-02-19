@@ -851,7 +851,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <Title>Orodja</Title>
         <AdjustDisplayDuration>&amp;Prilagodi trajanje...</AdjustDisplayDuration>
         <ApplyDurationLimits>Uporabi omejitve trajanja...</ApplyDurationLimits>
-        <DurationsBridgeGap>Poveži intervale pri trajanju...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Poveži intervale pri trajanju...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Popravi pogoste napake...</FixCommonErrors>
         <StartNumberingFrom>Ponovno oštevilči...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Odstrani besedilo za slušno prizadete...</RemoveTextForHearingImpaired>

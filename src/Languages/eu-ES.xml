@@ -1023,7 +1023,7 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sart
         <Title>&amp;Tresnak</Title>
         <AdjustDisplayDuration>&amp;Zehaztu iraupenak...</AdjustDisplayDuration>
         <ApplyDurationLimits>&amp;Ezarri iraupen mugak...</ApplyDurationLimits>
-        <DurationsBridgeGap>Zub&amp;itu hutsartea iraupenetan</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Zub&amp;itu hutsartea iraupenetan</SubtitlesBridgeGaps>
         <FixCommonErrors>Z&amp;uzendu akats arruntak...</FixCommonErrors>
         <StartNumberingFrom>&amp;Hasi zenbakitzea hemendik...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>&amp;Kendu gorrentzako idatzia...</RemoveTextForHearingImpaired>

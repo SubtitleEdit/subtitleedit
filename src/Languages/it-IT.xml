@@ -922,7 +922,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
         <Title>Strumenti</Title>
         <AdjustDisplayDuration>Regol&amp;a durate...</AdjustDisplayDuration>
         <ApplyDurationLimits>Applica limiti durate...</ApplyDurationLimits>
-        <DurationsBridgeGap>Riempi spazi vuoti tra le durate...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Riempi spazi vuoti tra le durate...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Correggi errori comuni...</FixCommonErrors>
         <StartNumberingFrom>Inizia numerazione da...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Elimina testo per non udenti...</RemoveTextForHearingImpaired>

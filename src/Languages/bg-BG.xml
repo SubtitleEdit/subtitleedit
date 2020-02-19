@@ -1031,7 +1031,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Инструменти</Title>
         <AdjustDisplayDuration>Настройка на времетраенето...</AdjustDisplayDuration>
         <ApplyDurationLimits>Прилагане на ограничения във времетраенето...</ApplyDurationLimits>
-        <DurationsBridgeGap>Преодоляване на различия във времетраенето...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Преодоляване на различия във времетраенето...</SubtitlesBridgeGaps>
         <FixCommonErrors>Поправяне на грешки...</FixCommonErrors>
         <StartNumberingFrom>Начално номериране...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Изтриване на текст за увредени със слуха...</RemoveTextForHearingImpaired>
