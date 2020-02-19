@@ -921,7 +921,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <Title>工具</Title>
         <AdjustDisplayDuration>調整持續時間(&amp;A)...</AdjustDisplayDuration>
         <ApplyDurationLimits>套用持續時間限制...</ApplyDurationLimits>
-        <DurationsBridgeGap>橋接持續時間間的間隔...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>橋接持續時間間的間隔...</SubtitlesBridgeGaps>
         <FixCommonErrors>修復一般錯誤(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>重新編號...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>移除妨礙聽覺的文字...</RemoveTextForHearingImpaired>

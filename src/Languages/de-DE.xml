@@ -1008,7 +1008,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <Title>Werkzeuge</Title>
         <AdjustDisplayDuration>&amp;Längen anpassen...</AdjustDisplayDuration>
         <ApplyDurationLimits>Längenbegrenzungen anwenden...</ApplyDurationLimits>
-        <DurationsBridgeGap>Kurze Zeitabstände überbrücken...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Kurze Zeitabstände überbrücken...</SubtitlesBridgeGaps>
         <FixCommonErrors>Häufige &amp;Fehler korrigieren...</FixCommonErrors>
         <StartNumberingFrom>Nummerierung beginnen ab...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Untertitel für Hörgeschädigte entfernen...</RemoveTextForHearingImpaired>

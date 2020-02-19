@@ -1006,7 +1006,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <Title>Eszközök</Title>
         <AdjustDisplayDuration>Időtartam beállítások...</AdjustDisplayDuration>
         <ApplyDurationLimits>Időtartam korlátozások alkalmazása...</ApplyDurationLimits>
-        <DurationsBridgeGap>Szünet áthidalása az időtartamokban...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Szünet áthidalása az időtartamokban...</SubtitlesBridgeGaps>
         <FixCommonErrors>Gyakori hibák javítása...</FixCommonErrors>
         <StartNumberingFrom>Átszámozás...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Hallássérülteknek szánt szöveg eltávolítása...</RemoveTextForHearingImpaired>

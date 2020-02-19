@@ -982,7 +982,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
         <Title>Alat</Title>
         <AdjustDisplayDuration>&amp;Sesuaikan durasi...</AdjustDisplayDuration>
         <ApplyDurationLimits>Terapkan batas durasi...</ApplyDurationLimits>
-        <DurationsBridgeGap>Celah jembatan dlm durasi...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Celah jembatan dlm durasi...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Perbaiki eror umum...</FixCommonErrors>
         <StartNumberingFrom>Nomori ulang...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Buang teks untuk tuna rungu...</RemoveTextForHearingImpaired>

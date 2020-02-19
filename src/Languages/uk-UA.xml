@@ -933,7 +933,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Інструменти</Title>
         <AdjustDisplayDuration>&amp;Змінити тривалості...</AdjustDisplayDuration>
         <ApplyDurationLimits>Застосувати обмеження тривалостей...</ApplyDurationLimits>
-        <DurationsBridgeGap>Ліквідувати розриви між субтитрами...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Ліквідувати розриви між субтитрами...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Виправити типові помилки...</FixCommonErrors>
         <StartNumberingFrom>Перенумерувати...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Видалити текст для людей із вадами слуху...</RemoveTextForHearingImpaired>

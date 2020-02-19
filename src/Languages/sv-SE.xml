@@ -1009,7 +1009,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <Title>Verktyg</Title>
         <AdjustDisplayDuration>Justera tidsintervaller...</AdjustDisplayDuration>
         <ApplyDurationLimits>Verkställ tidsintervallgränser...</ApplyDurationLimits>
-        <DurationsBridgeGap>Brygga luckor i tidsintervaller...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Brygga luckor i tidsintervaller...</SubtitlesBridgeGaps>
         <FixCommonErrors>Fixa vanliga fel...</FixCommonErrors>
         <StartNumberingFrom>Omnumrera...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Ta bort text för hörselskadade...</RemoveTextForHearingImpaired>

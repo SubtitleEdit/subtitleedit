@@ -1014,7 +1014,7 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
         <Title>Alati</Title>
         <AdjustDisplayDuration>&amp;Podesi trajanje...</AdjustDisplayDuration>
         <ApplyDurationLimits>Ograniči trajanje...</ApplyDurationLimits>
-        <DurationsBridgeGap>Premosti praznine...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Premosti praznine...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Ispravi česte greške...</FixCommonErrors>
         <StartNumberingFrom>Počni numerisanje od...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Ukloni tekst za gluve...</RemoveTextForHearingImpaired>

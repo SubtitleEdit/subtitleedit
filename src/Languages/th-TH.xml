@@ -880,7 +880,7 @@
         <Title>เครื่องมือ</Title>
         <AdjustDisplayDuration>&amp;ปรับระยะเวลา...</AdjustDisplayDuration>
         <ApplyDurationLimits>จำกัดระยะเวลา...</ApplyDurationLimits>
-        <DurationsBridgeGap>เติมช่องว่างในระยะเวลา...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>เติมช่องว่างในระยะเวลา...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;แก้ข้อผิดพลาดทั่วไป...</FixCommonErrors>
         <StartNumberingFrom>เรียงลำดับใหม่...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>ลบข้อความช่วยฟัง...</RemoveTextForHearingImpaired>

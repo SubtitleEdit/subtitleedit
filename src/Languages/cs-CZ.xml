@@ -1005,7 +1005,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <Title>Nástroje</Title>
         <AdjustDisplayDuration>&amp;Upravit trvání...</AdjustDisplayDuration>
         <ApplyDurationLimits>Použít limity trvání...</ApplyDurationLimits>
-        <DurationsBridgeGap>Překlenout mezery v trvání...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Překlenout mezery v trvání...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Opravit běžné chyby...</FixCommonErrors>
         <StartNumberingFrom>Přečíslovat...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Odebrat text pro sluchově postižené...</RemoveTextForHearingImpaired>
