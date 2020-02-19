@@ -32,6 +32,8 @@
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.labelDialogStyle = new System.Windows.Forms.Label();
+            this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
             this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelOptimalCharsPerSecond = new System.Windows.Forms.Label();
             this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
@@ -66,8 +68,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
-            this.labelDialogStyle = new System.Windows.Forms.Label();
-            this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -151,6 +151,30 @@
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // labelDialogStyle
+            // 
+            this.labelDialogStyle.AutoSize = true;
+            this.labelDialogStyle.Location = new System.Drawing.Point(6, 260);
+            this.labelDialogStyle.Name = "labelDialogStyle";
+            this.labelDialogStyle.Size = new System.Drawing.Size(61, 13);
+            this.labelDialogStyle.TabIndex = 193;
+            this.labelDialogStyle.Text = "Dialog style";
+            // 
+            // comboBoxDialogStyle
+            // 
+            this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDialogStyle.FormattingEnabled = true;
+            this.comboBoxDialogStyle.Items.AddRange(new object[] {
+            "Dash both lines with space",
+            "Dash both lines without space",
+            "Dash second line with space",
+            "Dash second line without space"});
+            this.comboBoxDialogStyle.Location = new System.Drawing.Point(73, 257);
+            this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
+            this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
+            this.comboBoxDialogStyle.TabIndex = 194;
+            this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // checkBoxCpsIncludeWhiteSpace
             // 
@@ -578,29 +602,6 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            // 
-            // labelDialogStyle
-            // 
-            this.labelDialogStyle.AutoSize = true;
-            this.labelDialogStyle.Location = new System.Drawing.Point(6, 260);
-            this.labelDialogStyle.Name = "labelDialogStyle";
-            this.labelDialogStyle.Size = new System.Drawing.Size(61, 13);
-            this.labelDialogStyle.TabIndex = 193;
-            this.labelDialogStyle.Text = "Dialog style";
-            // 
-            // comboBoxDialogStyle
-            // 
-            this.comboBoxDialogStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDialogStyle.FormattingEnabled = true;
-            this.comboBoxDialogStyle.Items.AddRange(new object[] {
-            "Dash both lines with space",
-            "Dash both lines without space",
-            "Dash second line with space",
-            "Dash second line without space"});
-            this.comboBoxDialogStyle.Location = new System.Drawing.Point(73, 257);
-            this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
-            this.comboBoxDialogStyle.Size = new System.Drawing.Size(203, 21);
-            this.comboBoxDialogStyle.TabIndex = 194;
             // 
             // SettingsProfile
             // 
