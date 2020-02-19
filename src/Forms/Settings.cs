@@ -1660,7 +1660,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
             }
 
-            gs.DialogStyle = GetDialogStyle();
+            gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -3168,24 +3168,7 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].SubtitleMaximumWordsPerMinute = (int)numericUpDownMaxWordsMin.Value;
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
-            _rulesProfiles[idx].DialogStyle = GetDialogStyle();
-        }
-
-        private DialogType GetDialogStyle()
-        {
-            if (comboBoxDialogStyle.SelectedIndex == 1)
-            {
-                return DialogType.DashBothLinesWithoutSpace;
-            }
-            if (comboBoxDialogStyle.SelectedIndex == 2)
-            {
-                return DialogType.DashSecondLineWithSpace;
-            }
-            if (comboBoxDialogStyle.SelectedIndex == 3)
-            {
-                return DialogType.DashSecondLineWithoutSpace;
-            }
-            return DialogType.DashBothLinesWithSpace;
+            _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
