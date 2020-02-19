@@ -1027,7 +1027,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar as durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
-        <DurationsBridgeGap>Unir os intervalos nas durações...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Unir os intervalos nas durações...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>

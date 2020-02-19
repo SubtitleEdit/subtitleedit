@@ -346,7 +346,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Generate>Generate</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Bridge small gaps in durations</Title>
+    <Title>Bridge small gaps between subtitles</Title>
     <GapsBridgedX>Number of small gaps bridged: {0}</GapsBridgedX>
     <GapToNext>Gap to next in seconds</GapToNext>
     <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
@@ -1028,7 +1028,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <Title>Tools</Title>
         <AdjustDisplayDuration>&amp;Adjust durations...</AdjustDisplayDuration>
         <ApplyDurationLimits>Apply duration limits...</ApplyDurationLimits>
-        <DurationsBridgeGap>Bridge gap in durations...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Bridge gaps between subtitles...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Fix common errors...</FixCommonErrors>
         <StartNumberingFrom>Renumber...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remove text for hearing impaired...</RemoveTextForHearingImpaired>
@@ -1039,7 +1039,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <MergeDuplicateText>Merge lines with same text...</MergeDuplicateText>
         <MergeSameTimeCodes>Merge lines with same time codes...</MergeSameTimeCodes>
         <SplitLongLines>Split long lines...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Minimum display time between subtitles...</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Apply minimum gap between subtitles...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sort by</SortBy>
         <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
         <Number>Number</Number>
@@ -1748,7 +1748,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MaxVolume>Volume must be below</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Set minimum display time between subtitles</Title>
+    <Title>Apply minimum gap between subtitles</Title>
     <PreviewLinesModifiedX>Preview - subtitles modified: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Show only modified lines</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconds between lines</MinimumMillisecondsBetweenParagraphs>

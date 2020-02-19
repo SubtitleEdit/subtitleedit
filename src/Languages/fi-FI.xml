@@ -1019,7 +1019,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <Title>Työkalut</Title>
         <AdjustDisplayDuration>Säädä kestoja</AdjustDisplayDuration>
         <ApplyDurationLimits>Käytä keston rajoja</ApplyDurationLimits>
-        <DurationsBridgeGap>Siltaa kestojen välit</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Siltaa kestojen välit</SubtitlesBridgeGaps>
         <FixCommonErrors>Korjaa tavallisimmat virheet</FixCommonErrors>
         <StartNumberingFrom>Aloita numerointi</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Poista kuulovammaisille tarkoitettu teksti</RemoveTextForHearingImpaired>

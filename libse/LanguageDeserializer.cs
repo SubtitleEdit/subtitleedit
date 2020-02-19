@@ -3520,8 +3520,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Tools/ApplyDurationLimits":
                     language.Main.Menu.Tools.ApplyDurationLimits = reader.Value;
                     break;
-                case "Main/Menu/Tools/DurationsBridgeGap":
-                    language.Main.Menu.Tools.DurationsBridgeGap = reader.Value;
+                case "Main/Menu/Tools/SubtitlesBridgeGaps":
+                    language.Main.Menu.Tools.SubtitlesBridgeGaps = reader.Value;
                     break;
                 case "Main/Menu/Tools/FixCommonErrors":
                     language.Main.Menu.Tools.FixCommonErrors = reader.Value;

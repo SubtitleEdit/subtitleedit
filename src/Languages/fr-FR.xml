@@ -992,7 +992,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <Title>Ou&amp;tils</Title>
         <AdjustDisplayDuration>Ajuster &amp;durées...</AdjustDisplayDuration>
         <ApplyDurationLimits>Appliquer limites de durée...</ApplyDurationLimits>
-        <DurationsBridgeGap>Combler l'écart entre les durées...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Combler l'écart entre les durées...</SubtitlesBridgeGaps>
         <FixCommonErrors>Corriger les &amp;erreurs fréquentes...</FixCommonErrors>
         <StartNumberingFrom>Nouvelle &amp;numérotation...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Supprimer le texte pour &amp;malentendants...</RemoveTextForHearingImpaired>

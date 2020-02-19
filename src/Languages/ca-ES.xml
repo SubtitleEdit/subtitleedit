@@ -999,7 +999,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Eines</Title>
         <AdjustDisplayDuration>&amp;Ajustament durades</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplica límits durada</ApplyDurationLimits>
-        <DurationsBridgeGap>Uneix buits en durades</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Uneix buits en durades</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Fixa errors comuns</FixCommonErrors>
         <StartNumberingFrom>Inicia nombrat des de...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Suprimeix text pels sords...</RemoveTextForHearingImpaired>

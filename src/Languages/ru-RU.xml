@@ -1036,7 +1036,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Title>Инструменты</Title>
         <AdjustDisplayDuration>Настройка продолжительности...</AdjustDisplayDuration>
         <ApplyDurationLimits>Ограничить продолжительность...</ApplyDurationLimits>
-        <DurationsBridgeGap>Ликвидировать разрывы...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Ликвидировать разрывы...</SubtitlesBridgeGaps>
         <FixCommonErrors>Исправить ошибки...</FixCommonErrors>
         <StartNumberingFrom>Перенумеровать строки...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Удалить текст для людей с нарушением слуха...</RemoveTextForHearingImpaired>

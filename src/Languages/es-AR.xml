@@ -1017,7 +1017,7 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
         <Title>Herramientas</Title>
         <AdjustDisplayDuration>Ajustar duraciones...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar límites de duración...</ApplyDurationLimits>
-        <DurationsBridgeGap>Brecha de puente en duraciones...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Brecha de puente en duraciones...</SubtitlesBridgeGaps>
         <FixCommonErrors>Corregir Errores Comunes...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeración desde...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para sordos...</RemoveTextForHearingImpaired>

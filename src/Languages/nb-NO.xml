@@ -941,7 +941,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
         <Title>Verktøy</Title>
         <AdjustDisplayDuration>&amp;Juster varigheter...</AdjustDisplayDuration>
         <ApplyDurationLimits>Legg til tidsgrenser...</ApplyDurationLimits>
-        <DurationsBridgeGap>Bind over hull i varigheter...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Bind over hull i varigheter...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Korriger vanlige feil...</FixCommonErrors>
         <StartNumberingFrom>Ny nummerering...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Fjern teksting for hørselshemmede...</RemoveTextForHearingImpaired>

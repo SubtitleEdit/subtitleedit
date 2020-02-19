@@ -1026,7 +1026,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <Title>Narzędzia</Title>
         <AdjustDisplayDuration>&amp;Dostosuj czasy trwania...</AdjustDisplayDuration>
         <ApplyDurationLimits>Zastosuj limity czasu trwania...</ApplyDurationLimits>
-        <DurationsBridgeGap>Zmostkuj przerwy w czasach trwania...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Zmostkuj przerwy w czasach trwania...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Popraw najczęstsze błędy...</FixCommonErrors>
         <StartNumberingFrom>Zmień numerację...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Usuń tekst dla niedosłyszących...</RemoveTextForHearingImpaired>

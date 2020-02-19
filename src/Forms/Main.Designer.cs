@@ -169,7 +169,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemApplyDurationLimits = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDurationBridgeGaps = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSubtitlesBridgeGaps = new System.Windows.Forms.ToolStripMenuItem();
             this.fixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTextForHearImpairedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1660,7 +1660,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.adjustDisplayTimeToolStripMenuItem,
             this.toolStripMenuItemApplyDurationLimits,
-            this.toolStripMenuItemDurationBridgeGaps,
+            this.toolStripMenuItemSubtitlesBridgeGaps,
+            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
             this.fixToolStripMenuItem,
             this.startNumberingFromToolStripMenuItem,
             this.removeTextForHearImpairedToolStripMenuItem,
@@ -1669,7 +1670,6 @@
             this.toolStripMenuItemMergeDuplicateText,
             this.toolStripMenuItemMergeLinesWithSameTimeCodes,
             this.toolStripMenuItemAutoSplitLongLines,
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
             this.toolStripMenuItemSortBy,
             this.netflixQualityCheckToolStripMenuItem,
             this.toolStripSeparator23,
@@ -1700,12 +1700,12 @@
             this.toolStripMenuItemApplyDurationLimits.Text = "Apply duration limits...";
             this.toolStripMenuItemApplyDurationLimits.Click += new System.EventHandler(this.toolStripMenuItemApplyDisplayTimeLimits_Click);
             // 
-            // toolStripMenuItemDurationBridgeGaps
+            // toolStripMenuItemSubtitlesBridgeGaps
             // 
-            this.toolStripMenuItemDurationBridgeGaps.Name = "toolStripMenuItemDurationBridgeGaps";
-            this.toolStripMenuItemDurationBridgeGaps.Size = new System.Drawing.Size(338, 22);
-            this.toolStripMenuItemDurationBridgeGaps.Text = "Bridge gaps in durations...";
-            this.toolStripMenuItemDurationBridgeGaps.Click += new System.EventHandler(this.toolStripMenuItemDurationBridgeGaps_Click);
+            this.toolStripMenuItemSubtitlesBridgeGaps.Name = "toolStripMenuItemSubtitlesBridgeGaps";
+            this.toolStripMenuItemSubtitlesBridgeGaps.Size = new System.Drawing.Size(338, 22);
+            this.toolStripMenuItemSubtitlesBridgeGaps.Text = "Bridge gap between subtitles...";
+            this.toolStripMenuItemSubtitlesBridgeGaps.Click += new System.EventHandler(this.toolStripMenuItemBridgeGapsBetweenSubtitles_Click);
             // 
             // fixToolStripMenuItem
             // 
@@ -1775,7 +1775,7 @@
             // 
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Name = "setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem";
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Size = new System.Drawing.Size(338, 22);
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = "Minimum display time between paragraphs...";
+            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = "Apply mininum gap between subtitles...";
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Click += new System.EventHandler(this.SetMinimalDisplayTimeDifferenceToolStripMenuItemClick);
             // 
             // toolStripMenuItemSortBy
@@ -5407,7 +5407,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMeasurementConverter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportSceneChanges;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveSceneChanges;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDurationBridgeGaps;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubtitlesBridgeGaps;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenDvd;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpProperties;
         private System.Windows.Forms.ToolStripMenuItem styleToolStripMenuItem;

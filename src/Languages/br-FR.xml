@@ -941,7 +941,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
         <Title>&amp;Ostilhoù</Title>
         <AdjustDisplayDuration>Keidañ &amp;ar padelezhioù...</AdjustDisplayDuration>
         <ApplyDurationLimits>Arloañ bevennoù ar padelezh...</ApplyDurationLimits>
-        <DurationsBridgeGap>Leuniañ an distok etre ar padelezhioù...</DurationsBridgeGap>
+        <SubtitlesBridgeGaps>Leuniañ an distok etre ar padelezhioù...</SubtitlesBridgeGaps>
         <FixCommonErrors>Reizhañ ar &amp;fazioù reoliek...</FixCommonErrors>
         <StartNumberingFrom>Niveradur &amp;nevez...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Diverkañ an destenn evit ar re vouzar &amp;...</RemoveTextForHearingImpaired>

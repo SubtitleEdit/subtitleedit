@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Core
 
             DurationsBridgeGaps = new LanguageStructure.DurationsBridgeGaps
             {
-                Title = "Bridge small gaps in durations",
+                Title = "Bridge small gaps between subtitles",
                 GapsBridgedX = "Number of small gaps bridged: {0}",
                 GapToNext = "Gap to next in seconds",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
@@ -1523,7 +1523,7 @@ namespace Nikse.SubtitleEdit.Core
                         Title = "Tools",
                         AdjustDisplayDuration = "&Adjust durations...",
                         ApplyDurationLimits = "Apply duration limits...",
-                        DurationsBridgeGap = "Bridge gap in durations...",
+                        SubtitlesBridgeGaps = "Bridge gaps between subtitles...",
                         FixCommonErrors = "&Fix common errors...",
                         StartNumberingFrom = "Renumber...",
                         RemoveTextForHearingImpaired = "Remove text for hearing impaired...",
@@ -1534,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeDuplicateText = "Merge lines with same text...",
                         MergeSameTimeCodes = "Merge lines with same time codes...",
                         SplitLongLines = "Split long lines...",
-                        MinimumDisplayTimeBetweenParagraphs = "Minimum display time between subtitles...",
+                        MinimumDisplayTimeBetweenParagraphs = "Apply minimum gap between subtitles...",
                         NetflixQualityCheck = "Netflix quality check...",
                         SortBy = "Sort by",
                         Number = "Number",
@@ -2038,7 +2038,7 @@ can edit in same subtitle file (collaboration)",
 
             SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs
             {
-                Title = "Set minimum display time between subtitles",
+                Title = "Apply minimum gap between subtitles",
                 PreviewLinesModifiedX = "Preview - subtitles modified: {0}",
                 MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between lines",
                 ShowOnlyModifiedLines = "Show only modified lines",
@@ -2986,3 +2986,4 @@ Keep changes?",
 
     }
 }
+
