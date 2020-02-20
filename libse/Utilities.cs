@@ -2076,8 +2076,11 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
-            if (text.Contains("- ") && text.Length > 5)
+            if (text.Contains("-") && !text.StartsWith("--", StringComparison.Ordinal))
             {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                text = dialogHelper.RemoveSpaces(text);
+
                 int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
                 if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
