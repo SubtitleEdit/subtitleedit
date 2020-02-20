@@ -3651,8 +3651,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 SetTitle();
                 MakeHistoryForUndo(_language.Menu.File.SaveAs);
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                Configuration.Settings.Save();
 
                 int index = 0;
                 foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
@@ -3677,6 +3675,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.Save();
+                            UpdateRecentFilesUI();
                         }
 
                         break;
@@ -4127,6 +4128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(_language.BeforeNew);
                 ResetSubtitle(true);
+                Configuration.Settings.RecentFiles.Add(null, null, null);
             }
         }
 
