@@ -3,6 +3,7 @@
 3.5.14 (xth March 2020) BETA
 * NEW:
    * "UTF-8 without BOM" encoding added - thx uckthis
+   * Add "Dialog style" setting - thx OmrSi/Flitskikker
    * Add some support for reading Adobe Premire .prproj files - thx Ariana
    * Add new sub format - thx uckthis
    * Add new sub format - thx Ingo
@@ -28,6 +29,7 @@
    * Up to 3 secs "min display time" in "Apply duration limits" - thx Rudy
    * Install Add more video files to "SupportedTypes" - thx xylographe
    * Add "Collapse" context menu for "shortcuts treeview"
+   * Improve text regarding "gaps between subtitles"
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix time code in format .sif - thx Milenko
@@ -46,6 +48,8 @@
    * Fix gap after "Set start and off-set the rest" - thx Flitskikker
    * Fix add space with single music note in italic - thx btsix
    * Fix some spelling mistakes in Hungarian - thx jtotht
+   * Fix import/export profile - thx Jamakmake
+   * Fix mpv crash/hang after open 4+ videos (again)
 
 
 3.5.13 (20th January 2020)
