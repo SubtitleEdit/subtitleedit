@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixHyphensInDialogs;
+            string fixAction = language.RemoveHyphensSingleLine;
             int iFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
