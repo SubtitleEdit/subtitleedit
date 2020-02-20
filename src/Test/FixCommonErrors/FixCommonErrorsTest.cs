@@ -407,98 +407,9 @@ namespace Test.FixCommonErrors
 
         #endregion Fix Missing Periods At End Of Line
 
-        #region Fix Hyphens (add dash)
 
-        [TestMethod]
-        public void FixHyphensAddDash1()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-            }
-        }
 
-        [TestMethod]
-        public void FixHyphensAddDash2()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "Hi Pete!");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-            }
-        }
 
-        [TestMethod]
-        public void FixHyphensAddDash2Italic()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "<i>- Hi Joe!" + Environment.NewLine + "Hi Pete!</i>");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>- Hi Joe!" + Environment.NewLine + "- Hi Pete!</i>");
-            }
-        }
-
-        [TestMethod]
-        public void FixHyphensAddDash3NoChange()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-            }
-        }
-
-        [TestMethod]
-        public void FixHyphensAddDash4NoChange()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "- Hi!" + Environment.NewLine + "- Hi Pete!");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
-            }
-        }
-
-        [TestMethod]
-        public void FixHyphensAddDashButNotInFirst()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "Five-Both?" + Environment.NewLine + "- T... T... Ten...");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
-            }
-        }
-
-        [TestMethod]
-        public void FixHyphensDontCrash()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                string input = "<i>" + Environment.NewLine + "- So far we don't know</i> <i>much about anything.</i>";
-                InitializeFixCommonErrorsLine(target, input);
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, input);
-            }
-        }
-
-        [TestMethod]
-        public void FixHyphensWithQuotes()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "\"Into The Woods.\"" + Environment.NewLine + "- \"Sweeney Todd.\"");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- \"Into The Woods.\"" + Environment.NewLine + "- \"Sweeney Todd.\"");
-            }
-        }
-
-        #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
 
@@ -1593,7 +1504,7 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
-                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
             }
         }
@@ -1604,7 +1515,7 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
-                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
             }
         }
@@ -1615,7 +1526,7 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
-                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Mm-hmm.");
             }
         }
@@ -1626,7 +1537,7 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
-                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "I-I never thought of that.");
             }
         }
@@ -1637,83 +1548,8 @@ namespace Test.FixCommonErrors
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
-                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                new FixHyphensRemoveDashSingleLine().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Uh-huh.");
-            }
-        }
-
-        [TestMethod]
-        public void FixDashWithPreviousEndsWithDashDash()
-        {
-            var subtitle = new Subtitle();
-            const string t1 = "Hey--";
-            string t2 = "- oh, no, no, no, you're gonna" + Environment.NewLine + "need to add the mattress,";
-            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
-            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
-            {
-                var result = Helper.FixHyphensRemove(subtitle, 1);
-                string target = "oh, no, no, no, you're gonna" + Environment.NewLine + "need to add the mattress,";
-                Assert.AreEqual(target, result);
-            }
-        }
-
-        [TestMethod]
-        public void FixDashDontRemoveWhiteSpaceWithItalic()
-        {
-            var subtitle = new Subtitle();
-            const string t1 = "Hey!";
-            const string t2 = "- PREVIOUSLY ON<I> HAVEN...</I>";
-            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
-            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
-            {
-                var result = Helper.FixHyphensRemove(subtitle, 1);
-                const string target = "PREVIOUSLY ON<I> HAVEN...</I>";
-                Assert.AreEqual(target, result);
-            }
-        }
-
-        [TestMethod]
-        public void FixDashItalic()
-        {
-            var subtitle = new Subtitle();
-            const string t1 = "Hey!";
-            const string t2 = "<i>- PREVIOUSLY ON HAVEN...</i>";
-            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
-            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
-            {
-                var result = Helper.FixHyphensRemove(subtitle, 1);
-                const string target = "<i>PREVIOUSLY ON HAVEN...</i>";
-                Assert.AreEqual(target, result);
-            }
-        }
-
-        [TestMethod]
-        public void FixDashItalicLine2()
-        {
-            var subtitle = new Subtitle();
-            const string t1 = "Hey!";
-            string t2 = "Yo!" + Environment.NewLine + "<i>- PREVIOUSLY ON HAVEN...</i>";
-            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
-            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
-            {
-                var result = Helper.FixHyphensRemove(subtitle, 1);
-                string target = "Yo!" + Environment.NewLine + "<i>PREVIOUSLY ON HAVEN...</i>";
-                Assert.AreEqual(target, result);
-            }
-        }
-
-        [TestMethod]
-        public void FixDashAssTag()
-        {
-            var subtitle = new Subtitle();
-            const string t1 = "Hey!";
-            const string t2 = "{\\an3}- PREVIOUSLY ON HAVEN...";
-            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
-            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
-            {
-                var result = Helper.FixHyphensRemove(subtitle, 1);
-                const string target = "{\\an3}PREVIOUSLY ON HAVEN...";
-                Assert.AreEqual(target, result);
             }
         }
 

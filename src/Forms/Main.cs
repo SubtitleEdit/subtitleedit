@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
@@ -31,7 +32,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -9466,8 +9466,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string aTrimmed = HtmlUtil.RemoveHtmlTags(a).TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
                     if (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟'))
                     {
-                        a = RemoveStartDash(a);
-                        b = RemoveStartDash(b);
+                        a = DialogSplitMerge.RemoveStartDash(a);
+                        b = DialogSplitMerge.RemoveStartDash(b);
                     }
 
                     currentParagraph.Text = Utilities.AutoBreakLine(a, language);
@@ -9499,8 +9499,8 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = "<b>" + newParagraph.Text;
                         }
 
-                        currentParagraph.Text = RemoveStartDash(currentParagraph.Text);
-                        newParagraph.Text = RemoveStartDash(newParagraph.Text);
+                        currentParagraph.Text = DialogSplitMerge.RemoveStartDash(currentParagraph.Text);
+                        newParagraph.Text = DialogSplitMerge.RemoveStartDash(newParagraph.Text);
                     }
                     else
                     {
@@ -9666,8 +9666,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟'))
                             {
-                                originalCurrent.Text = RemoveStartDash(originalCurrent.Text);
-                                originalNew.Text = RemoveStartDash(originalNew.Text);
+                                originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
+                                originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
                             }
 
                             lines.Clear();
@@ -9690,8 +9690,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
 
-                            a = RemoveStartDash(a);
-                            b = RemoveStartDash(b);
+                            a = DialogSplitMerge.RemoveStartDash(a);
+                            b = DialogSplitMerge.RemoveStartDash(b);
 
                             lines[0] = a;
                             lines[1] = b;
@@ -9742,8 +9742,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟'))
                             {
-                                a = RemoveStartDash(a);
-                                b = RemoveStartDash(b);
+                                a = DialogSplitMerge.RemoveStartDash(a);
+                                b = DialogSplitMerge.RemoveStartDash(b);
                             }
 
                             lines[0] = a;
@@ -10225,6 +10225,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeWithLineAfter(bool insertDash, BreakMode breakMode = BreakMode.Normal)
         {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
             int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
             var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -10249,15 +10250,15 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            if (insertDash)
+                            if (insertDash && !string.IsNullOrEmpty(original.Text) && !string.IsNullOrEmpty(originalNext.Text))
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
-                                original.Text = InsertStartDash(s);
+                                original.Text = dialogHelper.InsertStartDash(s, 0);
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                original.Text += Environment.NewLine + InsertStartDash(s);
+                                original.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
-                                original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                                original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine).TrimEnd();
                             }
                             else
                             {
@@ -10309,15 +10310,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (insertDash)
+                if (insertDash && !string.IsNullOrEmpty(currentParagraph.Text) && !string.IsNullOrEmpty(nextParagraph.Text))
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    currentParagraph.Text = InsertStartDash(s);
+                    currentParagraph.Text = dialogHelper.InsertStartDash(s, 0);
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    currentParagraph.Text += Environment.NewLine + InsertStartDash(s);
+                    currentParagraph.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
-                    currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                    currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine).TrimEnd();
                 }
                 else
                 {
@@ -10392,60 +10393,6 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
-        }
-
-        private static string InsertStartDash(string input)
-        {
-            string pre = string.Empty;
-
-            string s = input;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.Contains('}'))
-            {
-                var idx = s.IndexOf('}') + 1;
-                pre = s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            while (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && s.Contains('>')))
-            {
-                var idx = s.IndexOf('>') + 1;
-                pre += s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            if (s.StartsWith('-'))
-            {
-                return input;
-            }
-
-            return pre + "- " + s.TrimStart();
-        }
-
-        private static string RemoveStartDash(string input)
-        {
-            string pre = string.Empty;
-
-            string s = input;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.Contains('}'))
-            {
-                var idx = s.IndexOf('}') + 1;
-                pre = s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            while (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && s.Contains('>')))
-            {
-                var idx = s.IndexOf('>') + 1;
-                pre += s.Substring(0, idx);
-                s = s.Remove(0, idx);
-            }
-
-            if (!s.TrimStart().StartsWith('-'))
-            {
-                return input;
-            }
-
-            return pre + s.TrimStart().TrimStart('-').TrimStart();
         }
 
         private void UpdateStartTimeInfo(TimeCode startTime)
@@ -13373,7 +13320,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
             {
-                ToggleDashes();
+                if (textBoxListViewText.Focused)
+                {
+                    ToggleDashesTextBox(textBoxListViewText);
+                }
+                else if (textBoxListViewTextAlternate.Focused)
+                {
+                    ToggleDashesTextBox(textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    ToggleDashes();
+                }
                 e.SuppressKeyPress = true;
             }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
@@ -15378,6 +15336,24 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (!hasStartDash && _subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        foreach (var line in lines)
+                        {
+                            var trimmed = HtmlUtil.RemoveHtmlTags(line, true).TrimStart();
+                            if (trimmed.StartsWith('-'))
+                            {
+                                hasStartDash = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 MakeHistoryForUndo(_language.BeforeToggleDialogDashes);
                 if (hasStartDash)
                 {
@@ -15390,28 +15366,133 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ToggleDashesTextBox(TextBox tb)
+        {
+            var hasStartDash = false;
+            var lines = tb.Text.TrimEnd().SplitToLines();
+            foreach (var line in lines)
+            {
+                var trimmed = HtmlUtil.RemoveHtmlTags(line, true).TrimStart();
+                if (trimmed.StartsWith('-'))
+                {
+                    hasStartDash = true;
+                    break;
+                }
+            }
+
+            MakeHistoryForUndo(_language.BeforeToggleDialogDashes);
+            var sb = new StringBuilder();
+            if (hasStartDash)
+            {
+                // remove dashes
+                foreach (var line in lines)
+                {
+                    var pre = string.Empty;
+                    var s = SplitStartTags(line, ref pre);
+                    sb.AppendLine(pre + s.TrimStart('-').TrimStart());
+                }
+
+                tb.Text = sb.ToString().Trim();
+            }
+            else
+            {
+                // add dashes
+                if (CouldBeDialog(lines))
+                {
+                    foreach (var line in lines)
+                    {
+                        var pre = string.Empty;
+                        var s = SplitStartTags(line, ref pre);
+                        sb.AppendLine(pre + "- " + s);
+                    }
+                }
+                else
+                {
+                    sb.Append(tb.Text);
+                }
+
+                var text = sb.ToString().Trim();
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
+                text = dialogHelper.FixDashesAndSpaces(text);
+                tb.Text = text;
+            }
+        }
+
         private void AddDashes()
         {
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
                 var lines = p.Text.SplitToLines();
                 var sb = new StringBuilder();
-                foreach (var line in lines)
+                if (CouldBeDialog(lines))
                 {
-                    var pre = string.Empty;
-                    var s = SplitStartTags(line, ref pre);
-                    sb.AppendLine(pre + "- " + s);
+                    foreach (var line in lines)
+                    {
+                        var pre = string.Empty;
+                        var s = SplitStartTags(line, ref pre);
+                        sb.AppendLine(pre + "- " + s);
+                    }
+                }
+                else
+                {
+                    sb.Append(p.Text);
                 }
 
                 var text = sb.ToString().Trim();
+                text = dialogHelper.FixDashesAndSpaces(text);
                 _subtitle.Paragraphs[index].Text = text;
                 SubtitleListview1.SetText(index, text);
                 if (index == _subtitleListViewIndex)
                 {
                     textBoxListViewText.Text = text;
                 }
+
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        sb = new StringBuilder();
+                        if (CouldBeDialog(lines))
+                        {
+                            foreach (var line in lines)
+                            {
+                                var pre = string.Empty;
+                                var s = SplitStartTags(line, ref pre);
+                                if (!line.StartsWith("-"))
+                                {
+                                    sb.AppendLine(pre + "- " + s);
+                                }
+                                else
+                                {
+                                    sb.AppendLine(pre + s);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sb.Append(original.Text);
+                        }
+
+                        text = sb.ToString().Trim();
+                        text = dialogHelper.FixDashesAndSpaces(text);
+                        _subtitleAlternate.Paragraphs[index].Text = text;
+                        SubtitleListview1.SetAlternateText(index, text);
+                        if (index == _subtitleListViewIndex)
+                        {
+                            textBoxListViewTextAlternate.Text = text;
+                        }
+                    }
+                }
             }
+        }
+
+        private static bool CouldBeDialog(List<string> lines)
+        {
+            return lines.Count >= 2 && lines.Count <= 3;
         }
 
         private void RemoveDashes()
@@ -15434,6 +15515,30 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index == _subtitleListViewIndex)
                 {
                     textBoxListViewText.Text = text;
+                }
+
+                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                {
+                    var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        lines = original.Text.SplitToLines();
+                        sb = new StringBuilder();
+                        foreach (var line in lines)
+                        {
+                            var pre = string.Empty;
+                            var s = SplitStartTags(line, ref pre);
+                            sb.AppendLine(pre + s.TrimStart('-').TrimStart());
+                        }
+
+                        text = sb.ToString().Trim();
+                        _subtitleAlternate.Paragraphs[index].Text = text;
+                        SubtitleListview1.SetAlternateText(index, text);
+                        if (index == _subtitleListViewIndex)
+                        {
+                            textBoxListViewTextAlternate.Text = text;
+                        }
+                    }
                 }
             }
         }
@@ -19024,6 +19129,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(toolStripSplitButtonPlayRate);
             _lastTextKeyDownTicks = DateTime.UtcNow.Ticks;
             ShowSubtitleTimer.Start();
+
+            if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                var idx = _subtitleListViewIndex;
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
+            }
         }
 
         private void InitializePlayRateDropDown()

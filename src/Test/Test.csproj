@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\CharUtilsTest.cs" />
+    <Compile Include="Core\DialogTypeTest.cs" />
     <Compile Include="Core\SeJsonParserTest.cs" />
     <Compile Include="Core\FixCasingTest.cs" />
     <Compile Include="Core\LanguageAutoDetectTest.cs" />
