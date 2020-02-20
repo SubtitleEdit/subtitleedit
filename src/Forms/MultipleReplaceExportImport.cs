@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewExportStyles.Items.Add(new ListViewItem(group.Name) { Checked = true });
             }
 
+            selectAllToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
+            inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelGroups.Text = export
@@ -102,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
             textWriter.WriteStartDocument();
             textWriter.WriteStartElement("Settings", string.Empty);
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
-            foreach (var group in groups.Where(g=> exportedGroups.Contains(g.Name)))
+            foreach (var group in groups.Where(g => exportedGroups.Contains(g.Name)))
             {
                 textWriter.WriteStartElement(MultipleReplace.Group, string.Empty);
                 textWriter.WriteElementString(MultipleReplace.GroupName, group.Name);
@@ -127,6 +129,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = !item.Checked;
+            }
         }
     }
 }
