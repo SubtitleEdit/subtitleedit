@@ -3035,12 +3035,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 videoFileLoaded = _videoFileName != null;
 
-                if (Configuration.Settings.RecentFiles.Files.Count <= 0 || Configuration.Settings.RecentFiles.Files[0].FileName != fileName)
-                {
-                    Configuration.Settings.RecentFiles.Add(fileName, videoFileName, originalFileName);
-                    Configuration.Settings.Save();
-                    UpdateRecentFilesUI();
-                }
+                Configuration.Settings.RecentFiles.Add(fileName, videoFileName, originalFileName);
+                UpdateRecentFilesUI();
 
                 _fileName = fileName;
                 SetTitle();
