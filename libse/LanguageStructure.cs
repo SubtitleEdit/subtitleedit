@@ -678,10 +678,10 @@
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
             public string AddMissingQuote { get; set; }
             public string AddMissingQuotes { get; set; }
-            public string FixHyphens { get; set; }
-            public string FixHyphensAdd { get; set; }
-            public string FixHyphen { get; set; }
-            public string XHyphensFixed { get; set; }
+            public string RemoveHyphensSingleLine { get; set; }
+            public string XHyphensSingleLineRemoved { get; set; }
+            public string FixHyphensInDialogs { get; set; }
+            public string XHyphensInDialogsFixed { get; set; }
             public string AddMissingQuotesExample { get; set; }
             public string XMissingQuotesAdded { get; set; }
             public string Fix3PlusLines { get; set; }
@@ -2105,6 +2105,11 @@
             public string FixCommonerrors { get; set; }
             public string RemoveTextForHi { get; set; }
             public string MergeLinesShorterThan { get; set; }
+            public string DialogStyle { get; set; }
+            public string DialogStyleDashBothLinesWithSpace { get; set; }
+            public string DialogStyleDashBothLinesWithoutSpace { get; set; }
+            public string DialogStyleDashSecondLineWithSpace { get; set; }
+            public string DialogStyleDashSecondLineWithoutSpace { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
