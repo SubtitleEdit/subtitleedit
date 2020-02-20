@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (!string.IsNullOrEmpty(originalFileName))
                 {
-                    if (!(fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && originalFileName.Equals(oldRecentFile.OriginalFileName, StringComparison.OrdinalIgnoreCase)) 
+                    if (!(fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && originalFileName.Equals(oldRecentFile.OriginalFileName, StringComparison.OrdinalIgnoreCase))
                         && index < MaxRecentFiles)
                     {
                         newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             else
             {
-                existingEntry = Files.FirstOrDefault(p => !string.IsNullOrEmpty(p.FileName) && 
+                existingEntry = Files.FirstOrDefault(p => !string.IsNullOrEmpty(p.FileName) &&
                                                           !string.IsNullOrEmpty(p.OriginalFileName) &&
                                                           p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
                                                           p.OriginalFileName.Equals(originalFileName, StringComparison.OrdinalIgnoreCase));
