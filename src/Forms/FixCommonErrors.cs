@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -38,8 +39,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 16;
         private const int IndexStartWithUppercaseLetterAfterColon = 17;
         private const int IndexAddMissingQuotes = 18;
-        private const int IndexFixHyphensAdd = 19;
-        private const int IndexFixHyphens = 20;
+        private const int IndexFixHyphens = 19;
+        private const int IndexRemoveHyphensSingleLine = 20;
         private const int IndexFix3PlusLines = 21;
         private const int IndexFixDoubleDash = 22;
         private const int IndexFixDoubleGreaterThan = 23;
@@ -381,8 +382,8 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, () => new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(Subtitle, this) , ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
                 new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, () => new FixStartWithUppercaseLetterAfterColon().Fix(Subtitle, this), ce.StartWithUppercaseLetterAfterColonTicked),
                 new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, () => new AddMissingQuotes().Fix(Subtitle, this), ce.AddMissingQuotesTicked),
-                new FixItem(_language.FixHyphensAdd, string.Empty, () => new FixHyphensAdd().Fix(Subtitle, this), ce.FixHyphensAddTicked),
-                new FixItem(_language.FixHyphens, string.Empty, () => new FixHyphensRemove().Fix(Subtitle, this), ce.FixHyphensTicked),
+                new FixItem( string.Format(_language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, () => new FixHyphensInDialog().Fix(Subtitle, this), ce.FixHyphensTicked),
+                new FixItem( _language.RemoveHyphensSingleLine, string.Empty, () => new FixHyphensRemoveDashSingleLine().Fix(Subtitle, this), ce.FixHyphensRemoveSingleLineTicked),
                 new FixItem(_language.Fix3PlusLines, string.Empty, () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
@@ -422,6 +423,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 AddFixActionItemToListView(fi);
             }
+        }
+
+        private static string GetDialogStyle(DialogType dialogStyle)
+        {
+            if (dialogStyle == DialogType.DashSecondLineWithoutSpace)
+            {
+                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithoutSpace;
+            }
+            if (dialogStyle == DialogType.DashSecondLineWithSpace)
+            {
+                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace;
+            }
+            if (dialogStyle == DialogType.DashBothLinesWithoutSpace)
+            {
+                return Configuration.Settings.Language.Settings.DialogStyleDashSecondLineWithSpace;
+            }
+            return Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace;
         }
 
         public FixCommonErrors()
@@ -1029,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.StartWithUppercaseLetterAfterColonTicked = listView1.Items[IndexStartWithUppercaseLetterAfterColon].Checked;
             ce.AddMissingQuotesTicked = listView1.Items[IndexAddMissingQuotes].Checked;
             ce.FixHyphensTicked = listView1.Items[IndexFixHyphens].Checked;
-            ce.FixHyphensAddTicked = listView1.Items[IndexFixHyphensAdd].Checked;
+            ce.FixHyphensRemoveSingleLineTicked = listView1.Items[IndexRemoveHyphensSingleLine].Checked;
             ce.Fix3PlusLinesTicked = listView1.Items[IndexFix3PlusLines].Checked;
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;

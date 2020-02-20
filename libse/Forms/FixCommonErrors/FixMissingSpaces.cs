@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string languageCode = callbacks.Language;
             string fixAction = language.FixMissingSpace;
             int missingSpaces = 0;
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
             const string expectedChars = @"""”<.";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -157,81 +158,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))
                 {
-                    var arr = p.Text.SplitToLines();
-                    if (arr.Count == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                    var newText = dialogHelper.AddSpaces(p.Text);
+                    if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        if (arr[0][0] == '-' && arr[0][1] != ' ')
-                        {
-                            arr[0] = arr[0].Insert(1, " ");
-                        }
-
-                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[0][4] != ' ')
-                        {
-                            arr[0] = arr[0].Insert(4, " ");
-                        }
-
-                        if (arr[1][0] == '-' && arr[1][1] != ' ' && arr[1][1] != '-')
-                        {
-                            arr[1] = arr[1].Insert(1, " ");
-                        }
-
-                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[1][4] != ' ')
-                        {
-                            arr[1] = arr[1].Insert(4, " ");
-                        }
-
-                        string newText = arr[0] + Environment.NewLine + arr[1];
-                        if (newText != p.Text && callbacks.AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = newText;
-                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                    }
-                    else if (arr.Count == 3 && arr[0].Length > 1 && arr[1].Length > 1 && arr[2].Length > 1)
-                    {
-                        if (arr[0].StartsWith("-", StringComparison.Ordinal) &&
-                            !"!.?".Contains(arr[0][arr[0].Length - 1]) &&
-                            "!.?".Contains(arr[1][arr[1].Length - 1]) &&
-                            arr[2].StartsWith("-", StringComparison.Ordinal) &&
-                            "!.?".Contains(arr[2][arr[2].Length - 1]))
-                        {
-                            if (char.IsLetterOrDigit(arr[0][1]))
-                            {
-                                arr[0] = arr[0].Insert(1, " ");
-                            }
-                            if (char.IsLetterOrDigit(arr[2][1]))
-                            {
-                                arr[2] = arr[2].Insert(1, " ");
-                            }
-                        }
-
-                        if (arr[0].StartsWith("-", StringComparison.Ordinal) &&
-                           "!.?".Contains(arr[0][arr[0].Length - 1]) &&
-                           arr[1].StartsWith("-", StringComparison.Ordinal) &&
-                           !"!.?".Contains(arr[1][arr[1].Length - 1]) &&
-                           !arr[2].StartsWith("-", StringComparison.Ordinal) &&
-                           "!.?".Contains(arr[2][arr[2].Length - 1]))
-                        {
-                            if (char.IsLetterOrDigit(arr[0][1]))
-                            {
-                                arr[0] = arr[0].Insert(1, " ");
-                            }
-                            if (char.IsLetterOrDigit(arr[1][1]))
-                            {
-                                arr[1] = arr[1].Insert(1, " ");
-                            }
-                        }
-
-                        string newText = arr[0] + Environment.NewLine + arr[1] + Environment.NewLine + arr[2];
-                        if (newText != p.Text && callbacks.AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = newText;
-                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
 

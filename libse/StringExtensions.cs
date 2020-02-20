@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Core
                         start = i;
                         continue;
                     }
+
                     if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
                     {
                         lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
@@ -138,11 +139,13 @@ namespace Nikse.SubtitleEdit.Core
                         start = i;
                         continue;
                     }
+
                     lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
                     i++;
                     start = i;
                     continue;
                 }
+
                 if (ch == '\n' || ch == '\u2028')
                 {
                     lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
@@ -150,8 +153,10 @@ namespace Nikse.SubtitleEdit.Core
                     start = i;
                     continue;
                 }
+
                 i++;
             }
+
             lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
             return lines;
         }
@@ -194,6 +199,7 @@ namespace Nikse.SubtitleEdit.Core
                     first = source.IndexOf(c0, ++first, limit - first);
                     continue;
                 }
+
                 // Check the rest of "pattern" (starting with the 3rd character)
                 var found = true;
                 for (int j = 2; j < pattern.Length; j++)
@@ -204,6 +210,7 @@ namespace Nikse.SubtitleEdit.Core
                         break;
                     }
                 }
+
                 // If the whole word was found, return its index, otherwise try again
                 if (found)
                 {
@@ -212,6 +219,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 first = source.IndexOf(c0, ++first, limit - first);
             }
+
             return -1;
         }
 
@@ -230,6 +238,7 @@ namespace Nikse.SubtitleEdit.Core
                     return idx;
                 }
             }
+
             return -1;
         }
 
@@ -267,6 +276,7 @@ namespace Nikse.SubtitleEdit.Core
                     k = -1;
                 }
             }
+
             return s;
         }
 
@@ -283,6 +293,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
             }
+
             return false;
         }
 
@@ -299,6 +310,7 @@ namespace Nikse.SubtitleEdit.Core
                     newStr[newIdx++] = ch;
                 }
             }
+
             return new string(newStr, 0, newIdx);
         }
 
@@ -315,6 +327,7 @@ namespace Nikse.SubtitleEdit.Core
                     newStr[newIdx++] = ch;
                 }
             }
+
             return new string(newStr, 0, newIdx);
         }
 
@@ -366,6 +379,7 @@ namespace Nikse.SubtitleEdit.Core
                     sb.Append("\\u" + Convert.ToUInt32(character) + "?");
                 }
             }
+
             return sb.ToString();
         }
 
@@ -386,6 +400,7 @@ namespace Nikse.SubtitleEdit.Core
                     array[arrayIndex++] = ch;
                 }
             }
+
             return new string(array, 0, arrayIndex);
         }
 
@@ -431,8 +446,25 @@ namespace Nikse.SubtitleEdit.Core
                     length++;
                 }
             }
+
             return length;
         }
 
+        public static bool HasSentenceEnding(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            var s = HtmlUtil.RemoveHtmlTags(value, true).TrimEnd('"').TrimEnd('”');
+            if (s == string.Empty)
+            {
+                return false;
+            }
+
+            var last = s[s.Length - 1];
+            return last == '.' || last == '!' || last == '?' || last == ']' || last == '…' || last == '♪' || last == '؟';
+        }
     }
 }

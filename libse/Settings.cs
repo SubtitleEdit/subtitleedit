@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -636,7 +637,7 @@ $HorzAlign          =   Center
         public bool AddMissingQuotesTicked { get; set; }
         public bool Fix3PlusLinesTicked { get; set; }
         public bool FixHyphensTicked { get; set; }
-        public bool FixHyphensAddTicked { get; set; }
+        public bool FixHyphensRemoveSingleLineTicked { get; set; }
         public bool UppercaseIInsideLowercaseWordTicked { get; set; }
         public bool DoubleApostropheToQuoteTicked { get; set; }
         public bool AddPeriodAfterParagraphTicked { get; set; }
@@ -756,6 +757,7 @@ $HorzAlign          =   Center
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
         public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
+        public DialogType DialogStyle { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -891,6 +893,7 @@ $HorzAlign          =   Center
             SubtitleMaximumCharactersPerSeconds = 25.0;
             SubtitleOptimalCharactersPerSeconds = 15.0;
             SubtitleMaximumWordsPerMinute = 300;
+            DialogStyle = DialogType.DashBothLinesWithSpace;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -944,6 +947,7 @@ $HorzAlign          =   Center
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
+            DialogStyle = DialogType.DashBothLinesWithSpace;
 
             Profiles = new List<RulesProfile>();
             CurrentProfile = "Default";
@@ -960,6 +964,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
                 CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
                 MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
+                DialogStyle = DialogStyle,
             });
             AddExtraProfiles(Profiles);
         }
@@ -979,6 +984,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithoutSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -993,6 +999,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 200,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1007,6 +1014,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1021,6 +1029,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
+                DialogStyle = DialogType.DashSecondLineWithoutSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1035,6 +1044,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
+                DialogStyle = DialogType.DashSecondLineWithoutSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1049,6 +1059,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 240,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
+                DialogStyle = DialogType.DashSecondLineWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1063,6 +1074,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 240,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
+                DialogStyle = DialogType.DashSecondLineWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1077,6 +1089,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1091,6 +1104,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1105,6 +1119,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1119,6 +1134,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1133,6 +1149,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 167,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1147,6 +1164,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 160,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1161,6 +1179,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 250,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
             profiles.Add(new RulesProfile
             {
@@ -1175,6 +1194,7 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 240,
+                DialogStyle = DialogType.DashBothLinesWithSpace
             });
         }
     }
@@ -1947,6 +1967,30 @@ $HorzAlign          =   Center
                 var maxNumberOfLines = listNode.SelectSingleNode("MaxNumberOfLines")?.InnerText;
                 var mergeLinesShorterThan = listNode.SelectSingleNode("MergeLinesShorterThan")?.InnerText;
                 var minimumMillisecondsBetweenLines = listNode.SelectSingleNode("MinimumMillisecondsBetweenLines")?.InnerText;
+
+                var dialogStyle = DialogType.DashBothLinesWithSpace;
+                if (listNode.SelectSingleNode("DialogStyle") == null || !Enum.IsDefined(typeof(DialogType), listNode.SelectSingleNode("DialogStyle").InnerText))
+                { //TODO: Remove after 2022
+                    if (listNode.SelectSingleNode("Name") != null)
+                    {
+                        var lookup = new List<RulesProfile>();
+                        GeneralSettings.AddExtraProfiles(lookup);
+                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        if (match != null)
+                        {
+                            dialogStyle = match.DialogStyle; // update style when upgrading from 3.5.13 or below
+                        }
+                        else
+                        {
+                            dialogStyle = DialogType.DashBothLinesWithSpace;
+                        }
+                    }
+                }
+                else
+                {
+                    dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
+                }
+
                 settings.General.Profiles.Add(new RulesProfile
                 {
                     Name = listNode.SelectSingleNode("Name")?.InnerText,
@@ -1959,7 +2003,8 @@ $HorzAlign          =   Center
                     CpsIncludesSpace = Convert.ToBoolean(cpsIncludesSpace, CultureInfo.InvariantCulture),
                     MaxNumberOfLines = Convert.ToInt32(maxNumberOfLines, CultureInfo.InvariantCulture),
                     MergeLinesShorterThan = Convert.ToInt32(mergeLinesShorterThan, CultureInfo.InvariantCulture),
-                    MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture)
+                    MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture),
+                    DialogStyle = dialogStyle
                 });
                 profileCount++;
             }
@@ -2316,6 +2361,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.SubtitleMaximumWordsPerMinute = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("DialogStyle");
+            if (subNode != null)
+            {
+                settings.General.DialogStyle = (DialogType)Enum.Parse(typeof(DialogType), subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SpellCheckLanguage");
@@ -4280,10 +4331,10 @@ $HorzAlign          =   Center
                 settings.CommonErrors.FixHyphensTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("FixHyphensAddTicked");
+            subNode = node.SelectSingleNode("FixHyphensRemoveSingleLineTicked");
             if (subNode != null)
             {
-                settings.CommonErrors.FixHyphensAddTicked = Convert.ToBoolean(subNode.InnerText);
+                settings.CommonErrors.FixHyphensRemoveSingleLineTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("UppercaseIInsideLowercaseWordTicked");
@@ -6236,6 +6287,7 @@ $HorzAlign          =   Center
                     SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
                     CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
                     MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
+                    DialogStyle = settings.General.DialogStyle
                 });
                 GeneralSettings.AddExtraProfiles(settings.General.Profiles);
             }
@@ -6305,6 +6357,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("CpsIncludesSpace", profile.CpsIncludesSpace.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
+                    textWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
@@ -6367,6 +6420,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
@@ -6725,7 +6779,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixHyphensTicked", settings.CommonErrors.FixHyphensTicked.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FixHyphensAddTicked", settings.CommonErrors.FixHyphensAddTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixHyphensRemoveSingleLineTicked", settings.CommonErrors.FixHyphensRemoveSingleLineTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UppercaseIInsideLowercaseWordTicked", settings.CommonErrors.UppercaseIInsideLowercaseWordTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DoubleApostropheToQuoteTicked", settings.CommonErrors.DoubleApostropheToQuoteTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
