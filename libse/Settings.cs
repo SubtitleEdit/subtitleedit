@@ -77,6 +77,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, string videoFileName, string originalFileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
+            }
+
             RecentFileEntry existingEntry;
             if (string.IsNullOrEmpty(originalFileName))
             {
