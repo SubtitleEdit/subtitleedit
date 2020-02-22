@@ -20,12 +20,13 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionStartsWith = 1;
         private const int FunctionEndsWith = 2;
         private const int FunctionNotContains = 3;
-        private const int FunctionRegEx = 4;
-        private const int FunctionUnequal = 5;
-        private const int FunctionEqual = 6;
-        private const int FunctionDurationLessThan = 7;
-        private const int FunctionDurationGreaterThan = 8;
-        private const int FunctionStyle = 9;
+        private const int FunctionAlUppercase = 4;
+        private const int FunctionRegEx = 5;
+        private const int FunctionUnequal = 6;
+        private const int FunctionEqual = 7;
+        private const int FunctionDurationLessThan = 8;
+        private const int FunctionDurationGreaterThan = 9;
+        private const int FunctionStyle = 10;
 
         public ModifySelection(Subtitle subtitle, SubtitleFormat format, SubtitleListView subtitleListView)
         {
@@ -61,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.StartsWith);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ChangeCasing.AllUppercase);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
@@ -84,6 +86,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Not contains")
             {
                 comboBoxRule.SelectedIndex = FunctionNotContains;
+            }
+            else if (Configuration.Settings.Tools.ModifySelectionRule == "AllUppercase")
+            {
+                comboBoxRule.SelectedIndex = FunctionAlUppercase;
             }
             else if (Configuration.Settings.Tools.ModifySelectionRule == "RegEx")
             {
@@ -151,6 +157,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxRule.SelectedIndex == FunctionNotContains)
             {
                 Configuration.Settings.Tools.ModifySelectionRule = "Not contains";
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionAlUppercase)
+            {
+                Configuration.Settings.Tools.ModifySelectionRule = "AllUppercase";
             }
             else if (comboBoxRule.SelectedIndex == FunctionRegEx)
             {
@@ -293,9 +303,16 @@ namespace Nikse.SubtitleEdit.Forms
                             AddToListView(p, i);
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // duration greather than
+                    else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // duration greater than
                     {
                         if (p.Duration.TotalMilliseconds > (double)numericUpDownDuration.Value)
+                        {
+                            AddToListView(p, i);
+                        }
+                    }
+                    else if (comboBoxRule.SelectedIndex == FunctionAlUppercase) // all uppercase
+                    {
+                        if (p.Text == p.Text.ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
                         {
                             AddToListView(p, i);
                         }
@@ -377,7 +394,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FillStyles();
                 }
             }
-            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan)
+            else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan || comboBoxRule.SelectedIndex == FunctionDurationGreaterThan || comboBoxRule.SelectedIndex == FunctionAlUppercase)
             {
                 checkBoxCaseSensitive.Enabled = false;
                 listViewStyles.Visible = false;
