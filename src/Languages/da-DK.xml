@@ -81,6 +81,7 @@
     <DeleteCurrentLine>Slet aktuelle linje</DeleteCurrentLine>
     <Width>Bredde</Width>
     <Height>Højde</Height>
+    <Collapse>Fold sammen</Collapse>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -606,10 +607,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Tilføj spanske omvendte spørgsmålstegn og udråbstegn</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Tilføj manglende gåseøje</AddMissingQuote>
     <AddMissingQuotes>Tilføj manglende gåseøjne</AddMissingQuotes>
-    <FixHyphens>Ret linjer (fjern -) startende med bindestreg (-)</FixHyphens>
-    <FixHyphensAdd>Ret linjer (tilføj -) startende med bindestreg (-)</FixHyphensAdd>
-    <FixHyphen>Ret linje startende med bindestreg (-)</FixHyphen>
-    <XHyphensFixed>Bindestreger rettet: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Fjern dialog-bindestreg i enkeltlinjer</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Dialog-bindestreger fjernes i enkeltlinjer: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Fix dialog-bindestreg via stil: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Streger fast: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Hvordan har du det? -&gt; "Hvordan har du det?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Manglende antal gåseøjne tilføjet: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Ret tekster med mere end 2 linjer</Fix3PlusLines>
@@ -1934,6 +1935,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <FixCommonerrors>Ret almindelige fejl</FixCommonerrors>
     <RemoveTextForHi>Fjern tekst for svagthørende</RemoveTextForHi>
     <MergeLinesShorterThan>Flet linjer kortere end</MergeLinesShorterThan>
+    <DialogStyle>Dialog stil</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Dialog-bindestreg begge linjer med mellemrum</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Dialog-bindestreg begge linjer uden mellemrum</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Dialog-bindestreg anden linje med mellemrum</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Dialog-bindestreg anden linje uden mellemrum</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
@@ -2100,6 +2106,7 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <RestoreDefaultSettings>Benyt standard indstillinger</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Alle indstillinger vil blive sat til standardværdier.
 Fortsæt?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Fjern tidskoder</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
@@ -2381,11 +2388,16 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>Importer/OCR VobSub (sub/idx) undertekst</Title>
     <TitleBluRay>Importer/OCR Blu-ray (.sup) undertekst</TitleBluRay>
     <OcrMethod>OCR-metoden</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
-    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
-    <Language>Sprog</Language>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>OCR via billede sammenligning</OcrViaImageCompare>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver Microsoft Office</OcrViaModi>
+    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Motor</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Kun original Tesseract (kan registrere kursiv)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Neurale net kun LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Standard, baseret på hvad der er tilgængeligt</TesseractEngineModeDefault>
+    <Language>Sprog</Language>
     <ImageDatabase>Billeddatabase</ImageDatabase>
     <NoOfPixelsIsSpace>Antal pixels er mellemrum</NoOfPixelsIsSpace>
     <MaxErrorPercent>Max. fejl%</MaxErrorPercent>
@@ -2414,6 +2426,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AllFixes>Alle rettelser</AllFixes>
     <GuessesUsed>Gæt brugt</GuessesUsed>
     <UnknownWords>Ukendte ord</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' på linjen: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer tekst med matchende tidskoder...</ImportTextWithMatchingTimeCodes>
