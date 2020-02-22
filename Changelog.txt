@@ -30,6 +30,7 @@
    * Install Add more video files to "SupportedTypes" - thx xylographe
    * Add "Collapse" context menu for "shortcuts treeview"
    * Improve text regarding "gaps between subtitles"
+   * Add "ALL UPPERCASE" to "Modify selection" - thx Vladimír
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix time code in format .sif - thx Milenko
@@ -44,12 +45,12 @@
    * Fix crash in "fix Spanish inversion marks" - thx Lokotito
    * Fix for Blu-ray sup file end time - thx mgutt
    * Fix drag'n'drop after translation mode - thx Sopor
-   * Fix for shortcut "Open original" - thx OmrSi
    * Fix gap after "Set start and off-set the rest" - thx Flitskikker
    * Fix add space with single music note in italic - thx btsix
    * Fix some spelling mistakes in Hungarian - thx jtotht
    * Fix import/export profile - thx Jamakmake
    * Fix mpv crash/hang after open 4+ videos (again)
+   * Fix minor issues for Reopen - thx OmrSi
 
 
 3.5.13 (20th January 2020)
