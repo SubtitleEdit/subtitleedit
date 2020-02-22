@@ -3487,6 +3487,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenRecentFile(RecentFileEntry rfe)
         {
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+            }
+
             OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName, false);
             Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
             if (rfe.VideoOffsetInMs != 0)
