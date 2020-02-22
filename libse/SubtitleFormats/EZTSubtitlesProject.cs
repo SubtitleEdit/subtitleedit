@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var endMs = DecodeTimeCodeFrames(outCue.InnerText, splitChars).TotalMilliseconds;
                 subtitle.Paragraphs.Add(new Paragraph(text, startMs, endMs));
             }
+            subtitle.Renumber();
         }
     }
 }
