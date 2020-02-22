@@ -4526,6 +4526,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Main_Resize(null, null);
             }
 
+            SetLanguage(Configuration.Settings.General.Language);
+
             textBoxListViewTextAlternate.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleListViewIndex >= 0;
 
             SetShortcuts();
