@@ -2095,7 +2095,7 @@ namespace Nikse.SubtitleEdit.Forms
                 OpenRecentFile(rfe);
                 GotoSubPosAndPause();
                 SubtitleListview1.EndUpdate();
-                SetRecentIndices(fileName);
+                SetRecentIndices(rfe);
                 if (!string.IsNullOrEmpty(rfe.VideoFileName))
                 {
                     var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
@@ -3438,6 +3438,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ContinueNewOrExit())
             {
+                if (!string.IsNullOrEmpty(_fileName))
+                {
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                }
+
                 RecentFileEntry rfe = null;
                 foreach (var file in Configuration.Settings.RecentFiles.Files.Where(p => !string.IsNullOrEmpty(p.OriginalFileName)))
                 {
@@ -3472,7 +3477,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 GotoSubPosAndPause();
-                SetRecentIndices(item.Text);
+                SetRecentIndices(rfe);
                 SubtitleListview1.EndUpdate();
                 if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
                 {
@@ -3487,11 +3492,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenRecentFile(RecentFileEntry rfe)
         {
-            if (!string.IsNullOrEmpty(_fileName))
-            {
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-            }
-
             OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName, false);
             Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
             if (rfe.VideoOffsetInMs != 0)
@@ -3523,7 +3523,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetRecentIndices(string fileName)
+        private void SetRecentIndices(RecentFileEntry rfe)
         {
             if (!Configuration.Settings.General.RememberSelectedLine)
             {
@@ -3532,22 +3532,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowSubtitleTimer.Stop();
             Application.DoEvents();
-            foreach (var x in Configuration.Settings.RecentFiles.Files)
+            if (rfe != null && !string.IsNullOrEmpty(rfe.FileName) &&
+                rfe.FirstSelectedIndex >= 0 && rfe.FirstSelectedIndex < SubtitleListview1.Items.Count)
             {
-                if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
-                {
-                    int sIndex = x.FirstSelectedIndex;
-                    if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
-                    {
-                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                        SubtitleListview1.SelectIndexAndEnsureVisible(sIndex, true);
-                        _subtitleListViewIndex = -1;
-                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    }
-
-                    RefreshSelectedParagraph();
-                    break;
-                }
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                SubtitleListview1.SelectIndexAndEnsureVisible(rfe.FirstSelectedIndex, true);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                RefreshSelectedParagraph();
             }
 
             if (!_loading)

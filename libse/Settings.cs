@@ -51,28 +51,19 @@ namespace Nikse.SubtitleEdit.Core
                 return;
             }
 
-            var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
-            int index = 0;
-            foreach (var oldRecentFile in Files)
+            var existingEntry = GetRecentFile(fileName, originalFileName);
+            if (existingEntry == null)
             {
-                if (!string.IsNullOrEmpty(originalFileName))
-                {
-                    if (!(fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && originalFileName.Equals(oldRecentFile.OriginalFileName, StringComparison.OrdinalIgnoreCase))
-                        && index < MaxRecentFiles)
-                    {
-                        newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
-                    }
-                }
-                else
-                {
-                    if (!(fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(oldRecentFile.OriginalFileName)) && index < MaxRecentFiles)
-                    {
-                        newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
-                    }
-                }
-                index++;
+                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
-            Files = newList;
+            else
+            {
+                Files.Remove(existingEntry);
+                existingEntry.FirstSelectedIndex = firstSelectedIndex;
+                existingEntry.VideoOffsetInMs = videoOffset;
+                existingEntry.FirstVisibleIndex = firstVisibleIndex;
+                Files.Insert(0, existingEntry);
+            }
         }
 
         public void Add(string fileName, string videoFileName, string originalFileName)
@@ -82,6 +73,20 @@ namespace Nikse.SubtitleEdit.Core
                 Files = Files.Where(p => !string.IsNullOrEmpty(p.FileName)).ToList();
             }
 
+            var existingEntry = GetRecentFile(fileName, originalFileName);
+            if (existingEntry == null)
+            {
+                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+            }
+            else
+            {
+                Files.Remove(existingEntry);
+                Files.Insert(0, existingEntry);
+            }
+        }
+
+        private RecentFileEntry GetRecentFile(string fileName, string originalFileName)
+        {
             RecentFileEntry existingEntry;
             if (string.IsNullOrEmpty(originalFileName))
             {
@@ -96,16 +101,7 @@ namespace Nikse.SubtitleEdit.Core
                                                           p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) &&
                                                           p.OriginalFileName.Equals(originalFileName, StringComparison.OrdinalIgnoreCase));
             }
-
-            if (existingEntry == null)
-            {
-                Files.Insert(0, new RecentFileEntry { FileName = fileName ?? string.Empty, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
-            }
-            else
-            {
-                Files.Remove(existingEntry);
-                Files.Insert(0, existingEntry);
-            }
+            return existingEntry;
         }
     }
 
