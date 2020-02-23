@@ -8305,12 +8305,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0)
             {
-                InsertAfter();
+                InsertAfter(string.Empty);
                 textBoxListViewText.Focus();
             }
         }
 
-        private void InsertAfter()
+        private void InsertAfter(string text)
         {
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
@@ -8320,7 +8320,7 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index + 1;
             }
 
-            var newParagraph = new Paragraph();
+            var newParagraph = new Paragraph { Text = text };
 
             SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
 
@@ -9235,7 +9235,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
-                InsertAfter();
+                InsertAfter(string.Empty);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
@@ -13300,7 +13300,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
             {
-                InsertAfter();
+                InsertAfter(string.Empty);
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
@@ -15848,11 +15848,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!string.IsNullOrWhiteSpace(line))
                             {
-                                InsertAfter();
-                                textBoxListViewText.Text = line.Trim().Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(line) : line.Trim();
+                                var s = line.Trim().Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(line) : line.Trim();
+                                InsertAfter(s);
                             }
                         }
-
                         SubtitleListview1.EndUpdate();
                         RestartHistory();
                     }
@@ -15906,7 +15905,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _shortcuts.MainInsertAfter)
             {
-                InsertAfter();
+                InsertAfter(string.Empty);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
@@ -21819,7 +21818,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1, true);
-                InsertAfter();
+                InsertAfter(string.Empty);
                 SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1, true);
             }
         }
