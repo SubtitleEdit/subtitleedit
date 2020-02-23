@@ -1428,7 +1428,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int i = index + 16; // text block start at 17th byte (index 16)
                 var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
                 var closed = header.DisplayStandardCode != "0";
-                int max = index + 112;
+                int max = i + 112;
                 var sb = new StringBuilder();
                 while (i < max)
                 {
