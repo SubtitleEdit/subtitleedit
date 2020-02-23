@@ -112,8 +112,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(p.Text) + "\"}");
             }
             jsonBuilder.Append("]");
-            string json = jsonBuilder.ToString();
-            httpWebRequest.ContentLength = json.Length;
+            var json = jsonBuilder.ToString();
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 streamWriter.Write(json);
