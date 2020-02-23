@@ -51,6 +51,7 @@
    * Fix import/export profile - thx Jamakmake
    * Fix mpv crash/hang after open 4+ videos (again)
    * Fix minor issues for Reopen - thx OmrSi
+   * Fix text paste in list view - thx Molly
 
 
 3.5.13 (20th January 2020)
