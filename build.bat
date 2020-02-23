@@ -104,7 +104,7 @@ ECHO Merging assemblies with ILRepack...
 FOR /D %%A IN (packages\ILRepack.*) DO (SET "ILREPACKDIR=%%A")
 ECHO.
 "%ILREPACKDIR%\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe"^
- "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
+ "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "bin\Release\UtfUnknown.dll" "DLLs\Interop.QuartzTypeLib.dll"
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 POPD
 
