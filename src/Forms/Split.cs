@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -137,6 +136,12 @@ namespace Nikse.SubtitleEdit.Forms
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
             }
 
+            if (numericUpDownParts.Value == 0)
+            {
+                buttonSplit.Enabled = false;
+                return;
+            }
+
             listViewParts.Items.Clear();
             int startNumber = 0;
             if (RadioButtonLines.Checked)
@@ -147,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int noOfLines = partSize;
                     if (i == numericUpDownParts.Value - 1)
                     {
-                        noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
+                        noOfLines = (int)(_subtitle.Paragraphs.Count - (numericUpDownParts.Value - 1) * partSize);
                     }
 
                     var temp = new Subtitle { Header = _subtitle.Header };
