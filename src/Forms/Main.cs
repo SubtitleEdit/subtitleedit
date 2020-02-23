@@ -17052,7 +17052,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
                 MainResize();
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                if (SubtitleListview1.SelectedIndices.Count == 0)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                }
                 RefreshSelectedParagraph();
             }
         }
