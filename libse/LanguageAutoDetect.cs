@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -1053,11 +1053,6 @@ namespace Nikse.SubtitleEdit.Core
 
         public static Encoding DetectAnsiEncoding(byte[] buffer)
         {
-            if (Utilities.IsRunningOnMono())
-            {
-                return Encoding.Default;
-            }
-
             try
             {
                 var greekEncoding = Encoding.GetEncoding(1253); // Greek
