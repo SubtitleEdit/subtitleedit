@@ -1,6 +1,7 @@
 ﻿// Ripped from http://www.codeproject.com/KB/recipes/DetectEncoding.aspx
 
 using Nikse.SubtitleEdit.Core.DetectEncoding.Multilang;
+using UtfUnknown;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -385,59 +386,21 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
             {
                 return new[] { Encoding.ASCII };
             }
-
-            // expand the string to be at least 256 bytes
-            if (input.Length < 256)
-            {
-                byte[] newInput = new byte[256];
-                int steps = 256 / input.Length;
-                for (int i = 0; i < steps; i++)
-                {
-                    Array.Copy(input, 0, newInput, input.Length * i, input.Length);
-                }
-
-                int rest = 256 % input.Length;
-                if (rest > 0)
-                {
-                    Array.Copy(input, 0, newInput, steps * input.Length, rest);
-                }
-
-                input = newInput;
-            }
-
+            
+            // Use UTF.Unknown to detect from input byte string
+            DetectionResult detectionResult = CharsetDetector.DetectFromBytes(input);
             List<Encoding> result = new List<Encoding>();
 
-            // get the IMultiLanguage" interface
-            IMultiLanguage2 multilang2 = new CMultiLanguageClass();
-            try
+            //add in order (results ordered from most likely to least likely)
+            foreach (var detected in detectionResult.Details)
             {
-                DetectEncodingInfo[] detectedEncdings = new DetectEncodingInfo[maxEncodings];
-
-                int scores = detectedEncdings.Length;
-                int srcLen = input.Length;
-
-                // setup options (none)
-                const MLDETECTCP options = MLDETECTCP.MLDETECTCP_NONE;
-
-                // finally... call to DetectInputCodepage
-                multilang2.DetectInputCodepage(options, 0,
-                    ref input[0], ref srcLen, ref detectedEncdings[0], ref scores);
-
-                // get result
-                if (scores > 0)
+                result.Add(detected.Encoding);
+                if (result.Count == maxEncodings)
                 {
-                    for (int i = 0; i < scores; i++)
-                    {
-                        // add the result
-                        result.Add(Encoding.GetEncoding((int)detectedEncdings[i].nCodePage));
-                    }
+                    break;
                 }
             }
-            finally
-            {
-                Marshal.FinalReleaseComObject(multilang2);
-            }
-            // nothing found
+
             return result.ToArray();
         }
 
