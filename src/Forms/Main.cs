@@ -9313,7 +9313,12 @@ namespace Nikse.SubtitleEdit.Forms
                         next.Text = moveUpDown.S2;
                         SubtitleListview1.SetText(firstIndex, p.Text);
                         SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        var selectionStart = textBoxListViewText.SelectionStart;
                         textBoxListViewText.Text = p.Text;
+                        if (selectionStart >= 0)
+                        {
+                            textBoxListViewText.SelectionStart = selectionStart;
+                        }
                     }
                 }
             }
@@ -9337,7 +9342,12 @@ namespace Nikse.SubtitleEdit.Forms
                         next.Text = moveUpDown.S2;
                         SubtitleListview1.SetText(firstIndex, p.Text);
                         SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        var selectionStart = textBoxListViewText.SelectionStart;
                         textBoxListViewText.Text = p.Text;
+                        if (selectionStart >= 0)
+                        {
+                            textBoxListViewText.SelectionStart = selectionStart;
+                        }
                     }
                 }
             }
