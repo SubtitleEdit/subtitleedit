@@ -1,4 +1,4 @@
-namespace Nikse.SubtitleEdit.Forms.DCinema
+﻿namespace Nikse.SubtitleEdit.Forms.DCinema
 {
     partial class DCinemaPropertiesSmpte
     {
