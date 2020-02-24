@@ -82,6 +82,7 @@
     <DeleteCurrentLine>Изтриване на текущия ред</DeleteCurrentLine>
     <Width>Широчина</Width>
     <Height>Височина</Height>
+    <Collapse>Свиване</Collapse>
   </General>
   <About>
     <Title>Относно Subtitle Edit</Title>
@@ -611,10 +612,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixSpanishInvertedQuestionAndExclamationMarks>Поправяне на испански обърнати "?" и "!"</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Добавяне на липсваща кавичка (")</AddMissingQuote>
     <AddMissingQuotes>Добавяне на липсващи кавички (")</AddMissingQuotes>
-    <FixHyphens>Премахване на тире (-) в редове започващи с тирета (-)</FixHyphens>
-    <FixHyphensAdd>Добавяне на тире (-) в редове започващи с тирета (-)</FixHyphensAdd>
-    <FixHyphen>Поправяне на редове започващи с тире (-)</FixHyphen>
-    <XHyphensFixed>Поправени тирета: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Премахване на диалоговите тирета в единични редове</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Премахнато е диалогово тире в единични редове: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Поправяне на тире в диалозите чрез стил: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Поправени тирета: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Как си? -&gt; "Как си?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавени липсващи кавички: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Поправяне на субтитри с повече от два реда</Fix3PlusLines>
@@ -1511,7 +1512,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeColumnImportText>Преди колоната импорт на текст</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Преди местенето на клетка надолу</BeforeColumnShiftCellsDown>
     <BeforeX>Преди: {0}</BeforeX>
-    <LinesUpdatedX>Обновени линии: {0} </LinesUpdatedX>
+    <LinesUpdatedX>Обновени редове: {0} </LinesUpdatedX>
     <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка (Plugins): {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Преди стартирането на приставка (Plugins): {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Не може да се прочетат субтитрите, в резултат от приставката!</UnableToReadPluginResult>
@@ -1882,7 +1883,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CustomSearchTextAndUrl>URL адрес за търсене на текст</CustomSearchTextAndUrl>
     <WaveformAppearance>Изглед на формата на звуковия сигнал</WaveformAppearance>
     <WaveformGridColor>Цвят на мрежата</WaveformGridColor>
-    <WaveformShowGridLines>Показване линиите на мрежата</WaveformShowGridLines>
+    <WaveformShowGridLines>Показване линиите на мрежата (като решетка)</WaveformShowGridLines>
     <WaveformShowCps>Показване симв./сек.</WaveformShowCps>
     <WaveformShowWpm>Показване думи/мин.</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Обръщане посоката на превъртане на скрул бутона на мишката</ReverseMouseWheelScrollDirection>
@@ -1946,7 +1947,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonerrors>Попр. на грешки</FixCommonerrors>
     <RemoveTextForHi>Премахване на текста
 за хора с увреден слух</RemoveTextForHi>
-    <MergeLinesShorterThan>Обедин. редове по-малки от(бр.симв)</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Обедин.редове по-малки от(бр.симв)</MergeLinesShorterThan>
+    <DialogStyle>Диалогов стил</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Тире и на двата реда с интервал</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Тире и на двата реда без интервал</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Тире на втория ред с интервал</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Тире на втория ред без интервал</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Замени с музикален символ</MusicSymbol>
     <MusicSymbolsReplace>Музикални символи за замяна (разделени със запетая)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR грешки</FixCommonOcrErrorsUseHardcodedRules>
@@ -2057,12 +2063,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToFirstSelectedLine>Преминаване на първия избран ред</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Преминаване на следващия празен ред</GoToNextEmptyLine>
     <MergeSelectedLines>Обединяване на избраните редове</MergeSelectedLines>
-    <MergeSelectedLinesAndAutoBreak>Обединяване на избраните линии и автоматично прекъсване</MergeSelectedLinesAndAutoBreak>
-    <MergeSelectedLinesAndUnbreak>Обединяване на избраните линии и разрушаване</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Обединяване на избраните линии и разрушаване без интервал (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesAndAutoBreak>Обединяване на избраните редове и авт. прекъсване</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>Обединяване на избраните редове и прекъсване</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Обединяване на избраните редове и прекъсване без интервал (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Обединяване на избраните редове, запазване само на първия не празен текст</MergeSelectedLinesOnlyFirstText>
-    <MergeSelectedLinesBilingual>Обединяване на избраните редове двуезични</MergeSelectedLinesBilingual>
-    <SplitSelectedLineBilingual>Разделяне избраната линия двуезична</SplitSelectedLineBilingual>
+    <MergeSelectedLinesBilingual>Обединяване на избраните двуезични редове</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>Разделяне на избрания двуезичен ред</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Превключване режима на превода Вкл/Изкл</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Превключване оригинален/преведен</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Обединяване на оригинален и преводен</MergeOriginalAndTranslation>
@@ -2114,6 +2120,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RestoreDefaultSettingsMsg>Всички настройки ще бъдат възстановени до стойностите по подразбиране
 
 Ще продължите ли?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Премахване на времеви кодове</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>Настройки за mpv</Title>
