@@ -31,8 +31,10 @@
    * Add "Collapse" context menu for "shortcuts treeview"
    * Improve text regarding "gaps between subtitles"
    * Add "ALL UPPERCASE" to "Modify selection" - thx Vladimír
+   * Improve ANSI encoding detection on non-Windows platforms - thx NickZ
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
+   * Fix Microsoft Translator API for non-English - thx Ed
    * Fix time code in format .sif - thx Milenko
    * Fix FCE short gap without time codes - thx OmrSi
    * Fix crash when opening translation only from blank - thx OmrSi
