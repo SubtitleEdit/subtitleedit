@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core
             return pre.ToString();
         }
 
-        private bool IsDialog(List<string> lines)
+        public bool IsDialog(List<string> lines)
         {
             if (lines.Count < 2 || lines.Count > 3)
             {
