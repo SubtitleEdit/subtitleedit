@@ -16640,7 +16640,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MakeHistoryForUndo(_language.BeforeSplitLongLines);
                     _subtitle.Paragraphs.Clear();
-                    foreach (var p in splitLongLines.SplittedSubtitle.Paragraphs)
+                    foreach (var p in splitLongLines.SplitSubtitle.Paragraphs)
                     {
                         _subtitle.Paragraphs.Add(p);
                     }

@@ -1533,7 +1533,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeShortLines = "Merge short lines...",
                         MergeDuplicateText = "Merge lines with same text...",
                         MergeSameTimeCodes = "Merge lines with same time codes...",
-                        SplitLongLines = "Split long lines...",
+                        SplitLongLines = "Break/split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Apply minimum gap between subtitles...",
                         NetflixQualityCheck = "Netflix quality check...",
                         SortBy = "Sort by",
@@ -2521,11 +2521,11 @@ can edit in same subtitle file (collaboration)",
 
             SplitLongLines = new LanguageStructure.SplitLongLines
             {
-                Title = "Split long lines",
+                Title = "Break/split long lines",
                 SingleLineMaximumLength = "Single line maximum length",
                 LineMaximumLength = "Line maximum length",
                 LineContinuationBeginEndStrings = "Line continuation begin/end strings",
-                NumberOfSplits = "Number of splits: {0}",
+                NumberOfSplits = "Number of breaks/splits: {0}",
                 LongestSingleLineIsXAtY = "Longest single line length is {0} at line {1}",
                 LongestLineIsXAtY = "Longest total line length is {0} at line {1}",
             };

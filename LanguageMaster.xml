@@ -1038,7 +1038,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <MergeShortLines>Merge short lines...</MergeShortLines>
         <MergeDuplicateText>Merge lines with same text...</MergeDuplicateText>
         <MergeSameTimeCodes>Merge lines with same time codes...</MergeSameTimeCodes>
-        <SplitLongLines>Split long lines...</SplitLongLines>
+        <SplitLongLines>Break/split long lines...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Apply minimum gap between subtitles...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sort by</SortBy>
         <NetflixQualityCheck>Netflix quality check...</NetflixQualityCheck>
@@ -2208,11 +2208,11 @@ Continue?</RestoreDefaultSettingsMsg>
     <Basic>Basic</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Split long lines</Title>
+    <Title>Break/split long lines</Title>
     <SingleLineMaximumLength>Single line maximum length</SingleLineMaximumLength>
     <LineMaximumLength>Line maximum length</LineMaximumLength>
     <LineContinuationBeginEndStrings>Line continuation begin/end strings</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Number of splits: {0}</NumberOfSplits>
+    <NumberOfSplits>Number of breaks/splits: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Longest single line length is {0} at line {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Longest total line length is {0} at line {1}</LongestLineIsXAtY>
   </SplitLongLines>
