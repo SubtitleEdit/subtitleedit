@@ -411,17 +411,17 @@ ZA ŁATWO, PRAGNIE MŁODOŚCI";
             Assert.AreEqual("REŻYSERIA", subtitle.Paragraphs[5].Text);
             Assert.AreEqual("ZA ŁATWO, PRAGNIE MŁODOŚCI", subtitle.Paragraphs[6].Text);
 
-            Assert.AreEqual("00:21:29,998", subtitle.Paragraphs[0].StartTime.ToDisplayString());
-            Assert.AreEqual("00:21:32,960", subtitle.Paragraphs[0].EndTime.ToDisplayString());
+            Assert.AreEqual("00:21:29,998", subtitle.Paragraphs[0].StartTime.ToString(false));
+            Assert.AreEqual("00:21:32,960", subtitle.Paragraphs[0].EndTime.ToString(false));
 
-            Assert.AreEqual("00:21:58,986", subtitle.Paragraphs[1].StartTime.ToDisplayString());
-            Assert.AreEqual("00:22:01,947", subtitle.Paragraphs[1].EndTime.ToDisplayString());
+            Assert.AreEqual("00:21:58,986", subtitle.Paragraphs[1].StartTime.ToString(false));
+            Assert.AreEqual("00:22:01,947", subtitle.Paragraphs[1].EndTime.ToString(false));
 
-            Assert.AreEqual("00:22:03,991", subtitle.Paragraphs[2].StartTime.ToDisplayString());
-            Assert.AreEqual("00:22:05,784", subtitle.Paragraphs[2].EndTime.ToDisplayString());
+            Assert.AreEqual("00:22:03,991", subtitle.Paragraphs[2].StartTime.ToString(false));
+            Assert.AreEqual("00:22:05,784", subtitle.Paragraphs[2].EndTime.ToString(false));
 
-            Assert.AreEqual("00:27:21,175", subtitle.Paragraphs[6].StartTime.ToDisplayString());
-            Assert.AreEqual("00:27:23,121", subtitle.Paragraphs[6].EndTime.ToDisplayString());
+            Assert.AreEqual("00:27:21,175", subtitle.Paragraphs[6].StartTime.ToString(false));
+            Assert.AreEqual("00:27:23,121", subtitle.Paragraphs[6].EndTime.ToString(false));
 
             Assert.IsTrue(target.Errors.Contains("Line 8 -"));
             Assert.IsTrue(target.Errors.Contains("Line 14 -"));
