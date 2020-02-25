@@ -628,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripComboBoxWaveform.Items.Clear();
             for (double zoomCounter = AudioVisualizer.ZoomMinimum; zoomCounter <= AudioVisualizer.ZoomMaximum + (0.001); zoomCounter += 0.1)
             {
-                int percent = (int)Math.Round((zoomCounter * 100));
+                int percent = (int)Math.Round(zoomCounter * 100);
                 var item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
                 toolStripComboBoxWaveform.Items.Add(item);
                 if (percent == 100)
@@ -3404,6 +3404,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateRecentFilesUI()
         {
+            var dropDownItems = new List<ToolStripMenuItem>();
             reopenToolStripMenuItem.DropDownItems.Clear();
             if (Configuration.Settings.General.ShowRecentFiles && Configuration.Settings.RecentFiles.Files.Count > 0)
             {
@@ -3414,15 +3415,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (!string.IsNullOrEmpty(file.OriginalFileName) && File.Exists(file.OriginalFileName))
                         {
-                            reopenToolStripMenuItem.DropDownItems.Add(file.FileName + " + " + file.OriginalFileName, null, ReopenSubtitleToolStripMenuItemClick);
+                            dropDownItems.Add(new ToolStripMenuItem(file.FileName + " + " + file.OriginalFileName, null, ReopenSubtitleToolStripMenuItemClick));
                         }
                         else
                         {
-                            reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
+                            dropDownItems.Add(new ToolStripMenuItem(file.FileName, null, ReopenSubtitleToolStripMenuItemClick));
                         }
-                        UiUtil.FixFonts(reopenToolStripMenuItem.DropDownItems[reopenToolStripMenuItem.DropDownItems.Count - 1]);
+                        UiUtil.FixFonts(dropDownItems[dropDownItems.Count - 1]);
                     }
                 }
+                reopenToolStripMenuItem.DropDownItems.AddRange(dropDownItems.ToArray());
             }
             else
             {
