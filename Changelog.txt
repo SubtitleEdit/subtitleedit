@@ -4,7 +4,7 @@
 * NEW:
    * "UTF-8 without BOM" encoding added - thx uckthis
    * Add "Dialog style" setting - thx OmrSi/Flitskikker
-   * Add some support for reading Adobe Premire .prproj files - thx Ariana
+   * Add some support for reading Adobe Premiere .prproj files - thx Ariana
    * Add new sub format - thx uckthis
    * Add new sub format - thx Ingo
    * Add new json subtitle format - thx Niraj
