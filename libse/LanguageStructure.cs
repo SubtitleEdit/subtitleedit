@@ -1256,6 +1256,7 @@
             public string LineNumberXErrorReadingFromSourceLineY { get; set; }
             public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
             public string LineNumberXExpectedNumberFromSourceLineY { get; set; }
+            public string LineNumberXExpectedEmptyLine { get; set; }
             public string BeforeGuessingTimeCodes { get; set; }
             public string BeforeAutoDuration { get; set; }
             public string BeforeColumnPaste { get; set; }
