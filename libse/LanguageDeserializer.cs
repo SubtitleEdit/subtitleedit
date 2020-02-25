@@ -3178,6 +3178,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/LineNumberXExpectedNumberFromSourceLineY":
                     language.Main.LineNumberXExpectedNumberFromSourceLineY = reader.Value;
                     break;
+                case "Main/LineNumberXExpectedEmptyLine":
+                    language.Main.LineNumberXExpectedEmptyLine = reader.Value;
+                    break;
                 case "Main/BeforeGuessingTimeCodes":
                     language.Main.BeforeGuessingTimeCodes = reader.Value;
                     break;

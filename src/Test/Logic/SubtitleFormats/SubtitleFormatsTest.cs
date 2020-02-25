@@ -362,6 +362,73 @@ def";
             Assert.AreEqual(30, subtitle.Paragraphs[2].EndTime.TotalSeconds);
         }
 
+        [TestMethod]
+        public void TestBadFileWithMissingNewLineAndBadNumbers()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"
+00:21:29,998 --> 00:21:32,960
+LONDYN 8 maja 1945.
+
+Jeszcze 13 lat temu,
+
+-Kwadrans po 12... Mamo.
+67
+
+00:21:58,986 --> 00:22:01,947
+GŁÓWNY
+012 235 4526
+model 5732.
+93
+00:22:03,991 --> 00:22:05,784
+- Za wasz
+- Za wasz
+115
+00:22:18,931 --> 00:22:20,674
+- How do you do, Mr. Van Cleve?
+- How do you do, Mr. Van Cleve?
+
+124
+
+00:22:21,175 --> 00:22:23,121
+10:15 PM.
+That's it, you're staying in bed.
+
+312
+00:24:21,175 --> 00:24:23,121
+REŻYSERIA
+611
+00:27:21,175 --> 00:27:23,121
+ZA ŁATWO, PRAGNIE MŁODOŚCI";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(7, subtitle.Paragraphs.Count);
+            Assert.AreEqual("LONDYN 8 maja 1945." + Environment.NewLine + Environment.NewLine + "Jeszcze 13 lat temu," + Environment.NewLine + Environment.NewLine + "-Kwadrans po 12... Mamo.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("GŁÓWNY" + Environment.NewLine + "012 235 4526" + Environment.NewLine + "model 5732.", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("- Za wasz" + Environment.NewLine + "- Za wasz", subtitle.Paragraphs[2].Text);
+            Assert.AreEqual("- How do you do, Mr. Van Cleve?" + Environment.NewLine + "- How do you do, Mr. Van Cleve?", subtitle.Paragraphs[3].Text);
+            Assert.AreEqual("10:15 PM." + Environment.NewLine + "That's it, you're staying in bed.", subtitle.Paragraphs[4].Text);
+            Assert.AreEqual("REŻYSERIA", subtitle.Paragraphs[5].Text);
+            Assert.AreEqual("ZA ŁATWO, PRAGNIE MŁODOŚCI", subtitle.Paragraphs[6].Text);
+
+            Assert.AreEqual("00:21:29,998", subtitle.Paragraphs[0].StartTime.ToDisplayString());
+            Assert.AreEqual("00:21:32,960", subtitle.Paragraphs[0].EndTime.ToDisplayString());
+
+            Assert.AreEqual("00:21:58,986", subtitle.Paragraphs[1].StartTime.ToDisplayString());
+            Assert.AreEqual("00:22:01,947", subtitle.Paragraphs[1].EndTime.ToDisplayString());
+
+            Assert.AreEqual("00:22:03,991", subtitle.Paragraphs[2].StartTime.ToDisplayString());
+            Assert.AreEqual("00:22:05,784", subtitle.Paragraphs[2].EndTime.ToDisplayString());
+
+            Assert.AreEqual("00:27:21,175", subtitle.Paragraphs[6].StartTime.ToDisplayString());
+            Assert.AreEqual("00:27:23,121", subtitle.Paragraphs[6].EndTime.ToDisplayString());
+
+            Assert.IsTrue(target.Errors.Contains("Line 8 -"));
+            Assert.IsTrue(target.Errors.Contains("Line 14 -"));
+            Assert.IsTrue(target.Errors.Contains("Line 18 -"));
+            Assert.IsTrue(target.Errors.Contains("Line 32 -"));
+        }
+
         #endregion SubRip (.srt)
 
         #region Advanced Sub Station alpha (.ass)

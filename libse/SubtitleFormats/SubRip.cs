@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string paragraphWriteFormat = "{0}{4}{1} --> {2}{4}{3}{4}{4}";
 
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
             }
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Renumber();
             }
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (_isMsFrames)
                 {
@@ -190,8 +190,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (Utilities.IsInteger(line) && TryReadTimeCodesLine(next, _paragraph, false) && line.Trim() == GetLastNumber(_paragraph))
+                    if (Utilities.IsInteger(line) && (TryReadTimeCodesLine(next, null, false) || string.IsNullOrEmpty(next) && TryReadTimeCodesLine(nextNext, null, false)))
                     {
+                        // line is integer and time code follows - could loose a number from text...
                         subtitle.Paragraphs.Add(_paragraph);
                         _lastParagraph = _paragraph;
                         _paragraph = new Paragraph();
@@ -200,11 +201,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             _paragraph.Number = n;
                         }
+                        if (_errors.Length < 2000 && line.Trim() != GetLastNumber(_paragraph))
+                        {
+                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedEmptyLine, _lineNumber, line));
+                        }
                     }
                     else if (TryReadTimeCodesLine(line, null, false))
                     {
                         if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > 0 ||
-                            !string.IsNullOrEmpty(_paragraph.Text))
+                            _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text))
                         {
                             subtitle.Paragraphs.Add(_paragraph);
                             _lastParagraph = _paragraph;
@@ -298,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace(" ---> ", defaultSeparator)
                 .Replace(": ", ":").Trim();
 
-            // Removed stuff after timecodes - like subtitle position
+            // Removed stuff after time codes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
             if (line.Length > 30 && line[29] == ' ')
             {
