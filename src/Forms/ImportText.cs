@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
             checkBoxAutoSplitRemoveLinesNoLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
             checkBoxGenerateTimeCodes.Text = Configuration.Settings.Language.ImportText.GenerateTimeCodes;
+            checkBoxTakeTimeFromFileNames.Text = Configuration.Settings.Language.ImportText.TakeTimeFromFileName;
+            checkBoxTakeTimeFromFileNames.Left = checkBoxGenerateTimeCodes.Left + checkBoxGenerateTimeCodes.Width + 9;
             checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreak;
             labelGapBetweenSubtitles.Text = Configuration.Settings.Language.ImportText.GapBetweenSubtitles;
             numericUpDownGapBetweenLines.Left = labelGapBetweenSubtitles.Left + labelGapBetweenSubtitles.Width + 3;
@@ -76,6 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
+            checkBoxTakeTimeFromFileNames.Visible = false;
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
             {
@@ -97,6 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveLinesWithoutLetters.Checked = Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters;
             checkBoxAutoSplitRemoveLinesNoLetters.Checked = Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters;
             checkBoxGenerateTimeCodes.Checked = Configuration.Settings.Tools.ImportTextGenerateTimeCodes;
+            checkBoxTakeTimeFromFileNames.Checked = Configuration.Settings.Tools.ImportTextTakeTimeCodeFromFileName;
             checkBoxAutoBreak.Checked = Configuration.Settings.Tools.ImportTextAutoBreak;
             textBoxAsEnd.Text = Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText.Replace(" ", string.Empty);
             checkBoxAutoSplitAtEnd.Checked = Configuration.Settings.Tools.ImportTextAutoBreakAtEnd;
@@ -279,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle = new Subtitle(_subtitleInput);
                 if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                 {
-                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    foreach (var p in _subtitle.Paragraphs)
                     {
                         p.Text = Utilities.AutoBreakLine(p.Text);
                     }
@@ -292,14 +296,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Renumber(_startFromNumber);
-            if (checkBoxGenerateTimeCodes.Checked)
+            if (checkBoxGenerateTimeCodes.Checked && checkBoxTakeTimeFromFileNames.Visible && checkBoxTakeTimeFromFileNames.Checked)
+            {
+                // time codes already generated
+            }
+            else if (checkBoxGenerateTimeCodes.Checked)
             {
                 FixDurations();
                 MakePseudoStartTime();
             }
             else
             {
-                foreach (Paragraph p in _subtitle.Paragraphs)
+                foreach (var p in _subtitle.Paragraphs)
                 {
                     p.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                     p.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
@@ -343,6 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!checkBoxRemoveEmptyLines.Checked)
                     {
                         _subtitle.Paragraphs.Add(new Paragraph());
+                        ImportImages.SetEndTimeAndStartTime(Path.GetFileNameWithoutExtension(item.Text), _subtitle.Paragraphs.Last());
                     }
                 }
                 else if (!PlainTextImporter.ContainsLetters(line))
@@ -350,11 +359,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!checkBoxRemoveLinesWithoutLetters.Checked)
                     {
                         _subtitle.Paragraphs.Add(new Paragraph(line.Trim(), 0, 0));
+                        ImportImages.SetEndTimeAndStartTime(Path.GetFileNameWithoutExtension(item.Text), _subtitle.Paragraphs.Last());
                     }
                 }
                 else
                 {
                     _subtitle.Paragraphs.Add(new Paragraph(line.Trim(), 0, 0));
+                    ImportImages.SetEndTimeAndStartTime(Path.GetFileNameWithoutExtension(item.Text), _subtitle.Paragraphs.Last());
                 }
             }
         }
@@ -1036,6 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Configuration.Settings.Tools.ImportTextGenerateTimeCodes = checkBoxGenerateTimeCodes.Checked;
+            Configuration.Settings.Tools.ImportTextTakeTimeCodeFromFileName = checkBoxTakeTimeFromFileNames.Checked;
             Configuration.Settings.Tools.ImportTextAutoBreak = checkBoxAutoBreak.Checked;
             Configuration.Settings.Tools.ImportTextAutoBreakAtEnd = checkBoxAutoSplitAtEnd.Checked;
             Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText = textBoxAsEnd.Text.Replace(" ", string.Empty);
@@ -1055,6 +1067,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.Visible = false;
                 buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFiles;
                 groupBoxSplitting.Enabled = false;
+                checkBoxTakeTimeFromFileNames.Visible = true;
             }
             else
             {
@@ -1062,6 +1075,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.Visible = true;
                 buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
                 groupBoxSplitting.Enabled = true;
+                checkBoxTakeTimeFromFileNames.Visible = false;
             }
             GeneratePreview();
         }

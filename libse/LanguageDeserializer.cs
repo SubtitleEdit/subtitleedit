@@ -2041,6 +2041,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportText/GenerateTimeCodes":
                     language.ImportText.GenerateTimeCodes = reader.Value;
                     break;
+                case "ImportText/TakeTimeFromFileName":
+                    language.ImportText.TakeTimeFromFileName = reader.Value;
+                    break;
                 case "ImportText/GapBetweenSubtitles":
                     language.ImportText.GapBetweenSubtitles = reader.Value;
                     break;

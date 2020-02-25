@@ -778,6 +778,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <RemoveEmptyLines>Remove empty lines</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remove lines without letters</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generate time codes</GenerateTimeCodes>
+    <TakeTimeFromFileName>Take time from file name</TakeTimeFromFileName>
     <GapBetweenSubtitles>Gap between subtitles (milliseconds)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Fixed</Fixed>

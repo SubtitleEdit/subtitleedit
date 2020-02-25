@@ -247,6 +247,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ImportTextAutoSplitAtBlank { get; set; }
         public bool ImportTextRemoveLinesNoLetters { get; set; }
         public bool ImportTextGenerateTimeCodes { get; set; }
+        public bool ImportTextTakeTimeCodeFromFileName { get; set; }
         public bool ImportTextAutoBreak { get; set; }
         public bool ImportTextAutoBreakAtEnd { get; set; }
         public decimal ImportTextGap { get; set; }
@@ -3662,6 +3663,12 @@ $HorzAlign          =   Center
                 settings.Tools.ImportTextGenerateTimeCodes = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("ImportTextTakeTimeCodeFromFileName");
+            if (subNode != null)
+            {
+                settings.Tools.ImportTextTakeTimeCodeFromFileName = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoBreak");
             if (subNode != null)
             {
@@ -6640,6 +6647,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ImportTextAutoSplitAtBlank", settings.Tools.ImportTextAutoSplitAtBlank.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextRemoveLinesNoLetters", settings.Tools.ImportTextRemoveLinesNoLetters.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextGenerateTimeCodes", settings.Tools.ImportTextGenerateTimeCodes.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ImportTextTakeTimeCodeFromFileName", settings.Tools.ImportTextTakeTimeCodeFromFileName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextAutoBreak", settings.Tools.ImportTextAutoBreak.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextAutoBreakAtEnd", settings.Tools.ImportTextAutoBreakAtEnd.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ImportTextGap", settings.Tools.ImportTextGap.ToString(CultureInfo.InvariantCulture));
