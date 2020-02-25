@@ -483,6 +483,8 @@
     <Word from="izvinjenja" to="isprike" />
     <Word from="izvinjenju" to="isprici" />
     <Word from="jedamput" to="jedanput" />
+    <Word from="jedana" to="jedna" />
+    <Word from="jedns" to="jedna" />
     <Word from="jedbo" to="jedno" />
     <Word from="jel" to="je l'" />
     <Word from="jelda" to="jel' da" />
@@ -2853,7 +2855,6 @@
     <RegEx find="leven" replaceWith="ljeven" />
     <RegEx find="mnaj" replaceWith="mnja" />
     <RegEx find="([mM])oč([iun])" replaceWith="$1oć$2" />
-    <RegEx find="oguč" replaceWith="oguć" />
     <RegEx find="([mpsMPS])olić" replaceWith="$1olit ć" />
     <RegEx find="([mM])orać" replaceWith="$1orat ć" />
     <RegEx find="otivisa" replaceWith="otivira" />
@@ -2903,9 +2904,11 @@
     <RegEx find="([nN])ežn" replaceWith="$1ježn" />
     <RegEx find="(?&lt;!d)([nN])oč" replaceWith="$1oć" />
     <RegEx find="nošč" replaceWith="nošć" />
+    <RegEx find="nušt" replaceWith="ništ" />
     <RegEx find="\b([oO])dbra" replaceWith="$1bra" />
     <RegEx find="bavj?est" replaceWith="bavijest" />
     <RegEx find="belod" replaceWith="bjelod" />
+    <RegEx find="očm" replaceWith="očn" />
     <RegEx find="bešen" replaceWith="bješen" />
     <RegEx find="bezbj?edi" replaceWith="sigura" />
     <RegEx find="bezbj?eđen" replaceWith="siguran" />
@@ -2922,6 +2925,7 @@
     <RegEx find="oficir(?!s)" replaceWith="časnik" />
     <RegEx find="oficirs" replaceWith="časnič" />
     <RegEx find="gladne([lvt])" replaceWith="gladnje$1" />
+    <RegEx find="oguč" replaceWith="oguć" />
     <RegEx find="kean" replaceWith="cean" />
     <RegEx find="\bokvasi" replaceWith="smoči" />
     <RegEx find="(?&lt;!m)onj?el" replaceWith="onijel" />
@@ -3546,7 +3550,6 @@
     <RegEx find="([oO])d([kp])" replaceWith="$1t$2" />
     <RegEx find="oćeju" replaceWith="oće" />
     <RegEx find="očeć([eu])" replaceWith="očet ć$1" />
-    <RegEx find="očmi" replaceWith="očni" />
     <RegEx find="odseč" replaceWith="odsječ" />
     <RegEx find="odsetni" replaceWith="odsjetni" />
     <RegEx find="oež" replaceWith="ože" />
