@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLinePrivate(string text, int maximumLength, int mergeLinesShorterThan, string language, bool autoBreakLineEndingEarly)
         {
-            if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
+            if (text == null || text.Length < 3 || !(text.Contains(' ') || text.Contains('\n')))
             {
                 return text;
             }
@@ -468,17 +468,18 @@ namespace Nikse.SubtitleEdit.Core
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Count == 2)
                 {
+                    const string LineCloseChars = ".?!)]♪";
                     var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (language == "ar")
                     {
-                        if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
+                        if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (LineCloseChars.Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
                         {
                             return text;
                         }
                     }
                     else
                     {
-                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (LineCloseChars.Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
                         {
                             return text;
                         }
@@ -487,11 +488,11 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         return text;
                     }
-                    if (noTagLines[0].StartsWith('[') && noTagLines[0].Length > 1 && (".?!)]♪".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (noTagLines[0].StartsWith('[') && noTagLines[0].Length > 1 && (LineCloseChars.Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
                     {
                         return text;
                     }
-                    if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (".?!)]♪".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
+                    if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (LineCloseChars.Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
                     {
                         return text;
                     }
