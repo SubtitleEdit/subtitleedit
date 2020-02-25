@@ -858,6 +858,7 @@
             public string RemoveEmptyLines { get; set; }
             public string RemoveLinesWithoutLetters { get; set; }
             public string GenerateTimeCodes { get; set; }
+            public string TakeTimeFromFileName { get; set; }
             public string GapBetweenSubtitles { get; set; }
             public string Auto { get; set; }
             public string Fixed { get; set; }

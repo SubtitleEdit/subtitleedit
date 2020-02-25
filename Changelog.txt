@@ -32,6 +32,7 @@
    * Improve text regarding "gaps between subtitles"
    * Add "ALL UPPERCASE" to "Modify selection" - thx Vladimír
    * Improve ANSI encoding detection on non-Windows platforms - thx NickZ
+   * Import text w time code from file name - thx ChuotVu/BlazeSeven1989
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix Microsoft Translator API for non-English - thx Ed

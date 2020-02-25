@@ -88,19 +88,15 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(p.Duration.ToShortString());
         }
 
-        private static void SetEndTimeAndStartTime(string name, Paragraph p)
+        public static void SetEndTimeAndStartTime(string name, Paragraph p)
         {
             if (name.Contains("-to-"))
             {
                 var arr = name.Replace("-to-", "_").Split('_');
-                if (arr.Length == 3)
+                if (arr.Length == 3 && int.TryParse(arr[1], out var startTime) && int.TryParse(arr[2], out var endTime))
                 {
-                    int startTime, endTime;
-                    if (int.TryParse(arr[1], out startTime) && int.TryParse(arr[2], out endTime))
-                    {
-                        p.StartTime.TotalMilliseconds = startTime;
-                        p.EndTime.TotalMilliseconds = endTime;
-                    }
+                    p.StartTime.TotalMilliseconds = startTime;
+                    p.EndTime.TotalMilliseconds = endTime;
                 }
             }
             else if (TimeCodeFormat1.IsMatch(name) || TimeCodeFormat2.IsMatch(name))

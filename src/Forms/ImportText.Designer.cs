@@ -39,6 +39,7 @@
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxTakeTimeFromFileNames = new System.Windows.Forms.CheckBox();
             this.groupBoxAutoSplitSettings = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoSplitAtEnd = new System.Windows.Forms.CheckBox();
             this.labelSubMaxLen = new System.Windows.Forms.Label();
@@ -192,6 +193,7 @@
             // groupBoxImportOptions
             // 
             this.groupBoxImportOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportOptions.Controls.Add(this.checkBoxTakeTimeFromFileNames);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxAutoSplitSettings);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxAutoBreak);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxGenerateTimeCodes);
@@ -206,6 +208,16 @@
             this.groupBoxImportOptions.TabIndex = 1;
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
+            // 
+            // checkBoxTakeTimeFromFileNames
+            // 
+            this.checkBoxTakeTimeFromFileNames.AutoSize = true;
+            this.checkBoxTakeTimeFromFileNames.Location = new System.Drawing.Point(157, 250);
+            this.checkBoxTakeTimeFromFileNames.Name = "checkBoxTakeTimeFromFileNames";
+            this.checkBoxTakeTimeFromFileNames.Size = new System.Drawing.Size(143, 17);
+            this.checkBoxTakeTimeFromFileNames.TabIndex = 5;
+            this.checkBoxTakeTimeFromFileNames.Text = "Take time from file name";
+            this.checkBoxTakeTimeFromFileNames.UseVisualStyleBackColor = true;
             // 
             // groupBoxAutoSplitSettings
             // 
@@ -368,7 +380,7 @@
             this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 273);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
             this.groupBoxTimeCodes.Size = new System.Drawing.Size(390, 126);
-            this.groupBoxTimeCodes.TabIndex = 5;
+            this.groupBoxTimeCodes.TabIndex = 6;
             this.groupBoxTimeCodes.TabStop = false;
             this.groupBoxTimeCodes.Text = "Time codes";
             // 
@@ -763,5 +775,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
         private System.Windows.Forms.CheckBox checkBoxAutoSplitAtEnd;
         private System.Windows.Forms.ComboBox comboBoxLineMode;
+        private System.Windows.Forms.CheckBox checkBoxTakeTimeFromFileNames;
     }
 }
