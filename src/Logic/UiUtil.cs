@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, SubtitleFormat format)
         {
-            InitializeSubtitleFormatComboBox(comboBox, new[] { format.FriendlyName }, format.FriendlyName);
+            InitializeSubtitleFormatComboBox(comboBox, new List<string> { format.FriendlyName }, format.FriendlyName);
         }
 
         public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, string selectedName)
@@ -680,32 +680,37 @@ namespace Nikse.SubtitleEdit.Logic
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, string selectedName)
         {
             var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
-            InitializeSubtitleFormatComboBox(comboBox, formatNames, selectedName);
+            InitializeSubtitleFormatComboBox(comboBox, formatNames.ToList(), selectedName);
         }
 
-        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, IEnumerable<string> formatNames, string selectedName)
+        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, List<string> formatNames, string selectedName)
         {
             var selectedIndex = 0;
-            comboBox.BeginUpdate();
-            comboBox.Items.Clear();
             using (var graphics = comboBox.CreateGraphics())
             {
-                var maxWidth = 0.0F;
-                foreach (var name in formatNames)
+                var maxWidth = (float)comboBox.DropDownWidth;
+                var max = formatNames.Count;
+                for (var index = 0; index < max; index++)
                 {
-                    var index = comboBox.Items.Add(name);
+                    var name = formatNames[index];
                     if (name.Equals(selectedName, StringComparison.OrdinalIgnoreCase))
                     {
                         selectedIndex = index;
                     }
-                    var width = graphics.MeasureString(name, comboBox.Font).Width;
-                    if (width > maxWidth)
+                    if (name.Length > 30)
                     {
-                        maxWidth = width;
+                        var width = graphics.MeasureString(name, comboBox.Font).Width;
+                        if (width > maxWidth)
+                        {
+                            maxWidth = width;
+                        }
                     }
                 }
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
             }
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            comboBox.Items.AddRange(formatNames.ToArray<object>());
             comboBox.SelectedIndex = selectedIndex;
             comboBox.EndUpdate();
         }
@@ -716,6 +721,7 @@ namespace Nikse.SubtitleEdit.Logic
             var selectedItem = (TextEncoding)null;
             comboBox.BeginUpdate();
             comboBox.Items.Clear();
+            var encList = new List<TextEncoding>();
             using (var graphics = comboBox.CreateGraphics())
             {
                 var maxWidth = 0.0F;
@@ -736,14 +742,14 @@ namespace Nikse.SubtitleEdit.Logic
                         if (encoding.CodePage.Equals(Encoding.UTF8.CodePage))
                         {
                             item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
-                            comboBox.Items.Insert(TextEncoding.Utf8WithBomIndex, item);
+                            encList.Insert(TextEncoding.Utf8WithBomIndex, item);
                             if (item.Equals(defaultEncoding))
                             {
                                 selectedItem = item;
                             }
 
                             item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
-                            comboBox.Items.Insert(TextEncoding.Utf8WithoutBomIndex, item);
+                            encList.Insert(TextEncoding.Utf8WithBomIndex, item);
                             if (item.Equals(defaultEncoding))
                             {
                                 selectedItem = item;
@@ -751,12 +757,13 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            comboBox.Items.Add(item);
+                            encList.Add(item);
                         }
                     }
                 }
                 comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
             }
+            comboBox.Items.AddRange(encList.ToArray<object>());
             if (selectedItem == null)
             {
                 comboBox.SelectedIndex = TextEncoding.Utf8WithBomIndex; // UTF-8 if DefaultEncoding is not found
