@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core
             var s2 = " " + text.Substring(0, index).TrimEnd();
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
+                foreach (var ending in Utilities.NoBreakAfterList(_language))
                 {
                     if (ending.IsMatch(s2))
                     {
@@ -152,10 +152,9 @@ namespace Nikse.SubtitleEdit.Core
                 if (ch == ' ')
                 {
                     var s2 = text.Substring(0, i).TrimEnd();
-                    var x = CurrentWordInDoNotBreakList(s2, s2.Length - 1);
                     if (Configuration.Settings.Tools.UseNoLineBreakAfter)
                     {
-                        foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
+                        foreach (var ending in Utilities.NoBreakAfterList(_language))
                         {
                             if (ending.IsMatch(s2))
                             {
