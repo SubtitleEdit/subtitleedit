@@ -43,10 +43,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public bool IsLineLengthOkay(int singleLineMaxLength)
-        {
-            return Lines[0].Length <= singleLineMaxLength && Lines[1].Length <= singleLineMaxLength;
-        }
+        public bool IsLineLengthOkay(int singleLineMaxLength) => Lines.All(l => l.Length < singleLineMaxLength);
 
         public double DiffFromAverage()
         {

@@ -8,13 +8,15 @@ namespace Nikse.SubtitleEdit.Core
     {
         private readonly List<TextSplitResult> _splits;
         private readonly List<TextSplitResult> _allSplits;
+        private readonly string _language;
         private readonly int _singleLineMaxLength;
-        private const string EndLineChars = ".!?…؟";
+        private const string EndLineChars = ".!?)]…؟";
         private const string Commas = ",،";
 
         public TextSplit(string text, int singleLineMaxLength, string language)
         {
             _singleLineMaxLength = singleLineMaxLength;
+            _language = language;
 
             // create list with all split possibilities
             _splits = new List<TextSplitResult>();
@@ -112,18 +114,47 @@ namespace Nikse.SubtitleEdit.Core
             return best != null ? string.Join(Environment.NewLine, best.Lines) : null;
         }
 
-        private static bool EndsWith(TextSplitResult textSplitResult, string chars)
+        private bool EndsWith(TextSplitResult textSplitResult, string chars)
         {
-            var line1 = textSplitResult.Lines[0].TrimEnd('"', '\'');
-            return line1.Length > 0 && chars.Contains(line1[line1.Length - 1]);
+            if (textSplitResult.Lines.Count == 0)
+            {
+                return false;
+            }
+
+            string l = textSplitResult.Lines[0];
+
+            // arabic 
+            if (_language.Equals("ar", StringComparison.OrdinalIgnoreCase))
+            {
+                l = l.TrimStart('"', '\'');
+                return l.Length > 0 && chars.Contains(l[0]);
+            }
+
+            l = l.TrimEnd('"', '\'');
+            return l.Length > 0 && chars.Contains(l[l.Length - 1]);
         }
 
-        private static bool IsDialog(TextSplitResult textSplitResult)
+        private bool IsDialog(TextSplitResult textSplitResult)
         {
-            var line1 = textSplitResult.Lines[0].TrimEnd('"', '\'');
-            var line2 = textSplitResult.Lines[1].TrimStart('"', '\'');
-            return line2.Length > 0 && line1.Length > 0 &&
-                   line2.StartsWith('-') && EndLineChars.Contains(line1[line1.Length - 1]);
+            if (textSplitResult.Lines.Count == 0)
+            {
+                return false;
+            }
+
+            string l1 = string.Empty;
+            string l2 = string.Empty;
+
+            // arabic
+            if (_language.Equals("ar", StringComparison.OrdinalIgnoreCase))
+            {
+                l1 = textSplitResult.Lines[0].TrimStart('"', '\'');
+                l2 = textSplitResult.Lines[1].TrimEnd('"', '\'');
+                return l1.Length > 0 && l2.EndsWith('-') && EndLineChars.Contains(l1[0]);
+            }
+
+            l1 = textSplitResult.Lines[0].TrimEnd('"', '\'');
+            l2 = textSplitResult.Lines[1].TrimStart('"', '\'');
+            return l1.Length > 0 && l2.StartsWith('-') && EndLineChars.Contains(l1[l1.Length - 1]);
         }
     }
 }
