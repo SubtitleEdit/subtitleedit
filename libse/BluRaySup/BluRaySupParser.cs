@@ -123,6 +123,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 int w = data[0].Size.Width;
                 int h = data[0].Size.Height;
 
+                if (w <= 0 || h <= 0 || data[0].Fragment.ImageBuffer.Length == 0)
+                {
+                    return new Bitmap(1, 1);
+                }
+
                 var bm = new FastBitmap(new Bitmap(w, h));
                 bm.LockImage();
                 var pal = DecodePalette(palettes);
