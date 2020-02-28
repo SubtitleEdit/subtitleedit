@@ -4129,8 +4129,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
+            if (IsMenuOpen)
+            {
+                return;
+            }
+
             _converted = true;
-            SubtitleFormat format = GetCurrentSubtitleFormat();
+            var format = GetCurrentSubtitleFormat();
             if (format == null)
             {
                 format = new SubRip();
@@ -26533,6 +26538,21 @@ namespace Nikse.SubtitleEdit.Forms
             translatepoweredByMicrosoftToolStripMenuItem.Visible =
                 !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
                 !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint);
+        }
+
+        private void comboBoxSubtitleFormats_DropDownClosed(object sender, EventArgs e)
+        {
+            MenuClosed(sender, e);
+            if (_oldSubtitleFormat.FriendlyName != GetCurrentSubtitleFormat().FriendlyName)
+            {
+                ComboBoxSubtitleFormatsSelectedIndexChanged(sender, e);
+            }
+        }
+
+        private void comboBoxSubtitleFormats_DropDown(object sender, EventArgs e)
+        {
+            _oldSubtitleFormat = GetCurrentSubtitleFormat();
+            MenuOpened(sender, e);
         }
     }
 }
