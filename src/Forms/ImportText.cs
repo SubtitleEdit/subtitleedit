@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -17,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private Subtitle _subtitleInput;
         private string _videoFileName;
+        private string _fileName;
         private readonly Timer _refreshTimer = new Timer();
         private readonly bool _exit;
         private int _startFromNumber = 1;
@@ -173,6 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                groupBoxImportOptions.Visible = true;
                 _startFromNumber = 1;
                 if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 {
@@ -196,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             Format = null;
             string ext = string.Empty;
             var extension = Path.GetExtension(fileName);
+            _fileName = fileName;
             if (extension != null)
             {
                 ext = extension.ToLowerInvariant();
@@ -221,11 +225,91 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LoadRtf(fileName);
             }
+            else if (ext == ".html" && IsHtmlIndexExportFromSubtitleEdit(fileName))
+            {
+                textBoxText.Text = FileUtil.ReadAllTextShared(fileName, Encoding.UTF8);
+                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                GeneratePreview();
+                groupBoxImportOptions.Visible = false;
+            }
             else
             {
                 LoadTextFile(fileName);
             }
             return true;
+        }
+
+        private bool IsHtmlIndexExportFromSubtitleEdit(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return false;
+            }
+
+            var html = FileUtil.ReadAllTextShared(fileName, Encoding.UTF8);
+            var s = GetSubtitleFromHtmlIndex(html.SplitToLines());
+            return s.Paragraphs.Count > 0;
+        }
+
+        private static Subtitle GetSubtitleFromHtmlIndex(List<string> lines)
+        {
+            // A line will look like this: #1:4:06,288->4:09,375<div style='text-align:center'><img src='0001.png' /><br /><div style='font-size:22px; background-color:LightGreen'>My mommy always said<br />there were no monsters.</div></div><br /><hr />
+            var subtitle = new Subtitle();
+            foreach (var line in lines)
+            {
+                var indexOfText = line.IndexOf("LightGreen'>", StringComparison.OrdinalIgnoreCase);
+                if (indexOfText < 0)
+                {
+                    indexOfText = line.IndexOf("LightGreen\">", StringComparison.OrdinalIgnoreCase);
+                }
+
+                var indexOfFirstColon = line.IndexOf(':');
+                var indexOfTimeSplit = line.IndexOf("->", StringComparison.Ordinal);
+                var indexOfFirstDiv = line.IndexOf("<div", StringComparison.OrdinalIgnoreCase);
+                if (indexOfText > 0 && indexOfFirstColon > 0 && indexOfTimeSplit > 0 && indexOfFirstDiv > 0)
+                {
+                    var start = line.Substring(indexOfFirstColon + 1, indexOfTimeSplit - indexOfFirstColon -1);
+                    var end = line.Substring(indexOfTimeSplit + 2, indexOfFirstDiv - indexOfTimeSplit -2);
+                    var text = line.Substring(indexOfText + "LightGreen'>".Length)
+                        .Replace("</div>", string.Empty)
+                        .Replace("<hr />", string.Empty)
+                        .Replace("<hr/>", string.Empty)
+                        .Replace("<hr>", string.Empty)
+                        .Replace("<br />", Environment.NewLine)
+                        .Replace("<br>", Environment.NewLine)
+                        .TrimEnd();
+                    text = WebUtility.HtmlDecode(text);
+                    var p = new Paragraph(text, DecodeTimeCode(start), DecodeTimeCode(end));
+                    subtitle.Paragraphs.Add(p);
+                }
+            }
+            subtitle.Renumber();
+            return subtitle;
+        }
+
+        private static double DecodeTimeCode(string tc)
+        {
+            var parts = tc.Split(',', '.', ':');
+            try
+            {
+                if (parts.Length == 2)
+                {
+                    return new TimeCode(0, 0, int.Parse(parts[0]), int.Parse(parts[1])).TotalMilliseconds;
+                }
+                if (parts.Length == 3)
+                {
+                    return new TimeCode(0,  int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])).TotalMilliseconds;
+                }
+                if (parts.Length == 4)
+                {
+                    return new TimeCode( int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])).TotalMilliseconds;
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+            return 0;
         }
 
         private void GeneratePreview()
@@ -239,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxAutoBreak.Enabled = true;
                 checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreak;
             }
-            else // autosplit
+            else // auto split
             {
                 groupBoxAutoSplitSettings.Visible = true;
                 groupBoxAutoSplitSettings.BringToFront();
@@ -258,6 +342,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
+            if (IsHtmlIndexExportFromSubtitleEdit(_fileName))
+            {
+                groupBoxImportOptions.Visible = false;
+                var html = FileUtil.ReadAllTextShared(_fileName, Encoding.UTF8);
+                _subtitle = GetSubtitleFromHtmlIndex(html.SplitToLines());
+                groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
+                SubtitleListview1.Fill(_subtitle);
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                return;
+            }
+
+            groupBoxImportOptions.Visible = true;
             if (Format == null || Format.GetType() != typeof(CsvNuendo))
             {
                 _subtitle = new Subtitle();
