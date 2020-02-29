@@ -27,12 +27,14 @@
    * Improve speed of .scc reading
    * Auto detect xml in "custom text export" - thx Doug
    * Up to 3 secs "min display time" in "Apply duration limits" - thx Rudy
-   * Install Add more video files to "SupportedTypes" - thx xylographe
+   * Installer: Add more video files to "SupportedTypes" - thx xylographe
    * Add "Collapse" context menu for "shortcuts treeview"
    * Improve text regarding "gaps between subtitles"
    * Add "ALL UPPERCASE" to "Modify selection" - thx Vladimír
    * Improve ANSI encoding detection on non-Windows platforms - thx NickZ
    * Import text w time code from file name - thx ChuotVu/BlazeSeven1989
+   * Make time code more readable in video player - thx Joseph
+   * Do not change format until combobox dropdown is closed - thx Moisés
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix Microsoft Translator API for non-English - thx Ed
@@ -55,6 +57,7 @@
    * Fix mpv crash/hang after open 4+ videos (again)
    * Fix minor issues for Reopen - thx OmrSi
    * Fix text paste in list view - thx Molly
+   * Fix crash when parsing bad BDSUP files - thx Jan
 
 
 3.5.13 (20th January 2020)
