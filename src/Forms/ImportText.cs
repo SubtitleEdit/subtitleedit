@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private bool IsHtmlIndexExportFromSubtitleEdit(string fileName)
+        private static bool IsHtmlIndexExportFromSubtitleEdit(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
             {
