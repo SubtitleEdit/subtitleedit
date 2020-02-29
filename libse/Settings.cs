@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Core
                 existingEntry.FirstVisibleIndex = firstVisibleIndex;
                 Files.Insert(0, existingEntry);
             }
+            Files = Files.Take(MaxRecentFiles).ToList();
         }
 
         public void Add(string fileName, string videoFileName, string originalFileName)
@@ -83,6 +84,7 @@ namespace Nikse.SubtitleEdit.Core
                 Files.Remove(existingEntry);
                 Files.Insert(0, existingEntry);
             }
+            Files = Files.Take(MaxRecentFiles).ToList();
         }
 
         private RecentFileEntry GetRecentFile(string fileName, string originalFileName)
