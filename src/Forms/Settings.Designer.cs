@@ -103,6 +103,8 @@
             this.checkBoxShortcutsControl = new System.Windows.Forms.CheckBox();
             this.buttonUpdateShortcut = new System.Windows.Forms.Button();
             this.treeViewShortcuts = new System.Windows.Forms.TreeView();
+            this.contextMenuStripShortcuts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemShortcutsCollapse = new System.Windows.Forms.ToolStripMenuItem();
             this.labelShortcut = new System.Windows.Forms.Label();
             this.tabPageSyntaxColoring = new System.Windows.Forms.TabPage();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
@@ -370,8 +372,6 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
-            this.contextMenuStripShortcuts = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemShortcutsCollapse = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -386,6 +386,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
             this.tabPageShortcuts.SuspendLayout();
             this.groupBoxShortcuts.SuspendLayout();
+            this.contextMenuStripShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
             this.tabPageVideoPlayer.SuspendLayout();
@@ -450,7 +451,6 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
-            this.contextMenuStripShortcuts.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -609,9 +609,9 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxGeneralRules.Controls.Add(this.labelMinGapMs);
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxGeneralRules.Location = new System.Drawing.Point(6, 24);
+            this.groupBoxGeneralRules.Location = new System.Drawing.Point(6, 23);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(387, 356);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(387, 350);
             this.groupBoxGeneralRules.TabIndex = 0;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
@@ -1024,7 +1024,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxEncoding.Location = new System.Drawing.Point(205, 423);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(205, 407);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(188, 21);
             this.comboBoxEncoding.TabIndex = 4;
@@ -1032,7 +1032,7 @@
             // checkBoxAutoDetectAnsiEncoding
             // 
             this.checkBoxAutoDetectAnsiEncoding.AutoSize = true;
-            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(205, 452);
+            this.checkBoxAutoDetectAnsiEncoding.Location = new System.Drawing.Point(205, 436);
             this.checkBoxAutoDetectAnsiEncoding.Name = "checkBoxAutoDetectAnsiEncoding";
             this.checkBoxAutoDetectAnsiEncoding.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoDetectAnsiEncoding.TabIndex = 6;
@@ -1135,7 +1135,7 @@
             // labelAutoDetectAnsiEncoding
             // 
             this.labelAutoDetectAnsiEncoding.AutoSize = true;
-            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(8, 451);
+            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(8, 435);
             this.labelAutoDetectAnsiEncoding.Name = "labelAutoDetectAnsiEncoding";
             this.labelAutoDetectAnsiEncoding.Size = new System.Drawing.Size(137, 13);
             this.labelAutoDetectAnsiEncoding.TabIndex = 5;
@@ -1217,7 +1217,7 @@
             // labelDefaultFileEncoding
             // 
             this.labelDefaultFileEncoding.AutoSize = true;
-            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 427);
+            this.labelDefaultFileEncoding.Location = new System.Drawing.Point(8, 411);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
             this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
             this.labelDefaultFileEncoding.TabIndex = 3;
@@ -1226,7 +1226,7 @@
             // comboBoxFrameRate
             // 
             this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 395);
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 379);
             this.comboBoxFrameRate.Name = "comboBoxFrameRate";
             this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRate.TabIndex = 2;
@@ -1234,7 +1234,7 @@
             // labelDefaultFrameRate
             // 
             this.labelDefaultFrameRate.AutoSize = true;
-            this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 400);
+            this.labelDefaultFrameRate.Location = new System.Drawing.Point(8, 384);
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
             this.labelDefaultFrameRate.Size = new System.Drawing.Size(96, 13);
             this.labelDefaultFrameRate.TabIndex = 1;
@@ -1536,6 +1536,20 @@
             this.treeViewShortcuts.Size = new System.Drawing.Size(797, 394);
             this.treeViewShortcuts.TabIndex = 0;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
+            // 
+            // contextMenuStripShortcuts
+            // 
+            this.contextMenuStripShortcuts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemShortcutsCollapse});
+            this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
+            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 26);
+            // 
+            // toolStripMenuItemShortcutsCollapse
+            // 
+            this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
+            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(119, 22);
+            this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
+            this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
             // 
             // labelShortcut
             // 
@@ -4495,20 +4509,6 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
-            // contextMenuStripShortcuts
-            // 
-            this.contextMenuStripShortcuts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemShortcutsCollapse});
-            this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
-            this.contextMenuStripShortcuts.Size = new System.Drawing.Size(120, 26);
-            // 
-            // toolStripMenuItemShortcutsCollapse
-            // 
-            this.toolStripMenuItemShortcutsCollapse.Name = "toolStripMenuItemShortcutsCollapse";
-            this.toolStripMenuItemShortcutsCollapse.Size = new System.Drawing.Size(119, 22);
-            this.toolStripMenuItemShortcutsCollapse.Text = "Collapse";
-            this.toolStripMenuItemShortcutsCollapse.Click += new System.EventHandler(this.toolStripMenuItemShortcutsCollapse_Click);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4546,6 +4546,7 @@
             this.tabPageShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.ResumeLayout(false);
             this.groupBoxShortcuts.PerformLayout();
+            this.contextMenuStripShortcuts.ResumeLayout(false);
             this.tabPageSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
@@ -4641,7 +4642,6 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
-            this.contextMenuStripShortcuts.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
