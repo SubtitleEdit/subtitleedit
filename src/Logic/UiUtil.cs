@@ -749,7 +749,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
 
                             item = new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
-                            encList.Insert(TextEncoding.Utf8WithBomIndex, item);
+                            encList.Insert(TextEncoding.Utf8WithoutBomIndex, item);
                             if (item.Equals(defaultEncoding))
                             {
                                 selectedItem = item;
