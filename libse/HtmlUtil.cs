@@ -543,6 +543,17 @@ namespace Nikse.SubtitleEdit.Core
         {
             var text = input;
 
+            var preTags = string.Empty;
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                var endIdx = text.IndexOf('}', 2);
+                if (endIdx > 2)
+                {
+                    preTags = text.Substring(0, endIdx + 1);
+                    text = text.Remove(0, endIdx + 1);
+                }
+            }
+
             const string beginTag = "<i>";
             const string endTag = "</i>";
 
@@ -846,7 +857,7 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
             }
-            return text;
+            return preTags + text;
         }
 
         public static string ToggleTag(string input, string tag)

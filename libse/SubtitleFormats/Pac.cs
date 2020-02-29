@@ -1208,12 +1208,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// <summary>
         /// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
         /// </summary>
-        private static string FixItalics(string text)
+        private static string FixItalics(string input)
         {
+            var pre = string.Empty;
+            var text = input;
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
+            {
+                var endIdx = text.IndexOf('}', 2);
+                if (endIdx > 2)
+                {
+                    pre = text.Substring(0, endIdx + 1);
+                    text = text.Remove(0, endIdx + 1);
+                }
+            }
             int index = text.IndexOf('<');
             if (index < 0)
             {
-                return text;
+                return input;
             }
 
             while (index >= 0 && index < text.Length - 1)
@@ -1242,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
-            return text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+            return pre + text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
         }
 
         public static Encoding GetEncoding(int codePage)
