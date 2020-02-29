@@ -21,9 +21,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
+        public static bool ThrowOnError = false;
+
         public static bool IsValidCodePage(int codePage)
         {
-            return 0 <= codePage && codePage <= 10;
+            return 0 <= codePage && codePage <= 11;
         }
         public const int CodePageLatin = 0;
         public const int CodePageGreek = 1;
@@ -36,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageChineseSimplified = 8;
         public const int CodePageKorean = 9;
         public const int CodePageJapanese = 10;
+        public const int CodePageLatinTurkish = 11;
 
         public const int EncodingChineseSimplified = 936;
         public const int EncodingChineseTraditional = 950;
@@ -107,13 +110,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xe448, new SpecialCharacter("Ĥ")},
             { 0xe44A, new SpecialCharacter("Ĵ")},
             { 0xe453, new SpecialCharacter("Ŝ")},
-            { 0xeA55, new SpecialCharacter("Ŭ")},
+            { 0xeA55, new SpecialCharacter("Ǔ")},
             { 0xe463, new SpecialCharacter("ĉ")},
             { 0xe467, new SpecialCharacter("ĝ")},
             { 0xe468, new SpecialCharacter("ĥ")},
             { 0xe46A, new SpecialCharacter("ĵ")},
             { 0xe473, new SpecialCharacter("ŝ")},
-            { 0xeA75, new SpecialCharacter("ŭ")},
+            { 0xeA75, new SpecialCharacter("ǔ")},
             { 0xe341, new SpecialCharacter("À")},
             { 0xe441, new SpecialCharacter("Â")},
             { 0xe461, new SpecialCharacter("â")},
@@ -156,13 +159,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x87, new SpecialCharacter("þ")},
             { 0x89, new SpecialCharacter("ð")},
             { 0x88, new SpecialCharacter("Þ")},
-            { 0x8c, new SpecialCharacter("Ð")},
+            { 0x8c, new SpecialCharacter("Đ")},
 
             { 0xe653, new SpecialCharacter("Ş")},
             { 0xe673, new SpecialCharacter("ş")},
             { 0x7b,   new SpecialCharacter("ı")},
-            { 0xeA67, new SpecialCharacter("ğ")},
-            { 0xeA47, new SpecialCharacter("Ğ")},
+            { 0xeA67, new SpecialCharacter("ǧ")},
+            { 0xeA47, new SpecialCharacter("Ǧ")},
             { 0xe849, new SpecialCharacter("İ")},
 
             { 0xE75A, new SpecialCharacter("Ž")},
@@ -173,17 +176,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE773, new SpecialCharacter("š")},
             { 0xE763, new SpecialCharacter("č")},
             { 0xAE, new SpecialCharacter("đ")},
-            { 0xEC75, new SpecialCharacter("ű")},
-            { 0xEC55, new SpecialCharacter("Ű")},
-            { 0xEC6F, new SpecialCharacter("ő")},
-            { 0xEC4F, new SpecialCharacter("Ő")},
 
             { 0xA8,  new SpecialCharacter("¿")},
             { 0xAD,  new SpecialCharacter("¡")},
             { 0xA6,  new SpecialCharacter("ª")},
             { 0xA7,  new SpecialCharacter("º")},
 
-            { 0xAB, new SpecialCharacter("«")},
+            { 0xAB, new SpecialCharacter("½")},
             { 0xBB, new SpecialCharacter("»")},
             { 0xB3, new SpecialCharacter("³")},
             { 0x1C, new SpecialCharacter("“")},
@@ -191,11 +190,254 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x18, new SpecialCharacter("‘")},
             { 0x19, new SpecialCharacter("’")},
             { 0x13, new SpecialCharacter("–")},
-            { 0x14, new SpecialCharacter("—")}
+            { 0x14, new SpecialCharacter("—")},
+            { 0x83, new SpecialCharacter("³")},
+            { 0x5B, new SpecialCharacter("¤")},
+            { 0x85, new SpecialCharacter("ŧ")},
+            { 0x86, new SpecialCharacter("Ŧ")},
+            { 0x8A, new SpecialCharacter("«")},
+            { 0x8B, new SpecialCharacter("»")},
+            { 0x8E, new SpecialCharacter("Ŋ")},
+            { 0x8D, new SpecialCharacter("ŋ")},
+            { 0x95, new SpecialCharacter("Ħ")},
+            { 0x96, new SpecialCharacter("ħ")},
+            { 0x9A, new SpecialCharacter("Œ")},
+            { 0x9B, new SpecialCharacter("¢")},
+            { 0x9D, new SpecialCharacter("¥")},
+            { 0x9E, new SpecialCharacter("€")},
+            { 0xA9, new SpecialCharacter("°")},
+            { 0xAA, new SpecialCharacter("¾")},
+            { 0xAC, new SpecialCharacter("¼")},
+            { 0xB1, new SpecialCharacter("±")},
+            { 0xB5, new SpecialCharacter("µ")},
+            { 0xBA, new SpecialCharacter("œ")},
+            { 0xBF, new SpecialCharacter("ǧ")},
+            { 0xD2, new SpecialCharacter("®")},
+            { 0xD4, new SpecialCharacter("©")},
+            { 0x4CE2, new SpecialCharacter("Ľ", priority: 1)},
+            { 0x74E2, new SpecialCharacter("ť", priority: 1)},
+            { 0x64E2, new SpecialCharacter("ď", priority: 1)},
+            { 0x6CE2, new SpecialCharacter("ľ", priority: 1)},
+            { 0xE020, new SpecialCharacter("˜", priority: 0)},
+            { 0xE045, new SpecialCharacter("Ẽ")},
+            { 0xE049, new SpecialCharacter("Ĩ")},
+            { 0xE055, new SpecialCharacter("Ũ")},
+            { 0xE056, new SpecialCharacter("Ṽ")},
+            { 0xE059, new SpecialCharacter("Ỹ")},
+            { 0xE065, new SpecialCharacter("ẽ")},
+            { 0xE069, new SpecialCharacter("ĩ")},
+            { 0xE075, new SpecialCharacter("ũ")},
+            { 0xE076, new SpecialCharacter("ṽ")},
+            { 0xE079, new SpecialCharacter("ỹ")},
+            { 0xE120, new SpecialCharacter("˚", priority: 0)},
+            { 0xE155, new SpecialCharacter("Ů")},
+            { 0xE175, new SpecialCharacter("ů")},
+            { 0xE177, new SpecialCharacter("ẘ")},
+            { 0xE179, new SpecialCharacter("ẙ")},
+            { 0xE220, new SpecialCharacter("´", priority: 0)},
+            { 0xE247, new SpecialCharacter("Ǵ")},
+            { 0xE24B, new SpecialCharacter("Ḱ")},
+            { 0xE24C, new SpecialCharacter("Ĺ")},
+            { 0xE24D, new SpecialCharacter("Ḿ")},
+            { 0xE250, new SpecialCharacter("Ṕ")},
+            { 0xE252, new SpecialCharacter("Ŕ")},
+            { 0xE257, new SpecialCharacter("Ẃ")},
+            { 0xE25C, new SpecialCharacter("Ǽ")},
+            { 0xE25D, new SpecialCharacter("Ǿ")},
+            { 0xE267, new SpecialCharacter("ǵ")},
+            { 0xE26B, new SpecialCharacter("ḱ")},
+            { 0xE26C, new SpecialCharacter("ĺ")},
+            { 0xE26D, new SpecialCharacter("ḿ")},
+            { 0xE270, new SpecialCharacter("ṕ")},
+            { 0xE272, new SpecialCharacter("ŕ")},
+            { 0xE277, new SpecialCharacter("ẃ")},
+            { 0xE27C, new SpecialCharacter("ǽ")},
+            { 0xE27D, new SpecialCharacter("ǿ")},
+            { 0xE320, new SpecialCharacter("`", priority: 0)},
+            { 0xE34E, new SpecialCharacter("Ǹ")},
+            { 0xE357, new SpecialCharacter("Ẁ")},
+            { 0xE359, new SpecialCharacter("Ỳ")},
+            { 0xE36E, new SpecialCharacter("ǹ")},
+            { 0xE377, new SpecialCharacter("ẁ")},
+            { 0xE379, new SpecialCharacter("ỳ")},
+            { 0xE420, new SpecialCharacter("^", priority: 0)},
+            { 0xE457, new SpecialCharacter("Ŵ")},
+            { 0xE459, new SpecialCharacter("Ŷ")},
+            { 0xE45A, new SpecialCharacter("Ẑ")},
+            { 0xE477, new SpecialCharacter("ŵ")},
+            { 0xE479, new SpecialCharacter("ŷ")},
+            { 0xE47A, new SpecialCharacter("ẑ")},
+            { 0xE520, new SpecialCharacter("¨", priority: 0)},
+            { 0xE548, new SpecialCharacter("Ḧ")},
+            { 0xE557, new SpecialCharacter("Ẅ")},
+            { 0xE558, new SpecialCharacter("Ẍ")},
+            { 0xE568, new SpecialCharacter("ḧ")},
+            { 0xE574, new SpecialCharacter("ẗ")},
+            { 0xE577, new SpecialCharacter("ẅ")},
+            { 0xE578, new SpecialCharacter("ẍ")},
+            { 0xE620, new SpecialCharacter("¸", priority: 0)},
+            { 0xE644, new SpecialCharacter("Ḑ")},
+            { 0xE645, new SpecialCharacter("Ȩ")},
+            { 0xE647, new SpecialCharacter("Ģ")},
+            { 0xE648, new SpecialCharacter("Ḩ")},
+            { 0xE64B, new SpecialCharacter("Ķ")},
+            { 0xE64C, new SpecialCharacter("Ļ")},
+            { 0xE64E, new SpecialCharacter("Ņ")},
+            { 0xE652, new SpecialCharacter("Ŗ")},
+            { 0xE654, new SpecialCharacter("Ţ")},
+            { 0xE664, new SpecialCharacter("ḑ")},
+            { 0xE665, new SpecialCharacter("ȩ")},
+            { 0xE667, new SpecialCharacter("ģ")},
+            { 0xE668, new SpecialCharacter("ḩ")},
+            { 0xE66B, new SpecialCharacter("ķ")},
+            { 0xE66C, new SpecialCharacter("ļ")},
+            { 0xE66E, new SpecialCharacter("ņ")},
+            { 0xE672, new SpecialCharacter("ŗ")},
+            { 0xE674, new SpecialCharacter("ţ")},
+            { 0xE720, new SpecialCharacter("ˇ", priority: 0)},
+            { 0xE741, new SpecialCharacter("Ă")},
+            { 0xE744, new SpecialCharacter("Ď")},
+            { 0xE745, new SpecialCharacter("Ě")},
+            { 0xE747, new SpecialCharacter("Ǧ")},
+            { 0xE748, new SpecialCharacter("Ȟ")},
+            { 0xE749, new SpecialCharacter("Ǐ")},
+            { 0xE74B, new SpecialCharacter("Ǩ")},
+            { 0xE74E, new SpecialCharacter("Ň")},
+            { 0xE74F, new SpecialCharacter("Ǒ")},
+            { 0xE752, new SpecialCharacter("Ř")},
+            { 0xE754, new SpecialCharacter("Ť")},
+            { 0xE755, new SpecialCharacter("Ǔ")},
+            { 0xE761, new SpecialCharacter("ă")},
+            { 0xE765, new SpecialCharacter("ě")},
+            { 0xE768, new SpecialCharacter("ȟ")},
+            { 0xE769, new SpecialCharacter("ǐ")},
+            { 0xE76A, new SpecialCharacter("ǰ")},
+            { 0xE76B, new SpecialCharacter("ǩ")},
+            { 0xE76E, new SpecialCharacter("ň")},
+            { 0xE76F, new SpecialCharacter("ǒ")},
+            { 0xE772, new SpecialCharacter("ř")},
+            { 0xE775, new SpecialCharacter("ǔ")},
+            { 0xE820, new SpecialCharacter("˙", priority: 0)},
+            { 0xE841, new SpecialCharacter("Ȧ")},
+            { 0xE842, new SpecialCharacter("Ḃ")},
+            { 0xE843, new SpecialCharacter("Ċ")},
+            { 0xE844, new SpecialCharacter("Ḋ")},
+            { 0xE845, new SpecialCharacter("Ė")},
+            { 0xE846, new SpecialCharacter("Ḟ")},
+            { 0xE847, new SpecialCharacter("Ġ")},
+            { 0xE848, new SpecialCharacter("Ḣ")},
+            { 0xE84D, new SpecialCharacter("Ṁ")},
+            { 0xE84E, new SpecialCharacter("Ṅ")},
+            { 0xE84F, new SpecialCharacter("Ȯ")},
+            { 0xE850, new SpecialCharacter("Ṗ")},
+            { 0xE852, new SpecialCharacter("Ṙ")},
+            { 0xE853, new SpecialCharacter("Ṡ")},
+            { 0xE854, new SpecialCharacter("Ṫ")},
+            { 0xE857, new SpecialCharacter("Ẇ")},
+            { 0xE858, new SpecialCharacter("Ẋ")},
+            { 0xE859, new SpecialCharacter("Ẏ")},
+            { 0xE861, new SpecialCharacter("ȧ")},
+            { 0xE862, new SpecialCharacter("ḃ")},
+            { 0xE863, new SpecialCharacter("ċ")},
+            { 0xE864, new SpecialCharacter("ḋ")},
+            { 0xE865, new SpecialCharacter("ė")},
+            { 0xE866, new SpecialCharacter("ḟ")},
+            { 0xE867, new SpecialCharacter("ġ")},
+            { 0xE868, new SpecialCharacter("ḣ")},
+            { 0xE86D, new SpecialCharacter("ṁ")},
+            { 0xE86E, new SpecialCharacter("ṅ")},
+            { 0xE86F, new SpecialCharacter("ȯ")},
+            { 0xE870, new SpecialCharacter("ṗ")},
+            { 0xE872, new SpecialCharacter("ṙ")},
+            { 0xE873, new SpecialCharacter("ṡ")},
+            { 0xE874, new SpecialCharacter("ṫ")},
+            { 0xE877, new SpecialCharacter("ẇ")},
+            { 0xE878, new SpecialCharacter("ẋ")},
+            { 0xE879, new SpecialCharacter("ẏ")},
+            { 0xE920, new SpecialCharacter("¯", priority: 0)},
+            { 0xE941, new SpecialCharacter("Ā")},
+            { 0xE945, new SpecialCharacter("Ē")},
+            { 0xE947, new SpecialCharacter("Ḡ")},
+            { 0xE949, new SpecialCharacter("Ī")},
+            { 0xE94F, new SpecialCharacter("Ō")},
+            { 0xE955, new SpecialCharacter("Ū")},
+            { 0xE959, new SpecialCharacter("Ȳ")},
+            { 0xE95C, new SpecialCharacter("Ǣ")},
+            { 0xE961, new SpecialCharacter("ā")},
+            { 0xE965, new SpecialCharacter("ē")},
+            { 0xE967, new SpecialCharacter("ḡ")},
+            { 0xE969, new SpecialCharacter("ī")},
+            { 0xE96F, new SpecialCharacter("ō")},
+            { 0xE975, new SpecialCharacter("ū")},
+            { 0xE979, new SpecialCharacter("ȳ")},
+            { 0xE97C, new SpecialCharacter("ǣ")},
+            { 0xEA20, new SpecialCharacter("ˇ", priority: 0)},
+            { 0xEA41, new SpecialCharacter("Ă")},
+            { 0xEA45, new SpecialCharacter("Ě")},
+            { 0xEA49, new SpecialCharacter("Ǐ")},
+            { 0xEA4F, new SpecialCharacter("Ǒ")},
+            { 0xEA61, new SpecialCharacter("ă")},
+            { 0xEA65, new SpecialCharacter("ě")},
+            { 0xEA69, new SpecialCharacter("ǐ")},
+            { 0xEA6F, new SpecialCharacter("ǒ")},
+            { 0xEB20, new SpecialCharacter("˛", priority: 0)},
+            { 0xEB49, new SpecialCharacter("Į")},
+            { 0xEB4F, new SpecialCharacter("Ǫ")},
+            { 0xEB55, new SpecialCharacter("Ų")},
+            { 0xEB69, new SpecialCharacter("į")},
+            { 0xEB6F, new SpecialCharacter("ǫ")},
+            { 0xEB75, new SpecialCharacter("ų")},
+            { 0xEC20, new SpecialCharacter("˝", priority: 0)},
+            { 0xEC4F, new SpecialCharacter("Ő")},
+            { 0xEC55, new SpecialCharacter("Ű")},
+            { 0xEC6F, new SpecialCharacter("ő")},
+            { 0xEC75, new SpecialCharacter("ű")},
+        };
+
+        private static readonly Dictionary<int, SpecialCharacter> LatinTurkishOverrides = new Dictionary<int, SpecialCharacter>
+        {
+            { 0xE720, new SpecialCharacter("˘", priority: 0) },
+            { 0xE741, new SpecialCharacter("Ă")},
+            { 0xE745, new SpecialCharacter("Ĕ")},
+            { 0xE747, new SpecialCharacter("Ğ")},
+            { 0xE749, new SpecialCharacter("Ĭ")},
+            { 0xE74F, new SpecialCharacter("Ŏ")},
+            { 0xE755, new SpecialCharacter("Ŭ")},
+            { 0xE761, new SpecialCharacter("ă")},
+            { 0xE765, new SpecialCharacter("ĕ")},
+            { 0xE769, new SpecialCharacter("ĭ")},
+            { 0xE76F, new SpecialCharacter("ŏ")},
+            { 0xE775, new SpecialCharacter("ŭ")},
+
+            { 0xEA20, new SpecialCharacter("˘", priority: 0) },
+            { 0xEA45, new SpecialCharacter("Ĕ")},
+            { 0xEA47, new SpecialCharacter("Ğ")},
+            { 0xEA49, new SpecialCharacter("Ĭ")},
+            { 0xEA4F, new SpecialCharacter("Ŏ")},
+            { 0xEA55, new SpecialCharacter("Ŭ")},
+            { 0xEA65, new SpecialCharacter("ĕ")},
+            { 0xEA67, new SpecialCharacter("ğ")},
+            { 0xEA69, new SpecialCharacter("ĭ")},
+            { 0xEA6F, new SpecialCharacter("ŏ")},
+            { 0xEA75, new SpecialCharacter("ŭ")},
         };
 
         private static readonly Dictionary<int, SpecialCharacter> HebrewCodes = new Dictionary<int, SpecialCharacter>
         {
+            { 0x80, new SpecialCharacter("ְ")},
+            { 0x81, new SpecialCharacter("ֱ")},
+            { 0x82, new SpecialCharacter("ֲ")},
+            { 0x83, new SpecialCharacter("ֳ")},
+            { 0x84, new SpecialCharacter("ִ")},
+            { 0x85, new SpecialCharacter("ֵ")},
+            { 0x86, new SpecialCharacter("ֶ")},
+            { 0x87, new SpecialCharacter("ַ")},
+            { 0x88, new SpecialCharacter("ָ")},
+            { 0x89, new SpecialCharacter("ֹ")},
+            { 0x8b, new SpecialCharacter("ֻ")},
+            { 0x8c, new SpecialCharacter("ּ")},
+            { 0x8d, new SpecialCharacter("ֽ")},
+            { 0x92, new SpecialCharacter("֗")},
             { 0xa0, new SpecialCharacter("א")},
             { 0xa1, new SpecialCharacter("ב")},
             { 0xa2, new SpecialCharacter("ג")},
@@ -223,12 +465,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xb8, new SpecialCharacter("ר")},
             { 0xb9, new SpecialCharacter("ש")},
             { 0xba, new SpecialCharacter("ת")},
-            { 0x2c, new SpecialCharacter("،")}
+            { 0xbb, new SpecialCharacter("װ")},
+            { 0xbc, new SpecialCharacter("ױ")},
+            { 0xbd, new SpecialCharacter("ײ")},
+            { 0xcc, new SpecialCharacter("ףּ")},
+            { 0xcd, new SpecialCharacter("רּ")},
+            { 0xce, new SpecialCharacter("אַ")},
+            { 0xcf, new SpecialCharacter("אּ")},
+            { 0xd0, new SpecialCharacter("אָ")},
+            { 0xd1, new SpecialCharacter("שּׂ")},
+            { 0xd2, new SpecialCharacter("שּׁ")},
+            { 0xd3, new SpecialCharacter("שׂ")},
+            { 0xd4, new SpecialCharacter("שׁ")},
+            { 0xd5, new SpecialCharacter("ﬥ")},
+            { 0xd6, new SpecialCharacter("ﬠ")},
+            { 0xd7, new SpecialCharacter("לּ")},
+            { 0xd8, new SpecialCharacter("יּ")},
+            { 0xd9, new SpecialCharacter("טּ")},
+            { 0xda, new SpecialCharacter("זּ")},
+            { 0xdb, new SpecialCharacter("וּ")},
+            { 0xdc, new SpecialCharacter("הּ")},
+            { 0xdd, new SpecialCharacter("דּ")},
+            { 0xde, new SpecialCharacter("גּ")},
+            { 0xdf, new SpecialCharacter("בּ")},
+            { 0x2b, new SpecialCharacter(".")},
+            { 0x2c, new SpecialCharacter(",")}
         };
 
         private static readonly Dictionary<int, SpecialCharacter> ArabicCodes = new Dictionary<int, SpecialCharacter>
         {
             { 0xe081, new SpecialCharacter("أ")},
+            { 0xe086, new SpecialCharacter("ځ")},
             { 0xe09b, new SpecialCharacter("ؤ")},
             { 0xe09c, new SpecialCharacter("ئ")},
             { 0xe181, new SpecialCharacter("إ")},
@@ -264,21 +531,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x9b, new SpecialCharacter("و")},
             { 0x9c, new SpecialCharacter("ى")},
             { 0x9d, new SpecialCharacter("ة")},
+            { 0x9e, new SpecialCharacter("لا")},
             { 0x9f, new SpecialCharacter("ي")},
             { 0xe09f, new SpecialCharacter("ي")},
             { 0xa0, new SpecialCharacter("ء")},
+            { 0xad, new SpecialCharacter("ڪ")},
+            { 0xae, new SpecialCharacter("ﺭ")},
+            { 0xb0, new SpecialCharacter("ﺩ")},
+            { 0xb1, new SpecialCharacter("ﯼ")},
+            { 0xb3, new SpecialCharacter("۔")},
             { 0x3f, new SpecialCharacter("؟")},
+            { 0x25, new SpecialCharacter("٪")},
             { 0x2c, new SpecialCharacter("،")},
-
-            { 231, new SpecialCharacter("\u064B", true)},
-            { 232, new SpecialCharacter("\u064D", true)},
-            { 229, new SpecialCharacter("\u064E", true)},
-            { 228, new SpecialCharacter("\u064F", true)},
-            { 230, new SpecialCharacter("\u0650", true)},
-            { 227, new SpecialCharacter("\u0651", true)},
-            { 226, new SpecialCharacter("\u0653", true)},
-            { 224, new SpecialCharacter("\u0654", true)},
-            { 225, new SpecialCharacter("\u0655", true)}
+            { 0x3b, new SpecialCharacter("؛")},
+            { 0xe7, new SpecialCharacter("\u064B", true)},
+            { 0xea, new SpecialCharacter("\u064C", true)},
+            { 0xe8, new SpecialCharacter("\u064D", true)},
+            { 0xe5, new SpecialCharacter("\u064E", true)},
+            { 0xe4, new SpecialCharacter("\u064F", true)},
+            { 0xe6, new SpecialCharacter("\u0650", true)},
+            { 0xe3, new SpecialCharacter("\u0651", true)},
+            { 0xe9, new SpecialCharacter("\u0652", true)},
+            { 0xe2, new SpecialCharacter("\u0653", true)},
+            { 0xe0, new SpecialCharacter("\u0654", true)},
+            { 0xe1, new SpecialCharacter("\u0655", true)},
         };
 
         private static readonly Dictionary<int, SpecialCharacter> CyrillicCodes = new Dictionary<int, SpecialCharacter>
@@ -293,19 +569,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x27, new SpecialCharacter("э")},
             { 0x28, new SpecialCharacter("(")},
             { 0x29, new SpecialCharacter(")")},
+            { 0x2a, new SpecialCharacter(";")},
             { 0x2b, new SpecialCharacter("+")},
-            { 0x2c, new SpecialCharacter(",")},
-            { 0x2d, new SpecialCharacter("_")},
+            { 0x2c, new SpecialCharacter("б")},
+            { 0x2d, new SpecialCharacter("-")},
             { 0x2e, new SpecialCharacter("ю")},
             { 0x3a, new SpecialCharacter("Ж")},
-            { 0x3b, new SpecialCharacter("Ж")},
-            { 0x3c, new SpecialCharacter(">")},
+            { 0x3b, new SpecialCharacter("ж")},
+            { 0x3c, new SpecialCharacter("<")},
+            { 0x3d, new SpecialCharacter("=")},
+            { 0x3e, new SpecialCharacter(">")},
             { 0x41, new SpecialCharacter("Ф")},
             { 0x42, new SpecialCharacter("И")},
-            { 0x43, new SpecialCharacter("C")},
+            { 0x43, new SpecialCharacter("С")},
             { 0x44, new SpecialCharacter("В")},
             { 0x45, new SpecialCharacter("У")},
-            { 0x46, new SpecialCharacter("A")},
+            { 0x46, new SpecialCharacter("А")},
             { 0x47, new SpecialCharacter("П")},
             { 0x48, new SpecialCharacter("Р")},
             { 0x49, new SpecialCharacter("Ш")},
@@ -316,6 +595,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x4e, new SpecialCharacter("Т")},
             { 0x4f, new SpecialCharacter("Щ")},
             { 0x50, new SpecialCharacter("З")},
+            { 0x51, new SpecialCharacter("Q")},
             { 0x52, new SpecialCharacter("К")},
             { 0x53, new SpecialCharacter("Ы")},
             { 0x54, new SpecialCharacter("Е")},
@@ -331,12 +611,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x5f, new SpecialCharacter("-")},
             { 0x61, new SpecialCharacter("ф")},
             { 0x62, new SpecialCharacter("и")},
-            { 0x63, new SpecialCharacter("c")},
+            { 0x63, new SpecialCharacter("с")},
             { 0x64, new SpecialCharacter("в")},
             { 0x65, new SpecialCharacter("у")},
-            { 0x66, new SpecialCharacter("a")},
+            { 0x66, new SpecialCharacter("а")},
             { 0x67, new SpecialCharacter("п")},
-            { 0x68, new SpecialCharacter("p")},
+            { 0x68, new SpecialCharacter("р")},
             { 0x69, new SpecialCharacter("ш")},
             { 0x6a, new SpecialCharacter("о")},
             { 0x6b, new SpecialCharacter("л")},
@@ -347,7 +627,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x70, new SpecialCharacter("з")},
             { 0x72, new SpecialCharacter("к")},
             { 0x73, new SpecialCharacter("ы")},
-            { 0x74, new SpecialCharacter("e")},
+            { 0x74, new SpecialCharacter("е")},
             { 0x75, new SpecialCharacter("г")},
             { 0x76, new SpecialCharacter("м")},
             { 0x77, new SpecialCharacter("ц")},
@@ -358,12 +638,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x7d, new SpecialCharacter("Ъ")},
             { 0x80, new SpecialCharacter("Б")},
             { 0x81, new SpecialCharacter("Ю")},
+            { 0x82, new SpecialCharacter("Ђ")},
+            { 0x84, new SpecialCharacter("Є")},
+            { 0x85, new SpecialCharacter("Ѕ")},
+            { 0x86, new SpecialCharacter("І")},
             { 0x88, new SpecialCharacter("Ј")},
+            { 0x89, new SpecialCharacter("Љ")},
             { 0x8a, new SpecialCharacter("Њ")},
+            { 0x8b, new SpecialCharacter("Ћ")},
+            { 0x8c, new SpecialCharacter("Ґ")},
+            { 0x8d, new SpecialCharacter("ґ")},
             { 0x8f, new SpecialCharacter("Џ")},
+            { 0x90, new SpecialCharacter("№")},
             { 0x92, new SpecialCharacter("ђ")},
-            { 0x94, new SpecialCharacter(",")},
-            { 0x95, new SpecialCharacter("-")},
+            { 0x94, new SpecialCharacter("є")},
+            { 0x95, new SpecialCharacter("ѕ")},
             { 0x96, new SpecialCharacter("і")},
             { 0x98, new SpecialCharacter("ј")},
             { 0x99, new SpecialCharacter("љ")},
@@ -372,6 +661,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x9d, new SpecialCharacter("§")},
             { 0x9f, new SpecialCharacter("џ")},
             { 0xa2, new SpecialCharacter("%")},
+            { 0xa4, new SpecialCharacter("&")},
             { 0xac, new SpecialCharacter("C")},
             { 0xad, new SpecialCharacter("D")},
             { 0xae, new SpecialCharacter("E")},
@@ -379,7 +669,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xb0, new SpecialCharacter("G")},
             { 0xb1, new SpecialCharacter("H")},
             { 0xb2, new SpecialCharacter("'")},
-            { 0xb3, new SpecialCharacter("")},
+            { 0xb3, new SpecialCharacter("\"")},
             { 0xb4, new SpecialCharacter("I")},
             { 0xb5, new SpecialCharacter("J")},
             { 0xb6, new SpecialCharacter("K")},
@@ -393,6 +683,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xbe, new SpecialCharacter("T")},
             { 0xbf, new SpecialCharacter("U")},
             { 0xc0, new SpecialCharacter("V")},
+            { 0xc1, new SpecialCharacter("*")},
             { 0xc2, new SpecialCharacter("W")},
             { 0xc3, new SpecialCharacter("X")},
             { 0xc4, new SpecialCharacter("Y")},
@@ -407,7 +698,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xcd, new SpecialCharacter("i")},
             { 0xce, new SpecialCharacter("j")},
             { 0xcf, new SpecialCharacter("k")},
-            { 0xd0, new SpecialCharacter("")},
+            { 0xd0, new SpecialCharacter("—")},
             { 0xd1, new SpecialCharacter("l")},
             { 0xd2, new SpecialCharacter("m")},
             { 0xd3, new SpecialCharacter("n")},
@@ -423,13 +714,51 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xdd, new SpecialCharacter("э")},
             { 0xde, new SpecialCharacter("ю")},
             { 0xdf, new SpecialCharacter("z")},
-            { 0xe3, new SpecialCharacter("ѐ")},
+            { 0xe3, new SpecialCharacter("`")},
+            { 0xe5, new SpecialCharacter("¨")},
+            { 0xe020, new SpecialCharacter("˘")},
+            { 0xe03a, new SpecialCharacter("Ӂ")},
+            { 0xe03b, new SpecialCharacter("ӂ")},
+            { 0xe042, new SpecialCharacter("Й")},
+            { 0xe045, new SpecialCharacter("Ў")},
+            { 0xe046, new SpecialCharacter("Ӑ")},
+            { 0xe054, new SpecialCharacter("Ӗ")},
+            { 0xe062, new SpecialCharacter("й")},
             { 0xe065, new SpecialCharacter("ў")},
-            { 0xe574, new SpecialCharacter("ё")},
+            { 0xe066, new SpecialCharacter("ӑ")},
+            { 0xe074, new SpecialCharacter("ӗ")},
+            { 0xe220, new SpecialCharacter("´")},
             { 0xe252, new SpecialCharacter("Ќ")},
+            { 0xe255, new SpecialCharacter("Ѓ")},
             { 0xe272, new SpecialCharacter("ќ")},
+            { 0xe275, new SpecialCharacter("ѓ")},
+            { 0xe342, new SpecialCharacter("Ѝ")},
+            { 0xe354, new SpecialCharacter("Ѐ")},
+            { 0xe362, new SpecialCharacter("ѝ")},
+            { 0xe374, new SpecialCharacter("ѐ")},
+            { 0xe522, new SpecialCharacter("Ӭ")},
+            { 0xe527, new SpecialCharacter("ӭ")},
+            { 0xe53a, new SpecialCharacter("Ӝ")},
+            { 0xe53b, new SpecialCharacter("ӝ")},
+            { 0xe542, new SpecialCharacter("Ӥ")},
+            { 0xe545, new SpecialCharacter("Ӱ")},
+            { 0xe546, new SpecialCharacter("Ӓ")},
+            { 0xe54a, new SpecialCharacter("Ӧ")},
+            { 0xe550, new SpecialCharacter("Ӟ")},
+            { 0xe553, new SpecialCharacter("Ӹ")},
+            { 0xe554, new SpecialCharacter("Ё")},
+            { 0xe558, new SpecialCharacter("Ӵ")},
+            { 0xe562, new SpecialCharacter("ӥ")},
+            { 0xe565, new SpecialCharacter("ӱ")},
+            { 0xe566, new SpecialCharacter("ӓ")},
+            { 0xe56a, new SpecialCharacter("ӧ")},
+            { 0xe570, new SpecialCharacter("ӟ")},
+            { 0xe573, new SpecialCharacter("ӹ")},
+            { 0xe574, new SpecialCharacter("ё")},
+            { 0xe578, new SpecialCharacter("ӵ")},
+            { 0xe586, new SpecialCharacter("Ї")},
             { 0xe596, new SpecialCharacter("ї")},
-            { 0x6938, new SpecialCharacter("ш")}
+            { 0xe5b4, new SpecialCharacter("Ї")},
         };
 
         private static readonly Dictionary<int, SpecialCharacter> KoreanCodes = new Dictionary<int, SpecialCharacter>
@@ -450,19 +779,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x28, new SpecialCharacter("(") },
             { 0x29, new SpecialCharacter(")") },
             { 0x2A, new SpecialCharacter("*") },
+            { 0x2B, new SpecialCharacter("+") },
             { 0x2C, new SpecialCharacter(",") },
+            { 0x2D, new SpecialCharacter("-") },
             { 0x2E, new SpecialCharacter(".") },
             { 0x2F, new SpecialCharacter("/") },
             { 0x3A, new SpecialCharacter(":") },
             { 0x3B, new SpecialCharacter(";") },
+            { 0x3C, new SpecialCharacter("<") },
             { 0x3D, new SpecialCharacter("=") },
+            { 0x3E, new SpecialCharacter(">") },
             { 0x3F, new SpecialCharacter("?") },
             { 0x40, new SpecialCharacter("@") },
-            { 0x41, new SpecialCharacter("A") },
+            { 0x41, new SpecialCharacter("Α") },
             { 0x42, new SpecialCharacter("Β") },
             { 0x43, new SpecialCharacter("Γ") },
             { 0x44, new SpecialCharacter("Δ") },
-            { 0x45, new SpecialCharacter("E") },
+            { 0x45, new SpecialCharacter("Ε") },
             { 0x46, new SpecialCharacter("Ζ") },
             { 0x47, new SpecialCharacter("Η") },
             { 0x48, new SpecialCharacter("Θ") },
@@ -475,14 +808,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x4F, new SpecialCharacter("Ο") },
             { 0x50, new SpecialCharacter("Π") },
             { 0x51, new SpecialCharacter("Ρ") },
-
+            { 0x52, new SpecialCharacter("R") },
             { 0x53, new SpecialCharacter("Σ") },
-            { 0x54, new SpecialCharacter("T") },
+            { 0x54, new SpecialCharacter("Τ") },
             { 0x55, new SpecialCharacter("Υ") },
             { 0x56, new SpecialCharacter("Φ") },
             { 0x57, new SpecialCharacter("Χ") },
             { 0x58, new SpecialCharacter("Ψ") },
             { 0x59, new SpecialCharacter("Ω") },
+            { 0x5A, new SpecialCharacter("Z") },
 
             { 0x5F, new SpecialCharacter("-") },
 
@@ -511,17 +845,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x77, new SpecialCharacter("χ") },
             { 0x78, new SpecialCharacter("ψ") },
             { 0x79, new SpecialCharacter("ω") },
+            { 0x7A, new SpecialCharacter("z") },
+            { 0x7E, new SpecialCharacter("§") },
             { 0x80, new SpecialCharacter("#") },
             { 0x81, new SpecialCharacter("ß") },
             { 0x82, new SpecialCharacter("²") },
             { 0x83, new SpecialCharacter("³") },
-            { 0x84, new SpecialCharacter("½") },
-            { 0x85, new SpecialCharacter("ŧ") },
-            { 0x86, new SpecialCharacter("Ŧ") },
+            { 0x84, new SpecialCharacter("«") },
+            { 0x85, new SpecialCharacter("»") },
+            { 0x86, new SpecialCharacter("±") },
             { 0x87, new SpecialCharacter("þ") },
             { 0x88, new SpecialCharacter("Þ") },
             { 0x89, new SpecialCharacter("ð") },
-
             { 0x8C, new SpecialCharacter("A") },
             { 0x8D, new SpecialCharacter("B") },
             { 0x8E, new SpecialCharacter("C") },
@@ -548,6 +883,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xA3, new SpecialCharacter("X") },
             { 0xA4, new SpecialCharacter("Y") },
             { 0xA5, new SpecialCharacter("Z") },
+            { 0xA9, new SpecialCharacter("°") },
+            { 0xAB, new SpecialCharacter("½") },
             { 0xAC, new SpecialCharacter("a") },
             { 0xAD, new SpecialCharacter("b") },
             { 0xAE, new SpecialCharacter("c") },
@@ -591,6 +928,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE24D, new SpecialCharacter("Ν́") },
             { 0xE24E, new SpecialCharacter("Ξ́") },
             { 0xE24F, new SpecialCharacter("Ό") },
+            { 0xE255, new SpecialCharacter("Ύ") },
             { 0xE258, new SpecialCharacter("Ψ́") },
             { 0xE259, new SpecialCharacter("Ώ") },
             { 0xE261, new SpecialCharacter("ά") },
@@ -619,6 +957,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE278, new SpecialCharacter("ψ́") },
             { 0xE279, new SpecialCharacter("ώ") },
             { 0xE27B, new SpecialCharacter("ί") },
+            { 0xE320, new SpecialCharacter("`") },
+            { 0xE399, new SpecialCharacter("Ǹ") },
+            { 0xE39A, new SpecialCharacter("Ò") },
+            { 0xE3A0, new SpecialCharacter("Ù") },
+            { 0xE3A2, new SpecialCharacter("Ẁ") },
+            { 0xE3A4, new SpecialCharacter("Ỳ") },
+            { 0xE3B9, new SpecialCharacter("ǹ") },
+            { 0xE3C2, new SpecialCharacter("ẁ") },
+            { 0xE3C4, new SpecialCharacter("ỳ") },
+            { 0xE549, new SpecialCharacter("Ϊ") },
+            { 0xE555, new SpecialCharacter("Ϋ") },
             { 0xE561, new SpecialCharacter("α̈") },
             { 0xE562, new SpecialCharacter("β̈") },
             { 0xE563, new SpecialCharacter("γ̈") },
@@ -627,7 +976,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE566, new SpecialCharacter("ζ̈") },
             { 0xE567, new SpecialCharacter("η̈") },
             { 0xE568, new SpecialCharacter("θ̈") },
-            { 0xE569, new SpecialCharacter("ΐ") },
+            { 0xE569, new SpecialCharacter("ϊ") },
             { 0xE56A, new SpecialCharacter("κ̈") },
             { 0xE56B, new SpecialCharacter("λ̈") },
             { 0xE56C, new SpecialCharacter("μ̈") },
@@ -645,6 +994,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xE578, new SpecialCharacter("ψ̈") },
             { 0xE579, new SpecialCharacter("ω̈") },
             { 0xE57B, new SpecialCharacter("ϊ") },
+            { 0xE5E269, new SpecialCharacter("ΐ") },
+            { 0xE5E275, new SpecialCharacter("ΰ") }
         };
 
         private string _fileName = string.Empty;
@@ -752,9 +1103,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
             }
-            else if (CodePage == CodePageLatin)
+            else if (CodePage == CodePageLatin || CodePage == CodePageLatinCzech)
             {
-                textBuffer = GetLatinBytes(encoding, text, alignment);
+                textBuffer = GetLatinBytes(encoding, text, alignment, null);
             }
             else if (CodePage == CodePageCyrillic)
             {
@@ -763,6 +1114,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (CodePage == CodePageGreek)
             {
                 textBuffer = GetGreekBytes(text, alignment);
+            }
+            else if (CodePage == CodePageLatinTurkish)
+            {
+                textBuffer = GetLatinBytes(encoding, text, alignment, LatinTurkishOverrides);
             }
             else if (CodePage == CodePageChineseTraditional)
             {
@@ -944,12 +1299,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            subtitle.Paragraphs.Clear();
-            subtitle.Header = null;
+
+            bool usesSecondaryCodePage = UsesSecondaryCodePage(buffer);
             int index = 0;
             while (index < buffer.Length)
             {
-                Paragraph p = GetPacParagraph(ref index, buffer);
+                Paragraph p = GetPacParagraph(ref index, buffer, usesSecondaryCodePage);
                 if (p != null)
                 {
                     subtitle.Paragraphs.Add(p);
@@ -958,12 +1313,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        private bool UsesSecondaryCodePage(byte[] buffer)
+        {
+            bool? firstIsSecondary = null;
+            int secondaryUse = 0;
+            for (int i = 15; i < buffer.Length - 1; i++)
+            {
+                if (buffer[i] == 0xFE && (buffer[i - 15] == 0x60 || buffer[i - 15] == 0x61 || buffer[i - 12] == 0x60 || buffer[i - 12] == 0x61))
+                {
+                    bool secondary = (buffer[i + 1] & 0x08) != 0;
+                    firstIsSecondary = firstIsSecondary ?? secondary;
+                    if (secondary)
+                    {
+                        secondaryUse++;
+                    }
+                }
+            }
+
+            return secondaryUse > (firstIsSecondary.GetValueOrDefault() ? 1 : 0);
+        }
+
         private double _lastStartTotalSeconds;
         private double _lastEndTotalSeconds;
 
-        private Paragraph GetPacParagraph(ref int index, byte[] buffer)
+        private Paragraph GetPacParagraph(ref int index, byte[] buffer, bool usesSecondaryCodePage)
         {
-            if (index < 15)
+            bool isStory = index < 15;
+            if (isStory)
             {
                 index = 15;
             }
@@ -989,6 +1365,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int feIndex = index;
             const int endDelimiter = 0x00;
             byte alignment = buffer[feIndex + 1];
+            bool isSecondaryCodePage = (alignment & 0x08) != 0;
+            alignment &= 0x07;
+
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
@@ -1050,6 +1429,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 GetCodePage(buffer, index, endDelimiter);
             }
 
+            var overrides = (CodePage == CodePageLatinTurkish) ? LatinTurkishOverrides : null;
             var sb = new StringBuilder();
             index = feIndex + 3;
             bool w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
@@ -1065,11 +1445,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     w16 = true;
                     index += 5;
                 }
+                else if (buffer.Length > index + 2 && buffer[index] == 0x1f && buffer[index + 1] == 'C' && char.IsDigit((char)buffer[index + 2]))
+                {
+                    index += 3;
+                    continue;
+                }
 
                 if (w16)
                 {
                     if (buffer[index] == 0xFE)
                     {
+                        alignment = buffer[index + 1];
+                        isSecondaryCodePage = (alignment & 0x08) != 0;
+                        alignment &= 0x07;
                         sb.AppendLine();
                         w16 = buffer[index + 3] == 0x1f && Encoding.ASCII.GetString(buffer, index + 4, 3) == "W16";
                         if (w16)
@@ -1104,6 +1492,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append(Encoding.GetEncoding(EncodingChineseTraditional).GetString(buffer, index, 2));
                             }
                         }
+
                         index++;
                     }
                 }
@@ -1113,12 +1502,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (buffer[index] == 0xFE)
                 {
+                    alignment = buffer[index + 1];
+                    isSecondaryCodePage = (alignment & 0x08) != 0;
+                    alignment &= 0x07;
                     sb.AppendLine();
                     index += 2;
                 }
-                else if (CodePage == CodePageLatin)
+                else if (CodePage == CodePageLatin || CodePage == CodePageLatinTurkish || CodePage == CodePageLatinCzech
+                         || (usesSecondaryCodePage && !isSecondaryCodePage))
                 {
-                    sb.Append(GetLatinString(GetEncoding(CodePage), buffer, ref index));
+                    sb.Append(GetLatinString(GetEncoding(CodePage), buffer, ref index, overrides));
                 }
                 else if (CodePage == CodePageArabic)
                 {
@@ -1158,6 +1551,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (CodePage == CodePageArabic)
             {
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
+            else if (CodePage == CodePageHebrew)
+            {
+                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyz");
             }
 
             if (verticalAlignment < 5)
@@ -1270,6 +1667,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return Encoding.GetEncoding("iso-8859-6");
                 case CodePageHebrew:
                     return Encoding.GetEncoding("iso-8859-8");
+                case CodePageLatinTurkish:
+                    return Encoding.GetEncoding("iso-8859-9");
                 case CodePageThai:
                     return Encoding.GetEncoding("windows-874");
                 case CodePageCyrillic:
@@ -1289,6 +1688,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-bg-sq-hr" },
                     { CodePageGreek, "el" },
                     { CodePageLatinCzech, "cz" },
+                    { CodePageLatinTurkish, "tr" },
                     { CodePageArabic, "ar" },
                     { CodePageHebrew, "he" },
                     { CodePageThai, "th" },
@@ -1375,7 +1775,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             CodePage = GetPacEncodingImplementation?.GetPacEncoding(previewBuffer, _fileName) ?? 2;
         }
 
-        private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
+        private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment, Dictionary<int, SpecialCharacter> extraCharacters)
         {
             int i = 0;
             var buffer = new byte[text.Length * 2];
@@ -1393,7 +1793,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else
                 {
                     string letter = text.Substring(i, 1);
-                    var code = Find(LatinCodes, letter);
+                    var code = Find(extraCharacters, letter) ?? Find(LatinCodes, letter);
                     if (code != null)
                     {
                         int byteValue = code.Value.Key;
@@ -1500,7 +1900,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             buffer[i + extra] = (byte)byteValue;
                         }
-                        else
+                        else if (byteValue < 65536)
                         {
                             int high = byteValue / 256;
                             int low = byteValue % 256;
@@ -1514,6 +1914,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 extra++;
                             }
+                            buffer[i + extra] = (byte)low;
+                        }
+                        else
+                        {
+                            int highest = byteValue / 65536;
+                            int high = (byteValue / 256) % 256;
+                            int low = byteValue % 256;
+
+                            buffer[i + extra] = (byte)highest;
+                            extra++;
+                            buffer[i + extra] = (byte)high;
+                            extra++;
                             buffer[i + extra] = (byte)low;
                         }
                     }
@@ -1563,7 +1975,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (OnlyAnsi(line))
                 {
-                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment))
+                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment, null))
                     {
                         result.Add(b);
                     }
@@ -1608,12 +2020,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // if we have a special character we must fetch the next one and move it before the current special one
                 var tempIndex = index + 1;
                 var nextArabicCharacter = GetNextArabicCharacter(buffer, ref tempIndex);
-                if (nextArabicCharacter != null)
+                if (buffer[tempIndex] >= 0x80 && nextArabicCharacter != null)
                 {
                     index = tempIndex;
                     var combined = $"{nextArabicCharacter.Value.Character}{arabicCharacter.Value.Character}";
                     return combined;
                 }
+            }
+
+            if (ThrowOnError && !arabicCharacter.HasValue)
+            {
+                throw new InvalidOperationException($"Unknown byte ({buffer[index]}) in subtitle file @ binary offset {index}.");
             }
 
             return arabicCharacter.HasValue
@@ -1666,31 +2083,64 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return HebrewCodes[b].Character;
             }
 
+            if (ThrowOnError)
+            {
+                throw new InvalidOperationException($"Unknown byte ({b}) in subtitle file @ binary offset {index}.");
+            }
+
             return string.Empty;
+        }
+
+        private static bool TryGetMappedCharacter(Dictionary<int, SpecialCharacter> map, byte[] buffer, ref int index, out string result)
+        {
+            byte b = buffer[index];
+
+            result = string.Empty;
+            if (map.ContainsKey(b))
+            {
+                result = map[b].Character;
+            }
+
+            if (buffer.Length > index + 2)
+            {
+                var code = b * 256 + buffer[index + 1];
+                var next = buffer[index + 1] * 256 + buffer[index + 2];
+
+                if (map.ContainsKey(code) && (!map.ContainsKey(next) || map[code].Priority > map[next].Priority))
+                {
+                    index++;
+                    result = map[code].Character;
+                }
+            }
+
+            return !string.IsNullOrEmpty(result);
         }
 
         public static string GetLatinString(Encoding encoding, byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
+            return GetLatinString(encoding, buffer, ref index, null);
+        }
 
-            if (LatinCodes.ContainsKey(b))
+        private static string GetLatinString(Encoding encoding, byte[] buffer, ref int index, Dictionary<int, SpecialCharacter> overrides)
+        {
+            if (overrides != null && TryGetMappedCharacter(overrides, buffer, ref index, out var result))
             {
-                return LatinCodes[b].Character;
+                return result;
             }
 
-            if (buffer.Length > index + 1)
+            if (TryGetMappedCharacter(LatinCodes, buffer, ref index, out result))
             {
-                var code = b * 256 + buffer[index + 1];
-                if (LatinCodes.ContainsKey(code))
-                {
-                    index++;
-                    return LatinCodes[code].Character;
-                }
+                return result;
             }
 
-            if (b > 13)
+            if (buffer[index] > 13)
             {
                 return encoding.GetString(buffer, index, 1);
+            }
+
+            if (ThrowOnError)
+            {
+                throw new InvalidOperationException($"Unknown byte ({buffer[index]}) in subtitle file @ binary offset {index}.");
             }
 
             return string.Empty;
@@ -1705,11 +2155,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return Encoding.ASCII.GetString(buffer, index, 1);
             }
 
-            if (CyrillicCodes.ContainsKey(b))
-            {
-                return CyrillicCodes[b].Character;
-            }
-
             if (buffer.Length > index + 1)
             {
                 var code = b * 256 + buffer[index + 1];
@@ -1718,6 +2163,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     index++;
                     return CyrillicCodes[code].Character;
                 }
+            }
+
+            if (CyrillicCodes.ContainsKey(b))
+            {
+                return CyrillicCodes[b].Character;
+            }
+
+            if (ThrowOnError)
+            {
+                throw new InvalidOperationException($"Unknown byte (0x{b:X2}) in subtitle file @ binary offset {index}.");
             }
 
             return string.Empty;
@@ -1737,14 +2192,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return GreekCodes[b].Character;
             }
 
-            if (buffer.Length > index + 1)
+            if (buffer.Length > index + 2)
             {
-                var code = b * 256 + buffer[index + 1];
+                int code = b * 65536 + buffer[index + 1] * 256 + buffer[index + 2];
+                if (GreekCodes.ContainsKey(code))
+                {
+                    index += 2;
+                    return GreekCodes[code].Character;
+                }
+
+                code = b * 256 + buffer[index + 1];
                 if (GreekCodes.ContainsKey(code))
                 {
                     index++;
                     return GreekCodes[code].Character;
                 }
+            }
+
+            if (ThrowOnError)
+            {
+                throw new InvalidOperationException($"Unknown byte ({b}) in subtitle file @ binary offset {index}.");
             }
             return string.Empty;
         }
@@ -1773,6 +2240,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
+            if (ThrowOnError)
+            {
+                throw new InvalidOperationException($"Unknown byte ({b}) in subtitle file @ binary offset {index}.");
+            }
+
             return string.Empty;
         }
 
@@ -1795,19 +2267,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static KeyValuePair<int, SpecialCharacter>? Find(Dictionary<int, SpecialCharacter> list, string letter)
         {
-            return list.Where(c => c.Value.Character == letter).Cast<KeyValuePair<int, SpecialCharacter>?>().FirstOrDefault();
+            return list?.Where(c => c.Value.Character == letter).Cast<KeyValuePair<int, SpecialCharacter>?>().FirstOrDefault();
         }
 
         internal struct SpecialCharacter
         {
-            internal SpecialCharacter(string character, bool switchOrder = false)
+            internal SpecialCharacter(string character, bool switchOrder = false, int priority = 2)
             {
                 Character = character;
                 SwitchOrder = switchOrder;
+                Priority = priority;
             }
 
             internal string Character { get; set; }
             internal bool SwitchOrder { get; set; }
+            internal int Priority { get; set; }
         }
     }
 }
