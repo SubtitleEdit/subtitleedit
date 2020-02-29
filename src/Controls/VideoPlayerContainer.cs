@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     FontSizeFactor = 1.0F;
                     SetSubtitleFont();
-                    _labelTimeCode.Text = $"{new TimeCode().ToDisplayString()} / ?";
+                    _labelTimeCode.Text = $"{new TimeCode().ToShortDisplayString()} / ?";
                     ShowAllControls();
                     VideoPlayerContainerResize(this, null);
                     ShowAllControls();
@@ -1081,16 +1081,22 @@ namespace Nikse.SubtitleEdit.Controls
             _panelControls.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 28);
-            _labelTimeCode.ForeColor = Color.Gray;
-            _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 8);
+            _labelTimeCode.ForeColor = Color.AntiqueWhite;
+            _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 8, FontStyle.Bold);
             _labelTimeCode.AutoSize = true;
             _panelControls.Controls.Add(_labelTimeCode);
 
             _labelVideoPlayerName.Location = new Point(282, 17);
-            _labelVideoPlayerName.ForeColor = Color.Gray;
+            _labelVideoPlayerName.ForeColor = Color.AntiqueWhite;
             _labelVideoPlayerName.BackColor = Color.FromArgb(67, 75, 93);
             _labelVideoPlayerName.AutoSize = true;
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
+
+            if (Configuration.Settings.General.UseDarkTheme)
+            {
+                _labelTimeCode.ForeColor = Color.Gray;
+                _labelVideoPlayerName.ForeColor = Color.Gray;
+            }
 
             _panelControls.Controls.Add(_labelVideoPlayerName);
 
@@ -1126,15 +1132,24 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForwardDown.Left = _pictureBoxFastForward.Left;
             _pictureBoxFastForwardOver.Left = _pictureBoxFastForward.Left;
 
+            ResizeTimeCode();
+
+            _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
+            _mpvTextFileName = null;
+        }
+
+        private void ResizeTimeCode()
+        {
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
                 var span = TimeCode.FromSeconds(1);
-                _labelTimeCode.Text = $"{span.ToDisplayString()} / {span.ToDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
+                _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {span.ToShortDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
                 {
                     _labelTimeCode.Font = new Font(_labelTimeCode.Font.Name, _labelTimeCode.Font.Size - 1);
                 }
+
                 _labelTimeCode.Text = string.Empty;
             }
             else
@@ -1145,9 +1160,6 @@ namespace Nikse.SubtitleEdit.Controls
                     _labelTimeCode.Font = new Font(_labelTimeCode.Font.Name, _labelTimeCode.Font.Size - 1);
                 }
             }
-
-            _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
-            _mpvTextFileName = null;
         }
 
         #region PlayPauseButtons
@@ -1598,13 +1610,14 @@ namespace Nikse.SubtitleEdit.Controls
                 if (SmpteMode)
                 {
                     var span = TimeCode.FromSeconds(pos + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
+                    _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {dur.ToShortDisplayString()} SMPTE";
                 }
                 else
                 {
                     var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
+                    _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {dur.ToShortDisplayString()}";
                 }
+                ResizeTimeCode();
 
                 RefreshPlayPauseButtons();
             }
