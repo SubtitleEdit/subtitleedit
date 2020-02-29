@@ -257,18 +257,24 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFont.BeginUpdate();
             comboBoxFontName.Items.Clear();
             comboBoxSubtitleFont.Items.Clear();
+            var comboBoxFontNameList = new List<string>();
+            var comboBoxSubtitleFontList = new List<string>();
+            var comboBoxSubtitleFontIndex = 0;
             foreach (var x in FontFamily.Families.OrderBy(p => p.Name))
             {
-                comboBoxFontName.Items.Add(x.Name);
+                comboBoxFontNameList.Add(x.Name);
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
-                    comboBoxSubtitleFont.Items.Add(x.Name);
+                    comboBoxSubtitleFontList.Add(x.Name);
                     if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                     {
-                        comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                        comboBoxSubtitleFontIndex = comboBoxSubtitleFont.Items.Count - 1;
                     }
                 }
             }
+            comboBoxFontName.Items.AddRange(comboBoxFontNameList.ToArray<object>());
+            comboBoxSubtitleFont.Items.AddRange(comboBoxSubtitleFontList.ToArray<object>());
+            comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFontIndex;
             comboBoxFontName.EndUpdate();
             comboBoxSubtitleFont.EndUpdate();
 
@@ -771,11 +777,10 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxToolsEndSceneIndex.SelectedIndex = 0;
             }
 
+            comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
-            for (int i = 5; i < 100; i++)
-            {
-                comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
-            }
+            comboBoxMergeShortLineLength.Items.AddRange(Enumerable.Range(5, 100).Select(p => p.ToString(CultureInfo.InvariantCulture)).ToArray<object>());
+            comboBoxMergeShortLineLength.EndUpdate();
 
             if (gs.MergeLinesShorterThan >= 5 && gs.MergeLinesShorterThan - 5 < comboBoxMergeShortLineLength.Items.Count)
             {
@@ -1453,21 +1458,23 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                // English is the default selected language.
+
+                // English is the default selected language
                 Configuration.Settings.WordLists.LastLanguage = Configuration.Settings.WordLists.LastLanguage ?? "en-US";
                 comboBoxWordListLanguage.BeginUpdate();
-                foreach (var ci in cultures)
+                var list = new List<ComboBoxLanguage>(cultures.Count);
+                var idx = 0;
+                for (var index = 0; index < cultures.Count; index++)
                 {
-                    comboBoxWordListLanguage.Items.Add(new ComboBoxLanguage { CultureInfo = ci });
+                    var ci = cultures[index];
+                    list.Add(new ComboBoxLanguage { CultureInfo = ci });
                     if (ci.Name.Equals(Configuration.Settings.WordLists.LastLanguage, StringComparison.Ordinal))
                     {
-                        comboBoxWordListLanguage.SelectedIndex = comboBoxWordListLanguage.Items.Count - 1;
+                        idx = index;
                     }
                 }
-                if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex == -1)
-                {
-                    comboBoxWordListLanguage.SelectedIndex = 0;
-                }
+                comboBoxWordListLanguage.Items.AddRange(list.ToArray<object>());
+                comboBoxWordListLanguage.SelectedIndex = idx;
                 comboBoxWordListLanguage.EndUpdate();
             }
             else
@@ -1974,10 +1981,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     listBoxNames.BeginUpdate();
                     listBoxNames.Items.Clear();
-                    foreach (var name in originalTask.Result)
-                    {
-                        listBoxNames.Items.Add(name);
-                    }
+                    listBoxNames.Items.AddRange(originalTask.Result.ToArray<object>());
                     listBoxNames.EndUpdate();
                 }, uiContext);
             }
