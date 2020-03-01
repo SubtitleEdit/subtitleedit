@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxSubtitleFontList.Add(x.Name);
                     if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                     {
-                        comboBoxSubtitleFontIndex = comboBoxSubtitleFont.Items.Count - 1;
+                        comboBoxSubtitleFontIndex = comboBoxSubtitleFontList.Count - 1;
                     }
                 }
             }
@@ -777,10 +777,13 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxToolsEndSceneIndex.SelectedIndex = 0;
             }
 
-            comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
-            comboBoxMergeShortLineLength.Items.AddRange(Enumerable.Range(5, 100).Select(p => p.ToString(CultureInfo.InvariantCulture)).ToArray<object>());
-            comboBoxMergeShortLineLength.EndUpdate();
+            var comboBoxMergeShortLineLengthList = new List<string>(95);
+            for (int i = 5; i < 100; i++)
+            {
+                comboBoxMergeShortLineLengthList.Add(i.ToString(CultureInfo.InvariantCulture));
+            }
+            comboBoxMergeShortLineLength.Items.AddRange(comboBoxMergeShortLineLengthList.ToArray<object>());
 
             if (gs.MergeLinesShorterThan >= 5 && gs.MergeLinesShorterThan - 5 < comboBoxMergeShortLineLength.Items.Count)
             {
@@ -1930,14 +1933,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxOcrFixList.BeginUpdate();
                 listBoxOcrFixList.Items.Clear();
-                foreach (var pair in _ocrFixReplaceList.WordReplaceList)
-                {
-                    listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
-                }
-                foreach (var pair in _ocrFixReplaceList.PartialLineWordBoundaryReplaceList)
-                {
-                    listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
-                }
+                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.WordReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
+                listBoxOcrFixList.Items.AddRange(_ocrFixReplaceList.PartialLineWordBoundaryReplaceList.Select(p => p.Key + " --> " + p.Value).ToArray<object>());
                 listBoxOcrFixList.Sorted = true;
                 listBoxOcrFixList.EndUpdate();
             }
@@ -1952,13 +1949,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (reloadListBox)
             {
                 listBoxUserWordLists.Items.Clear();
-                listBoxUserWordLists.BeginUpdate();
-                foreach (string name in _userWordList)
-                {
-                    listBoxUserWordLists.Items.Add(name);
-                }
-
-                listBoxUserWordLists.EndUpdate();
+                listBoxUserWordLists.Items.AddRange(_userWordList.ToArray<object>());
             }
         }
 
