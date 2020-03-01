@@ -314,6 +314,27 @@ namespace Nikse.SubtitleEdit.Core
             return new string(newStr, 0, newIdx);
         }
 
+        public static bool IsOnlyControlCharactersOrWhiteSpace(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return true;
+            }
+
+            int max = s.Length;
+            for (int index = 0; index < max; index++)
+            {
+                var ch = s[index];
+                if (!char.IsControl(ch) && !char.IsWhiteSpace(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
             int max = s.Length;
