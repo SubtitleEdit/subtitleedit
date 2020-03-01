@@ -490,29 +490,31 @@ namespace Nikse.SubtitleEdit.Core
         public int RemoveEmptyLines()
         {
             int count = _paragraphs.Count;
-            if (count > 0)
+            if (count <= 0)
             {
-                int firstNumber = _paragraphs[0].Number;
-                for (int i = _paragraphs.Count - 1; i >= 0; i--)
+                return 0;
+            }
+
+            int firstNumber = _paragraphs[0].Number;
+            for (int i = _paragraphs.Count - 1; i >= 0; i--)
+            {
+                var p = _paragraphs[i];
+                if (p.Text.IsOnlyControlCharactersOrWhiteSpace())
                 {
-                    Paragraph p = _paragraphs[i];
-                    if (string.IsNullOrWhiteSpace(p.Text.RemoveControlCharacters()))
-                    {
-                        _paragraphs.RemoveAt(i);
-                    }
+                    _paragraphs.RemoveAt(i);
                 }
-                if (count != _paragraphs.Count)
-                {
-                    Renumber(firstNumber);
-                }
+            }
+            if (count != _paragraphs.Count)
+            {
+                Renumber(firstNumber);
             }
             return count - _paragraphs.Count;
         }
 
         /// <summary>
-        /// Removes paragrahs by a list of indices
+        /// Removes paragraphs by a list of indices
         /// </summary>
-        /// <param name="indices">Indices of pargraphs/lines to delete</param>
+        /// <param name="indices">Indices of paragraphs/lines to delete</param>
         /// <returns>Number of lines deleted</returns>
         public int RemoveParagraphsByIndices(IEnumerable<int> indices)
         {
@@ -529,9 +531,9 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Removes paragrahs by a list of IDs
+        /// Removes paragraphs by a list of IDs
         /// </summary>
-        /// <param name="ids">IDs of pargraphs/lines to delete</param>
+        /// <param name="ids">IDs of paragraphs/lines to delete</param>
         /// <returns>Number of lines deleted</returns>
         public int RemoveParagraphsByIds(IEnumerable<string> ids)
         {
