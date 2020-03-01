@@ -3095,6 +3095,7 @@
             this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
             this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
+            this.toolStripSplitButtonPlayRate.ButtonClick += new System.EventHandler(this.toolStripSplitButtonPlayRate_ButtonClick);
             // 
             // tabControlButtons
             // 

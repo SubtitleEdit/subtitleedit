@@ -26554,5 +26554,10 @@ namespace Nikse.SubtitleEdit.Forms
             _oldSubtitleFormat = GetCurrentSubtitleFormat();
             MenuOpened(sender, e);
         }
+
+        private void toolStripSplitButtonPlayRate_ButtonClick(object sender, EventArgs e)
+        {
+            toolStripSplitButtonPlayRate.ShowDropDown();
+        }
     }
 }
