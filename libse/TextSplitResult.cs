@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Core
         public double TotalLength => Lines.Sum(p => p.Length);
         public double TotalLengthPixels => LengthPixels.Sum(p => p) - SpaceLengthPixels;
 
-        private static Graphics _graphics;
-        private static Font _defaultFont;
+        private static readonly Graphics Graphics = Graphics.FromHwnd(IntPtr.Zero);
+        private static readonly Font DefaultFont = SystemFonts.DefaultFont;
 
         public TextSplitResult(List<string> lines)
         {
@@ -24,21 +24,15 @@ namespace Nikse.SubtitleEdit.Core
             LengthPixels = new List<float>();
             if (Configuration.Settings.Tools.AutoBreakUsePixelWidth)
             {
-                if (_graphics == null)
-                {
-                    _graphics = Graphics.FromHwnd(IntPtr.Zero);
-                    _defaultFont = SystemFonts.DefaultFont;
-                }
-
-                var lineOneWidth = _graphics.MeasureString(Lines[0], _defaultFont).Width;
+                var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
                 LengthPixels.Add(lineOneWidth);
 
-                var lineTwoWidth = _graphics.MeasureString(Lines[1], _defaultFont).Width;
+                var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
                 LengthPixels.Add(lineTwoWidth);
 
                 if (Math.Abs(SpaceLengthPixels) < 0.01)
                 {
-                    SpaceLengthPixels = _graphics.MeasureString(" ", _defaultFont).Width;
+                    SpaceLengthPixels = Graphics.MeasureString(" ", DefaultFont).Width;
                 }
             }
 
