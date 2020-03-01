@@ -15,6 +15,7 @@
    * Update Dutch translation - thx xylographe
    * Update Bulgarian translation - thx KalinM
    * Update Russian translation - thx Elheym
+   * Update Portuguese translation - thx moob
    * Update names lists with territories from CLDR - thx xylographe
    * Remove (obsolete) support for SSL3
    * Remember "merge short lines max chars" - thx taxen
@@ -35,6 +36,7 @@
    * Import text w time code from file name - thx ChuotVu/BlazeSeven1989
    * Make time code more readable in video player - thx Joseph
    * Do not change format until combobox dropdown is closed - thx Moisés
+   * Auto-br now faster
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix Microsoft Translator API for non-English - thx Ed
