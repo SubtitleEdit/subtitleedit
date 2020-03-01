@@ -775,6 +775,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
     <RemoveEmptyLines>Fjern tomme linjer</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Fjern linjer uden bogstaver</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generer tidskoder</GenerateTimeCodes>
+    <TakeTimeFromFileName>Tag tid fra fil</TakeTimeFromFileName>
     <GapBetweenSubtitles>Gap mellem undertekster (millisekunder)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Fast</Fixed>
@@ -1493,6 +1494,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linie {0} - fejl ved læsning: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linie {0} - Fejl ved læsning af tidskode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linie {0} - fejl ved linjenummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Linje {0} - forventet tom linje, men fundet nummer + tidskode (nummer skippet): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Før gæt af tidskoder</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Før auto-varighed for udvalgte linjer</BeforeAutoDuration>
     <BeforeColumnPaste>Før kolonne indsæt fra udklipsholder</BeforeColumnPaste>
