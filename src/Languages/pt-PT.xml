@@ -82,6 +82,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <DeleteCurrentLine>Eliminar a linha actual</DeleteCurrentLine>
     <Width>Largura</Width>
     <Height>Altura</Height>
+    <Collapse>Recolher</Collapse>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -346,7 +347,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Generate>Gerar</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Unir pequenos intervalos entre durações</Title>
+    <Title>Unir pequenos intervalos entre linhas</Title>
     <GapsBridgedX>Número de pequenos intervalos unidos: {0}</GapsBridgedX>
     <GapToNext>Intervalo até ao seguinte em segundos</GapToNext>
     <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores do que</BridgeGapsSmallerThanXPart1>
@@ -609,10 +610,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Corrigir sinais invertidos (interrogação e exclamação) do espanhol</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Adicionar aspa em falta (")</AddMissingQuote>
     <AddMissingQuotes>Adicionar aspas em falta (")</AddMissingQuotes>
-    <FixHyphens>Eliminar travessão em linhas que começam com travessão (-)</FixHyphens>
-    <FixHyphensAdd>Adicionar travessão em linhas duplas só com um travessão (-)</FixHyphensAdd>
-    <FixHyphen>Corrigir linhas que começam com travessão (-)</FixHyphen>
-    <XHyphensFixed>Travessões removidos: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Eliminar travessões numa única linha</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Travessões eliminados numa única linha: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Corrigir travessões através do estilo: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Travessões corrigidos: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Como estás? -&gt; "Como estás?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aspas em falta adicionadas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corrigir legendas com mais de duas linhas</Fix3PlusLines>
@@ -777,6 +778,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <RemoveEmptyLines>Eliminar linhas em branco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Eliminar linhas sem letras</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Gerar tempos</GenerateTimeCodes>
+    <TakeTimeFromFileName>Obter duração do nome do ficheiro</TakeTimeFromFileName>
     <GapBetweenSubtitles>Espaço entre linhas (milissegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
@@ -1027,7 +1029,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <Title>Ferramentas</Title>
         <AdjustDisplayDuration>&amp;Ajustar as durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>Unir os intervalos nas durações...</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>Unir os intervalos entre linhas...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>
@@ -1037,8 +1039,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
         <MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
         <MergeSameTimeCodes>Combinar linhas com os mesmos tempos...</MergeSameTimeCodes>
-        <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre linhas...</MinimumDisplayTimeBetweenParagraphs>
+        <SplitLongLines>Quebrar/Dividir as linhas longas...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Aplicar intervalo mínimo entre linhas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
         <NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
         <Number>Ordem numérica</Number>
@@ -1496,6 +1498,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linha {0} - erro de leitura: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linha {0} - erro ao ler os tempos: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linha {0} - número da legenda esperado: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Linha {0} - prevista linha em branco mas foi encontrado número + tempos: {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Antes de saber os tempos</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Antes de auto-duração para as linhas seleccionadas</BeforeAutoDuration>
     <BeforeColumnPaste>Antes de colar coluna</BeforeColumnPaste>
@@ -1747,7 +1750,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MaxVolume>Volume deve ser abaixo de...</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Estabelecer tempo mínimo de visualização entre linhas</Title>
+    <Title>Aplicar intervalo mínimo entre linhas</Title>
     <PreviewLinesModifiedX>Pré-visualizar - linhas modificadas: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
@@ -1939,6 +1942,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FixCommonerrors>Corrigir erros</FixCommonerrors>
     <RemoveTextForHi>Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Eliminar quebra em linha menor que...</MergeLinesShorterThan>
+    <DialogStyle>Estilo de diálogo</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Travessão em ambas as linhas com espaço</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Travessão em ambas as linhas sem espaço</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Travessão só na segunda linha com espaço</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Travessão só na segunda linha sem espaço</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -2106,6 +2114,7 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
     <RestoreDefaultSettingsMsg>Todas as configurações serão repostas para os valores predefinidos
 
 Continuar?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Eliminar tempos</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>Definições do mpv</Title>
@@ -2202,11 +2211,11 @@ Continuar?</RestoreDefaultSettingsMsg>
     <Basic>Básico</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Dividir linhas longas</Title>
+    <Title>Quebrar/Dividir linhas longas</Title>
     <SingleLineMaximumLength>Comp. máximo de uma linha</SingleLineMaximumLength>
     <LineMaximumLength>Comp. máximo da linha</LineMaximumLength>
     <LineContinuationBeginEndStrings>Sentenças de início/fim da continuação da linha</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Número de divisões: {0}</NumberOfSplits>
+    <NumberOfSplits>Número de quebras/divisões: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>O comprimento da maior linha individual é {0} na linha {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>O comprimento da maior linha é {0} na linha {1}</LongestLineIsXAtY>
   </SplitLongLines>
@@ -2389,11 +2398,16 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Importar legenda OCR VobSub (sub/idx)</Title>
     <TitleBluRay>Importar legenda OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Método OCR</OcrMethod>
-    <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR com Tesseract</OcrViaTesseract>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
+    <OcrViaImageCompare>Comparação binária de imagens</OcrViaImageCompare>
+    <OcrViaModi>Microsoft Office Document Imaging (MODI). Necessita do Microsoft Office</OcrViaModi>
     <OcrViaNOCR>OCR com o nOCR</OcrViaNOCR>
+    <TesseractEngineMode>Modo do mecanismo</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Apenas Tesseract original (pode detectar itálicos)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Apenas redes neurais LSTM</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Por defeito, com base no que está disponível</TesseractEngineModeDefault>
     <Language>Idioma</Language>
-    <OcrViaImageCompare>OCR por comparação de imagens</OcrViaImageCompare>
     <ImageDatabase>Base de dados de imagem</ImageDatabase>
     <NoOfPixelsIsSpace>Nenhum dos pixéis é espaço</NoOfPixelsIsSpace>
     <MaxErrorPercent>Max. erros%</MaxErrorPercent>
@@ -2422,6 +2436,7 @@ Manter as alterações?</KeepChangesMessage>
     <AllFixes>Corrigir tudo</AllFixes>
     <GuessesUsed>Suposições usadas</GuessesUsed>
     <UnknownWords>Palavras desconhecidas</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} através da 'OCRFixReplaceList.xml' na linha: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com tempos correspondente...</ImportTextWithMatchingTimeCodes>
