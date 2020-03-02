@@ -82,7 +82,7 @@
     <DeleteCurrentLine>Удалить текущую строку</DeleteCurrentLine>
     <Width>Ширина</Width>
     <Height>Высота</Height>
-    <Collapse>Collapse</Collapse>
+    <Collapse>Свернуть</Collapse>
   </General>
   <About>
     <Title>О программе</Title>
