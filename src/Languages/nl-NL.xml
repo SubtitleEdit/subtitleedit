@@ -81,6 +81,7 @@
     <DeleteCurrentLine>Huidige ondertitel verwĳderen</DeleteCurrentLine>
     <Width>Breedte</Width>
     <Height>Hoogte</Height>
+    <Collapse>Samenvouwen</Collapse>
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
@@ -608,10 +609,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Spaanse omgekeerde vraag- en uitroeptekens corrigeren</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Ontbrekend aanhalingsteken (") toevoegen</AddMissingQuote>
     <AddMissingQuotes>Ontbrekende aanhalingstekens (") toevoegen</AddMissingQuotes>
-    <FixHyphens>Koppelteken (-) aan begin van regel verwĳderen</FixHyphens>
-    <FixHyphensAdd>Streepje (-) toevoegen aan regelparen met slechts één streepje</FixHyphensAdd>
-    <FixHyphen>Tekst die met streepje (-) begint corrigeren</FixHyphen>
-    <XHyphensFixed>Streepjes verwĳderd: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Overbodige dialoogstreepjes verwĳderen</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Dialoogstreepjes verwĳderd: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Dialoogstreepjes corrigeren via stĳl: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Dialoogstreepjes gecorrigeerd: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Hoe gaat het? ⇒ "Hoe gaat het?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aanhalingstekens toegevoegd: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Ondertitels met meer dan twee regels corrigeren</Fix3PlusLines>
@@ -776,6 +777,7 @@ Open “Instellingen -&gt; Voorkeuren -&gt; Extra” voor meer informatie.</Goog
     <RemoveEmptyLines>Lege regels verwĳderen</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Regels zonder letters verwĳderen</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Tĳdcodes genereren</GenerateTimeCodes>
+    <TakeTimeFromFileName>Tĳdcodes uit bestandsnaam halen</TakeTimeFromFileName>
     <GapBetweenSubtitles>Afstand tussen ondertitels (in milliseconden)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Vast</Fixed>
@@ -1498,6 +1500,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Regel {0} – fout bĳ het lezen: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Regel {0} – fout bĳ lezen tĳdcode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Regel {0} – verwachtte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Regel {0} – lege regel verwacht, nummer+tĳdcode gevonden: {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Vóór schatten van tĳdcodes</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Vóór auto-weergavetĳd voor selectie</BeforeAutoDuration>
     <BeforeColumnPaste>Vóór invoegen kolom</BeforeColumnPaste>
@@ -1943,6 +1946,11 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
     <RemoveTextForHi>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHi>
     <MergeLinesShorterThan>Samenvoegen indien korter dan</MergeLinesShorterThan>
+    <DialogStyle>Dialoogstĳl</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Streepje en spatie op beide regels</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Alleen een streepje op beide regels</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Streepje en spatie op tweede regel</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Alleen een streepje op tweede regel</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsReplace>Te vervangen muzieksymbolen (met komma scheiden)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren – ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
