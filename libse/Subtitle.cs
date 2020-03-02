@@ -325,13 +325,20 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes, double optimalCharactersPerSeconds, bool extendOnly = false)
+        public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false)
         {
-            for (int i = 0; i < _paragraphs.Count; i++)
+            if (selectedIndexes != null)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                foreach (var index in selectedIndexes)
                 {
-                    RecalculateDisplayTime(maxCharactersPerSecond, i, optimalCharactersPerSeconds, extendOnly);
+                    RecalculateDisplayTime(maxCharPerSec, index, optimalCharPerSec, extendOnly);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _paragraphs.Count; i++)
+                {
+                    RecalculateDisplayTime(maxCharPerSec, i, optimalCharPerSec, extendOnly);
                 }
             }
         }
@@ -370,7 +377,6 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
         }
-
 
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
         {
