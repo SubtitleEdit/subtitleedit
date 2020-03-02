@@ -637,7 +637,7 @@
             this.comboBoxDialogStyle.Location = new System.Drawing.Point(203, 297);
             this.comboBoxDialogStyle.Name = "comboBoxDialogStyle";
             this.comboBoxDialogStyle.Size = new System.Drawing.Size(170, 21);
-            this.comboBoxDialogStyle.TabIndex = 62;
+            this.comboBoxDialogStyle.TabIndex = 57;
             this.comboBoxDialogStyle.SelectedIndexChanged += new System.EventHandler(this.ProfileUiValueChanged);
             // 
             // checkBoxCpsIncludeWhiteSpace
