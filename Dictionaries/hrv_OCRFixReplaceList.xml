@@ -546,8 +546,10 @@
     <Word from="Kevu" to="Majku" />
     <Word from="kevom" to="majkom" />
     <Word from="Kevom" to="Majkom" />
+    <Word from="kidnapere" to="otmičare" />
     <Word from="kidnapovan" to="otet" />
     <Word from="Kidnapovan" to="Otet" />
+    <Word from="kidnapuje" to="otima" />
     <Word from="kijanje" to="kihanje" />
     <Word from="kiji" to="koji" />
     <Word from="kijim" to="kojim" />
@@ -1970,6 +1972,7 @@
     <Word from="Zaželjeo" to="Zaželio" />
     <Word from="zaželjeo" to="zaželio" />
     <Word from="zbg" to="zbog" />
+    <Word from="zenice" to="zjenice" />
     <Word from="zobg" to="zbog" />
     <Word from="zdelu" to="zdjelu" />
     <Word from="zdrvo" to="zdravo" />
@@ -2267,6 +2270,7 @@
     <Word from="Tajms" to="Times" />
     <Word from="Tejlor" to="Taylor" />
     <Word from="Temi" to="Tammy" />
+    <Word from="Tokijo" to="Tokio" />
     <Word from="Vajlder" to="Wilder" />
     <Word from="Valš" to="Walsh" />
     <Word from="Vankuver" to="Vancouver" />
@@ -2925,7 +2929,7 @@
     <RegEx find="oficir(?!s)" replaceWith="časnik" />
     <RegEx find="oficirs" replaceWith="časnič" />
     <RegEx find="gladne([lvt])" replaceWith="gladnje$1" />
-    <RegEx find="oguč" replaceWith="oguć" />
+    <RegEx find="guč" replaceWith="guć" />
     <RegEx find="kean" replaceWith="cean" />
     <RegEx find="\bokvasi" replaceWith="smoči" />
     <RegEx find="(?&lt;!m)onj?el" replaceWith="onijel" />
@@ -3505,6 +3509,7 @@
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="l([ou])žić" replaceWith="l$1žit ć" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
+    <RegEx find="mbog" replaceWith="mnog" />
     <RegEx find="(?&lt;![Mm])ekd" replaceWith="egd" />
     <RegEx find="([mv])ešten" replaceWith="$1ješten" />
     <RegEx find="mnet" replaceWith="ment" />
