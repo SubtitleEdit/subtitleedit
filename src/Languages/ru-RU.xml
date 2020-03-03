@@ -82,6 +82,7 @@
     <DeleteCurrentLine>Удалить текущую строку</DeleteCurrentLine>
     <Width>Ширина</Width>
     <Height>Высота</Height>
+    <Collapse>Свернуть</Collapse>
   </General>
   <About>
     <Title>О программе</Title>
@@ -615,10 +616,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixSpanishInvertedQuestionAndExclamationMarks>Исправить Испанские перевернутые знаки вопроса и восклицания</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Добавить недостающую кавычку (")</AddMissingQuote>
     <AddMissingQuotes>Добавить недостающие кавычки (")</AddMissingQuotes>
-    <FixHyphens>Исправить (удалить тире) строки начинающиеся с тире (-)</FixHyphens>
-    <FixHyphensAdd>Исправить (добавить тире) строки начинающиеся с тире (-)</FixHyphensAdd>
-    <FixHyphen>Исправить строки начинающиеся с тире (-)</FixHyphen>
-    <XHyphensFixed>Удалено тире: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Удалять диалоговые тире в одной строке</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Диалоговых тире удалено в одной строке: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Исправлено тире в диалогах через стиль: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Тире исправнено: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавлено недостающих кавычек: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Исправить субтитры с более, чем двумя строками</Fix3PlusLines>
@@ -786,6 +787,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveEmptyLines>Удалить пустые строки</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Удалить строки без букв</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Создание временных кодов</GenerateTimeCodes>
+    <TakeTimeFromFileName>Взять время из имени файла</TakeTimeFromFileName>
     <GapBetweenSubtitles>Промежуток между субтитрами (в мс)</GapBetweenSubtitles>
     <Auto>Автоматически</Auto>
     <Fixed>Задать</Fixed>
@@ -1036,7 +1038,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Title>Инструменты</Title>
         <AdjustDisplayDuration>Настройка продолжительности...</AdjustDisplayDuration>
         <ApplyDurationLimits>Ограничить продолжительность...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>Ликвидировать разрывы...</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>Устранение разрывов между строками...</SubtitlesBridgeGaps>
         <FixCommonErrors>Исправить ошибки...</FixCommonErrors>
         <StartNumberingFrom>Перенумеровать строки...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Удалить текст для людей с нарушением слуха...</RemoveTextForHearingImpaired>
@@ -1510,7 +1512,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleExported>Выполнен экспорт субтитров</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Строка {0} - ошибка чтения: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Строка {0} - ошибка чтения таймкода: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Строка {0} - ожидается номер субтитра: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Строка {0} - ожидаемый номер субтитра: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Строка {0} - ожидаемая строка пуста, но найден номер + временной код (номер пропущен): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Перед расстановкой временных кодов</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Перед установкой автопродолжительности для выделенных строк</BeforeAutoDuration>
     <BeforeColumnPaste>Перед вставкой колонки</BeforeColumnPaste>
@@ -1534,9 +1537,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <ParsingTransportStream>Анализ потокового носителя - ожидайте...</ParsingTransportStream>
     <XPercentCompleted>{0}% завершено</XPercentCompleted>
     <NextX>Следующих: {0}</NextX>
-    <PromptInsertSubtitleOverlap>Вставка субтитра в позиции формы сигнала приведет к перекрытию!
+    <PromptInsertSubtitleOverlap>Вставка субтитра в позиции формы сигнала приведёт к перекрытию!
 
-Все равно продолжить?</PromptInsertSubtitleOverlap>
+Всё равно продолжить?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Субтитры содержат отрицательную длительность в строке(-ах): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Установить скорость воспроизведения до {0}%</SetPlayRateX>
     <ErrorLoadIdx>Не удается прочитать/изменить файлы .idx. Эти файлы являются частью idx/sub (называемые VobSub) и Subtitle Edit может открыть файл .sub.</ErrorLoadIdx>
@@ -1825,7 +1828,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Мин. разрыв между субти-ми в мс</MinimumGapMilliseconds>
-    <MaximumLines>Макс. количество строк</MaximumLines>
+    <MaximumLines>Макс. кол-во строк</MaximumLines>
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
@@ -1954,12 +1957,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveTextForHi>Убрать текст для
 слабослышащих</RemoveTextForHi>
     <MergeLinesShorterThan>Объединить строки короче, чем</MergeLinesShorterThan>
+    <DialogStyle>Стиль диалога</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Тире обеим строкам с пробелом</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Тире обеим строкам без пробела</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Тире второй строке с пробелом</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Тире второй строке без пробела</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Заменить музыкальным символом:</MusicSymbol>
     <MusicSymbolsReplace>Символы на замену (разделять "запятой")</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (сразу переходить ко 2-му шагу ‒
-    правилам исправления)</FixCommonErrorsSkipStepOne>
+    <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг
+    (сразу переходить ко 2-му шагу ‒ Правилам исправлений)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Горячие клавиши</Shortcuts>
     <Shortcut>Команда:</Shortcut>
     <Control>Ctrl</Control>
@@ -2058,7 +2066,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SyntaxColorDurationIfTooSmall>Цвет для слишком короткой продолжительности</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Цвет для слишком длинной продолжительности</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Цвет для слишком длинного текста</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanMaxLines>Подсвечивание текста, если он превышает {0} строк(и)</SyntaxColorTextMoreThanMaxLines>
+    <SyntaxColorTextMoreThanMaxLines>Подсвечивание текста, если он превышает {0} строки</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Цвет наложения таймкода</SyntaxColorOverlap>
     <SyntaxColorGap>Цвет разрыва, если он слишком короткий</SyntaxColorGap>
     <SyntaxErrorColor>Цвет ошибки</SyntaxErrorColor>
@@ -2120,9 +2128,10 @@ https://github.com/SubtitleEdit/subtitleedit
 Настройка шрифта для субтитров обычно выполняется в видеоплеере, но также может быть выполнена при использовании формата субтитров
 со встроенной информацией о шрифтах, например «Advanced Sub Station Alpha», или через экспорт в форматы на основе изображений.</FontNote>
     <RestoreDefaultSettings>Восстановить настройки по-умолчанию</RestoreDefaultSettings>
-    <RestoreDefaultSettingsMsg>All settings will be restored to default values /Все настройки будут возвращены
+    <RestoreDefaultSettingsMsg>Все настройки будут возвращены к исходным.
 
-Continue?</RestoreDefaultSettingsMsg>
+Продолжить?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Удалить временные коды</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>Настройки для mpv</Title>
