@@ -3409,6 +3409,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.ShowRecentFiles && Configuration.Settings.RecentFiles.Files.Count > 0)
             {
                 reopenToolStripMenuItem.Visible = true;
+                var lowerFileNameList = new List<string>();
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
                     if (File.Exists(file.FileName))
@@ -3419,7 +3420,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            dropDownItems.Add(new ToolStripMenuItem(file.FileName, null, ReopenSubtitleToolStripMenuItemClick));
+                            if (!lowerFileNameList.Contains(file.FileName.ToLowerInvariant()))
+                            {
+                                dropDownItems.Add(new ToolStripMenuItem(file.FileName, null, ReopenSubtitleToolStripMenuItemClick));
+                                lowerFileNameList.Add(file.FileName.ToLowerInvariant());
+                            }
                         }
                         UiUtil.FixFonts(dropDownItems[dropDownItems.Count - 1]);
                     }
