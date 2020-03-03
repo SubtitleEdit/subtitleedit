@@ -247,20 +247,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var html = FileUtil.ReadAllTextShared(fileName, Encoding.UTF8);
-            var s = GetSubtitleFromHtmlIndex(html.SplitToLines());
+            var s = GetSubtitleFromHtmlIndex(html);
             return s.Paragraphs.Count > 0;
         }
 
-        private static Subtitle GetSubtitleFromHtmlIndex(List<string> lines)
+        private static Subtitle GetSubtitleFromHtmlIndex(string html)
         {
+            var lines = html
+                .Replace($"<br />{Environment.NewLine}", "<br />")
+                .Replace($"<br />\\n", "<br />")
+                .SplitToLines();
+
             // A line will look like this: #1:4:06,288->4:09,375<div style='text-align:center'><img src='0001.png' /><br /><div style='font-size:22px; background-color:LightGreen'>My mommy always said<br />there were no monsters.</div></div><br /><hr />
             var subtitle = new Subtitle();
             foreach (var line in lines)
             {
-                var indexOfText = line.IndexOf("LightGreen'>", StringComparison.OrdinalIgnoreCase);
-                if (indexOfText < 0)
+                var indexOfText = line.IndexOf("background-color:", StringComparison.OrdinalIgnoreCase);
+                if (indexOfText >= 0)
                 {
-                    indexOfText = line.IndexOf("LightGreen\">", StringComparison.OrdinalIgnoreCase);
+                    indexOfText = line.IndexOf('>', indexOfText);
                 }
 
                 var indexOfFirstColon = line.IndexOf(':');
@@ -270,14 +275,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var start = line.Substring(indexOfFirstColon + 1, indexOfTimeSplit - indexOfFirstColon -1);
                     var end = line.Substring(indexOfTimeSplit + 2, indexOfFirstDiv - indexOfTimeSplit -2);
-                    var text = line.Substring(indexOfText + "LightGreen'>".Length)
+                    var text = line.Substring(indexOfText + 1)
                         .Replace("</div>", string.Empty)
                         .Replace("<hr />", string.Empty)
                         .Replace("<hr/>", string.Empty)
                         .Replace("<hr>", string.Empty)
                         .Replace("<br />", Environment.NewLine)
                         .Replace("<br>", Environment.NewLine)
-                        .TrimEnd();
+                        .Trim();
                     text = WebUtility.HtmlDecode(text);
                     var p = new Paragraph(text, DecodeTimeCode(start), DecodeTimeCode(end));
                     subtitle.Paragraphs.Add(p);
@@ -346,7 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxImportOptions.Visible = false;
                 var html = FileUtil.ReadAllTextShared(_fileName, Encoding.UTF8);
-                _subtitle = GetSubtitleFromHtmlIndex(html.SplitToLines());
+                _subtitle = GetSubtitleFromHtmlIndex(html);
                 groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
                 SubtitleListview1.Fill(_subtitle);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
