@@ -593,11 +593,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph previous = subtitle.GetParagraphOrDefault(j - 1);
-                if (p.StartTime.TotalMilliseconds == 0 && previous != null)
+                if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && previous != null)
                 {
                     p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + 1;
                 }
-                if (p.EndTime.TotalMilliseconds == 0)
+                if (Math.Abs(p.EndTime.TotalMilliseconds) < 0.01)
                 {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
                 }
