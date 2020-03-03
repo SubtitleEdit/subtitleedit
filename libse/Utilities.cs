@@ -192,43 +192,59 @@ namespace Nikse.SubtitleEdit.Core
 
         internal static bool CanBreak(string s, int index, string language)
         {
-            char nextChar;
+            char charAtPos;
             if (index >= 0 && index < s.Length)
             {
-                nextChar = s[index];
+                charAtPos = s[index];
             }
             else
             {
                 return false;
             }
 
-            if (!"\r\n\t ".Contains(nextChar))
+            if (!"\r\n\t ".Contains(charAtPos))
             {
                 return false;
+            }
+
+            // only substring if index is not same as current string length
+            if (index + 1 < s.Length)
+            {
+                s = s.Substring(0, index);
             }
 
             // Some words we don't like breaking after
-            string s2 = s.Substring(0, index);
-            if (Configuration.Settings.Tools.UseNoLineBreakAfter)
+            if (Configuration.Settings.Tools.UseNoLineBreakAfter && NoBreakAfterList(language).Any(entry => entry.IsMatch(s)))
             {
-                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
-                {
-                    if (ending.IsMatch(s2))
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                if (s2.EndsWith(" mr.", StringComparison.OrdinalIgnoreCase) ||
-                    s2.EndsWith(" dr.", StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
+                return false;
             }
 
-            if (s2.EndsWith("? -", StringComparison.Ordinal) || s2.EndsWith("! -", StringComparison.Ordinal) || s2.EndsWith(". -", StringComparison.Ordinal))
+            // titles
+            if (s[s.Length - 1] == '.' &&
+                s.EndsWith(" mr.", StringComparison.OrdinalIgnoreCase) ||
+                s.EndsWith(" mrs.", StringComparison.OrdinalIgnoreCase) ||
+                s.EndsWith(" ms.", StringComparison.OrdinalIgnoreCase) ||
+                s.EndsWith(" dr.", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            // dialog
+            if (s.EndsWith("! -", StringComparison.Ordinal) ||
+                s.EndsWith("! (", StringComparison.Ordinal) ||
+                s.EndsWith("! [", StringComparison.Ordinal) ||
+                s.EndsWith(". -", StringComparison.Ordinal) ||
+                s.EndsWith(". (", StringComparison.Ordinal) ||
+                s.EndsWith(". [", StringComparison.Ordinal) ||
+                s.EndsWith("? -", StringComparison.Ordinal) ||
+                s.EndsWith("? (", StringComparison.Ordinal) ||
+                s.EndsWith("? [", StringComparison.Ordinal) ||
+                s.EndsWith("¡ [", StringComparison.Ordinal) ||
+                s.EndsWith("¡ (", StringComparison.Ordinal) ||
+                s.EndsWith("¡ -", StringComparison.Ordinal) ||
+                s.EndsWith("¿ -", StringComparison.Ordinal) ||
+                s.EndsWith("¿ [", StringComparison.Ordinal) ||
+                s.EndsWith("¿ (", StringComparison.Ordinal))
             {
                 return false;
             }
@@ -499,7 +515,10 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string s = RemoveLineBreaks(text);
-            if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
+            var noTagText = HtmlUtil.RemoveHtmlTags(s, true);
+
+            // skip short text, except dialogs
+            if (noTagText.Length < mergeLinesShorterThan && !IsDialogCandidate(s, true))
             {
                 return s;
             }
@@ -571,8 +590,8 @@ namespace Nikse.SubtitleEdit.Core
             }
             s = sb.ToString();
 
-            var textSplit = new TextSplit(s, maximumLength, language);
-            var split = textSplit.AutoBreak(Configuration.Settings.Tools.AutoBreakDashEarly, autoBreakLineEndingEarly, Configuration.Settings.Tools.AutoBreakCommaBreakEarly, Configuration.Settings.Tools.AutoBreakUsePixelWidth);
+            var ts = new TextSplit(s, maximumLength, language);
+            var split = ts.AutoBreak(Configuration.Settings.Tools.AutoBreakDashEarly, autoBreakLineEndingEarly, Configuration.Settings.Tools.AutoBreakCommaBreakEarly, Configuration.Settings.Tools.AutoBreakUsePixelWidth);
             if (split != null)
             {
                 s = split;
@@ -594,6 +613,30 @@ namespace Nikse.SubtitleEdit.Core
             return s.TrimEnd();
         }
 
+        public static bool IsDialogCandidate(string s, bool isClean)
+        {
+            // make sure text doesn't include html tag
+            string noTagText = !isClean ? HtmlUtil.RemoveHtmlTags(s, true) : s;
+
+            // html tag only
+            if (string.IsNullOrWhiteSpace(noTagText))
+            {
+                return false;
+            }
+
+            // minimum length (single-char)(dot)(space)(hyphen)(single-char)
+            if (noTagText.Length < 5)
+            {
+                return false;
+            }
+
+            // dialog pattern
+            return noTagText.Contains("! -") || noTagText.Contains("? -") ||
+                noTagText.Contains(") -") || noTagText.Contains("] -") ||
+                noTagText.Contains(". -") || noTagText.Contains("¿ -") ||
+                noTagText.Contains("¡ -");
+        }
+
         public static string RemoveLineBreaks(string input)
         {
             var s = HtmlUtil.FixUpperTags(input);
@@ -612,7 +655,6 @@ namespace Nikse.SubtitleEdit.Core
             s = s.FixExtraSpaces();
             return s.Trim();
         }
-
 
         /// <summary>
         /// Note: Requires a space before the NewLine
