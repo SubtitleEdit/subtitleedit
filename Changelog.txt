@@ -37,6 +37,7 @@
    * Make time code more readable in video player - thx Joseph
    * Do not change format until combobox dropdown is closed - thx Moisés
    * Auto-br now faster
+   * Format PAC: Add Turkish + add/fix many characters - thx Ingo S
 * FIXED:
    * Fix color in Sami format - thx OhaengCha/Jamakmake
    * Fix Microsoft Translator API for non-English - thx Ed
