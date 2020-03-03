@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 bool justAppend = index == Text.Length - 1 && index > 0;
-                const string expectedChars = ":;]<.!?";
+                const string expectedChars = ":;]<.!?؟";
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;

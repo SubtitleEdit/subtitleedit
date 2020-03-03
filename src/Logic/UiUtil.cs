@@ -822,7 +822,7 @@ namespace Nikse.SubtitleEdit.Logic
 
 
 
-        private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|";
+        private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|؟،";
 
         public static void ApplyControlBackspace(TextBox textBox)
         {
