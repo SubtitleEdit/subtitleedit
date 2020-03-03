@@ -20,18 +20,29 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
                     mergedSubtitle.Paragraphs.Add(p);
                 }
-                Paragraph next = subtitle.GetParagraphOrDefault(i);
+                var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
                     if (QualifiesForMerge(p, next, maxMsBetween) && IsFixAllowed(p, isFixAllowedList))
                     {
-                        if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && next.Text.StartsWith("<i>", StringComparison.Ordinal) && next.Text.EndsWith("</i>", StringComparison.Ordinal))
+                        var nextText = next.Text
+                            .Replace("{\\an1}", string.Empty)
+                            .Replace("{\\an2}", string.Empty)
+                            .Replace("{\\an3}", string.Empty)
+                            .Replace("{\\an4}", string.Empty)
+                            .Replace("{\\an5}", string.Empty)
+                            .Replace("{\\an6}", string.Empty)
+                            .Replace("{\\an7}", string.Empty)
+                            .Replace("{\\an8}", string.Empty)
+                            .Replace("{\\an9}", string.Empty);
+
+                        if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && nextText.StartsWith("<i>", StringComparison.Ordinal) && nextText.EndsWith("</i>", StringComparison.Ordinal))
                         {
-                            p.Text = p.Text.Remove(p.Text.Length - 4) + Environment.NewLine + next.Text.Remove(0, 3);
+                            p.Text = p.Text.Remove(p.Text.Length - 4) + Environment.NewLine + nextText.Remove(0, 3);
                         }
                         else
                         {
-                            p.Text = p.Text + Environment.NewLine + next.Text;
+                            p.Text = p.Text + Environment.NewLine + nextText;
                         }
                         if (reBreak)
                         {
