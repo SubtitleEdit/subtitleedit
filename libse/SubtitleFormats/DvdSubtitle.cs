@@ -34,7 +34,7 @@ LICENSE=
 
             var sb = new StringBuilder();
             sb.AppendLine(header);
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 int milliseconds = p.StartTime.Milliseconds / 10;
                 string time = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, milliseconds);
@@ -55,15 +55,15 @@ LICENSE=
             _errorCount = 0;
             bool textOn = false;
             string text = string.Empty;
-            TimeCode start = new TimeCode();
-            TimeCode end = new TimeCode();
+            var start = new TimeCode();
+            var end = new TimeCode();
             foreach (string line in lines)
             {
                 if (textOn)
                 {
                     if (line.Trim() == "}")
                     {
-                        Paragraph p = new Paragraph
+                        var p = new Paragraph
                         {
                             Text = text,
                             StartTime = new TimeCode(start.TotalMilliseconds),
@@ -121,18 +121,17 @@ LICENSE=
             }
 
             int index = 1;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
-                Paragraph next = subtitle.GetParagraphOrDefault(index);
+                var next = subtitle.GetParagraphOrDefault(index);
                 if (next != null)
                 {
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
                 }
                 index++;
             }
 
             subtitle.RemoveEmptyLines();
-
             subtitle.Renumber();
         }
     }
