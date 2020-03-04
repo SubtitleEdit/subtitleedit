@@ -335,6 +335,10 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         {
                             pacCodePage = Pac.CodePageJapanese;
                         }
+                        else if (pcp.Equals("Turkish", StringComparison.OrdinalIgnoreCase))
+                        {
+                            pacCodePage = Pac.CodePageLatinTurkish;
+                        }
                         else if (!int.TryParse(pcp, out pacCodePage) || !Pac.IsValidCodePage(pacCodePage))
                         {
                             throw new FormatException($"The /pac-codepage value '{pcp}' is invalid.");
