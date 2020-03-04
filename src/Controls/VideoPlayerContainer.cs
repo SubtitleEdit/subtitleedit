@@ -409,14 +409,18 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var oldSub = subtitle;
                         subtitle = new Subtitle(subtitle);
-                        if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
+                        if (LanguageAutoDetect.CouldBeRightToLeftLanguage(subtitle))
                         {
                             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
                             {
                                 var paragraph = subtitle.Paragraphs[index];
-                                paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
+                                if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
+                                {
+                                    paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
+                                }
                             }
                         }
+
                         var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
                         var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
                         Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
