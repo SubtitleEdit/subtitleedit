@@ -1289,11 +1289,20 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool CouldBeRightToLeftLanguage(Subtitle subtitle)
         {
-            var text = subtitle.GetAllTexts();
-            if (text.Length > 1000)
+            const int maxNumberOfLinesToCheck = 20;
+            var max = Math.Min(maxNumberOfLinesToCheck, subtitle.Paragraphs.Count);
+            for (int i = 0; i < max; i++)
             {
-                return GetCount(text, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu).ToArray()) > 1;
+                if (ContainsRightToLeftLetter(subtitle.Paragraphs[i].Text))
+                {
+                    return true;
+                }
             }
+            return false;
+        }
+
+        public static bool ContainsRightToLeftLetter(string text)
+        {
             foreach (var letter in RightToLeftLetters)
             {
                 if (text.Contains(letter))
@@ -1303,6 +1312,5 @@ namespace Nikse.SubtitleEdit.Core
             }
             return false;
         }
-
     }
 }

@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Core
                 existingEntry.FirstSelectedIndex = firstSelectedIndex;
                 existingEntry.VideoOffsetInMs = videoOffset;
                 existingEntry.FirstVisibleIndex = firstVisibleIndex;
+                existingEntry.VideoFileName = videoFileName;
+                existingEntry.OriginalFileName = originalFileName;
                 Files.Insert(0, existingEntry);
             }
             Files = Files.Take(MaxRecentFiles).ToList();
