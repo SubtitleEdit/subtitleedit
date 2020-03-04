@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly Graphics Graphics = Graphics.FromHwnd(IntPtr.Zero);
         private static readonly Font DefaultFont = SystemFonts.DefaultFont;
+        private static readonly object GdiLock = new object();
 
         public TextSplitResult(List<string> lines)
         {
@@ -24,15 +25,24 @@ namespace Nikse.SubtitleEdit.Core
             LengthPixels = new List<float>();
             if (Configuration.Settings.Tools.AutoBreakUsePixelWidth)
             {
-                var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
-                LengthPixels.Add(lineOneWidth);
+                lock (GdiLock)
+                {
+                    var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
+                    LengthPixels.Add(lineOneWidth);
+                }
 
-                var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
-                LengthPixels.Add(lineTwoWidth);
+                lock (GdiLock)
+                {
+                    var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
+                    LengthPixels.Add(lineTwoWidth);
+                }
 
                 if (Math.Abs(SpaceLengthPixels) < 0.01)
                 {
-                    SpaceLengthPixels = Graphics.MeasureString(" ", DefaultFont).Width;
+                    lock (GdiLock)
+                    {
+                        SpaceLengthPixels = Graphics.MeasureString(" ", DefaultFont).Width;
+                    }
                 }
             }
 
