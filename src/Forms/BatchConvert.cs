@@ -1537,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (var paragraph in p.Subtitle.Paragraphs)
                     {
-                        paragraph.Text = Utilities.AutoBreakLine(paragraph.Text);
+                        paragraph.Text = Utilities.AutoBreakLine(paragraph.Text, p.Language);
                     }
                 }
                 catch (Exception exception)
