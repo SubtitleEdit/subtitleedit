@@ -1381,6 +1381,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            clusterStream?.Dispose();
             return subtitles;
         }
 
