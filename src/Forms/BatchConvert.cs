@@ -302,6 +302,9 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxMillisecondsBetweenLines.Value = Configuration.Settings.Tools.MergeShortLinesMaxGap;
             checkBoxOnlyContinuationLines.Checked = Configuration.Settings.Tools.MergeShortLinesOnlyContinuous;
 
+            inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+
             var fixItems = new List<FixActionItem>
             {
                 new FixActionItem
@@ -2378,6 +2381,22 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 groupBoxConvertOptions.Text = Configuration.Settings.Language.BatchConvert.ConvertOptions;
+            }
+        }
+
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewConvertOptions.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewConvertOptions.Items)
+            {
+                item.Checked = !item.Checked;
             }
         }
     }
