@@ -19565,17 +19565,14 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var item = (ToolStripItem)sender;
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                MethodInfo mi;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out var name, out var text, out var version, out var description, out var actionType, out var shortcut, out var mi);
                 if (mi == null)
                 {
                     return;
                 }
 
                 string rawText = null;
-                SubtitleFormat format = GetCurrentSubtitleFormat();
+                var format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
                     rawText = _subtitle.ToText(format);
@@ -19654,6 +19651,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (newFormat != null)
                     {
+                        if (allowChangeFormat && newFormat.GetType() == typeof(SubRip) && IsOnlyTextChanged(_subtitle, s))
+                        {
+                            allowChangeFormat = false;
+                        }
+
                         if (!allowChangeFormat && IsOnlyTextChanged(_subtitle, s))
                         {
                             for (int k = 0; k < s.Paragraphs.Count; k++)
