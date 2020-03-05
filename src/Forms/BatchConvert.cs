@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
         private Dictionary<string, List<BluRaySupParser.PcsData>> _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+        RemoveTextForHISettings _removeTextForHiSettings;
 
         public BatchConvert(Icon icon)
         {
@@ -1151,7 +1152,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes))
                             {
-                                var mergedSameTimeCodesSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                                var mergedSameTimeCodesSub = MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
                                 if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
                                 {
                                     sub.Paragraphs.Clear();
@@ -1438,10 +1439,6 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     }
                 }
-            }
-            else if (comboBoxFilter.SelectedIndex == 4 && fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-            {
-                skip = false;
             }
             return skip;
         }
@@ -2185,25 +2182,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        RemoveTextForHISettings _removeTextForHiSettings;
-        private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
-        {
-            using (var form = new FormRemoveTextForHearImpaired(null, new Subtitle()))
-            {
-                form.InitializeSettingsOnly();
-                form.ShowDialog(this);
-                _removeTextForHiSettings = form.GetSettings(new Subtitle());
-            }
-        }
-
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4;
-        }
-
-        private void buttonBridgeGapsSettings_Click(object sender, EventArgs e)
-        {
-            _bridgeGaps.ShowDialog(this);
         }
 
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
