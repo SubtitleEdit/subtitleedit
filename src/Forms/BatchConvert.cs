@@ -1535,9 +1535,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
+                    var l = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(p.Subtitle);
                     foreach (var paragraph in p.Subtitle.Paragraphs)
                     {
-                        paragraph.Text = Utilities.AutoBreakLine(paragraph.Text);
+                        paragraph.Text = Utilities.AutoBreakLine(paragraph.Text, l ?? p.Language);
                     }
                 }
                 catch (Exception exception)
