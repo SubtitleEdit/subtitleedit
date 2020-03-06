@@ -46,7 +46,22 @@ namespace Nikse.SubtitleEdit.Forms
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
             public List<IBinaryParagraph> BinaryParagraphs { get; set; }
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, TextEncoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat, List<IBinaryParagraph> binaryParagraphs)
+            public ThreadDoWorkParameter(
+                bool fixCommonErrors,
+                bool multipleReplace,
+                bool fixRtl,
+                bool splitLongLinesActive,
+                bool autoBalance,
+                bool setMinDisplayTimeBetweenSubtitles,
+                ListViewItem item,
+                Subtitle subtitle,
+                SubtitleFormat format,
+                TextEncoding encoding,
+                string language,
+                string fileName,
+                string toFormat,
+                SubtitleFormat sourceFormat,
+                List<IBinaryParagraph> binaryParagraphs)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
@@ -1182,7 +1197,23 @@ namespace Nikse.SubtitleEdit.Forms
                                 System.Threading.Thread.Sleep(100);
                             }
 
-                            var parameter = new ThreadDoWorkParameter(IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors), IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace), IsActionEnabled(CommandLineConverter.BatchAction.FixRtl), IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines), IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines), IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap), item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format, binaryParagraphs);
+                            var parameter = new ThreadDoWorkParameter(
+                                IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
+                                IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace),
+                                IsActionEnabled(CommandLineConverter.BatchAction.FixRtl),
+                                IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
+                                IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
+                                IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                item,
+                                sub,
+                                GetCurrentSubtitleFormat(),
+                                GetCurrentEncoding(),
+                                Configuration.Settings.Tools.BatchConvertLanguage,
+                                fileName,
+                                toFormat,
+                                format,
+                                binaryParagraphs);
+
                             if (!worker1.IsBusy)
                             {
                                 worker1.RunWorkerAsync(parameter);
@@ -1217,6 +1248,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 System.Threading.Thread.Sleep(100);
             }
+
+            // dispose workers
+            worker1.Dispose();
+            worker2.Dispose();
+            worker3.Dispose();
+
             _converting = false;
             labelStatus.Text = string.Empty;
             progressBar1.Visible = false;
@@ -1385,6 +1422,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            clusterStream?.Dispose();
             return subtitles;
         }
 
