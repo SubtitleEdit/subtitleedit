@@ -1,8 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
-using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -15,7 +16,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -117,9 +117,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
             _parentForm = parentForm;
 
-            _spellCheck = new OcrSpellCheck { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
-            _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
-                                             parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
+            if (parentForm.GetType() != typeof(FixCommonErrors))
+            {
+                _spellCheck = new OcrSpellCheck { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
+                _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
+                    parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
+            }
 
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(threeLetterIsoLanguageName);
             LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
