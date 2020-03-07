@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var last = s[s.Length - 1];
-            return last == '.' || last == '!' || last == '?' || last == ']' || last == '…' || last == '♪' || last == '؟';
+            return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟';
         }
     }
 }
