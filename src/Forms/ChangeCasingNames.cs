@@ -35,9 +35,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
+            toolStripMenuItem1SelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
+            toolStripMenuItem2InverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
             labelExtraNames.Text = Configuration.Settings.Language.ChangeCasingNames.ExtraNames;
             buttonAddCustomNames.Text = Configuration.Settings.Language.DvdSubRip.Add;
-
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             listViewFixes.Resize += delegate
@@ -312,5 +315,30 @@ namespace Nikse.SubtitleEdit.Forms
             FindAllNames();
         }
 
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = !item.Checked;
+            }
+        }
+
+        private void toolStripMenuItem1SelectAll_Click(object sender, EventArgs e)
+        {
+            DoSelection(true);
+        }
+
+        private void toolStripMenuItem2InverseSelection_Click(object sender, EventArgs e)
+        {
+            DoSelection(false);
+        }
     }
 }

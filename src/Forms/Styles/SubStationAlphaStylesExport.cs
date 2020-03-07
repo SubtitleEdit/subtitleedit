@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             Text = Configuration.Settings.Language.SubStationAlphaStyles.Export;
             labelStyles.Text = Configuration.Settings.Language.SubStationAlphaStyles.Styles;
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
@@ -185,6 +187,22 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewExportStyles.Items)
+            {
+                item.Checked = !item.Checked;
             }
         }
     }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxNames = new System.Windows.Forms.GroupBox();
@@ -45,9 +46,17 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.labelXLinesSelected = new System.Windows.Forms.Label();
+            this.contextMenuStrip2SelectAll = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1SelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2InverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxNames.SuspendLayout();
             this.groupBoxLinesFound.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2SelectAll.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -150,6 +159,7 @@
             this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.listViewNames.ContextMenuStrip = this.contextMenuStrip2SelectAll;
             this.listViewNames.FullRowSelect = true;
             this.listViewNames.HideSelection = false;
             this.listViewNames.Location = new System.Drawing.Point(6, 19);
@@ -195,6 +205,7 @@
             this.columnHeader5,
             this.columnHeader7,
             this.columnHeader8});
+            this.listViewFixes.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
@@ -225,6 +236,28 @@
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 292;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // labelXLinesSelected
             // 
             this.labelXLinesSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -234,6 +267,28 @@
             this.labelXLinesSelected.Size = new System.Drawing.Size(78, 13);
             this.labelXLinesSelected.TabIndex = 16;
             this.labelXLinesSelected.Text = "XLinesSelected";
+            // 
+            // contextMenuStrip2SelectAll
+            // 
+            this.contextMenuStrip2SelectAll.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1SelectAll,
+            this.toolStripMenuItem2InverseSelection});
+            this.contextMenuStrip2SelectAll.Name = "contextMenuStrip1";
+            this.contextMenuStrip2SelectAll.Size = new System.Drawing.Size(181, 70);
+            // 
+            // toolStripMenuItem1SelectAll
+            // 
+            this.toolStripMenuItem1SelectAll.Name = "toolStripMenuItem1SelectAll";
+            this.toolStripMenuItem1SelectAll.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1SelectAll.Text = "Select all";
+            this.toolStripMenuItem1SelectAll.Click += new System.EventHandler(this.toolStripMenuItem1SelectAll_Click);
+            // 
+            // toolStripMenuItem2InverseSelection
+            // 
+            this.toolStripMenuItem2InverseSelection.Name = "toolStripMenuItem2InverseSelection";
+            this.toolStripMenuItem2InverseSelection.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2InverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItem2InverseSelection.Click += new System.EventHandler(this.toolStripMenuItem2InverseSelection_Click);
             // 
             // ChangeCasingNames
             // 
@@ -260,6 +315,8 @@
             this.groupBoxNames.ResumeLayout(false);
             this.groupBoxNames.PerformLayout();
             this.groupBoxLinesFound.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2SelectAll.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -285,5 +342,11 @@
         private System.Windows.Forms.Button buttonAddCustomNames;
         private System.Windows.Forms.TextBox textBoxExtraNames;
         private System.Windows.Forms.Label labelExtraNames;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2SelectAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1SelectAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2InverseSelection;
     }
 }

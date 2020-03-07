@@ -52,6 +52,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergedShortLines.MergedText;
 
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
@@ -302,6 +304,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void MergeShortLines_FormClosing(object sender, FormClosingEventArgs e)
         {
             Configuration.Settings.Tools.MergeShortLinesMaxChars = (int)numericUpDownMaxCharacters.Value;
+        }
+
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = !item.Checked;
+            }
         }
     }
 }
