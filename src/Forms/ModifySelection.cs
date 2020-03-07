@@ -53,6 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderApply.Text = Configuration.Settings.Language.General.Apply;
             columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
             columnHeaderText.Text = Configuration.Settings.Language.General.Text;
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+
             listViewStyles.Visible = false;
 
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -474,6 +477,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownDuration_ValueChanged(object sender, EventArgs e)
         {
             Preview();
+        }
+
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = !item.Checked;
+            }
         }
     }
 }
