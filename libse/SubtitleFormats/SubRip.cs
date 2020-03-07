@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -24,14 +23,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Paragraph _paragraph;
         private Paragraph _lastParagraph;
         private ExpectingLine _expecting = ExpectingLine.Number;
-        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
 
         public override string Extension => ".srt";
 
         public const string NameOfFormat = "SubRip";
 
         public override string Name => NameOfFormat;
+
+        public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -325,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
             }
 
-            if (RegexTimeCodes.IsMatch(line.RemoveChar(' ')) || RegexTimeCodes2.IsMatch(line.RemoveChar(' ')))
+            if (IsValidTimeCode(line))
             {
                 string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
                 try
@@ -375,6 +374,109 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
+        /// <summary>
+        /// Optimized validation of time codes
+        /// Old Regex was:
+        ///  - ^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$
+        ///  - ^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$
+        /// <returns>True if valid srt time code</returns>
+        /// </summary>
+        private static bool IsValidTimeCode(string line)
+        {
+            int step = 0;
+            var max = line.Length;
+            for (int i = 0; i < max; i++)
+            {
+                var ch = line[i];
+                if (char.IsWhiteSpace(ch))
+                {
+                    continue;
+                }
+
+                if (step == 0 || step == 2 || step == 4 || step == 9 || step == 11) // start numbers
+                {
+                    if (ch == '-' || char.IsDigit(ch))
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 1 || step == 3 || step == 10 || step == 12) // number
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == ':')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 5 || step == 13) // seconds
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == ',' || ch == ':')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 6 || step == 14) // milliseconds
+                {
+                    if (char.IsDigit(ch))
+                    {
+                        // ok
+                    }
+                    else if (ch == '-')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 7) // separator char 2
+                {
+                    if (ch == '-')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step == 8) // separator char 3
+                {
+                    if (ch == '>')
+                    {
+                        step++;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (step > 14)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
