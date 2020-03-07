@@ -213,7 +213,14 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashSecondLineWithSpace:
                         if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                            {
+                                sb.AppendLine(pre + l);
+                            }
+                            else
+                            {
+                                sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            }
                         }
                         else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
                         {
@@ -225,7 +232,11 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         break;
                     case DialogType.DashBothLinesWithoutSpace:
-                        if (!l.TrimStart().StartsWith(GetDashChar()))
+                        if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                        {
+                            sb.AppendLine(pre + l);
+                        }
+                        else if (!l.TrimStart().StartsWith(GetDashChar()))
                         {
                             sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
                         }
@@ -237,7 +248,14 @@ namespace Nikse.SubtitleEdit.Core
                     case DialogType.DashSecondLineWithoutSpace:
                         if (i > 0 && !l.TrimStart().StartsWith(GetDashChar()))
                         {
-                            sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            if (isDialogThreeLinesTwoOne && i == 1 || isDialogThreeLinesOneTwo && i == 2)
+                            {
+                                sb.AppendLine(pre + l);
+                            }
+                            else
+                            {
+                                sb.AppendLine(pre + GetLineStartFromDashStyle(i) + l.TrimStart().TrimStart(GetAlternateDashChar()));
+                            }
                         }
                         else if (i == 0 && l.TrimStart().StartsWith(GetDashChar()))
                         {
