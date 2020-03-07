@@ -145,5 +145,13 @@ namespace Test.Core
             var result = splitMerge.FixDashes($"\"Into The Woods.\"{Environment.NewLine}- \"Sweeney Todd.\"");
             Assert.AreEqual($"- \"Into The Woods.\"{Environment.NewLine}- \"Sweeney Todd.\"", result);
         }
+
+        [TestMethod]
+        public void FixHyphensFirstLineParentheses()
+        {
+            var splitMerge = new DialogSplitMerge { DialogStyle = DialogType.DashBothLinesWithSpace };
+            var result = splitMerge.FixSpaces($"-(howling){Environment.NewLine}-I see what's on the other side.");
+            Assert.AreEqual($"- (howling){Environment.NewLine}- I see what's on the other side.", result);
+        }
     }
 }
