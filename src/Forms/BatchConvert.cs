@@ -474,14 +474,19 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     Cursor = Cursors.WaitCursor;
+                    labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                    listViewInputFiles.BeginUpdate();
                     foreach (string fileName in openFileDialog1.FileNames)
                     {
                         AddInputFile(fileName);
+                        Application.DoEvents();
                     }
                 }
                 finally
                 {
+                    listViewInputFiles.EndUpdate();
                     Cursor = Cursors.Default;
+                    labelStatus.Text = string.Empty;
                 }
             }
 
@@ -707,17 +712,27 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in fileNames)
+            try
             {
-                if (FileUtil.IsDirectory(fileName))
+                var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                listViewInputFiles.BeginUpdate();
+                foreach (string fileName in fileNames)
                 {
-                    SearchFolder(fileName);
+                    if (FileUtil.IsDirectory(fileName))
+                    {
+                        SearchFolder(fileName);
+                    }
+                    else
+                    {
+                        AddInputFile(fileName);
+                    }
                 }
-                else
-                {
-                    AddInputFile(fileName);
-                }
+            }
+            finally
+            {
+                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                listViewInputFiles.EndUpdate();
             }
         }
 
@@ -1423,7 +1438,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            clusterStream?.Dispose();
+            clusterStream.Dispose();
             return subtitles;
         }
 
@@ -2020,11 +2035,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelStatus.Text = string.Empty;
 
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.Visible = true;
                 SetControlState(true);
                 listViewInputFiles.EndUpdate();
             }
+            progressBar1.Value = 0;
+            progressBar1.Visible = false;
         }
 
         private void SetControlState(bool enabled)
@@ -2181,6 +2196,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Application.DoEvents();
                         if (_abort)
                         {
+                            progressBar1.Value = 0;
+                            progressBar1.Visible = false;
                             return;
                         }
                     }
