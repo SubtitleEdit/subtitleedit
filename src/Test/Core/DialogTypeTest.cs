@@ -153,5 +153,21 @@ namespace Test.Core
             var result = splitMerge.FixSpaces($"-(howling){Environment.NewLine}-I see what's on the other side.");
             Assert.AreEqual($"- (howling){Environment.NewLine}- I see what's on the other side.", result);
         }
+
+        [TestMethod]
+        public void FixHyphensThreeLinesTwoOne()
+        {
+            var splitMerge = new DialogSplitMerge { DialogStyle = DialogType.DashBothLinesWithSpace };
+            var result = splitMerge.FixDashesAndSpaces($"-I'm a'{Environment.NewLine}one-in-a-generation artist.{Environment.NewLine}-Oh.");
+            Assert.AreEqual($"- I'm a'{Environment.NewLine}one-in-a-generation artist.{Environment.NewLine}- Oh.", result);
+        }
+
+        [TestMethod]
+        public void FixHyphensThreeLinesOneTwo()
+        {
+            var splitMerge = new DialogSplitMerge { DialogStyle = DialogType.DashBothLinesWithSpace };
+            var result = splitMerge.FixDashesAndSpaces($"-What are you?{Environment.NewLine}-I'm a{ Environment.NewLine}one-in-a-generation artist.");
+            Assert.AreEqual($"- What are you?{Environment.NewLine}- I'm a{ Environment.NewLine}one-in-a-generation artist.", result);
+        }
     }
 }
