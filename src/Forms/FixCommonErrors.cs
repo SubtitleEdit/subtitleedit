@@ -186,6 +186,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBack.Visible = false;
             buttonNextFinish.Visible = false;
             buttonCancel.Text = _languageGeneral.Ok;
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
         }
 
         public string Language
@@ -1898,6 +1900,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return _hunspell.Spell(word);
+        }
+
+        private void toolStripMenuItemSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = true;
+            }
+        }
+
+        private void toolStripMenuItemInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = !item.Checked;
+            }
         }
     }
 }

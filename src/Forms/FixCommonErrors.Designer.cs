@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
+            this.contextMenuStripFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -94,6 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEditPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
+            this.contextMenuStripFixes.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -326,6 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader6,
             this.columnHeader7,
             this.columnHeader8});
+            this.listViewFixes.ContextMenuStrip = this.contextMenuStripFixes;
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(3, 3);
@@ -561,16 +566,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 112;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -684,6 +689,28 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
             // 
+            // contextMenuStripFixes
+            // 
+            this.contextMenuStripFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStripFixes.Name = "contextMenuStrip1";
+            this.contextMenuStripFixes.Size = new System.Drawing.Size(181, 70);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            // 
             // FixCommonErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -695,8 +722,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBoxStep1);
             this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBoxStep1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -725,6 +752,7 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.tabPageLog.PerformLayout();
+            this.contextMenuStripFixes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -782,5 +810,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.Button buttonResetDefault;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripFixes;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
     }
 }

@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     var oldText = p.Text;
                     var text = Utilities.RemoveUnneededSpaces(p.Text, callbacks.Language);
-                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t') + Utilities.CountTagInText(text, Environment.NewLine)) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t') + Utilities.CountTagInText(oldText, Environment.NewLine)))
+                    if (text.Length != oldText.Length && Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t') + Utilities.CountTagInText(text, Environment.NewLine) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t') + Utilities.CountTagInText(oldText, Environment.NewLine)))
                     {
                         doubleSpaces++;
                         p.Text = text;
