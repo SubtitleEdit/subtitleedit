@@ -287,58 +287,52 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
         {
-            if (selectedIndexes?.Count > 0)
+            var adjustMs = seconds * TimeCode.BaseUnit;
+            if (selectedIndexes != null)
             {
                 foreach (var idx in selectedIndexes)
                 {
-                    AdjustDisplayUsingSeconds(idx, seconds);
+                    AdjustDisplayUsingSeconds(idx, adjustMs);
                 }
             }
             else
             {
                 for (int idx = 0; idx < Paragraphs.Count; idx++)
                 {
-                    AdjustDisplayUsingSeconds(idx, seconds);
+                    AdjustDisplayUsingSeconds(idx, adjustMs);
                 }
             }
         }
 
-        private void AdjustDisplayUsingSeconds(int idx, double seconds)
+        private void AdjustDisplayUsingSeconds(int idx, double ms)
         {
-            // produces no changes
-            if (seconds == 0)
-            {
-                return;
-            }
-
-            double nextStartTimeInMs = double.MaxValue;
+            var p = Paragraphs[idx];
+            var nextStartTimeInMs = double.MaxValue;
             if (idx + 1 < Paragraphs.Count)
             {
                 nextStartTimeInMs = Paragraphs[idx + 1].StartTime.TotalMilliseconds;
             }
+            var newEndTimeInMs = p.EndTime.TotalMilliseconds + ms;
 
-            // calculate new end-time
-            double endTimeInMs = Paragraphs[idx].EndTime.TotalMilliseconds + (seconds * TimeCode.BaseUnit);
-
-            // handle overlaps
-            if (endTimeInMs > nextStartTimeInMs)
+            // handle overlap with next
+            if (newEndTimeInMs > nextStartTimeInMs)
             {
-                endTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
-
-            // find best min duration, between user defined and 100ms
-            double minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
 
             // fix too short duration
-            if (Paragraphs[idx].StartTime.TotalMilliseconds + minDur > endTimeInMs)
+            var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
+            if (p.StartTime.TotalMilliseconds + minDur > newEndTimeInMs)
             {
-                endTimeInMs = Paragraphs[idx].StartTime.TotalMilliseconds + minDur;
+                newEndTimeInMs = p.StartTime.TotalMilliseconds + minDur;
             }
 
-            if (endTimeInMs != Paragraphs[idx].EndTime.TotalMilliseconds)
+            if (ms > 0 && newEndTimeInMs < p.EndTime.TotalMilliseconds || ms < 0 && newEndTimeInMs > p.EndTime.TotalMilliseconds)
             {
-                Paragraphs[idx].EndTime.TotalMilliseconds = endTimeInMs;
+                return; // do not adjust wrong way
             }
+
+            p.EndTime.TotalMilliseconds = newEndTimeInMs;
         }
 
         public void RecalculateDisplayTimes(double maxCharPerSec, List<int> selectedIndexes, double optimalCharPerSec, bool extendOnly = false)
