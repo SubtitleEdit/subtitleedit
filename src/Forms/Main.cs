@@ -9861,8 +9861,6 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                 {
-                    var halfGap = (int)Math.Round(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0);
-                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - halfGap;
                     newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
