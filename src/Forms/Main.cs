@@ -1124,6 +1124,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _makeHistoryPaused = true;
 
                     MovePrevNext(e, beforeParagraph, index);
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, paragraph);
 
                     if (_subtitleAlternate != null)
                     {
@@ -9822,18 +9823,25 @@ namespace Nikse.SubtitleEdit.Forms
             double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
             if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
             {
-                var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
-                if (startFactor < 0.25)
+                var lineOneTextNoHtml = HtmlUtil.RemoveHtmlTags(currentParagraph.Text, true).Replace(Environment.NewLine, string.Empty);
+                var lineTwoTextNoHtml = HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Replace(Environment.NewLine, string.Empty);
+                if (Math.Abs(lineOneTextNoHtml.Length - lineTwoTextNoHtml.Length) > 2)
                 {
-                    startFactor = 0.25;
-                }
+                    // give more time to the paragraph with most text
+                    var oldTextNoHtml = HtmlUtil.RemoveHtmlTags(oldText, true).Replace(Environment.NewLine, string.Empty);
+                    var startFactor = (double)lineOneTextNoHtml.Length / oldTextNoHtml.Length;
+                    if (startFactor < 0.25)
+                    {
+                        startFactor = 0.25;
+                    }
 
-                if (startFactor > 0.75)
-                {
-                    startFactor = 0.75;
-                }
+                    if (startFactor > 0.75)
+                    {
+                        startFactor = 0.75;
+                    }
 
-                middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                    middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                }
             }
 
             if (currentParagraph.StartTime.IsMaxTime && currentParagraph.EndTime.IsMaxTime)
@@ -9853,16 +9861,9 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                 {
-                    var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
-                    if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                    {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
-                    else
-                    {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
+                    var halfGap = (int)Math.Round(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0);
+                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - halfGap;
+                    newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
         }
