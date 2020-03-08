@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Core
             // fix too short duration
             if (Paragraphs[idx].StartTime.TotalMilliseconds + minDur > endTimeInMs)
             {
-                endTimeInMs = minDur;
+                endTimeInMs = Paragraphs[idx].StartTime.TotalMilliseconds + minDur;
             }
 
             if (endTimeInMs != Paragraphs[idx].EndTime.TotalMilliseconds)
