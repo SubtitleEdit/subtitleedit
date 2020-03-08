@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.14 (xth March 2020) BETA
+3.5.14 (8th March 2020)
 * NEW:
    * "UTF-8 without BOM" encoding added - thx uckthis
    * Add "Dialog style" setting - thx OmrSi/Flitskikker

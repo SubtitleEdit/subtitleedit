@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("eab3b9db-0f82-4843-982b-05a4c51888a2")]
 
-[assembly: AssemblyVersion("3.5.13.[REVNO]")]
+[assembly: AssemblyVersion("3.5.14.[REVNO]")]
 
 // Make the internal types available in our testing assembly.
 [assembly: InternalsVisibleTo("Test")]
