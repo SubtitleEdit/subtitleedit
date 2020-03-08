@@ -1,11 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -28,6 +28,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr libvlc_new(int argc, [MarshalAs(UnmanagedType.LPArray)] string[] argv);
         private libvlc_new _libvlc_new;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr libvlc_get_version();
+        private libvlc_get_version _libvlc_get_version;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_release(IntPtr libVlc);
@@ -195,6 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private void LoadLibVlcDynamic()
         {
             _libvlc_new = (libvlc_new)GetDllType(typeof(libvlc_new), "libvlc_new");
+            _libvlc_get_version = (libvlc_get_version)GetDllType(typeof(libvlc_get_version), "libvlc_get_version");
             _libvlc_release = (libvlc_release)GetDllType(typeof(libvlc_release), "libvlc_release");
 
             _libvlc_media_new_path = (libvlc_media_new_path)GetDllType(typeof(libvlc_media_new_path), "libvlc_media_new_path");
@@ -283,7 +288,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override string PlayerName => "VLC Lib Dynamic";
+        public override string PlayerName
+        {
+            get
+            {
+                if (_libVlcDll == IntPtr.Zero || _libvlc_get_version == null)
+                {
+                    return "VLC";
+                }
+
+                var versionPointer = _libvlc_get_version();
+                var libVlcVersionIncludingCodeName = Marshal.PtrToStringAnsi(versionPointer);
+                return $"VLC {libVlcVersionIncludingCodeName}";
+            }
+        }
 
         public override int Volume
         {
@@ -753,7 +771,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 string[] initParameters = { "--no-sub-autodetect-file" }; // , "--ffmpeg-hw" }; //, "--no-video-title-show" }; // TODO: Put in options/config file
                 _libVlc = _libvlc_new(initParameters.Length, initParameters);
-                IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
+                var media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
                 _mediaPlayer = _libvlc_media_player_new_from_media(media);
                 _libvlc_media_release(media);
 
