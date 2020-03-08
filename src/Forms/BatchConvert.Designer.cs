@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -37,6 +37,9 @@
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxChangeFrameRate = new System.Windows.Forms.GroupBox();
             this.buttonSwapFrameRate = new System.Windows.Forms.Button();
             this.comboBoxFrameRateTo = new System.Windows.Forms.ComboBox();
@@ -103,10 +106,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.contextMenuStripOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.inverseSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxFixRtl.SuspendLayout();
@@ -119,7 +120,6 @@
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
-            this.contextMenuStripOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonConvert
@@ -203,6 +203,28 @@
             // Action
             // 
             this.Action.Width = 400;
+            // 
+            // contextMenuStripOptions
+            // 
+            this.contextMenuStripOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.inverseSelectionToolStripMenuItem});
+            this.contextMenuStripOptions.Name = "contextMenuStripOptions";
+            this.contextMenuStripOptions.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // inverseSelectionToolStripMenuItem
+            // 
+            this.inverseSelectionToolStripMenuItem.Name = "inverseSelectionToolStripMenuItem";
+            this.inverseSelectionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.inverseSelectionToolStripMenuItem.Text = "Inverse selection";
+            this.inverseSelectionToolStripMenuItem.Click += new System.EventHandler(this.inverseSelectionToolStripMenuItem_Click);
             // 
             // groupBoxChangeFrameRate
             // 
@@ -310,14 +332,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -886,6 +908,7 @@
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
+            this.listViewInputFiles.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewInputFiles_ColumnClick);
             this.listViewInputFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragDrop);
             this.listViewInputFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewInputFiles_DragEnter);
             this.listViewInputFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewInputFilesKeyDown);
@@ -956,28 +979,6 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
-            // contextMenuStripOptions
-            // 
-            this.contextMenuStripOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.inverseSelectionToolStripMenuItem});
-            this.contextMenuStripOptions.Name = "contextMenuStripOptions";
-            this.contextMenuStripOptions.Size = new System.Drawing.Size(181, 70);
-            // 
-            // toolStripMenuItemSelectAll
-            // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
-            // 
-            // inverseSelectionToolStripMenuItem
-            // 
-            this.inverseSelectionToolStripMenuItem.Name = "inverseSelectionToolStripMenuItem";
-            this.inverseSelectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.inverseSelectionToolStripMenuItem.Text = "Inverse selection";
-            this.inverseSelectionToolStripMenuItem.Click += new System.EventHandler(this.inverseSelectionToolStripMenuItem_Click);
-            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -998,6 +999,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.contextMenuStripOptions.ResumeLayout(false);
             this.groupBoxChangeFrameRate.ResumeLayout(false);
             this.groupBoxChangeFrameRate.PerformLayout();
             this.groupBoxOffsetTimeCodes.ResumeLayout(false);
@@ -1018,7 +1020,6 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
-            this.contextMenuStripOptions.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

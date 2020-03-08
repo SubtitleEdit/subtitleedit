@@ -2436,5 +2436,38 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Checked = !item.Checked;
             }
         }
+
+        private void listViewInputFiles_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (_converting)
+            {
+                return;
+            }
+
+            var sorter = (ListViewSorter)listViewInputFiles.ListViewItemSorter;
+            if (sorter == null)
+            {
+                sorter = new ListViewSorter
+                {
+                    ColumnNumber = e.Column, 
+                    IsNumber = false, 
+                    IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex
+                };
+                listViewInputFiles.ListViewItemSorter = sorter;
+            }
+
+            if (e.Column == sorter.ColumnNumber)
+            {
+                sorter.Descending = !sorter.Descending; // inverse sort direction
+            }
+            else
+            {
+                sorter.ColumnNumber = e.Column;
+                sorter.Descending = false;
+                sorter.IsNumber = false;
+                sorter.IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex;
+            }
+            listViewInputFiles.Sort();
+        }
     }
 }
