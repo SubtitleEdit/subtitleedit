@@ -9637,7 +9637,7 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
                 }
 
-                SetSplitTime(splitSeconds, currentParagraph, newParagraph, firstSelectedIndex, oldText);
+                SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
@@ -9818,7 +9818,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetSplitTime(double? splitSeconds, Paragraph currentParagraph, Paragraph newParagraph, int firstSelectedIndex, string oldText)
+        private void SetSplitTime(double? splitSeconds, Paragraph currentParagraph, Paragraph newParagraph, string oldText)
         {
             double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
             if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
@@ -9861,6 +9861,12 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                 {
+                    if (splitSeconds == null)
+                    {
+                        // SE decides split point (not user), so split gap time evenly
+                        var halfGap = (int)Math.Round(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0);
+                        currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - halfGap;
+                    }
                     newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
@@ -10019,7 +10025,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitPos = mediaPlayer.CurrentPosition;
             }
 
-            SetSplitTime(splitPos, p, newParagraph, idx, oldText);
+            SetSplitTime(splitPos, p, newParagraph, oldText);
             _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
             _subtitle.Renumber();
             _subtitleListViewIndex = -1;
