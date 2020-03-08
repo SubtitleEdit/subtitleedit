@@ -287,6 +287,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
         {
+            if (Math.Abs(seconds) < 0.01)
+            {
+                return;
+            }
+
             var adjustMs = seconds * TimeCode.BaseUnit;
             if (selectedIndexes != null)
             {
