@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
                 if (format.FriendlyName == friendlyName || format.Name == friendlyName)
                 {
@@ -105,6 +105,43 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return $"{(float)fileSize / (1024 * 1024 * 1024):0.0} gb";
+        }
+
+        public static long DisplayFileSizeToBytes(string displayFileSize)
+        {
+            if (displayFileSize.Contains("bytes"))
+            {
+                if (double.TryParse(displayFileSize.Replace("bytes", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
+                {
+                    return (int)Math.Round(n);
+                }
+            }
+
+            if (displayFileSize.Contains("kb"))
+            {
+                if (double.TryParse(displayFileSize.Replace("kb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
+                {
+                    return (int)Math.Round(n * 1024);
+                }
+            }
+
+            if (displayFileSize.Contains("mb"))
+            {
+                if (double.TryParse(displayFileSize.Replace("mb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
+                {
+                    return (int)Math.Round(n * 1024 * 1024);
+                }
+            }
+
+            if (displayFileSize.Contains("gb"))
+            {
+                if (double.TryParse(displayFileSize.Replace("gb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
+                {
+                    return (int)Math.Round(n * 1024 * 1024 * 1024);
+                }
+            }
+
+            return 0;
         }
 
         /// <summary>
