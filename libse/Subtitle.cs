@@ -24,26 +24,29 @@ namespace Nikse.SubtitleEdit.Core
         public SubtitleFormat OriginalFormat { get; private set; }
 
         public List<HistoryItem> HistoryItems { get; }
+
         public bool CanUndo => HistoryItems.Count > 0;
 
-        public Subtitle()
+        public Subtitle() :
+            this(new List<Paragraph>(), new List<HistoryItem>())
         {
-            Paragraphs = new List<Paragraph>();
-            HistoryItems = new List<HistoryItem>();
-            FileName = "Untitled";
         }
 
-        public Subtitle(List<HistoryItem> historyItems)
-            : this()
+        public Subtitle(List<Paragraph> paragraphs) :
+            this(paragraphs, new List<HistoryItem>())
         {
-            HistoryItems = historyItems;
+        }
+
+        public Subtitle(List<HistoryItem> historyItems) :
+            this(new List<Paragraph>(), historyItems)
+        {
         }
 
         public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
-            : this()
         {
             HistoryItems = historyItems;
             Paragraphs = paragraphs;
+            FileName = "Untitled";
         }
 
         /// <summary>
@@ -66,11 +69,6 @@ namespace Nikse.SubtitleEdit.Core
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
-        }
-
-        public Subtitle(List<Paragraph> paragraphs) : this()
-        {
-            Paragraphs = paragraphs;
         }
 
         /// <summary>
