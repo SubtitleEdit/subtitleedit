@@ -1,20 +1,21 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic.Ocr;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using Bitmap = System.Drawing.Bitmap;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class OcrPreprocessingSettings : Form
     {
+        public PreprocessingSettings PreprocessingSettings { get; }
         private readonly bool _isBinaryImageCompare;
         private readonly NikseBitmap _source;
-        public PreprocessingSettings PreprocessingSettings { get; }
+        private readonly bool _loading;
 
         public OcrPreprocessingSettings(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
         {
+            _loading = true;
             _isBinaryImageCompare = isBinaryImageCompare;
             InitializeComponent();
             groupBoxBinaryImageCompareThreshold.Visible = isBinaryImageCompare;
@@ -55,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
+            _loading = false;
             RefreshImage();
         }
 
@@ -65,6 +67,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void RefreshImage()
         {
+            if (_loading)
+            {
+                return;
+            }
+
             PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
             PreprocessingSettings.YellowToWhite = checkBoxYellowToWhite.Enabled && checkBoxYellowToWhite.Checked;
             PreprocessingSettings.ColorToWhite = buttonColorToWhite.Enabled ? panelColorToWhite.BackColor : Color.Transparent;
