@@ -297,19 +297,19 @@ namespace Nikse.SubtitleEdit.Core
             {
                 foreach (var idx in selectedIndexes)
                 {
-                    AdjustDisplayUsingSeconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
                 }
             }
             else
             {
                 for (int idx = 0; idx < Paragraphs.Count; idx++)
                 {
-                    AdjustDisplayUsingSeconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
                 }
             }
         }
 
-        private void AdjustDisplayUsingSeconds(int idx, double ms)
+        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms)
         {
             var p = Paragraphs[idx];
             var nextStartTimeInMs = double.MaxValue;
