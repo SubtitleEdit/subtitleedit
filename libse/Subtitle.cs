@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms)
+        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms, bool isFixed = false)
         {
             var p = Paragraphs[idx];
             var nextStartTimeInMs = double.MaxValue;
@@ -317,7 +317,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 nextStartTimeInMs = Paragraphs[idx + 1].StartTime.TotalMilliseconds;
             }
-            var newEndTimeInMs = p.EndTime.TotalMilliseconds + ms;
+
+            // when isFixed is true, the param *ms is used at the end time otherwise it's used as the add time
+            var newEndTimeInMs = isFixed ? p.StartTime.TotalMilliseconds + ms : p.EndTime.TotalMilliseconds + ms;
 
             // handle overlap with next
             if (newEndTimeInMs > nextStartTimeInMs)
@@ -393,29 +395,20 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
+        public void SetFixedDuration(List<int> selectedIndexes, double ms)
         {
-            for (int i = 0; i < Paragraphs.Count; i++)
+            if (selectedIndexes?.Count > 0)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                foreach (var idx in selectedIndexes)
                 {
-                    var p = GetParagraphOrDefault(i);
-                    if (p == null)
-                    {
-                        continue;
-                    }
-
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
-
-                    var next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
-                    {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.Duration.TotalMilliseconds <= 0)
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                        }
-                    }
+                    AdjustDisplayTimeUsingMilliseconds(idx, ms, true);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Paragraphs.Count; i++)
+                {
+                    AdjustDisplayTimeUsingMilliseconds(i, ms, true);
                 }
             }
         }
