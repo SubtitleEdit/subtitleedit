@@ -164,26 +164,35 @@ namespace Nikse.SubtitleEdit.Core
             sr.Close();
 
             var ext = Path.GetExtension(fileName).ToLowerInvariant();
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension == ext && !p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
+
+            var unknownFormats = new List<SubtitleFormat>();
+
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (subtitleFormat.IsMine(lines, fileName))
+                if (format.Extension == ext && !format.Name.StartsWith("Unknown", StringComparison.Ordinal))
                 {
-                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
+                    if (format.IsMine(lines, fileName))
+                    {
+                        return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, format, loadSubtitle);
+                    }
                 }
-            }
-            foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats.Where(p => p.Extension != ext || p.Name.StartsWith("Unknown", StringComparison.Ordinal)))
-            {
-                if (subtitleFormat.IsMine(lines, fileName))
+                else
                 {
-                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, subtitleFormat, loadSubtitle);
+                    // use as an alternative when none of the known formats matched
+                    unknownFormats.Add(format);
                 }
             }
 
-            if (useThisEncoding == null)
+            // now check using less prioritized format
+            foreach (var unknownFormat in unknownFormats)
             {
-                return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
+                if (unknownFormat.IsMine(lines, fileName))
+                {
+                    return FinalizeFormat(fileName, batchMode, sourceFrameRate, lines, unknownFormat, loadSubtitle);
+                }
             }
-            return null;
+
+            return useThisEncoding == null ? LoadSubtitle(fileName, out encoding, Encoding.Unicode) : null;
         }
 
         private SubtitleFormat FinalizeFormat(string fileName, bool batchMode, double? sourceFrameRate, List<string> lines, SubtitleFormat subtitleFormat, bool loadSubtitle)
