@@ -326,6 +326,7 @@
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
     <Word from="gjde" to="gdje" />
+    <Word from="gke" to="gle" />
     <Word from="g-đica" to="gđica" />
     <Word from="g-đice" to="gđice" />
     <Word from="g-đici" to="gđici" />
@@ -1001,6 +1002,7 @@
     <Word from="ovjde" to="ovdje" />
     <Word from="Ovjde" to="Ovdje" />
     <Word from="ovoje" to="ovo je" />
+    <Word from="pakuj" to="pakiraj" />
     <Word from="pakuje" to="pakira" />
     <Word from="Pakuje" to="Pakira" />
     <Word from="pakuješ" to="pakiraš" />
@@ -1087,6 +1089,8 @@
     <Word from="poenima" to="bodovima" />
     <Word from="Pokušaču" to="Pokušat ću" />
     <Word from="poleće" to="polijeće" />
+    <Word from="Polcija" to="Policija" />
+    <Word from="policja" to="policija" />
     <Word from="poludili" to="poludjeli" />
     <Word from="pomaći" to="pomaknuti" />
     <Word from="pomaknim" to="pomaknem" />
@@ -1679,6 +1683,7 @@
     <Word from="tovju" to="tvoju" />
     <Word from="tp" to="to" />
     <Word from="trabam" to="trebam" />
+    <Word from="transportuje" to="transportira" />
     <Word from="trezna" to="trijezna" />
     <Word from="trkanje" to="utrkivanje" />
     <Word from="trkanja" to="utrkivanja" />
@@ -1846,6 +1851,7 @@
     <Word from="vekova" to="stoljeća" />
     <Word from="vekovima" to="vjekovima" />
     <Word from="venca" to="vijenca" />
+    <Word from="Večina" to="Većina" />
     <Word from="večnost" to="vječnost" />
     <Word from="veoma" to="vrlo" />
     <Word from="Veoma" to="Vrlo" />
@@ -2346,6 +2352,7 @@
     <LinePart from="Biće sve" to="Bit će sve" />
     <LinePart from="biće ti žao" to="bit će ti žao" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
+    <LinePart from="Biću tamo" to="Bit ću tamo" />
     <LinePart from="Biću uz" to="Bit ću uz" />
     <LinePart from="Biću u" to="Bit ću u" />
     <LinePart from="bi ja" to="bih ja" />
@@ -2421,6 +2428,8 @@
     <LinePart from="Moramo da idemo" to="Moramo ići" />
     <LinePart from="Moraš da ideš" to="Moraš ići" />
     <LinePart from="moraš da ideš" to="moraš ići" />
+    <LinePart from="moram da odem" to="moram otići" />
+    <LinePart from="mora da ode" to="mora otići" />
     <LinePart from="moram da vidim" to="moram vidjeti" />
     <LinePart from="moram da zaboravim" to="moram zaboraviti" />
     <LinePart from="moraš da zaboraviš" to="moraš zaboraviti" />
