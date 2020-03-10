@@ -101,6 +101,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
+                        if (Utilities.IsInteger(line))
+                        {
+                            _errorCount++;
+                        }
                         p.Text = p.Text.TrimEnd() + Environment.NewLine + line;
                     }
                 }

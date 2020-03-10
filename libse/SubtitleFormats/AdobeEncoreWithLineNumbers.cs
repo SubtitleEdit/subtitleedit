@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 sb.AppendLine(line);
             }
@@ -31,6 +31,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            if (new UnknownSubtitle66().IsMine(lines, fileName))
+            {
+                return false;
+            }
+
             return base.IsMine(lines, fileName);
         }
 
@@ -38,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
@@ -74,6 +79,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
+                        if (Utilities.IsInteger(text.RemoveChar(':')))
+                        {
+                            _errorCount++;
+                        }
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
@@ -97,6 +106,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-
     }
 }

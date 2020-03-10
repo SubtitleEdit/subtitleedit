@@ -487,6 +487,10 @@ namespace Nikse.SubtitleEdit.Core
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
+                    if (Utilities.IsInteger(line.RemoveChar('[').RemoveChar(']')))
+                    {
+                        line = string.Empty;
+                    }
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
                     {
                         line = line.Remove(0, 3);
