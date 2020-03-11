@@ -1,5 +1,6 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -47,12 +48,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.FixMissingPeriodAtEndOfLine;
-            int missigPeriodsAtEndOfLine = 0;
+            int missingPeriodsAtEndOfLine = 0;
 
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                var p = subtitle.Paragraphs[i];
+                var next = subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
                 {
@@ -104,12 +105,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     }
                                     else
                                     {
-                                        p.Text += ".";
+                                        var lines = p.Text.SplitToLines();
+                                        if (!IsOneLineUrl(lines.Last()))
+                                        {
+                                            p.Text += ".";
+                                        }
                                     }
                                 }
                                 if (p.Text != oldText)
                                 {
-                                    missigPeriodsAtEndOfLine++;
+                                    missingPeriodsAtEndOfLine++;
                                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                                 }
                             }
@@ -144,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
 
                                 string oldText = p.Text;
-                                missigPeriodsAtEndOfLine++;
+                                missingPeriodsAtEndOfLine++;
                                 p.Text += endSign;
                                 callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                             }
@@ -189,12 +194,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             p.Text = p.Text.Insert(indexOfNewLine, ".");
                         }
 
-                        missigPeriodsAtEndOfLine++;
+                        missingPeriodsAtEndOfLine++;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
-            callbacks.UpdateFixStatus(missigPeriodsAtEndOfLine, language.AddPeriods, language.XPeriodsAdded);
+            callbacks.UpdateFixStatus(missingPeriodsAtEndOfLine, language.AddPeriods, language.XPeriodsAdded);
         }
 
     }
