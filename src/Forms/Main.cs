@@ -12679,11 +12679,11 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                ResetSubtitle();
                                 if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
                                     (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)) &&
                                     !Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
-                                    ResetSubtitle();
                                     OpenVideo(fileName);
                                 }
                             }
