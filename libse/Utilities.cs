@@ -25,6 +25,8 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         public static readonly char[] NewLineChars = { '\r', '\n' };
 
+        public static Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
+
         // TODO: Change to IReadonlyList in .net >= 4.5
         public static ICollection<string> VideoFileExtensions { get; } = new List<string>
         { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv",".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".avs", ".mxf" };
@@ -2263,6 +2265,14 @@ namespace Nikse.SubtitleEdit.Core
             while (text.Contains(" . "))
             {
                 text = text.Replace(" . ", ". ");
+            }
+
+            var numberSeparatorNumberMatch = NumberSeparatorNumberRegEx.Match(text);
+            while (numberSeparatorNumberMatch.Success)
+            {
+                var spaceIdx = text.IndexOf(' ', numberSeparatorNumberMatch.Index);
+                text = text.Remove(spaceIdx, 1);
+                numberSeparatorNumberMatch = NumberSeparatorNumberRegEx.Match(text);
             }
 
             return text;

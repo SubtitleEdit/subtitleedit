@@ -575,6 +575,27 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void RemoveUnneededSpacesBetweenNumbers1()
+        {
+            string s = Utilities.RemoveUnneededSpaces("Yes, it is at 8: 40 today.", "en");
+            Assert.AreEqual("Yes, it is at 8:40 today.", s);
+        }
+
+        [TestMethod]
+        public void RemoveUnneededSpacesBetweenNumbers1NoChange()
+        {
+            string s = Utilities.RemoveUnneededSpaces("Yes, it is at: 40 today.", "en");
+            Assert.AreEqual("Yes, it is at: 40 today.", s);
+        }
+
+        [TestMethod]
+        public void RemoveUnneededSpacesBetweenNumbers2()
+        {
+            string s = Utilities.RemoveUnneededSpaces("The time is 8. 40.", "en");
+            Assert.AreEqual("The time is 8.40.", s);
+        }
+        
+        [TestMethod]
         public void CountTagInTextStringOneLetterString()
         {
             int count = Utilities.CountTagInText("HHH", "H");
