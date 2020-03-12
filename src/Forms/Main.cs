@@ -10064,13 +10064,19 @@ namespace Nikse.SubtitleEdit.Forms
                         next++;
                     }
 
+                    var addText = _subtitle.Paragraphs[index].Text;
+                    if (firstIndex != index)
+                    {
+                        addText = RemoveAssStartAlignmentTag(addText);
+                    }
+
                     if (breakMode == BreakMode.UnbreakNoSpace)
                     {
-                        sb.Append(_subtitle.Paragraphs[index].Text);
+                        sb.Append(addText);
                     }
                     else
                     {
-                        sb.AppendLine(_subtitle.Paragraphs[index].Text);
+                        sb.AppendLine(addText);
                     }
 
                     endMilliseconds = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
@@ -10339,7 +10345,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
                     currentParagraph.Text = dialogHelper.InsertStartDash(s, 0);
 
-                    s = Utilities.UnbreakLine(nextParagraph.Text);
+                    s = Utilities.UnbreakLine(RemoveAssStartAlignmentTag(nextParagraph.Text));
                     currentParagraph.Text += Environment.NewLine + dialogHelper.InsertStartDash(s, 1);
 
                     currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine).TrimEnd();
@@ -10352,23 +10358,23 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                         currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
-                        currentParagraph.Text = Utilities.UnbreakLine(currentParagraph.Text);
+                        currentParagraph.Text = Utilities.UnbreakLine(RemoveAssStartAlignmentTag(currentParagraph.Text));
                     }
                     else if (breakMode == BreakMode.UnbreakNoSpace)
                     {
-                        currentParagraph.Text = currentParagraph.Text.TrimEnd() + nextParagraph.Text.TrimStart();
+                        currentParagraph.Text = currentParagraph.Text.TrimEnd() + RemoveAssStartAlignmentTag(nextParagraph.Text).TrimStart();
                     }
                     else if (breakMode == BreakMode.AutoBreak)
                     {
                         currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
-                        currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
+                        currentParagraph.Text += Environment.NewLine + RemoveAssStartAlignmentTag(nextParagraph.Text).Replace(Environment.NewLine, " ");
                         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, language);
                     }
                     else
                     {
                         currentParagraph.Text = (currentParagraph.Text.Trim() + Environment.NewLine +
-                                                 nextParagraph.Text.Trim()).Trim();
+                                                 RemoveAssStartAlignmentTag(nextParagraph.Text).Trim()).Trim();
                     }
 
                     currentParagraph.Text = ChangeAllLinesTagsToSingleTag(currentParagraph.Text, "i");
@@ -10417,6 +10423,16 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
+        }
+
+        private static string RemoveAssStartAlignmentTag(string text)
+        {
+            var s = text.TrimStart();
+            if (s.StartsWith("{\\an") && s.Length > 5 && s[5] == '}')
+            {
+                s = s.Remove(0, 6);
+            }
+            return s;
         }
 
         private void UpdateStartTimeInfo(TimeCode startTime)
