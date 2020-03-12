@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return new TimeCode(seconds * TimeCode.BaseUnit + FramesToMillisecondsMax999(frames));
             }
-            return new TimeCode(); ;
+            return new TimeCode();
         }
     }
 }
