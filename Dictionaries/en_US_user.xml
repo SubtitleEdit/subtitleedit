@@ -1,4 +1,6 @@
 ﻿<words>
+  <word>'cause</word>
+  <word>'em</word>
   <word>50s</word>
   <word>9/11</word>
   <word>a.m.</word>
@@ -67,7 +69,6 @@
   <word>cardiothoracic</word>
   <word>catalogue</word>
   <word>catalogued</word>
-  <word>'cause</word>
   <word>centimetres</word>
   <word>cerium</word>
   <word>cesium</word>
@@ -110,7 +111,6 @@
   <word>dysesthesia</word>
   <word>dysprosium</word>
   <word>einsteinium</word>
-  <word>'em</word>
   <word>emoji</word>
   <word>endeth</word>
   <word>episiotomy</word>
@@ -157,6 +157,7 @@
   <word>goddamned</word>
   <word>golconda</word>
   <word>gold</word>
+  <word>gracilis</word>
   <word>guys'll</word>
   <word>hafnium</word>
   <word>hashtag</word>
@@ -216,8 +217,8 @@
   <word>manganese</word>
   <word>meds</word>
   <word>meitnerium</word>
-  <word>mendelevium</word>
   <word>men's</word>
+  <word>mendelevium</word>
   <word>mercury</word>
   <word>mesenteric</word>
   <word>mesentery</word>
@@ -246,7 +247,9 @@
   <word>neon</word>
   <word>neptunium</word>
   <word>neurobiologist</word>
+  <word>neuropathy</word>
   <word>neuroscientific</word>
+  <word>neurotypical</word>
   <word>neurovascular</word>
   <word>nickel</word>
   <word>niobium</word>
@@ -254,11 +257,14 @@
   <word>nobelium</word>
   <word>nothin</word>
   <word>now's</word>
+  <word>odontoid</word>
   <word>ohh</word>
   <word>online</word>
   <word>or</word>
   <word>oropharyngeal</word>
   <word>osmium</word>
+  <word>osseointegrated</word>
+  <word>osseointegration</word>
   <word>other's</word>
   <word>otolaryngologist</word>
   <word>oww</word>
@@ -282,7 +288,9 @@
   <word>potassium</word>
   <word>praseodymium</word>
   <word>promethium</word>
+  <word>prosthetics</word>
   <word>protactinium</word>
+  <word>pseudoachondroplasia</word>
   <word>purée</word>
   <word>radium</word>
   <word>radon</word>
@@ -318,10 +326,10 @@
   <word>secret's</word>
   <word>selenium</word>
   <word>selfies</word>
+  <word>sensei</word>
   <word>señor</word>
   <word>señora</word>
   <word>señorita</word>
-  <word>sensei</word>
   <word>sharpshoot</word>
   <word>shithead's</word>
   <word>shithole</word>
@@ -354,6 +362,7 @@
   <word>sulphur</word>
   <word>synchronicity</word>
   <word>syncopal</word>
+  <word>synovectomy</word>
   <word>tantalum</word>
   <word>taxies</word>
   <word>technetium</word>
@@ -373,8 +382,8 @@
   <word>there'd</word>
   <word>there'll</word>
   <word>there're</word>
-  <word>this</word>
   <word>this'll</word>
+  <word>this</word>
   <word>thoracotomy</word>
   <word>thorium</word>
   <word>thrombectomy</word>
@@ -385,6 +394,7 @@
   <word>touché</word>
   <word>transcervical</word>
   <word>transcutaneous</word>
+  <word>transdural</word>
   <word>transectional</word>
   <word>trickeration</word>
   <word>trifecta</word>
