@@ -78,15 +78,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="index">Index of wanted paragraph</param>
         /// <returns>Paragraph, null if index is index is out of bounds</returns>
-        public Paragraph GetParagraphOrDefault(int index)
-        {
-            if (Paragraphs == null || Paragraphs.Count <= index || index < 0)
-            {
-                return null;
-            }
-
-            return Paragraphs[index];
-        }
+        public Paragraph GetParagraphOrDefault(int index) => Paragraphs == null || Paragraphs.Count <= index || index < 0 ? null : Paragraphs[index];
 
         public Paragraph GetParagraphOrDefaultById(string id)
         {
@@ -433,9 +425,30 @@ namespace Nikse.SubtitleEdit.Core
 
         public int GetIndex(Paragraph p)
         {
-            if (p == null)
+            // invalid paragraph
+            if (p == null || Paragraphs.Count == 0)
             {
                 return -1;
+            }
+
+            // check using number O(1)
+            if (p.Number >= Paragraphs[0].Number && p.Number <= Paragraphs[Paragraphs.Count - 1].Number)
+            {
+                if (GetParagraphOrDefault(p.Number - 1) == p)
+                {
+                    return p.Number - 1;
+                }
+            }
+
+            // check using time O(log n)
+            double targetTime = p.StartTime.TotalMilliseconds;
+            if (targetTime >= Paragraphs[0].StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds <= targetTime)
+            {
+                int idx = GetParagraphIndexFromMilliseconds(targetTime);
+                if (idx >= 0)
+                {
+                    return idx;
+                }
             }
 
             int index = Paragraphs.IndexOf(p);
@@ -478,24 +491,52 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Get paragraph index by time in seconds
+        /// Get paragraph index using milliseconds. The operation is an O(log n)
+        /// </summary>
+        private int GetParagraphIndexFromMilliseconds(double targetMs)
+        {
+            int l = 0;
+            int r = Paragraphs.Count - 1;
+            while (l <= r)
+            {
+                int midIdx = (int)Math.Floor((l + r) / 2d);
+                double midMs = Paragraphs[midIdx].StartTime.TotalMilliseconds;
+
+                if (targetMs > midMs)
+                {
+                    l = midIdx + 1;
+                }
+                else if (targetMs < midMs)
+                {
+                    r = midIdx - 1;
+                }
+                else
+                {
+                    return midIdx;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Get paragraph index using seconds
         /// </summary>
         public int GetIndex(double seconds)
         {
-            var totalMilliseconds = seconds * TimeCode.BaseUnit;
-            for (int i = 0; i < Paragraphs.Count; i++)
-            {
-                var p = Paragraphs[i];
-                if (totalMilliseconds >= p.StartTime.TotalMilliseconds && totalMilliseconds <= p.EndTime.TotalMilliseconds)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            int idx = GetParagraphIndexFromMilliseconds(seconds * TimeCode.BaseUnit);
+            return idx >= 0 ? idx : -1;
         }
 
         public Paragraph GetFirstAlike(Paragraph p)
         {
+            // O(log n)
+            int idx = GetParagraphIndexFromMilliseconds(p.StartTime.TotalMilliseconds);
+            if (idx >= 0)
+            {
+                return Paragraphs[idx];
+            }
+
             foreach (var item in Paragraphs)
             {
                 if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
