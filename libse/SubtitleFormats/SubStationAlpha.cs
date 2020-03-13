@@ -723,8 +723,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             if (string.IsNullOrEmpty(scriptInfo) || string.IsNullOrEmpty(style))
             {
                 var s = new Subtitle { Paragraphs = { new Paragraph("test", 0, 1000) } };
-                var f = new SubStationAlpha();
-                var res = f.ToText(s, string.Empty);
+                new SubStationAlpha().ToText(s, string.Empty);
                 return s.Header;
             }
 
