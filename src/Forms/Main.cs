@@ -18332,7 +18332,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            double frameRate = CurrentFrameRate;
             int startFrom = 0;
             if (selection == SelectionChoice.SelectionAndForward)
             {
