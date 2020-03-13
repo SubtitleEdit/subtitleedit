@@ -25,6 +25,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
+        const string HeaderNoStyles =
+            @"[Script Info]
+; This is a Sub Station Alpha v4 script.
+Title: {0}
+ScriptType: v4.00
+Collisions: Normal
+PlayDepth: 0
+
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+{1}
+
+[Events]
+Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
+
         public override string ToText(Subtitle subtitle, string title)
         {
             const string header =
@@ -42,20 +57,7 @@ Style: Default,{1},{2},{3},65535,65535,-2147483640,{9},0,1,{4},{5},2,{6},{7},{8}
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
-            const string headerNoStyles =
-@"[Script Info]
-; This is a Sub Station Alpha v4 script.
-Title: {0}
-ScriptType: v4.00
-Collisions: Normal
-PlayDepth: 0
 
-[V4 Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-{1}
-
-[Events]
-Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: Marked={4},{0},{1},{3},{5},{6},{7},{8},{9},{2}";
@@ -78,13 +80,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]"))
             {
-                LoadStylesFromAdvancedSubstationAlpha(subtitle, title, subtitle.Header, headerNoStyles, sb);
+                LoadStylesFromAdvancedSubstationAlpha(subtitle, title, subtitle.Header, HeaderNoStyles, sb);
                 isValidAssHeader = true;
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
-                LoadStylesFromTimedText10(subtitle, title, header, headerNoStyles, sb);
+                LoadStylesFromTimedText10(subtitle, title, header, HeaderNoStyles, sb);
             }
             else
             {
@@ -170,74 +172,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             try
             {
-                bool styleFound = false;
-                var ttStyles = new StringBuilder();
-                foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
+                var style = GetStyle(subtitle.Header);
+                if (!string.IsNullOrEmpty(style))
                 {
-                    try
-                    {
-                        var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-
-                        string bold = "0";
-                        if (ssaStyle.Bold)
-                        {
-                            bold = "-1";
-                        }
-
-                        string italic = "0";
-                        if (ssaStyle.Italic)
-                        {
-                            italic = "-1";
-                        }
-
-                        string newAlignment = "2";
-                        switch (ssaStyle.Alignment)
-                        {
-                            case "1":
-                                newAlignment = "1";
-                                break;
-                            case "3":
-                                newAlignment = "3";
-                                break;
-                            case "4":
-                                newAlignment = "9";
-                                break;
-                            case "5":
-                                newAlignment = "10";
-                                break;
-                            case "6":
-                                newAlignment = "11";
-                                break;
-                            case "7":
-                                newAlignment = "5";
-                                break;
-                            case "8":
-                                newAlignment = "6";
-                                break;
-                            case "9":
-                                newAlignment = "7";
-                                break;
-                        }
-
-                        //Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-                        const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},0,1";
-                        //                                 N   FN  FS  PC  SC  TC  BC  Bo  It  BS  O    Sh   Ali  ML   MR   MV   A Encoding
-
-                        ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, ssaStyle.Primary.ToArgb(), ssaStyle.Secondary.ToArgb(),
-                                            ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, ssaStyle.BorderStyle, ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture), ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture),
-                                            newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
-                        styleFound = true;
-
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }
-
-                if (styleFound)
-                {
-                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles));
+                    sb.AppendLine(string.Format(headerNoStyles, title, style));
                     subtitle.Header = sb.ToString();
                 }
                 else
@@ -249,6 +187,73 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 sb.AppendLine(string.Format(header, title));
             }
+        }
+
+        private static string GetStyle(string header)
+        {
+            var ttStyles = new StringBuilder();
+            foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(header))
+            {
+                try
+                {
+                    var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, header);
+
+                    string bold = "0";
+                    if (ssaStyle.Bold)
+                    {
+                        bold = "-1";
+                    }
+
+                    string italic = "0";
+                    if (ssaStyle.Italic)
+                    {
+                        italic = "-1";
+                    }
+
+                    string newAlignment = "2";
+                    switch (ssaStyle.Alignment)
+                    {
+                        case "1":
+                            newAlignment = "1";
+                            break;
+                        case "3":
+                            newAlignment = "3";
+                            break;
+                        case "4":
+                            newAlignment = "9";
+                            break;
+                        case "5":
+                            newAlignment = "10";
+                            break;
+                        case "6":
+                            newAlignment = "11";
+                            break;
+                        case "7":
+                            newAlignment = "5";
+                            break;
+                        case "8":
+                            newAlignment = "6";
+                            break;
+                        case "9":
+                            newAlignment = "7";
+                            break;
+                    }
+
+                    //Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+                    const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},0,1";
+                    //                                 N   FN  FS  PC  SC  TC  BC  Bo  It  BS  O    Sh   Ali  ML   MR   MV   A Encoding
+
+                    ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, ssaStyle.Primary.ToArgb(), ssaStyle.Secondary.ToArgb(),
+                        ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, ssaStyle.BorderStyle, ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture), ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture),
+                        newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            return ttStyles.ToString();
         }
 
         private static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
@@ -673,13 +678,61 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
         }
 
-        public override bool HasStyleSupport
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool HasStyleSupport => true;
 
+        public static string GetHeaderAndStylesFromAdvancedSubStationAlpha(string header, string title)
+        {
+            var scriptInfo = string.Empty;
+            if (header != null && header.Contains("[Script Info]") && header.Contains("ScriptType: v4.00+"))
+            {
+                var sb = new StringBuilder();
+                var scriptInfoOn = false;
+                foreach (var line in header.SplitToLines())
+                {
+                    if (line.RemoveChar(' ').Contains("Styles]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+
+                    if (line.Equals("[Script Info]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        scriptInfoOn = true;
+                    }
+
+                    if (scriptInfoOn)
+                    {
+                        if (line.StartsWith("ScriptType:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine("ScriptType: v4.00");
+                        }
+                        else if (line.Equals("; This is an Advanced Sub Station Alpha v4+ script.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sb.AppendLine("; This is a Sub Station Alpha v4 script.");
+                        }
+                        else
+                        {
+                            sb.AppendLine(line);
+                        }
+                    }
+                }
+                scriptInfo = sb.ToString();
+            }
+
+            var style = GetStyle(header);
+
+            if (string.IsNullOrEmpty(scriptInfo) || string.IsNullOrEmpty(style))
+            {
+                var s = new Subtitle { Paragraphs = { new Paragraph("test", 0, 1000) } };
+                var f = new SubStationAlpha();
+                var res = f.ToText(s, string.Empty);
+                return s.Header;
+            }
+
+            return string.Format($@"{scriptInfo.Trim() + Environment.NewLine}
+[V4 Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+{style.Trim() + Environment.NewLine}
+[Events]");
+        }
     }
 }
