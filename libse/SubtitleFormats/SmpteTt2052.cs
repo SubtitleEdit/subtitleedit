@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 bool first = true;
                 bool italicOn = false;
-                foreach (string line in text.SplitToLines())
+                foreach (string line in Utilities.RemoveSsaTags(text).SplitToLines())
                 {
                     if (!first)
                     {
