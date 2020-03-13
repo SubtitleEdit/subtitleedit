@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z\d]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z\d]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[a-zäö¨åA-ZÄÖÅ]+", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[a-zäöåA-ZÄÖÅ]+", RegexOptions.Compiled);
         private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
