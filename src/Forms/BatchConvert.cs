@@ -169,6 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxSubtitleFormats.Left = comboBoxEncoding.Left;
             }
+            buttonBrowseEncoding.Left = comboBoxEncoding.Left + comboBoxEncoding.Width + 5;
             buttonStyles.Left = comboBoxSubtitleFormats.Left + comboBoxSubtitleFormats.Width + 5;
             buttonTransportStreamSettings.Left = buttonStyles.Left;
 
@@ -210,6 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, formatNames, Configuration.Settings.Tools.BatchConvertFormat);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
+            comboBoxEncoding.Items.Add(new TextEncoding(Encoding.UTF8, l.TryToUseSourceEncoding));
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.BatchConvertOutputFolder) || !Directory.Exists(Configuration.Settings.Tools.BatchConvertOutputFolder))
             {
@@ -758,8 +760,23 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        private TextEncoding GetCurrentEncoding()
+        private TextEncoding GetCurrentEncoding(string fileName)
         {
+            bool useEncodingFromFile = comboBoxEncoding.SelectedIndex == comboBoxEncoding.Items.Count - 1;
+            if (useEncodingFromFile)
+            {
+                if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+                {
+                    if (Configuration.Settings.General.DefaultEncoding == TextEncoding.Utf8WithoutBom)
+                    {
+                        return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithoutBom);
+                    }
+                    return new TextEncoding(Encoding.UTF8, TextEncoding.Utf8WithBom);
+                }
+                var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                return new TextEncoding(enc, null);
+            }
+
             return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
 
@@ -1222,7 +1239,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 item,
                                 sub,
                                 GetCurrentSubtitleFormat(),
-                                GetCurrentEncoding(),
+                                GetCurrentEncoding(fileName),
                                 Configuration.Settings.Tools.BatchConvertLanguage,
                                 fileName,
                                 toFormat,
@@ -1709,7 +1726,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         dir = Path.GetDirectoryName(p.FileName);
                     }
-                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback);
+                    var success = CommandLineConverter.BatchConvertSave(targetFormat, TimeSpan.Zero, GetCurrentEncoding(p.FileName), dir, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, binaryParagraphs, overwrite, -1, null, null, null, null, false, progressCallback);
                     if (success)
                     {
                         p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
@@ -1737,6 +1754,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Style;
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = true;
+                buttonBrowseEncoding.Visible = true;
                 checkBoxUseStyleFromSource.Visible = true;
                 checkBoxUseStyleFromSource.Left = buttonStyles.Left + buttonStyles.Width - checkBoxUseStyleFromSource.Width;
             }
@@ -1750,6 +1768,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 comboBoxEncoding.Enabled = true;
+                buttonBrowseEncoding.Visible = true;
             }
             else if (comboBoxSubtitleFormats.Text == BluRaySubtitle ||
                      comboBoxSubtitleFormats.Text == VobSubSubtitle ||
@@ -1761,17 +1780,20 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = false;
+                buttonBrowseEncoding.Visible = false;
             }
             else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.BatchConvert.PlainText)
             {
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = true;
+                buttonBrowseEncoding.Visible = true;
             }
             else
             {
                 buttonStyles.Visible = false;
                 comboBoxEncoding.Enabled = true;
+                buttonBrowseEncoding.Visible = true;
             }
         }
 
@@ -2380,7 +2402,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var form = new FixCommonErrors { BatchMode = true })
                 {
-                    form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
+                    form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(null), Configuration.Settings.Tools.BatchConvertLanguage);
                     form.ShowDialog(this);
                     Configuration.Settings.Tools.BatchConvertLanguage = form.Language;
                 }
@@ -2449,8 +2471,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 sorter = new ListViewSorter
                 {
-                    ColumnNumber = e.Column, 
-                    IsNumber = false, 
+                    ColumnNumber = e.Column,
+                    IsNumber = false,
                     IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex
                 };
                 listViewInputFiles.ListViewItemSorter = sorter;
@@ -2468,6 +2490,34 @@ namespace Nikse.SubtitleEdit.Forms
                 sorter.IsDisplayFileSize = e.Column == columnHeaderSize.DisplayIndex;
             }
             listViewInputFiles.Sort();
+        }
+
+        private void buttonBrowseEncoding_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.Main.OpenAnsiSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                var chooseEncoding = new ChooseEncoding();
+                chooseEncoding.Initialize(openFileDialog1.FileName);
+                if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                {
+                    var encoding = chooseEncoding.GetEncoding();
+                    for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
+                    {
+                        var item = comboBoxEncoding.Items[i];
+                        if (item is TextEncoding te)
+                        {
+                            if (te.Encoding.WebName == encoding.WebName)
+                            {
+                                comboBoxEncoding.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

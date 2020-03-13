@@ -73,6 +73,7 @@
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.labelMaxCharacters = new System.Windows.Forms.Label();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
+            this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
             this.buttonTransportStreamSettings = new System.Windows.Forms.Button();
             this.linkLabelOpenOutputFolder = new System.Windows.Forms.LinkLabel();
@@ -634,6 +635,7 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOutput.Controls.Add(this.buttonBrowseEncoding);
             this.groupBoxOutput.Controls.Add(this.radioButtonSaveInOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonTransportStreamSettings);
             this.groupBoxOutput.Controls.Add(this.linkLabelOpenOutputFolder);
@@ -654,6 +656,16 @@
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
+            // 
+            // buttonBrowseEncoding
+            // 
+            this.buttonBrowseEncoding.Location = new System.Drawing.Point(300, 263);
+            this.buttonBrowseEncoding.Name = "buttonBrowseEncoding";
+            this.buttonBrowseEncoding.Size = new System.Drawing.Size(26, 23);
+            this.buttonBrowseEncoding.TabIndex = 12;
+            this.buttonBrowseEncoding.Text = "...";
+            this.buttonBrowseEncoding.UseVisualStyleBackColor = true;
+            this.buttonBrowseEncoding.Click += new System.EventHandler(this.buttonBrowseEncoding_Click);
             // 
             // radioButtonSaveInOutputFolder
             // 
@@ -1103,5 +1115,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripOptions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem inverseSelectionToolStripMenuItem;
+        private System.Windows.Forms.Button buttonBrowseEncoding;
     }
 }

@@ -223,6 +223,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamFileNameEnding>File name ending</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
