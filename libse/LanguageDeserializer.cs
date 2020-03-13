@@ -610,6 +610,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/RemoveLineBreaks":
                     language.BatchConvert.RemoveLineBreaks = reader.Value;
                     break;
+                case "BatchConvert/TryToUseSourceEncoding":
+                    language.BatchConvert.TryToUseSourceEncoding = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;

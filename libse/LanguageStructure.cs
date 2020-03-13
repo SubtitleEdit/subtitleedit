@@ -233,6 +233,7 @@
             public string TransportStreamFileNameEnding { get; set; }
             public string TransportStreamSettingsButton { get; set; }
             public string RemoveLineBreaks { get; set; }
+            public string TryToUseSourceEncoding { get; set; }
         }
 
         public class Beamer
