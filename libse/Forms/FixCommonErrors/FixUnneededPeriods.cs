@@ -12,11 +12,32 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int removedCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 if (callbacks.AllowFix(p, fixAction))
                 {
                     // Returns processed text.
                     string procText = RemoveDotAfterPunctuation(p.Text);
+
+                    while (procText.Contains("....", StringComparison.Ordinal))
+                    {
+                        procText = procText.Replace("....", "...");
+                    }
+
+                    while (procText.Contains("……", StringComparison.Ordinal))
+                    {
+                        procText = procText.Replace("……", "…");
+                    }
+
+                    while (procText.Contains(".…", StringComparison.Ordinal))
+                    {
+                        procText = procText.Replace(".…", "…");
+                    }
+
+                    while (procText.Contains("….", StringComparison.Ordinal))
+                    {
+                        procText = procText.Replace("….", "…");
+                    }
+
                     int diff = p.Text.Length - procText.Length;
                     if (diff > 0)
                     {
