@@ -72,7 +72,7 @@
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
             this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownLine.Name = "timeUpDownLine";
-            this.timeUpDownLine.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownLine.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownLine.TabIndex = 1;
             timeCode1.Hours = 0;
             timeCode1.Milliseconds = 0;
@@ -83,6 +83,7 @@
             timeCode1.TotalSeconds = 0D;
             this.timeUpDownLine.TimeCode = timeCode1;
             this.timeUpDownLine.UseVideoOffset = false;
+            this.timeUpDownLine.KeyDown += new System.Windows.Forms.KeyEventHandler(this.timeUpDownLine_KeyDown);
             // 
             // groupBox2
             // 

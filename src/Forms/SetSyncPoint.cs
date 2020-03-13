@@ -101,18 +101,23 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(_subtitleFileName))
             {
                 var videoFileExt = Utilities.GetVideoFileFilter(false);
-                foreach (var file in Directory.GetFiles(Path.GetDirectoryName(_subtitleFileName)))
+                var folder = Path.GetDirectoryName(_subtitleFileName);
+                if (folder != null)
                 {
-                    if (file.EndsWith(".nfo", StringComparison.OrdinalIgnoreCase)
-                        || file.EndsWith(".srt", StringComparison.OrdinalIgnoreCase)
-                        || file.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+                    foreach (var file in Directory.GetFiles(folder))
                     {
-                        continue;
-                    }
-                    if (videoFileExt.Contains(Path.GetExtension(file)))
-                    {
-                        openFileDialog1.InitialDirectory = Path.GetDirectoryName(file);
-                        break;
+                        if (file.EndsWith(".nfo", StringComparison.OrdinalIgnoreCase)
+                            || file.EndsWith(".srt", StringComparison.OrdinalIgnoreCase)
+                            || file.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        if (videoFileExt.Contains(Path.GetExtension(file)))
+                        {
+                            openFileDialog1.InitialDirectory = Path.GetDirectoryName(file);
+                            break;
+                        }
                     }
                 }
             }
@@ -165,14 +170,12 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
-            if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
+            if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic libVlc)
             {
-                var libVlc = (LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;
             }
-            else if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibMpvDynamic)
+            else if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibMpvDynamic libMpv)
             {
-                var libMpv = (LibMpvDynamic)videoPlayerContainer1.VideoPlayer;
                 libMpv.AudioTrackNumber = _audioTrackNumber;
             }
         }
@@ -333,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonStartVerify_Click(object sender, EventArgs e)
         {
-            if (videoPlayerContainer1 != null && videoPlayerContainer1.VideoPlayer != null)
+            if (videoPlayerContainer1?.VideoPlayer != null)
             {
                 _goBackPosition = videoPlayerContainer1.CurrentPosition;
                 _stopPosition = _goBackPosition + Configuration.Settings.Tools.VerifyPlaySeconds;
@@ -373,5 +376,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void timeUpDownLine_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonOK_Click(sender, e);
+            }
+        }
     }
 }
