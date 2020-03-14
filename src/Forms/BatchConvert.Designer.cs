@@ -88,6 +88,7 @@
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
+            this.labelNumberOfFiles = new System.Windows.Forms.Label();
             this.textBoxFilter = new System.Windows.Forms.TextBox();
             this.labelFilter = new System.Windows.Forms.Label();
             this.comboBoxFilter = new System.Windows.Forms.ComboBox();
@@ -806,6 +807,7 @@
             this.groupBoxInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxInput.Controls.Add(this.labelNumberOfFiles);
             this.groupBoxInput.Controls.Add(this.textBoxFilter);
             this.groupBoxInput.Controls.Add(this.labelFilter);
             this.groupBoxInput.Controls.Add(this.comboBoxFilter);
@@ -820,6 +822,16 @@
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
+            // 
+            // labelNumberOfFiles
+            // 
+            this.labelNumberOfFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelNumberOfFiles.Location = new System.Drawing.Point(872, 258);
+            this.labelNumberOfFiles.Name = "labelNumberOfFiles";
+            this.labelNumberOfFiles.Size = new System.Drawing.Size(100, 16);
+            this.labelNumberOfFiles.TabIndex = 14;
+            this.labelNumberOfFiles.Text = "labelNumberOfFiles";
+            this.labelNumberOfFiles.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxFilter
             // 
@@ -1116,5 +1128,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem inverseSelectionToolStripMenuItem;
         private System.Windows.Forms.Button buttonBrowseEncoding;
+        private System.Windows.Forms.Label labelNumberOfFiles;
     }
 }
