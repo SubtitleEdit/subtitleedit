@@ -322,6 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             inverseSelectionToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            UpdateNumberOfFiles();
 
             var fixItems = new List<FixActionItem>
             {
@@ -691,6 +692,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // ignored
             }
+            UpdateNumberOfFiles();
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
@@ -733,7 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             finally
             {
-                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelStatus.Text = string.Empty;
                 listViewInputFiles.EndUpdate();
             }
         }
@@ -1520,14 +1522,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 progressBar1.Value++;
             }
+            else
+            {
+                progressBar1.Value = progressBar1.Maximum;
+            }
+            progressBar1.Refresh();
 
             TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
             labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
-
             if (progressBar1.Value == progressBar1.Maximum)
             {
                 labelStatus.Text = string.Empty;
             }
+
+            Application.DoEvents();
         }
 
         private static void DoThreadWork(object sender, DoWorkEventArgs e)
@@ -1936,6 +1944,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RemoveAllToolStripMenuItemClick(object sender, EventArgs e)
         {
             listViewInputFiles.Items.Clear();
+            UpdateNumberOfFiles();
         }
 
         private void RemoveSelectedFiles()
@@ -1945,10 +1954,28 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            int first = -1;
             for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
+                if (first < 0)
+                {
+                    first = listViewInputFiles.SelectedIndices[i];
+                }
                 listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
             }
+
+            // keep an item selected/focused for improved UX
+            if (first < listViewInputFiles.Items.Count)
+            {
+                listViewInputFiles.Items[first].Selected = true;
+                listViewInputFiles.FocusedItem = listViewInputFiles.Items[first];
+            }
+            else if (listViewInputFiles.Items.Count > 0)
+            {
+                listViewInputFiles.Items[listViewInputFiles.Items.Count - 1].Selected = true;
+                listViewInputFiles.FocusedItem = listViewInputFiles.Items[listViewInputFiles.Items.Count - 1];
+            }
+            UpdateNumberOfFiles();
         }
 
         private void RemoveToolStripMenuItemClick(object sender, EventArgs e)
@@ -2062,6 +2089,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             progressBar1.Value = 0;
             progressBar1.Visible = false;
+            UpdateNumberOfFiles();
         }
 
         private void SetControlState(bool enabled)
@@ -2238,6 +2266,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(nameOfFormat);
             item.SubItems.Add("-");
             listViewInputFiles.Items.Add(item);
+            UpdateNumberOfFiles();
         }
 
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
@@ -2517,6 +2546,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+            }
+        }
+
+        private void UpdateNumberOfFiles()
+        {
+            if (listViewInputFiles.Items.Count > 0)
+            {
+                labelNumberOfFiles.Text = $"{listViewInputFiles.Items.Count:#,###,##0}";
+            }
+            else
+            {
+                labelNumberOfFiles.Text = string.Empty;
             }
         }
     }
