@@ -63,8 +63,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // paragraphs
                 for (int index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
-                    Paragraph p = subtitle.Paragraphs[index];
-                    Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
+                    var p = subtitle.Paragraphs[index];
+                    var next = subtitle.GetParagraphOrDefault(index + 1);
                     string text = p.Text;
 
                     var bufferShort = new byte[]
@@ -100,13 +100,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
-                        buffer[7] = 1; // align top (vertial)
-                        bufferShort[3] = 1; // align top (vertial)
+                        buffer[7] = 1; // align top (vertical)
+                        bufferShort[3] = 1; // align top (vertical)
                     }
                     else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                     {
                         buffer[7] = 8; // center (vertical)
-                        bufferShort[3] = 8; // align top (vertial)
+                        bufferShort[3] = 8; // align top (vertical)
                     }
 
                     if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an1}", StringComparison.Ordinal))
@@ -167,18 +167,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     int length = textBytes.Count + 20;
                     long end = fs.Position + length;
-                    if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500))
+                    if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500)
                     {
-                        fs.WriteByte((byte)(length));
+                        fs.WriteByte((byte)length);
 
-                        if (p.Text.Trim().Contains(Environment.NewLine))
-                        {
-                            fs.WriteByte(0x62); // two lines?
-                        }
-                        else
-                        {
-                            fs.WriteByte(0x61); // one line?
-                        }
+                        fs.WriteByte(p.Text.Trim().Contains(Environment.NewLine) ? (byte)0x62 : (byte)0x61);
 
                         WriteTime(fs, p.StartTime);
                         WriteTime(fs, p.EndTime);
@@ -188,16 +181,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         length = textBytes.Count + 20 - (buffer.Length - bufferShort.Length);
                         end = fs.Position + length;
-                        fs.WriteByte((byte)(length));
+                        fs.WriteByte((byte)length);
 
-                        if (p.Text.Trim().Contains(Environment.NewLine))
-                        {
-                            fs.WriteByte(0x42); // two lines?
-                        }
-                        else
-                        {
-                            fs.WriteByte(0x41); // one line?
-                        }
+                        fs.WriteByte(p.Text.Trim().Contains(Environment.NewLine) ? (byte)0x42 : (byte)0x41);
 
                         WriteTime(fs, p.StartTime);
                         fs.WriteByte(2);
@@ -220,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(Stream fs, TimeCode timeCode)
         {
             fs.WriteByte((byte)timeCode.Hours);
             fs.WriteByte((byte)timeCode.Minutes);
@@ -269,12 +255,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int i = 128;
             Paragraph last = null;
             var sb = new StringBuilder();
-            while (i < buffer.Length - 20)
+            while (i < buffer.Length - 16)
             {
                 var p = new Paragraph();
                 int length = buffer[i];
-                int textLength = length - 20;
-                int start = 19;
+
+                int usedBytes = 20;
+
+                p.StartTime = DecodeTimestamp(buffer, i + 2);
+                p.EndTime = DecodeTimestamp(buffer, i + 6);
+                if (p.EndTime.Hours == 2 && p.EndTime.Minutes == 1 && p.EndTime.Seconds == 0 && p.EndTime.Milliseconds == 0 &&
+                    (p.Duration.TotalMilliseconds < 0 || p.Duration.TotalMilliseconds > 5000))
+                {
+                    usedBytes = 20 - 4;
+                }
+
+                int textLength = length - usedBytes;
+                int start = usedBytes - 1;
                 for (int j = 0; j < 4; j++)
                 {
                     if (buffer[i + start - 1] > 0x10)
@@ -283,16 +280,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         textLength++;
                     }
                 }
+
                 if (textLength > 0 && buffer.Length >= i + textLength)
                 {
-                    p.StartTime = DecodeTimestamp(buffer, i + 2);
-
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
                     {
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
-
-                    p.EndTime = DecodeTimestamp(buffer, i + 6);
 
                     sb.Clear();
                     int j = 0;
@@ -350,13 +344,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 i += length;
             }
-            if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (last != null && (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds || last.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds))
             {
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             }
 
+            for (var index = 0; index < subtitle.Paragraphs.Count - 1; index++)
+            {
+                var current = subtitle.Paragraphs[index];
+                var next = subtitle.Paragraphs[index + 1];
+                if (current.EndTime.Hours == 2 && current.EndTime.Minutes == 1 && current.EndTime.Seconds == 0 && current.EndTime.Milliseconds == 0 &&
+                    (current.Duration.TotalMilliseconds < 0 || current.Duration.TotalMilliseconds > 5000))
+                {
+                    current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+            }
+
             subtitle.Renumber();
         }
-
     }
 }
