@@ -1088,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var sb = new StringBuilder(text.Length);
             if (text.Contains(word))
             {
-                const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
+                const string separatorChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -1097,7 +1097,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         bool startOk = i == 0;
                         if (!startOk)
                         {
-                            startOk = (startChars + Environment.NewLine).Contains(text[i - 1]);
+                            var prevChar = text[i - 1];
+                            startOk = char.IsPunctuation(prevChar) || char.IsWhiteSpace(prevChar) || separatorChars.Contains(prevChar);
                         }
                         if (!startOk && word.StartsWith(' '))
                         {
@@ -1105,10 +1106,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         }
                         if (startOk)
                         {
-                            bool endOk = (i + word.Length == text.Length);
+                            bool endOk = i + word.Length == text.Length;
                             if (!endOk)
                             {
-                                endOk = (startChars + Environment.NewLine).Contains(text[i + word.Length]);
+                                var nextChar = text[i + word.Length];
+                                endOk = char.IsPunctuation(nextChar) || char.IsWhiteSpace(nextChar) || separatorChars.Contains(nextChar);
                             }
                             if (!endOk)
                             {
