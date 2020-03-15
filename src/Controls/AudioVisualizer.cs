@@ -444,7 +444,7 @@ namespace Nikse.SubtitleEdit.Controls
                 for (int index = 0; index < _ranges.Length; index++)
                 {
                     var range = _ranges[index];
-                    if (range.End >= position && (range.Start < _nextSelection.Start || (range.Start == _nextSelection.Start && range.End > _nextSelection.End)))
+                    if (range.End >= position && (range.Start < _nextSelection.Start || range.Start == _nextSelection.Start && range.End > _nextSelection.End))
                     {
                         _nextSelection = range;
                     }
@@ -1718,7 +1718,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (endSeconds > EndPositionSeconds)
                     {
                         double newStartPos = _startPositionSeconds + (endSeconds - EndPositionSeconds); // move later, so whole selected paragraph is visible
-                        if (newStartPos < seconds) // but only if visibile screen is wide enough
+                        if (newStartPos < seconds) // but only if visible screen is wide enough
                         {
                             _startPositionSeconds = newStartPos;
                         }
@@ -1932,38 +1932,36 @@ namespace Nikse.SubtitleEdit.Controls
             int begin = SecondsToSampleIndex(_currentVideoPositionSeconds - 1);
             int length = SecondsToSampleIndex(durationInSeconds);
             var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
-
             int hitCount = 0;
             for (int i = begin; i > 0; i--)
             {
                 if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
                 {
                     hitCount++;
+                    if (hitCount > length)
+                    {
+                        double seconds = SampleIndexToSeconds(i + length / 2);
+                        if (seconds >= 0)
+                        {
+                            StartPositionSeconds = seconds;
+                            if (_startPositionSeconds > 1)
+                            {
+                                StartPositionSeconds -= 1;
+                            }
+                            else
+                            {
+                                StartPositionSeconds = 0;
+                            }
+
+                            OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
+                            Invalidate();
+                        }
+                        return seconds;
+                    }
                 }
                 else
                 {
                     hitCount = 0;
-                }
-
-                if (hitCount > length)
-                {
-                    double seconds = SampleIndexToSeconds(i + length / 2);
-                    if (seconds >= 0)
-                    {
-                        StartPositionSeconds = seconds;
-                        if (_startPositionSeconds > 1)
-                        {
-                            StartPositionSeconds -= 1;
-                        }
-                        else
-                        {
-                            StartPositionSeconds = 0;
-                        }
-
-                        OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
-                        Invalidate();
-                    }
-                    return seconds;
                 }
             }
             return -1;
@@ -1985,15 +1983,14 @@ namespace Nikse.SubtitleEdit.Controls
                 if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
                 {
                     hitCount++;
+                    if (hitCount > length)
+                    {
+                        return Math.Max(0, SampleIndexToSeconds(i + length) - 0.01);
+                    }
                 }
                 else
                 {
                     hitCount = 0;
-                }
-
-                if (hitCount > length)
-                {
-                    return Math.Max(0, SampleIndexToSeconds(i + length) - 0.01);
                 }
             }
             return -1;
