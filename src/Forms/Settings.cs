@@ -1270,6 +1270,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(audioVisualizerNode, language.WaveformGoToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange));
             AddNode(audioVisualizerNode, language.WaveformGoToNextSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange));
             AddNode(audioVisualizerNode, language.WaveformToggleSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleSceneChange));
+            AddNode(audioVisualizerNode, language.WaveformGuessStart, nameof(Configuration.Settings.Shortcuts.WaveformGuessStart));
             if (audioVisualizerNode.Nodes.Count > 0)
             {
                 _shortcuts.Nodes.Add(audioVisualizerNode);

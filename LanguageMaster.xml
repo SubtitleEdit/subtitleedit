@@ -2021,6 +2021,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
+    <WaveformGuessStart>Auto adjust start via volume/scene change</WaveformGuessStart>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
     <GoBack1FrameWithPlay>One frame back (with play)</GoBack1FrameWithPlay>
