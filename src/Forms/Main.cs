@@ -2217,7 +2217,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (((ext == ".m2ts" || ext == ".ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+            if (((ext == ".m2ts" || ext == ".ts" || ext == ".mts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
                 (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
             {
                 bool isTextSt = false;
@@ -7134,11 +7134,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     bool startOk = startIndex == 0 ||
                                    "«»“” <>-—+/'\"[](){}¿¡….,;:!?%&$£\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00C2\u00A0".Contains(p.Text[startIndex - 1]) ||
+                                   char.IsPunctuation(p.Text[startIndex - 1]) ||
                                    startIndex == p.Text.Length - oldWord.Length;
                     if (startOk)
                     {
                         int end = startIndex + oldWord.Length;
-                        if (end <= p.Text.Length && end == p.Text.Length || ("«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00C2\u00A0").Contains(p.Text[end]))
+                        if (end <= p.Text.Length && end == p.Text.Length ||
+                            "«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u00C2\u00A0".Contains(p.Text[end]) ||
+                            char.IsPunctuation(p.Text[end]))
                         {
                             var lengthBefore = p.Text.Length;
                             p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
@@ -12765,7 +12768,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ResetSubtitle();
                     OpenSubtitle(fileName, null);
                 }
-                else if (ext == ".m2ts" && FileUtil.IsM2TransportStream(fileName))
+                else if ((ext == ".m2ts" || ext == ".ts" || ext == ".mts") && FileUtil.IsM2TransportStream(fileName))
                 {
                     ResetSubtitle();
                     OpenSubtitle(fileName, null);
