@@ -2187,7 +2187,7 @@ namespace Nikse.SubtitleEdit.Controls
             int hitCount = 0;
             for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
             {
-                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
+                if (i > 0 && _wavePeaks.Peaks[i].Abs <= threshold)
                 {
                     hitCount++;
                 }
