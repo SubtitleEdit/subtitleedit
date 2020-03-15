@@ -14245,6 +14245,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformGuessStart)
+            {
+                AutoGuessStartTime(_subtitleListViewIndex);
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
             {
                 ToolStripMenuItemDeleteClick(null, null);
@@ -14600,6 +14605,76 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // put new entries above tabs
+        }
+
+        private void AutoGuessStartTime(int index)
+        {
+            var silenceLengthInSeconds = 0.11;
+            var p = _subtitle.GetParagraphOrDefault(index);
+            for (var startVolume = 8.5; startVolume < 14; startVolume += 0.3)
+            {
+                var pos = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, p.StartTime.TotalSeconds);
+                var pos2 = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume + 0.3, silenceLengthInSeconds, p.StartTime.TotalSeconds);
+                if (pos >= 0 && pos > p.StartTime.TotalSeconds - 1)
+                {
+                    if (pos2 > pos && pos2 >= 0 && pos2 > p.StartTime.TotalSeconds - 1)
+                    {
+                        pos = pos2;
+                    }
+
+                    var newStartTimeMs = pos * TimeCode.BaseUnit;
+                    var prev = _subtitle.GetParagraphOrDefault(index - 1);
+                    if (prev != null && prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines >= newStartTimeMs)
+                    {
+                        newStartTimeMs = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (newStartTimeMs >= p.StartTime.TotalMilliseconds)
+                        {
+                            break; // cannot move start time
+                        }
+                    }
+
+                    // check for scene changes
+                    if (audioVisualizer.SceneChanges != null)
+                    {
+                        var matchingSceneChanges = audioVisualizer.SceneChanges
+                            .Where(sc => sc > p.StartTime.TotalSeconds - 0.3 && sc < p.StartTime.TotalSeconds + 0.2)
+                            .OrderBy(sc => Math.Abs(sc - p.StartTime.TotalSeconds));
+                        if (matchingSceneChanges.Count() > 0)
+                        {
+                            newStartTimeMs = matchingSceneChanges.First() * TimeCode.BaseUnit;
+                        }
+                    }
+
+                    if (Math.Abs(p.StartTime.TotalMilliseconds - newStartTimeMs) < 10)
+                    {
+                        break; // diff too small
+                    }
+
+                    var newEndTimeMs = p.EndTime.TotalMilliseconds;
+                    if (newStartTimeMs > p.StartTime.TotalMilliseconds)
+                    {
+                        var temp = new Paragraph(p);
+                        temp.StartTime.TotalMilliseconds = newStartTimeMs;
+                        if (temp.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ||
+                            Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        {
+                            var next = _subtitle.GetParagraphOrDefault(index + 1);
+                            if (next == null ||
+                                next.StartTime.TotalMilliseconds > newStartTimeMs + p.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                            {
+                                newEndTimeMs = newStartTimeMs + p.Duration.TotalMilliseconds;
+                            }
+                        }
+                    }
+
+                    MakeHistoryForUndo(string.Format(Configuration.Settings.Language.Main.BeforeX, Configuration.Settings.Language.Settings.WaveformGuessStart));
+                    p.StartTime.TotalMilliseconds = newStartTimeMs;
+                    p.EndTime.TotalMilliseconds = newEndTimeMs;
+                    RefreshSelectedParagraph();
+                    SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                    break;
+                }
+            }
         }
 
         private void GoToBookmark()

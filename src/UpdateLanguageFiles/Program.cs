@@ -66,7 +66,15 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
-                    File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
+                    try
+                    {
+                        File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
+                    }
+                    catch 
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
+                    }
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }

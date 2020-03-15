@@ -1926,6 +1926,7 @@ namespace Nikse.SubtitleEdit.Controls
             return -1;
         }
 
+        /// <returns>video position in seconds, -1 if not found</returns>
         public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
         {
             int begin = SecondsToSampleIndex(_currentVideoPositionSeconds - 1);
@@ -1946,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (hitCount > length)
                 {
-                    double seconds = SampleIndexToSeconds(i + (length / 2));
+                    double seconds = SampleIndexToSeconds(i + length / 2);
                     if (seconds >= 0)
                     {
                         StartPositionSeconds = seconds;
@@ -1963,6 +1964,36 @@ namespace Nikse.SubtitleEdit.Controls
                         Invalidate();
                     }
                     return seconds;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Seeks silence in volume
+        /// </summary>
+        /// <returns>video position in seconds, -1 if not found</returns>
+        public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds)
+        {
+            var min = SecondsToSampleIndex(startSeconds - 1);
+            var max = SecondsToSampleIndex(startSeconds + durationInSeconds + 0.05);
+            int length = SecondsToSampleIndex(durationInSeconds);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
+            int hitCount = 0;
+            for (int i = max; i > min; i--)
+            {
+                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
+                {
+                    hitCount++;
+                }
+                else
+                {
+                    hitCount = 0;
+                }
+
+                if (hitCount > length)
+                {
+                    return Math.Max(0, SampleIndexToSeconds(i + length) - 0.01);
                 }
             }
             return -1;

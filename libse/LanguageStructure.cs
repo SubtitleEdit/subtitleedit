@@ -2186,6 +2186,7 @@
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
+            public string WaveformGuessStart { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack1FrameWithPlay { get; set; }

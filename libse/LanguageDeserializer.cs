@@ -5485,6 +5485,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformToggleSceneChange":
                     language.Settings.WaveformToggleSceneChange = reader.Value;
                     break;
+                case "Settings/WaveformGuessStart":
+                    language.Settings.WaveformGuessStart = reader.Value;
+                    break;
                 case "Settings/GoBack1Frame":
                     language.Settings.GoBack1Frame = reader.Value;
                     break;

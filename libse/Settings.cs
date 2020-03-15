@@ -1557,6 +1557,7 @@ $HorzAlign          =   Center
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
+        public string WaveformGuessStart { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslate { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
@@ -6103,6 +6104,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.WaveformToggleSceneChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("WaveformGuessStart");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.WaveformGuessStart = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateGoogleIt");
                 if (subNode != null)
                 {
@@ -7109,6 +7116,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
+                textWriter.WriteElementString("WaveformGuessStart", settings.Shortcuts.WaveformGuessStart);
                 textWriter.WriteElementString("MainTranslateGoogleIt", settings.Shortcuts.MainTranslateGoogleIt);
                 textWriter.WriteElementString("MainTranslateGoogleTranslate", settings.Shortcuts.MainTranslateGoogleTranslate);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
