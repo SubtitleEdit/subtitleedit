@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            Action<int, bool> addSelection = (index, isPrimary) =>
+            void addSelection(int index, bool isPrimary = false)
             {
                 var p = subtitle.GetParagraphOrDefault(index);
                 if (p == null || p.StartTime.IsMaxTime)
@@ -394,12 +394,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 _allSelectedParagraphs.Add(p);
-            };
+            }
 
             addSelection(primarySelectedIndex, true);
             foreach (int selectedIndex in selectedIndexes)
             {
-                addSelection(selectedIndex, false);
+                addSelection(selectedIndex);
             }
         }
 
