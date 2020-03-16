@@ -2121,13 +2121,10 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     double avgVol = GetAverageVolumeForNextMilliseconds(i, blockSizeMilliseconds);
-                    if (avgVol > silenceThreshold)
+                    if (avgVol > silenceThreshold && avgVol < maxThreshold)
                     {
-                        if (avgVol < maxThreshold)
-                        {
-                            subtitleOn = true;
-                            begin = i;
-                        }
+                        subtitleOn = true;
+                        begin = i;
                     }
                 }
                 i++;
