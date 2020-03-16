@@ -2045,28 +2045,20 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
         {
-            int length = SecondsToSampleIndex(milliseconds / TimeCode.BaseUnit);
-            if (length < 9)
-            {
-                length = 9;
-            }
-
+            // lenght cannot be lesser than 9
+            int length = Math.Max(SecondsToSampleIndex(milliseconds / TimeCode.BaseUnit), 9);
             double v = 0;
-            int count = 0;
-            for (int i = sampleIndex; i < sampleIndex + length; i++)
+            // { x | x <= total peaks }
+            int count = Math.Min(sampleIndex + length, _wavePeaks.Peaks.Count);
+            // allow range [1, n]
+            int from = Math.Max(sampleIndex, 1);
+            for (int i = from; i < count; i++)
             {
-                if (i > 0 && i < _wavePeaks.Peaks.Count)
-                {
-                    v += _wavePeaks.Peaks[i].Abs;
-                    count++;
-                }
+                v += _wavePeaks.Peaks[i].Abs;
             }
-            if (count == 0)
-            {
-                return 0;
-            }
-
-            return v / count;
+            // calculate avg peaks
+            int hitCount = count - from;
+            return hitCount == 0 ? 0 : v / hitCount;
         }
 
         internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int minimumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
