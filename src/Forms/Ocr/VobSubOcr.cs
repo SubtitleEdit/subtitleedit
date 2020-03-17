@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
@@ -11,7 +12,6 @@ using Nikse.SubtitleEdit.Logic.Ocr.Tesseract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -23,7 +23,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -404,6 +403,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
             checkBoxGuessUnknownWords.Checked = Configuration.Settings.VobSubOcr.GuessUnknownWords;
+            checkBoxAutoFixCommonErrors.Checked = Configuration.Settings.VobSubOcr.FixOcrErrors;
 
             groupBoxTransportStream.Text = language.TransportStream;
             checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
@@ -8071,6 +8071,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             Configuration.Settings.VobSubOcr.ItalicFactor = _unItalicFactor;
+            Configuration.Settings.VobSubOcr.FixOcrErrors = checkBoxAutoFixCommonErrors.Checked;
             Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.GuessUnknownWords = checkBoxGuessUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;

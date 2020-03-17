@@ -1289,6 +1289,7 @@ $HorzAlign          =   Center
         public bool RightToLeft { get; set; }
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
+        public bool FixOcrErrors { get; set; }
         public bool PromptForUnknownWords { get; set; }
         public bool GuessUnknownWords { get; set; }
         public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
@@ -1322,6 +1323,7 @@ $HorzAlign          =   Center
             RightToLeft = false;
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
+            FixOcrErrors = true;
             PromptForUnknownWords = true;
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
@@ -4807,6 +4809,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.DefaultMillisecondsForUnknownDurations = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("FixOcrErrors");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.FixOcrErrors = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("PromptForUnknownWords");
             if (subNode != null)
             {
@@ -6910,6 +6918,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixOcrErrors", settings.VobSubOcr.FixOcrErrors.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GuessUnknownWords", settings.VobSubOcr.GuessUnknownWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString(CultureInfo.InvariantCulture));
