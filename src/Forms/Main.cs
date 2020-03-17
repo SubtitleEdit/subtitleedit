@@ -14609,9 +14609,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AutoGuessStartTime(int index)
         {
-            var silenceLengthInSeconds = 0.11;
             var p = _subtitle.GetParagraphOrDefault(index);
-            for (var startVolume = 8.5; startVolume < 14; startVolume += 0.3)
+            if (p == null)
+            {
+                return;
+            }
+
+            var silenceLengthInSeconds = 0.05;
+            var lowPercent = audioVisualizer.FindLowPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.1);
+            var highPercent = audioVisualizer.FindHighPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.4);
+            var add = 5.0;
+            if (highPercent > 40)
+            {
+                add = 8;
+            }
+            else if (highPercent < 5)
+            {
+                add = highPercent - lowPercent - 0.3;
+            }
+            for (var startVolume = lowPercent + add; startVolume < 14; startVolume += 0.3)
             {
                 var pos = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume, silenceLengthInSeconds, p.StartTime.TotalSeconds);
                 var pos2 = audioVisualizer.FindDataBelowThresholdBackForStart(startVolume + 0.3, silenceLengthInSeconds, p.StartTime.TotalSeconds);
