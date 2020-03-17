@@ -2199,6 +2199,11 @@
             public string GoForward1Second { get; set; }
             public string GoBack5Seconds { get; set; }
             public string GoForward5Seconds { get; set; }
+            public string GoBack3Second { get; set; }
+            public string GoToStartCurrent { get; set; }
+            public string ToggleStartEndCurrent { get; set; }
+            public string PlayCurrent { get; set; }
+            
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
 

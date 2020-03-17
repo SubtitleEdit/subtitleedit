@@ -2034,6 +2034,10 @@ can edit in same subtitle file (collaboration)</Information>
     <GoForward1Second>One second forward</GoForward1Second>
     <GoBack5Seconds>Five seconds back</GoBack5Seconds>
     <GoForward5Seconds>Five seconds forward</GoForward5Seconds>
+    <GoBack3Second>Three seconds back</GoBack3Second>
+    <GoToStartCurrent>Set video pos to start of current subtitle</GoToStartCurrent>
+    <ToggleStartEndCurrent>Toggle video pos between start/end of current subtitle</ToggleStartEndCurrent>
+    <PlayCurrent>Play current subtitle</PlayCurrent>
     <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>

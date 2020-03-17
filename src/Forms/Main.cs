@@ -13801,7 +13801,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F4)
+            else if (_shortcuts.MainVideoToggleStartEndCurrent == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                 {
@@ -13822,7 +13822,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F5)
+            else if (_shortcuts.MainVideoPlayCurrent == e.KeyData)
             {
                 if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                 {
@@ -13837,28 +13837,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F6)
+            else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     GotoSubPositionAndPause();
                 }
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F7)
+            else if (_shortcuts.MainVideo3000MsLeft == e.KeyData)
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     GoBackSeconds(3);
-                }
-            }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F8)
-            {
-                if (mediaPlayer.VideoPlayer != null)
-                {
-                    _endSeconds = -1;
-                    mediaPlayer.TogglePlayPause();
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark

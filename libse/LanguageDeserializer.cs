@@ -5524,6 +5524,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/GoForward5Seconds":
                     language.Settings.GoForward5Seconds = reader.Value;
                     break;
+                case "Settings/GoBack3Second":
+                    language.Settings.GoBack3Second = reader.Value;
+                    break;
+                case "Settings/GoToStartCurrent":
+                    language.Settings.GoToStartCurrent = reader.Value;
+                    break;
+                case "Settings/ToggleStartEndCurrent":
+                    language.Settings.ToggleStartEndCurrent = reader.Value;
+                    break;
+                case "Settings/PlayCurrent":
+                    language.Settings.PlayCurrent = reader.Value;
+                    break;
                 case "Settings/WaveformGoToPrevSubtitle":
                     language.Settings.WaveformGoToPrevSubtitle = reader.Value;
                     break;
