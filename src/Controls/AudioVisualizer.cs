@@ -21,6 +21,13 @@ namespace Nikse.SubtitleEdit.Controls
             End
         }
 
+        public class MinMax
+        {
+            public double Min { get; set; }
+            public double Max { get; set; }
+            public double Avg { get; set; }
+        }
+
         public class ParagraphEventArgs : EventArgs
         {
             public Paragraph Paragraph { get; }
@@ -1888,114 +1895,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
-        {
-            int begin = SecondsToSampleIndex(_currentVideoPositionSeconds + 1);
-            int length = SecondsToSampleIndex(durationInSeconds);
-            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
-
-            int hitCount = 0;
-            for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
-            {
-                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
-                {
-                    hitCount++;
-                }
-                else
-                {
-                    hitCount = 0;
-                }
-
-                if (hitCount > length)
-                {
-                    double seconds = SampleIndexToSeconds(i - (length / 2));
-                    if (seconds >= 0)
-                    {
-                        StartPositionSeconds = seconds;
-                        if (_startPositionSeconds > 1)
-                        {
-                            StartPositionSeconds -= 1;
-                        }
-
-                        OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
-                        Invalidate();
-                    }
-                    return seconds;
-                }
-            }
-            return -1;
-        }
-
-        /// <returns>video position in seconds, -1 if not found</returns>
-        public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
-        {
-            int begin = SecondsToSampleIndex(_currentVideoPositionSeconds - 1);
-            int length = SecondsToSampleIndex(durationInSeconds);
-            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
-            int hitCount = 0;
-            for (int i = begin; i > 0; i--)
-            {
-                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
-                {
-                    hitCount++;
-                    if (hitCount > length)
-                    {
-                        double seconds = SampleIndexToSeconds(i + length / 2);
-                        if (seconds >= 0)
-                        {
-                            StartPositionSeconds = seconds;
-                            if (_startPositionSeconds > 1)
-                            {
-                                StartPositionSeconds -= 1;
-                            }
-                            else
-                            {
-                                StartPositionSeconds = 0;
-                            }
-
-                            OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
-                            Invalidate();
-                        }
-                        return seconds;
-                    }
-                }
-                else
-                {
-                    hitCount = 0;
-                }
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// Seeks silence in volume
-        /// </summary>
-        /// <returns>video position in seconds, -1 if not found</returns>
-        public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds)
-        {
-            var min = SecondsToSampleIndex(startSeconds - 1);
-            var max = SecondsToSampleIndex(startSeconds + durationInSeconds + 0.05);
-            int length = SecondsToSampleIndex(durationInSeconds);
-            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
-            int hitCount = 0;
-            for (int i = max; i > min; i--)
-            {
-                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
-                {
-                    hitCount++;
-                    if (hitCount > length)
-                    {
-                        return Math.Max(0, SampleIndexToSeconds(i + length) - 0.01);
-                    }
-                }
-                else
-                {
-                    hitCount = 0;
-                }
-            }
-            return -1;
-        }
-
         public void ZoomIn()
         {
             ZoomFactor += 0.1;
@@ -2255,6 +2154,190 @@ namespace Nikse.SubtitleEdit.Controls
                 subtitleOn = false;
             }
             return subtitleOn;
+        }
+
+        private MinMax GetMinAndMax(int startIndex, int endIndex)
+        {
+            int minPeak = int.MaxValue;
+            int maxPeak = int.MinValue;
+            double total = 0;
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                var v = _wavePeaks.Peaks[i].Abs;
+                total += v;
+                if (v < minPeak)
+                {
+                    minPeak = v;
+                }
+                if (v > maxPeak)
+                {
+                    maxPeak = v;
+                }
+            }
+
+            return new MinMax { Min = minPeak, Max = maxPeak, Avg = total / (endIndex - startIndex) };
+        }
+
+        public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
+        {
+            int begin = SecondsToSampleIndex(_currentVideoPositionSeconds + 1);
+            int length = SecondsToSampleIndex(durationInSeconds);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
+
+            int hitCount = 0;
+            for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
+            {
+                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
+                {
+                    hitCount++;
+                }
+                else
+                {
+                    hitCount = 0;
+                }
+
+                if (hitCount > length)
+                {
+                    double seconds = SampleIndexToSeconds(i - (length / 2));
+                    if (seconds >= 0)
+                    {
+                        StartPositionSeconds = seconds;
+                        if (_startPositionSeconds > 1)
+                        {
+                            StartPositionSeconds -= 1;
+                        }
+
+                        OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
+                        Invalidate();
+                    }
+                    return seconds;
+                }
+            }
+            return -1;
+        }
+
+        /// <returns>video position in seconds, -1 if not found</returns>
+        public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
+        {
+            int begin = SecondsToSampleIndex(_currentVideoPositionSeconds - 1);
+            int length = SecondsToSampleIndex(durationInSeconds);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
+            int hitCount = 0;
+            for (int i = begin; i > 0; i--)
+            {
+                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
+                {
+                    hitCount++;
+                    if (hitCount > length)
+                    {
+                        double seconds = SampleIndexToSeconds(i + length / 2);
+                        if (seconds >= 0)
+                        {
+                            StartPositionSeconds = seconds;
+                            if (_startPositionSeconds > 1)
+                            {
+                                StartPositionSeconds -= 1;
+                            }
+                            else
+                            {
+                                StartPositionSeconds = 0;
+                            }
+
+                            OnSingleClick?.Invoke(this, new ParagraphEventArgs(seconds, null));
+                            Invalidate();
+                        }
+                        return seconds;
+                    }
+                }
+                else
+                {
+                    hitCount = 0;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Seeks silence in volume
+        /// </summary>
+        /// <returns>video position in seconds, -1 if not found</returns>
+        public double FindDataBelowThresholdBackForStart(double thresholdPercent, double durationInSeconds, double startSeconds)
+        {
+            var min = Math.Max(0, SecondsToSampleIndex(startSeconds - 1));
+            var maxShort = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(startSeconds + durationInSeconds + 0.01));
+            var max = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(startSeconds + durationInSeconds + 0.8));
+            int length = SecondsToSampleIndex(durationInSeconds);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
+
+            var minMax = GetMinAndMax(min, max);
+            const int lowPeakDifference = 4_000;
+            if (minMax.Max - minMax.Min < lowPeakDifference)
+            {
+                return -1; // all audio about the same
+            }
+
+            // look for start silence in the beginning of subtitle
+            min = SecondsToSampleIndex(startSeconds);
+            var hitCount = 0;
+            int index;
+            for (index = min; index < max; index++)
+            {
+                if (index > 0 && index < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[index].Abs <= threshold)
+                {
+                    hitCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (hitCount > length)
+            {
+                minMax = GetMinAndMax(min, index);
+                var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
+                if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+                {
+                    return Math.Max(0, SampleIndexToSeconds(index - 1) - 0.01);
+                }
+            }
+
+            // move start left?
+            min = SecondsToSampleIndex(startSeconds - 1);
+            hitCount = 0;
+            for (index = maxShort; index > min; index--)
+            {
+                if (index > 0 && index < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[index].Abs <= threshold)
+                {
+                    hitCount++;
+                    if (hitCount > length)
+                    {
+                        return Math.Max(0, SampleIndexToSeconds(index + length) - 0.01);
+                    }
+                }
+                else
+                {
+                    hitCount = 0;
+                }
+            }
+            return -1;
+        }
+
+        public double FindLowPercentage(double startSeconds, double endSeconds)
+        {
+            var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+            var max = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+            var minMax = GetMinAndMax(min, max);
+            var threshold = minMax.Min * 100.0 / _wavePeaks.HighestPeak;
+            return threshold;
+        }
+
+        public double FindHighPercentage(double startSeconds, double endSeconds)
+        {
+            var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
+            var max = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
+            var minMax = GetMinAndMax(min, max);
+            var threshold = minMax.Max * 100.0 / _wavePeaks.HighestPeak;
+            return threshold;
         }
 
         public int GetSceneChangeIndex(double seconds)
