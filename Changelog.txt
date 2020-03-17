@@ -6,6 +6,7 @@
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
 * IMPROVED:
+   * Update Bulgarian translation - thx KalinM
    * Minor UI improvements for "Batch convert" UI
    * Improve "Fix unneeded periods" - thx Aleksander
    * Improve "Remove unneeded spaces" - thx Aleksander
