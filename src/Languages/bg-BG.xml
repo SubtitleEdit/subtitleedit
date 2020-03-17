@@ -225,6 +225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TransportStreamFileNameEnding>Край на името на файла</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Настройки на TS...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Премахване прекъсвания на редове</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Опитайте да използвате изходната кодова таблица</TryToUseSourceEncoding>
   </BatchConvert>
   <Beamer>
     <Title>Проектор</Title>
@@ -782,6 +783,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveEmptyLines>Изтриване на празни редове</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Изтриване на редове без букви</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Генериране на тайм кодове</GenerateTimeCodes>
+    <TakeTimeFromFileName>Отделете времето от името на файла</TakeTimeFromFileName>
     <GapBetweenSubtitles>Интервал между субтитрите (милисек.)</GapBetweenSubtitles>
     <Auto>Автоматично</Auto>
     <Fixed>Настрой</Fixed>
@@ -1505,6 +1507,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 във файла със субитрите (Ред {0})
 </LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Ред {0} - очакван празен ред, но е намерен номер + времеви код (брой пропуснати): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Преди авт. времетраене за избраните редове</BeforeAutoDuration>
     <BeforeColumnPaste>Преди поставянето на колона</BeforeColumnPaste>
@@ -2026,6 +2029,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformGoToPreviousSceneChange>Преминете към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Преминаване към следващата промяна на сцена</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Превключване промяна на сцените</WaveformToggleSceneChange>
+    <WaveformGuessStart>Авт. настройване на старта чрез промяна силата на звука/сцената</WaveformGuessStart>
     <GoBack1Frame>1 кадър назад</GoBack1Frame>
     <GoForward1Frame>1 кадър напред</GoForward1Frame>
     <GoBack1FrameWithPlay>1 кадр назад (с възпроизвеждане)</GoBack1FrameWithPlay>
@@ -2038,6 +2042,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoForward1Second>1 сек. напред</GoForward1Second>
     <GoBack5Seconds>5 сек. назад</GoBack5Seconds>
     <GoForward5Seconds>5 сек. напред</GoForward5Seconds>
+    <GoBack3Second>Три секунди назад</GoBack3Second>
+    <GoToStartCurrent>Задаване на видео поз за старт на текущия субтитър</GoToStartCurrent>
+    <ToggleStartEndCurrent>Превключване на видео поз между начало/край на текущия субтитър</ToggleStartEndCurrent>
+    <PlayCurrent>Възпроизвеждане на текущия субтитър</PlayCurrent>
     <WaveformGoToPrevSubtitle>Към предишните субтитри (от видео позиция)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Преминаване към следващия субтитър (от позицията на видеото)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Превключване Пусни/Пауза</TogglePlayPause>
