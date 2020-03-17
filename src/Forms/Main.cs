@@ -14615,7 +14615,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var silenceLengthInSeconds = 0.05;
+            var silenceLengthInSeconds = 0.08;
             var lowPercent = audioVisualizer.FindLowPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.1);
             var highPercent = audioVisualizer.FindHighPercentage(p.StartTime.TotalSeconds - 0.3, p.StartTime.TotalSeconds + 0.4);
             var add = 5.0;
