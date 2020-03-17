@@ -2288,7 +2288,13 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    break;
+                    minMax = GetMinAndMax(min, index);
+                    var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
+                    if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+                    {
+                        break;
+                    }
+                    hitCount = length / 2;
                 }
             }
             if (hitCount > length)
