@@ -1,5 +1,28 @@
 ﻿Subtitle Edit Changelog
 
+3.5.15 (xth April 2020) BETA
+* NEW:
+   * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
+   * Add new subtitle format - thx Marko
+   * Add new subtitle format - thx José
+* IMPROVED:
+   * Minor UI improvements for "Batch convert" UI
+   * Improve "Fix unneeded periods" - thx Aleksander
+   * Improve "Remove unneeded spaces" - thx Aleksander
+   * Keep properties between ASSA/SSA - thx DKqwerty
+   * Improve handling of alignment tags in "Merge lines" - thx Moisés
+   * Improve parsing of unknown subtitles - thx Marko
+   * Do not change end time in split - thx OmrSi
+   * Display version in VLC player name
+* FIXED:
+   * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
+   * Fix issues with CheetahCaption - thx Tom 
+   * Fix issue with spell check replace - thx LithiumFlower
+   * Fix "Fix missing spaces" after ":" in Finnish - thx Boulder08
+   * Remove ASSA tags when exporting to "SMPTE-TT 2052" - thx Moisés
+   * Fix keeping settings in "OCR image pre-processing"
+
+
 3.5.14 (8th March 2020)
 * NEW:
    * "UTF-8 without BOM" encoding added - thx uckthis
