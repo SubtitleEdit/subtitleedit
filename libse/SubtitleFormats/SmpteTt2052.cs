@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("smpte", "http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt");
             nsmgr.AddNamespace("m608", "http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608");
 
-            const string xmlStructure = @"<?xml version='1.0' encoding='utf-8'?>
+            var xmlStructure = @"<?xml version='1.0' encoding='utf-8'?>
 <tt xml:lang='[LANG]' xmlns='http://www.w3.org/ns/ttml' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' ttp:timeBase='media' ttp:frameRate='24' ttp:frameRateMultiplier='1000 1001' xmlns:smpte='http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt' xmlns:m608='http://www.smpte-ra.org/schemas/2052-1/2010/smpte-tt#cea608'>
     <head>
         <metadata>
@@ -126,6 +126,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         <div></div>
     </body>
 </tt>";
+            string frameRate = ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString();
+            string frameRateMultiplier = "1000 1001";
+            if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.01)
+            {
+                frameRateMultiplier = "1 1";
+            }
+            xmlStructure = xmlStructure.Replace("frameRate='24'", $"frameRate='{frameRate}'");
+            xmlStructure = xmlStructure.Replace("frameRateMultiplier='1000 1001'", $"frameRateMultiplier='{frameRateMultiplier}'");
+
             var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             xml.LoadXml(xmlStructure.Replace("[LANG]", languageCode));
             if (!string.IsNullOrWhiteSpace(title))

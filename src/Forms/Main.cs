@@ -22772,11 +22772,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                var frameRate = CurrentFrameRate;
+                var format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
                 if (format == null)
                 {
                     e.Cancel = true;
                 }
+                Configuration.Settings.General.DefaultFrameRate = frameRate;
             }
         }
 
@@ -22789,6 +22791,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.UpdateFrames(_subtitle);
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                ShowSource();
+            }
         }
 
         private void ToolStripMenuItemGoogleMicrosoftTranslateSelLineClick(object sender, EventArgs e)
