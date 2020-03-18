@@ -1115,6 +1115,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveHearImpairedTags(string text)
         {
+            if (!text.Contains(Environment.NewLine) && Settings.OnlyIfInSeparateLine && !StartsAndEndsWithHearImpairedTags(text))
+            {
+                return text;
+            }
+
             string preAssTag = string.Empty;
             if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}', 2) > 0)
             {
