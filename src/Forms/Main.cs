@@ -3437,6 +3437,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.RecentFiles.Files.Clear();
                 reopenToolStripMenuItem.Visible = false;
             }
+
+            reopenToolStripMenuItem.Visible = reopenToolStripMenuItem.DropDownItems.Count > 0;
         }
 
         private void ReopenSubtitleToolStripMenuItemClick(object sender, EventArgs e)
@@ -14386,7 +14388,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertNewTextAtVideoPosition();
                 e.SuppressKeyPress = true;
             }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
+            else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
             {
                 var p = InsertNewTextAtVideoPosition();
                 p.Text = string.Empty;
