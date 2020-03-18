@@ -14188,6 +14188,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.VideoSelectNextSubtitle)
+            {
+                var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    if (p.StartTime.TotalMilliseconds > cp)
+                    {
+                        SubtitleListview1.SelectNone();
+                        SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Selected = true;
+                        SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Focused = true;
+                        break;
+                    }
+                }
+
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToPreviousSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition - 0.01;

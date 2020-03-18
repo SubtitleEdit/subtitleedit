@@ -1465,6 +1465,7 @@ $HorzAlign          =   Center
         public string MainVideoPlayCurrent { get; set; }
         public string MainVideoGoToPrevSubtitle { get; set; }
         public string MainVideoGoToNextSubtitle { get; set; }
+        public string MainVideoSelectNextSubtitle { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
         public string MainVideoFaster { get; set; }
@@ -5540,6 +5541,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoSelectNextSubtitle");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoSelectNextSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                 {
@@ -7058,6 +7065,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainVideoPlayCurrent", settings.Shortcuts.MainVideoPlayCurrent);
                 textWriter.WriteElementString("MainVideoGoToPrevSubtitle", settings.Shortcuts.MainVideoGoToPrevSubtitle);
                 textWriter.WriteElementString("MainVideoGoToNextSubtitle", settings.Shortcuts.MainVideoGoToNextSubtitle);
+                textWriter.WriteElementString("MainVideoSelectNextSubtitle", settings.Shortcuts.MainVideoSelectNextSubtitle);
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
                 textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
                 textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
