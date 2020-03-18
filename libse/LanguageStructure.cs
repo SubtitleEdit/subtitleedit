@@ -2206,7 +2206,7 @@
             
             public string WaveformGoToPrevSubtitle { get; set; }
             public string WaveformGoToNextSubtitle { get; set; }
-
+            public string WaveformSelectNextSubtitle { get; set; }
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
