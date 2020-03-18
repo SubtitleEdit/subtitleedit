@@ -5,6 +5,7 @@
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
+   * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Minor UI improvements for "Batch convert" UI
@@ -14,6 +15,7 @@
    * Improve handling of alignment tags in "Merge lines" - thx Moisés
    * Improve parsing of unknown subtitles - thx Marko
    * Do not change end time in split - thx OmrSi
+   * Update Serbian spell check dictionary - thx arslan
    * Display version in VLC player name
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
@@ -21,7 +23,10 @@
    * Fix issue with spell check replace - thx LithiumFlower
    * Fix "Fix missing spaces" after ":" in Finnish - thx Boulder08
    * Remove ASSA tags when exporting to "SMPTE-TT 2052" - thx Moisés
+   * Use current frame rate for format SMPTE-TT 2052 - thx Moisés
    * Fix keeping settings in "OCR image pre-processing"
+   * Fix "Remove text for HI" issues - thx Zezslav
+   * Fix shortcut crash - thx MaOz63
 
 
 3.5.14 (8th March 2020)
