@@ -308,21 +308,42 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 if (lines[0].Length > 1 && lines[0][0] == '-' && lines[1].Trim() == "-")
                 {
+                    var oldFirstLine = oldText.SplitToLines()[0];
+                    if (context.OnlySeparatedLines && oldFirstLine.Length > 1 && oldFirstLine[0] == '-')
+                    {
+                        lines[0] = oldFirstLine;
+                    }
                     return lines[0].Remove(0, 1).Trim();
                 }
 
                 if (lines[1].Length > 1 && lines[1][0] == '-' && lines[0].Trim() == "-")
                 {
+                    var oldSecondLine = oldText.SplitToLines()[1];
+                    if (context.OnlySeparatedLines && oldSecondLine.Length > 1 && oldSecondLine[0] == '-')
+                    {
+                        lines[1] = oldSecondLine;
+                    }
                     return lines[1].Remove(0, 1).Trim();
                 }
 
                 if (lines[1].Length > 4 && lines[1].StartsWith("<i>-", StringComparison.Ordinal) && lines[0].Trim() == "-")
                 {
+                    var oldSecondLine = oldText.SplitToLines()[1];
+                    if (context.OnlySeparatedLines && oldSecondLine.Length > 1 && oldSecondLine.StartsWith("<i>-", StringComparison.Ordinal))
+                    {
+                        lines[1] = oldSecondLine;
+                    }
                     return "<i>" + lines[1].Remove(0, 4).Trim();
                 }
 
                 if (lines[0].Length > 1 && lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
                 {
+                    var oldFirstLine = oldText.SplitToLines()[0];
+                    if (context.OnlySeparatedLines && oldFirstLine.Length > 1 && lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
+                    {
+                        lines[0] = oldFirstLine;
+                    }
+
                     if (lines[0].StartsWith('-') && oldText.Contains(Environment.NewLine + "-"))
                     {
                         lines[0] = lines[0].Remove(0, 1);
