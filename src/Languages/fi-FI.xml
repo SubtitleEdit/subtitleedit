@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.14</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [18-01-2020]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [17-03-2020]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -81,6 +81,7 @@
     <DeleteCurrentLine>Poista nykyinen rivi</DeleteCurrentLine>
     <Width>Leveys</Width>
     <Height>Korkeus</Height>
+    <Collapse>Laajenna</Collapse>
   </General>
   <About>
     <Title>Tietoja</Title>
@@ -217,6 +218,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Tiedoston nimi päättyy</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Striimaus-asetukset...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Poista rivinvaihdot</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Käytä lähteen koodausta jos mahdollista</TryToUseSourceEncoding>
   </BatchConvert>
   <Beamer>
     <Title>Videotykki</Title>
@@ -604,10 +606,10 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Korjaa espanjan käännetyt kysymys- ja huutomerkit</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Lisää puuttuva lainausmerkki (")</AddMissingQuote>
     <AddMissingQuotes>Lisää puuttuvat lainausmerkit (")</AddMissingQuotes>
-    <FixHyphens>Korjaa (poista viiva) yhdysmerkillä (-) alkavat rivit</FixHyphens>
-    <FixHyphensAdd>Korjaa (lisää viiva) riviparit, joissa on vain yksi viiva (-)</FixHyphensAdd>
-    <FixHyphen>Korjaa (lisää viiva) yhdysmerkillä (-) alkavat riviparit</FixHyphen>
-    <XHyphensFixed>Yhdysviivoja poistettu: {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>Poista keskustelua osoittavat ajatusviivat yksirivisistä teksteistä</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>Poistettu keskustelua osoittavia ajatusviivoja yksirivisistä teksteistä: {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>Tyylin mukaisesti poistettuja ajatusviivoja: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>Ajatusviivoja poistettu: {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"Miten voit? -&gt; "Miten voit?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Puuttuvia lainausmerkkejä lisätty: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Korjaa yli kahden rivin tekstitykset</Fix3PlusLines>
@@ -769,6 +771,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <RemoveEmptyLines>Poista tyhjät rivit</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Poista kirjaimettomat rivit</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Luo aikaleimat</GenerateTimeCodes>
+    <TakeTimeFromFileName>Käytä tiedoston nimessä esiintyvää aikaa</TakeTimeFromFileName>
     <GapBetweenSubtitles>Tekstitysväli (millisekunteina)</GapBetweenSubtitles>
     <Auto>Autom.</Auto>
     <Fixed>Kiinteä</Fixed>
@@ -1019,7 +1022,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <Title>Työkalut</Title>
         <AdjustDisplayDuration>Säädä kestoja</AdjustDisplayDuration>
         <ApplyDurationLimits>Käytä keston rajoja</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>Siltaa kestojen välit</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>Yhdistä tekstityksien välit</SubtitlesBridgeGaps>
         <FixCommonErrors>Korjaa tavallisimmat virheet</FixCommonErrors>
         <StartNumberingFrom>Aloita numerointi</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Poista kuulovammaisille tarkoitettu teksti</RemoveTextForHearingImpaired>
@@ -1480,6 +1483,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <LineNumberXErrorReadingFromSourceLineY>Rivi {0} - virhe luettaessa: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Rivi {0} - virhe luettaessa aikaleimaa: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Rivi {0} - odotettu tekstitysnumero: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>Rivi {0} - odotettiin tyhjää riviä mutta löytyi numero ja aikaleima (numeroa ei huomioitu): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>Ennen aikaleimaen arvailuja</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Ennen valittujen rivien auto-kestoja</BeforeAutoDuration>
     <BeforeColumnPaste>Ennen sarakkeen liittämistä</BeforeColumnPaste>
@@ -1778,7 +1782,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ShowFrameRate>Näytä kuvataajuus</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
     <DefaultFileEncoding>Tiedoston koodaus (oletus)</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>Autom. ANSI-koodin tunnistus</AutoDetectAnsiEncoding>
+    <AutoDetectAnsiEncoding>Automaattinen ANSI-koodin tunnistus</AutoDetectAnsiEncoding>
     <Profile>Profiili</Profile>
     <Profiles>Profiilit</Profiles>
     <ImportProfiles>Tuo profiilit</ImportProfiles>
@@ -1919,6 +1923,11 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <FixCommonerrors>Virhekorjaukset</FixCommonerrors>
     <RemoveTextForHi>Poista äänitekstitys</RemoveTextForHi>
     <MergeLinesShorterThan>Yhdistä rivit lyhyempiä kuin</MergeLinesShorterThan>
+    <DialogStyle>Keskustelutyyli</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>Molemmille riveille viiva ja väli</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>Molemmille riveille viiva</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>Jälkimmäisille riveille viiva ja väli</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>Jälkimmäisille riveille viiva</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
     <MusicSymbolsReplace>Korvattavat musiikkisymbolit (pilkuin eroteltuina)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset tekstintunnistusvirheet</FixCommonOcrErrorsUseHardcodedRules>
@@ -1992,6 +2001,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
+    <WaveformGuessStart>Säädä aloitusta kohtauksen vaihtuessa</WaveformGuessStart>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
     <GoForward1Frame>Yksi kehys eteenpäin</GoForward1Frame>
     <GoBack1FrameWithPlay>Yksi kehys takaisin ja toisto</GoBack1FrameWithPlay>
@@ -2066,7 +2076,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MainFileSaveAll>Tallenna kaikki</MainFileSaveAll>
     <Miscellaneous>Sekalaiset</Miscellaneous>
     <CpsIncludesSpace>Sisällytä välilyönnit 'merkkiä sekunnissa' -arvoon</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Käytä rivinvaihdon kieltoluetteloa (automaattiselle rivinvaihdolle)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Käytä rivinvaihdon kieltoluetteloa</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Katkaise aikaisemmin lauseen loppuessa (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Katkaise pisteleveyteen</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Suosi alariviä</BreakPreferBottomHeavy>
@@ -2081,6 +2091,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <FontNote>HUOM! Nämä fonttiasetukset vaikuttavat ainostaan Subtitle Editorin käyttöliittymään. Tekstityksen fontti määritetään yleensä videosoittimessa, mutta se voidaan määrittää myös käyttäen tekstitysmuotoa "Advanced Sub Station Alfa". </FontNote>
     <RestoreDefaultSettings>Palauta oletusarvoihin</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Palautetaanko kaikki asetukset oletusarvoihinsa?</RestoreDefaultSettingsMsg>
+    <RemoveTimeCodes>Poista aikaleimat</RemoveTimeCodes>
   </Settings>
   <SettingsMpv>
     <Title>mpv:n asetukset</Title>
@@ -2362,11 +2373,16 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Tuo/tekstintunnista VobSub (sub/idx) -tekstitys</Title>
     <TitleBluRay>Tuo/tekstintunnista Blu-ray (.sup) -tekstitys</TitleBluRay>
     <OcrMethod>Tekstintunnistusmenetelmä</OcrMethod>
-    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää Microsoft Officea</OcrViaModi>
-    <OcrViaTesseract>Tekstintunnistus Tesseractin avulla</OcrViaTesseract>
-    <OcrViaNOCR>Tekstintunnistus käyttäen nOCR:ia</OcrViaNOCR>
-    <Language>Kieli</Language>
+    <OcrViaTesseractVersionX></OcrViaTesseractVersionX>
     <OcrViaImageCompare>Tekstintunnistus kuvavertailun avulla</OcrViaImageCompare>
+    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää Microsoft Officea</OcrViaModi>
+    <OcrViaNOCR>Tekstintunnistus käyttäen nOCR:ia</OcrViaNOCR>
+    <TesseractEngineMode>Tunnistustapa</TesseractEngineMode>
+    <TesseractEngineModeLegacy>Vain alkuperäinen Tesseract (tunnistaa italian)</TesseractEngineModeLegacy>
+    <TesseractEngineModeNeural>Vain LSTM (Keinoälyverkot)</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth></TesseractEngineModeBoth>
+    <TesseractEngineModeDefault>Oletus, perustuen käytettävissäoleviin</TesseractEngineModeDefault>
+    <Language>Kieli</Language>
     <ImageDatabase>Kuvapankki</ImageDatabase>
     <NoOfPixelsIsSpace>Kuvapisteitä välilyöntinä</NoOfPixelsIsSpace>
     <MaxErrorPercent>Virheprosentin maksimi</MaxErrorPercent>
@@ -2395,6 +2411,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AllFixes>Kaikki korjaukset</AllFixes>
     <GuessesUsed>Arvaukset</GuessesUsed>
     <UnknownWords>Tuntemattomat sanat</UnknownWords>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} tiedostossa 'OCRFixReplaceList.xml' rivillä: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Tekstintunnistuksen automaattinen korjaus ja oikoluku</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Korjaa tekstintunnistusvirheet</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Tuo tekstit, joissa on yhtenevät aikaleimat</ImportTextWithMatchingTimeCodes>
