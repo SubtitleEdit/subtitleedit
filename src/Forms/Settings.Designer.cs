@@ -3213,6 +3213,7 @@
             this.listBoxOcrFixList.Size = new System.Drawing.Size(179, 225);
             this.listBoxOcrFixList.TabIndex = 40;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
+            this.listBoxOcrFixList.DoubleClick += new System.EventHandler(this.listBoxOcrFixList_DoubleClick);
             this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
             this.listBoxOcrFixList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
@@ -3265,6 +3266,7 @@
             this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 225);
             this.listBoxUserWordLists.TabIndex = 30;
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
+            this.listBoxUserWordLists.DoubleClick += new System.EventHandler(this.listBoxUserWordLists_DoubleClick);
             this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
             this.listBoxUserWordLists.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
@@ -3348,6 +3350,7 @@
             this.listBoxNames.Size = new System.Drawing.Size(150, 225);
             this.listBoxNames.TabIndex = 20;
             this.listBoxNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesSelectedIndexChanged);
+            this.listBoxNames.DoubleClick += new System.EventHandler(this.listBoxNames_DoubleClick);
             this.listBoxNames.Enter += new System.EventHandler(this.ListBoxSearchReset);
             this.listBoxNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 

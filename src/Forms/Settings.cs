@@ -3192,5 +3192,38 @@ namespace Nikse.SubtitleEdit.Forms
         {
             treeViewShortcuts.CollapseAll();
         }
+
+        private void listBoxNames_DoubleClick(object sender, EventArgs e)
+        {
+            var idx = listBoxNames.SelectedIndex;
+            if (idx >= 0)
+            {
+                textBoxNameEtc.Text = (string)listBoxNames.Items[idx];
+            }
+        }
+
+        private void listBoxUserWordLists_DoubleClick(object sender, EventArgs e)
+        {
+            var idx = listBoxUserWordLists.SelectedIndex;
+            if (idx >= 0)
+            {
+                textBoxUserWord.Text = (string)listBoxUserWordLists.Items[idx];
+            }
+        }
+
+        private void listBoxOcrFixList_DoubleClick(object sender, EventArgs e)
+        {
+            var idx = listBoxOcrFixList.SelectedIndex;
+            if (idx >= 0)
+            {
+                var text = (string)listBoxOcrFixList.Items[idx];
+                var splitIdx = text.IndexOf(" --> ", StringComparison.Ordinal);
+                if (splitIdx > 0)
+                {
+                    textBoxOcrFixKey.Text = text.Substring(0, splitIdx);
+                    textBoxOcrFixValue.Text = text.Remove(0, splitIdx + " --> ".Length);
+                }
+            }
+        }
     }
 }
