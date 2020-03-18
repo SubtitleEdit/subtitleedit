@@ -575,6 +575,8 @@
     <Word from="odlazis" to="odlaziš" />
     <Word from="odlezati" to="odležati" />
     <Word from="odlucim" to="odlučim" />
+    <Word from="odlucis" to="odlučiš" />
+    <Word from="odluciš" to="odlučiš" />
     <Word from="odmice" to="odmiče" />
     <Word from="odraduje" to="odrađuje" />
     <Word from="odreden" to="određen" />
@@ -763,6 +765,7 @@
     <Word from="priustimo" to="priuštimo" />
     <Word from="priustiti" to="priuštiti" />
     <Word from="proci" to="proći" />
+    <Word from="Prodavac" to="Prodavač" />
     <Word from="prodavac" to="prodavač" />
     <Word from="promasio" to="promašio" />
     <Word from="Promasio" to="Promašio" />
