@@ -3529,6 +3529,7 @@
     <RegEx find="irać" replaceWith="irat ć" />
     <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
+    <RegEx find="jdm" replaceWith="jem/>
     <RegEx find="jdin" replaceWith="jedin" />
     <RegEx find="kodnevnic" replaceWith="kodnevic" />
     <RegEx find="([kKpPvVtT])ratić" replaceWith="$1ratit ć" />
