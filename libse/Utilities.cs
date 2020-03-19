@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
 
-        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv",".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".avs", ".mxf" };
+        public static string[] VideoFileExtensions { get; } = { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".mts", ".avs", ".mxf" };
 
         public static string GetVideoFileFilter(bool includeAudioFiles)
         {
@@ -829,7 +829,20 @@ namespace Nikse.SubtitleEdit.Core
                 optimalCharactersPerSecond = 14.7;
             }
 
-            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
+            var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / optimalCharactersPerSecond * TimeCode.BaseUnit;
+        
+            if (duration < 1400)
+            {
+                duration *= 1.2;
+            }
+            else if (duration < 1400 * 1.2)
+            {
+                duration = 1400 * 1.2;
+            }
+            else if (duration > 2900)
+            {
+                duration = Math.Max(2900, duration * 0.96);
+            }
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
             {
