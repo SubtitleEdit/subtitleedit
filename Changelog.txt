@@ -3,11 +3,12 @@
 3.5.15 (xth April 2020) BETA
 * NEW:
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
+   * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
-   * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
+   * Update Finnish translation - thx Teijo S :)
    * Minor UI improvements for "Batch convert" UI
    * Improve "Fix unneeded periods" - thx Aleksander
    * Improve "Remove unneeded spaces" - thx Aleksander
