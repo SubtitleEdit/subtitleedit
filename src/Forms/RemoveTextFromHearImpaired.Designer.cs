@@ -61,6 +61,8 @@
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.textBoxAfterText = new System.Windows.Forms.TextBox();
+            this.labelText = new System.Windows.Forms.Label();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxRemoveTextConditions.SuspendLayout();
@@ -69,10 +71,10 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(716, 515);
+            this.buttonOK.Location = new System.Drawing.Point(716, 563);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -81,10 +83,10 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(797, 515);
+            this.buttonCancel.Location = new System.Drawing.Point(797, 563);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 3;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -96,7 +98,7 @@
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 222);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(941, 283);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(941, 291);
             this.groupBoxLinesFound.TabIndex = 1;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found";
@@ -117,11 +119,12 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(929, 260);
+            this.listViewFixes.Size = new System.Drawing.Size(929, 268);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listViewFixes_ItemChecked);
+            this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.listViewFixes_SelectedIndexChanged);
             // 
             // columnHeaderApply
             // 
@@ -428,19 +431,41 @@
             // buttonApply
             // 
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(878, 515);
+            this.buttonApply.Location = new System.Drawing.Point(878, 563);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(75, 23);
-            this.buttonApply.TabIndex = 4;
+            this.buttonApply.TabIndex = 5;
             this.buttonApply.Text = "Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
+            // textBoxAfterText
+            // 
+            this.textBoxAfterText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxAfterText.Location = new System.Drawing.Point(12, 543);
+            this.textBoxAfterText.Multiline = true;
+            this.textBoxAfterText.Name = "textBoxAfterText";
+            this.textBoxAfterText.Size = new System.Drawing.Size(394, 43);
+            this.textBoxAfterText.TabIndex = 2;
+            this.textBoxAfterText.TextChanged += new System.EventHandler(this.textBoxAfterText_TextChanged);
+            // 
+            // labelText
+            // 
+            this.labelText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelText.AutoSize = true;
+            this.labelText.Location = new System.Drawing.Point(12, 527);
+            this.labelText.Name = "labelText";
+            this.labelText.Size = new System.Drawing.Size(29, 13);
+            this.labelText.TabIndex = 6;
+            this.labelText.Text = "Text";
             // 
             // FormRemoveTextForHearImpaired
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 550);
+            this.ClientSize = new System.Drawing.Size(965, 598);
+            this.Controls.Add(this.labelText);
+            this.Controls.Add(this.textBoxAfterText);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.groupBoxRemoveTextConditions);
             this.Controls.Add(this.groupBoxLinesFound);
@@ -463,6 +488,7 @@
             this.groupBoxRemoveTextConditions.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -500,5 +526,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.CheckBox checkBoxInterjectionOnlySeparateLine;
+        private System.Windows.Forms.TextBox textBoxAfterText;
+        private System.Windows.Forms.Label labelText;
     }
 }
