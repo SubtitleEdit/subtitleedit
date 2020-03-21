@@ -176,21 +176,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
             JoinedFormat = lastFormat;
 
-            for (int outer = 0; outer < subtitles.Count; outer++)
-            {
-                for (int inner = 1; inner < subtitles.Count; inner++)
-                {
-                    var a = subtitles[inner - 1];
-                    var b = subtitles[inner];
-                    if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
-                    {
-                        string t1 = _fileNamesToJoin[inner - 1];
-                        _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
-                        _fileNamesToJoin[inner] = t1;
 
-                        var t2 = subtitles[inner - 1];
-                        subtitles[inner - 1] = subtitles[inner];
-                        subtitles[inner] = t2;
+            if (!radioButtonJoinAddTime.Checked)
+            {
+                for (int outer = 0; outer < subtitles.Count; outer++)
+                {
+                    for (int inner = 1; inner < subtitles.Count; inner++)
+                    {
+                        var a = subtitles[inner - 1];
+                        var b = subtitles[inner];
+                        if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
+                        {
+                            string t1 = _fileNamesToJoin[inner - 1];
+                            _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
+                            _fileNamesToJoin[inner] = t1;
+
+                            var t2 = subtitles[inner - 1];
+                            subtitles[inner - 1] = subtitles[inner];
+                            subtitles[inner] = t2;
+                        }
                     }
                 }
             }
@@ -338,6 +342,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             numericUpDownAddMs.Enabled = radioButtonJoinAddTime.Checked;
             labelAddTime.Enabled = radioButtonJoinAddTime.Checked;
+            SortAndLoad();
         }
     }
 }
