@@ -3188,6 +3188,6 @@
     <RegEx find="^-1t (\p{L})" replaceWith="- It $1" />
     <RegEx find="^-_\.(\p{L})" replaceWith="- ...$1" />
     <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
-    <!-- <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
+    <RegEx find=" l([!?\.])" replaceWith=" I$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
