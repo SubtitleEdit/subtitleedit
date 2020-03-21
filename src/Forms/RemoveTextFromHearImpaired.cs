@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -18,6 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Dictionary<Paragraph, string> _fixes;
         private readonly Main _mainForm;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
+        private readonly List<Paragraph> _edited = new List<Paragraph>();
+        private readonly List<Paragraph> _editedOld = new List<Paragraph>();
 
         public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
@@ -69,10 +72,12 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
+            labelText.Text = Configuration.Settings.Language.General.Text;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonApply.Text = Configuration.Settings.Language.General.Apply;
             UiUtil.FixLargeFonts(this, buttonOK);
+            listViewFixes_SelectedIndexChanged(null, null);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -117,13 +122,24 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
-                string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
-                if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
+                if (_edited.Contains(p))
                 {
                     count++;
-                    AddToListView(p, newText);
-                    _fixes.Add(p, newText);
+                    var old = _editedOld.First(x => x.Id == p.Id);
+                    AddToListView(old, p.Text);
+                    _fixes.Add(old, p.Text);
                 }
+                else
+                {
+                    string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, Subtitle, index);
+                    if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
+                    {
+                        count++;
+                        AddToListView(p, newText);
+                        _fixes.Add(p, newText);
+                    }
+                }
+
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
@@ -364,6 +380,40 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxInterjectionOnlySeparateLine_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var idx = listViewFixes.SelectedIndices.Count == 1 ? listViewFixes.SelectedIndices[0] : -1;
+            if (idx < 0)
+            {
+                textBoxAfterText.Visible = false;
+                labelText.Visible = false;
+                return;
+            }
+
+            textBoxAfterText.TextChanged -= textBoxAfterText_TextChanged;
+            textBoxAfterText.Visible = true;
+            labelText.Visible = true;
+            var item = listViewFixes.Items[idx];
+            var p = (Paragraph)item.Tag;
+            textBoxAfterText.Tag = item;
+            var text = _fixes[p];
+            textBoxAfterText.Text = text;
+            textBoxAfterText.TextChanged += textBoxAfterText_TextChanged;
+        }
+
+        private void textBoxAfterText_TextChanged(object sender, EventArgs e)
+        {
+            var text = textBoxAfterText.Text.Trim();
+            var item = (ListViewItem)textBoxAfterText.Tag;
+            var p = (Paragraph)item.Tag;
+            _editedOld.Add(new Paragraph(p, false) { Text = p.Text });
+            item.SubItems[3].Text = text;
+            _fixes[p] = text;
+            var o = Subtitle.GetParagraphOrDefaultById(p.Id);
+            o.Text = text;
+            _edited.Add(p);
         }
     }
 }
