@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -25859,10 +25860,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                var currentOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex - 1, _subtitle.Paragraphs[firstSelectedIndex - 1], _subtitleAlternate.Paragraphs);
+                var currentOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex, _subtitle.Paragraphs[firstSelectedIndex], _subtitleAlternate.Paragraphs);
                 if (currentOriginal != null)
                 {
-                    _subtitleAlternate.Paragraphs.Insert(_subtitleAlternate.Paragraphs.IndexOf(currentOriginal) + 1, new Paragraph(newParagraph));
+                    _subtitleAlternate.Paragraphs.Insert(_subtitleAlternate.Paragraphs.IndexOf(currentOriginal) + 1, new Paragraph(currentOriginal));
                 }
                 else
                 {
