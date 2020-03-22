@@ -86,6 +86,7 @@
             public string Width { get; set; }
             public string Height { get; set; }
             public string Collapse { get; set; }
+            public string ShortcutX { get; set; }
         }
 
         public class About

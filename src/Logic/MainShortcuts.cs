@@ -81,6 +81,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainCreateStartDownEndUp { get; set; }
         public Keys MainCreateSetEndAddNewAndGoToNew { get; set; }
         public Keys MainAdjustSetStartAndOffsetTheRest { get; set; }
+        public Keys MainAdjustSetStartAndOffsetTheRest2 { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRest { get; set; }
         public Keys MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public Keys MainAdjustSetEndAndGotoNext { get; set; }
@@ -241,6 +242,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
             MainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             MainAdjustSetStartAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            MainAdjustSetStartAndOffsetTheRest2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
             MainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
             MainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             MainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);

@@ -301,6 +301,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Collapse":
                     language.General.Collapse = reader.Value;
                     break;
+                case "General/ShortcutX":
+                    language.General.ShortcutX = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
