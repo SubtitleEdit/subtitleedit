@@ -5843,9 +5843,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ShowStatus(string message)
+        public void ShowStatus(string message, bool log = true)
         {
-            if (_hideStatusLog)
+            if (_hideStatusLog && log && !string.IsNullOrEmpty(message))
             {
                 _statusLog.Add(message);
                 return;
@@ -5856,10 +5856,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(message))
             {
                 _timerClearStatus.Stop();
-                _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
+                if (log)
+                {
+                    _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000;
+                    _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
+                }
+                else
+                {
+                    _timerClearStatus.Interval = 1500;
+                }
                 _timerClearStatus.Start();
             }
-
             ShowSourceLineNumber();
             ShowLineInformationListView();
         }
@@ -14494,7 +14501,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData)
+            else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
             {
                 ButtonSetStartAndOffsetRestClick(null, null);
                 e.SuppressKeyPress = true;
@@ -26665,6 +26672,80 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripSplitButtonPlayRate_ButtonClick(object sender, EventArgs e)
         {
             toolStripSplitButtonPlayRate.ShowDropDown();
+        }
+
+        private void ShowButtonShortcut(string shortcut)
+        {
+            if (string.IsNullOrEmpty(shortcut))
+            {
+                ShowStatus(string.Empty, false);
+            }
+            else
+            {
+                ShowStatus(string.Format(Configuration.Settings.Language.General.ShortcutX, shortcut), false);
+            }
+        }
+
+        private void buttonSetStartAndOffsetRest_MouseEnter(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2))
+            {
+                ShowButtonShortcut(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
+            }
+            else 
+            {
+                ShowButtonShortcut(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            }
+        }
+
+        private void buttonSetEndAndGoToNext_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+        }
+
+        private void buttonAdjustSetStartTime_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateSetStart);
+        }
+
+        private void buttonAdjustSetEndTime_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+        }
+
+        private void buttonInsertNewText_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
+        }
+
+        private void buttonAdjustPlayBefore_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
+        }
+
+        private void buttonAdjustGoToPosAndPause_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
+        }
+
+        private void buttonBeforeText_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
+        }
+
+        private void buttonGotoSub_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
+        }
+
+        private void buttonSetStartTime_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateSetStart);
+        }
+
+        private void buttonSetEnd_MouseEnter(object sender, EventArgs e)
+        {
+            ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateSetEnd);
         }
     }
 }

@@ -199,7 +199,8 @@ namespace Nikse.SubtitleEdit.Core
                 DeleteCurrentLine = "Delete current line",
                 Width = "Width",
                 Height = "Height",
-                Collapse = "Collapse"
+                Collapse = "Collapse",
+                ShortcutX ="Shortcut: {0}"
             };
 
             About = new LanguageStructure.About

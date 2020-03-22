@@ -82,6 +82,7 @@
     <Width>Width</Width>
     <Height>Height</Height>
     <Collapse>Collapse</Collapse>
+    <ShortcutX>Shortcut: {0}</ShortcutX>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>

@@ -1524,6 +1524,7 @@ $HorzAlign          =   Center
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
+        public string MainAdjustSetStartAndOffsetTheRest2 { get; set; }
         public string MainAdjustSetEndAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
@@ -1609,6 +1610,7 @@ $HorzAlign          =   Center
             MainToolsRenumber = "Control+Shift+N";
             MainToolsRemoveTextForHI = "Control+Shift+H";
             MainToolsChangeCasing = "Control+Shift+C";
+            MainVideoPlayFromJustBefore = "Shift+F10";
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
@@ -1640,14 +1642,16 @@ $HorzAlign          =   Center
             MainTextBoxSelectionToUpper = "Control+Shift+U";
             MainTextBoxToggleAutoDuration = string.Empty;
             MainToolsBeamer = "Control+Shift+Alt+B";
-            MainCreateInsertSubAtVideoPos = string.Empty;
-            MainCreateSetStart = string.Empty;
-            MainCreateSetEnd = string.Empty;
+            MainCreateInsertSubAtVideoPos = "Shift+F9";
+            MainVideoGoToStartCurrent = "Shift+F11";
+            MainCreateSetStart = "F11";
+            MainCreateSetEnd = "F12";
             MainCreateSetEndAddNewAndGoToNew = string.Empty;
             MainCreateStartDownEndUp = string.Empty;
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
+            MainAdjustSetStartAndOffsetTheRest2 = "F9";
             MainAdjustSetEndAndOffsetTheRest = string.Empty;
-            MainAdjustSetEndAndOffsetTheRestAndGoToNext = string.Empty;
+            MainAdjustSetEndAndOffsetTheRestAndGoToNext = "F10";
             MainAdjustSetEndAndGotoNext = string.Empty;
             MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
@@ -1745,6 +1749,7 @@ $HorzAlign          =   Center
 
     public class Settings
     {
+        public string Version { get; set; }
         public CompareSettings Compare { get; set; }
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
@@ -1891,6 +1896,12 @@ $HorzAlign          =   Center
             }
 
             var settings = new Settings();
+
+            XmlNode versionNode = doc.DocumentElement.SelectSingleNode("Version");
+            if (versionNode != null)
+            {
+                settings.Version = versionNode.InnerText;
+            }
 
             // Compare
             XmlNode nodeCompare = doc.DocumentElement.SelectSingleNode("Compare");
@@ -5907,6 +5918,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest2");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
                 if (subNode != null)
                 {
@@ -6366,6 +6383,8 @@ $HorzAlign          =   Center
                 textWriter.WriteStartDocument();
 
                 textWriter.WriteStartElement("Settings", string.Empty);
+
+                textWriter.WriteElementString("Version", Utilities.AssemblyVersion);
 
                 textWriter.WriteStartElement("Compare", string.Empty);
                 textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString(CultureInfo.InvariantCulture));
@@ -7125,6 +7144,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
                 textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
                 textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+                textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest2", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
                 textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
                 textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
                 textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
