@@ -480,6 +480,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                if (text.Length > 3 && text.StartsWith(". .") && char.IsLetter(text[3]))
+                {
+                    text = text.Remove(1, 1).Insert(1, ".");
+                }
+                else if (text.Length > 3 && text.StartsWith(".. ") && char.IsLetter(text[3]))
+                {
+                    text = text.Remove(2, 1).Insert(2, ".");
+                }
+                else if (text.Length > 3 && text.StartsWith("..") && char.IsLetter(text[2]))
+                {
+                    text = "." + text;
+                }
+
                 int len = text.Length;
                 for (int i = 0; i < len; i++)
                 {
