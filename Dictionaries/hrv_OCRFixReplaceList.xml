@@ -1374,6 +1374,7 @@
     <Word from="Samnom" to="Sa mnom" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
+    <Word from="sce" to="sve" />
     <Word from="Sci" to="Svi" />
     <Word from="secka" to="sjecka" />
     <Word from="seckam" to="sjeckam" />
@@ -1650,6 +1651,7 @@
     <Word from="svetova" to="svjetova" />
     <Word from="svetove" to="svjetove" />
     <Word from="svugde" to="svugdje" />
+    <Word from="svw" to="sve" />
     <Word from="šolja" to="šalica" />
     <Word from="šolju" to="šalicu" />
     <Word from="Šta" to="Što" />
@@ -2302,6 +2304,7 @@
     <Word from="Tejlor" to="Taylor" />
     <Word from="Temi" to="Tammy" />
     <Word from="Tokijo" to="Tokio" />
+    <Word from="Trejsi" to="Tracy" />
     <Word from="Vajlder" to="Wilder" />
     <Word from="Valš" to="Walsh" />
     <Word from="Vankuver" to="Vancouver" />
@@ -3526,6 +3529,7 @@
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisa([ol])" replaceWith="lira$1" />
     <RegEx find="(?&lt;!hva)lisati" replaceWith="lirati" />
+    <RegEx find="ilp" replaceWith="ilo" />
     <RegEx find="irać" replaceWith="irat ć" />
     <RegEx find="izovan " replaceWith="iziran" />
     <RegEx find="jći" replaceWith="jući" />
@@ -3641,6 +3645,7 @@
     <RegEx find="ristun" replaceWith="risutn" />
     <RegEx find="(?&lt;!k)rimić" replaceWith="rimit ć" />
     <RegEx find="prostav" replaceWith="protstav" />
+    <RegEx find="ptre" replaceWith="potre" />
     <RegEx find="pulis" replaceWith="pulir" />
     <RegEx find="riaj" replaceWith="rija" />
     <RegEx find="rićemo" replaceWith="rit ćemo" />
@@ -3698,6 +3703,7 @@
     <RegEx find="tariše" replaceWith="tira" />
     <RegEx find="tarišu" replaceWith="tiraju" />
     <RegEx find="trišu" replaceWith="triraju" />
+    <RegEx find="uej" replaceWith="uje" />
     <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="uisa" replaceWith="uira" />
     <RegEx find="uzt" replaceWith="ust" />
@@ -3737,6 +3743,7 @@
     <RegEx find="vld" replaceWith="vlad" />
     <RegEx find="vnr" replaceWith="vne" />
     <RegEx find="vnsk" replaceWith="vinsk" />
+    <RegEx find="(?&lt;!d)vof" replaceWith="vog" />
     <RegEx find="vpj" replaceWith="voj" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
