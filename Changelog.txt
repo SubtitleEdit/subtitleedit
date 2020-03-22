@@ -18,6 +18,8 @@
    * Do not change end time in split - thx OmrSi
    * Update Serbian spell check dictionary - thx arslan
    * Display version in VLC player name
+   * Add text edit box to remove text for HI - thx Raistlin
+   * Improve English OCR fixes slightly - thx tormento
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issues with CheetahCaption - thx Tom 
@@ -28,6 +30,9 @@
    * Fix keeping settings in "OCR image pre-processing"
    * Fix "Remove text for HI" issues - thx Zezslav
    * Fix shortcut crash - thx MaOz63
+   * Do not auto-detect video if video is already loaded on startup
+   * Fix "Join" append issues - thx Henrique
+   * Fix "Duplicate line" shortcut in translator mode - thx OmrSi
 
 
 3.5.14 (8th March 2020)

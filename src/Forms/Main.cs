@@ -14384,11 +14384,6 @@ namespace Nikse.SubtitleEdit.Forms
             //TABS: Create / adjust / translate
 
             // create
-            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Control && e.KeyCode == Keys.F9)
-            {
-                InsertNewTextAtVideoPosition();
-                e.SuppressKeyPress = true;
-            }
             else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
             {
                 var p = InsertNewTextAtVideoPosition();
@@ -14403,22 +14398,12 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonSetEndClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
-            {
-                ButtonInsertNewTextClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
-            {
-                buttonBeforeText_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11 || _shortcuts.MainCreateSetStart == e.KeyData)
+            else if (_shortcuts.MainCreateSetStart == e.KeyData)
             {
                 buttonSetStartTime_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12 || _shortcuts.MainCreateSetEnd == e.KeyData)
+            else if (_shortcuts.MainCreateSetEnd == e.KeyData)
             {
                 StopAutoDuration();
                 ButtonSetEndClick(null, null);
@@ -14525,17 +14510,6 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndGotoNext == e.KeyData)
-            {
-                ShowNextSubtitleLabel();
-                ButtonSetEndAndGoToNextClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
-            {
-                ButtonSetStartAndOffsetRestClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
             {
                 ShowNextSubtitleLabel();
                 ButtonSetEndAndGoToNextClick(null, null);
@@ -17774,7 +17748,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var textSize = graphics.MeasureString(buttonPlayPrevious.Text, Font);
                 if (textSize.Height > buttonPlayPrevious.Height - 4)
                 {
-                    int newButtonHeight = 22;
+                    int newButtonHeight = 23;
                     UiUtil.SetButtonHeight(this, newButtonHeight, -4);
 
                     // List view
@@ -17796,11 +17770,6 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonGotoSub.Width = buttonWidth;
                     buttonSetStartTime.Width = buttonWidth;
                     buttonSetEnd.Width = buttonWidth;
-                    int FKeyLeft = buttonInsertNewText.Left + buttonInsertNewText.Width;
-                    labelCreateF9.Left = FKeyLeft;
-                    labelCreateF10.Left = FKeyLeft;
-                    labelCreateF11.Left = FKeyLeft;
-                    labelCreateF12.Left = FKeyLeft;
                     buttonForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward1.Width;
                     numericUpDownSec1.Width = buttonInsertNewText.Width - (numericUpDownSec1.Left + buttonForward1.Width);
                     buttonForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward2.Width;
@@ -17814,10 +17783,6 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonAdjustSetEndTime.Width = buttonWidth;
                     buttonAdjustPlayBefore.Width = buttonWidth;
                     buttonAdjustGoToPosAndPause.Width = buttonWidth;
-                    labelAdjustF9.Left = FKeyLeft;
-                    labelAdjustF10.Left = FKeyLeft;
-                    labelAdjustF11.Left = FKeyLeft;
-                    labelAdjustF12.Left = FKeyLeft;
                     buttonAdjustSecForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward1.Width;
                     numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
                     buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
@@ -18943,12 +18908,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (tabControlButtons.SelectedIndex == 1)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
+                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 25;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
             else if (tabControlButtons.SelectedIndex == 2)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
+                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 25;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
