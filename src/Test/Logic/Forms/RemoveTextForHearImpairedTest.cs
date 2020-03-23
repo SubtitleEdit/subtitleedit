@@ -1828,6 +1828,28 @@ namespace Test.Logic.Forms
             Assert.AreEqual("- Spoken text." + Environment.NewLine + "<i>- Spoken text.</i>", actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiSecondLineDifficult()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.RemoveInterjections = false;
+            string actual = target.RemoveTextFromHearImpaired("- [chuckles]" + Environment.NewLine + "- MRS. TRYON: Mr. Wylie!");
+            Assert.AreEqual("Mr. Wylie!", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiSecondLineDifficult2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            string actual = target.RemoveTextFromHearImpaired("- [chuckles]" + Environment.NewLine + "- MRS. TRYON: Mr. Wylie!");
+            Assert.AreEqual("Mr. Wylie!", actual);
+        }
+
 
         [TestMethod]
         public void RemoveInterjectionsAfterComma()

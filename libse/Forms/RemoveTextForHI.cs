@@ -364,6 +364,26 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                                            !l1Trim.EndsWith('?'))
                                     {
                                         int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
+                                        if (indexOf > 0 && indexOf < indexOfColon)
+                                        {
+                                            var periodWord = line.Substring(0, indexOf).TrimStart(' ', '-', '"');
+                                            if (periodWord.Equals("Dr", StringComparison.OrdinalIgnoreCase) ||
+                                                periodWord.Equals("Mr", StringComparison.OrdinalIgnoreCase) ||
+                                                periodWord.Equals("Mrs", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                indexOf = line.IndexOf(". ", indexOf + 1, StringComparison.Ordinal);
+                                            }
+                                            else
+                                            {
+                                                var toColonWord = line.Substring(0, indexOfColon);
+                                                if (toColonWord == toColonWord.ToUpperInvariant() && line != line.ToUpperInvariant())
+                                                {
+                                                    indexOf = indexOfColon;
+                                                }
+                                            }
+                                        }
+
+
                                         if (indexOf == -1)
                                         {
                                             indexOf = line.IndexOf("! ", StringComparison.Ordinal);
