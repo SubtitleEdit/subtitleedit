@@ -183,11 +183,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
-                    if (part0.Length > 1 && "-—!?.\")]".Contains(part0[part0.Length - 1]) &&
-                        part1.Length > 1 && (char.IsUpper(part1[0]) || "\"'{[(".Contains(part1[0])))
+                    if (part0.Length > 1 && "-—!?.\")]♫♪".Contains(part0[part0.Length - 1]) &&
+                        part1.Length > 1 && (char.IsUpper(part1[0]) || "\"'♫♪{[(".Contains(part1[0])))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
-                        if (char.IsLetter((part0[0])) || CharUtils.IsDigit(part0[0]))
+                        if (char.IsLetter(part0[0]) || CharUtils.IsDigit(part0[0]))
                         {
                             if (text.Length > 3 && text[0] == '<' && text[2] == '>')
                             {
