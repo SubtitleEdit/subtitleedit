@@ -7665,6 +7665,10 @@ namespace Nikse.SubtitleEdit.Forms
                 boxToolStripMenuItem.Visible = false;
             }
 
+            microsoftBingTranslateToolStripMenuItem.Visible =
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey) &&
+                !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint);
+
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
