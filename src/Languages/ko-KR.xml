@@ -81,6 +81,8 @@
     <DeleteCurrentLine>현재 줄 삭제</DeleteCurrentLine>
     <Width>폭</Width>
     <Height>높이</Height>
+    <Collapse>축소</Collapse>
+    <ShortcutX>단축키: {0}</ShortcutX>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -193,7 +195,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixRtlAddUnicode>유니코드 태그를 통해 RTL 수정</FixRtlAddUnicode>
     <FixRtlRemoveUnicode>RTL 유니코드 태그 제거</FixRtlRemoveUnicode>
     <FixRtlReverseStartEnd>RTL 시작/끝 반전</FixRtlReverseStartEnd>
-    <SplitLongLines>긴 줄 분할</SplitLongLines>
+    <SplitLongLines>긴 줄 분할/줄바꿈</SplitLongLines>
     <AutoBalance>자동 줄맞춤</AutoBalance>
     <ScanFolder>폴더 찾아보기</ScanFolder>
     <Recursive>하위 폴더 포함</Recursive>
@@ -218,6 +220,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TransportStreamFileNameEnding>파일 이름 끝</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS 설정...</TransportStreamSettingsButton>
     <RemoveLineBreaks>줄바꿈 제거</RemoveLineBreaks>
+    <TryToUseSourceEncoding>소스 인코딩을 사용 하십시오</TryToUseSourceEncoding>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -341,7 +344,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Generate>생성</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>* 줄 사이의 작은 시간 간격 메우기</Title>
+    <Title>* 자막 사이의 작은 간격 메우기</Title>
     <GapsBridgedX>메워진 간격: {0}개</GapsBridgedX>
     <GapToNext>다음 줄과의 시간 간격</GapToNext>
     <BridgeGapsSmallerThanXPart1>- 다음보다 작은 간격 메움:</BridgeGapsSmallerThanXPart1>
@@ -604,10 +607,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixSpanishInvertedQuestionAndExclamationMarks>스페인어의 역물음표와 역감탄사 수정하기</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>누락된 따옴표('') 추가하기</AddMissingQuote>
     <AddMissingQuotes>누락된 따옴표("") 추가하기</AddMissingQuotes>
-    <FixHyphens>대시(-)로 시작하는 줄 수정하기 (대시 삭제)</FixHyphens>
-    <FixHyphensAdd>한쌍으로 된 구문에서 한쪽만 대시가 있을때 (대시 추가)</FixHyphensAdd>
-    <FixHyphen>대시(-)로 시작하는 줄 수정하기</FixHyphen>
-    <XHyphensFixed>수정된 대시(-): {0}</XHyphensFixed>
+    <RemoveHyphensSingleLine>단일 라인의 대화 대시(-) 제거</RemoveHyphensSingleLine>
+    <XHyphensSingleLineRemoved>단일 라인에서 제거된 대화 대시(-): {0}</XHyphensSingleLineRemoved>
+    <FixHyphensInDialogs>스타일을 통해 대화안의 대시(-) 수정: {0}</FixHyphensInDialogs>
+    <XHyphensInDialogsFixed>수정된 대시(-): {0}</XHyphensInDialogsFixed>
     <AddMissingQuotesExample>"힘들었지? -&gt; "힘들었지?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>누락된 따옴표 추가: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>3줄 이상의 자막 수정하기</Fix3PlusLines>
@@ -773,6 +776,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <RemoveEmptyLines>빈 줄 제거</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>문자 없는 줄 제거</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>타임코드 생성</GenerateTimeCodes>
+    <TakeTimeFromFileName>Take time from file name</TakeTimeFromFileName>
     <GapBetweenSubtitles>자막 간격 (ms)</GapBetweenSubtitles>
     <Auto>자동</Auto>
     <Fixed>수정</Fixed>
@@ -1023,7 +1027,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <Title>도구</Title>
         <AdjustDisplayDuration>표시시간 조정...</AdjustDisplayDuration>
         <ApplyDurationLimits>최대/최소 표시시간 설정...</ApplyDurationLimits>
-        <SubtitlesBridgeGaps>작은 시간 간격 메우기</SubtitlesBridgeGaps>
+        <SubtitlesBridgeGaps>자막 사이의 간격 메우기</SubtitlesBridgeGaps>
         <FixCommonErrors>일반적인 오류 수정...</FixCommonErrors>
         <StartNumberingFrom>자막 시작 번호 다시 매기기</StartNumberingFrom>
         <RemoveTextForHearingImpaired>청각 장애인용 텍스트 삭제...</RemoveTextForHearingImpaired>
@@ -1491,6 +1495,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <LineNumberXErrorReadingFromSourceLineY>라인 {0} - 읽기 오류: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>라인 {0} - 타임코드 판독 오류: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>라인 {0} - 자막 번호 오류: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedEmptyLine>라인 {0} - 빈 줄로 예상했지만 찾은 수 + 타임코드 (건너뛴 수): {1}</LineNumberXExpectedEmptyLine>
     <BeforeGuessingTimeCodes>타임코드 예상하기 전</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>선택한 줄의 표시시간을 자동으로 설정하기 전</BeforeAutoDuration>
     <BeforeColumnPaste>문자열 붙여넣기 전</BeforeColumnPaste>
@@ -1935,6 +1940,11 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <FixCommonerrors>일반 오류 수정</FixCommonerrors>
     <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
     <MergeLinesShorterThan>다음보다 짧은 줄은 줄바꿈 제거</MergeLinesShorterThan>
+    <DialogStyle>대화 스타일</DialogStyle>
+    <DialogStyleDashBothLinesWithSpace>양쪽 줄에 공백있는 대시</DialogStyleDashBothLinesWithSpace>
+    <DialogStyleDashBothLinesWithoutSpace>양쪽 줄에 공백없는 대시</DialogStyleDashBothLinesWithoutSpace>
+    <DialogStyleDashSecondLineWithSpace>두번째 줄에 공백있는 대시</DialogStyleDashSecondLineWithSpace>
+    <DialogStyleDashSecondLineWithoutSpace>두번째 줄에 공백없는 대시</DialogStyleDashSecondLineWithoutSpace>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
@@ -2008,6 +2018,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <WaveformGoToPreviousSceneChange>이전 장면 전환으로 이동</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
+    <WaveformGuessStart>볼륨/장면 전환을 통한 자동 조정</WaveformGuessStart>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
     <GoBack1FrameWithPlay>1프레임 뒤로 (재생포함)</GoBack1FrameWithPlay>
@@ -2020,8 +2031,13 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <GoForward1Second>1초 앞으로</GoForward1Second>
     <GoBack5Seconds>5초 뒤로</GoBack5Seconds>
     <GoForward5Seconds>5초 앞으로</GoForward5Seconds>
+    <GoBack3Second>3초 뒤로</GoBack3Second>
+    <GoToStartCurrent>비디오 위치를  현재 자막의 시작으로 설정</GoToStartCurrent>
+    <ToggleStartEndCurrent>현재 자막의 시작/끝 사이의 비디오 위치 전환</ToggleStartEndCurrent>
+    <PlayCurrent>현재 자막 재생</PlayCurrent>
     <WaveformGoToPrevSubtitle>이전 자막으로 이동 (비디오 위치에서)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
+    <WaveformSelectNextSubtitle>다음 자막 선택 (비디오 위치에서, 비디오 위치를 유지)</WaveformSelectNextSubtitle>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
     <Pause>일시 중지</Pause>
     <Fullscreen>전체 화면</Fullscreen>
@@ -2198,11 +2214,11 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Basic>기본</Basic>
   </Split>
   <SplitLongLines>
-    <Title>* 긴 줄 분할 (한화면에 표시되는 자막 또는 자막안의 긴 줄을 다음 문자수를 기준으로 분할함)</Title>
+    <Title>* 긴 줄 분할/줄바꿈</Title>
     <SingleLineMaximumLength>한 줄의 문자수가 다음 이상이면 분할:</SingleLineMaximumLength>
     <LineMaximumLength>다음 문자수 이상인 자막 분할:</LineMaximumLength>
     <LineContinuationBeginEndStrings>줄의 시작/끝부분에 다음 문자열 추가:</LineContinuationBeginEndStrings>
-    <NumberOfSplits>분할: {0}개</NumberOfSplits>
+    <NumberOfSplits>분할/줄바꿈: {0}개</NumberOfSplits>
     <LongestSingleLineIsXAtY>최고 긴 줄: [{1}]번 - 문자수: {0}개 -&gt; 이 줄을 보려면 여기를 클릭!</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>최고 긴 자막: [{1}]번 - 문자수: {0}개 -&gt; 이 줄을 보려면 여기를 클릭!</LongestLineIsXAtY>
   </SplitLongLines>
