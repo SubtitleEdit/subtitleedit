@@ -723,11 +723,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
                     if (frameRateMultiplier != null)
                     {
-                        if (frameRateMultiplier.InnerText == "999 1000" && Math.Abs(fr - 30) < 0.01)
+                        if ((frameRateMultiplier.InnerText == "999 1000" || frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 30) < 0.01)
                         {
                             Configuration.Settings.General.CurrentFrameRate = 29.97;
                         }
-                        else if (frameRateMultiplier.InnerText == "999 1000" && Math.Abs(fr - 24) < 0.01)
+                        else if ((frameRateMultiplier.InnerText == "999 1000" || frameRateMultiplier.InnerText == "1000 1001") && Math.Abs(fr - 24) < 0.01)
                         {
                             Configuration.Settings.General.CurrentFrameRate = 23.976;
                         }
