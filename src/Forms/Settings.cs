@@ -900,8 +900,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
 
-            MakeShortcutsTreeview(language);
-            ShowShortcutsTreeview();
+            MakeShortcutsTreeView(language);
+            ShowShortcutsTreeView();
             toolStripMenuItemShortcutsCollapse.Text = Configuration.Settings.Language.General.Collapse;
             labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
             buttonShortcutsClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
@@ -999,7 +999,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         ShortcutNode _shortcuts = new ShortcutNode("root");
 
-        private void MakeShortcutsTreeview(LanguageStructure.Settings language)
+        private void MakeShortcutsTreeView(LanguageStructure.Settings language)
         {
             _shortcuts = new ShortcutNode("root");
 
@@ -1283,7 +1283,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ShowShortcutsTreeview()
+        private void ShowShortcutsTreeView()
         {
             treeViewShortcuts.BeginUpdate();
             treeViewShortcuts.Nodes.Clear();
@@ -1484,7 +1484,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 comboBoxWordListLanguage.Items.AddRange(list.ToArray<object>());
-                comboBoxWordListLanguage.SelectedIndex = idx;
+                if (comboBoxWordListLanguage.Items.Count > 0)
+                {
+                    comboBoxWordListLanguage.SelectedIndex = idx;
+                }
                 comboBoxWordListLanguage.EndUpdate();
             }
             else
@@ -1543,14 +1546,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.Profiles = _rulesProfiles;
 
-            if (comboBoxSaveAsFileNameFrom.SelectedIndex == 0)
-            {
-                gs.SaveAsUseFileNameFrom = "video";
-            }
-            else
-            {
-                gs.SaveAsUseFileNameFrom = "file";
-            }
+            gs.SaveAsUseFileNameFrom = comboBoxSaveAsFileNameFrom.SelectedIndex == 0 ? "video" : "file";
 
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
@@ -1910,7 +1906,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxNames.Items.Clear();
             listBoxUserWordLists.Items.Clear();
             listBoxOcrFixList.Items.Clear();
-            if (comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage)
+            if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage)
             {
                 string language = GetCurrentWordListLanguage();
 
@@ -1930,7 +1926,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadOcrFixList(bool reloadListBox)
         {
-            if (!(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage cb))
+            if (comboBoxWordListLanguage.Items.Count == 0 || !(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage cb))
             {
                 return;
             }
@@ -1999,8 +1995,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddNamesClick(object sender, EventArgs e)
         {
-            var sidx = comboBoxWordListLanguage.SelectedIndex;
-            if (sidx < 0)
+            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
+            if (languageIndex < 0)
             {
                 return;
             }
@@ -2122,8 +2118,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
-            var sidx = comboBoxWordListLanguage.SelectedIndex;
-            if (sidx < 0)
+            var languageIndex = comboBoxWordListLanguage.SelectedIndex;
+            if (languageIndex < 0)
             {
                 return;
             }
@@ -2262,7 +2258,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (!(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage))
+            if (comboBoxWordListLanguage.Items.Count == 0 || !(comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] is ComboBoxLanguage))
             {
                 return;
             }
@@ -3064,7 +3060,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldAlt = checkBoxShortcutsAlt.Checked;
             var oldShift = checkBoxShortcutsShift.Checked;
             var oldKeyIndex = comboBoxShortcutKey.SelectedIndex;
-            ShowShortcutsTreeview();
+            ShowShortcutsTreeView();
             buttonShortcutsClear.Enabled = textBoxShortcutSearch.Text.Length > 0;
             if (selected != null)
             {
