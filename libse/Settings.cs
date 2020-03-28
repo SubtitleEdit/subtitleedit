@@ -1644,9 +1644,13 @@ $HorzAlign          =   Center
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = "Shift+F9";
             MainVideoGoToStartCurrent = "Shift+F11";
+            MainVideoToggleStartEndCurrent = "F4";
+            MainVideoPlayCurrent = "F5";
+            MainVideoGoToStartCurrent = "F6";
+            MainVideo3000MsLeft = "F7";
+            MainListViewGoToNextError = "F8";
             MainCreateSetStart = "F11";
             MainCreateSetEnd = "F12";
-            MainCreateSetEndAddNewAndGoToNew = string.Empty;
             MainCreateStartDownEndUp = string.Empty;
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetStartAndOffsetTheRest2 = "F9";
@@ -1828,6 +1832,22 @@ $HorzAlign          =   Center
 
                     if (string.IsNullOrEmpty(settings.Version))
                     {  // 3.5.14 or older
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoToggleStartEndCurrent))
+                        {
+                            settings.Shortcuts.MainVideoToggleStartEndCurrent = "F4";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoPlayCurrent))
+                        {
+                            settings.Shortcuts.MainVideoPlayCurrent = "F5";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
+                        {
+                            settings.Shortcuts.MainVideoGoToStartCurrent = "F6";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideo3000MsLeft))
+                        {
+                            settings.Shortcuts.MainVideo3000MsLeft = "F7";
+                        }
                         if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2))
                         {
                             settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = "F9";
