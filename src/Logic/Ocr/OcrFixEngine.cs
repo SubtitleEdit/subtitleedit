@@ -493,6 +493,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = "." + text;
                 }
 
+                text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>- </i>", "- ");
+                text = text.Replace("<i> - </i>", "- ");
+                text = text.Replace("<i> -</i>", "- ");
+                text = text.Replace("- ", "-  ");
+                text = text.Replace("<i>a</i>", "a");
+                text = text.Replace("<i>.</i>", ".");
+                text = text.TrimStart();
+
                 int len = text.Length;
                 for (int i = 0; i < len; i++)
                 {

@@ -637,6 +637,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _lastLine = text;
 
                 text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>- </i>", "- ");
+                text = text.Replace("<i> - </i>", "- ");
+                text = text.Replace("<i> -</i>", "- ");
                 text = text.Replace("<i>a</i>", "a");
                 text = text.Replace("<i>.</i>", ".");
                 text = text.Replace("  ", " ");
