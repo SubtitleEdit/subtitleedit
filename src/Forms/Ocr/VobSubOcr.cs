@@ -6646,7 +6646,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             foreach (var ml in ModiLanguage.AllLanguages)
             {
                 comboBoxModiLanguage.Items.Add(ml);
-                if (ml.Id == _vobSubOcrSettings.LastModiLanguageId)
+                if (_vobSubOcrSettings != null && ml.Id == _vobSubOcrSettings.LastModiLanguageId)
                 {
                     comboBoxModiLanguage.SelectedIndex = comboBoxModiLanguage.Items.Count - 1;
                 }
