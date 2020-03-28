@@ -1262,7 +1262,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
       <SetEndTime>Set e&amp;nd time</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and off-set the rest</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and offset the rest</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <GoogleIt>Google it</GoogleIt>
@@ -1476,8 +1476,8 @@ Continue?</SubtitleAppendPrompt>
     <BeforeTimeCodeImport>Before import of time codes</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Time codes imported from {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Before insert subtitle at video position</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Before set start time and off-set the rest</BeforeSetStartTimeAndOffsetTheRest>
-    <BeforeSetEndTimeAndOffsetTheRest>Before set end time and off-set the rest</BeforeSetEndTimeAndOffsetTheRest>
+    <BeforeSetStartTimeAndOffsetTheRest>Before set start time and offset the rest</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Before set end time and offset the rest</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Before set end time at video position and auto calculate start</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Continue with current spell check?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Chars/sec: {0:0.00}</CharactersPerSecond>
