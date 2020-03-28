@@ -19476,7 +19476,18 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAdjustF11.Text = string.Empty;
                 labelCreateF11.Text = string.Empty;
             }
-            
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainCreateSetEnd) && Configuration.Settings.Shortcuts.MainCreateSetEnd.Length < 5)
+            {
+                labelAdjustF12.Text = Configuration.Settings.Shortcuts.MainCreateSetEnd;
+                labelCreateF12.Text = Configuration.Settings.Shortcuts.MainCreateSetEnd;
+            }
+            else
+            {
+                labelAdjustF12.Text = string.Empty;
+                labelCreateF12.Text = string.Empty;
+            }
+
             if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos) && Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos.Length < 5)
             {
                 labelCreateF9.Text = Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos;
