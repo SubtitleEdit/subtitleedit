@@ -1651,8 +1651,8 @@ $HorzAlign          =   Center
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetStartAndOffsetTheRest2 = "F9";
             MainAdjustSetEndAndOffsetTheRest = string.Empty;
-            MainAdjustSetEndAndOffsetTheRestAndGoToNext = "F10";
-            MainAdjustSetEndAndGotoNext = string.Empty;
+            MainAdjustSetEndAndOffsetTheRestAndGoToNext = string.Empty;
+            MainAdjustSetEndAndGotoNext = "F10";
             MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainAdjustSetEndNextStartAndGoToNext = string.Empty;
@@ -1824,6 +1824,34 @@ $HorzAlign          =   Center
                     if (settings.General.DefaultEncoding.StartsWith("utf-8", StringComparison.Ordinal))
                     {
                         settings.General.DefaultEncoding = TextEncoding.Utf8WithBom;
+                    }
+
+                    if (string.IsNullOrEmpty(settings.Version))
+                    {  // 3.5.14 or older
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2))
+                        {
+                            settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2 = "F9";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainAdjustSetEndAndGotoNext))
+                        {
+                            settings.Shortcuts.MainAdjustSetEndAndGotoNext = "F10";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetStart))
+                        {
+                            settings.Shortcuts.MainCreateSetStart = "F11";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateSetEnd))
+                        {
+                            settings.Shortcuts.MainCreateSetEnd = "F12";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainCreateInsertSubAtVideoPos))
+                        {
+                            settings.Shortcuts.MainCreateInsertSubAtVideoPos = "Shift+F9";
+                        }
+                        if (string.IsNullOrEmpty(settings.Shortcuts.MainVideoGoToStartCurrent))
+                        {
+                            settings.Shortcuts.MainVideoGoToStartCurrent = "Shift+F11";
+                        }
                     }
                 }
                 catch (Exception exception)

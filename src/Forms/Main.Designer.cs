@@ -365,6 +365,10 @@
             this.buttonSetEnd = new System.Windows.Forms.Button();
             this.buttonInsertNewText = new System.Windows.Forms.Button();
             this.buttonSetStartTime = new System.Windows.Forms.Button();
+            this.labelCreateF12 = new System.Windows.Forms.Label();
+            this.labelCreateF11 = new System.Windows.Forms.Label();
+            this.labelCreateF10 = new System.Windows.Forms.Label();
+            this.labelCreateF9 = new System.Windows.Forms.Label();
             this.buttonForward2 = new System.Windows.Forms.Button();
             this.numericUpDownSec2 = new System.Windows.Forms.NumericUpDown();
             this.buttonSecBack2 = new System.Windows.Forms.Button();
@@ -377,6 +381,10 @@
             this.buttonSetEndAndGoToNext = new System.Windows.Forms.Button();
             this.buttonSetStartAndOffsetRest = new System.Windows.Forms.Button();
             this.buttonAdjustSetStartTime = new System.Windows.Forms.Button();
+            this.labelAdjustF12 = new System.Windows.Forms.Label();
+            this.labelAdjustF11 = new System.Windows.Forms.Label();
+            this.labelAdjustF10 = new System.Windows.Forms.Label();
+            this.labelAdjustF9 = new System.Windows.Forms.Label();
             this.buttonAdjustSecForward2 = new System.Windows.Forms.Button();
             this.numericUpDownSecAdjust2 = new System.Windows.Forms.NumericUpDown();
             this.buttonAdjustSecBack2 = new System.Windows.Forms.Button();
@@ -3317,6 +3325,10 @@
             this.tabPageCreate.Controls.Add(this.buttonSetEnd);
             this.tabPageCreate.Controls.Add(this.buttonInsertNewText);
             this.tabPageCreate.Controls.Add(this.buttonSetStartTime);
+            this.tabPageCreate.Controls.Add(this.labelCreateF12);
+            this.tabPageCreate.Controls.Add(this.labelCreateF11);
+            this.tabPageCreate.Controls.Add(this.labelCreateF10);
+            this.tabPageCreate.Controls.Add(this.labelCreateF9);
             this.tabPageCreate.Controls.Add(this.buttonForward2);
             this.tabPageCreate.Controls.Add(this.numericUpDownSec2);
             this.tabPageCreate.Controls.Add(this.buttonSecBack2);
@@ -3386,6 +3398,46 @@
             this.buttonSetStartTime.UseVisualStyleBackColor = true;
             this.buttonSetStartTime.Click += new System.EventHandler(this.buttonSetStartTime_Click);
             this.buttonSetStartTime.MouseEnter += new System.EventHandler(this.buttonSetStartTime_MouseEnter);
+            //
+            // labelCreateF12
+            // 
+            this.labelCreateF12.AutoSize = true;
+            this.labelCreateF12.ForeColor = System.Drawing.Color.Gray;
+            this.labelCreateF12.Location = new System.Drawing.Point(188, 114);
+            this.labelCreateF12.Name = "labelCreateF12";
+            this.labelCreateF12.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF12.TabIndex = 65;
+            this.labelCreateF12.Text = "F12";
+            // 
+            // labelCreateF11
+            // 
+            this.labelCreateF11.AutoSize = true;
+            this.labelCreateF11.ForeColor = System.Drawing.Color.Gray;
+            this.labelCreateF11.Location = new System.Drawing.Point(188, 88);
+            this.labelCreateF11.Name = "labelCreateF11";
+            this.labelCreateF11.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF11.TabIndex = 64;
+            this.labelCreateF11.Text = "F11";
+            // 
+            // labelCreateF10
+            // 
+            this.labelCreateF10.AutoSize = true;
+            this.labelCreateF10.ForeColor = System.Drawing.Color.Gray;
+            this.labelCreateF10.Location = new System.Drawing.Point(188, 36);
+            this.labelCreateF10.Name = "labelCreateF10";
+            this.labelCreateF10.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF10.TabIndex = 63;
+            this.labelCreateF10.Text = "F10";
+            // 
+            // labelCreateF9
+            // 
+            this.labelCreateF9.AutoSize = true;
+            this.labelCreateF9.ForeColor = System.Drawing.Color.Gray;
+            this.labelCreateF9.Location = new System.Drawing.Point(188, 10);
+            this.labelCreateF9.Name = "labelCreateF9";
+            this.labelCreateF9.Size = new System.Drawing.Size(19, 13);
+            this.labelCreateF9.TabIndex = 62;
+            this.labelCreateF9.Text = "F9";
             // 
             // buttonForward2
             // 
@@ -3492,6 +3544,10 @@
             this.tabPageAdjust.Controls.Add(this.buttonSetEndAndGoToNext);
             this.tabPageAdjust.Controls.Add(this.buttonSetStartAndOffsetRest);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSetStartTime);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF12);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF11);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF10);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF9);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSecForward2);
             this.tabPageAdjust.Controls.Add(this.numericUpDownSecAdjust2);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSecBack2);
@@ -3551,6 +3607,47 @@
             this.buttonAdjustSetStartTime.UseVisualStyleBackColor = true;
             this.buttonAdjustSetStartTime.Click += new System.EventHandler(this.buttonSetStartTime_Click);
             this.buttonAdjustSetStartTime.MouseEnter += new System.EventHandler(this.buttonAdjustSetStartTime_MouseEnter);
+            // 
+            // 
+            // labelAdjustF12
+            // 
+            this.labelAdjustF12.AutoSize = true;
+            this.labelAdjustF12.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustF12.Location = new System.Drawing.Point(188, 88);
+            this.labelAdjustF12.Name = "labelAdjustF12";
+            this.labelAdjustF12.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF12.TabIndex = 64;
+            this.labelAdjustF12.Text = "F12";
+            // 
+            // labelAdjustF11
+            // 
+            this.labelAdjustF11.AutoSize = true;
+            this.labelAdjustF11.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustF11.Location = new System.Drawing.Point(188, 62);
+            this.labelAdjustF11.Name = "labelAdjustF11";
+            this.labelAdjustF11.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF11.TabIndex = 63;
+            this.labelAdjustF11.Text = "F11";
+            // 
+            // labelAdjustF10
+            // 
+            this.labelAdjustF10.AutoSize = true;
+            this.labelAdjustF10.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustF10.Location = new System.Drawing.Point(188, 36);
+            this.labelAdjustF10.Name = "labelAdjustF10";
+            this.labelAdjustF10.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF10.TabIndex = 62;
+            this.labelAdjustF10.Text = "F10";
+            // 
+            // labelAdjustF9
+            // 
+            this.labelAdjustF9.AutoSize = true;
+            this.labelAdjustF9.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustF9.Location = new System.Drawing.Point(188, 10);
+            this.labelAdjustF9.Name = "labelAdjustF9";
+            this.labelAdjustF9.Size = new System.Drawing.Size(19, 13);
+            this.labelAdjustF9.TabIndex = 61;
+            this.labelAdjustF9.Text = "F9";
             // 
             // buttonAdjustSecForward2
             // 
@@ -5146,6 +5243,14 @@
         private System.Windows.Forms.NumericUpDown numericUpDownSecAdjust2;
         private System.Windows.Forms.Button buttonAdjustSecBack2;
         private System.Windows.Forms.CheckBox checkBoxSyncListViewWithVideoWhilePlaying;
+        private System.Windows.Forms.Label labelAdjustF10;
+        private System.Windows.Forms.Label labelAdjustF9;
+        private System.Windows.Forms.Label labelAdjustF11;
+        private System.Windows.Forms.Label labelAdjustF12;
+        private System.Windows.Forms.Label labelCreateF12;
+        private System.Windows.Forms.Label labelCreateF11;
+        private System.Windows.Forms.Label labelCreateF10;
+        private System.Windows.Forms.Label labelCreateF9;
         private System.Windows.Forms.ToolStripMenuItem translatepoweredByMicrosoftToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveform;
         private Controls.VideoPlayerContainer mediaPlayer;

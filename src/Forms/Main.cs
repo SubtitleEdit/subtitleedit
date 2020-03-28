@@ -17781,6 +17781,11 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonGotoSub.Width = buttonWidth;
                     buttonSetStartTime.Width = buttonWidth;
                     buttonSetEnd.Width = buttonWidth;
+                    int FKeyLeft = buttonInsertNewText.Left + buttonInsertNewText.Width;
+                    labelCreateF9.Left = FKeyLeft;
+                    labelCreateF10.Left = FKeyLeft;
+                    labelCreateF11.Left = FKeyLeft;
+                    labelCreateF12.Left = FKeyLeft;
                     buttonForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward1.Width;
                     numericUpDownSec1.Width = buttonInsertNewText.Width - (numericUpDownSec1.Left + buttonForward1.Width);
                     buttonForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward2.Width;
@@ -17794,6 +17799,10 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonAdjustSetEndTime.Width = buttonWidth;
                     buttonAdjustPlayBefore.Width = buttonWidth;
                     buttonAdjustGoToPosAndPause.Width = buttonWidth;
+                    labelAdjustF9.Left = FKeyLeft;
+                    labelAdjustF10.Left = FKeyLeft;
+                    labelAdjustF11.Left = FKeyLeft;
+                    labelAdjustF12.Left = FKeyLeft;
                     buttonAdjustSecForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward1.Width;
                     numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
                     buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
@@ -18919,12 +18928,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (tabControlButtons.SelectedIndex == 1)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 25;
+                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
                 Configuration.Settings.VideoControls.LastActiveTab = "Create";
             }
             else if (tabControlButtons.SelectedIndex == 2)
             {
-                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 25;
+                tabControlButtons.Width = buttonInsertNewText.Left + buttonInsertNewText.Width + 35;
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
@@ -19432,6 +19441,59 @@ namespace Nikse.SubtitleEdit.Forms
 
             UiUtil.HelpKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
             helpToolStripMenuItem1.ShortcutKeys = UiUtil.HelpKeys;
+
+
+            // shortcut hints
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2) && Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2.Length < 5)
+            {
+                labelAdjustF9.Text = Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2;
+            }
+            else if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest) && Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest.Length < 5)
+            {
+                labelAdjustF9.Text = Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest;
+            }
+            else
+            {
+                labelAdjustF9.Text = string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext) && Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext.Length < 5)
+            {
+                labelAdjustF10.Text = Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext;
+            }
+            else
+            {
+                labelAdjustF10.Text = string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainCreateSetStart) && Configuration.Settings.Shortcuts.MainCreateSetStart.Length < 5)
+            {
+                labelAdjustF11.Text = Configuration.Settings.Shortcuts.MainCreateSetStart;
+                labelCreateF11.Text = Configuration.Settings.Shortcuts.MainCreateSetStart;
+            }
+            else
+            {
+                labelAdjustF11.Text = string.Empty;
+                labelCreateF11.Text = string.Empty;
+            }
+            
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos) && Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos.Length < 5)
+            {
+                labelCreateF9.Text = Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos;
+            }
+            else
+            {
+                labelCreateF9.Text = string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore) && Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore.Length < 5)
+            {
+                labelCreateF10.Text = Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore;
+            }
+            else
+            {
+                labelCreateF10.Text = string.Empty;
+            }
         }
 
         public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
