@@ -1921,9 +1921,9 @@ namespace Nikse.SubtitleEdit.Controls
             RefreshProgressBar();
         }
 
-        private bool IsMouseOverControl(Control control, Point cursurLocation)
+        private bool IsMouseOverControl(Control control, Point cursorLocation)
         {
-            if (control.ClientRectangle.Contains(cursurLocation))
+            if (control.ClientRectangle.Contains(cursorLocation))
             {
                 return true;
             }
