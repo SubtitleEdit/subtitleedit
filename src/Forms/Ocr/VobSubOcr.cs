@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         // Dictionaries/spellchecking/fixing
         private OcrFixEngine _ocrFixEngine;
         private int _tesseractOcrAutoFixes;
-        private string Tesseract4Version = "4.1.1";
+        private string Tesseract4Version = "5.00 Alpha 2020-03-28";
 
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
