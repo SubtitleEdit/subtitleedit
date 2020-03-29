@@ -63,7 +63,7 @@
             this.Name = "DownloadTesseract4";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Download Tesseract 4";
+            this.Text = "Download Tesseract";
             this.ResumeLayout(false);
             this.PerformLayout();
 
