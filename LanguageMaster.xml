@@ -2058,10 +2058,18 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorDurationIfTooSmall>Color duration if too short</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color duration if too long</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Color text if too wide (pixels)</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
     <SyntaxColorGap>Color gap if too short</SyntaxColorGap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Settings...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Line width settings</LineWidthSettings>
+    <MaximumLineWidth>Maximum line width:</MaximumLineWidth>
+    <Pixels>pixels</Pixels>
+    <MeasureFont>Measuring font:</MeasureFont>
+    <ShowLineWidths>Show line widths below subtitle text box</ShowLineWidths>
+    <GenerateLineWidthStatistics>Show line width statistics in File &gt; Statistics</GenerateLineWidthStatistics>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
@@ -2273,6 +2281,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Single line width - minimum: {0} pixels</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Single line width - maximum: {0} pixels</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Single line width - average: {0} pixels</SingleLineWidthAverage>
     <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
     <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
     <DurationAverage>Duration - average: {0:0.000} seconds</DurationAverage>

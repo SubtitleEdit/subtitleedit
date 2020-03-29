@@ -5596,6 +5596,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxColorTextIfTooLong":
                     language.Settings.SyntaxColorTextIfTooLong = reader.Value;
                     break;
+                case "Settings/SyntaxColorTextIfTooWide":
+                    language.Settings.SyntaxColorTextIfTooWide = reader.Value;
+                    break;
                 case "Settings/SyntaxColorTextMoreThanMaxLines":
                     language.Settings.SyntaxColorTextMoreThanMaxLines = reader.Value;
                     break;
@@ -5607,6 +5610,27 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/SyntaxErrorColor":
                     language.Settings.SyntaxErrorColor = reader.Value;
+                    break;
+                case "Settings/SyntaxLineWidthSettings":
+                    language.Settings.SyntaxLineWidthSettings = reader.Value;
+                    break;
+                case "Settings/LineWidthSettings":
+                    language.Settings.LineWidthSettings = reader.Value;
+                    break;
+                case "Settings/MaximumLineWidth":
+                    language.Settings.MaximumLineWidth = reader.Value;
+                    break;
+                case "Settings/Pixels":
+                    language.Settings.Pixels = reader.Value;
+                    break;
+                case "Settings/MeasureFont":
+                    language.Settings.MeasureFont = reader.Value;
+                    break;
+                case "Settings/ShowLineWidths":
+                    language.Settings.ShowLineWidths = reader.Value;
+                    break;
+                case "Settings/GenerateLineWidthStatistics":
+                    language.Settings.GenerateLineWidthStatistics = reader.Value;
                     break;
                 case "Settings/GoToFirstSelectedLine":
                     language.Settings.GoToFirstSelectedLine = reader.Value;
@@ -6156,6 +6180,15 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Statistics/SingleLineLengthAverage":
                     language.Statistics.SingleLineLengthAverage = reader.Value;
+                    break;
+                case "Statistics/SingleLineWidthMinimum":
+                    language.Statistics.SingleLineWidthMinimum = reader.Value;
+                    break;
+                case "Statistics/SingleLineWidthMaximum":
+                    language.Statistics.SingleLineWidthMaximum = reader.Value;
+                    break;
+                case "Statistics/SingleLineWidthAverage":
+                    language.Statistics.SingleLineWidthAverage = reader.Value;
                     break;
                 case "Statistics/DurationMinimum":
                     language.Statistics.DurationMinimum = reader.Value;
