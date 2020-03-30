@@ -104,6 +104,9 @@ https://github.com/SubtitleEdit/subtitleedit
             int maximumSingleLineLength = 0;
             long totalSingleLineLength = 0;
             long totalSingleLines = 0;
+            int minimumSingleLineWidth = 99999999;
+            int maximumSingleLineWidth = 0;
+            long totalSingleLineWidth = 0;
             double minimumDuration = 100000000;
             double maximumDuration = 0;
             double totalDuration = 0;
@@ -135,6 +138,15 @@ https://github.com/SubtitleEdit/subtitleedit
                     minimumSingleLineLength = Math.Min(l, minimumSingleLineLength);
                     maximumSingleLineLength = Math.Max(l, maximumSingleLineLength);
                     totalSingleLineLength += l;
+
+                    if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
+                    {
+                        var w = GetSingleLineWidth(line);
+                        minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
+                        maximumSingleLineWidth = Math.Max(w, maximumSingleLineWidth);
+                        totalSingleLineWidth += w;
+                    }
+
                     totalSingleLines++;
                 }
             }
@@ -164,6 +176,15 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength) + " (" + GetIndicesWithSingleLineLength(maximumSingleLineLength) + ")");
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
+
+            if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
+            {
+                sb.AppendLine(string.Format(_l.SingleLineWidthMinimum, minimumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(minimumSingleLineWidth) + ")");
+                sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");
+                sb.AppendLine(string.Format(_l.SingleLineWidthAverage, totalSingleLineWidth / totalSingleLines));
+                sb.AppendLine();
+            }
+
             sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(minimumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit) + " (" + GetIndicesWithDuration(maximumDuration) + ")");
             sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / TimeCode.BaseUnit));
@@ -183,6 +204,11 @@ https://github.com/SubtitleEdit/subtitleedit
         private static int GetSingleLineLength(string s)
         {
             return HtmlUtil.RemoveHtmlTags(s, true).Length;
+        }
+
+        private static int GetSingleLineWidth(string s)
+        {
+            return TextWidth.CalcPixelWidth(HtmlUtil.RemoveHtmlTags(s, true));
         }
 
         private const int NumberOfLinesToShow = 10;
@@ -253,6 +279,29 @@ https://github.com/SubtitleEdit/subtitleedit
                 foreach (var line in p.Text.SplitToLines())
                 {
                     if (GetSingleLineLength(line) == length)
+                    {
+                        if (indices.Count >= NumberOfLinesToShow)
+                        {
+                            indices.Add("...");
+                            return string.Join(", ", indices);
+                        }
+                        indices.Add("#" + (i + 1).ToString(CultureInfo.InvariantCulture));
+                        break;
+                    }
+                }
+            }
+            return string.Join(", ", indices);
+        }
+
+        private string GetIndicesWithSingleLineWidth(int width)
+        {
+            var indices = new List<string>();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                foreach (var line in p.Text.SplitToLines())
+                {
+                    if (GetSingleLineWidth(line) == width)
                     {
                         if (indices.Count >= NumberOfLinesToShow)
                         {
