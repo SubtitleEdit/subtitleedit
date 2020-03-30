@@ -2224,10 +2224,16 @@
             public string SyntaxColorDurationIfTooSmall { get; set; }
             public string SyntaxColorDurationIfTooLarge { get; set; }
             public string SyntaxColorTextIfTooLong { get; set; }
+            public string SyntaxColorTextIfTooWide { get; set; }
             public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxColorGap { get; set; }
             public string SyntaxErrorColor { get; set; }
+            public string SyntaxLineWidthSettings { get; set; }
+            public string LineWidthSettings { get; set; }
+            public string MaximumLineWidth { get; set; }
+            public string Pixels { get; set; }
+            public string MeasureFont { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }
@@ -2461,6 +2467,9 @@
             public string SingleLineLengthMinimum { get; set; }
             public string SingleLineLengthMaximum { get; set; }
             public string SingleLineLengthAverage { get; set; }
+            public string SingleLineWidthMinimum { get; set; }
+            public string SingleLineWidthMaximum { get; set; }
+            public string SingleLineWidthAverage { get; set; }
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
             public string DurationAverage { get; set; }
