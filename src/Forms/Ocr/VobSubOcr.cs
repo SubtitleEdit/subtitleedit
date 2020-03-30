@@ -6994,9 +6994,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 try
                 {
-                    var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
-                    _languageId = ci.ThreeLetterISOLanguageName;
-                    threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                    if (!string.IsNullOrEmpty(LanguageString))
+                    {
+                        var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
+                        _languageId = ci.ThreeLetterISOLanguageName;
+                        threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                    }
                 }
                 catch
                 {
