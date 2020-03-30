@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Controls
             End
         }
 
-        public class MinMax
+        public struct WaveStats
         {
             public double Min { get; set; }
             public double Max { get; set; }
@@ -2137,7 +2137,7 @@ namespace Nikse.SubtitleEdit.Controls
             return subtitleOn;
         }
 
-        private MinMax GetMinAndMax(int startIndex, int endIndex)
+        private WaveStats GetWaveStats(int startIndex, int endIndex)
         {
             int minPeak = int.MaxValue;
             int maxPeak = int.MinValue;
@@ -2156,7 +2156,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            return new MinMax { Min = minPeak, Max = maxPeak, Avg = total / (endIndex - startIndex) };
+            return new WaveStats { Min = minPeak, Max = maxPeak, Avg = total / (endIndex - startIndex) };
         }
 
         public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
@@ -2250,9 +2250,9 @@ namespace Nikse.SubtitleEdit.Controls
             int length = SecondsToSampleIndex(durationInSeconds);
             var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
 
-            var minMax = GetMinAndMax(min, max);
+            var waveStats = GetWaveStats(min, max);
             const int lowPeakDifference = 4_000;
-            if (minMax.Max - minMax.Min < lowPeakDifference)
+            if (waveStats.Max - waveStats.Min < lowPeakDifference)
             {
                 return -1; // all audio about the same
             }
@@ -2269,9 +2269,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    minMax = GetMinAndMax(min, index);
-                    var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
-                    if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+                    waveStats = GetWaveStats(min, index);
+                    var currentWaveStats = GetWaveStats(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
+                    if (currentWaveStats.Avg > waveStats.Avg + 300 || currentWaveStats.Avg < 1000 && waveStats.Avg < 1000 && Math.Abs(currentWaveStats.Avg - waveStats.Avg) < 500)
                     {
                         break;
                     }
@@ -2280,9 +2280,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             if (hitCount > length)
             {
-                minMax = GetMinAndMax(min, index);
-                var currentMinMax = GetMinAndMax(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
-                if (currentMinMax.Avg > minMax.Avg + 300 || currentMinMax.Avg < 1000 && minMax.Avg < 1000 && Math.Abs(currentMinMax.Avg - minMax.Avg) < 500)
+                waveStats = GetWaveStats(min, index);
+                var currentWaveStats = GetWaveStats(SecondsToSampleIndex(startSeconds), SecondsToSampleIndex(startSeconds + 0.8));
+                if (currentWaveStats.Avg > waveStats.Avg + 300 || currentWaveStats.Avg < 1000 && waveStats.Avg < 1000 && Math.Abs(currentWaveStats.Avg - waveStats.Avg) < 500)
                 {
                     return Math.Max(0, SampleIndexToSeconds(index - 1) - 0.01);
                 }
@@ -2313,18 +2313,16 @@ namespace Nikse.SubtitleEdit.Controls
         {
             var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
             var max = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
-            var minMax = GetMinAndMax(min, max);
-            var threshold = minMax.Min * 100.0 / _wavePeaks.HighestPeak;
-            return threshold;
+            // threshold
+            return GetWaveStats(min, max).Min * 100.0 / _wavePeaks.HighestPeak;
         }
 
         public double FindHighPercentage(double startSeconds, double endSeconds)
         {
             var min = Math.Max(0, SecondsToSampleIndex(startSeconds));
             var max = Math.Min(_wavePeaks.Peaks.Count, SecondsToSampleIndex(endSeconds));
-            var minMax = GetMinAndMax(min, max);
-            var threshold = minMax.Max * 100.0 / _wavePeaks.HighestPeak;
-            return threshold;
+            // threshold
+            return GetWaveStats(min, max).Max * 100.0 / _wavePeaks.HighestPeak;
         }
 
         public int GetSceneChangeIndex(double seconds)
