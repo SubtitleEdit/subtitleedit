@@ -292,6 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateCharactersPerSecond.Visible = false;
                 labelTextAlternateLineLengths.Visible = false;
                 labelAlternateSingleLine.Visible = false;
+                labelAlternateSingleLinePixels.Visible = false;
                 labelTextAlternateLineTotal.Visible = false;
                 labelNextWord.Visible = false;
 
@@ -304,6 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelDurationWarning.Text = string.Empty;
                 labelVideoInfo.Text = string.Empty;
                 labelSingleLine.Text = string.Empty;
+                labelSingleLinePixels.Text = string.Empty;
                 Text = Title;
                 timeUpDownStartTime.TimeCode = new TimeCode();
                 timeUpDownStartTime.UseVideoOffset = true;
@@ -719,7 +721,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_subtitleListViewIndex >= 0)
                     {
-                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
+                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                     }
                     else
                     {
@@ -1595,9 +1597,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelStartTime.Text = _languageGeneral.StartTime;
             labelDuration.Text = _languageGeneral.Duration;
             labelText.Text = _languageGeneral.Text;
-            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewText);
+            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewText);
             labelAlternateText.Text = _languageGeneral.OriginalText;
-            UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, _subtitleAlternate?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewTextAlternate);
+            UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelAlternateSingleLinePixels, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, _subtitleAlternate?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewTextAlternate);
             buttonPrevious.Text = _language.Controls.Previous;
             buttonNext.Text = _language.Controls.Next;
             buttonAutoBreak.Text = _language.Controls.AutoBreak;
@@ -4022,6 +4024,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Title;
             _oldSubtitleFormat = null;
             labelSingleLine.Text = string.Empty;
+            labelSingleLinePixels.Text = string.Empty;
             RemoveAlternate(true, false);
             _splitDualSami = false;
 
@@ -4634,6 +4637,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAlternateCharactersPerSecond.Visible = true;
             labelTextAlternateLineLengths.Visible = true;
             labelAlternateSingleLine.Visible = true;
+            labelAlternateSingleLinePixels.Visible = true;
             labelTextAlternateLineTotal.Visible = true;
         }
 
@@ -8118,10 +8122,12 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextLineTotal.Text = string.Empty;
                 textBoxListViewText.Enabled = false;
                 labelSingleLine.Text = string.Empty;
+                labelSingleLinePixels.Text = string.Empty;
                 timeUpDownStartTime.TimeCode = new TimeCode();
                 numericUpDownDuration.Value = 0;
                 ShowHideBookmark(new Paragraph());
                 labelAlternateSingleLine.Text = string.Empty;
+                labelAlternateSingleLinePixels.Text = string.Empty;
                 textBoxListViewTextAlternate.Enabled = false;
                 labelAlternateCharactersPerSecond.Text = string.Empty;
                 labelTextAlternateLineLengths.Text = string.Empty;
@@ -8568,7 +8574,7 @@ namespace Nikse.SubtitleEdit.Forms
                     InitializeListViewEditBox(p);
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
-                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
+                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
                     FixVerticalScrollBars(textBoxListViewText, ref _lastNumberOfNewLines);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -8704,7 +8710,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label lineTotal, Label charactersPerSecond, Paragraph paragraph, TextBox textBox)
+        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label singleLinePixels, Label lineTotal, Label charactersPerSecond, Paragraph paragraph, TextBox textBox)
         {
             if (paragraph == null)
             {
@@ -8715,9 +8721,20 @@ namespace Nikse.SubtitleEdit.Forms
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
+            singleLinePixels.Left = lineLengths.Left + lineLengths.Width + 50;
             text = HtmlUtil.RemoveHtmlTags(text, true);
             text = NetflixImsc11Japanese.RemoveTags(text);
             UiUtil.GetLineLengths(singleLine, text);
+
+            if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
+            {
+                UiUtil.GetLinePixelWidths(singleLinePixels, text);
+                labelSingleLinePixels.Visible = !(textBoxListViewText.Width / 3 < labelTextLineLengths.Width);
+            }
+            else
+            {
+                labelSingleLinePixels.Visible = false;
+            }
 
             buttonSplitLine.Visible = false;
 
@@ -8981,7 +8998,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (textBoxListViewText.Text == string.Empty)
             {
                 _subtitle.Paragraphs[idx].Text = string.Empty;
-                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
+                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
                 SubtitleListview1.SetText(idx, string.Empty);
                 _listViewTextUndoIndex = idx;
                 labelStatus.Text = string.Empty;
@@ -9010,7 +9027,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Paragraphs[idx].Text = text;
-            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
+            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[idx], textBoxListViewText);
             SubtitleListview1.SetText(idx, text);
 
             _listViewTextUndoIndex = _subtitleListViewIndex;
@@ -9074,7 +9091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewTextAlternate.Text == string.Empty)
                     {
-                        UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
+                        UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelAlternateSingleLinePixels, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                         SubtitleListview1.SetAlternateText(_subtitleListViewIndex, string.Empty);
                         _listViewTextUndoIndex = _subtitleListViewIndex;
                         labelStatus.Text = string.Empty;
@@ -9095,7 +9112,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     original.Text = text;
-                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
+                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelAlternateSingleLinePixels, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
                     _listViewTextUndoIndex = _subtitleListViewIndex;
                 }
@@ -15995,7 +16012,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_subtitleListViewIndex >= 0)
                     {
-                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
+                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                     }
                     else
                     {
@@ -17283,6 +17300,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateCharactersPerSecond.Visible = true;
                 labelTextAlternateLineLengths.Visible = true;
                 labelAlternateSingleLine.Visible = true;
+                labelAlternateSingleLinePixels.Visible = true;
                 labelTextAlternateLineTotal.Visible = true;
 
                 labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
@@ -17882,6 +17900,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateCharactersPerSecond.Left = tbOriginal.Left + (tbOriginal.Width - labelAlternateCharactersPerSecond.Width);
                 lbSingleLineOriginal.Left = tbOriginal.Left;
                 labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
+                labelAlternateSingleLinePixels.Left = labelAlternateSingleLine.Left + labelAlternateSingleLine.Width + 10;
                 labelTextAlternateLineTotal.Left = tbOriginal.Left + (tbOriginal.Width - labelTextAlternateLineTotal.Width);
                 if (textBoxListViewText.Width / 2.1 < labelTextLineLengths.Width)
                 {
@@ -17890,6 +17909,15 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     labelTextAlternateLineTotal.Visible = true;
+                }
+
+                if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
+                {
+                    labelAlternateSingleLinePixels.Visible = false;
+                }
+                else
+                {
+                    labelAlternateSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
                 }
             }
 
@@ -17905,6 +17933,15 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 labelTextLineTotal.Visible = true;
+            }
+
+            if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
+            {
+                labelSingleLinePixels.Visible = false;
+            }
+            else
+            {
+                labelSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
             }
 
             FixRightToLeftDependingOnLanguage();
@@ -21118,6 +21155,7 @@ namespace Nikse.SubtitleEdit.Forms
                         labelAlternateCharactersPerSecond.Visible = true;
                         labelTextAlternateLineLengths.Visible = true;
                         labelAlternateSingleLine.Visible = true;
+                        labelAlternateSingleLinePixels.Visible = true;
                         labelTextAlternateLineTotal.Visible = true;
 
                         labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
@@ -22175,7 +22213,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     original.Text = text;
-                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
+                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelAlternateSingleLinePixels, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
                     FixVerticalScrollBars(textBoxListViewTextAlternate, ref _lastNumberOfNewLinesAlternate);
                 }
@@ -22412,6 +22450,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAlternateCharactersPerSecond.Visible = false;
             labelTextAlternateLineLengths.Visible = false;
             labelAlternateSingleLine.Visible = false;
+            labelAlternateSingleLinePixels.Visible = false;
             labelTextAlternateLineTotal.Visible = false;
             textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 8 + buttonUnBreak.Width));
             textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
@@ -25882,7 +25921,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.EndUpdate();
                     if (_subtitleListViewIndex >= 0)
                     {
-                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
+                        UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelSingleLinePixels, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                     }
 
                     ShowLineInformationListView();
