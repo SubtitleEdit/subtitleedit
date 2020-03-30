@@ -5089,6 +5089,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformSingleClickSelect":
                     language.Settings.WaveformSingleClickSelect = reader.Value;
                     break;
+                case "Settings/WaveformSnapToSceneChanges":
+                    language.Settings.WaveformSnapToSceneChanges = reader.Value;
+                    break;
                 case "Settings/WaveformBorderHitMs1":
                     language.Settings.WaveformBorderHitMs1 = reader.Value;
                     break;
