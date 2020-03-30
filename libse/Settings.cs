@@ -142,6 +142,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
+        public bool ListViewSyntaxColorWideLines { get; set; }
         public bool ListViewSyntaxColorGap { get; set; }
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
@@ -325,6 +326,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxColorDurationBig = true;
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
+            ListViewSyntaxColorWideLines = false;
             ListViewSyntaxMoreThanXLines = true;
             ListViewSyntaxColorGap = true;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
@@ -738,6 +740,10 @@ $HorzAlign          =   Center
         public bool SubtitleListViewFontBold { get; set; }
         public Color SubtitleFontColor { get; set; }
         public Color SubtitleBackgroundColor { get; set; }
+        public string MeasureFontName { get; set; }
+        public int MeasureFontSize { get; set; }
+        public bool MeasureFontBold { get; set; }
+        public int SubtitleLineMaximumPixelWidth { get; set; }
         public bool CenterSubtitleInTextBox { get; set; }
         public bool ShowRecentFiles { get; set; }
         public bool RememberSelectedLine { get; set; }
@@ -877,6 +883,10 @@ $HorzAlign          =   Center
             SubtitleListViewFontSize = 10;
             SubtitleFontBold = false;
             SubtitleFontColor = Color.Black;
+            MeasureFontName = "Arial";
+            MeasureFontSize = 24;
+            MeasureFontBold = false;
+            SubtitleLineMaximumPixelWidth = 576;
             SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
@@ -2289,6 +2299,30 @@ $HorzAlign          =   Center
                 settings.General.SubtitleBackgroundColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
+            subNode = node.SelectSingleNode("MeasureFontName");
+            if (subNode != null)
+            {
+                settings.General.MeasureFontName = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("MeasureFontSize");
+            if (subNode != null)
+            {
+                settings.General.MeasureFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("MeasureFontBold");
+            if (subNode != null)
+            {
+                settings.General.MeasureFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+                        
+            subNode = node.SelectSingleNode("SubtitleLineMaximumPixelWidth");
+            if (subNode != null)
+            {
+                settings.General.SubtitleLineMaximumPixelWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("CenterSubtitleInTextBox");
             if (subNode != null)
             {
@@ -3075,6 +3109,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ListViewSyntaxColorWideLines");
+            if (subNode != null)
+            {
+                settings.Tools.ListViewSyntaxColorWideLines = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLines");
@@ -6539,6 +6579,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);
+                textWriter.WriteElementString("MeasureFontSize", settings.General.MeasureFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MeasureFontBold", settings.General.MeasureFontBold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleLineMaximumPixelWidth", settings.General.SubtitleLineMaximumPixelWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString(CultureInfo.InvariantCulture));
@@ -6673,6 +6717,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewSyntaxColorWideLines", settings.Tools.ListViewSyntaxColorWideLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorGap", settings.Tools.ListViewSyntaxColorGap.ToString(CultureInfo.InvariantCulture));

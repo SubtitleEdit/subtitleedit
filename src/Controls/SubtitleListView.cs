@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -1403,6 +1404,18 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
+            }
+            if (_settings.Tools.ListViewSyntaxColorWideLines)
+            {
+                string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                foreach (string line in s.SplitToLines())
+                {
+                    if (TextWidth.CalcPixelWidth(line) > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                    {
+                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        return;
+                    }
+                }                
             }
             if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                 item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
