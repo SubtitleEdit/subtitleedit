@@ -743,8 +743,6 @@ $HorzAlign          =   Center
         public string MeasureFontName { get; set; }
         public int MeasureFontSize { get; set; }
         public bool MeasureFontBold { get; set; }
-        public bool ShowLineWidths { get; set; }
-        public bool GenerateLineWidthStatistics { get; set; }
         public int SubtitleLineMaximumPixelWidth { get; set; }
         public bool CenterSubtitleInTextBox { get; set; }
         public bool ShowRecentFiles { get; set; }
@@ -888,8 +886,6 @@ $HorzAlign          =   Center
             MeasureFontName = "Arial";
             MeasureFontSize = 24;
             MeasureFontBold = false;
-            ShowLineWidths = false;
-            GenerateLineWidthStatistics = false;
             SubtitleLineMaximumPixelWidth = 576;
             SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
@@ -2316,18 +2312,6 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MeasureFontBold = Convert.ToBoolean(subNode.InnerText);
-            }
-
-            subNode = node.SelectSingleNode("ShowLineWidths");
-            if (subNode != null)
-            {
-                settings.General.ShowLineWidths = Convert.ToBoolean(subNode.InnerText);
-            }
-
-            subNode = node.SelectSingleNode("GenerateLineWidthStatistics");
-            if (subNode != null)
-            {
-                settings.General.GenerateLineWidthStatistics = Convert.ToBoolean(subNode.InnerText);
             }
                         
             subNode = node.SelectSingleNode("SubtitleLineMaximumPixelWidth");
@@ -6583,8 +6567,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MeasureFontName", settings.General.MeasureFontName);
                 textWriter.WriteElementString("MeasureFontSize", settings.General.MeasureFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MeasureFontBold", settings.General.MeasureFontBold.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ShowLineWidths", settings.General.ShowLineWidths.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("GenerateLineWidthStatistics", settings.General.GenerateLineWidthStatistics.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleLineMaximumPixelWidth", settings.General.SubtitleLineMaximumPixelWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString(CultureInfo.InvariantCulture));

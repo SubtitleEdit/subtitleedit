@@ -26,8 +26,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelPixelsSuffix.Text = language.Pixels;
             labelMeasureFont.Text = language.MeasureFont;
             checkBoxMeasureFontBold.Text = language.SubtitleBold;
-            checkBoxShowLineWidths.Text = language.ShowLineWidths;
-            checkBoxGenerateLineWidthStatistics.Text = language.GenerateLineWidthStatistics;
 
             comboBoxMeasureFontName.BeginUpdate();
             comboBoxMeasureFontName.Items.Clear();
@@ -49,8 +47,6 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxLineWidth.Value = settings.SubtitleLineMaximumPixelWidth;
             numericUpDownMeasureFontSize.Value = settings.MeasureFontSize;
             checkBoxMeasureFontBold.Checked = settings.MeasureFontBold;
-            checkBoxShowLineWidths.Checked = settings.ShowLineWidths;
-            checkBoxGenerateLineWidthStatistics.Checked = settings.GenerateLineWidthStatistics;
 
             numericUpDownMaxLineWidth.Left = labelMaximumLineWidth.Left + labelMaximumLineWidth.Width + 6;
             labelPixelsSuffix.Left = numericUpDownMaxLineWidth.Left + numericUpDownMaxLineWidth.Width + 6;
@@ -69,8 +65,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.MeasureFontName = comboBoxMeasureFontName.Text;
             Configuration.Settings.General.MeasureFontSize = Convert.ToInt32(numericUpDownMeasureFontSize.Value);
             Configuration.Settings.General.MeasureFontBold = checkBoxMeasureFontBold.Checked;
-            Configuration.Settings.General.ShowLineWidths = checkBoxShowLineWidths.Checked;
-            Configuration.Settings.General.GenerateLineWidthStatistics = checkBoxGenerateLineWidthStatistics.Checked;
 
             DialogResult = DialogResult.OK;
         }

@@ -139,7 +139,7 @@ https://github.com/SubtitleEdit/subtitleedit
                     maximumSingleLineLength = Math.Max(l, maximumSingleLineLength);
                     totalSingleLineLength += l;
 
-                    if (Configuration.Settings.General.GenerateLineWidthStatistics)
+                    if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                     {
                         var w = GetSingleLineWidth(line);
                         minimumSingleLineWidth = Math.Min(w, minimumSingleLineWidth);
@@ -177,7 +177,7 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
 
-            if (Configuration.Settings.General.GenerateLineWidthStatistics)
+            if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
                 sb.AppendLine(string.Format(_l.SingleLineWidthMinimum, minimumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(minimumSingleLineWidth) + ")");
                 sb.AppendLine(string.Format(_l.SingleLineWidthMaximum, maximumSingleLineWidth) + " (" + GetIndicesWithSingleLineWidth(maximumSingleLineWidth) + ")");

@@ -36,9 +36,7 @@
             this.comboBoxMeasureFontName = new System.Windows.Forms.ComboBox();
             this.labelMeasureFont = new System.Windows.Forms.Label();
             this.checkBoxMeasureFontBold = new System.Windows.Forms.CheckBox();
-            this.checkBoxShowLineWidths = new System.Windows.Forms.CheckBox();
             this.numericUpDownMeasureFontSize = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxGenerateLineWidthStatistics = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxLineWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMeasureFontSize)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +46,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(374, 129);
+            this.buttonCancel.Location = new System.Drawing.Point(368, 91);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
@@ -60,7 +58,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(293, 129);
+            this.buttonOK.Location = new System.Drawing.Point(287, 91);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 7;
@@ -111,7 +109,7 @@
             this.comboBoxMeasureFontName.FormattingEnabled = true;
             this.comboBoxMeasureFontName.Location = new System.Drawing.Point(119, 38);
             this.comboBoxMeasureFontName.Name = "comboBoxMeasureFontName";
-            this.comboBoxMeasureFontName.Size = new System.Drawing.Size(205, 21);
+            this.comboBoxMeasureFontName.Size = new System.Drawing.Size(199, 21);
             this.comboBoxMeasureFontName.TabIndex = 2;
             // 
             // labelMeasureFont
@@ -127,26 +125,17 @@
             // 
             this.checkBoxMeasureFontBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxMeasureFontBold.AutoSize = true;
-            this.checkBoxMeasureFontBold.Location = new System.Drawing.Point(392, 40);
+            this.checkBoxMeasureFontBold.Location = new System.Drawing.Point(386, 40);
             this.checkBoxMeasureFontBold.Name = "checkBoxMeasureFontBold";
             this.checkBoxMeasureFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxMeasureFontBold.TabIndex = 4;
             this.checkBoxMeasureFontBold.Text = "Bold";
             this.checkBoxMeasureFontBold.UseVisualStyleBackColor = true;
             // 
-            // checkBoxShowLineWidths
-            // 
-            this.checkBoxShowLineWidths.AutoSize = true;
-            this.checkBoxShowLineWidths.Location = new System.Drawing.Point(15, 78);
-            this.checkBoxShowLineWidths.Name = "checkBoxShowLineWidths";
-            this.checkBoxShowLineWidths.Size = new System.Drawing.Size(212, 17);
-            this.checkBoxShowLineWidths.TabIndex = 5;
-            this.checkBoxShowLineWidths.Text = "Show line widths below subtitle text box";
-            this.checkBoxShowLineWidths.UseVisualStyleBackColor = true;
-            // 
             // numericUpDownMeasureFontSize
             // 
-            this.numericUpDownMeasureFontSize.Location = new System.Drawing.Point(330, 38);
+            this.numericUpDownMeasureFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMeasureFontSize.Location = new System.Drawing.Point(324, 38);
             this.numericUpDownMeasureFontSize.Maximum = new decimal(new int[] {
             200,
             0,
@@ -166,26 +155,14 @@
             0,
             0});
             // 
-            // checkBoxGenerateLineWidthStatistics
-            // 
-            this.checkBoxGenerateLineWidthStatistics.AutoSize = true;
-            this.checkBoxGenerateLineWidthStatistics.Location = new System.Drawing.Point(15, 101);
-            this.checkBoxGenerateLineWidthStatistics.Name = "checkBoxGenerateLineWidthStatistics";
-            this.checkBoxGenerateLineWidthStatistics.Size = new System.Drawing.Size(227, 17);
-            this.checkBoxGenerateLineWidthStatistics.TabIndex = 6;
-            this.checkBoxGenerateLineWidthStatistics.Text = "Show line width statistics in File > Statistics";
-            this.checkBoxGenerateLineWidthStatistics.UseVisualStyleBackColor = true;
-            // 
             // SettingsLineWidth
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(461, 164);
-            this.Controls.Add(this.checkBoxGenerateLineWidthStatistics);
+            this.ClientSize = new System.Drawing.Size(455, 126);
             this.Controls.Add(this.numericUpDownMeasureFontSize);
-            this.Controls.Add(this.checkBoxShowLineWidths);
             this.Controls.Add(this.checkBoxMeasureFontBold);
             this.Controls.Add(this.labelMeasureFont);
             this.Controls.Add(this.comboBoxMeasureFontName);
@@ -220,8 +197,6 @@
         private System.Windows.Forms.ComboBox comboBoxMeasureFontName;
         private System.Windows.Forms.Label labelMeasureFont;
         private System.Windows.Forms.CheckBox checkBoxMeasureFontBold;
-        private System.Windows.Forms.CheckBox checkBoxShowLineWidths;
         private System.Windows.Forms.NumericUpDown numericUpDownMeasureFontSize;
-        private System.Windows.Forms.CheckBox checkBoxGenerateLineWidthStatistics;
     }
 }

@@ -8726,10 +8726,10 @@ namespace Nikse.SubtitleEdit.Forms
             text = NetflixImsc11Japanese.RemoveTags(text);
             UiUtil.GetLineLengths(singleLine, text);
 
-            if (Configuration.Settings.General.ShowLineWidths)
+            if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
             {
                 UiUtil.GetLinePixelWidths(singleLinePixels, text);
-                labelSingleLinePixels.Visible = true;
+                labelSingleLinePixels.Visible = !(textBoxListViewText.Width / 3 < labelTextLineLengths.Width);
             }
             else
             {
@@ -17910,6 +17910,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelTextAlternateLineTotal.Visible = true;
                 }
+
+                if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
+                {
+                    labelAlternateSingleLinePixels.Visible = false;
+                }
+                else
+                {
+                    labelAlternateSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
+                }
             }
 
             labelAlternateCharactersPerSecond.Top = labelCharactersPerSecond.Top;
@@ -17924,6 +17933,15 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 labelTextLineTotal.Visible = true;
+            }
+
+            if (textBoxListViewText.Width / 3 < labelTextLineLengths.Width)
+            {
+                labelSingleLinePixels.Visible = false;
+            }
+            else
+            {
+                labelSingleLinePixels.Visible = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
             }
 
             FixRightToLeftDependingOnLanguage();
