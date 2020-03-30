@@ -722,20 +722,29 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
+                double seconds = Math.Ceiling(_startPositionSeconds) - _startPositionSeconds - 1;
+                int xPosition = SecondsToXPosition(seconds);
+                int yPosition = 0;
+                double yCounter = 0;
                 double interval = _zoomFactor >= 0.4 ?
-                    0.1 * _wavePeaks.SampleRate * _zoomFactor : // a pixel is 0.1 second
-                    1.0 * _wavePeaks.SampleRate * _zoomFactor;  // a pixel is 1.0 second
-                using (var pen = new Pen(new SolidBrush(GridColor)))
+                    0.1 : // a pixel is 0.1 second
+                    1.0;  // a pixel is 1.0 second
+                using (var pen = new Pen(GridColor))
                 {
-                    for (double i = SecondsToXPosition(_startPositionSeconds) % ((int)Math.Round(interval)); i < Width; i += interval)
+                    while (xPosition < Width)
                     {
-                        var j = (int)Math.Round(i);
-                        graphics.DrawLine(pen, j, 0, j, imageHeight);
+                        graphics.DrawLine(pen, xPosition, 0, xPosition, imageHeight);
+
+                        seconds += interval;
+                        xPosition = SecondsToXPosition(seconds);
                     }
-                    for (double i = 0; i < imageHeight; i += interval)
+
+                    while (yPosition < Height)
                     {
-                        var j = (int)Math.Round(i);
-                        graphics.DrawLine(pen, 0, j, Width, j);
+                        graphics.DrawLine(pen, 0, yPosition, Width, yPosition);
+
+                        yCounter += interval;
+                        yPosition = Convert.ToInt32(yCounter * _wavePeaks.SampleRate * _zoomFactor);
                     }
                 }
             }
