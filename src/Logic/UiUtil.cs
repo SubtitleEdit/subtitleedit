@@ -660,6 +660,38 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
+        public static void GetLinePixelWidths(Label label, string text)
+        {
+            label.ForeColor = ForeColor;
+            var lines = text.SplitToLines();
+            const int max = 3;
+            var sb = new StringBuilder();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string line = lines[i];
+                if (i > 0)
+                {
+                    sb.Append('/');
+                }
+
+                if (i > max)
+                {
+                    label.ForeColor = Color.Red;
+                    sb.Append("...");
+                    label.Text = sb.ToString();
+                    return;
+                }
+
+                int lineWidth = TextWidth.CalcPixelWidth(line);
+                sb.Append(lineWidth);
+                if (lineWidth > Configuration.Settings.General.SubtitleLineMaximumPixelWidth)
+                {
+                    label.ForeColor = Color.Red;
+                }
+            }
+            label.Text = sb.ToString();
+        }
+
         public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, SubtitleFormat format)
         {
             InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);

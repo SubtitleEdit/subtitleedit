@@ -374,6 +374,8 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
+            this.checkBoxSyntaxColorTextTooWide = new System.Windows.Forms.CheckBox();
+            this.buttonLineWidthSettings = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1579,6 +1581,8 @@
             this.groupBoxListViewSyntaxColoring.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonLineWidthSettings);
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextTooWide);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorGapTooSmall);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextMoreThanTwoLines);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxOverlap);
@@ -1597,30 +1601,30 @@
             // checkBoxSyntaxColorGapTooSmall
             // 
             this.checkBoxSyntaxColorGapTooSmall.AutoSize = true;
-            this.checkBoxSyntaxColorGapTooSmall.Location = new System.Drawing.Point(20, 186);
+            this.checkBoxSyntaxColorGapTooSmall.Location = new System.Drawing.Point(20, 209);
             this.checkBoxSyntaxColorGapTooSmall.Name = "checkBoxSyntaxColorGapTooSmall";
             this.checkBoxSyntaxColorGapTooSmall.Size = new System.Drawing.Size(132, 17);
-            this.checkBoxSyntaxColorGapTooSmall.TabIndex = 6;
+            this.checkBoxSyntaxColorGapTooSmall.TabIndex = 7;
             this.checkBoxSyntaxColorGapTooSmall.Text = "Gap - color if too small";
             this.checkBoxSyntaxColorGapTooSmall.UseVisualStyleBackColor = true;
             // 
             // checkBoxSyntaxColorTextMoreThanTwoLines
             // 
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 139);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 5;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
             // 
             // checkBoxSyntaxOverlap
             // 
             this.checkBoxSyntaxOverlap.AutoSize = true;
-            this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 151);
+            this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 174);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
             this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
-            this.checkBoxSyntaxOverlap.TabIndex = 5;
+            this.checkBoxSyntaxOverlap.TabIndex = 6;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
             // 
@@ -1636,10 +1640,10 @@
             // 
             // buttonListViewSyntaxColorError
             // 
-            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 224);
+            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 247);
             this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
             this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 23);
-            this.buttonListViewSyntaxColorError.TabIndex = 7;
+            this.buttonListViewSyntaxColorError.TabIndex = 8;
             this.buttonListViewSyntaxColorError.Text = "Error color";
             this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
             this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
@@ -1667,7 +1671,7 @@
             // panelListViewSyntaxColorError
             // 
             this.panelListViewSyntaxColorError.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 224);
+            this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 247);
             this.panelListViewSyntaxColorError.Name = "panelListViewSyntaxColorError";
             this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
             this.panelListViewSyntaxColorError.TabIndex = 8;
@@ -4536,6 +4540,26 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
+            // checkBoxSyntaxColorTextTooWide
+            // 
+            this.checkBoxSyntaxColorTextTooWide.AutoSize = true;
+            this.checkBoxSyntaxColorTextTooWide.Location = new System.Drawing.Point(20, 116);
+            this.checkBoxSyntaxColorTextTooWide.Name = "checkBoxSyntaxColorTextTooWide";
+            this.checkBoxSyntaxColorTextTooWide.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxSyntaxColorTextTooWide.TabIndex = 3;
+            this.checkBoxSyntaxColorTextTooWide.Text = "Text - color if too wide";
+            this.checkBoxSyntaxColorTextTooWide.UseVisualStyleBackColor = true;
+            // 
+            // buttonLineWidthSettings
+            // 
+            this.buttonLineWidthSettings.Location = new System.Drawing.Point(160, 112);
+            this.buttonLineWidthSettings.Name = "buttonLineWidthSettings";
+            this.buttonLineWidthSettings.Size = new System.Drawing.Size(112, 23);
+            this.buttonLineWidthSettings.TabIndex = 4;
+            this.buttonLineWidthSettings.Text = "Settings...";
+            this.buttonLineWidthSettings.UseVisualStyleBackColor = true;
+            this.buttonLineWidthSettings.Click += new System.EventHandler(this.buttonLineWidthSettings_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5021,5 +5045,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
         private System.Windows.Forms.CheckBox checkBoxWaveformSnapToSceneChanges;
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
+        private System.Windows.Forms.Button buttonLineWidthSettings;
+        private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextTooWide;
     }
 }

@@ -316,6 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall;
             checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
+            checkBoxSyntaxColorTextTooWide.Checked = Configuration.Settings.Tools.ListViewSyntaxColorWideLines;
             checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines;
             if (Configuration.Settings.General.MaxNumberOfLines >= numericUpDownMaxNumberOfLines.Minimum &&
                 Configuration.Settings.General.MaxNumberOfLines <= numericUpDownMaxNumberOfLines.Maximum)
@@ -927,6 +928,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Text = language.SyntaxColorDurationIfTooSmall;
             checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
+            checkBoxSyntaxColorTextTooWide.Text = language.SyntaxColorTextIfTooWide;
+            buttonLineWidthSettings.Text = language.SyntaxLineWidthSettings;
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.General.MaxNumberOfLines);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             checkBoxSyntaxColorGapTooSmall.Text = language.SyntaxColorGap;
@@ -941,6 +944,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
             buttonClearShortcut.Left = buttonUpdateShortcut.Left + buttonUpdateShortcut.Width + 15;
+            buttonLineWidthSettings.Left = checkBoxSyntaxColorTextTooWide.Left + checkBoxSyntaxColorTextTooWide.Width + 9;
 
             _oldVlcLocation = gs.VlcLocation;
             _oldVlcLocationRelative = gs.VlcLocationRelative;
@@ -1742,6 +1746,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall = checkBoxSyntaxColorDurationTooSmall.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxColorWideLines = checkBoxSyntaxColorTextTooWide.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorGap = checkBoxSyntaxColorGapTooSmall.Checked;
@@ -3224,6 +3229,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxOcrFixKey.Text = text.Substring(0, splitIdx);
                     textBoxOcrFixValue.Text = text.Remove(0, splitIdx + " --> ".Length);
+                }
+            }
+        }
+
+        private void buttonLineWidthSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsLineWidth())
+            {                
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    
                 }
             }
         }
