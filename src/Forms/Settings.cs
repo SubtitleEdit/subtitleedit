@@ -515,6 +515,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformSetVideoPosMoveStartEnd.Text = language.WaveformSetVideoPosMoveStartEnd;
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
+            checkBoxWaveformSingleClickSelect.Text = language.WaveformSingleClickSelect;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
             numericUpDownWaveformBorderHitMs.Left = labelWaveformBorderHitMs1.Left + labelWaveformBorderHitMs1.Width;
@@ -890,7 +891,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformSetVideoPosMoveStartEnd.Checked = Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd;
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
-            checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
+            checkBoxWaveformSingleClickSelect.Checked = Configuration.Settings.VideoControls.WaveformSingleClickSelect;
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
             {
@@ -1762,6 +1763,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = checkBoxWaveformSetVideoPosMoveStartEnd.Checked;
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
+            Configuration.Settings.VideoControls.WaveformSingleClickSelect = checkBoxWaveformSingleClickSelect.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
             gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
             gs.FFmpegLocation = textBoxFFmpegPath.Text;

@@ -1816,7 +1816,10 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                     {
-                        OnSingleClick.Invoke(this, new ParagraphEventArgs(RelativeXPositionToSeconds(e.X), null));
+                        double seconds = RelativeXPositionToSeconds(e.X);
+                        var milliseconds = (int)(seconds * TimeCode.BaseUnit);
+                        Paragraph p = GetParagraphAtMilliseconds(milliseconds);
+                        OnSingleClick.Invoke(this, new ParagraphEventArgs(RelativeXPositionToSeconds(e.X), p));
                     }
                 }
             }

@@ -1225,6 +1225,7 @@ $HorzAlign          =   Center
         public bool WaveformFocusOnMouseEnter { get; set; }
         public bool WaveformListViewFocusOnMouseEnter { get; set; }
         public bool WaveformSetVideoPositionOnMoveStartEnd { get; set; }
+        public bool WaveformSingleClickSelect { get; set; }
         public int WaveformBorderHitMs { get; set; }
         public Color WaveformGridColor { get; set; }
         public Color WaveformColor { get; set; }
@@ -4634,6 +4635,12 @@ $HorzAlign          =   Center
                 settings.VideoControls.WaveformListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("WaveformSingleClickSelect");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformSingleClickSelect = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformSetVideoPositionOnMoveStartEnd");
             if (subNode != null)
             {
@@ -6949,6 +6956,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformSingleClickSelect", settings.VideoControls.WaveformSingleClickSelect.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));
