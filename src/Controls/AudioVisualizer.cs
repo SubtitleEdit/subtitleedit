@@ -380,26 +380,19 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            Action<int, bool> addSelection = (index, isPrimary) =>
+            var primaryParagraph = subtitle.GetParagraphOrDefault(primarySelectedIndex);
+            if (primaryParagraph != null && !primaryParagraph.StartTime.IsMaxTime)
+            {
+                _selectedParagraph = primaryParagraph;
+                _allSelectedParagraphs.Add(primaryParagraph);
+            }
+            foreach (int index in selectedIndexes)
             {
                 var p = subtitle.GetParagraphOrDefault(index);
-                if (p == null || p.StartTime.IsMaxTime)
+                if (p != null && !p.StartTime.IsMaxTime)
                 {
-                    return;
+                    _allSelectedParagraphs.Add(p);
                 }
-
-                if (isPrimary)
-                {
-                    _selectedParagraph = p;
-                }
-
-                _allSelectedParagraphs.Add(p);
-            };
-
-            addSelection(primarySelectedIndex, true);
-            foreach (int selectedIndex in selectedIndexes)
-            {
-                addSelection(selectedIndex, false);
             }
         }
 
@@ -2045,28 +2038,19 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
         {
-            int length = SecondsToSampleIndex(milliseconds / TimeCode.BaseUnit);
-            if (length < 9)
-            {
-                length = 9;
-            }
-
+            // length cannot be less than 9
+            int length = Math.Max(SecondsToSampleIndex(milliseconds / TimeCode.BaseUnit), 9);
+            int max = Math.Min(sampleIndex + length, _wavePeaks.Peaks.Count);
+            int from = Math.Max(sampleIndex, 1);
             double v = 0;
             int count = 0;
-            for (int i = sampleIndex; i < sampleIndex + length; i++)
+            for (int i = from; i < max; i++)
             {
-                if (i > 0 && i < _wavePeaks.Peaks.Count)
-                {
-                    v += _wavePeaks.Peaks[i].Abs;
-                    count++;
-                }
-            }
-            if (count == 0)
-            {
-                return 0;
+                v += _wavePeaks.Peaks[i].Abs;
+                count++;
             }
 
-            return v / count;
+            return count == 0 ? 0 : v / count;
         }
 
         internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int minimumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
@@ -2129,13 +2113,10 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     double avgVol = GetAverageVolumeForNextMilliseconds(i, blockSizeMilliseconds);
-                    if (avgVol > silenceThreshold)
+                    if (avgVol > silenceThreshold && avgVol < maxThreshold)
                     {
-                        if (avgVol < maxThreshold)
-                        {
-                            subtitleOn = true;
-                            begin = i;
-                        }
+                        subtitleOn = true;
+                        begin = i;
                     }
                 }
                 i++;
@@ -2185,9 +2166,9 @@ namespace Nikse.SubtitleEdit.Controls
             var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
 
             int hitCount = 0;
-            for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
+            for (int i = Math.Max(0, begin); i < _wavePeaks.Peaks.Count; i++)
             {
-                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
+                if (_wavePeaks.Peaks[i].Abs <= threshold)
                 {
                     hitCount++;
                 }
