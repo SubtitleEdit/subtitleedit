@@ -2053,6 +2053,7 @@
             public string WaveformSetVideoPosMoveStartEnd { get; set; }
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
+            public string WaveformSingleClickSelect { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
             public string WaveformColor { get; set; }

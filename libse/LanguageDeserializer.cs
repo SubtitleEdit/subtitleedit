@@ -5086,6 +5086,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformListViewFocusMouseEnter":
                     language.Settings.WaveformListViewFocusMouseEnter = reader.Value;
                     break;
+                case "Settings/WaveformSingleClickSelect":
+                    language.Settings.WaveformSingleClickSelect = reader.Value;
+                    break;
                 case "Settings/WaveformBorderHitMs1":
                     language.Settings.WaveformBorderHitMs1 = reader.Value;
                     break;
