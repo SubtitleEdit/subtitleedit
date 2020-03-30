@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     FontSizeFactor = 1.0F;
                     SetSubtitleFont();
-                    _labelTimeCode.Text = $"{new TimeCode().ToShortDisplayString()} / ?";
+                    _labelTimeCode.Text = $"{new TimeCode().ToDisplayString()} / ?";
                     ShowAllControls();
                     VideoPlayerContainerResize(this, null);
                     ShowAllControls();
@@ -1147,7 +1147,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (string.IsNullOrEmpty(_labelTimeCode.Text))
             {
                 var span = TimeCode.FromSeconds(1);
-                _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {span.ToShortDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
+                _labelTimeCode.Text = $"{span.ToDisplayString()} / {span.ToDisplayString()}{(SmpteMode ? " SMPTE" : string.Empty)}";
                 _labelTimeCode.Left = Width - _labelTimeCode.Width - 9;
                 if (_labelTimeCode.Top + _labelTimeCode.Height >= _panelControls.Height - 4)
                 {
@@ -1650,12 +1650,12 @@ namespace Nikse.SubtitleEdit.Controls
                 if (SmpteMode)
                 {
                     var span = TimeCode.FromSeconds(pos + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {dur.ToShortDisplayString()} SMPTE";
+                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
                 }
                 else
                 {
                     var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = $"{span.ToShortDisplayString()} / {dur.ToShortDisplayString()}";
+                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
                 }
                 ResizeTimeCode();
 
