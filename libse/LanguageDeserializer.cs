@@ -5005,6 +5005,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/TimeCodeModeHHMMSSFF":
                     language.Settings.TimeCodeModeHHMMSSFF = reader.Value;
                     break;
+                case "Settings/SplitBehavior":
+                    language.Settings.SplitBehavior = reader.Value;
+                    break;
+                case "Settings/SplitBehaviorPrevious":
+                    language.Settings.SplitBehaviorPrevious = reader.Value;
+                    break;
+                case "Settings/SplitBehaviorHalf":
+                    language.Settings.SplitBehaviorHalf = reader.Value;
+                    break;
+                case "Settings/SplitBehaviorNext":
+                    language.Settings.SplitBehaviorNext = reader.Value;
+                    break;
                 case "Settings/VideoEngine":
                     language.Settings.VideoEngine = reader.Value;
                     break;
