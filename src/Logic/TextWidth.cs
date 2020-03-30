@@ -16,8 +16,10 @@ namespace Nikse.SubtitleEdit.Logic
         {            
             if (text != "")
             {
-                Font measureFont = new Font(Configuration.Settings.General.MeasureFontName, Configuration.Settings.General.MeasureFontSize, Configuration.Settings.General.MeasureFontBold ? FontStyle.Bold : FontStyle.Regular);
-                return (int) Math.Round(TextRenderer.MeasureText(text, measureFont, Size.Empty, TextFormatFlags.NoPadding).Width * 0.969f /* Correction value to remove extra padding */) + 1 /* Border */;                
+                using (Font measureFont = new Font(Configuration.Settings.General.MeasureFontName, Configuration.Settings.General.MeasureFontSize, Configuration.Settings.General.MeasureFontBold ? FontStyle.Bold : FontStyle.Regular))
+                {
+                    return (int)Math.Round(TextRenderer.MeasureText(text, measureFont, Size.Empty, TextFormatFlags.NoPadding).Width * 0.969f /* Correction value to remove extra padding */) + 1 /* Border */;
+                }
             }
 
             return 0;
