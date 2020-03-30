@@ -1231,11 +1231,20 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxPlayOverMouseUp(object sender, MouseEventArgs e)
-        {
-            HideAllPlayImages();
-            _pictureBoxPause.Visible = true;
-            _pictureBoxPause.BringToFront();
-            Play();
+        {            
+            if (IsMouseOverControl((PictureBox) sender, e.Location))
+            {
+                HideAllPlayImages();
+                _pictureBoxPause.Visible = true;
+                _pictureBoxPause.BringToFront();
+                Play();
+            }
+            else
+            {
+                HideAllPlayImages();
+                _pictureBoxPlay.Visible = true;
+                _pictureBoxPause.BringToFront();
+            }
         }
 
         private void HideAllPauseImages()
@@ -1277,11 +1286,20 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxPauseOverMouseUp(object sender, MouseEventArgs e)
-        {
-            HideAllPauseImages();
-            _pictureBoxPlay.Visible = true;
-            _pictureBoxPlay.BringToFront();
-            Pause();
+        {            
+            if (IsMouseOverControl((PictureBox)sender, e.Location))
+            {
+                HideAllPauseImages();
+                _pictureBoxPlay.Visible = true;
+                _pictureBoxPlay.BringToFront();
+                Pause();
+            }
+            else
+            {
+                HideAllPauseImages();
+                _pictureBoxPause.Visible = true;
+                _pictureBoxPause.BringToFront();
+            }
         }
 
         #endregion PlayPauseButtons
@@ -1324,11 +1342,20 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxStopOverMouseUp(object sender, MouseEventArgs e)
-        {
-            HideAllStopImages();
-            _pictureBoxStop.Visible = true;
-            _pictureBoxStop.BringToFront();
-            Stop();
+        {            
+            if (IsMouseOverControl((PictureBox)sender, e.Location))
+            {
+                HideAllStopImages();
+                _pictureBoxStop.Visible = true;
+                _pictureBoxStop.BringToFront();
+                Stop();
+            }
+            else
+            {
+                HideAllStopImages();
+                _pictureBoxStop.Visible = true;
+                _pictureBoxStop.BringToFront();
+            }
         }
 
         #endregion StopButtons
@@ -1434,11 +1461,20 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxMuteOverMouseUp(object sender, MouseEventArgs e)
-        {
-            HideAllMuteImages();
-            Mute = true;
-            _pictureBoxMuteDown.Visible = true;
-            _pictureBoxMuteDown.BringToFront();
+        {            
+            if (IsMouseOverControl((PictureBox)sender, e.Location))
+            {
+                HideAllMuteImages();
+                _pictureBoxMuteDown.Visible = true;
+                _pictureBoxMuteDown.BringToFront();
+                Mute = true;
+            }
+            else
+            {
+                HideAllMuteImages();
+                _pictureBoxMute.Visible = true;
+                _pictureBoxMute.BringToFront();
+            }
         }
 
         private void PictureBoxMuteDownClick(object sender, EventArgs e)
@@ -1883,6 +1919,16 @@ namespace Nikse.SubtitleEdit.Controls
             _retryCount = 3;
             SmpteMode = false;
             RefreshProgressBar();
+        }
+
+        private bool IsMouseOverControl(Control control, Point cursorLocation)
+        {
+            if (control.ClientRectangle.Contains(cursorLocation))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
