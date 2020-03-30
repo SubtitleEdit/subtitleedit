@@ -13356,12 +13356,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceForward)
             {
-                audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                if (audioVisualizer.WavePeaks != null)
+                {
+                    audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceBack)
             {
-                audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                if (audioVisualizer.WavePeaks != null)
+                {
+                    audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
@@ -22124,7 +22130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (mediaPlayer.VideoPlayer != null && !(audioVisualizer == null) && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.Peaks.Count > 0)
+            if (mediaPlayer.VideoPlayer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.Peaks.Count > 0)
             {
                 toolStripMenuItemImportSceneChanges.Visible = true;
                 toolStripMenuItemRemoveSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;
@@ -24691,7 +24697,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void seekSilenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (audioVisualizer == null)
+            if (audioVisualizer.WavePeaks == null)
             {
                 return;
             }
@@ -26769,7 +26775,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowButtonShortcut(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest2);
             }
-            else 
+            else
             {
                 ShowButtonShortcut(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             }
