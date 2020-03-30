@@ -174,6 +174,8 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.checkBoxWaveformSnapToSceneChanges = new System.Windows.Forms.CheckBox();
+            this.checkBoxWaveformSingleClickSelect = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowWpm = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowCps = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformSetVideoPosMoveStartEnd = new System.Windows.Forms.CheckBox();
@@ -372,7 +374,6 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
-            this.checkBoxWaveformSingleClickSelect = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2353,6 +2354,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToSceneChanges);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSingleClickSelect);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowWpm);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowCps);
@@ -2384,6 +2386,26 @@
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
+            // 
+            // checkBoxWaveformSnapToSceneChanges
+            // 
+            this.checkBoxWaveformSnapToSceneChanges.AutoSize = true;
+            this.checkBoxWaveformSnapToSceneChanges.Location = new System.Drawing.Point(262, 161);
+            this.checkBoxWaveformSnapToSceneChanges.Name = "checkBoxWaveformSnapToSceneChanges";
+            this.checkBoxWaveformSnapToSceneChanges.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxWaveformSnapToSceneChanges.TabIndex = 26;
+            this.checkBoxWaveformSnapToSceneChanges.Text = "Snap to scene changes (hold Shift to override)";
+            this.checkBoxWaveformSnapToSceneChanges.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWaveformSingleClickSelect
+            // 
+            this.checkBoxWaveformSingleClickSelect.AutoSize = true;
+            this.checkBoxWaveformSingleClickSelect.Location = new System.Drawing.Point(262, 138);
+            this.checkBoxWaveformSingleClickSelect.Name = "checkBoxWaveformSingleClickSelect";
+            this.checkBoxWaveformSingleClickSelect.Size = new System.Drawing.Size(178, 17);
+            this.checkBoxWaveformSingleClickSelect.TabIndex = 25;
+            this.checkBoxWaveformSingleClickSelect.Text = "Single click to select paragraphs";
+            this.checkBoxWaveformSingleClickSelect.UseVisualStyleBackColor = true;
             // 
             // checkBoxWaveformShowWpm
             // 
@@ -2421,7 +2443,7 @@
             this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 194);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
             this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
-            this.labelWaveformTextSize.TabIndex = 23;
+            this.labelWaveformTextSize.TabIndex = 27;
             this.labelWaveformTextSize.Text = "Text font size";
             // 
             // checkBoxWaveformTextBold
@@ -2430,7 +2452,7 @@
             this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 195);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxWaveformTextBold.TabIndex = 31;
+            this.checkBoxWaveformTextBold.TabIndex = 29;
             this.checkBoxWaveformTextBold.Text = "Bold";
             this.checkBoxWaveformTextBold.UseVisualStyleBackColor = true;
             // 
@@ -2456,7 +2478,7 @@
             this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 191);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxWaveformTextSize.TabIndex = 30;
+            this.comboBoxWaveformTextSize.TabIndex = 28;
             // 
             // checkBoxListViewMouseEnterFocus
             // 
@@ -2485,7 +2507,7 @@
             this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 224);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
-            this.labelWaveformBorderHitMs2.TabIndex = 14;
+            this.labelWaveformBorderHitMs2.TabIndex = 32;
             this.labelWaveformBorderHitMs2.Text = "milliseconds";
             // 
             // numericUpDownWaveformBorderHitMs
@@ -2498,7 +2520,7 @@
             0});
             this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
             this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownWaveformBorderHitMs.TabIndex = 35;
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 31;
             this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
             18,
             0,
@@ -2511,7 +2533,7 @@
             this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 224);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
-            this.labelWaveformBorderHitMs1.TabIndex = 13;
+            this.labelWaveformBorderHitMs1.TabIndex = 30;
             this.labelWaveformBorderHitMs1.Text = "Marker hit must be within";
             // 
             // checkBoxAllowOverlap
@@ -4514,16 +4536,6 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
-            // checkBoxWaveformSingleClickSelect
-            // 
-            this.checkBoxWaveformSingleClickSelect.AutoSize = true;
-            this.checkBoxWaveformSingleClickSelect.Location = new System.Drawing.Point(262, 138);
-            this.checkBoxWaveformSingleClickSelect.Name = "checkBoxWaveformSingleClickSelect";
-            this.checkBoxWaveformSingleClickSelect.Size = new System.Drawing.Size(178, 17);
-            this.checkBoxWaveformSingleClickSelect.TabIndex = 36;
-            this.checkBoxWaveformSingleClickSelect.Text = "Single click to select paragraphs";
-            this.checkBoxWaveformSingleClickSelect.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5007,6 +5019,7 @@
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripShortcuts;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
+        private System.Windows.Forms.CheckBox checkBoxWaveformSnapToSceneChanges;
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
     }
 }
