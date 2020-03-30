@@ -2234,8 +2234,6 @@
             public string MaximumLineWidth { get; set; }
             public string Pixels { get; set; }
             public string MeasureFont { get; set; }
-            public string ShowLineWidths { get; set; }
-            public string GenerateLineWidthStatistics { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }

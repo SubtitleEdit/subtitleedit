@@ -5626,12 +5626,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MeasureFont":
                     language.Settings.MeasureFont = reader.Value;
                     break;
-                case "Settings/ShowLineWidths":
-                    language.Settings.ShowLineWidths = reader.Value;
-                    break;
-                case "Settings/GenerateLineWidthStatistics":
-                    language.Settings.GenerateLineWidthStatistics = reader.Value;
-                    break;
                 case "Settings/GoToFirstSelectedLine":
                     language.Settings.GoToFirstSelectedLine = reader.Value;
                     break;

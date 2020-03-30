@@ -2068,8 +2068,6 @@ can edit in same subtitle file (collaboration)</Information>
     <MaximumLineWidth>Maximum line width:</MaximumLineWidth>
     <Pixels>pixels</Pixels>
     <MeasureFont>Measuring font:</MeasureFont>
-    <ShowLineWidths>Show line widths below subtitle text box</ShowLineWidths>
-    <GenerateLineWidthStatistics>Show line width statistics in File &gt; Statistics</GenerateLineWidthStatistics>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
