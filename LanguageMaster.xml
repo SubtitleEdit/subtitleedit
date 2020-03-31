@@ -2555,6 +2555,8 @@ Keep changes?</KeepChangesMessage>
     <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Set current as new selection</SetParagraphAsSelection>
     <FocusTextBox>Focus text box</FocusTextBox>
+    <GoToPrevious>Go to previous subtitle</GoToPrevious>
+    <GoToNext>Go to next subtitle</GoToNext>
     <DeleteParagraph>Delete text</DeleteParagraph>
     <Split>Split</Split>
     <SplitAtCursor>Split at cursor</SplitAtCursor>

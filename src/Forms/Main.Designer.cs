@@ -285,6 +285,9 @@
             this.toolStripMenuItemMergeDialog = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.extendBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extendAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.removeFormattinglToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllFormattingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -412,6 +415,9 @@
             this.mergeWithPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            this.extendToPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWaveformPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.showWaveformAndSpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -511,12 +517,8 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.extendAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extendBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extendToPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToPreviousSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToNextSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2445,7 +2447,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 964);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 942);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -2650,6 +2652,25 @@
             this.mergeAfterToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.mergeAfterToolStripMenuItem.Text = "Merge with line after";
             this.mergeAfterToolStripMenuItem.Click += new System.EventHandler(this.MergeAfterToolStripMenuItemClick);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(281, 6);
+            // 
+            // extendBeforeToolStripMenuItem
+            // 
+            this.extendBeforeToolStripMenuItem.Name = "extendBeforeToolStripMenuItem";
+            this.extendBeforeToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.extendBeforeToolStripMenuItem.Text = "Extend to line before";
+            this.extendBeforeToolStripMenuItem.Click += new System.EventHandler(this.ExtendBeforeToolStripMenuItemClick);
+            // 
+            // extendAfterToolStripMenuItem
+            // 
+            this.extendAfterToolStripMenuItem.Name = "extendAfterToolStripMenuItem";
+            this.extendAfterToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.extendAfterToolStripMenuItem.Text = "Extend to line after";
+            this.extendAfterToolStripMenuItem.Click += new System.EventHandler(this.ExtendAfterToolStripMenuItemClick);
             // 
             // toolStripSeparator8
             // 
@@ -3892,6 +3913,8 @@
             this.addParagraphAndPasteToolStripMenuItem,
             this.toolStripMenuItemSetParagraphAsSelection,
             this.toolStripMenuItemFocusTextbox,
+            this.goToPreviousSubtitleStripMenuItem,
+            this.goToNextSubtitleStripMenuItem,
             this.deleteParagraphToolStripMenuItem,
             this.splitToolStripMenuItem1,
             this.mergeWithPreviousToolStripMenuItem,
@@ -3912,7 +3935,7 @@
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 446);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -3976,6 +3999,25 @@
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
             this.toolStripSeparator11.Size = new System.Drawing.Size(271, 6);
+            // 
+            // extendToPreviousToolStripMenuItem
+            // 
+            this.extendToPreviousToolStripMenuItem.Name = "extendToPreviousToolStripMenuItem";
+            this.extendToPreviousToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.extendToPreviousToolStripMenuItem.Text = "Extend to previous";
+            this.extendToPreviousToolStripMenuItem.Click += new System.EventHandler(this.extendToPreviousToolStripMenuItem_Click);
+            // 
+            // extendToNextToolStripMenuItem
+            // 
+            this.extendToNextToolStripMenuItem.Name = "extendToNextToolStripMenuItem";
+            this.extendToNextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.extendToNextToolStripMenuItem.Text = "Extend to next";
+            this.extendToNextToolStripMenuItem.Click += new System.EventHandler(this.extendToNextToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(271, 6);
             // 
             // toolStripMenuItemWaveformPlaySelection
             // 
@@ -4984,43 +5026,19 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripSeparator4
+            // goToPreviousSubtitleStripMenuItem
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(281, 6);
+            this.goToPreviousSubtitleStripMenuItem.Name = "goToPreviousSubtitleStripMenuItem";
+            this.goToPreviousSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.goToPreviousSubtitleStripMenuItem.Text = "Go to previous subtitle";
+            this.goToPreviousSubtitleStripMenuItem.Click += new System.EventHandler(this.goToPreviousSubtitleToolStripMenuItem_Click);
             // 
-            // extendAfterToolStripMenuItem
+            // goToNextSubtitleStripMenuItem
             // 
-            this.extendAfterToolStripMenuItem.Name = "extendAfterToolStripMenuItem";
-            this.extendAfterToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.extendAfterToolStripMenuItem.Text = "Extend to line after";
-            this.extendAfterToolStripMenuItem.Click += new System.EventHandler(this.ExtendAfterToolStripMenuItemClick);
-            // 
-            // extendBeforeToolStripMenuItem
-            // 
-            this.extendBeforeToolStripMenuItem.Name = "extendBeforeToolStripMenuItem";
-            this.extendBeforeToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.extendBeforeToolStripMenuItem.Text = "Extend to line before";
-            this.extendBeforeToolStripMenuItem.Click += new System.EventHandler(this.ExtendBeforeToolStripMenuItemClick);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(271, 6);
-            // 
-            // extendToNextToolStripMenuItem
-            // 
-            this.extendToNextToolStripMenuItem.Name = "extendToNextToolStripMenuItem";
-            this.extendToNextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.extendToNextToolStripMenuItem.Text = "Extend to next";
-            this.extendToNextToolStripMenuItem.Click += new System.EventHandler(this.extendToNextToolStripMenuItem_Click);
-            // 
-            // extendToPreviousToolStripMenuItem
-            // 
-            this.extendToPreviousToolStripMenuItem.Name = "extendToPreviousToolStripMenuItem";
-            this.extendToPreviousToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.extendToPreviousToolStripMenuItem.Text = "Extend to previous";
-            this.extendToPreviousToolStripMenuItem.Click += new System.EventHandler(this.extendToPreviousToolStripMenuItem_Click);
+            this.goToNextSubtitleStripMenuItem.Name = "goToNextSubtitleStripMenuItem";
+            this.goToNextSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.goToNextSubtitleStripMenuItem.Text = "Go to next subtitle";
+            this.goToNextSubtitleStripMenuItem.Click += new System.EventHandler(this.goToNextSubtitleToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -5583,5 +5601,7 @@
         private System.Windows.Forms.ToolStripMenuItem extendToPreviousToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extendToNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem goToPreviousSubtitleStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem goToNextSubtitleStripMenuItem;
     }
 }

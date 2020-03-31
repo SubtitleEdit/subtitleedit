@@ -6907,6 +6907,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Waveform/FocusTextBox":
                     language.Waveform.FocusTextBox = reader.Value;
                     break;
+                case "Waveform/GoToPrevious":
+                    language.Waveform.GoToPrevious = reader.Value;
+                    break;
+                case "Waveform/GoToNext":
+                    language.Waveform.GoToNext = reader.Value;
+                    break;
                 case "Waveform/DeleteParagraph":
                     language.Waveform.DeleteParagraph = reader.Value;
                     break;
