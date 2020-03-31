@@ -2081,6 +2081,30 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
+
+            if (language == "ar") // special rules for Arabic
+            {
+                while (text.Contains(" ؟"))
+                {
+                    text = text.Replace(" ؟", "؟");
+                }
+
+                while (text.Contains(" \u060C")) // Arabic comma
+                {
+                    text = text.Replace(" \u060C", "\u060C");
+                }
+
+                while (text.Contains(" و "))
+                {
+                    text = text.Replace(" و "," و");
+                }
+
+                while (text.Contains(" ـ "))
+                {
+                    text = text.Replace(" ـ ", " ـ");
+                }
+            }
+
             if (text.Contains(" . "))
             {
                 var regex = new Regex(@"[a-z] \. [A-Z]");
