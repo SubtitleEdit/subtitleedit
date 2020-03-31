@@ -2307,6 +2307,59 @@ namespace Test.FixCommonErrors
             new AddMissingQuotes().Fix(s, new EmptyFixCallback());
             Assert.AreEqual("\"Bad Ape!\"", p.Text);
         }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingMultiple2()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("\"Dear Juilliard School of Music,", 2000, 5000));
+            s.Paragraphs.Add(new Paragraph("I was baffled by your restraining order" + Environment.NewLine + "of October the 13th.", 5100, 8000));
+            s.Paragraphs.Add(new Paragraph("What did I do?\"", 8100, 1500));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Dear Juilliard School of Music,", s.Paragraphs[0].Text);
+            Assert.AreEqual("I was baffled by your restraining order" + Environment.NewLine + "of October the 13th.", s.Paragraphs[1].Text);
+            Assert.AreEqual("What did I do?\"", s.Paragraphs[2].Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingMultipleDontTouch()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("And Caesar says, \"If I wanted two,", 2000, 5000));
+            s.Paragraphs.Add(new Paragraph("I would have ordered two.\"", 5100, 8000));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("And Caesar says, \"If I wanted two,", s.Paragraphs[0].Text);
+            Assert.AreEqual("I would have ordered two.\"", s.Paragraphs[1].Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingMultiple3lines()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("\"Painter left job unfinished," + Environment.NewLine + "spilled paint on porch.", 2000, 5000));
+            s.Paragraphs.Add(new Paragraph("Do not hire this person.", 5100, 8000));
+            s.Paragraphs.Add(new Paragraph("Zero stars.\"", 8100, 1200));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Painter left job unfinished," + Environment.NewLine + "spilled paint on porch.", s.Paragraphs[0].Text);
+            Assert.AreEqual("Do not hire this person.", s.Paragraphs[1].Text);
+            Assert.AreEqual("Zero stars.\"", s.Paragraphs[2].Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingMultiple4lines()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("\"Painter left job unfinished," + Environment.NewLine + "spilled paint on porch.", 2000, 5000));
+            s.Paragraphs.Add(new Paragraph("Do not hire this person.", 5100, 8000));
+            s.Paragraphs.Add(new Paragraph("Shrug emoji, poop emoji," + Environment.NewLine + "thumbs-down emoji.", 8100, 15000));
+            s.Paragraphs.Add(new Paragraph("Zero stars.\"", 15100, 1800));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Painter left job unfinished," + Environment.NewLine + "spilled paint on porch.", s.Paragraphs[0].Text);
+            Assert.AreEqual("Do not hire this person.", s.Paragraphs[1].Text);
+            Assert.AreEqual("Shrug emoji, poop emoji," + Environment.NewLine + "thumbs-down emoji.", s.Paragraphs[2].Text);
+            Assert.AreEqual("Zero stars.\"", s.Paragraphs[3].Text);
+        }
+
         #endregion
     }
 }
