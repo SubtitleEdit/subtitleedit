@@ -9901,11 +9901,15 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                 {
-                    if (splitSeconds == null)
+                    if (splitSeconds == null || Configuration.Settings.General.SplitBehavior == 1)
                     {
                         // SE decides split point (not user), so split gap time evenly
                         var halfGap = (int)Math.Round(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0);
                         currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - halfGap;
+                    }
+                    else if (Configuration.Settings.General.SplitBehavior == 0)
+                    {
+                        currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                     newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
