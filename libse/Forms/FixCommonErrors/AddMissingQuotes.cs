@@ -10,10 +10,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.AddMissingQuote;
             int noOfFixes = 0;
+            var skipTo = -1;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                var p = subtitle.Paragraphs[i];
+                if (i < skipTo)
+                {
+                    continue;
+                }
 
+                var p = subtitle.Paragraphs[i];
+                string oldText = p.Text;
                 p.Text = FixDifferentQuotes(p.Text); //TODO: extract to own rule
 
                 if (Utilities.CountTagInText(p.Text, '"') == 1)
@@ -33,6 +39,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             next = null; // seems to have valid quotes, so no spanning
                         }
                     }
+                    if (next != null && !HtmlUtil.RemoveHtmlTags(p.Text).EndsWith('"') && next.Text.EndsWith('"'))
+                    {
+                        skipTo = i + 2;
+                        continue;
+                    }
+
+                    if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 500 && !HtmlUtil.RemoveHtmlTags(p.Text).EndsWith('"') && next.Text.IndexOf('"') < 0)
+                    {
+                        var next2 = subtitle.GetParagraphOrDefault(i + 2);
+                        if (next2 != null && next2.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < 500 && Utilities.CountTagInText(next2.Text, '"') == 1 && next2.Text.EndsWith('"'))
+                        {
+                            skipTo = i + 3;
+                            continue;
+                        }
+                        var next3 = subtitle.GetParagraphOrDefault(i + 3);
+                        if (next2 != null && next3 != null && next2.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < 500 && next3.StartTime.TotalMilliseconds - next2.EndTime.TotalMilliseconds < 500 &&
+                            next2.Text.IndexOf('"') < 0 && Utilities.CountTagInText(next3.Text, '"') == 1 && next3.Text.EndsWith('"'))
+                        {
+                            skipTo = i + 4;
+                            continue;
+                        }
+                    }
 
                     var prev = subtitle.GetParagraphOrDefault(i - 1);
                     if (prev != null)
@@ -49,7 +77,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                     }
 
-                    string oldText = p.Text;
                     var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     if (lines.Count == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialog
@@ -113,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     { // not dialog
                         if (p.Text.StartsWith('"'))
                         {
-                            if (next == null || !next.Text.Contains('"'))
+                            if (next == null || !next.Text.Contains('"') && p.Text.HasSentenceEnding())
                             {
                                 p.Text += "\"";
                             }
@@ -127,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else if (p.Text.EndsWith('"'))
                         {
-                            if (prev == null || !prev.Text.Contains('"'))
+                            if (prev == null || !prev.Text.Contains('"') || (prev.Text.TrimEnd('"').HasSentenceEnding() && prev.Text.TrimEnd('"').IndexOf('"') < 0))
                             {
                                 p.Text = "\"" + p.Text;
                             }
@@ -186,18 +213,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
+                }
 
-                    if (oldText != p.Text)
+                if (oldText != p.Text)
+                {
+                    if (callbacks.AllowFix(p, fixAction))
                     {
-                        if (callbacks.AllowFix(p, fixAction))
-                        {
-                            noOfFixes++;
-                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        else
-                        {
-                            p.Text = oldText;
-                        }
+                        noOfFixes++;
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                    else
+                    {
+                        p.Text = oldText;
                     }
                 }
             }
