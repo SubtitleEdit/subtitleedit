@@ -2771,6 +2771,8 @@
             public string AddParagraphHereAndPasteText { get; set; }
             public string SetParagraphAsSelection { get; set; }
             public string FocusTextBox { get; set; }
+            public string GoToPrevious { get; set; }
+            public string GoToNext { get; set; }
             public string DeleteParagraph { get; set; }
             public string Split { get; set; }
             public string SplitAtCursor { get; set; }
