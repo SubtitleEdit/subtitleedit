@@ -431,6 +431,8 @@
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
+            this.labelAlternateSingleLinePixels = new System.Windows.Forms.Label();
+            this.labelSingleLinePixels = new System.Windows.Forms.Label();
             this.panelBookmark = new System.Windows.Forms.Panel();
             this.labelBookmark = new System.Windows.Forms.Label();
             this.pictureBoxBookmark = new System.Windows.Forms.PictureBox();
@@ -509,8 +511,12 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.labelSingleLinePixels = new System.Windows.Forms.Label();
-            this.labelAlternateSingleLinePixels = new System.Windows.Forms.Label();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.extendAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extendBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.extendToNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extendToPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2410,6 +2416,9 @@
             this.toolStripMenuItemMergeDialog,
             this.mergeBeforeToolStripMenuItem,
             this.mergeAfterToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.extendBeforeToolStripMenuItem,
+            this.extendAfterToolStripMenuItem,
             this.toolStripSeparator8,
             this.removeFormattinglToolStripMenuItem,
             this.boldToolStripMenuItem,
@@ -2436,7 +2445,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 892);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 964);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -3888,6 +3897,9 @@
             this.mergeWithPreviousToolStripMenuItem,
             this.mergeWithNextToolStripMenuItem,
             this.toolStripSeparator11,
+            this.extendToPreviousToolStripMenuItem,
+            this.extendToNextToolStripMenuItem,
+            this.toolStripSeparator6,
             this.toolStripMenuItemWaveformPlaySelection,
             this.toolStripSeparator24,
             this.showWaveformAndSpectrogramToolStripMenuItem,
@@ -3900,7 +3912,7 @@
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 396);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 446);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4196,6 +4208,26 @@
             this.groupBoxEdit.Size = new System.Drawing.Size(724, 121);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
+            // 
+            // labelAlternateSingleLinePixels
+            // 
+            this.labelAlternateSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelAlternateSingleLinePixels.AutoSize = true;
+            this.labelAlternateSingleLinePixels.Location = new System.Drawing.Point(870, 94);
+            this.labelAlternateSingleLinePixels.Name = "labelAlternateSingleLinePixels";
+            this.labelAlternateSingleLinePixels.Size = new System.Drawing.Size(62, 13);
+            this.labelAlternateSingleLinePixels.TabIndex = 43;
+            this.labelAlternateSingleLinePixels.Text = "AltSinLinPix";
+            // 
+            // labelSingleLinePixels
+            // 
+            this.labelSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSingleLinePixels.AutoSize = true;
+            this.labelSingleLinePixels.Location = new System.Drawing.Point(427, 94);
+            this.labelSingleLinePixels.Name = "labelSingleLinePixels";
+            this.labelSingleLinePixels.Size = new System.Drawing.Size(105, 13);
+            this.labelSingleLinePixels.TabIndex = 42;
+            this.labelSingleLinePixels.Text = "labelSingleLinePixels";
             // 
             // panelBookmark
             // 
@@ -4952,25 +4984,43 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // labelSingleLinePixels
+            // toolStripSeparator4
             // 
-            this.labelSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelSingleLinePixels.AutoSize = true;
-            this.labelSingleLinePixels.Location = new System.Drawing.Point(427, 94);
-            this.labelSingleLinePixels.Name = "labelSingleLinePixels";
-            this.labelSingleLinePixels.Size = new System.Drawing.Size(105, 13);
-            this.labelSingleLinePixels.TabIndex = 42;
-            this.labelSingleLinePixels.Text = "labelSingleLinePixels";
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(281, 6);
             // 
-            // labelAlternateSingleLinePixels
+            // extendAfterToolStripMenuItem
             // 
-            this.labelAlternateSingleLinePixels.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelAlternateSingleLinePixels.AutoSize = true;
-            this.labelAlternateSingleLinePixels.Location = new System.Drawing.Point(870, 94);
-            this.labelAlternateSingleLinePixels.Name = "labelAlternateSingleLinePixels";
-            this.labelAlternateSingleLinePixels.Size = new System.Drawing.Size(62, 13);
-            this.labelAlternateSingleLinePixels.TabIndex = 43;
-            this.labelAlternateSingleLinePixels.Text = "AltSinLinPix";
+            this.extendAfterToolStripMenuItem.Name = "extendAfterToolStripMenuItem";
+            this.extendAfterToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.extendAfterToolStripMenuItem.Text = "Extend to line after";
+            this.extendAfterToolStripMenuItem.Click += new System.EventHandler(this.ExtendAfterToolStripMenuItemClick);
+            // 
+            // extendBeforeToolStripMenuItem
+            // 
+            this.extendBeforeToolStripMenuItem.Name = "extendBeforeToolStripMenuItem";
+            this.extendBeforeToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.extendBeforeToolStripMenuItem.Text = "Extend to line before";
+            this.extendBeforeToolStripMenuItem.Click += new System.EventHandler(this.ExtendBeforeToolStripMenuItemClick);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(271, 6);
+            // 
+            // extendToNextToolStripMenuItem
+            // 
+            this.extendToNextToolStripMenuItem.Name = "extendToNextToolStripMenuItem";
+            this.extendToNextToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.extendToNextToolStripMenuItem.Text = "Extend to next";
+            this.extendToNextToolStripMenuItem.Click += new System.EventHandler(this.extendToNextToolStripMenuItem_Click);
+            // 
+            // extendToPreviousToolStripMenuItem
+            // 
+            this.extendToPreviousToolStripMenuItem.Name = "extendToPreviousToolStripMenuItem";
+            this.extendToPreviousToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.extendToPreviousToolStripMenuItem.Text = "Extend to previous";
+            this.extendToPreviousToolStripMenuItem.Click += new System.EventHandler(this.extendToPreviousToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -5527,5 +5577,11 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRuby;
         private System.Windows.Forms.Label labelSingleLinePixels;
         private System.Windows.Forms.Label labelAlternateSingleLinePixels;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem extendBeforeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extendAfterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extendToPreviousToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extendToNextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     }
 }

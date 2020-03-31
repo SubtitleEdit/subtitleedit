@@ -1555,6 +1555,10 @@ $HorzAlign          =   Center
         public string MainAdjustStartXMsForward { get; set; }
         public string MainAdjustEndXMsBack { get; set; }
         public string MainAdjustEndXMsForward { get; set; }
+        public string MainAdjustExtendToNextSceneChange { get; set; }
+        public string MainAdjustExtendToPreviousSceneChange { get; set; }
+        public string MainAdjustExtendToNextSubtitle { get; set; }
+        public string MainAdjustExtendToPreviousSubtitle { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
         public string MainTextBoxBreakAtPosition { get; set; }
@@ -1698,6 +1702,10 @@ $HorzAlign          =   Center
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
             WaveformAddTextHere = "Return";
+            MainAdjustExtendToNextSceneChange = string.Empty;
+            MainAdjustExtendToPreviousSceneChange = string.Empty;
+            MainAdjustExtendToNextSubtitle = "Control+Shift+E";
+            MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
         }
     }
 
@@ -6125,6 +6133,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendToNextSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChange");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendToPreviousSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSubtitle");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendToNextSubtitle = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSubtitle");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendToPreviousSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                 {
@@ -7279,6 +7311,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustStartXMsForward", settings.Shortcuts.MainAdjustStartXMsForward);
                 textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
                 textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
+                textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
+                textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
+                textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
+                textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
                 textWriter.WriteElementString("MainTextBoxBreakAtPosition", settings.Shortcuts.MainTextBoxBreakAtPosition);

@@ -1184,6 +1184,8 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
+        <ExtendToLineBefore>Extend to line before</ExtendToLineBefore>
+        <ExtendToLineAfter>Extend to line after</ExtendToLineAfter>
         <RemoveFormatting>Remove formatting</RemoveFormatting>
         <RemoveFormattingAll>Remove all formatting</RemoveFormattingAll>
         <RemoveFormattingBold>Remove bold</RemoveFormattingBold>
@@ -1988,6 +1990,10 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Extend selected lines to next scene change (or next subtitle)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToPreviousSceneChange>Extend selected lines to previous scene change (or previous subtitle)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
@@ -2554,6 +2560,8 @@ Keep changes?</KeepChangesMessage>
     <SplitAtCursor>Split at cursor</SplitAtCursor>
     <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <MergeWithNext>Merge with next</MergeWithNext>
+    <ExtendToPrevious>Extend to previous</ExtendToPrevious>
+    <ExtendToNext>Extend to next</ExtendToNext>
     <PlaySelection>Play selection</PlaySelection>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>

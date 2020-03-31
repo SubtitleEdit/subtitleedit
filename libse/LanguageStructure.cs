@@ -1551,6 +1551,8 @@
                     public string MergeSelectedLinesAsDialog { get; set; }
                     public string MergeWithLineBefore { get; set; }
                     public string MergeWithLineAfter { get; set; }
+                    public string ExtendToLineBefore { get; set; }
+                    public string ExtendToLineAfter { get; set; }
                     public string RemoveFormatting { get; set; }
                     public string RemoveFormattingAll { get; set; }
                     public string RemoveFormattingBold { get; set; }
@@ -2153,6 +2155,10 @@
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
+            public string AdjustExtendToNextSceneChange { get; set; }
+            public string AdjustExtendToPreviousSceneChange { get; set; }
+            public string AdjustExtendToNextSubtitle { get; set; }
+            public string AdjustExtendToPreviousSubtitle { get; set; }
             public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
@@ -2770,6 +2776,8 @@
             public string SplitAtCursor { get; set; }
             public string MergeWithPrevious { get; set; }
             public string MergeWithNext { get; set; }
+            public string ExtendToPrevious { get; set; }
+            public string ExtendToNext { get; set; }
             public string PlaySelection { get; set; }
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
