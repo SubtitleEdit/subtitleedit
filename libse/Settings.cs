@@ -829,6 +829,7 @@ $HorzAlign          =   Center
         public string FFmpegLocation { get; set; }
         public string FFmpegSceneThreshold { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
+        public int SplitBehavior { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
@@ -949,6 +950,7 @@ $HorzAlign          =   Center
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
+            SplitBehavior = 0;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;
@@ -2831,6 +2833,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("SplitBehavior");
+            if (subNode != null)
+            {
+                settings.General.SplitBehavior = Convert.ToInt32(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("ClearStatusBarAfterSeconds");
@@ -6667,6 +6675,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
                 textWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
                 textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SplitBehavior", settings.General.SplitBehavior.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Company", settings.General.Company);
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString(CultureInfo.InvariantCulture));

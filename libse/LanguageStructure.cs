@@ -2026,6 +2026,10 @@
             public string TimeCodeMode { get; set; }
             public string TimeCodeModeHHMMSSMS { get; set; }
             public string TimeCodeModeHHMMSSFF { get; set; }
+            public string SplitBehavior { get; set; }
+            public string SplitBehaviorPrevious { get; set; }
+            public string SplitBehaviorHalf { get; set; }
+            public string SplitBehaviorNext { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }
