@@ -374,6 +374,8 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
+            this.comboBoxSplitBehavior = new System.Windows.Forms.ComboBox();
+            this.labelSplitBehavior = new System.Windows.Forms.Label();
             this.checkBoxSyntaxColorTextTooWide = new System.Windows.Forms.CheckBox();
             this.buttonLineWidthSettings = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
@@ -461,7 +463,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(506, 531);
+            this.buttonOK.Location = new System.Drawing.Point(506, 540);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
@@ -473,7 +475,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(587, 531);
+            this.buttonCancel.Location = new System.Drawing.Point(587, 540);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 1;
@@ -500,7 +502,7 @@
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
-            this.tabControlSettings.Size = new System.Drawing.Size(840, 514);
+            this.tabControlSettings.Size = new System.Drawing.Size(840, 523);
             this.tabControlSettings.TabIndex = 2;
             this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
             // 
@@ -510,7 +512,7 @@
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(832, 488);
+            this.tabPageGeneral.Size = new System.Drawing.Size(832, 497);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -520,6 +522,8 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.labelSplitBehavior);
+            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSplitBehavior);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAutoSave);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSaveAsFileNameFrom);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSaveAsFileNameFrom);
@@ -554,7 +558,7 @@
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(6, 6);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
-            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 476);
+            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 485);
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
@@ -562,10 +566,10 @@
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 426);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 453);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
-            this.checkBoxAutoSave.TabIndex = 28;
+            this.checkBoxAutoSave.TabIndex = 30;
             this.checkBoxAutoSave.Text = "Auto save";
             this.checkBoxAutoSave.UseVisualStyleBackColor = true;
             // 
@@ -573,18 +577,18 @@
             // 
             this.comboBoxSaveAsFileNameFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSaveAsFileNameFrom.FormattingEnabled = true;
-            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(442, 359);
+            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(441, 386);
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxSaveAsFileNameFrom.TabIndex = 23;
+            this.comboBoxSaveAsFileNameFrom.TabIndex = 25;
             // 
             // labelSaveAsFileNameFrom
             // 
             this.labelSaveAsFileNameFrom.AutoSize = true;
-            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(439, 343);
+            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(438, 370);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
             this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
-            this.labelSaveAsFileNameFrom.TabIndex = 22;
+            this.labelSaveAsFileNameFrom.TabIndex = 24;
             this.labelSaveAsFileNameFrom.Text = "\"Save as...\" will take name from";
             // 
             // groupBoxGeneralRules
@@ -964,27 +968,27 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 394);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 421);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
-            this.comboBoxAutoBackupDeleteAfter.TabIndex = 27;
+            this.comboBoxAutoBackupDeleteAfter.TabIndex = 29;
             // 
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 397);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 424);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
-            this.labelAutoBackupDeleteAfter.TabIndex = 26;
+            this.labelAutoBackupDeleteAfter.TabIndex = 28;
             this.labelAutoBackupDeleteAfter.Text = "Delete after";
             // 
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 426);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 453);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxCheckForUpdates.TabIndex = 29;
+            this.checkBoxCheckForUpdates.TabIndex = 31;
             this.checkBoxCheckForUpdates.Text = "Check for updates";
             this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
@@ -1102,18 +1106,18 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 394);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 421);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAutoBackup.TabIndex = 25;
+            this.comboBoxAutoBackup.TabIndex = 27;
             // 
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 397);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 424);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
-            this.labelAutoBackup.TabIndex = 24;
+            this.labelAutoBackup.TabIndex = 26;
             this.labelAutoBackup.Text = "Auto-backup";
             // 
             // checkBoxRememberSelectedLine
@@ -1154,18 +1158,18 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 310);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 337);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxListViewDoubleClickEvent.TabIndex = 21;
+            this.comboBoxListViewDoubleClickEvent.TabIndex = 23;
             // 
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 294);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 321);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
-            this.labelListViewDoubleClickEvent.TabIndex = 20;
+            this.labelListViewDoubleClickEvent.TabIndex = 22;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
             // labelShowLineBreaksAs
@@ -4519,7 +4523,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 541);
+            this.labelStatus.Location = new System.Drawing.Point(12, 550);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
@@ -4532,7 +4536,7 @@
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReset.Location = new System.Drawing.Point(668, 531);
+            this.buttonReset.Location = new System.Drawing.Point(668, 540);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
             this.buttonReset.TabIndex = 2;
@@ -4540,6 +4544,26 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
+            // comboBoxSplitBehavior
+            // 
+            this.comboBoxSplitBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSplitBehavior.FormattingEnabled = true;
+            this.comboBoxSplitBehavior.Items.AddRange(new object[] {
+            "HH:MM:SS:MSEC (00:00:00.000)",
+            "HH:MM:SS:FF (00:00:00.00)"});
+            this.comboBoxSplitBehavior.Location = new System.Drawing.Point(528, 288);
+            this.comboBoxSplitBehavior.Name = "comboBoxSplitBehavior";
+            this.comboBoxSplitBehavior.Size = new System.Drawing.Size(207, 21);
+            this.comboBoxSplitBehavior.TabIndex = 21;
+            // 
+            // labelSplitBehavior
+            // 
+            this.labelSplitBehavior.AutoSize = true;
+            this.labelSplitBehavior.Location = new System.Drawing.Point(438, 291);
+            this.labelSplitBehavior.Name = "labelSplitBehavior";
+            this.labelSplitBehavior.Size = new System.Drawing.Size(72, 13);
+            this.labelSplitBehavior.TabIndex = 20;
+            this.labelSplitBehavior.Text = "Split behavior";
             // checkBoxSyntaxColorTextTooWide
             // 
             this.checkBoxSyntaxColorTextTooWide.AutoSize = true;
@@ -4564,7 +4588,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(865, 566);
+            this.ClientSize = new System.Drawing.Size(865, 575);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.tabControlSettings);
@@ -5045,6 +5069,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShortcutsCollapse;
         private System.Windows.Forms.CheckBox checkBoxWaveformSnapToSceneChanges;
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
+        private System.Windows.Forms.Label labelSplitBehavior;
+        private System.Windows.Forms.ComboBox comboBoxSplitBehavior;
         private System.Windows.Forms.Button buttonLineWidthSettings;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextTooWide;
     }
