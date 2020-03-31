@@ -465,6 +465,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelTimeCodeMode.Text = language.TimeCodeMode;
             comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
 
+            comboBoxSplitBehavior.Items.Clear();
+            comboBoxSplitBehavior.Items.Add(language.SplitBehaviorPrevious);
+            comboBoxSplitBehavior.Items.Add(language.SplitBehaviorHalf);
+            comboBoxSplitBehavior.Items.Add(language.SplitBehaviorNext);
+            comboBoxSplitBehavior.SelectedIndex = gs.SplitBehavior;
+            labelSplitBehavior.Text = language.SplitBehavior;
+            comboBoxSplitBehavior.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
+
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
@@ -1594,6 +1602,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
             }
+
+            gs.SplitBehavior = comboBoxSplitBehavior.SelectedIndex;
 
             gs.SpellChecker = comboBoxSpellChecker.SelectedIndex == 1 ? "word" : "hunspell";
 

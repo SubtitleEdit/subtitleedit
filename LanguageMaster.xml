@@ -1861,6 +1861,10 @@ can edit in same subtitle file (collaboration)</Information>
     <TimeCodeMode>Time code mode</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Split behavior</SplitBehavior>
+    <SplitBehaviorPrevious>Add gap to the left of split point</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Add gap in the center of split point</SplitBehaviorHalf>
+    <SplitBehaviorNext>Add gap to the right of split point</SplitBehaviorNext>
     <VideoEngine>Video engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
