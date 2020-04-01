@@ -2122,6 +2122,13 @@
             public string DialogStyleDashBothLinesWithoutSpace { get; set; }
             public string DialogStyleDashSecondLineWithSpace { get; set; }
             public string DialogStyleDashSecondLineWithoutSpace { get; set; }
+            public string ContinuationStyle { get; set; }
+            public string ContinuationStyleNone { get; set; }
+            public string ContinuationStyleNoneLeadingTrailingDots { get; set; }
+            public string ContinuationStyleOnlyTrailingDots { get; set; }
+            public string ContinuationStyleLeadingTrailingDots { get; set; }
+            public string ContinuationStyleLeadingTrailingDash { get; set; }
+            public string ContinuationStyleLeadingTrailingDashDots { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
