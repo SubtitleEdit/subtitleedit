@@ -381,6 +381,7 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
+            this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -4620,6 +4621,12 @@
             this.buttonReset.UseVisualStyleBackColor = true;
             this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
+            // toolTipContinuationPreview
+            // 
+            this.toolTipContinuationPreview.AutoPopDelay = 60000;
+            this.toolTipContinuationPreview.InitialDelay = 500;
+            this.toolTipContinuationPreview.ReshowDelay = 100;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5112,5 +5119,6 @@
         private System.Windows.Forms.Label labelContinuationStyle;
         private System.Windows.Forms.Button buttonFixContinuationStyleSettings;
         private System.Windows.Forms.ComboBox comboBoxContinuationStyle;
+        private System.Windows.Forms.ToolTip toolTipContinuationPreview;
     }
 }

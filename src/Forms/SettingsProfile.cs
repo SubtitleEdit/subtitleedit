@@ -198,6 +198,9 @@ namespace Nikse.SubtitleEdit.Forms
             RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             RulesProfiles[idx].ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
             UpdateRulesProfilesLine(idx);
+
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
         }
 
         private void listViewProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -288,7 +291,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
-            comboBoxDialogStyle.SelectedIndex = 0;
+            comboBoxContinuationStyle.SelectedIndex = 0;
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
             switch (RulesProfiles[idx].ContinuationStyle)
             {
                 case ContinuationStyle.None:

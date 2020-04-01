@@ -339,6 +339,31 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
+        {
+            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit";
+            string line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
+            string line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
+            string linePause = "(...)";
+            string line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
+
+            switch (continuationStyle)
+            {
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return line1 + ",\n\n" + line2 + "\n\n" + line3 + "...\n\n" + linePause + "\n\n..." + line4;
+                case ContinuationStyle.OnlyTrailingDots:
+                    return line1 + "...\n\n" + line2 + "...\n\n" + line3 + "...\n\n" + linePause + "\n\n" + line4;
+                case ContinuationStyle.LeadingTrailingDots:
+                    return line1 + "...\n\n..." + line2 + "...\n\n..." + line3 + "...\n\n" + linePause + "\n\n..." + line4;
+                case ContinuationStyle.LeadingTrailingDash:
+                    return line1 + " -\n\n- " + line2 + " -\n\n- " + line3 + " -\n\n" + linePause + "\n\n- " + line4;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    return line1 + " -\n\n- " + line2 + " -\n\n- " + line3 + "...\n\n" + linePause + "\n\n..." + line4;
+                default:
+                    return line1 + ",\n\n" + line2 + "\n\n" + line3 + "\n\n" + linePause + "\n\n" + line4;
+            }
+        }
+
         private static string GetStartTags(string input)
         {
             var pre = new StringBuilder();
