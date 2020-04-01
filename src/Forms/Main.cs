@@ -17613,7 +17613,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _endSeconds = -1;
 
-                _videoInfo = ShowVideoInfo(fileName);
+                _videoInfo = UiUtil.GetVideoInfo(fileName);
                 if (_videoInfo.FramesPerSecond > 0)
                 {
                     toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
@@ -17736,11 +17736,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void VideoEnded(object sender, EventArgs e)
         {
             mediaPlayer.Pause();
-        }
-
-        private static VideoInfo ShowVideoInfo(string fileName)
-        {
-            return UiUtil.GetVideoInfo(fileName);
         }
 
         private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
