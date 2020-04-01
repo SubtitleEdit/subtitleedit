@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         skip = true;
                     }
-                    if (!skip && !"0123456789".Contains(text[idx + 1].ToString()))
+                    if (!skip && "0123456789".Contains(text[idx + 1].ToString()))
                     {
                         skip = true;
                     }
