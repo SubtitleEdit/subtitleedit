@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var p = subtitle.Paragraphs[i];
 
                 // Arabic
-                if (callbacks.Language == "ar") // special rules for French
+                if (callbacks.Language == "ar") // special rules for Arabic
                 {
                     if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
                         !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
