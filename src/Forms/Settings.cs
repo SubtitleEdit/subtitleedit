@@ -1002,7 +1002,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
-            comboBoxDialogStyle.SelectedIndex = 0;
+            comboBoxContinuationStyle.SelectedIndex = 0;
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(continuationStyle));
             switch (continuationStyle)
             {
                 case ContinuationStyle.None:
@@ -3229,6 +3231,9 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             _rulesProfiles[idx].ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)

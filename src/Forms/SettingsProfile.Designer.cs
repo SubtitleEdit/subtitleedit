@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBoxStyles = new System.Windows.Forms.GroupBox();
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
             this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
@@ -69,7 +71,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
-            this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
+            this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -155,6 +157,16 @@
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // comboBoxContinuationStyle
+            // 
+            this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuationStyle.FormattingEnabled = true;
+            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(102, 286);
+            this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
+            this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxContinuationStyle.TabIndex = 195;
+            this.comboBoxContinuationStyle.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // labelContinuationStyle
             // 
@@ -616,14 +628,11 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // comboBoxContinuationStyle
+            // toolTipContinuationPreview
             // 
-            this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxContinuationStyle.FormattingEnabled = true;
-            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(102, 286);
-            this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
-            this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
-            this.comboBoxContinuationStyle.TabIndex = 195;
+            this.toolTipContinuationPreview.AutoPopDelay = 60000;
+            this.toolTipContinuationPreview.InitialDelay = 500;
+            this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
             // SettingsProfile
             // 
@@ -700,5 +709,6 @@
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
         private System.Windows.Forms.Label labelContinuationStyle;
         private System.Windows.Forms.ComboBox comboBoxContinuationStyle;
+        private System.Windows.Forms.ToolTip toolTipContinuationPreview;
     }
 }

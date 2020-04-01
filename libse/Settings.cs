@@ -2122,6 +2122,29 @@ $HorzAlign          =   Center
                     dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
                 }
 
+                var continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                if (listNode.SelectSingleNode("ContinuationStyle") == null || !Enum.IsDefined(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle").InnerText))
+                { //TODO: Remove after 2022
+                    if (listNode.SelectSingleNode("Name") != null)
+                    {
+                        var lookup = new List<RulesProfile>();
+                        GeneralSettings.AddExtraProfiles(lookup);
+                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        if (match != null)
+                        {
+                            continuationStyle = match.ContinuationStyle; // update style when upgrading from 3.5.13 or below
+                        }
+                        else
+                        {
+                            continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                        }
+                    }
+                }
+                else
+                {
+                    continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
+                }
+
                 settings.General.Profiles.Add(new RulesProfile
                 {
                     Name = listNode.SelectSingleNode("Name")?.InnerText,
@@ -2135,7 +2158,8 @@ $HorzAlign          =   Center
                     MaxNumberOfLines = Convert.ToInt32(maxNumberOfLines, CultureInfo.InvariantCulture),
                     MergeLinesShorterThan = Convert.ToInt32(mergeLinesShorterThan, CultureInfo.InvariantCulture),
                     MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture),
-                    DialogStyle = dialogStyle
+                    DialogStyle = dialogStyle,
+                    ContinuationStyle = continuationStyle
                 });
                 profileCount++;
             }
@@ -6624,6 +6648,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
+                    textWriter.WriteElementString("ContinuationStyle", profile.ContinuationStyle.ToString());
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
