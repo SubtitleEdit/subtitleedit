@@ -1551,6 +1551,8 @@
                     public string MergeSelectedLinesAsDialog { get; set; }
                     public string MergeWithLineBefore { get; set; }
                     public string MergeWithLineAfter { get; set; }
+                    public string ExtendToLineBefore { get; set; }
+                    public string ExtendToLineAfter { get; set; }
                     public string RemoveFormatting { get; set; }
                     public string RemoveFormattingAll { get; set; }
                     public string RemoveFormattingBold { get; set; }
@@ -2057,6 +2059,8 @@
             public string WaveformSetVideoPosMoveStartEnd { get; set; }
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
+            public string WaveformSingleClickSelect { get; set; }
+            public string WaveformSnapToSceneChanges { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
             public string WaveformColor { get; set; }
@@ -2151,6 +2155,10 @@
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
+            public string AdjustExtendToNextSceneChange { get; set; }
+            public string AdjustExtendToPreviousSceneChange { get; set; }
+            public string AdjustExtendToNextSubtitle { get; set; }
+            public string AdjustExtendToPreviousSubtitle { get; set; }
             public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
@@ -2763,11 +2771,15 @@
             public string AddParagraphHereAndPasteText { get; set; }
             public string SetParagraphAsSelection { get; set; }
             public string FocusTextBox { get; set; }
+            public string GoToPrevious { get; set; }
+            public string GoToNext { get; set; }
             public string DeleteParagraph { get; set; }
             public string Split { get; set; }
             public string SplitAtCursor { get; set; }
             public string MergeWithPrevious { get; set; }
             public string MergeWithNext { get; set; }
+            public string ExtendToPrevious { get; set; }
+            public string ExtendToNext { get; set; }
             public string PlaySelection { get; set; }
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }

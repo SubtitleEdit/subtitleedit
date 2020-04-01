@@ -3937,6 +3937,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/MergeWithLineAfter":
                     language.Main.Menu.ContextMenu.MergeWithLineAfter = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/ExtendToLineBefore":
+                    language.Main.Menu.ContextMenu.ExtendToLineBefore = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ExtendToLineAfter":
+                    language.Main.Menu.ContextMenu.ExtendToLineAfter = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/RemoveFormatting":
                     language.Main.Menu.ContextMenu.RemoveFormatting = reader.Value;
                     break;
@@ -5098,6 +5104,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformListViewFocusMouseEnter":
                     language.Settings.WaveformListViewFocusMouseEnter = reader.Value;
                     break;
+                case "Settings/WaveformSingleClickSelect":
+                    language.Settings.WaveformSingleClickSelect = reader.Value;
+                    break;
+                case "Settings/WaveformSnapToSceneChanges":
+                    language.Settings.WaveformSnapToSceneChanges = reader.Value;
+                    break;
                 case "Settings/WaveformBorderHitMs1":
                     language.Settings.WaveformBorderHitMs1 = reader.Value;
                     break;
@@ -5379,6 +5391,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AdjustExtendCurrentSubtitle":
                     language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToNextSceneChange":
+                    language.Settings.AdjustExtendToNextSceneChange = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToPreviousSceneChange":
+                    language.Settings.AdjustExtendToPreviousSceneChange = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToNextSubtitle":
+                    language.Settings.AdjustExtendToNextSubtitle = reader.Value;
+                    break;
+                case "Settings/AdjustExtendToPreviousSubtitle":
+                    language.Settings.AdjustExtendToPreviousSubtitle = reader.Value;
                     break;
                 case "Settings/RecalculateDurationOfCurrentSubtitle":
                     language.Settings.RecalculateDurationOfCurrentSubtitle = reader.Value;
@@ -6883,6 +6907,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Waveform/FocusTextBox":
                     language.Waveform.FocusTextBox = reader.Value;
                     break;
+                case "Waveform/GoToPrevious":
+                    language.Waveform.GoToPrevious = reader.Value;
+                    break;
+                case "Waveform/GoToNext":
+                    language.Waveform.GoToNext = reader.Value;
+                    break;
                 case "Waveform/DeleteParagraph":
                     language.Waveform.DeleteParagraph = reader.Value;
                     break;
@@ -6897,6 +6927,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/MergeWithNext":
                     language.Waveform.MergeWithNext = reader.Value;
+                    break;
+                case "Waveform/ExtendToPrevious":
+                    language.Waveform.ExtendToPrevious = reader.Value;
+                    break;
+                case "Waveform/ExtendToNext":
+                    language.Waveform.ExtendToNext = reader.Value;
                     break;
                 case "Waveform/PlaySelection":
                     language.Waveform.PlaySelection = reader.Value;
