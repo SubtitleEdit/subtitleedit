@@ -2096,12 +2096,17 @@ namespace Nikse.SubtitleEdit.Core
 
                 while (text.Contains(" و "))
                 {
-                    text = text.Replace(" و "," و");
+                    text = text.Replace(" و ", " و");
                 }
 
-                while (text.Contains(" ـ "))
+                while (text.Contains("\"و "))
                 {
-                    text = text.Replace(" ـ ", " ـ");
+                    text = text.Replace("\"و ", "\"و");
+                }
+
+                while (text.Contains("ـ "))
+                {
+                    text = text.Replace("ـ ", " ـ");
                 }
             }
 
