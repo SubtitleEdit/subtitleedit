@@ -1957,6 +1957,13 @@ can edit in same subtitle file (collaboration)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Dash both lines without space</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Dash second line with space</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Dash second line without space</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Continuation style</ContinuationStyle>
+    <ContinuationStyleNone>None</ContinuationStyleNone>
+    <ContinuationStyleNoneLeadingTrailingDots>None, dots for pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Dots (trailing only)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Dots</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>

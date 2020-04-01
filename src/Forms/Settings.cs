@@ -663,6 +663,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxFixCommonErrors.Text = language.FixCommonerrors;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
+            labelContinuationStyle.Text = language.ContinuationStyle;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
@@ -806,6 +807,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
+            SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -987,6 +989,39 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
+                    break;
+            }
+        }
+
+        private void SetContinuationStyle(ContinuationStyle continuationStyle)
+        {
+            comboBoxContinuationStyle.Items.Clear();
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
+            comboBoxDialogStyle.SelectedIndex = 0;
+            switch (continuationStyle)
+            {
+                case ContinuationStyle.None:
+                    comboBoxContinuationStyle.SelectedIndex = 0;
+                    break;
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 1;
+                    break;
+                case ContinuationStyle.OnlyTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 2;
+                    break;
+                case ContinuationStyle.LeadingTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 3;
+                    break;
+                case ContinuationStyle.LeadingTrailingDash:
+                    comboBoxContinuationStyle.SelectedIndex = 4;
+                    break;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    comboBoxContinuationStyle.SelectedIndex = 5;
                     break;
             }
         }
@@ -1695,6 +1730,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            gs.ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -3167,6 +3203,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetDialogStyle(profile.DialogStyle);
+            SetContinuationStyle(profile.ContinuationStyle);
 
             checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
             _oldProfileId = profile.Id;
@@ -3191,6 +3228,7 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            _rulesProfiles[idx].ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)

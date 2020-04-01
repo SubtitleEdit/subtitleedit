@@ -5293,6 +5293,27 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/DialogStyleDashSecondLineWithoutSpace":
                     language.Settings.DialogStyleDashSecondLineWithoutSpace = reader.Value;
                     break;
+                case "Settings/ContinuationStyle":
+                    language.Settings.ContinuationStyle = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNone":
+                    language.Settings.ContinuationStyleNone = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNoneLeadingTrailingDots":
+                    language.Settings.ContinuationStyleNoneLeadingTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleOnlyTrailingDots":
+                    language.Settings.ContinuationStyleOnlyTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDots":
+                    language.Settings.ContinuationStyleLeadingTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDash":
+                    language.Settings.ContinuationStyleLeadingTrailingDash = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDashDots":
+                    language.Settings.ContinuationStyleLeadingTrailingDashDots = reader.Value;
+                    break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;
                     break;

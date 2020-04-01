@@ -32,6 +32,7 @@
             this.labelName = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
             this.comboBoxDialogStyle = new System.Windows.Forms.ComboBox();
             this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
@@ -68,6 +69,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
+            this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxGeneralRules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
@@ -97,7 +99,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewProfiles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(927, 417);
+            this.groupBoxStyles.Size = new System.Drawing.Size(927, 445);
             this.groupBoxStyles.TabIndex = 1;
             this.groupBoxStyles.TabStop = false;
             // 
@@ -124,6 +126,8 @@
             // 
             this.groupBoxGeneralRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
+            this.groupBoxGeneralRules.Controls.Add(this.labelContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelDialogStyle);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxDialogStyle);
             this.groupBoxGeneralRules.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
@@ -147,10 +151,19 @@
             this.groupBoxGeneralRules.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
             this.groupBoxGeneralRules.Location = new System.Drawing.Point(619, 61);
             this.groupBoxGeneralRules.Name = "groupBoxGeneralRules";
-            this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 320);
+            this.groupBoxGeneralRules.Size = new System.Drawing.Size(302, 348);
             this.groupBoxGeneralRules.TabIndex = 90;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // labelContinuationStyle
+            // 
+            this.labelContinuationStyle.AutoSize = true;
+            this.labelContinuationStyle.Location = new System.Drawing.Point(6, 289);
+            this.labelContinuationStyle.Name = "labelContinuationStyle";
+            this.labelContinuationStyle.Size = new System.Drawing.Size(90, 13);
+            this.labelContinuationStyle.TabIndex = 195;
+            this.labelContinuationStyle.Text = "Continuation style";
             // 
             // labelDialogStyle
             // 
@@ -179,10 +192,10 @@
             // checkBoxCpsIncludeWhiteSpace
             // 
             this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
-            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 286);
+            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(9, 318);
             this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
             this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(270, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 190;
+            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 196;
             this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes white spaces";
             this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
             this.checkBoxCpsIncludeWhiteSpace.CheckedChanged += new System.EventHandler(this.UiElementChanged);
@@ -463,7 +476,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(6, 386);
+            this.buttonExport.Location = new System.Drawing.Point(6, 414);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(82, 23);
             this.buttonExport.TabIndex = 20;
@@ -475,7 +488,7 @@
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonImport.Location = new System.Drawing.Point(94, 386);
+            this.buttonImport.Location = new System.Drawing.Point(94, 414);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(82, 23);
             this.buttonImport.TabIndex = 30;
@@ -487,7 +500,7 @@
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(182, 386);
+            this.buttonCopy.Location = new System.Drawing.Point(182, 414);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 23);
             this.buttonCopy.TabIndex = 40;
@@ -499,7 +512,7 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 386);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(446, 414);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 23);
             this.buttonRemoveAll.TabIndex = 70;
@@ -511,7 +524,7 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(270, 386);
+            this.buttonAdd.Location = new System.Drawing.Point(270, 414);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 23);
             this.buttonAdd.TabIndex = 50;
@@ -523,7 +536,7 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(358, 386);
+            this.buttonRemove.Location = new System.Drawing.Point(358, 414);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(82, 23);
             this.buttonRemove.TabIndex = 60;
@@ -548,7 +561,7 @@
             this.listViewProfiles.Location = new System.Drawing.Point(6, 19);
             this.listViewProfiles.MultiSelect = false;
             this.listViewProfiles.Name = "listViewProfiles";
-            this.listViewProfiles.Size = new System.Drawing.Size(604, 362);
+            this.listViewProfiles.Size = new System.Drawing.Size(604, 390);
             this.listViewProfiles.TabIndex = 10;
             this.listViewProfiles.UseCompatibleStateImageBehavior = false;
             this.listViewProfiles.View = System.Windows.Forms.View.Details;
@@ -584,7 +597,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(864, 440);
+            this.buttonCancel.Location = new System.Drawing.Point(864, 468);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 205;
@@ -595,7 +608,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(783, 440);
+            this.buttonOK.Location = new System.Drawing.Point(783, 468);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 200;
@@ -603,11 +616,20 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // comboBoxContinuationStyle
+            // 
+            this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuationStyle.FormattingEnabled = true;
+            this.comboBoxContinuationStyle.Location = new System.Drawing.Point(102, 286);
+            this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
+            this.comboBoxContinuationStyle.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxContinuationStyle.TabIndex = 195;
+            // 
             // SettingsProfile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(951, 475);
+            this.ClientSize = new System.Drawing.Size(951, 503);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -676,5 +698,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
         private System.Windows.Forms.Label labelDialogStyle;
         private System.Windows.Forms.ComboBox comboBoxDialogStyle;
+        private System.Windows.Forms.Label labelContinuationStyle;
+        private System.Windows.Forms.ComboBox comboBoxContinuationStyle;
     }
 }

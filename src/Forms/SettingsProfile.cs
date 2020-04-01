@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxLines.Text = language.MaximumLines;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
+            labelContinuationStyle.Text = language.ContinuationStyle;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
@@ -55,6 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxDialogStyle.Left = labelDialogStyle.Left + labelDialogStyle.Width + 5;
             comboBoxDialogStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxDialogStyle.Left);
+
+            comboBoxContinuationStyle.Left = labelContinuationStyle.Left + labelContinuationStyle.Width + 5;
+            comboBoxContinuationStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxContinuationStyle.Left);
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
@@ -192,6 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
             RulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
             RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            RulesProfiles[idx].ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
             UpdateRulesProfilesLine(idx);
         }
 
@@ -271,6 +276,38 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case DialogType.DashSecondLineWithoutSpace:
                     comboBoxDialogStyle.SelectedIndex = 3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            comboBoxContinuationStyle.Items.Clear();
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
+            comboBoxDialogStyle.SelectedIndex = 0;
+            switch (RulesProfiles[idx].ContinuationStyle)
+            {
+                case ContinuationStyle.None:
+                    comboBoxContinuationStyle.SelectedIndex = 0;
+                    break;
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 1;
+                    break;
+                case ContinuationStyle.OnlyTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 2;
+                    break;
+                case ContinuationStyle.LeadingTrailingDots:
+                    comboBoxContinuationStyle.SelectedIndex = 3;
+                    break;
+                case ContinuationStyle.LeadingTrailingDash:
+                    comboBoxContinuationStyle.SelectedIndex = 4;
+                    break;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    comboBoxContinuationStyle.SelectedIndex = 5;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
