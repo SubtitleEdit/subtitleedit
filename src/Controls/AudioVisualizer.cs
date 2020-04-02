@@ -1807,7 +1807,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Button == MouseButtons.Left && OnSingleClick != null)
             {
                 int diff = Math.Abs(_mouseMoveStartX - e.X);
-                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
+                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && DateTime.UtcNow.Ticks - _buttonDownTimeTicks < 2500‬) // 10.000/ms or 10.000.000/s
                 {
                     if (ModifierKeys == Keys.Shift && _selectedParagraph != null)
                     {
