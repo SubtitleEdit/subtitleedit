@@ -1133,7 +1133,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     double seconds = RelativeXPositionToSeconds(e.X);
                     var milliseconds = (int)(seconds * TimeCode.BaseUnit);
-                                        
+
                     if (OnNewSelectionRightClicked != null && NewSelectionParagraph != null)
                     {
                         OnNewSelectionRightClicked.Invoke(this, new ParagraphEventArgs(NewSelectionParagraph));
@@ -1458,7 +1458,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
 
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
-                                
+
                                 if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
                                 {
                                     double nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
@@ -1476,7 +1476,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (NewSelectionParagraph != null)
                                 {
                                     NewSelectionParagraph.StartTime.TotalMilliseconds = milliseconds;
-                                                                        
+
                                     if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && ModifierKeys != Keys.Shift)
                                     {
                                         double nearestSceneChange = _sceneChanges.Count > 0 ? _sceneChanges.Aggregate((x, y) => Math.Abs((x * 1000) - milliseconds) < Math.Abs((y * 1000) - milliseconds) ? x : y) : -9999;
@@ -1502,7 +1502,7 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
                         else if (_mouseDownParagraphType == MouseDownParagraphType.End)
-                        {                            
+                        {
                             if (milliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds > MinimumSelectionMilliseconds)
                             {
                                 if (AllowMovePrevOrNext)
@@ -1624,7 +1624,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                             var startTotalSeconds = RelativeXPositionToSeconds(start);
                             var endTotalSeconds = RelativeXPositionToSeconds(end);
-                            
+
                             NewSelectionParagraph.StartTime.TotalSeconds = startTotalSeconds;
                             NewSelectionParagraph.EndTime.TotalSeconds = endTotalSeconds;
 
@@ -1648,7 +1648,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (PreventOverlap && endTotalSeconds * TimeCode.BaseUnit >= _wholeParagraphMaxMilliseconds)
                             {
                                 NewSelectionParagraph.EndTime.TotalMilliseconds = _wholeParagraphMaxMilliseconds - 1;
-                                Invalidate();    
+                                Invalidate();
                             }
                             if (PreventOverlap && startTotalSeconds * TimeCode.BaseUnit <= _wholeParagraphMinMilliseconds)
                             {
@@ -2108,15 +2108,19 @@ namespace Nikse.SubtitleEdit.Controls
             int length = Math.Max(SecondsToSampleIndex(milliseconds / TimeCode.BaseUnit), 9);
             int max = Math.Min(sampleIndex + length, _wavePeaks.Peaks.Count);
             int from = Math.Max(sampleIndex, 1);
+
+            if (from >= max)
+            {
+                return 0;
+            }
+
             double v = 0;
-            int count = 0;
             for (int i = from; i < max; i++)
             {
                 v += _wavePeaks.Peaks[i].Abs;
-                count++;
             }
 
-            return count == 0 ? 0 : v / count;
+            return v / (max - from);
         }
 
         internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int minimumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
