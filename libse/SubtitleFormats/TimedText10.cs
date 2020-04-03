@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A"));
+                        xml.LoadXml(FixBadXml(xmlAsString));
                         var nsmgr = new XmlNamespaceManager(xml.NameTable);
                         nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
@@ -698,7 +698,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(FixBadXml(sb.ToString()));
             }
 
             const string ns = "http://www.w3.org/ns/ttml";
@@ -1446,5 +1446,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
+        private static string FixBadXml(string xml)
+        {
+            if (string.IsNullOrEmpty(xml))
+            {
+                return xml;
+            }
+
+            var idx = xml.IndexOf('<');
+            if (idx < 0)
+            {
+                return xml;
+            }
+
+            var result = xml;
+            if (idx > 0)
+            {
+                result = result.Remove(0, idx);
+            }
+
+            return result
+                .Replace(" & ", " &amp; ")
+                .Replace("Q&A", "Q&amp;A");
+        }
     }
 }
