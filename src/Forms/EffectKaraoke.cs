@@ -91,14 +91,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             var sb = new StringBuilder();
             int i = 0;
-            while (i < text.Length)
+            int len = text.Length;
+            while (i < len)
             {
                 if (text[i] == '<' && IsTagFollowIndex(text, i))
                 {
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
                     sb.Clear();
                     string tag = GetTag(text.Substring(i));
-                    if (i + 1 < text.Length && text[i + 1] == '/')
+                    if (i + 1 < len && text[i + 1] == '/')
                     {
                         if (tag == "</i>" && italic > 0)
                         {
@@ -285,8 +286,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             double startMilliseconds;
             double endMilliseconds;
-            TimeCode start;
-            TimeCode end;
             int index = 0;
             string text = string.Empty;
             bool tagOn = false;
@@ -306,7 +305,8 @@ namespace Nikse.SubtitleEdit.Forms
                 i = idx;
             }
 
-            while (i < _paragraph.Text.Length)
+            int len = text.Length;
+            while (i < len)
             {
                 var c = _paragraph.Text[i];
                 if (tagOn)
@@ -372,19 +372,23 @@ namespace Nikse.SubtitleEdit.Forms
                     tempText = tempText.Replace("<u></u>", string.Empty);
                     tempText = tempText.Replace("<b></b>", string.Empty);
 
-                    startMilliseconds = index * stepsLength;
-                    startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    endMilliseconds = ((index + 1) * stepsLength) - 1;
-                    endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    start = new TimeCode(startMilliseconds);
-                    end = new TimeCode(endMilliseconds);
-                    _animation.Add(new Paragraph(start, end, tempText));
+                    startMilliseconds = _paragraph.StartTime.TotalMilliseconds + index * stepsLength;
+                    endMilliseconds = startMilliseconds + stepsLength;
+                    _animation.Add(new Paragraph(new TimeCode(startMilliseconds), new TimeCode(endMilliseconds), tempText));
                     index++;
                 }
                 i++;
             }
+
+            // when delay is enabled use use the rate instead to avoid delayed blink
+            if (numericUpDownDelay.Value > 0)
+            {
+                startMilliseconds = _paragraph.StartTime.TotalMilliseconds + index * stepsLength;
+                endMilliseconds = startMilliseconds + stepsLength;
+                _animation.Add(new Paragraph(new TimeCode(startMilliseconds), new TimeCode(endMilliseconds), _paragraph.Text));
+            }
             // All remaining time should go to the last paragraph.
-            if (_animation.Count > 0)
+            else if (_animation.Count > 0)
             {
                 _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
             }

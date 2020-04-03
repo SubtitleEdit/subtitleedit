@@ -253,24 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        private static double CalculateStepLength(string text, double duration)
-        {
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') > 2)
-            {
-                int i = 0;
-                while (i < text.Length &&
-                       text.Substring(i).StartsWith("{\\", StringComparison.Ordinal) &&
-                       text.Substring(i).IndexOf('}', i) > 2)
-                {
-                    int idx = text.IndexOf('}', i);
-                    i = idx + 1;
-                }
-                text = text.Remove(0, i);
-            }
-
-            text = HtmlUtil.RemoveHtmlTags(text);
-            return duration / text.Length;
-        }
+        private static double CalculateStepLength(string text, double duration) => duration / HtmlUtil.RemoveHtmlTags(text, true).Length;
 
         public void MakeAnimation()
         {
@@ -280,8 +263,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             double startMilliseconds;
             double endMilliseconds;
-            TimeCode start;
-            TimeCode end;
             int index = 0;
             string text = string.Empty;
             bool tagOn = false;
@@ -289,7 +270,9 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             string beforeEndTag = string.Empty;
             string alignment = string.Empty;
-            while (i < _paragraph.Text.Length)
+
+            int len = _paragraph.Text.Length;
+            while (i < len)
             {
                 if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
                 {
@@ -339,13 +322,9 @@ namespace Nikse.SubtitleEdit.Forms
                     text += tag + _paragraph.Text[i];
                     tag = string.Empty;
 
-                    startMilliseconds = index * stepsLength;
-                    startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    endMilliseconds = (index + 1) * stepsLength - 1;
-                    endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    start = new TimeCode(startMilliseconds);
-                    end = new TimeCode(endMilliseconds);
-                    TypewriterParagraphs.Add(new Paragraph(start, end, alignment + text + beforeEndTag) { Extra = _paragraph.Extra });
+                    startMilliseconds = _paragraph.StartTime.TotalMilliseconds + index * stepsLength;
+                    endMilliseconds = startMilliseconds + stepsLength;
+                    TypewriterParagraphs.Add(new Paragraph(new TimeCode(startMilliseconds), new TimeCode(endMilliseconds), alignment + text + beforeEndTag) { Extra = _paragraph.Extra });
                     index++;
                 }
                 i++;
@@ -353,12 +332,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (numericUpDownDelay.Value > 0)
             {
-                startMilliseconds = index * stepsLength;
-                startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
+                startMilliseconds = _paragraph.StartTime.TotalMilliseconds + index * stepsLength;
                 endMilliseconds = _paragraph.EndTime.TotalMilliseconds;
-                start = new TimeCode(startMilliseconds);
-                end = new TimeCode(endMilliseconds);
-                TypewriterParagraphs.Add(new Paragraph(start, end, _paragraph.Text) { Extra = _paragraph.Extra });
+                TypewriterParagraphs.Add(new Paragraph(new TimeCode(startMilliseconds), new TimeCode(endMilliseconds), _paragraph.Text) { Extra = _paragraph.Extra });
             }
             else if (TypewriterParagraphs.Count > 0)
             {
