@@ -868,7 +868,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void AudioWaveform_OnSingleClick(object sender, AudioVisualizer.ParagraphEventArgs e)
-        {            
+        {
             timerWaveform.Stop();
             _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
@@ -10280,7 +10280,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExtendBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            
+
         }
 
         private void ExtendAfterToolStripMenuItemClick(object sender, EventArgs e)
@@ -11643,6 +11643,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if (!Configuration.Settings.General.DisableVideoAutoLoading)
                                         {
+                                            matroska.Dispose();
                                             OpenVideo(matroska.Path);
                                         }
                                     }
@@ -11661,6 +11662,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
+                                    matroska.Dispose();
                                     if (ext == ".mkv")
                                     {
                                         OpenVideo(matroska.Path);
@@ -14806,7 +14808,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void GoToPreviousSubtitle(double currentPosition)
-        {            
+        {
             var found = false;
             foreach (var p in _subtitle.Paragraphs)
             {
