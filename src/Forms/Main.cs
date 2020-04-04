@@ -16269,6 +16269,15 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
                 }
+                else if (Clipboard.ContainsFileDropList())
+                {
+                    var fileDropList = Clipboard.GetFileDropList();
+                    if (fileDropList.Count == 1)
+                    {
+                        ShowStatus(Configuration.Settings.Language.General.PleaseWait, false);
+                        OpenSubtitle(fileDropList[0], null);
+                    }
+                }
 
                 e.SuppressKeyPress = true;
             }
