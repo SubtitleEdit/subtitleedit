@@ -9875,7 +9875,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
-                
+
                 if (Configuration.Settings.General.SplitBehavior == 0)
                 {
                     firstSelectedIndex++;
@@ -16153,6 +16153,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         var selectIndices = new List<int>();
+                        int count = _subtitle.Paragraphs.Count;
                         for (int i = 0; i < tmp.Paragraphs.Count; i++)
                         {
                             var p = tmp.Paragraphs[i];
@@ -16168,10 +16169,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                                 }
                             }
-
+                        }
+                        if (count != _subtitle.Paragraphs.Count)
+                        {
                             _subtitle.Renumber();
                         }
-
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.BeginUpdate();
                         foreach (var selectIndex in selectIndices)
@@ -16185,6 +16187,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
                     { // insert into empty subtitle
                         MakeHistoryForUndo(_language.BeforeInsertLine);
+                        int count = _subtitle.Paragraphs.Count;
                         foreach (var p in tmp.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(p);
@@ -16197,7 +16200,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-
+                        if (count != _subtitle.Paragraphs.Count)
+                        {
+                            _subtitle.Renumber();
+                        }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                     }
@@ -16209,8 +16215,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MakeHistoryForUndo(_language.BeforeInsertLine);
                             _makeHistoryPaused = true;
-
                             DeleteSelectedLines();
+                            int count = _subtitle.Paragraphs.Count;
                             var selectedIndices = new List<int>();
                             foreach (var p in tmp.Paragraphs)
                             {
@@ -16227,7 +16233,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 firstIndex++;
                             }
-
+                            if (count != _subtitle.Paragraphs.Count)
+                            {
+                                _subtitle.Renumber();
+                            }
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                             SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
                             foreach (var idx in selectedIndices)
