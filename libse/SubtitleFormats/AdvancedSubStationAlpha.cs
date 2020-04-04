@@ -216,7 +216,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
             }
 
-            if (!string.IsNullOrEmpty(subtitle.Footer) && (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine)))
+            if (!string.IsNullOrEmpty(subtitle.Footer) &&
+                (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine) || subtitle.Footer.Contains("[Aegisub Extradata]" + Environment.NewLine)))
             {
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
@@ -227,7 +228,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
         {
             var scriptInfo = string.Empty;
-            if (header != null && 
+            if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00") &&
                 !header.Contains("ScriptType: v4.00+"))
@@ -1248,6 +1249,14 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                     graphicsStarted = true;
                     footer.AppendLine();
                     footer.AppendLine("[Graphics]");
+                }
+                else if (line.Trim().Equals("[Aegisub Extradata]", StringComparison.OrdinalIgnoreCase))
+                {
+                    eventsStarted = false;
+                    fontsStarted = false;
+                    graphicsStarted = true;
+                    footer.AppendLine();
+                    footer.AppendLine("[Aegisub Extradata]");
                 }
                 else if (fontsStarted)
                 {
