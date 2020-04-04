@@ -721,6 +721,28 @@ namespace Nikse.SubtitleEdit.Core
         public static string RemoveSsaTags(string input)
         {
             var s = input;
+
+            if (s.Contains('{') && s.Contains('}'))
+            {
+                var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
+                var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
+                if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
+                {
+                    var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
+                    if (startTagIndex >= 0)
+                    {
+                        if (p0Index > p1Index)
+                        {
+                            s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
+                        }
+                        else
+                        {
+                            s = s.Remove(startTagIndex);
+                        }
+                    }
+                }
+            }
+
             int k = s.IndexOf("{\\", StringComparison.Ordinal);
             while (k >= 0)
             {
@@ -733,6 +755,31 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Remove(k, l - k + 1);
                 k = s.IndexOf('{', k);
             }
+
+            if (s.StartsWith("m ", StringComparison.Ordinal))
+            {
+                var test = s.Remove(0, 2)
+                    .RemoveChar('0')
+                    .RemoveChar('1')
+                    .RemoveChar('2')
+                    .RemoveChar('3')
+                    .RemoveChar('4')
+                    .RemoveChar('5')
+                    .RemoveChar('6')
+                    .RemoveChar('7')
+                    .RemoveChar('8')
+                    .RemoveChar('9')
+                    .RemoveChar('-')
+                    .RemoveChar('l')
+                    .RemoveChar('m')
+                    .RemoveChar(' ')
+                    .RemoveChar('.');
+                if (test.Length == 0)
+                {
+                    return string.Empty;
+                }
+            }
+
             return s;
         }
 
