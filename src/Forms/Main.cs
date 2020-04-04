@@ -9875,6 +9875,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+                
+                if (Configuration.Settings.General.SplitBehavior == 0)
+                {
+                    firstSelectedIndex++;
+                }
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
         }
@@ -10093,7 +10098,10 @@ namespace Nikse.SubtitleEdit.Forms
             SetSplitTime(splitPos, p, newParagraph, oldText);
             _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
             _subtitle.Renumber();
-            _subtitleListViewIndex = -1;
+            if (Configuration.Settings.General.SplitBehavior > 0)
+            {
+                _subtitleListViewIndex = -1;
+            }
             p.Text = text1;
             newParagraph.Text = text2;
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
