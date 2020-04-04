@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.DetectEncoding;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.DetectEncoding;
 
 namespace Nikse.SubtitleEdit.Core
 {
     public static class LanguageAutoDetect
     {
-
+     
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -613,7 +613,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
-            var allText = s.GetAllTexts();
+            var allText = s.GetAllTexts(500000);
             string languageId = AutoDetectGoogleLanguage(allText, s.Paragraphs.Count / 14);
             if (string.IsNullOrEmpty(languageId))
             {
@@ -1335,7 +1335,7 @@ namespace Nikse.SubtitleEdit.Core
 
             // Korean
             count = 0;
-            foreach (var letter in "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ")
+            foreach (var letter in "가나다라마바사아자차카타파하아야어여오요우유으이")
             {
                 if (text.Contains(letter))
                 {
@@ -1365,6 +1365,28 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             dictionary.Add("th", count);
+
+            // Sinhalese
+            count = 0;
+            foreach (var letter in "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("sl", count);
+
+            // Urdu
+            count = 0;
+            foreach (var letter in "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("ur", count);
 
             var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == dictionary.Values.Max());
             return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
