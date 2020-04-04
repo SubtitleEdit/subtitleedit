@@ -17621,7 +17621,16 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
                 }
 
-                UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
+                var ok = UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                if (!ok && oldVideoPlayer != Configuration.Settings.General.VideoPlayer)
+                {
+                    CloseVideoToolStripMenuItemClick(null, null);
+                    _videoFileName = fileName;
+                    _videoInfo = UiUtil.GetVideoInfo(fileName);
+                    UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                }
+
                 mediaPlayer.Volume = 0;
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;

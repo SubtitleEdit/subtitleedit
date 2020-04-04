@@ -1,8 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -18,50 +17,65 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        public void Initialize(string fileName, VideoInfo videoInfo, Exception exception)
+        public void Initialize(string fileName, Exception exception)
         {
             var sb = new StringBuilder();
             sb.AppendLine("There seems to be missing a codec (or file is not a valid video/audio file)!");
             sb.AppendLine();
-            if (Configuration.Settings.General.VideoPlayer != "VLC")
+
+            var currentVideoPlayer = Configuration.Settings.General.VideoPlayer;
+            var isLibMpvInstalled = LibMpvDynamic.IsInstalled;
+            if (currentVideoPlayer == "MPV" && !isLibMpvInstalled)
             {
-                sb.AppendLine("You need to install/update LAV Filters - DirectShow Media Splitter and Decoders: https://github.com/Nevcairiel/LAVFilters/releases");
-                sb.AppendLine();
-                sb.AppendLine("NOTE: Subtitle Edit can also use mpv, VLC or MPC-HC as built-in video player. See Options -> Settings -> Video Player");
-                sb.AppendLine("http://www.videolan.org/vlc/");
+                currentVideoPlayer = "DirectShow";
+            }
+
+
+            if (currentVideoPlayer == "DirectShow")
+            {
+                sb.AppendLine("Try installing/updating \"LAV Filters - DirectShow Media Splitter and Decoders\": https://github.com/Nevcairiel/LAVFilters/releases");
+                sb.Append("Note that Subtitle Edit is a " + IntPtr.Size * 8 + "-bit program, and hence requires " + IntPtr.Size * 8 + "-bit codecs!");
                 sb.AppendLine();
             }
-            else
+            else if (currentVideoPlayer == "VLC")
             {
                 sb.AppendLine("VLC media player was unable to play this file (perhaps it's not a valid video/audio file) - you can change video player via Options -> Settings -> Video Player");
-                sb.AppendLine("Latest version of VLC is available here: http://www.videolan.org/vlc/");
+                sb.AppendLine("Latest version of VLC is available here: http://www.videolan.org/vlc/  (get the " + IntPtr.Size * 8 + "-bit version!)");
                 sb.AppendLine();
             }
-
-            if (!string.IsNullOrEmpty(videoInfo?.VideoCodec))
+            else if (currentVideoPlayer == "MPV" && Configuration.IsRunningOnWindows)
             {
-                sb.AppendLine($"The file {Path.GetFileName(fileName)} is encoded with {videoInfo.VideoCodec.Replace('\0', ' ')}!");
-                sb.AppendLine("");
+                sb.AppendLine("You can re-download mpv or change video player via Options -> Settings -> Video Player");
+                sb.AppendLine();
             }
-
-            sb.AppendLine("");
-
-            sb.AppendLine("You can find a few useful tools below:");
-            sb.AppendLine(" - http://mediaarea.net/MediaInfo");
-            sb.AppendLine(" - http://www.free-codecs.com/download/Codec_Tweak_Tool.htm");
-
-            sb.AppendLine("");
-            sb.Append("Note that Subtitle Edit is a " + (IntPtr.Size * 8) + "-bit program, and hence requires " + (IntPtr.Size * 8) + "-bit codecs!");
-
             richTextBoxMessage.Text = sb.ToString();
+
+            if (!Configuration.IsRunningOnWindows || currentVideoPlayer == "MPV")
+            {
+                buttonMpvSettings.Visible = false;
+                labelMpvInfo.Visible = false;
+            }
+            else if (currentVideoPlayer != "MPV")
+            {
+                labelMpvInfo.Text = $"You could also switch video player from \"{currentVideoPlayer}\" to \"mpv\".";
+                if (isLibMpvInstalled)
+                {
+                    buttonMpvSettings.Text = "Use \"mpv\" as video player";
+                }
+            }
 
             if (exception != null)
             {
-                textBoxError.Text = "Message: " + exception.Message + Environment.NewLine +
-                                    "Source: " + exception.Source + Environment.NewLine +
-                                    Environment.NewLine +
+                var source = string.Empty;
+                if (!string.IsNullOrEmpty(exception.Source))
+                {
+                    source = "Source: " + exception.Source.Trim() + Environment.NewLine + Environment.NewLine;
+                }
+
+                textBoxError.Text = "Message: " + exception.Message.Trim() + Environment.NewLine +
+                                    source +
                                     "Stack Trace: " + Environment.NewLine +
-                                    exception.StackTrace;
+                                    exception.StackTrace.Trim();
             }
             Text += fileName;
         }
@@ -79,5 +93,23 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.OpenURL(e.LinkText);
         }
 
+        private void buttonMpvSettings_Click(object sender, EventArgs e)
+        {
+            if (LibMpvDynamic.IsInstalled)
+            {
+                Configuration.Settings.General.VideoPlayer = "MPV";
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
+            using (var form = new SettingsMpv(true))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.General.VideoPlayer = "MPV";
+                    DialogResult = DialogResult.OK;
+                }
+            }
+        }
     }
 }
