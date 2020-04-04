@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic
             throw new NotSupportedException("You need DirectX, or mpv media player, or VLC media player installed as well as Subtitle Edit dll files in order to use the video player!");
         }
 
-        public static void InitializeVideoPlayerAndContainer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public static bool InitializeVideoPlayerAndContainer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             try
             {
@@ -256,19 +256,21 @@ namespace Nikse.SubtitleEdit.Logic
                     videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
                 }
 
+                return true;
             }
             catch (Exception exception)
             {
                 videoPlayerContainer.VideoPlayer = null;
                 var videoError = new VideoError();
-                videoError.Initialize(fileName, videoInfo, exception);
+                videoError.Initialize(fileName, exception);
                 videoError.ShowDialog();
+                return false;
             }
         }
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            // Do not autobreak lines more than 1 line.
+            // Do not auto-break lines more than 1 line.
             if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)
             {
                 return;
@@ -1115,10 +1117,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             OpenItem(folder, "folder");
         }
+
         public static void OpenURL(string url)
         {
             OpenItem(url, "url");
         }
+
         public static void OpenFile(string file)
         {
             OpenItem(file, "file");
@@ -1146,6 +1150,5 @@ namespace Nikse.SubtitleEdit.Logic
                 MessageBox.Show($"Cannot open {type}: {item}{Environment.NewLine}{Environment.NewLine}{exception.Source}: {exception.Message}", "Error opening URL", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
     }
 }

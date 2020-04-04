@@ -12,11 +12,14 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class SettingsMpv : Form
     {
 
-        public SettingsMpv()
+        private readonly bool _justDownload;
+
+        public SettingsMpv(bool justDownload)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _justDownload = justDownload;
             labelPleaseWait.Text = string.Empty;
             if (Configuration.IsRunningOnLinux && Configuration.Settings.General.MpvVideoOutput == "direct3d")
             {
@@ -42,6 +45,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Controls.Remove(buttonDownload);
             }
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            if (justDownload)
+            {
+                comboBoxVideoOutput.Enabled = false;
+            }
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -85,6 +93,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownload.Enabled = !Configuration.IsRunningOnLinux;
 
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
+            if (_justDownload)
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
 
 
