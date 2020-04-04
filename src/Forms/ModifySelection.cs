@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
             ApplySelection();
         }
 
-        private void AddToListView(Paragraph p, int index)
+        private ListViewItem MakeListViewItem(Paragraph p, int index)
         {
             var item = new ListViewItem(string.Empty) { Tag = index, Checked = true };
             item.SubItems.Add(p.Number.ToString());
@@ -211,7 +211,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.SubItems.Add(string.IsNullOrEmpty(p.Style) ? p.Extra : p.Style);
             }
-            listViewFixes.Items.Add(item);
+
+            return item;
         }
 
         private void Preview()
@@ -222,6 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Regex regEx = null;
+            var listViewItems = new List<ListViewItem>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             string text = textBoxText.Text;
@@ -258,35 +260,35 @@ namespace Nikse.SubtitleEdit.Forms
                 if ((radioButtonSubtractFromSelection.Checked || radioButtonIntersect.Checked) && _subtitleListView.Items[i].Selected ||
                     !radioButtonSubtractFromSelection.Checked && !radioButtonIntersect.Checked)
                 {
-                    Paragraph p = _subtitle.Paragraphs[i];
+                    var p = _subtitle.Paragraphs[i];
                     if (text.Length > 0)
                     {
                         if (comboBoxRule.SelectedIndex == FunctionContains) // Contains
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                             {
-                                AddToListView(p, i);
+                                listViewItems.Add(MakeListViewItem(p, i));
                             }
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionStartsWith) // Starts with
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.StartsWith(text, StringComparison.OrdinalIgnoreCase))
                             {
-                                AddToListView(p, i);
+                                listViewItems.Add(MakeListViewItem(p, i));
                             }
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionEndsWith) // Ends with
                         {
                             if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.OrdinalIgnoreCase))
                             {
-                                AddToListView(p, i);
+                                listViewItems.Add(MakeListViewItem(p, i));
                             }
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionNotContains) // Not contains
                         {
                             if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                             {
-                                AddToListView(p, i);
+                                listViewItems.Add(MakeListViewItem(p, i));
                             }
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx
@@ -306,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (regEx.IsMatch(p.Text))
                             {
-                                AddToListView(p, i);
+                                listViewItems.Add(MakeListViewItem(p, i));
                             }
                         }
                     }
@@ -314,54 +316,55 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (i % 2 == 0)
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionEqual) // select equal lines
                     {
                         if (i % 2 == 1)
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionDurationLessThan) // duration less than
                     {
                         if (p.Duration.TotalMilliseconds < (double)numericUpDownDuration.Value)
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan) // duration greater than
                     {
                         if (p.Duration.TotalMilliseconds > (double)numericUpDownDuration.Value)
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionAlUppercase) // all uppercase
                     {
                         if (p.Text == p.Text.ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionStyle) // select styles
                     {
                         if (styles.Contains(string.IsNullOrEmpty(p.Style) ? p.Extra : p.Style))
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionActor) // select actors
                     {
                         if (actors.Contains(p.Actor))
                         {
-                            AddToListView(p, i);
+                            listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
                 }
             }
 
+            listViewFixes.Items.AddRange(listViewItems.ToArray());
             listViewFixes.EndUpdate();
             groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
         }
