@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.DetectEncoding;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.DetectEncoding;
 
 namespace Nikse.SubtitleEdit.Core
 {
     public static class LanguageAutoDetect
     {
-
+     
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -613,12 +613,17 @@ namespace Nikse.SubtitleEdit.Core
         {
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
-            string languageId = AutoDetectGoogleLanguage(s.GetAllTexts(), s.Paragraphs.Count / 14);
+            var allText = s.GetAllTexts(500000);
+            string languageId = AutoDetectGoogleLanguage(allText, s.Paragraphs.Count / 14);
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = GetEncodingViaLetter(allText);
+            }
+
             if (string.IsNullOrEmpty(languageId))
             {
                 languageId = null;
             }
-
             return languageId;
         }
 
@@ -1312,5 +1317,80 @@ namespace Nikse.SubtitleEdit.Core
             }
             return false;
         }
+
+        public static string GetEncodingViaLetter(string text)
+        {
+            var dictionary = new Dictionary<string, int>();
+
+            // Arabic
+            int count = 0;
+            foreach (var letter in "غظضذخثتشرقصفعسنملكيطحزوهدجبا")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("ar", count);
+
+            // Korean
+            count = 0;
+            foreach (var letter in "가나다라마바사아자차카타파하아야어여오요우유으이")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("ko", count);
+
+            // Japanese
+            count = 0;
+            foreach (var letter in "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("ja", count);
+
+            // Thai
+            count = 0;
+            foreach (var letter in "กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("th", count);
+
+            // Sinhalese
+            count = 0;
+            foreach (var letter in "අආඇඈඉඊඋඌඍඎඏඐඑඒඓඔඕඖකඛගඝඞඟචඡජඣඤඥඦටඨඩඪණඬතථදධනඳපඵබභමඹයරලවශෂසහළෆ්ාැෑිීුූෘෙේෛොෝෞෟ෦෧෨෩෪෫෬෭෮෯")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("sl", count);
+
+            // Urdu
+            count = 0;
+            foreach (var letter in "ﺍﺎﺁﺂﺏﺑﺒﺐﭖﭘﭙﭗﺕﺗﺘﺖﭦﭨﭩﭧﺙﺛﺜﺚﺝﺟﺠﺞﭺﭼﭽﭻﺡﺣﺤﺢﺥﺧﺨﺦﺩﺪﺫﺬﺭﺮﮌﮍﺯﺰﮊﮋﺱﺳﺴﺲﺵﺷﺸﺶﺹﺻﺼﺺﺽﺿﻀﺾﻁﻃﻄﻂﻅﻇﻈﻆﻉﻋﻌﻊﻍﻏﻐﻎﻑﻓﻔﻒﻕﻗﻘﻖﻙﻛﻜﻚﻻﻼﻝﻟﻠﻞﻡﻣﻤﻢﻥﻧﻨﻦﻭﻮﮮﮯﮦﮨﮩﮧﯼﯾﯿﯽﮪﮬﮭﮫﴽﴼﺀﺋﺌﹱﹷﹹ")
+            {
+                if (text.Contains(letter))
+                {
+                    count++;
+                }
+            }
+            dictionary.Add("ur", count);
+
+            var maxHitsLanguage = dictionary.FirstOrDefault(x => x.Value == dictionary.Values.Max());
+            return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
+        }
+
     }
 }

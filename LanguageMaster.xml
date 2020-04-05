@@ -1392,8 +1392,8 @@ Continue?</SubtitleAppendPrompt>
     <LineXOfY>line {0} of {1}</LineXOfY>
     <XLinesSavedAsY>{0} lines saved as {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lines deleted</XLinesDeleted>
-    <BeforeDeletingXLines>Before deleting {0} lines</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Delete {0} lines?</DeleteXLinesPrompt>
+    <BeforeDeletingXLines>Before deleting {0:#,##0} lines</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Delete {0:#,##0} lines?</DeleteXLinesPrompt>
     <OneLineDeleted>Line deleted</OneLineDeleted>
     <BeforeDeletingOneLine>Before deleting one line</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Delete one line?</DeleteOneLinePrompt>
@@ -1600,7 +1600,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <AddToCurrentSelection>Add to current selection</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Subtract from current selection</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Intersect with current selection</IntersectWithCurrentSelection>
-    <MatchingLinesX>Matching lines: {0}</MatchingLinesX>
+    <MatchingLinesX>Matching lines: {0:#,##0}</MatchingLinesX>
     <Contains>Contains</Contains>
     <StartsWith>Starts with</StartsWith>
     <EndsWith>Ends with</EndsWith>

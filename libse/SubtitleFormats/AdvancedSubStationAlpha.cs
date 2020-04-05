@@ -216,7 +216,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
             }
 
-            if (!string.IsNullOrEmpty(subtitle.Footer) && (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine)))
+            if (!string.IsNullOrEmpty(subtitle.Footer) &&
+                (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine) || subtitle.Footer.Contains("[Aegisub Extradata]" + Environment.NewLine)))
             {
                 sb.AppendLine();
                 sb.AppendLine(subtitle.Footer);
@@ -227,7 +228,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
         public static string GetHeaderAndStylesFromSubStationAlpha(string header)
         {
             var scriptInfo = string.Empty;
-            if (header != null && 
+            if (header != null &&
                 header.Contains("[Script Info]") &&
                 header.Contains("ScriptType: v4.00") &&
                 !header.Contains("ScriptType: v4.00+"))
@@ -1249,6 +1250,14 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                     footer.AppendLine();
                     footer.AppendLine("[Graphics]");
                 }
+                else if (line.Trim().Equals("[Aegisub Extradata]", StringComparison.OrdinalIgnoreCase))
+                {
+                    eventsStarted = false;
+                    fontsStarted = false;
+                    graphicsStarted = true;
+                    footer.AppendLine();
+                    footer.AppendLine("[Aegisub Extradata]");
+                }
                 else if (fontsStarted)
                 {
                     footer.AppendLine(line);
@@ -1489,11 +1498,42 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
         {
             if (newFormat != null && newFormat.Name == SubStationAlpha.NameOfFormat)
             {
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
                     string s = p.Text;
+
                     if (s.Contains('{') && s.Contains('}'))
                     {
+                        var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
+                        var p0Index = s.IndexOf("{\\p0}", StringComparison.Ordinal);
+                        if (p1Index > 0 && (p0Index > p1Index || p0Index == -1))
+                        {
+                            var startTagIndex = s.Substring(0, p1Index).LastIndexOf('{');
+                            if (startTagIndex >= 0)
+                            {
+                                if (p0Index > p1Index)
+                                {
+                                    s = s.Remove(startTagIndex, p0Index - startTagIndex + "{\\p0}".Length);
+                                }
+                                else
+                                {
+                                    s = s.Remove(startTagIndex);
+                                }
+                            }
+                        }
+
+                        var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
+                        if (karaokeStart >= 0)
+                        {
+                            int l = s.IndexOf('}', karaokeStart + 1);
+                            if (l < karaokeStart)
+                            {
+                                break;
+                            }
+
+                            s = s.Remove(karaokeStart, l - karaokeStart + 1);
+                        }
+
                         s = s.Replace(@"\u0", string.Empty);
                         s = s.Replace(@"\u1", string.Empty);
                         s = s.Replace(@"\s0", string.Empty);
@@ -1528,8 +1568,44 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
             }
             else
             {
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
+                    var noTags = Utilities.RemoveSsaTags(p.Text).Trim();
+                    if (noTags.Length == 0)
+                    {
+                        p.Text = string.Empty;
+                        continue;
+                    }
+
+                    p.Text = p.Text.Replace("\\n", Environment.NewLine); // Soft line break
+                    p.Text = p.Text.Replace("\\N", Environment.NewLine); // Hard line break
+                    p.Text = p.Text.Replace("\\h", " "); // Hard space
+
+                    if (noTags.StartsWith("m ", StringComparison.Ordinal))
+                    {
+                        var test = noTags.Remove(0, 2)
+                            .RemoveChar('0')
+                            .RemoveChar('1')
+                            .RemoveChar('2')
+                            .RemoveChar('3')
+                            .RemoveChar('4')
+                            .RemoveChar('5')
+                            .RemoveChar('6')
+                            .RemoveChar('7')
+                            .RemoveChar('8')
+                            .RemoveChar('9')
+                            .RemoveChar('-')
+                            .RemoveChar('l')
+                            .RemoveChar('m')
+                            .RemoveChar(' ')
+                            .RemoveChar('.');
+                        if (test.Length == 0)
+                        {
+                            p.Text = string.Empty;
+                            continue;
+                        }
+                    }
+
                     int indexOfBegin = p.Text.IndexOf('{');
                     string pre = string.Empty;
                     while (indexOfBegin >= 0 && p.Text.IndexOf('}') > indexOfBegin)
@@ -1560,7 +1636,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                             pre = s.Substring(0, 5) + "}";
                         }
                         int indexOfEnd = p.Text.IndexOf('}');
-                        p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                        p.Text = p.Text.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
 
                         indexOfBegin = p.Text.IndexOf('{');
                     }

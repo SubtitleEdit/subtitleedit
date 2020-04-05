@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
 
@@ -11,7 +12,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly FileStream _stream;
+        private readonly MemoryMappedFile _memoryMappedFile;
+        private readonly Stream _stream;
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
         private string _videoCodecId;
@@ -21,13 +23,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private List<MatroskaTrackInfo> _tracks;
 
         private readonly Element _segmentElement;
-        private long _timecodeScale = 1000000;
+        private long _timeCodeScale = 1000000;
         private double _duration;
+
+        public bool IsValid { get; }
+
+        public string Path { get; }
 
         public MatroskaFile(string path)
         {
             Path = path;
-            _stream = new FastFileStream(path);
+            try
+            {
+                _memoryMappedFile = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
+                _stream = _memoryMappedFile.CreateViewStream();
+            }
+            catch
+            {
+                _stream = new FastFileStream(path); // fallback if file is in use
+            }
 
             // read header
             var headerElement = ReadElement();
@@ -42,11 +56,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
             }
         }
-
-        public bool IsValid { get; }
-
-        public string Path { get; }
-
         public List<MatroskaTrackInfo> GetTracks(bool subtitleOnly = false)
         {
             ReadSegmentInfoAndTracks();
@@ -106,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         done = true;
                         break;
                     case ElementId.Timecode:
-                        // Absolute timestamp of the cluster (based on TimecodeScale)
+                        // Absolute timestamp of the cluster (based on TimeCodeScale)
                         clusterTimeCode = (long)ReadUInt((int)element.DataSize);
                         break;
                     case ElementId.BlockGroup:
@@ -125,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _stream.Seek(element.EndPosition, SeekOrigin.Begin);
             }
 
-            return (long)Math.Round(GetTimescaledToMilliseconds(clusterTimeCode + trackStartTime));
+            return (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + trackStartTime));
         }
 
         private void ReadVideoElement(Element videoElement)
@@ -300,12 +309,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     case ElementId.TimecodeScale:
                         // Timestamp scale in nanoseconds (1.000.000 means all timestamps in the segment are expressed in milliseconds)
-                        _timecodeScale = (int)ReadUInt((int)element.DataSize);
+                        _timeCodeScale = (int)ReadUInt((int)element.DataSize);
                         break;
                     case ElementId.Duration:
-                        // Duration of the segment (based on TimecodeScale)
+                        // Duration of the segment (based on TimeCodeScale)
                         _duration = element.DataSize == 4 ? ReadFloat32() : ReadFloat64();
-                        _duration = GetTimescaledToMilliseconds(_duration);
+                        _duration = GetTimeScaledToMilliseconds(_duration);
                         break;
                     default:
                         _stream.Seek(element.DataSize, SeekOrigin.Current);
@@ -314,9 +323,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private double GetTimescaledToMilliseconds(double time)
+        private double GetTimeScaledToMilliseconds(double time)
         {
-            return time * _timecodeScale / 1000000.0;
+            return time * _timeCodeScale / 1000000.0;
         }
 
         private void ReadTracksElement(Element tracksElement)
@@ -406,7 +415,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         var duration = (long)ReadUInt((int)element.DataSize);
                         if (subtitle != null)
                         {
-                            subtitle.Duration = (long)Math.Round(GetTimescaledToMilliseconds(duration));
+                            subtitle.Duration = (long)Math.Round(GetTimeScaledToMilliseconds(duration));
                         }
                         break;
                     default:
@@ -458,7 +467,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var data = new byte[dataLength];
             _stream.Read(data, 0, dataLength);
 
-            return new MatroskaSubtitle(data, (long)Math.Round(GetTimescaledToMilliseconds(clusterTimeCode + timeCode)));
+            return new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode)));
         }
 
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
@@ -471,8 +480,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public void Dispose()
         {
-            _stream?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _stream?.Dispose();
+                _memoryMappedFile?.Dispose();
+            }
+        }
+
 
         private void ReadSegmentInfoAndTracks()
         {

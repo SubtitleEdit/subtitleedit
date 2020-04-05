@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -26,6 +26,30 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
+
+                // Arabic
+                if (callbacks.Language == "ar") // special rules for Arabic
+                {
+                    if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
+                        !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
+                        !Url.IsMatch(p.Text)) // Skip urls.
+                    {
+                        string newText = FixSpaceAfter(p.Text, '؟');
+                        newText = FixSpaceAfter(newText, '\u060C'); // Arabic comma
+                        newText = FixSpaceAfter(newText, '.');
+                        newText = FixSpaceAfter(newText, '!');
+                        if (newText != p.Text && callbacks.AllowFix(p, fixAction))
+                        {
+                            missingSpaces++;
+                            string oldText = p.Text;
+                            p.Text = newText;
+                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                    }
+
+                    continue;
+                }
+
 
                 // missing space after comma ","
                 var match = FixMissingSpacesReComma.Match(p.Text);
@@ -338,6 +362,42 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
+        }
+
+        private static string FixSpaceAfter(string input, char fixSpaceAfterChar)
+        {
+            var text = input;
+            var idx = text.IndexOf(fixSpaceAfterChar);
+            while (idx >= 0)
+            {
+                if (idx >= text.Length - 1)
+                {
+                    return text;
+                }
+
+                bool skip = false;
+                if (fixSpaceAfterChar == '.')
+                {
+                    string word = GetWordFromIndex(text, idx);
+                    if (word.Contains('@')) // skip emails
+                    {
+                        skip = true;
+                    }
+                    if (!skip && "0123456789".Contains(text[idx + 1].ToString()))
+                    {
+                        skip = true;
+                    }
+                }
+
+                if (!skip && !" \r\n\":;()[]<>.؟!\u060C".Contains(text[idx + 1].ToString()))
+                {
+                    text = text.Insert(idx + 1, " ");
+                }
+
+                idx = text.IndexOf(fixSpaceAfterChar, idx + 1);
+            }
+
+            return text;
         }
 
         private static string FixMissingSpaceBeforeAfterMusicQuotes(string input, char musicSymbol)
