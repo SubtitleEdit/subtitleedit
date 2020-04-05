@@ -133,25 +133,38 @@ namespace Nikse.SubtitleEdit.Core.Translate
         }
 
 
-        private int NumberOfLines { get; set; }
-        private bool SplitAtLineEnding { get; set; }
+        private int BreakNumberOfLines { get; set; }
+        private bool BreakSplitAtLineEnding { get; set; }
+        private bool BreakIsDialog { get; set; }
 
         public string UnBreak(string text, string source)
         {
             var lines = source.SplitToLines();
-            NumberOfLines = lines.Count;
-            SplitAtLineEnding = lines.Count == 2 && lines[0].HasSentenceEnding();
+            BreakNumberOfLines = lines.Count;
+            BreakSplitAtLineEnding = lines.Count == 2 && lines[0].HasSentenceEnding();
+            BreakIsDialog = lines.Count == 2 &&
+                       (lines[0].StartsWith('-') || lines[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
+                       lines[1].StartsWith('-') &&
+                       Utilities.CountTagInText(source, '-') == 2;
             return Utilities.UnbreakLine(text);
         }
 
         public string ReBreak(string text, string language)
         {
-            if (NumberOfLines == 1)
+            if (BreakNumberOfLines == 1)
             {
                 return text;
             }
 
-            return Utilities.AutoBreakLine(text, language, SplitAtLineEnding);
+            if (BreakIsDialog && Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, '-') == 2)
+            {
+                return text
+                    .Insert(text.LastIndexOf('-') - 1, Environment.NewLine)
+                    .Replace(" " + Environment.NewLine, Environment.NewLine)
+                    .Replace(Environment.NewLine + " ", Environment.NewLine);
+            }
+
+            return Utilities.AutoBreakLine(text, language, BreakSplitAtLineEnding);
         }
     }
 }
