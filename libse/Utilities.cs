@@ -744,6 +744,12 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
+            if (k == -1 || karaokeStart >= 0 && karaokeStart < k)
+            {
+                k = karaokeStart;
+            }
+
             while (k >= 0)
             {
                 int l = s.IndexOf('}', k + 1);
@@ -755,6 +761,10 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Remove(k, l - k + 1);
                 k = s.IndexOf('{', k);
             }
+
+            s = s.Replace("\\n", Environment.NewLine); // Soft line break
+            s = s.Replace("\\N", Environment.NewLine); // Hard line break
+            s = s.Replace("\\h", " "); // Hard space
 
             if (s.StartsWith("m ", StringComparison.Ordinal))
             {
