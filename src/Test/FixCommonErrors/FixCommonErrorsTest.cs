@@ -965,6 +965,28 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesArabic()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "aaa\u060Caaa؟aaa.aaa");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "ar" });
+                Assert.AreEqual("aaa\u060C aaa؟ aaa. aaa", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesArabic2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "aaa\u060C\"aaa؟\"aaa.\"aaa");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "ar" });
+                Assert.AreEqual("aaa\u060C\"aaa؟\"aaa.\"aaa", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
