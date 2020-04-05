@@ -711,7 +711,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _subtitle.Renumber();
-
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
                     foreach (var selectIndex in selectIndices)
@@ -16168,10 +16167,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                                 }
                             }
-
-                            _subtitle.Renumber();
                         }
 
+                        _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.BeginUpdate();
                         foreach (var selectIndex in selectIndices)
@@ -16198,6 +16196,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+                        _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                     }
