@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core
 {
     public static class LanguageAutoDetect
     {
-     
+
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsGerman =
         {
-            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt", "Verdammt", "bist", "Darum", "sitzt", "Setz", "Das ist", "Du bist", "nicht", "Scheiße", "Nein", "für", "gesagt"
+            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt", "Verdammt", "bist", "Darum", "sitzt", "Setz", "Das ist", "Du bist", "nicht", "Scheiße", "Nein", "für", "gesagt", "zwei", "richtig"
         };
 
         private static readonly string[] AutoDetectWordsDutch =
