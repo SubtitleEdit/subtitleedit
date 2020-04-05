@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
@@ -34,18 +34,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             string result;
             var input = new StringBuilder();
-            var formattings = new Formatting[paragraphs.Count];
+            var formatList = new Formatting[paragraphs.Count];
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var p = paragraphs[index];
                 var f = new Formatting();
-                formattings[index] = f;
+                formatList[index] = f;
                 if (input.Length > 0)
                 {
                     input.Append(" " + SplitChar + " ");
                 }
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
-                text = f.Unbreak(text, p.Text);
+                text = f.UnBreak(text, p.Text);
                 input.Append(text);
             }
 
@@ -114,10 +114,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                if (formattings.Length > index)
+                if (formatList.Length > index)
                 {
-                    s = formattings[index].ReAddFormatting(s);
-                    s = formattings[index].Rebreak(s);
+                    s = formatList[index].ReAddFormatting(s);
+                    s = formatList[index].ReBreak(s, targetLanguage);
                 }
 
                 resultList.Add(s);

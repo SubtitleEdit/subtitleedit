@@ -134,22 +134,24 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
 
         private int NumberOfLines { get; set; }
+        private bool SplitAtLineEnding { get; set; }
 
-        public string Unbreak(string text, string source)
+        public string UnBreak(string text, string source)
         {
-            NumberOfLines = source.SplitToLines().Count;
+            var lines = source.SplitToLines();
+            NumberOfLines = lines.Count;
+            SplitAtLineEnding = lines.Count == 2 && lines[0].HasSentenceEnding();
             return Utilities.UnbreakLine(text);
         }
 
-        public string Rebreak(string text)
+        public string ReBreak(string text, string language)
         {
             if (NumberOfLines == 1)
             {
                 return text;
             }
 
-            return Utilities.AutoBreakLine(text);
+            return Utilities.AutoBreakLine(text, language, SplitAtLineEnding);
         }
-
     }
 }
