@@ -56,6 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonFixesApply = new System.Windows.Forms.Button();
             this.buttonRefreshFixes = new System.Windows.Forms.Button();
             this.buttonFixesSelectAll = new System.Windows.Forms.Button();
@@ -82,9 +85,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
-            this.contextMenuStripFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemInverseSelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripRules = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAllRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseRules = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -93,11 +96,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerStep2.Panel1.SuspendLayout();
             this.splitContainerStep2.Panel2.SuspendLayout();
             this.splitContainerStep2.SuspendLayout();
+            this.contextMenuStripFixes.SuspendLayout();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxEditPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
-            this.contextMenuStripFixes.SuspendLayout();
+            this.contextMenuStripRules.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -233,6 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.listView1.ContextMenuStrip = this.contextMenuStripRules;
             this.listView1.FullRowSelect = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.HideSelection = false;
@@ -366,6 +371,28 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 244;
+            // 
+            // contextMenuStripFixes
+            // 
+            this.contextMenuStripFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAll,
+            this.toolStripMenuItemInverseSelection});
+            this.contextMenuStripFixes.Name = "contextMenuStrip1";
+            this.contextMenuStripFixes.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAll
+            // 
+            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
+            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAll.Text = "Select all";
+            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            // 
+            // toolStripMenuItemInverseSelection
+            // 
+            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
+            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
+            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
             // 
             // buttonFixesApply
             // 
@@ -689,27 +716,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
             // 
-            // contextMenuStripFixes
+            // contextMenuStripRules
             // 
-            this.contextMenuStripFixes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAll,
-            this.toolStripMenuItemInverseSelection});
-            this.contextMenuStripFixes.Name = "contextMenuStrip1";
-            this.contextMenuStripFixes.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAllRules,
+            this.toolStripMenuItemInverseRules});
+            this.contextMenuStripRules.Name = "contextMenuStrip1";
+            this.contextMenuStripRules.Size = new System.Drawing.Size(162, 48);
             // 
-            // toolStripMenuItemSelectAll
+            // toolStripMenuItemSelectAllRules
             // 
-            this.toolStripMenuItemSelectAll.Name = "toolStripMenuItemSelectAll";
-            this.toolStripMenuItemSelectAll.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemSelectAll.Text = "Select all";
-            this.toolStripMenuItemSelectAll.Click += new System.EventHandler(this.toolStripMenuItemSelectAll_Click);
+            this.toolStripMenuItemSelectAllRules.Name = "toolStripMenuItemSelectAllRules";
+            this.toolStripMenuItemSelectAllRules.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAllRules.Text = "Select all";
+            this.toolStripMenuItemSelectAllRules.Click += new System.EventHandler(this.ButtonSelectAllClick);
             // 
-            // toolStripMenuItemInverseSelection
+            // toolStripMenuItemInverseRules
             // 
-            this.toolStripMenuItemInverseSelection.Name = "toolStripMenuItemInverseSelection";
-            this.toolStripMenuItemInverseSelection.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemInverseSelection.Text = "Inverse selection";
-            this.toolStripMenuItemInverseSelection.Click += new System.EventHandler(this.toolStripMenuItemInverseSelection_Click);
+            this.toolStripMenuItemInverseRules.Name = "toolStripMenuItemInverseRules";
+            this.toolStripMenuItemInverseRules.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseRules.Text = "Inverse selection";
+            this.toolStripMenuItemInverseRules.Click += new System.EventHandler(this.ButtonInverseSelectionClick);
             // 
             // FixCommonErrors
             // 
@@ -722,8 +749,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonNextFinish);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
+            this.Controls.Add(this.groupBox2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -746,13 +773,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.splitContainerStep2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerStep2)).EndInit();
             this.splitContainerStep2.ResumeLayout(false);
+            this.contextMenuStripFixes.ResumeLayout(false);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxEditPanel.ResumeLayout(false);
             this.groupBoxEditPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.tabPageLog.PerformLayout();
-            this.contextMenuStripFixes.ResumeLayout(false);
+            this.contextMenuStripRules.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -813,5 +841,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFixes;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripRules;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelectAllRules;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseRules;
     }
 }
