@@ -1522,6 +1522,18 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                             }
                         }
 
+                        var karaokeStart = s.IndexOf("{Kara Effector", StringComparison.Ordinal);
+                        if (karaokeStart >= 0)
+                        {
+                            int l = s.IndexOf('}', karaokeStart + 1);
+                            if (l < karaokeStart)
+                            {
+                                break;
+                            }
+
+                            s = s.Remove(karaokeStart, l - karaokeStart + 1);
+                        }
+
                         s = s.Replace(@"\u0", string.Empty);
                         s = s.Replace(@"\u1", string.Empty);
                         s = s.Replace(@"\s0", string.Empty);
@@ -1564,6 +1576,10 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
                         p.Text = string.Empty;
                         continue;
                     }
+
+                    p.Text = p.Text.Replace("\\n", Environment.NewLine); // Soft line break
+                    p.Text = p.Text.Replace("\\N", Environment.NewLine); // Hard line break
+                    p.Text = p.Text.Replace("\\h", " "); // Hard space
 
                     if (noTags.StartsWith("m ", StringComparison.Ordinal))
                     {
