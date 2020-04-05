@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsGerman =
         {
-            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt"
+            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt", "Verdammt", "bist", "Darum", "sitzt", "Setz", "Das ist", "Du bist", "nicht", "Scheiße", "Nein", "für", "gesagt"
         };
 
         private static readonly string[] AutoDetectWordsDutch =
