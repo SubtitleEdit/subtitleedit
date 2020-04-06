@@ -9874,7 +9874,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
-                
+
                 if (Configuration.Settings.General.SplitBehavior == 0)
                 {
                     firstSelectedIndex++;
@@ -19900,7 +19900,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
 
-            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
+            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL").OrderBy(p => p))
             {
                 try
                 {
