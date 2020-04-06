@@ -1966,13 +1966,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripFilesOpening(object sender, CancelEventArgs e)
         {
-            if (listViewInputFiles.Items.Count == 0 || _converting)
+            if (_converting)
             {
                 e.Cancel = true;
                 return;
             }
             removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
             openContainingFolderToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count == 1;
+            removeAllToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+            toolStripSeparator1.Visible = listViewInputFiles.SelectedItems.Count > 0;
         }
 
         private void RemoveAllToolStripMenuItemClick(object sender, EventArgs e)
