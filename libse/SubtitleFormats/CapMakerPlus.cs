@@ -241,10 +241,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
-                if (subtitle.Paragraphs[i].StartTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
-                {
-                }
-                else if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
                 {
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
                 }
