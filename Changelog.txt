@@ -12,7 +12,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
    * Update Korean translation - thx domddol
-   * Update Tesseract version 4.1.1 to "5 Alpha 2020-03-38" 
+   * Update Tesseract version 4.1.1 to "5 Alpha 2020-03-28" 
    * Make shortcuts F4-F12 customizable
    * Minor UI improvements for "Batch convert" UI
    * Improve "Fix unneeded periods" - thx Aleksander
