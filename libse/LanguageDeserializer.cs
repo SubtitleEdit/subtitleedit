@@ -616,6 +616,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/TryToUseSourceEncoding":
                     language.BatchConvert.TryToUseSourceEncoding = reader.Value;
                     break;
+                case "BatchConvert/ConvertMkvThreeLetterLanguageCodes":
+                    language.BatchConvert.ConvertMkvThreeLetterLanguageCodes = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;

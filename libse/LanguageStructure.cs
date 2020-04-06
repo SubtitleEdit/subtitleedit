@@ -235,6 +235,7 @@
             public string TransportStreamSettingsButton { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string TryToUseSourceEncoding { get; set; }
+            public string ConvertMkvThreeLetterLanguageCodes { get; set; }
         }
 
         public class Beamer

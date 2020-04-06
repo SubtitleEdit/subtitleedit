@@ -19206,16 +19206,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
         {
-            string folderName = Path.GetDirectoryName(_fileName);
-            if (Utilities.IsRunningOnMono())
-            {
-                UiUtil.OpenFolder(folderName);
-            }
-            else
-            {
-                string argument = @"/select, " + _fileName;
-                System.Diagnostics.Process.Start("explorer.exe", argument);
-            }
+            UiUtil.OpenFolderFromFileName(_fileName);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

@@ -225,6 +225,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
     <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
+    <ConvertMkvThreeLetterLanguageCodes>Convert .mkv three letter language codes to two letters</ConvertMkvThreeLetterLanguageCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
