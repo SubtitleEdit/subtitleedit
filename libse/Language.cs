@@ -200,7 +200,8 @@ namespace Nikse.SubtitleEdit.Core
                 Width = "Width",
                 Height = "Height",
                 Collapse = "Collapse",
-                ShortcutX ="Shortcut: {0}"
+                ShortcutX = "Shortcut: {0}",
+                ExampleX = "Example: {0}",
             };
 
             About = new LanguageStructure.About
@@ -365,7 +366,10 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamSettingsButton = "TS settings...",
                 RemoveLineBreaks = "Remove line-breaks",
                 TryToUseSourceEncoding = "Try to use source encoding",
-                ConvertMkvThreeLetterLanguageCodes = "Convert .mkv three letter language codes to two letters",
+                MkvLanguageInOutputFileNameX = "Matroska (.mkv) \"Language\" in output file name: {0}",
+                MkvLanguageStyleTwoLetter = "Two letter language code",
+                MkvLanguageStyleThreeLetter = "Three letter language code",
+                MkvLanguageStyleEmpty = "No language code",
             };
 
             Beamer = new LanguageStructure.Beamer

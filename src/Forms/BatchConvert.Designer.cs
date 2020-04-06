@@ -106,7 +106,7 @@
             this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertMkvSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -967,44 +967,43 @@
             this.removeAllToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator1,
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem});
+            this.convertMkvSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(364, 120);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 120);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(363, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItemClick);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(363, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.removeAllToolStripMenuItem.Text = "Remove all";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.RemoveAllToolStripMenuItemClick);
             // 
             // openContainingFolderToolStripMenuItem
             // 
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
-            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(363, 22);
+            this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(360, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(396, 6);
             // 
-            // convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem
+            // convertMkvSettingsToolStripMenuItem
             // 
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.CheckOnClick = true;
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Name = "convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem";
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Size = new System.Drawing.Size(363, 22);
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Text = "Convert .mkv three letter language codes to two letters";
-            this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Click += new System.EventHandler(this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem_Click);
+            this.convertMkvSettingsToolStripMenuItem.Name = "convertMkvSettingsToolStripMenuItem";
+            this.convertMkvSettingsToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.convertMkvSettingsToolStripMenuItem.Text = "Mkv language in output file name: Three letter language code";
+            this.convertMkvSettingsToolStripMenuItem.Click += new System.EventHandler(this.convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
@@ -1157,6 +1156,6 @@
         private System.Windows.Forms.Label labelNumberOfFiles;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem convertMkvSettingsToolStripMenuItem;
     }
 }

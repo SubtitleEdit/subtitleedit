@@ -92,6 +92,12 @@
     <Compile Include="Forms\AlignmentPickerJapanese.Designer.cs">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BatchConvertMkvEnding.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchConvertMkvEnding.Designer.cs">
+      <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\BatchConvertTsSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1092,6 +1098,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPickerJapanese.resx">
       <DependentUpon>AlignmentPickerJapanese.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchConvertMkvEnding.resx">
+      <DependentUpon>BatchConvertMkvEnding.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertTsSettings.resx">
       <DependentUpon>BatchConvertTsSettings.cs</DependentUpon>

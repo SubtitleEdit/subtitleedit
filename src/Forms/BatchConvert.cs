@@ -275,8 +275,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseStyleFromSource.Checked = Configuration.Settings.Tools.BatchConvertUseStyleFromSource;
             _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
 
-            convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Checked = Configuration.Settings.Tools.BatchConvertMkvUseTwoLetterLanguageCode;
-
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
 
@@ -458,6 +456,23 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonSwapFrameRate.Width = 35;
                 buttonSwapFrameRate.Font = new Font(Font.FontFamily, Font.Size);
             }
+
+            SetMkvLanguageMenuItem();
+        }
+
+        private void SetMkvLanguageMenuItem()
+        {
+            var styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleThreeLetter;
+            if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2")
+            {
+                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleTwoLetter;
+            }
+            else if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "0")
+            {
+                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleEmpty;
+            }
+
+            convertMkvSettingsToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.BatchConvert.MkvLanguageInOutputFileNameX, styleName);
         }
 
         public class FixActionItem
@@ -700,18 +715,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetMkvLanguage(string languageCode)
         {
+            if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "0")
+            {
+                return string.Empty;
+            }
+
             if (string.IsNullOrEmpty(languageCode))
             {
-                return "undefined";
+                return "undefined.";
             }
 
-            if (convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Checked && 
+            if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2" &&
                 IsoCountryCodes.ThreeToTweLetterLookup.TryGetValue(languageCode.ToUpperInvariant(), out var twoLetterCode))
             {
-                return twoLetterCode.ToLowerInvariant();
+                return twoLetterCode.ToLowerInvariant() + ".";
             }
 
-            return languageCode;
+            return string.IsNullOrEmpty(languageCode) ? string.Empty : languageCode.TrimEnd('.')  + ".";
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
@@ -1011,10 +1031,10 @@ namespace Nikse.SubtitleEdit.Forms
                                                     }
                                                 }
 
-                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + (GetMkvLanguage(track.Language) + ".").Replace("undefined.", string.Empty) + "mkv";
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMkvLanguage(track.Language).Replace("undefined.", string.Empty) + "mkv";
                                                 if (mkvFileNames.Contains(fileName))
                                                 {
-                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + ".mkv";
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
                                                 }
                                                 mkvFileNames.Add(fileName);
 
@@ -1027,10 +1047,10 @@ namespace Nikse.SubtitleEdit.Forms
                                             {
                                                 bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska, Handle);
 
-                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + (GetMkvLanguage(track.Language) + ".").Replace("undefined.", string.Empty) + "mkv";
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMkvLanguage(track.Language).Replace("undefined.", string.Empty) + "mkv";
                                                 if (mkvFileNames.Contains(fileName))
                                                 {
-                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + ".mkv";
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
                                                 }
                                                 mkvFileNames.Add(fileName);
 
@@ -1074,10 +1094,10 @@ namespace Nikse.SubtitleEdit.Forms
                                             {
                                                 var mkvSub = matroska.GetSubtitle(track.TrackNumber, null);
                                                 Utilities.LoadMatroskaTextSubtitle(track, matroska, mkvSub, sub);
-                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + (GetMkvLanguage(track.Language) + ".").Replace("undefined.", string.Empty) + "mkv";
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + GetMkvLanguage(track.Language).Replace("undefined.", string.Empty) + "mkv";
                                                 if (mkvFileNames.Contains(fileName))
                                                 {
-                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + ".mkv";
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + GetMkvLanguage(track.Language) + "mkv";
                                                 }
                                                 mkvFileNames.Add(fileName);
                                                 break;
@@ -2082,7 +2102,6 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertApplyDurationLimits = IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits);
             Configuration.Settings.Tools.MergeShortLinesMaxGap = (int)numericUpDownMaxMillisecondsBetweenLines.Value;
             Configuration.Settings.Tools.MergeShortLinesOnlyContinuous = checkBoxOnlyContinuationLines.Checked;
-            Configuration.Settings.Tools.BatchConvertMkvUseTwoLetterLanguageCode = convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Checked;
 
             UpdateRtlSettings();
         }
@@ -2612,7 +2631,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.Tools.BatchConvertMkvUseTwoLetterLanguageCode = convertMkvThreeLetterLanguageCodesToTwoLettersToolStripMenuItem.Checked;
+            using (var form = new BatchConvertMkvEnding { LanguageCodeStyle = Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle })
+            {
+                var result = form.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle = form.LanguageCodeStyle;
+                    SetMkvLanguageMenuItem();
+                }
+            }
         }
     }
 }
