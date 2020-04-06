@@ -199,6 +199,7 @@ namespace Nikse.SubtitleEdit.Core
         public int BatchConvertTsScreenWidth { get; set; }
         public int BatchConvertTsScreenHeight { get; set; }
         public string BatchConvertTsFileNameAppend { get; set; }
+        public bool BatchConvertMkvUseTwoLetterLanguageCode { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -3467,6 +3468,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertTsFileNameAppend = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertMkvUseTwoLetterLanguageCode");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertMkvUseTwoLetterLanguageCode = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ModifySelectionRule");
@@ -6815,6 +6822,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsScreenWidth", settings.Tools.BatchConvertTsScreenWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
+                textWriter.WriteElementString("BatchConvertMkvUseTwoLetterLanguageCode", settings.Tools.BatchConvertMkvUseTwoLetterLanguageCode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString(CultureInfo.InvariantCulture));

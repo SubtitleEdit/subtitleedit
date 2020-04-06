@@ -364,7 +364,8 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamFileNameEnding = "File name ending",
                 TransportStreamSettingsButton = "TS settings...",
                 RemoveLineBreaks = "Remove line-breaks",
-                TryToUseSourceEncoding = "Try to use source encoding"
+                TryToUseSourceEncoding = "Try to use source encoding",
+                ConvertMkvThreeLetterLanguageCodes = "Convert .mkv three letter language codes to two letters",
             };
 
             Beamer = new LanguageStructure.Beamer
