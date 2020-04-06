@@ -1609,7 +1609,7 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         Title = "Auto-translate",
                         TranslatePoweredByGoogle = "Translate with Google...",
-                        TranslatePoweredByMicrosoft = "Translate with Bing (Microsoft)...",
+                        TranslatePoweredByMicrosoft = "Translate with Bing...",
                         TranslateFromSwedishToDanish = "Translate from Swedish to Danish (powered by nikse.dk)...",
                     },
 
