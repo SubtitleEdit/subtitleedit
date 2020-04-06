@@ -229,17 +229,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var deletes = new List<int>();
-            for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            for (int g = subtitle.Paragraphs.Count - 2; g >= 0; g--)
             {
-                if (subtitle.Paragraphs[i].StartTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                if (subtitle.Paragraphs[g].StartTime.TotalMilliseconds == subtitle.Paragraphs[g + 1].StartTime.TotalMilliseconds)
                 {
-                    subtitle.Paragraphs[i].Text += Environment.NewLine + subtitle.Paragraphs[i + 1].Text;
-                    subtitle.Paragraphs[i].EndTime = subtitle.Paragraphs[i + 1].EndTime;
-                    deletes.Add(i + 1);
+                    subtitle.Paragraphs[g].Text += Environment.NewLine + subtitle.Paragraphs[g + 1].Text;
+                    subtitle.Paragraphs[g].EndTime = subtitle.Paragraphs[g + 1].EndTime;
+                    subtitle.Paragraphs.RemoveAt(g + 1);
                 }
             }
-            subtitle.RemoveParagraphsByIndices(deletes);
 
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
