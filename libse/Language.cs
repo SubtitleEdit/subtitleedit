@@ -941,7 +941,7 @@ namespace Nikse.SubtitleEdit.Core
                 Translate = "Translate",
                 SourceText = "Source text",
                 GoogleTranslate = "Google translate",
-                MicrosoftTranslate = "Microsoft translate",
+                MicrosoftTranslate = "Bing Microsoft translate",
             };
 
             GoToLine = new LanguageStructure.GoToLine
@@ -1258,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Core
                 SubtitleAppendedX = "Subtitle appended: {0}",
                 SubtitleNotAppended = "Subtitle NOT appended!",
                 GoogleTranslate = "Google translate",
-                MicrosoftTranslate = "Microsoft translate",
+                MicrosoftTranslate = "Bing Microsoft translate",
                 BeforeGoogleTranslation = "Before Google translation",
                 SelectedLinesTranslated = "Selected lines translated",
                 SubtitleTranslated = "Subtitle translated",
@@ -1608,8 +1608,8 @@ namespace Nikse.SubtitleEdit.Core
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
                     {
                         Title = "Auto-translate",
-                        TranslatePoweredByGoogle = "Translate (powered by Google)...",
-                        TranslatePoweredByMicrosoft = "Translate (powered by Microsoft)...",
+                        TranslatePoweredByGoogle = "Translate with Google...",
+                        TranslatePoweredByMicrosoft = "Translate with Bing (Microsoft)...",
                         TranslateFromSwedishToDanish = "Translate from Swedish to Danish (powered by nikse.dk)...",
                     },
 

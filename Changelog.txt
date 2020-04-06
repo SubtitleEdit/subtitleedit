@@ -4,8 +4,10 @@
 * NEW:
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
    * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
+   * Add shortcuts for extending to line before/after - thx Flitskikker
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
+   * Add support for pasting file from clipboard in list view - thx 5j9
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
@@ -18,13 +20,23 @@
    * Keep properties between ASSA/SSA - thx DKqwerty
    * Improve handling of alignment tags in "Merge lines" - thx Moisés
    * Improve parsing of unknown subtitles - thx Marko
-   * Do not change end time in split - thx OmrSi
    * Update Serbian spell check dictionary - thx arslan
    * Display version in VLC player name
    * Add text edit box to remove text for HI - thx Raistlin
    * Improve English OCR fixes slightly - thx tormento  
+   * Properly align gridlines with time ticks - thx Flitskikker
+   * Add setting for split behavior - thx Flitskikker
+   * Add option for single click select - thx Flitskikker
+   * Add scene change snapping - thx Flitskikker
+   * Improve "Remove unneeded spaces" for Arabic - thx OmrSi
+   * Improve "Fix missing spaces" for Arabic - thx OmrSi
+   * Read TTML 1.0 even if starts with garbage - thx slimozis
+   * Try to make "missing codec error" more user-friendly
+   * Add "Actor" to "Modify selection" for ASS/SSA
+   * Improve "Batch convert" with mkv language settings - thx Rodark
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
+   * Fix issue with line break in MS translate - thx cocowash
    * Fix issues with CheetahCaption - thx Tom 
    * Fix issue with spell check replace - thx LithiumFlower
    * Fix "Fix missing spaces" after ":" in Finnish - thx Boulder08
@@ -38,6 +50,8 @@
    * Fix "Duplicate line" shortcut in translator mode - thx OmrSi
    * Fix for "Remove text for HI" - thx btsix
    * Hide MS-translate for selected lines if n/a - thx satpowers
+   * Fix issue with "Fix quotes" - thx Rouzax
+   * Make "Fix dialog style" work with ko, zh, ja, th - thx Jamakmake 
 
 
 3.5.14 (8th March 2020)
