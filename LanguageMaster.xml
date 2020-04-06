@@ -736,7 +736,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <Translate>Translate</Translate>
     <SourceText>Source text</SourceText>
     <GoogleTranslate>Google translate</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <MicrosoftTranslate>Bing Microsoft translate</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Go to subtitle number</Title>
@@ -1104,8 +1104,8 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-translate</Title>
-        <TranslatePoweredByGoogle>Translate (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Translate (powered by Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByGoogle>Translate with Google...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Translate with Bing (Microsoft)...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Translate from Swedish to Danish (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -1364,7 +1364,7 @@ Continue?</SubtitleAppendPrompt>
     <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
     <GoogleTranslate>Google translate</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <MicrosoftTranslate>Bing Microsoft translate</MicrosoftTranslate>
     <BeforeGoogleTranslation>Before Google translation</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Selected lines translated</SelectedLinesTranslated>
     <SubtitleTranslated>Subtitle translated</SubtitleTranslated>
