@@ -1105,7 +1105,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <AutoTranslate>
         <Title>Auto-translate</Title>
         <TranslatePoweredByGoogle>Translate with Google...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Translate with Bing (Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByMicrosoft>Translate with Bing...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Translate from Swedish to Danish (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
