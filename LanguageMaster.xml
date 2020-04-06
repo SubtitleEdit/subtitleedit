@@ -83,6 +83,7 @@
     <Height>Height</Height>
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
+    <ExampleX>Example: {0}</ExampleX>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -225,7 +226,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
     <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
-    <ConvertMkvThreeLetterLanguageCodes>Convert .mkv three letter language codes to two letters</ConvertMkvThreeLetterLanguageCodes>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Language" in output file name: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
