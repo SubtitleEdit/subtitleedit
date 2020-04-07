@@ -4792,10 +4792,9 @@ namespace Nikse.SubtitleEdit.Forms
             _hideStatusLog = false;
             var newStatusLog = _statusLog;
             _statusLog = oldStatusLog;
-            newStatusLog.Reverse();
-            foreach (var s in newStatusLog)
+            for (int i = newStatusLog.Count - 1; i >= 0; i--)
             {
-                ShowStatus(s);
+                ShowStatus(newStatusLog[i]);
             }
 
             if (Configuration.Settings.General.ShowNegativeDurationInfoOnSave)
