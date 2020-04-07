@@ -1806,7 +1806,7 @@ namespace Test.Logic.Forms
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
-            target.Settings.OnlyIfInSeparateLine = true;
+            target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveTextFromHearImpaired("Senti, [si schiarisce la voce]," + Environment.NewLine + "dille semplicemente che ti e mancata.");
             Assert.AreEqual("Senti," + Environment.NewLine + "dille semplicemente che ti e mancata.", actual);
         }
@@ -1850,6 +1850,32 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Mr. Wylie!", actual);
         }
 
+
+        [TestMethod]
+        public void RemoveTextForHiBracketDoubleLineDoRemove()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("[man] Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?");
+            Assert.AreEqual("Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiBracketDoubleLineDoNotRemove()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.OnlyIfInSeparateLine = true;
+            string actual = target.RemoveTextFromHearImpaired("[man] Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?");
+            Assert.AreEqual("[man] Aren't you a little old" + Environment.NewLine + "to be playing with dolls, Michael?", actual);
+        }
 
         [TestMethod]
         public void RemoveInterjectionsAfterComma()

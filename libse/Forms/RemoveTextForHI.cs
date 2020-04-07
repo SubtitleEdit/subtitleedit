@@ -1135,7 +1135,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveHearImpairedTags(string text)
         {
-            if (!text.Contains(Environment.NewLine) && Settings.OnlyIfInSeparateLine && !StartsAndEndsWithHearImpairedTags(text))
+            if (Settings.OnlyIfInSeparateLine && !StartsAndEndsWithHearImpairedTags(text))
             {
                 return text;
             }
