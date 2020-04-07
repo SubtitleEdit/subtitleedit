@@ -4410,6 +4410,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+
             try
             { // can have some problems with fonts...
                 UiUtil.InitializeSubtitleFont(textBoxSource);
