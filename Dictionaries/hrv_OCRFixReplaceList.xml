@@ -1011,7 +1011,6 @@
     <Word from="ovdije" to="ovdje" />
     <Word from="Ovdije" to="Ovdje" />
     <Word from="overi" to="ovjeri" />
-    <Word from="overe" to="ovjere" />
     <Word from="ovj" to="ovaj" />
     <Word from="ovjde" to="ovdje" />
     <Word from="Ovjde" to="Ovdje" />
@@ -3012,6 +3011,7 @@
     <RegEx find="(?&lt;!e)tmen" replaceWith="tmjen" />
     <RegEx find="ovaploćenj" replaceWith="utjelovljenj" />
     <RegEx find="Ovaploćenj" replaceWith="Utjelovljenj" />
+    <RegEx find="overe" replaceWith="ovjere" />
     <RegEx find="vlaš[cćč]en" replaceWith="vlašten" />
     <RegEx find="ozbir" replaceWith="obzir" />
     <RegEx find="\b([oO])zli?j?ed([aeiu]|om|ama)\b" replaceWith="$1zljed$2" />
