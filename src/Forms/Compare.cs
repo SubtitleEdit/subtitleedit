@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class Compare : Form
+    public sealed partial class Compare : PositionAndSizeForm
     {
         private Subtitle _subtitle1;
         private Subtitle _subtitle2;
