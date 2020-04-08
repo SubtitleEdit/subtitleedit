@@ -953,7 +953,7 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
         <DvdStuioProProperties>Propiedades de DVD Studio Pro...</DvdStuioProProperties>
         <TimedTextProperties>Propiedades deTimed Text...</TimedTextProperties>
         <PacProperties>PAC propiedades...</PacProperties>
-        <OpenOriginal>Abrir subtítulo original (modo tranductor)...</OpenOriginal>
+        <OpenOriginal>Abrir subtítulo original (modo traductor)...</OpenOriginal>
         <SaveOriginal>Guardar subtítulo original</SaveOriginal>
         <CloseOriginal>Cerrar subtítulo original</CloseOriginal>
         <OpenContainingFolder>Abrir carpeta contenedora</OpenContainingFolder>
@@ -1004,7 +1004,7 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
         <Find>Buscar</Find>
         <FindNext>Buscar siguie&amp;nte</FindNext>
         <Replace>&amp;Reemplazar</Replace>
-        <MultipleReplace>Reemplazado &amp;Multiple...</MultipleReplace>
+        <MultipleReplace>Reemplazado &amp;múltiple...</MultipleReplace>
         <GoToSubtitleNumber>Ir a subtítulo número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo de derecha a izquierda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corregir RTL mediante caracteres de control Unicode (para las líneas seleccionadas)</FixTrlViaUnicodeControlCharacters>
