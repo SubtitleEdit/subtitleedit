@@ -2159,7 +2159,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <EditFixContinuationStyleSettings>Edit settings for fixing continuation style...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Settings for fixing continuation style</FixContinuationStyleSettings>
     <UncheckInsertsAllCaps>Detect and uncheck inserts in all-caps (for example: NO ENTRY)</UncheckInsertsAllCaps>
-    <UncheckInsertsItalic>Try to detect and uncheck inserts or lyrics in lowercase and italic</UncheckInsertsItalic>
+    <UncheckInsertsItalic>Try to detect and uncheck italic inserts or lyrics in lowercase</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Try to detect and uncheck inserts or lyrics in lowercase</UncheckInsertsLowercase>
   </Settings>
   <SettingsMpv>

@@ -17,17 +17,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                var text = Helper.SanitizeString(p.Text);
+                var text = ContinuationUtilities.SanitizeString(p.Text);
                 if ((text.StartsWith("..") || text.StartsWith("…")) && callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = p.Text;
 
                     Paragraph pPrev = subtitle.Paragraphs[i - 1];
-                    var previousText = Helper.SanitizeString(pPrev.Text);
+                    var previousText = ContinuationUtilities.SanitizeString(pPrev.Text);
 
                     if (previousText.EndsWith("..") || previousText.EndsWith("…"))
                     {
-                        // Yes: Remove starting dots
+                        // Remove starting dots
 
                         // Get first word
                         string[] split = text.Split(Convert.ToChar(" "));
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (newFirstWord.StartsWith("..")) newFirstWord = newFirstWord.Substring(2);
                         if (newFirstWord.StartsWith("…")) newFirstWord = newFirstWord.Substring(1);
                         newFirstWord = newFirstWord.Trim();
-                        var newText = Helper.ReplaceFirstOccurrence(oldText, firstWord, newFirstWord);
+                        var newText = ContinuationUtilities.ReplaceFirstOccurrence(oldText, firstWord, newFirstWord);
 
                         // Commit
                         p.Text = newText;

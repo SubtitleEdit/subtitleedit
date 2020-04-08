@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -887,7 +888,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / optimalCharactersPerSecond * TimeCode.BaseUnit;
-        
+
             if (duration < 1400)
             {
                 duration *= 1.2;
@@ -2807,6 +2808,369 @@ namespace Nikse.SubtitleEdit.Core
             var text = input.Replace(rtl, string.Empty);
             text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
             return text;
+        }
+    }
+
+    public static class ContinuationUtilities {
+        private static string dashes = "-‐–—";
+        private static string quotes = "'\"“”‘’«»‹›„“‚‘";
+        private static string singleQuotes = "'‘’‘";
+        private static string doubleQuotes = "''‘‘’’‚‚‘‘";
+
+        public static string SanitizeString(string input, bool removeDashes = true)
+        {
+            string checkString = input;
+            checkString = Regex.Replace(checkString, "<.*?>", String.Empty);
+            checkString = Regex.Replace(checkString, "\\(.*?\\)", String.Empty);
+            checkString = Regex.Replace(checkString, "\\[.*?\\]", String.Empty);
+            checkString = Regex.Replace(checkString, "\\{.*?\\}", String.Empty);
+            checkString = checkString.Trim();
+
+            // Remove string elevation
+            if (checkString.EndsWith("\r\n_") || checkString.EndsWith("\r\n.") || checkString.EndsWith("\n_") || checkString.EndsWith("\n."))
+            {
+                checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+            }
+
+            // Remove dashes from the beginning
+            if (removeDashes)
+            {
+                if (dashes.Contains(checkString[0]))
+                {
+                    checkString = checkString.Substring(1).Trim();
+                }
+            }
+
+            // Remove single-char quotes from the beginning
+            if (quotes.Contains(checkString[0]))
+            {
+                if (singleQuotes.Contains(checkString[0]) && Char.IsLetter(checkString[1]) && !Char.IsUpper(checkString[1]) && Char.IsWhiteSpace(checkString[2]) && Char.IsLetter(checkString[3]))
+                {
+                    // 's Avonds -- don't remove
+                }
+                else
+                {
+                    checkString = checkString.Substring(1).Trim();
+                }
+            }
+
+            // Remove double-char quotes from the beginning
+            if (doubleQuotes.Contains(checkString.Substring(0, 2)))
+            {
+                checkString = checkString.Substring(2).Trim();
+            }
+
+            // Remove single-char quotes from the ending
+            if (quotes.Contains(checkString[checkString.Length - 1]))
+            {
+                if (singleQuotes.Contains(checkString[checkString.Length - 1]))
+                {
+                    // Could be something like: nothin'
+                    // TODO
+                }
+
+                checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+            }
+
+            // Remove double-char quotes from the ending
+            if (doubleQuotes.Contains(checkString.Substring(checkString.Length - 2, 2)))
+            {
+                checkString = checkString.Substring(0, checkString.Length - 2).Trim();
+            }
+
+            return checkString;
+        }
+
+        public static string ExtractParagraphOnly(string input, bool removeDashes = true)
+        {
+            string checkString = input;
+            checkString = Regex.Replace(checkString, "\\{.*?\\}", String.Empty);
+            checkString = checkString.Trim();
+
+            // Remove string elevation
+            if (checkString.EndsWith("\r\n_") || checkString.EndsWith("\r\n.") || checkString.EndsWith("\n_") || checkString.EndsWith("\n."))
+            {
+                checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+            }
+
+            return checkString;
+        }
+
+        public static string ReplaceFirstOccurrence(string Source, string Find, string Replace)
+        {
+            int place = Source.IndexOf(Find);
+
+            if (place == -1)
+                return Source;
+
+            string result = Source.Remove(place, Find.Length).Insert(place, Replace);
+            return result;
+        }
+
+        public static string ReplaceLastOccurrence(string Source, string Find, string Replace)
+        {
+            int place = Source.LastIndexOf(Find);
+
+            if (place == -1)
+                return Source;
+
+            string result = Source.Remove(place, Find.Length).Insert(place, Replace);
+            return result;
+        }
+
+        public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        {
+            // Get last word
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string lastWord = split.Last();
+            string newLastWord = lastWord;
+                        
+            if (gap && profile.UseDifferentStyleGap)
+            {
+                // Check if needed
+                if (profile.GapSuffix.Length == 0 || lastWord.EndsWith(profile.GapSuffix))
+                {
+                    return text;
+                }
+                
+                // Make new last word
+                string gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
+                newLastWord = newLastWord.TrimEnd(',') + (lastWord.EndsWith(",") && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
+            }
+            else
+            {
+                // Check if needed
+                if (profile.Suffix.Length == 0 || lastWord.EndsWith(profile.Suffix))
+                {
+                    return text;
+                }
+                
+                // Make new last word
+                string addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
+                newLastWord = newLastWord.TrimEnd(',') + (lastWord.EndsWith(",") && !profile.SuffixReplaceComma ? "," : "") + addEnd;
+            }
+
+            // Replace it
+            return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+        }
+
+        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        {
+            // Get first word of the next paragraph
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string firstWord = split.First();
+            string newFirstWord = firstWord;
+                        
+            if (gap && profile.UseDifferentStyleGap)
+            {
+                // Check if needed
+                if (profile.GapPrefix.Length == 0 || firstWord.StartsWith(profile.GapPrefix))
+                {
+                    return text;
+                }
+
+                // Make new first word
+                newFirstWord = newFirstWord.Substring(profile.GapPrefix.Length);
+            }
+            else
+            {
+                // Check if needed
+                if (profile.Prefix.Length == 0 || firstWord.StartsWith(profile.Prefix))
+                {
+                    return text;
+                }
+
+                // Make new first word
+                newFirstWord = newFirstWord.Substring(profile.Prefix.Length);
+            }
+
+            // Replace it
+            return ContinuationUtilities.ReplaceLastOccurrence(originalText, firstWord, newFirstWord);
+        }
+
+        public static string RemoveSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        {
+            // Get last word
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string lastWord = split.Last();
+            string newLastWord = lastWord;
+
+            if (gap && profile.UseDifferentStyleGap)
+            {
+                // Check if needed
+                if (profile.GapSuffix.Length == 0 || !lastWord.EndsWith(profile.GapSuffix))
+                {
+                    return text;
+                }
+
+                // Make new last word
+                newLastWord = newLastWord.Substring(0, newLastWord.Length - profile.GapSuffix.Length);
+            }
+            else
+            {
+                // Check if needed
+                if (profile.Suffix.Length == 0 || !lastWord.EndsWith(profile.Suffix))
+                {
+                    return text;
+                }
+
+                // Make new last word
+                newLastWord = newLastWord.Substring(0, newLastWord.Length - profile.Suffix.Length);
+            }
+
+            // Replace it
+            return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+        }
+
+        public static string RemovePrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        {
+            // Get first word of the next paragraph
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string firstWord = split.First();
+            string newFirstWord = firstWord;
+
+            if (gap && profile.UseDifferentStyleGap)
+            {
+                // Check if needed
+                if (profile.GapPrefix.Length == 0 || !firstWord.StartsWith(profile.GapPrefix))
+                {
+                    return text;
+                }
+
+                // Make new first word
+                string gapAddStart = profile.GapPrefix + (profile.GapPrefixAddSpace ? " " : "");
+                newFirstWord = gapAddStart + newFirstWord;
+            }
+            else
+            {
+                // Check if needed
+                if (profile.Prefix.Length == 0 || !firstWord.StartsWith(profile.Prefix))
+                {
+                    return text;
+                }
+
+                // Make new first word
+                string addStart = profile.Prefix + (profile.PrefixAddSpace ? " " : "");
+                newFirstWord = addStart + newFirstWord;
+            }
+
+            // Replace it
+            return ContinuationUtilities.ReplaceLastOccurrence(originalText, firstWord, newFirstWord);
+        }
+
+        public static string GetContinuationStyleName(ContinuationStyle continuationStyle)
+        {
+            switch (continuationStyle)
+            {
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
+                case ContinuationStyle.OnlyTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
+                case ContinuationStyle.LeadingTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
+                case ContinuationStyle.LeadingTrailingDash:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
+                default:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNone;
+            }
+        }
+
+        public static ContinuationProfile GetContinuationProfile(ContinuationStyle continuationStyle)
+        {
+            switch (continuationStyle)
+            {
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "",
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = false,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = true,
+                        GapSuffix = "...",
+                        GapSuffixAddSpace = false,
+                        GapSuffixReplaceComma = true,
+                        GapPrefix = "...",
+                        GapPrefixAddSpace = false
+                    };
+                case ContinuationStyle.OnlyTrailingDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "...",
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = true,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
+                    };
+                case ContinuationStyle.LeadingTrailingDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "...",
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = true,
+                        Prefix = "...",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
+                    };
+                case ContinuationStyle.LeadingTrailingDash:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "-",
+                        SuffixAddSpace = true,
+                        SuffixReplaceComma = true,
+                        Prefix = "-",
+                        PrefixAddSpace = true,
+                        UseDifferentStyleGap = false
+                    };
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "-",
+                        SuffixAddSpace = true,
+                        SuffixReplaceComma = true,
+                        Prefix = "-",
+                        PrefixAddSpace = true,
+                        UseDifferentStyleGap = true,
+                        GapSuffix = "...",
+                        GapSuffixAddSpace = false,
+                        GapSuffixReplaceComma = true,
+                        GapPrefix = "...",
+                        GapPrefixAddSpace = false
+                    };
+                default:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "",
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = false,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = false
+                    };
+            }
+        }
+
+        public class ContinuationProfile
+        {
+            public string Suffix;
+            public bool SuffixAddSpace;
+            public bool SuffixReplaceComma;
+            public string Prefix;
+            public bool PrefixAddSpace;
+            public bool UseDifferentStyleGap;
+            public string GapSuffix;
+            public bool GapSuffixAddSpace;
+            public bool GapSuffixReplaceComma;
+            public string GapPrefix;
+            public bool GapPrefixAddSpace;
         }
     }
 }
