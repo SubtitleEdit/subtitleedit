@@ -2449,7 +2449,12 @@ can edit in same subtitle file (collaboration)",
                 RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine +
                                             Environment.NewLine +
                                             "Continue?",
-                RemoveTimeCodes = "Remove time codes"
+                RemoveTimeCodes = "Remove time codes",
+                EditFixContinuationStyleSettings = "Edit settings for fixing continuation style...",
+                FixContinuationStyleSettings = "Settings for fixing continuation style",
+                UncheckInsertsAllCaps = "Detect and uncheck inserts in all-caps (for example: NO ENTRY)",
+                UncheckInsertsItalic = "Try to detect and uncheck italic inserts or lyrics in lowercase",
+                UncheckInsertsLowercase = "Try to detect and uncheck inserts or lyrics in lowercase"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

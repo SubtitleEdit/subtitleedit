@@ -5878,6 +5878,21 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/RemoveTimeCodes":
                     language.Settings.RemoveTimeCodes = reader.Value;
                     break;
+                case "Settings/EditFixContinuationStyleSettings":
+                    language.Settings.EditFixContinuationStyleSettings = reader.Value;
+                    break;
+                case "Settings/FixContinuationStyleSettings":
+                    language.Settings.FixContinuationStyleSettings = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsAllCaps":
+                    language.Settings.UncheckInsertsAllCaps = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsItalic":
+                    language.Settings.UncheckInsertsItalic = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsLowercase":
+                    language.Settings.UncheckInsertsLowercase = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;

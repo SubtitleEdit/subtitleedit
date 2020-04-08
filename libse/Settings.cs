@@ -776,6 +776,9 @@ $HorzAlign          =   Center
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
+        public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
+        public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
+        public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -918,6 +921,9 @@ $HorzAlign          =   Center
             SubtitleMaximumWordsPerMinute = 300;
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+            FixContinuationStyleUncheckInsertsAllCaps = true;
+            FixContinuationStyleUncheckInsertsItalic = true;
+            FixContinuationStyleUncheckInsertsLowercase = true;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -2557,6 +2563,24 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ContinuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsAllCaps");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsAllCaps = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsItalic");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsItalic = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsLowercase");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsLowercase = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SpellCheckLanguage");
@@ -6740,6 +6764,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
