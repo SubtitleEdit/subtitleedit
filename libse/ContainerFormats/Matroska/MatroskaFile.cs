@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
-    public class MatroskaFile : IDisposable
+    public sealed class MatroskaFile : IDisposable
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
@@ -33,18 +33,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public MatroskaFile(string path)
         {
             Path = path;
-            _memoryMappedFile = MemoryMappedFile.CreateFromFile(
-                File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
-                null, // no mapping to a name
-                0L, // use the file's actual size
-                MemoryMappedFileAccess.Read,
+            try
+            {
+                _memoryMappedFile = MemoryMappedFile.CreateFromFile(
+                    File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                    null, // no mapping to a name
+                    0L, // use the file's actual size
+                    MemoryMappedFileAccess.Read,
 #if NET40
                     null, // not configuring security
 #endif
-                HandleInheritability.None, // adjust as needed
-                false); // close the previously passed in stream when done
+                    HandleInheritability.None, // adjust as needed
+                    false); // close the previously passed in stream when done
 
-            _stream = _memoryMappedFile.CreateViewStream(0L, 0L, MemoryMappedFileAccess.Read);
+                _stream = _memoryMappedFile.CreateViewStream(0L, 0L, MemoryMappedFileAccess.Read);
+            }
+            catch // fallback, probably out of memory
+            {
+                Dispose(true);
+                _stream = new FastFileStream(path);
+            }
 
             // read header
             var headerElement = ReadElement();
@@ -487,7 +495,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
