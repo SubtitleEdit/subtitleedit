@@ -2151,20 +2151,7 @@ namespace Nikse.SubtitleEdit.Core
                     text = text.Replace(" \u060C", "\u060C");
                 }
 
-                while (text.Contains(" و "))
-                {
-                    text = text.Replace(" و ", " و");
-                }
-
-                if (text.Length > 3 && text[0] == 'و' && text[1] == ' ')
-                {
-                    text = text.Remove(1, 1);
-                }
-
-                while (text.Contains(" و\""))
-                {
-                    text = text.Replace(" و\"", "و\"");
-                }
+                text = new Regex(@"\bو ").Replace(text, "و");
 
                 while (text.Contains("ـ "))
                 {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
@@ -99,8 +99,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[");
             bool isFirst = true;
-            foreach (var p in paragraphs)
+            var formatList = new Formatting[paragraphs.Count];
+            for (var index = 0; index < paragraphs.Count; index++)
             {
+                var p = paragraphs[index];
                 if (!isFirst)
                 {
                     jsonBuilder.Append(",");
@@ -109,8 +111,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     isFirst = false;
                 }
-                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(p.Text) + "\"}");
+
+                var f = new Formatting();
+                formatList[index] = f;
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                text = f.UnBreak(text, p.Text);
+
+                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
             }
+
             jsonBuilder.Append("]");
             var json = jsonBuilder.ToString();
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
@@ -136,7 +145,15 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     {
                         var textDics = (Dictionary<string, object>)o;
                         var res = (string)textDics["text"];
+
+                        if (formatList.Length > results.Count)
+                        {
+                            res = formatList[results.Count].ReAddFormatting(res);
+                            res = formatList[results.Count].ReBreak(res, targetLanguage);
+                        }
+
                         res = TranslationHelper.PostTranslate(res, targetLanguage);
+
                         results.Add(res);
                     }
                 }

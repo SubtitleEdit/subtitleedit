@@ -200,7 +200,8 @@ namespace Nikse.SubtitleEdit.Core
                 Width = "Width",
                 Height = "Height",
                 Collapse = "Collapse",
-                ShortcutX ="Shortcut: {0}"
+                ShortcutX = "Shortcut: {0}",
+                ExampleX = "Example: {0}",
             };
 
             About = new LanguageStructure.About
@@ -364,7 +365,11 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamFileNameEnding = "File name ending",
                 TransportStreamSettingsButton = "TS settings...",
                 RemoveLineBreaks = "Remove line-breaks",
-                TryToUseSourceEncoding = "Try to use source encoding"
+                TryToUseSourceEncoding = "Try to use source encoding",
+                MkvLanguageInOutputFileNameX = "Matroska (.mkv) \"Language\" in output file name: {0}",
+                MkvLanguageStyleTwoLetter = "Two letter language code",
+                MkvLanguageStyleThreeLetter = "Three letter language code",
+                MkvLanguageStyleEmpty = "No language code",
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -940,7 +945,7 @@ namespace Nikse.SubtitleEdit.Core
                 Translate = "Translate",
                 SourceText = "Source text",
                 GoogleTranslate = "Google translate",
-                MicrosoftTranslate = "Microsoft translate",
+                MicrosoftTranslate = "Bing Microsoft translate",
             };
 
             GoToLine = new LanguageStructure.GoToLine
@@ -1257,7 +1262,7 @@ namespace Nikse.SubtitleEdit.Core
                 SubtitleAppendedX = "Subtitle appended: {0}",
                 SubtitleNotAppended = "Subtitle NOT appended!",
                 GoogleTranslate = "Google translate",
-                MicrosoftTranslate = "Microsoft translate",
+                MicrosoftTranslate = "Bing Microsoft translate",
                 BeforeGoogleTranslation = "Before Google translation",
                 SelectedLinesTranslated = "Selected lines translated",
                 SubtitleTranslated = "Subtitle translated",
@@ -1408,7 +1413,7 @@ namespace Nikse.SubtitleEdit.Core
                 ErrorLoadingPluginXErrorY = "Error loading plugin: {0}: {1}",
                 BeforeRunningPluginXVersionY = "Before running plugin: {0}: {1}",
                 UnableToReadPluginResult = "Unable to read subtitle result from plugin!",
-                UnableToCreateBackupDirectory = "Unable to create backup directory {0}: {1}",
+                UnableToCreateBackupDirectory = "Unable to create backup folder {0}: {1}",
                 BeforeDisplaySubtitleJoin = "Before join of subtitles",
                 SubtitlesJoined = "Subtitles joined",
                 StatusLog = "Status log",
@@ -1434,7 +1439,7 @@ namespace Nikse.SubtitleEdit.Core
                 ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
                 ErrorLoadTorrent = "This file seems to be a BitTorrent file - not a subtitle file.",
                 ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\r\n\r\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -> Restore auto-backup...",
-                ErrorDirectoryDropNotAllowed = "Directory drop are not supported here.",
+                ErrorDirectoryDropNotAllowed = "Folder drop is not supported here.",
                 NoSupportEncryptedVobSub = "Encrypted VobSub content is not supported.",
                 NoSupportHereBluRaySup = "Blu-ray sup files are not supported here.",
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
@@ -1607,8 +1612,8 @@ namespace Nikse.SubtitleEdit.Core
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu
                     {
                         Title = "Auto-translate",
-                        TranslatePoweredByGoogle = "Translate (powered by Google)...",
-                        TranslatePoweredByMicrosoft = "Translate (powered by Microsoft)...",
+                        TranslatePoweredByGoogle = "Translate with Google...",
+                        TranslatePoweredByMicrosoft = "Translate with Bing...",
                         TranslateFromSwedishToDanish = "Translate from Swedish to Danish (powered by nikse.dk)...",
                     },
 

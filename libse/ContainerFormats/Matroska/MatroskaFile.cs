@@ -33,15 +33,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public MatroskaFile(string path)
         {
             Path = path;
-            try
-            {
-                _memoryMappedFile = MemoryMappedFile.CreateFromFile(path, FileMode.Open);
-                _stream = _memoryMappedFile.CreateViewStream();
-            }
-            catch
-            {
-                _stream = new FastFileStream(path); // fallback if file is in use
-            }
+            _memoryMappedFile = MemoryMappedFile.CreateFromFile(
+                File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),
+                null, // no mapping to a name
+                0L, // use the file's actual size
+                MemoryMappedFileAccess.Read,
+#if NET40
+                    null, // not configuring security
+#endif
+                HandleInheritability.None, // adjust as needed
+                false); // close the previously passed in stream when done
+
+            _stream = _memoryMappedFile.CreateViewStream(0L, 0L, MemoryMappedFileAccess.Read);
 
             // read header
             var headerElement = ReadElement();

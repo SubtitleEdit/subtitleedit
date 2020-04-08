@@ -1113,6 +1113,20 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Color ForeColor => Configuration.Settings.General.UseDarkTheme ? DarkTheme.ForeColor : Control.DefaultForeColor;
 
+        public static void OpenFolderFromFileName(string fileName)
+        {
+            string folderName = Path.GetDirectoryName(fileName);
+            if (Configuration.IsRunningOnWindows)
+            {
+                string argument = @"/select, " + fileName;
+                System.Diagnostics.Process.Start("explorer.exe", argument);
+            }
+            else
+            {
+                UiUtil.OpenFolder(folderName);
+            }
+        }
+
         public static void OpenFolder(string folder)
         {
             OpenItem(folder, "folder");

@@ -87,6 +87,7 @@
             public string Height { get; set; }
             public string Collapse { get; set; }
             public string ShortcutX { get; set; }
+            public string ExampleX { get; set; }
         }
 
         public class About
@@ -235,6 +236,10 @@
             public string TransportStreamSettingsButton { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string TryToUseSourceEncoding { get; set; }
+            public string MkvLanguageInOutputFileNameX { get; set; }
+            public string MkvLanguageStyleTwoLetter { get; set; }
+            public string MkvLanguageStyleThreeLetter { get; set; }
+            public string MkvLanguageStyleEmpty { get; set; }
         }
 
         public class Beamer
