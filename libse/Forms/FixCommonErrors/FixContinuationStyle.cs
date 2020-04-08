@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             bool inSentence = false;
+            bool? inItalicSentence = null;
 
             // Loop paragraphs
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
@@ -80,21 +81,30 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!IsEndOfSentence(text))
                     {
                         // ...ignore inserts
-                        if (IsAllCaps(text))
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
                         {
-                            isChecked = false;
+                            if (IsAllCaps(text))
+                            {
+                                isChecked = false;
+                            }
                         }
 
-                        // ...and italic lyrics                        
-                        /*if (IsItalic(oldText) && !IsNewSentence(text))
+                        // ...and italic lyrics    
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
                         {
-                            isChecked = false;
-                        }*/
+                            if (IsItalic(oldText) && !IsNewSentence(text) && inItalicSentence == false)
+                            {
+                                isChecked = false;
+                            }
+                        }
 
                         // ...and smallcaps inserts or non-italic lyrics
-                        if (!IsNewSentence(text) && !inSentence)
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
                         {
-                            isChecked = false;
+                            if (!IsNewSentence(text) && !inSentence)
+                            {
+                                isChecked = false;
+                            }
                         }
                     }
 
@@ -178,12 +188,30 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (IsNewSentence(text))
                 {
                     inSentence = true;
+
+                    if (IsItalic(oldText))
+                    {
+                        inItalicSentence = true;
+                    }
+                    else
+                    {
+                        inItalicSentence = null;
+                    }
                 }
 
                 // Detect end of sentence
                 if (IsEndOfSentence(text))
                 {
                     inSentence = false;
+
+                    if (IsItalic(oldText))
+                    {
+                        inItalicSentence = false;
+                    }
+                    else
+                    {
+                        inItalicSentence = null;
+                    }
                 }
             }
 

@@ -674,6 +674,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
+            buttonFixContinuationStyleSettings.Text = language.EditFixContinuationStyleSettings;
 
             groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak.Replace("&", string.Empty);
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
@@ -3296,7 +3297,18 @@ namespace Nikse.SubtitleEdit.Forms
             {                
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    
+                    // Saving settings handled by dialog
+                }
+            }
+        }
+
+        private void buttonFixContinuationStyleSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsFixContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
                 }
             }
         }

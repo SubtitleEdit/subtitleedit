@@ -731,6 +731,12 @@
     <Compile Include="Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingsFixContinuationStyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsFixContinuationStyle.Designer.cs">
+      <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingsLineWidth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1412,6 +1418,9 @@
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsFixContinuationStyle.resx">
+      <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsLineWidth.resx">
       <DependentUpon>SettingsLineWidth.cs</DependentUpon>

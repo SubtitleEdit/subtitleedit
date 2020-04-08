@@ -2318,6 +2318,11 @@
             public string RestoreDefaultSettings { get; set; }
             public string RestoreDefaultSettingsMsg { get; set; }
             public string RemoveTimeCodes { get; set; }
+            public string EditFixContinuationStyleSettings { get; set; }
+            public string FixContinuationStyleSettings { get; set; }
+            public string UncheckInsertsAllCaps { get; set; }
+            public string UncheckInsertsItalic { get; set; }
+            public string UncheckInsertsLowercase { get; set; }
         }
 
         public class SettingsMpv

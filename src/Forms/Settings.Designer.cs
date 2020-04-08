@@ -3081,7 +3081,7 @@
             this.buttonFixContinuationStyleSettings.TabIndex = 37;
             this.buttonFixContinuationStyleSettings.Text = "Edit settings for fixing continuation style...";
             this.buttonFixContinuationStyleSettings.UseVisualStyleBackColor = true;
-            this.buttonFixContinuationStyleSettings.Visible = false;
+            this.buttonFixContinuationStyleSettings.Click += new System.EventHandler(this.buttonFixContinuationStyleSettings_Click);
             // 
             // checkBoxFceSkipStep1
             // 
