@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return true;
         }
 
-        public void AddFixToListView(Paragraph p, string action, string before, string after)
+        public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked = true)
         {
         }
 

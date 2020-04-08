@@ -894,6 +894,10 @@ namespace Nikse.SubtitleEdit.Core
                 FixSpaceBetweenNumbersExample = "1 100 -> 1100",
                 FixDialogsOneLineExample = "Hi John! - Hi Ida! -> Hi John!<br />- Hi Ida!",
                 SelectDefault = "Select default",
+                FixContinuationStyleX = "Fix continuation style: {0}",
+                XFixContinuationStyle = "{0} fixed continuation style",
+                FixUnnecessaryLeadingDots = "Remove unnecessary leading dots",
+                XFixUnnecessaryLeadingDots = "{0} removed unnecessary leading dots"
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries

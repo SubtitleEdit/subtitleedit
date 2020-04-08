@@ -1858,6 +1858,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/SelectDefault":
                     language.FixCommonErrors.SelectDefault = reader.Value;
                     break;
+                case "FixCommonErrors/FixContinuationStyleX":
+                    language.FixCommonErrors.FixContinuationStyleX = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixContinuationStyle":
+                    language.FixCommonErrors.XFixContinuationStyle = reader.Value;
+                    break;
+                case "FixCommonErrors/FixUnnecessaryLeadingDots":
+                    language.FixCommonErrors.FixUnnecessaryLeadingDots = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixUnnecessaryLeadingDots":
+                    language.FixCommonErrors.XFixUnnecessaryLeadingDots = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
