@@ -765,6 +765,10 @@
             public string FixSpaceBetweenNumbersExample { get; set; }
             public string FixDialogsOneLineExample { get; set; }
             public string SelectDefault { get; set; }
+            public string FixContinuationStyleX { get; set; }
+            public string XFixContinuationStyle { get; set; }
+            public string FixUnnecessaryLeadingDots { get; set; }
+            public string XFixUnnecessaryLeadingDots { get; set; }
         }
 
         public class GetDictionaries

@@ -665,6 +665,8 @@ $HorzAlign          =   Center
         public bool FixEllipsesStartTicked { get; set; }
         public bool FixMissingOpenBracketTicked { get; set; }
         public bool FixMusicNotationTicked { get; set; }
+        public bool FixContinuationStyleTicked { get; set; }
+        public bool FixUnnecessaryLeadingDotsTicked { get; set; }
 
         public FixCommonErrorsSettings()
         {
@@ -698,6 +700,8 @@ $HorzAlign          =   Center
             FixEllipsesStartTicked = true;
             FixMissingOpenBracketTicked = true;
             FixMusicNotationTicked = true;
+            FixContinuationStyleTicked = true;
+            FixUnnecessaryLeadingDotsTicked = true;
         }
 
     }
@@ -4655,6 +4659,18 @@ $HorzAlign          =   Center
                 settings.CommonErrors.FixMusicNotationTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("FixContinuationStyleTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixContinuationStyleTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("FixUnnecessaryLeadingDotsTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixUnnecessaryLeadingDotsTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             // Video Controls
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
             subNode = node.SelectSingleNode("CustomSearchText1");
@@ -7105,6 +7121,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixEllipsesStartTicked", settings.CommonErrors.FixEllipsesStartTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixMissingOpenBracketTicked", settings.CommonErrors.FixMissingOpenBracketTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VideoControls", string.Empty);
