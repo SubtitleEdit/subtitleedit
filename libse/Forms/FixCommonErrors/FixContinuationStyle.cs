@@ -9,22 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixContinuationStyle : IFixCommonError
     {
-        class ContinuationProfile
-        {
-            public string Suffix;
-            public bool SuffixAddSpace;
-            public bool SuffixReplaceComma;
-            public string Prefix;
-            public bool PrefixAddSpace;
-            public bool UseDifferentStyleGap;
-            public string GapSuffix;
-            public bool GapSuffixAddSpace;
-            public bool GapSuffixReplaceComma;
-            public string GapPrefix;
-            public bool GapPrefixAddSpace;
-        }
-
-        private ContinuationProfile continuationProfile = null;
+        private ContinuationUtilities.ContinuationProfile continuationProfile = null;
         private List<string> prefixes = null;
         private List<string> suffixes = null;
         private List<string> suffixesToAlwaysFix = new List<string>() { ",", "-", "‐", "–", "—" };
@@ -33,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = string.Format(language.FixContinuationStyleX, GetContinuationStyle(Configuration.Settings.General.ContinuationStyle));
+            string fixAction = string.Format(language.FixContinuationStyleX, ContinuationUtilities.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle));
             int fixCount = 0;
 
             // Check continuation profile
@@ -70,8 +55,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 Paragraph pNext = subtitle.Paragraphs[i + 1];
                 var oldText = p.Text;
                 var oldTextNext = pNext.Text;
-                var text = Helper.SanitizeString(p.Text);
-                var textNext = Helper.SanitizeString(pNext.Text);
+                var text = ContinuationUtilities.SanitizeString(p.Text);
+                var textNext = ContinuationUtilities.SanitizeString(pNext.Text);
                 var isChecked = true;
 
                 // Check if we should fix this paragraph
@@ -131,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     // Replace it
-                    var newText = Helper.ReplaceLastOccurrence(oldText, lastWord, newLastWord);
+                    var newText = ContinuationUtilities.ReplaceLastOccurrence(oldText, lastWord, newLastWord);
 
                     // Commit if changed
                     if (oldText != newText)
@@ -164,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     // Replace it
-                    var newTextNext = Helper.ReplaceLastOccurrence(oldTextNext, firstWord, newFirstWord);
+                    var newTextNext = ContinuationUtilities.ReplaceLastOccurrence(oldTextNext, firstWord, newFirstWord);
 
                     // If ends with dots (possible interruptions), check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…"))
@@ -299,7 +284,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private bool IsItalic(string input)
         {
-            input = Helper.ExtractParagraphOnly(input);
+            input = ContinuationUtilities.ExtractParagraphOnly(input);
 
             if (input.Length > 2)
             {
@@ -314,84 +299,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private void SetContinuationProfile(ContinuationStyle continuationStyle)
         {
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    this.continuationProfile = new ContinuationProfile {
-                        Suffix = "",
-                        SuffixAddSpace = false,
-                        SuffixReplaceComma = false,
-                        Prefix = "",
-                        PrefixAddSpace = false,
-                        UseDifferentStyleGap = true,
-                        GapSuffix = "...",
-                        GapSuffixAddSpace = false,
-                        GapSuffixReplaceComma = true,
-                        GapPrefix = "...",
-                        GapPrefixAddSpace = false
-                    };
-                    break;
-                case ContinuationStyle.OnlyTrailingDots:
-                    this.continuationProfile = new ContinuationProfile
-                    {
-                        Suffix = "...",
-                        SuffixAddSpace = false,
-                        SuffixReplaceComma = true,
-                        Prefix = "",
-                        PrefixAddSpace = false,
-                        UseDifferentStyleGap = false
-                    };
-                    break;
-                case ContinuationStyle.LeadingTrailingDots:
-                    this.continuationProfile = new ContinuationProfile
-                    {
-                        Suffix = "...",
-                        SuffixAddSpace = false,
-                        SuffixReplaceComma = true,
-                        Prefix = "...",
-                        PrefixAddSpace = false,
-                        UseDifferentStyleGap = false
-                    };
-                    break;
-                case ContinuationStyle.LeadingTrailingDash:
-                    this.continuationProfile = new ContinuationProfile
-                    {
-                        Suffix = "-",
-                        SuffixAddSpace = true,
-                        SuffixReplaceComma = true,
-                        Prefix = "-",
-                        PrefixAddSpace = true,
-                        UseDifferentStyleGap = false
-                    };
-                    break;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    this.continuationProfile = new ContinuationProfile
-                    {
-                        Suffix = "-",
-                        SuffixAddSpace = true,
-                        SuffixReplaceComma = true,
-                        Prefix = "-",
-                        PrefixAddSpace = true,
-                        UseDifferentStyleGap = true,
-                        GapSuffix = "...",
-                        GapSuffixAddSpace = false,
-                        GapSuffixReplaceComma = true,
-                        GapPrefix = "...",
-                        GapPrefixAddSpace = false
-                    };
-                    break;
-                default:
-                    this.continuationProfile = new ContinuationProfile
-                    {
-                        Suffix = "",
-                        SuffixAddSpace = false,
-                        SuffixReplaceComma = false,
-                        Prefix = "",
-                        PrefixAddSpace = false,
-                        UseDifferentStyleGap = false
-                    };
-                    break;
-            }
+            this.continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
 
             this.prefixes = new List<string>() { "...", "..", "-", "‐", "–", "—", "…", this.continuationProfile.Prefix };
             this.suffixes = new List<string>() { ",", "...", "..", "-", "‐", "–", "—", "…", this.continuationProfile.Suffix };
@@ -401,31 +309,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 this.prefixes.Add(this.continuationProfile.GapPrefix);
                 this.suffixes.Add(this.continuationProfile.GapSuffix);
             }
-        }
-
-        private static string GetContinuationStyle(ContinuationStyle continuationStyle)
-        {
-            if (continuationStyle == ContinuationStyle.NoneLeadingTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.OnlyTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDash)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDashDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
-            }
-            return Configuration.Settings.Language.Settings.ContinuationStyleNone;
         }
     }
 }

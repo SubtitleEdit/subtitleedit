@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.Fix3PlusLines, string.Empty, () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
-                new FixItem( string.Format(_language.FixContinuationStyleX, GetContinuationStyle(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle().Fix(Subtitle, this), ce.FixContinuationStyleTicked),
+                new FixItem( string.Format(_language.FixContinuationStyleX, ContinuationUtilities.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle().Fix(Subtitle, this), ce.FixContinuationStyleTicked),
                 (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingDots 
                     ? new FixItem(_language.FixUnnecessaryLeadingDots, string.Empty, () => new FixUnnecessaryLeadingDots().Fix(Subtitle, this), ce.FixUnnecessaryLeadingDotsTicked)
                     : new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, () => new FixEllipsesStart().Fix(Subtitle, this), ce.FixEllipsesStartTicked)),
@@ -448,32 +448,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace;
         }
-
-        private static string GetContinuationStyle(ContinuationStyle continuationStyle)
-        {
-            if (continuationStyle == ContinuationStyle.NoneLeadingTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.OnlyTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDash)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash;
-            }
-            if (continuationStyle == ContinuationStyle.LeadingTrailingDashDots)
-            {
-                return Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots;
-            }
-            return Configuration.Settings.Language.Settings.ContinuationStyleNone;
-        }
-
+        
         public FixCommonErrors()
         {
             UiUtil.PreInitialize(this);

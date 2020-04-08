@@ -9530,6 +9530,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
+                                        
                     if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                     {
@@ -9697,6 +9698,14 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
                 }
 
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                    currentParagraph.Text = ContinuationUtilities.AddSuffixIfNeeded(currentParagraph.Text, continuationProfile, false);
+                    newParagraph.Text = ContinuationUtilities.AddPrefixIfNeeded(newParagraph.Text, continuationProfile, false);
+                }
+
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -9847,6 +9856,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (originalNew.Text.StartsWith("<i> ", StringComparison.Ordinal))
                             {
                                 originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
+                            }
+
+                            if (continuationStyle != ContinuationStyle.None)
+                            {
+                                var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                                originalCurrent.Text = ContinuationUtilities.AddSuffixIfNeeded(originalCurrent.Text, continuationProfile, false);
+                                originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
                             }
                         }
 
@@ -10137,6 +10153,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var addText = _subtitle.Paragraphs[index].Text;
+
+                    var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                    if (continuationStyle != ContinuationStyle.None)
+                    {
+                        var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                        var gap = next < firstIndex + SubtitleListview1.SelectedIndices.Count ? _subtitle.Paragraphs[next].StartTime.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5 : false;
+                        if (index != firstIndex)
+                        {
+                            addText = ContinuationUtilities.RemovePrefixIfNeeded(addText, continuationProfile, gap);
+                        }
+                        if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
+                        {
+                            addText = ContinuationUtilities.RemoveSuffixIfNeeded(addText, continuationProfile, gap);
+                        }
+                    }
+
                     if (firstIndex != index)
                     {
                         addText = RemoveAssStartAlignmentTag(addText);
@@ -10287,12 +10319,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExtendBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
-
+            ExtendSelectedLinesToPreviousLine();
         }
 
         private void ExtendAfterToolStripMenuItemClick(object sender, EventArgs e)
         {
-
+            ExtendSelectedLinesToNextLine();
         }
 
         private static string ChangeAllLinesTagsToSingleTag(string text, string tag)
@@ -10344,14 +10376,36 @@ namespace Nikse.SubtitleEdit.Forms
             var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
 
             if (nextParagraph != null && currentParagraph != null)
-            {
+            {                
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                    var gap = nextParagraph.StartTime.TotalMilliseconds - currentParagraph.EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5;
+
+                    currentParagraph.Text = ContinuationUtilities.RemoveSuffixIfNeeded(currentParagraph.Text, continuationProfile, gap);
+                    nextParagraph.Text = ContinuationUtilities.RemovePrefixIfNeeded(nextParagraph.Text, continuationProfile, gap);
+                }
 
                 if (_subtitleAlternate != null)
                 {
                     var original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                     var originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, nextParagraph, _subtitleAlternate.Paragraphs);
+
+                    if (original != null && originalNext != null)
+                    {
+                        if (continuationStyle != ContinuationStyle.None)
+                        {
+                            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                            var gap = originalNext.StartTime.TotalMilliseconds - original.EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5;
+
+                            original.Text = ContinuationUtilities.RemoveSuffixIfNeeded(original.Text, continuationProfile, gap);
+                            originalNext.Text = ContinuationUtilities.RemovePrefixIfNeeded(originalNext.Text, continuationProfile, gap);
+                        }
+                    }
 
                     if (originalNext != null)
                     {
