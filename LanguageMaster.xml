@@ -83,6 +83,7 @@
     <Height>Height</Height>
     <Collapse>Collapse</Collapse>
     <ShortcutX>Shortcut: {0}</ShortcutX>
+    <ExampleX>Example: {0}</ExampleX>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -225,6 +226,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TransportStreamSettingsButton>TS settings...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remove line-breaks</RemoveLineBreaks>
     <TryToUseSourceEncoding>Try to use source encoding</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Language" in output file name: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -735,7 +740,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <Translate>Translate</Translate>
     <SourceText>Source text</SourceText>
     <GoogleTranslate>Google translate</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <MicrosoftTranslate>Bing Microsoft translate</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Go to subtitle number</Title>
@@ -1103,8 +1108,8 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-translate</Title>
-        <TranslatePoweredByGoogle>Translate (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Translate (powered by Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByGoogle>Translate with Google...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Translate with Bing...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Translate from Swedish to Danish (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -1363,7 +1368,7 @@ Continue?</SubtitleAppendPrompt>
     <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
     <GoogleTranslate>Google translate</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <MicrosoftTranslate>Bing Microsoft translate</MicrosoftTranslate>
     <BeforeGoogleTranslation>Before Google translation</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Selected lines translated</SelectedLinesTranslated>
     <SubtitleTranslated>Subtitle translated</SubtitleTranslated>
@@ -1514,7 +1519,7 @@ Continue?</SubtitleAppendPrompt>
     <ErrorLoadingPluginXErrorY>Error loading plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Before running plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Unable to read subtitle result from plugin!</UnableToReadPluginResult>
-    <UnableToCreateBackupDirectory>Unable to create backup directory {0}: {1}</UnableToCreateBackupDirectory>
+    <UnableToCreateBackupDirectory>Unable to create backup folder {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Before join of subtitles</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Subtitles joined</SubtitlesJoined>
     <StatusLog>Status log</StatusLog>
@@ -1542,7 +1547,7 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
 
 If you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
-    <ErrorDirectoryDropNotAllowed>Directory drop are not supported here.</ErrorDirectoryDropNotAllowed>
+    <ErrorDirectoryDropNotAllowed>Folder drop is not supported here.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub content is not supported.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>

@@ -304,6 +304,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/ShortcutX":
                     language.General.ShortcutX = reader.Value;
                     break;
+                case "General/ExampleX":
+                    language.General.ExampleX = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;
@@ -615,6 +618,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "BatchConvert/TryToUseSourceEncoding":
                     language.BatchConvert.TryToUseSourceEncoding = reader.Value;
+                    break;
+                case "BatchConvert/MkvLanguageInOutputFileNameX":
+                    language.BatchConvert.MkvLanguageInOutputFileNameX = reader.Value;
+                    break;
+                case "BatchConvert/MkvLanguageStyleTwoLetter":
+                    language.BatchConvert.MkvLanguageStyleTwoLetter = reader.Value;
+                    break;
+                case "BatchConvert/MkvLanguageStyleThreeLetter":
+                    language.BatchConvert.MkvLanguageStyleThreeLetter = reader.Value;
+                    break;
+                case "BatchConvert/MkvLanguageStyleEmpty":
+                    language.BatchConvert.MkvLanguageStyleEmpty = reader.Value;
                     break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;

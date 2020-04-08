@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core
 {
     public static class LanguageAutoDetect
     {
-     
+
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
@@ -89,8 +89,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsNorwegian =
         {
-            "vi", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp", "forsvunnet", "skutt", "sterkt", "minste", "første",
-            "fortsette", "inneholder", "gikk", "fortelle", "begynt", "spørsmål", "plutselig"
+            "vi", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp", "forsvunnet",
+            "skutt", "sterkt", "minste", "første", "fortsette", "inneholder", "gikk", "fortelle", "begynt", "spørsmål", "plutselig"
         };
 
         private static readonly string[] AutoDetectWordsSwedish =
@@ -115,8 +115,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsFrench =
         {
-            "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux", "vouloir", "quelque", "pouvoir",
-            "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir", "allez", "tous", "ces", "deux", "avoir", " pouvoir", "même"
+            "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux",
+            "vouloir", "quelque", "pouvoir", "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir",
+            "allez", "tous", "ces", "deux", "avoir", " pouvoir", "même", "œil", "sœur",
         };
 
         private static readonly string[] AutoDetectWordsPortuguese =
@@ -127,7 +128,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsGerman =
         {
-            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt"
+            "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt", "Verdammt", "bist", "Darum", "sitzt", "Setz", "Das ist", "Du bist", "nicht", "Scheiße",
+            "Nein", "für", "gesagt", "zwei", "richtig"
         };
 
         private static readonly string[] AutoDetectWordsDutch =
@@ -1150,6 +1152,22 @@ namespace Nikse.SubtitleEdit.Core
                 if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
                 {
                     return koreanEncoding;
+                }
+
+                var encoding28591 = Encoding.GetEncoding(28591);
+
+                var frenchCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsFrench);
+                if (frenchCount1252 > buffer.Length / 200)
+                {
+                    var frenchCount28591 = GetCount(encoding28591.GetString(buffer), AutoDetectWordsFrench);
+                    return frenchCount28591 > frenchCount1252 ? encoding28591 : encoding1252;
+                }
+
+                var portugueseCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsPortuguese);
+                if (portugueseCount1252 > buffer.Length / 200)
+                {
+                    var portugueseCount28591 = GetCount(encoding28591.GetString(buffer), AutoDetectWordsPortuguese);
+                    return portugueseCount28591 > portugueseCount1252 ? encoding28591 : encoding1252;
                 }
 
                 return EncodingTools.DetectInputCodepage(buffer);
