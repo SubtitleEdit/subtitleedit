@@ -19887,12 +19887,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int filePluginCount = 0;
-            int toolsPluginCount = 0;
-            int syncPluginCount = 0;
-            int translatePluginCount = 0;
-            int spellCheckPluginCount = 0;
-
             UiUtil.CleanUpMenuItemPlugin(fileToolStripMenuItem);
             UiUtil.CleanUpMenuItemPlugin(toolsToolStripMenuItem);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSpellCheckMain);
@@ -19900,7 +19894,14 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
 
-            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL").OrderBy(p => p))
+            var fileMenuItems = new List<ToolStripMenuItem>();
+            var toolsMenuItems = new List<ToolStripMenuItem>();
+            var translateMenuItems = new List<ToolStripMenuItem>();
+            var translateSelectedLinesMenuItems = new List<ToolStripMenuItem>();
+            var syncMenuItems = new List<ToolStripMenuItem>();
+            var spellCheckMenuItems = new List<ToolStripMenuItem>();
+
+            foreach (var pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
                 try
                 {
@@ -19910,10 +19911,7 @@ namespace Nikse.SubtitleEdit.Forms
                     GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
                     if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
-                        var item = new ToolStripMenuItem();
-                        item.Name = "Plugin" + toolsPluginCount;
-                        item.Text = text;
-                        item.Tag = pluginFileName;
+                        var item = new ToolStripMenuItem { Text = text, Tag = pluginFileName };
                         UiUtil.FixFonts(item);
 
                         if (!string.IsNullOrEmpty(shortcut))
@@ -19923,49 +19921,42 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
-                            AddSeparator(filePluginCount, fileToolStripMenuItem, 2);
+                            AddSeparator(fileMenuItems.Count, fileToolStripMenuItem, 2);
                             item.Click += PluginToolClick;
-                            fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
-                            filePluginCount++;
+                            fileMenuItems.Add(item);
                         }
                         else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
                         {
-                            AddSeparator(toolsPluginCount, toolsToolStripMenuItem);
+                            AddSeparator(toolsMenuItems.Count, toolsToolStripMenuItem);
                             item.Click += PluginToolClick;
-                            toolsToolStripMenuItem.DropDownItems.Add(item);
-                            toolsPluginCount++;
+                            toolsMenuItems.Add(item);
                         }
                         else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
                         {
-                            AddSeparator(syncPluginCount, toolStripMenuItemSynchronization);
+                            AddSeparator(syncMenuItems.Count, toolStripMenuItemSynchronization);
                             item.Click += PluginToolClick;
-                            toolStripMenuItemSynchronization.DropDownItems.Add(item);
-                            syncPluginCount++;
+                            syncMenuItems.Add(item);
                         }
                         else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
                         {
-                            AddSeparator(translatePluginCount, toolStripMenuItemAutoTranslate);
+                            AddSeparator(translateMenuItems.Count, toolStripMenuItemAutoTranslate);
                             item.Click += PluginClickTranslate;
-                            toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
+                            translateMenuItems.Add(item);
 
                             // selected lines
                             item = new ToolStripMenuItem();
-                            item.Name = "PluginTSL" + toolsPluginCount;
                             item.Text = text;
                             item.Tag = pluginFileName;
                             UiUtil.FixFonts(item);
-                            AddSeparator(translatePluginCount, toolStripMenuItemTranslateSelected);
+                            AddSeparator(translateMenuItems.Count - 1, toolStripMenuItemTranslateSelected);
                             item.Click += PluginClickTranslateSelectedLines;
-                            toolStripMenuItemTranslateSelected.DropDownItems.Add(item);
-
-                            translatePluginCount++;
+                            translateSelectedLinesMenuItems.Add(item);
                         }
                         else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
                         {
-                            AddSeparator(spellCheckPluginCount, toolStripMenuItemSpellCheckMain);
+                            AddSeparator(spellCheckMenuItems.Count, toolStripMenuItemSpellCheckMain);
                             item.Click += PluginClickNoFormatChange;
-                            toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
-                            spellCheckPluginCount++;
+                            spellCheckMenuItems.Add(item);
                         }
                     }
                 }
@@ -19974,6 +19965,15 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(_language.ErrorLoadingPluginXErrorY, pluginFileName, exception.Message));
                 }
             }
+            foreach (var fileMenuItem in fileMenuItems)
+            {
+                fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, fileMenuItem);
+            }
+            toolsToolStripMenuItem.DropDownItems.AddRange(toolsMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemAutoTranslate.DropDownItems.AddRange(translateMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemSynchronization.DropDownItems.AddRange(syncMenuItems.OrderBy(p => p.Text).ToArray());
+            toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(spellCheckMenuItems.OrderBy(p => p.Text).ToArray());
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
