@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _textAutoBackup;
         private string _textAutoBackupOriginal;
         private List<string> _statusLog = new List<string>();
-        private bool _hideStatusLog;
+        private bool _disableShowStatus;
         private StatusLog _statusLogForm;
         private bool _makeHistoryPaused;
         private bool _saveAsCalled;
@@ -4767,36 +4767,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            _hideStatusLog = true;
-            var oldStatusLog = _statusLog;
-            _statusLog = new List<string>();
+            _disableShowStatus = true;
             _saveAsCalled = false;
             var result = SaveSubtitle(GetCurrentSubtitleFormat(), useOnly0AForNewLine);
             if (result != DialogResult.OK)
             {
-                _statusLog = oldStatusLog;
-                _hideStatusLog = false;
+                _disableShowStatus = false;
                 return;
             }
 
             if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 SaveOriginalToolStripMenuItemClick(null, null);
-                _statusLog = oldStatusLog;
-                _hideStatusLog = false;
+                _disableShowStatus = false;
                 ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
                            string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleAlternateFileName)));
                 return;
             }
 
-            _hideStatusLog = false;
-            var newStatusLog = _statusLog;
-            _statusLog = oldStatusLog;
-            newStatusLog.Reverse();
-            foreach (var s in newStatusLog)
-            {
-                ShowStatus(s);
-            }
+            _disableShowStatus = false;
+            ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)));
 
             if (Configuration.Settings.General.ShowNegativeDurationInfoOnSave)
             {
@@ -5869,9 +5859,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ShowStatus(string message, bool log = true)
         {
-            if (_hideStatusLog && log && !string.IsNullOrEmpty(message))
+            if (_disableShowStatus)
             {
-                _statusLog.Add(message);
                 return;
             }
 
@@ -22305,6 +22294,14 @@ namespace Nikse.SubtitleEdit.Forms
                     if (index < 0)
                     {
                         index = 0;
+                    }
+
+                    var last = _subtitle.GetParagraphOrDefault(index - 1);
+                    var newFirst = subtitle.GetParagraphOrDefault(0);
+                    if (last != null && newFirst != null && newFirst.StartTime.TotalMilliseconds < last.EndTime.TotalMilliseconds)
+                    {
+                        var addMilliseconds = last.EndTime.TotalMilliseconds - newFirst.StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(addMilliseconds));
                     }
 
                     foreach (var p in subtitle.Paragraphs)
