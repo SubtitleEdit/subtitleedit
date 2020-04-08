@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Text;
 
             var continuationProfile = ContinuationUtilities.GetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
-            comboBoxLineContinuationBegin.Text = continuationProfile.Suffix;
-            comboBoxLineContinuationEnd.Text = continuationProfile.Prefix;
+            comboBoxLineContinuationBegin.Text = continuationProfile.Prefix;
+            comboBoxLineContinuationEnd.Text = continuationProfile.Suffix;
 
             toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
