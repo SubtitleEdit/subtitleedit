@@ -1115,6 +1115,37 @@ namespace Nikse.SubtitleEdit.Core
                     return pol1252Count > pol1250Count ? encoding1252 : encoding1250;
                 }
 
+                var dutchCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsDutch);
+                if (dutchCount1252 > buffer.Length / 300)
+                {
+                    return encoding1252;
+                }
+
+                var danishCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsDanish);
+                if (danishCount1252 > buffer.Length / 300)
+                {
+                    return encoding1252;
+                }
+
+                var swedishCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsSwedish);
+                if (swedishCount1252 > buffer.Length / 300)
+                {
+                    return encoding1252;
+                }
+
+                var germanCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsGerman);
+                if (germanCount1252 > buffer.Length / 300)
+                {
+                    return encoding1252;
+                }
+
+                var spanishText = encoding1252.GetString(buffer);
+                var spanishCount1252 = GetCount(spanishText, AutoDetectWordsSpanish);
+                if (spanishCount1252 > buffer.Length / 300 && (spanishText.Contains('ú') || spanishText.Contains('í') || spanishText.Contains('ú') || spanishText.Contains('ó') || spanishText.Contains('é') || spanishText.Contains('ñ')))
+                {
+                    return encoding1252;
+                }
+
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                 {
@@ -1248,7 +1279,8 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
-                            return DetectAnsiEncoding(buffer);
+                            var autoDetected = DetectAnsiEncoding(buffer);
+                            return autoDetected.CodePage < 949 ? Encoding.Default : autoDetected;
                         }
                     }
                 }
