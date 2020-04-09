@@ -122,8 +122,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsPortuguese =
         {
-            "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há", "lhe", "quero", "nós", "são", "ter",
-            "coisa", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também", "tens", "deus", "quê", "ainda", "noite"
+            "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem", "há",
+            "lhe", "quero", "nós", "são", "ter", "coisa", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também", "tens",
+            "deus", "quê", "ainda", "noite", "conversar", "Desculpe", "verdade"
         };
 
         private static readonly string[] AutoDetectWordsGerman =
@@ -1074,7 +1075,9 @@ namespace Nikse.SubtitleEdit.Core
                     return russianEncoding;
                 }
 
-                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500)
+                var wordMinCount = buffer.Length / 300;
+
+                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > wordMinCount)
                 {
                     return russianEncoding;
                 }
@@ -1084,28 +1087,30 @@ namespace Nikse.SubtitleEdit.Core
                     return russianEncoding;
                 }
 
-                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 300) // Serbian
+
+                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > wordMinCount) // Serbian
                 {
                     return russianEncoding;
                 }
 
                 var encoding1250 = Encoding.GetEncoding(1250); // Central European/Eastern European: Polish, Czech, Slovak, Hungarian, Slovene, Bosnian, Croatian, Serbian (Latin script), Romanian (before 1993 spelling reform) and Albanian
-                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCroatianAndSerbian) > buffer.Length / 300)
+                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCroatianAndSerbian) > wordMinCount)
                 {
                     return encoding1250;
                 }
 
-                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCzechAndSlovak) > buffer.Length / 300)
+                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCzechAndSlovak) > wordMinCount)
                 {
                     return encoding1250;
                 }
+
 
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
                 var pol1252Count = GetCount(encoding1252.GetString(buffer), AutoDetectWordsPolish);
                 var pol1250Count = GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish);
                 var encoding28592 = Encoding.GetEncoding(28592);
                 var pol28592Count = GetCount(encoding28592.GetString(buffer), AutoDetectWordsPolish);
-                if (pol1252Count > buffer.Length / 300 || pol1250Count > buffer.Length / 300)
+                if (pol1252Count > wordMinCount || pol1250Count > wordMinCount)
                 {
                     if (pol28592Count > pol1250Count && pol28592Count > pol1252Count)
                     {
@@ -1116,32 +1121,32 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var dutchCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsDutch);
-                if (dutchCount1252 > buffer.Length / 300)
+                if (dutchCount1252 > wordMinCount)
                 {
                     return encoding1252;
                 }
 
                 var danishCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsDanish);
-                if (danishCount1252 > buffer.Length / 300)
+                if (danishCount1252 > wordMinCount)
                 {
                     return encoding1252;
                 }
 
                 var swedishCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsSwedish);
-                if (swedishCount1252 > buffer.Length / 300)
+                if (swedishCount1252 > wordMinCount)
                 {
                     return encoding1252;
                 }
 
                 var germanCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsGerman);
-                if (germanCount1252 > buffer.Length / 300)
+                if (germanCount1252 > wordMinCount)
                 {
                     return encoding1252;
                 }
 
                 var spanishText = encoding1252.GetString(buffer);
                 var spanishCount1252 = GetCount(spanishText, AutoDetectWordsSpanish);
-                if (spanishCount1252 > buffer.Length / 300 && (spanishText.Contains('ú') || spanishText.Contains('í') || spanishText.Contains('ú') || spanishText.Contains('ó') || spanishText.Contains('é') || spanishText.Contains('ñ')))
+                if (spanishCount1252 > wordMinCount && (spanishText.Contains('ú') || spanishText.Contains('í') || spanishText.Contains('ú') || spanishText.Contains('ó') || spanishText.Contains('é') || spanishText.Contains('ñ')))
                 {
                     return encoding1252;
                 }
@@ -1188,14 +1193,14 @@ namespace Nikse.SubtitleEdit.Core
                 var encoding28591 = Encoding.GetEncoding(28591);
 
                 var frenchCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsFrench);
-                if (frenchCount1252 > buffer.Length / 200)
+                if (frenchCount1252 > wordMinCount)
                 {
                     var frenchCount28591 = GetCount(encoding28591.GetString(buffer), AutoDetectWordsFrench);
                     return frenchCount28591 > frenchCount1252 ? encoding28591 : encoding1252;
                 }
 
                 var portugueseCount1252 = GetCount(encoding1252.GetString(buffer), AutoDetectWordsPortuguese);
-                if (portugueseCount1252 > buffer.Length / 200)
+                if (portugueseCount1252 > wordMinCount)
                 {
                     var portugueseCount28591 = GetCount(encoding28591.GetString(buffer), AutoDetectWordsPortuguese);
                     return portugueseCount28591 > portugueseCount1252 ? encoding28591 : encoding1252;
