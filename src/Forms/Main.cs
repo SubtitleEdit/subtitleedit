@@ -7087,6 +7087,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void RefreshSelectedParagraphs()
+        {
+            for (int i = 0; i < SubtitleListview1.SelectedIndices.Count; i++)
+            {
+                var index = SubtitleListview1.SelectedIndices[i];
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p != null)
+                {
+                    SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                }
+            }
+        }
+
         private int GetPositionFromWordIndex(string text, int wordIndex)
         {
             var sb = new StringBuilder();
@@ -10276,12 +10289,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ExtendBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
-
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                ExtendSelectedLinesToPreviousLine();
+            }
         }
 
         private void ExtendAfterToolStripMenuItemClick(object sender, EventArgs e)
         {
-
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                ExtendSelectedLinesToNextLine();
+            }
         }
 
         private static string ChangeAllLinesTagsToSingleTag(string text, string tag)
@@ -14668,7 +14687,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph();
+                RefreshSelectedParagraphs();
             }
         }
 
@@ -14709,7 +14728,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph();
+                RefreshSelectedParagraphs();
             }
         }
 
@@ -14754,7 +14773,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph();
+                RefreshSelectedParagraphs();
             }
         }
 
@@ -14799,7 +14818,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph();
+                RefreshSelectedParagraphs();
             }
         }
 
