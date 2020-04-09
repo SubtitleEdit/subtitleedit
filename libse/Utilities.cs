@@ -2818,10 +2818,15 @@ namespace Nikse.SubtitleEdit.Core
         private static string doubleQuotes = "''‘‘’’‚‚‘‘";
 
         public static List<string> Prefixes = new List<string>() { "...", "..", "-", "‐", "–", "—", "…" };
-        public static List<string> Suffixes = new List<string>() { ",", "...", "..", "-", "‐", "–", "—", "…" };
+        public static List<string> Suffixes = new List<string>() { "...", "..", "-", "‐", "–", "—", "…" };
 
         public static string SanitizeString(string input, bool removeDashes = true)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
             string checkString = input;
             checkString = Regex.Replace(checkString, "<.*?>", String.Empty);
             checkString = Regex.Replace(checkString, "\\(.*?\\)", String.Empty);
@@ -2899,26 +2904,38 @@ namespace Nikse.SubtitleEdit.Core
             return checkString;
         }
 
-        public static string ReplaceFirstOccurrence(string Source, string Find, string Replace)
+        public static string ReplaceFirstOccurrence(string source, string find, string replace)
         {
-            int place = Source.IndexOf(Find);
+            int place = source.IndexOf(find);
 
             if (place == -1)
-                return Source;
+                return source;
 
-            string result = Source.Remove(place, Find.Length).Insert(place, Replace);
+            string result = source.Remove(place, find.Length).Insert(place, replace);
             return result;
         }
 
-        public static string ReplaceLastOccurrence(string Source, string Find, string Replace)
+        public static string ReplaceLastOccurrence(string source, string find, string replace)
         {
-            int place = Source.LastIndexOf(Find);
+            int place = source.LastIndexOf(find);
 
             if (place == -1)
-                return Source;
+                return source;
 
-            string result = Source.Remove(place, Find.Length).Insert(place, Replace);
+            string result = source.Remove(place, find.Length).Insert(place, replace);
             return result;
+        }
+
+        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize = true)
+        {
+            string text = sanitize ? ContinuationUtilities.SanitizeString(input) : input;
+
+            if (((!ContinuationUtilities.IsEndOfSentence(text) || text.EndsWith(",") || HasSuffix(text, profile)) && !text.EndsWith("--") && !text.EndsWith(":")))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
@@ -2990,7 +3007,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // Replace it
-            return ContinuationUtilities.ReplaceLastOccurrence(originalText, firstWord, newFirstWord);
+            return ContinuationUtilities.ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
         }
 
         public static string RemoveSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
@@ -3062,7 +3079,159 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // Replace it
-            return ContinuationUtilities.ReplaceLastOccurrence(originalText, firstWord, newFirstWord);
+            return ContinuationUtilities.ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
+        }
+
+        public static string RemoveSuffix(string originalText, ContinuationProfile profile, bool addComma = false)
+        {
+            // Get last word
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string lastWord = split.Last();
+            string newLastWord = lastWord;
+
+            foreach (string suffix in Suffixes)
+            {
+                if (newLastWord.EndsWith(suffix)) newLastWord = newLastWord.Substring(0, newLastWord.Length - suffix.Length);
+            }
+            newLastWord = newLastWord.Trim();
+
+            if (addComma) newLastWord = newLastWord + ",";
+
+            // Replace it
+            return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+        }
+
+        public static string RemovePrefix(string originalText, ContinuationProfile profile)
+        {
+            // Get first word of the next paragraph
+            string text = ContinuationUtilities.SanitizeString(originalText);
+            string[] split = text.Split(Convert.ToChar(" "));
+            string firstWord = split.First();
+            string newFirstWord = firstWord;
+
+            foreach (string prefix in Prefixes)
+            {
+                if (newFirstWord.StartsWith(prefix)) newFirstWord = newFirstWord.Substring(prefix.Length);
+            }
+            newFirstWord = newFirstWord.Trim();
+
+            // Replace it
+            return ContinuationUtilities.ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
+        }
+
+        public static bool IsNewSentence(string input)
+        {
+            if (Char.IsLetter(input[0]) && Char.IsUpper(input[0]))
+            {
+                // First letter
+                return true;
+            }
+            else if (Char.IsLetter(input[0]) && !Char.IsUpper(input[0]) && Char.IsLetter(input[1]) && Char.IsUpper(input[1]))
+            {
+                // iPhone
+                return true;
+            }
+            else if (Char.IsPunctuation(input[0]) && Char.IsLetter(input[1]) && !Char.IsUpper(input[1]) && Char.IsWhiteSpace(input[2]) && Char.IsLetter(input[3]) && Char.IsUpper(input[3]))
+            {
+                // 's Avonds
+                return true;
+            }
+            else if ("¿¡".Contains(input[0]) && Char.IsLetter(input[1]) && Char.IsUpper(input[1]))
+            {
+                // Spanish
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsEndOfSentence(string input)
+        {
+            return (input.EndsWith(".") && !input.EndsWith("..")) || input.EndsWith("?") || input.EndsWith("!") || input.EndsWith(";") /* Greek question mark */ || input.EndsWith("--");
+        }
+
+        public static bool IsAllCaps(string input)
+        {
+            int totalCount = 0;
+            int allCapsCount = 0;
+
+            // Count all caps chars
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (Char.IsLetter(input[i]))
+                {
+                    totalCount++;
+
+                    if (Char.IsUpper(input[i]))
+                    {
+                        allCapsCount++;
+                    }
+                }
+            }
+
+            return (double)allCapsCount / (double)totalCount >= 0.80;
+        }
+
+        public static bool IsItalic(string input)
+        {
+            input = ContinuationUtilities.ExtractParagraphOnly(input);
+
+            if (input.Length > 2)
+            {
+                if (input.StartsWith("<i>") && ((input.EndsWith("</i>") && !input.Substring(2).Contains("<i>")) || !input.Contains("</i>")))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool HasPrefix(string input, ContinuationProfile profile)
+        {
+            if (profile.Prefix.Length > 0 && input.StartsWith(profile.Prefix))
+            {
+                return true;
+            }
+
+            if (profile.UseDifferentStyleGap && profile.GapPrefix.Length > 0 && input.StartsWith(profile.GapPrefix))
+            {
+                return true;
+            }
+
+            foreach (string prefix in Prefixes)
+            {
+                if (input.StartsWith(prefix))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool HasSuffix(string input, ContinuationProfile profile)
+        {
+            if (profile.Suffix.Length > 0 && input.EndsWith(profile.Suffix))
+            {
+                return true;
+            }
+
+            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && input.EndsWith(profile.GapSuffix))
+            {
+                return true;
+            }
+
+            foreach (string suffix in Suffixes)
+            {
+                if (input.EndsWith(suffix))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool StartsWithConjunction(string input, string language)
@@ -3095,6 +3264,23 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return false;
+        }
+
+        public static Tuple<string, string> MergeHelper(string input, string nextInput, ContinuationProfile profile, string language)
+        {
+            var thisText = ContinuationUtilities.SanitizeString(input);
+            var nextText = ContinuationUtilities.SanitizeString(nextInput);
+            var nextTextWithDashPrefix = ContinuationUtilities.SanitizeString(nextInput, profile.GapPrefix != "-");
+
+            if ((ContinuationUtilities.HasSuffix(thisText, profile) && ContinuationUtilities.HasPrefix(nextTextWithDashPrefix, profile))
+                || (ContinuationUtilities.HasSuffix(thisText, profile) && !ContinuationUtilities.IsNewSentence(nextText)))
+            {
+                var newText = ContinuationUtilities.RemoveSuffix(input, profile, StartsWithConjunction(nextText, language));
+                var newNextText = ContinuationUtilities.RemovePrefix(nextInput, profile);
+                return new Tuple<string, string>(newText, newNextText);
+            }
+
+            return new Tuple<string, string>(input, nextInput);
         }
 
         public static int GetMinimumGapMs()
