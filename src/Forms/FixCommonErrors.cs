@@ -45,13 +45,12 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexFixDoubleDash = 22;
         private const int IndexFixDoubleGreaterThan = 23;
         private const int IndexFixContinuationStyle = 24;
-        private const int IndexFixUnnecessaryLeadingDots = 25;
-        private const int IndexFixEllipsesStart = 25;
-        private const int IndexFixMissingOpenBracket = 26;
-        private const int IndexFixOcrErrorsViaReplaceList = 27;
-        private const int IndexUppercaseIInsideLowercaseWord = 28;
-        private const int IndexRemoveSpaceBetweenNumbers = 29;
-        private const int IndexDialogsOnOneLine = 30;
+        private const int IndexFixMissingOpenBracket = 25;
+        private const int IndexFixOcrErrorsViaReplaceList = 26;
+        private const int IndexUppercaseIInsideLowercaseWord = 27;
+        private const int IndexRemoveSpaceBetweenNumbers = 28;
+        private const int IndexDialogsOnOneLine = 29;
+        private const int IndexFixEllipsesStart = 30;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -392,9 +391,6 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
                 new FixItem( string.Format(_language.FixContinuationStyleX, ContinuationUtilities.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle().Fix(Subtitle, this), ce.FixContinuationStyleTicked),
-                (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingDots 
-                    ? new FixItem(_language.FixUnnecessaryLeadingDots, string.Empty, () => new FixUnnecessaryLeadingDots().Fix(Subtitle, this), ce.FixUnnecessaryLeadingDotsTicked)
-                    : new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, () => new FixEllipsesStart().Fix(Subtitle, this), ce.FixEllipsesStartTicked)),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, () => new FixMissingOpenBracket().Fix(Subtitle, this), ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
@@ -402,6 +398,10 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked)
             };
 
+            if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
+            {
+                _fixActions.Add(new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, () => new FixEllipsesStart().Fix(Subtitle, this), ce.FixEllipsesStartTicked));
+            }
             if (Language == "en")
             {
                 _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
@@ -1059,11 +1059,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixContinuationStyleTicked = listView1.Items[IndexFixContinuationStyle].Checked;
-            if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.OnlyTrailingDots)
-            {
-                ce.FixUnnecessaryLeadingDotsTicked = listView1.Items[IndexFixUnnecessaryLeadingDots].Checked;
-            }
-            else
+            if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
             {
                 ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
             }
