@@ -231,13 +231,14 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsThai =
         {
-            "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์",
-            "คะ", "อิซานะ", "มจริง", "รับทราบ", "พอคะ", "ครับ", "อยาตขาป", "ยินดีทีดรูจักคะ", "ปลอดภัยดีนะ", "ทุกคน", "ตอนที", "ขอบคุณครับ", "ขอทษนะคะ", "ขอทษคะ"
+            "ผู้กอง", "โรเบิร์ต", "วิตตอเรีย", "เข้าใจมั้ย", "คุณตำรวจ", "ราเชล", "เพื่อน", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์", "ขอโทษครับ", "ขอบคุณ", "วาร์กัส", "ทุกคน",
+            "ไม่เอาน่า", "อิซานะ", "มจริง", "รับทราบ", "พอคะ", "ครับ", "อยาตขาป", "ยินดีทีดรูจักคะ", "ปลอดภัยดีนะ", "ทุกคน", "ตอนที", "ขอบคุณครับ", "ขอทษนะคะ", "ขอทษคะ"
         };
 
         private static readonly string[] AutoDetectWordsKorean =
         {
-            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고"
+            "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고", "있어요",
+            "있어요", "보여줘", "괜찮아요", "목소릴", "기억이", "저주를", "좋아요"
         };
 
         private static readonly string[] AutoDetectWordsMacedonian =
@@ -1106,7 +1107,6 @@ namespace Nikse.SubtitleEdit.Core
                     return encoding1250;
                 }
 
-
                 var encoding1252 = Encoding.GetEncoding(1252); // Latin - English and some other Western languages
                 var textEnc1252 = encoding1252.GetString(buffer);
                 var pol1252Count = GetCount(textEnc1252, AutoDetectWordsPolish);
@@ -1160,9 +1160,12 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var thaiEncoding = Encoding.GetEncoding(874); // Thai
-                if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
+                var thaiCount = GetCount(thaiEncoding.GetString(buffer), AutoDetectWordsThai);
+                var koreanEncoding = Encoding.GetEncoding(949); // Korean
+                var koreanCount = GetCount(koreanEncoding.GetString(buffer), AutoDetectWordsKorean);
+                if (thaiCount > 10 || koreanCount > 10)
                 {
-                    return thaiEncoding;
+                    return thaiCount > koreanCount ? thaiEncoding : koreanEncoding;
                 }
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
@@ -1186,14 +1189,7 @@ namespace Nikse.SubtitleEdit.Core
                     return encoding1250;
                 }
 
-                var koreanEncoding = Encoding.GetEncoding(949); // Korean
-                if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
-                {
-                    return koreanEncoding;
-                }
-
                 var encoding28591 = Encoding.GetEncoding(28591);
-
                 var frenchCount1252 = GetCount(textEnc1252, AutoDetectWordsFrench);
                 if (frenchCount1252 > wordMinCount)
                 {
@@ -1287,7 +1283,7 @@ namespace Nikse.SubtitleEdit.Core
                         else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
                             var autoDetected = DetectAnsiEncoding(buffer);
-                            return autoDetected.CodePage < 949 ? Encoding.Default : autoDetected;
+                            return autoDetected.CodePage < 949 && autoDetected.CodePage != 874 ? Encoding.Default : autoDetected;
                         }
                     }
                 }
