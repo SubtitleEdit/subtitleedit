@@ -2161,6 +2161,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsAllCaps>Detect and uncheck inserts in all-caps (for example: NO ENTRY)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Try to detect and uncheck italic inserts or lyrics in lowercase</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Try to detect and uncheck inserts or lyrics in lowercase</UncheckInsertsLowercase>
+    <HideInterruptionContinuationCandidatesWithoutName>Hide interruption continuation candidates start don't start with a name</HideInterruptionContinuationCandidatesWithoutName>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>

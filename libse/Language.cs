@@ -2454,7 +2454,8 @@ can edit in same subtitle file (collaboration)",
                 FixContinuationStyleSettings = "Settings for fixing continuation style",
                 UncheckInsertsAllCaps = "Detect and uncheck inserts in all-caps (for example: NO ENTRY)",
                 UncheckInsertsItalic = "Try to detect and uncheck italic inserts or lyrics in lowercase",
-                UncheckInsertsLowercase = "Try to detect and uncheck inserts or lyrics in lowercase"
+                UncheckInsertsLowercase = "Try to detect and uncheck inserts or lyrics in lowercase",
+                HideInterruptionContinuationCandidatesWithoutName = "Hide interruption continuation candidates start don't start with a name"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

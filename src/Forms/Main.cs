@@ -10160,7 +10160,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (continuationStyle != ContinuationStyle.None)
                     {
                         var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                        var gap = next < firstIndex + SubtitleListview1.SelectedIndices.Count ? _subtitle.Paragraphs[next].StartTime.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5 : false;
+                        var gap = next < firstIndex + SubtitleListview1.SelectedIndices.Count ? _subtitle.Paragraphs[next].StartTime.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs() : false;
                         if (index != firstIndex)
                         {
                             addText = ContinuationUtilities.RemovePrefixIfNeeded(addText, continuationProfile, gap);
@@ -10392,7 +10392,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (continuationStyle != ContinuationStyle.None)
                 {
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                    var gap = nextParagraph.StartTime.TotalMilliseconds - currentParagraph.EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5;
+                    var gap = nextParagraph.StartTime.TotalMilliseconds - currentParagraph.EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs();
 
                     currentParagraph.Text = ContinuationUtilities.RemoveSuffixIfNeeded(currentParagraph.Text, continuationProfile, gap);
                     nextParagraph.Text = ContinuationUtilities.RemovePrefixIfNeeded(nextParagraph.Text, continuationProfile, gap);
@@ -10408,7 +10408,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (continuationStyle != ContinuationStyle.None)
                         {
                             var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                            var gap = originalNext.StartTime.TotalMilliseconds - original.EndTime.TotalMilliseconds > Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5;
+                            var gap = originalNext.StartTime.TotalMilliseconds - original.EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs();
 
                             original.Text = ContinuationUtilities.RemoveSuffixIfNeeded(original.Text, continuationProfile, gap);
                             originalNext.Text = ContinuationUtilities.RemovePrefixIfNeeded(originalNext.Text, continuationProfile, gap);

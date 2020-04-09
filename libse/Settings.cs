@@ -779,6 +779,7 @@ $HorzAlign          =   Center
         public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
         public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
+        public bool FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -924,6 +925,7 @@ $HorzAlign          =   Center
             FixContinuationStyleUncheckInsertsAllCaps = true;
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
+            FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName = true;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -2583,6 +2585,12 @@ $HorzAlign          =   Center
                 settings.General.FixContinuationStyleUncheckInsertsLowercase = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+                        
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
             {
@@ -6767,6 +6775,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));

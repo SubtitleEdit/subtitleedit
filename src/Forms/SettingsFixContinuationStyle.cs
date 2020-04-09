@@ -25,11 +25,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUncheckInsertsAllCaps.Text = language.UncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Text = language.UncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Text = language.UncheckInsertsLowercase;
+            checkBoxHideInterruptionContinuationCandidatesWithoutName.Text = language.HideInterruptionContinuationCandidatesWithoutName;
 
             checkBoxUncheckInsertsAllCaps.Checked = settings.FixContinuationStyleUncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Checked = settings.FixContinuationStyleUncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Checked = settings.FixContinuationStyleUncheckInsertsLowercase;
-                        
+            checkBoxHideInterruptionContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName;
+
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -40,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps = checkBoxUncheckInsertsAllCaps.Checked;
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic = checkBoxUncheckInsertsItalic.Checked;
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase = checkBoxUncheckInsertsLowercase.Checked;
+            Configuration.Settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName = checkBoxHideInterruptionContinuationCandidatesWithoutName.Checked;
 
             DialogResult = DialogResult.OK;
         }
