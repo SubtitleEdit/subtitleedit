@@ -9704,8 +9704,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (continuationStyle != ContinuationStyle.None)
                 {
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                    currentParagraph.Text = ContinuationUtilities.AddSuffixIfNeeded(currentParagraph.Text, continuationProfile, false);
-                    newParagraph.Text = ContinuationUtilities.AddPrefixIfNeeded(newParagraph.Text, continuationProfile, false);
+                    if (ContinuationUtilities.ShouldAddSuffix(currentParagraph.Text, continuationProfile))
+                    {
+                        currentParagraph.Text = ContinuationUtilities.AddSuffixIfNeeded(currentParagraph.Text, continuationProfile, false);
+                        newParagraph.Text = ContinuationUtilities.AddPrefixIfNeeded(newParagraph.Text, continuationProfile, false);
+                    }
                 }
 
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
@@ -9863,8 +9866,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (continuationStyle != ContinuationStyle.None)
                             {
                                 var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                                originalCurrent.Text = ContinuationUtilities.AddSuffixIfNeeded(originalCurrent.Text, continuationProfile, false);
-                                originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
+                                if (ContinuationUtilities.ShouldAddSuffix(originalCurrent.Text, continuationProfile))
+                                {
+                                    originalCurrent.Text = ContinuationUtilities.AddSuffixIfNeeded(originalCurrent.Text, continuationProfile, false);
+                                    originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
+                                }
                             }
                         }
 
@@ -10154,23 +10160,20 @@ namespace Nikse.SubtitleEdit.Forms
                         next++;
                     }
 
-                    var addText = _subtitle.Paragraphs[index].Text;
-
                     var continuationStyle = Configuration.Settings.General.ContinuationStyle;
                     if (continuationStyle != ContinuationStyle.None)
                     {
                         var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                        var gap = next < firstIndex + SubtitleListview1.SelectedIndices.Count ? _subtitle.Paragraphs[next].StartTime.TotalMilliseconds - _subtitle.Paragraphs[index].EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs() : false;
-                        if (index != firstIndex)
-                        {
-                            addText = ContinuationUtilities.RemovePrefixIfNeeded(addText, continuationProfile, gap);
-                        }
                         if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
                         {
-                            addText = ContinuationUtilities.RemoveSuffixIfNeeded(addText, continuationProfile, gap);
+                            var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                            _subtitle.Paragraphs[index].Text = mergeResult.Item1;
+                            _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
                         }
                     }
 
+                    var addText = _subtitle.Paragraphs[index].Text;
+                                        
                     if (firstIndex != index)
                     {
                         addText = RemoveAssStartAlignmentTag(addText);
@@ -10391,11 +10394,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var continuationStyle = Configuration.Settings.General.ContinuationStyle;
                 if (continuationStyle != ContinuationStyle.None)
                 {
-                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                    var gap = nextParagraph.StartTime.TotalMilliseconds - currentParagraph.EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs();
-
-                    currentParagraph.Text = ContinuationUtilities.RemoveSuffixIfNeeded(currentParagraph.Text, continuationProfile, gap);
-                    nextParagraph.Text = ContinuationUtilities.RemovePrefixIfNeeded(nextParagraph.Text, continuationProfile, gap);
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);                    
+                    var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                    currentParagraph.Text = mergeResult.Item1;
+                    nextParagraph.Text = mergeResult.Item2;
                 }
 
                 if (_subtitleAlternate != null)
@@ -10408,10 +10410,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (continuationStyle != ContinuationStyle.None)
                         {
                             var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-                            var gap = originalNext.StartTime.TotalMilliseconds - original.EndTime.TotalMilliseconds > ContinuationUtilities.GetMinimumGapMs();
-
-                            original.Text = ContinuationUtilities.RemoveSuffixIfNeeded(original.Text, continuationProfile, gap);
-                            originalNext.Text = ContinuationUtilities.RemovePrefixIfNeeded(originalNext.Text, continuationProfile, gap);
+                            var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate));
+                            original.Text = mergeResult.Item1;
+                            originalNext.Text = mergeResult.Item2;
                         }
                     }
 

@@ -11,9 +11,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
     public class FixContinuationStyle : IFixCommonError
     {
         private ContinuationUtilities.ContinuationProfile continuationProfile = null;
-        private List<string> prefixes = null;
-        private List<string> suffixes = null;
-
         private List<string> names = null;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
@@ -61,15 +58,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var isChecked = true;
 
                 // Check if we should fix this paragraph
-                if (((!IsEndOfSentence(text) || HasSuffix(text)) && !text.EndsWith("--") && !text.EndsWith(":")))
+                if (ShouldFixParagraph(text))
                 {
                     // If ends with nothing...
-                    if (!IsEndOfSentence(text))
+                    if (!ContinuationUtilities.IsEndOfSentence(text))
                     {
                         // ...ignore inserts
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
                         {
-                            if (IsAllCaps(text))
+                            if (ContinuationUtilities.IsAllCaps(text))
                             {
                                 isChecked = false;
                             }
@@ -78,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...and italic lyrics    
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
                         {
-                            if (IsItalic(oldText) && !IsNewSentence(text) && inItalicSentence == false)
+                            if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text) && inItalicSentence == false)
                             {
                                 isChecked = false;
                             }
@@ -87,16 +84,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...and smallcaps inserts or non-italic lyrics
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
                         {
-                            if (!IsNewSentence(text) && !inSentence)
+                            if (!ContinuationUtilities.IsNewSentence(text) && !inSentence)
                             {
                                 isChecked = false;
                             }
                         }
                     }
 
+
                     // Remove any previous suffixes from first paragraph
                     var textWithoutSuffix = text;
-                    foreach (string suffix in this.suffixes)
+                    foreach (string suffix in ContinuationUtilities.Suffixes.Union(new List<string> { "," }))
                     {
                         if (textWithoutSuffix.EndsWith(suffix)) textWithoutSuffix = textWithoutSuffix.Substring(0, textWithoutSuffix.Length - suffix.Length);
                     }
@@ -104,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     // Remove any previous prefixes from second paragraph
                     var textNextWithoutPrefix = textNext;
-                    foreach (string prefix in this.prefixes)
+                    foreach (string prefix in ContinuationUtilities.Prefixes)
                     {
                         if (textNextWithoutPrefix.StartsWith(prefix)) textNextWithoutPrefix = textNextWithoutPrefix.Substring(prefix.Length);
                     }
@@ -120,11 +118,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     // Detect gap
                     bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
+
                     
                     // If ends with dots (possible interruptions), check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…"))
                     {
-                        if (!HasPrefix(textNext) && IsNewSentence(textNext))
+                        if (!HasPrefix(textNext) && ContinuationUtilities.IsNewSentence(textNext))
                         {
                             isChecked = false;
 
@@ -139,6 +138,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                     }
 
+
                     // First paragraph...
 
                     // If first paragraphs ends with a suffix,
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // and next sentence starts with conjunction,
                     // try to re-add comma
                     var addComma = false;
-                    if (!lastWord.EndsWith(",") 
+                    if (!lastWord.EndsWith(",")
                         && HasSuffix(text) 
                         && (gap ? !gapReplaceComma : !replaceComma)
                         && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language))
@@ -179,6 +179,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         callbacks.AddFixToListView(p, fixAction, oldText, newText, isChecked);
                     }
                     
+
                     // Second paragraph...
 
                     // Make new first word
@@ -210,11 +211,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 skipThisLine:
 
                 // Detect new sentence
-                if (IsNewSentence(text))
+                if (ContinuationUtilities.IsNewSentence(text))
                 {
                     inSentence = true;
 
-                    if (IsItalic(oldText))
+                    if (ContinuationUtilities.IsItalic(oldText))
                     {
                         inItalicSentence = true;
                     }
@@ -225,11 +226,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 // Detect end of sentence
-                if (IsEndOfSentence(text))
+                if (ContinuationUtilities.IsEndOfSentence(text))
                 {
                     inSentence = false;
 
-                    if (IsItalic(oldText))
+                    if (ContinuationUtilities.IsItalic(oldText))
                     {
                         inItalicSentence = false;
                     }
@@ -248,100 +249,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
         }
 
-        private bool IsNewSentence(string input)
+        private bool ShouldFixParagraph(string input)
         {
-            if (Char.IsLetter(input[0]) && Char.IsUpper(input[0]))
-            {
-                // First letter
-                return true;
-            }
-            else if (Char.IsLetter(input[0]) && !Char.IsUpper(input[0]) && Char.IsLetter(input[1]) && Char.IsUpper(input[1]))
-            {
-                // iPhone
-                return true;
-            }
-            else if (Char.IsPunctuation(input[0]) && Char.IsLetter(input[1]) && !Char.IsUpper(input[1]) && Char.IsWhiteSpace(input[2]) && Char.IsLetter(input[3]) && Char.IsUpper(input[3]))
-            {
-                // 's Avonds
-                return true;
-            }
-            else if ("¿¡".Contains(input[0]) && Char.IsLetter(input[1]) && Char.IsUpper(input[1]))
-            {
-                // Spanish
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool IsEndOfSentence(string input)
-        {
-            return (input.EndsWith(".") && !input.EndsWith("..")) || input.EndsWith("?") || input.EndsWith("!") || input.EndsWith(";") /* Greek question mark */ || input.EndsWith("--");
+            return ContinuationUtilities.ShouldAddSuffix(input, this.continuationProfile, false);
         }
 
         private bool HasPrefix(string input)
         {
-            foreach (string prefix in this.prefixes)
-            {
-                if (input.StartsWith(prefix))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ContinuationUtilities.HasPrefix(input, this.continuationProfile);
         }
 
         private bool HasSuffix(string input)
         {
-            foreach (string suffix in this.suffixes)
-            {
-                if (input.EndsWith(suffix))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return ContinuationUtilities.HasSuffix(input, this.continuationProfile);
         }
-
-        private bool IsAllCaps(string input)
-        {
-            int totalCount = 0;
-            int allCapsCount = 0;
-
-            // Count all caps chars
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (Char.IsLetter(input[i]))
-                {
-                    totalCount++;
-
-                    if (Char.IsUpper(input[i]))
-                    {
-                        allCapsCount++;
-                    }
-                }
-            }
-
-            return (double)allCapsCount / (double)totalCount >= 0.80;
-        }
-
-        private bool IsItalic(string input)
-        {
-            input = ContinuationUtilities.ExtractParagraphOnly(input);
-
-            if (input.Length > 2)
-            {
-                if (input.StartsWith("<i>") && ((input.EndsWith("</i>") && !input.Substring(2).Contains("<i>")) || !input.Contains("</i>")))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
+                
         private bool StartsWithName(string input, string language)
         {
             if (this.names == null)
@@ -367,32 +289,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private void SetContinuationProfile(ContinuationStyle continuationStyle)
         {
             this.continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
-
-            this.prefixes = ContinuationUtilities.Prefixes;
-            this.suffixes = ContinuationUtilities.Suffixes;
-
-            if (this.continuationProfile.Prefix.Length > 0)
-            {
-                this.prefixes.Add(this.continuationProfile.Prefix);
-            }
-
-            if (this.continuationProfile.Suffix.Length > 0)
-            {
-                this.suffixes.Add(this.continuationProfile.Suffix);
-            }
-
-            if (this.continuationProfile.UseDifferentStyleGap)
-            {
-                if (this.continuationProfile.GapPrefix.Length > 0)
-                {
-                    this.prefixes.Add(this.continuationProfile.GapPrefix);
-                }
-
-                if (this.continuationProfile.GapSuffix.Length > 0)
-                {
-                    this.suffixes.Add(this.continuationProfile.GapSuffix);
-                }
-            }
         }
     }
 }
