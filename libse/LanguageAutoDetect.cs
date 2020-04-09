@@ -1276,15 +1276,19 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
-                        { // keep utf-8 encoding if it's default
-                            encoding = Encoding.UTF8;
+                        else if (couldBeUtf8)
+                        {
+                            if (Configuration.Settings.General.DefaultEncoding.StartsWith("UTF-8", StringComparison.Ordinal))
+                            { // keep utf-8 encoding if it's default
+
+                                return Encoding.UTF8;
+                            }
+                            if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).Replace('\'', '"').Contains("encoding=\"utf-8\"", StringComparison.OrdinalIgnoreCase))
+                            { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
+                                return Encoding.UTF8;
+                            }
                         }
-                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLowerInvariant().Replace('\'', '"').Contains("encoding=\"utf-8\""))
-                        { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
-                            encoding = Encoding.UTF8;
-                        }
-                        else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
+                        if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
                             var autoDetected = DetectAnsiEncoding(buffer);
                             return autoDetected.CodePage < 949 ? Encoding.Default : autoDetected;
@@ -1306,29 +1310,30 @@ namespace Nikse.SubtitleEdit.Core
         private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
             couldBeUtf8 = false;
-            int utf8Count = 0;
+            bool success = false;
             int i = 0;
-            while (i < buffer.Length - 3)
+            int len = buffer.Length - 3;
+            while (i < len)
             {
                 byte b = buffer[i];
                 if (b > 127)
                 {
                     if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
                     { // 2-byte sequence
-                        utf8Count++;
+                        success = true;
                         i++;
                     }
                     else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
                                                      buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
                     { // 3-byte sequence
-                        utf8Count++;
+                        success = true;
                         i += 2;
                     }
                     else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
                                                      buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
                                                      buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
                     { // 4-byte sequence
-                        utf8Count++;
+                        success = true;
                         i += 3;
                     }
                     else
@@ -1339,12 +1344,7 @@ namespace Nikse.SubtitleEdit.Core
                 i++;
             }
             couldBeUtf8 = true;
-            if (utf8Count == 0)
-            {
-                return false; // not utf-8 (no characters utf-8 encoded...)
-            }
-
-            return true;
+            return success;
         }
 
         private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
