@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -71,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         continue;
                     }
 
-                    var text = string.Empty;
+                    var text = new StringBuilder();
                     var start = -1d;
                     var dur = -1d;
                     foreach (var lineKey in line.Keys)
@@ -88,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         {
                                             if (tk == "utf8")
                                             {
-                                                text = string.Join(Environment.NewLine, textDic[tk].ToString().SplitToLines());
+                                                text.Append(" " + string.Join(Environment.NewLine, textDic[tk].ToString().SplitToLines()));
                                             }
                                         }
                                     }
@@ -110,15 +111,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                     }
-                    if (!string.IsNullOrEmpty(text) && dur > 0)
+
+                    var subText = text.ToString()
+                        .Replace("  ", " ")
+                        .Replace(Environment.NewLine + "  ", Environment.NewLine)
+                        .Trim();
+                    if (!string.IsNullOrEmpty(subText) && dur > 0)
                     {
-                        subtitle.Paragraphs.Add(new Paragraph(text, start, start + dur));
+                        subtitle.Paragraphs.Add(new Paragraph(subText, start, start + dur));
                     }
                 }
             }
-
+            new FixOverlappingDisplayTimes().Fix(subtitle, new EmptyFixCallback());
             subtitle.Renumber();
         }
-
     }
 }
