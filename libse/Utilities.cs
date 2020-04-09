@@ -2817,6 +2817,9 @@ namespace Nikse.SubtitleEdit.Core
         private static string singleQuotes = "'‘’‘";
         private static string doubleQuotes = "''‘‘’’‚‚‘‘";
 
+        public static List<string> Prefixes = new List<string>() { "...", "..", "-", "‐", "–", "—", "…" };
+        public static List<string> Suffixes = new List<string>() { ",", "...", "..", "-", "‐", "–", "—", "…" };
+
         public static string SanitizeString(string input, bool removeDashes = true)
         {
             string checkString = input;
@@ -3060,6 +3063,43 @@ namespace Nikse.SubtitleEdit.Core
 
             // Replace it
             return ContinuationUtilities.ReplaceLastOccurrence(originalText, firstWord, newFirstWord);
+        }
+
+        public static bool StartsWithConjunction(string input, string language)
+        {
+            List<string> conjunctions = null;
+
+            if (language == "nl")
+            {
+                conjunctions = new List<string>() { "maar", "dus", "omdat", "aangezien", "want", "vermits", "zodat", "opdat", "zoals", "bijvoorbeeld",
+                    "net", "behalve", "al", "alhoewel", "hoewel", "ofschoon", "tenzij", "waardoor", "waarna", "misschien", "waarschijnlijk", "vast" };
+            }
+            else if (language == "en")
+            {
+                conjunctions = new List<string> { "and", "but", "for", "nor", "yet", "or", "so", "such as" };
+            }
+            else if (language == "fr")
+            {
+                conjunctions = new List<string> { "mais", "car", "donc", "parce que", "par exemple" };
+            }
+
+            if (conjunctions != null)
+            {
+                foreach (string conjunction in conjunctions)
+                {
+                    if (input.StartsWith(conjunction + " ") || input.StartsWith(conjunction + ",") || input.StartsWith(conjunction + ":"))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static int GetMinimumGapMs()
+        {
+            return Math.Max(Configuration.Settings.General.MinimumMillisecondsBetweenLines + 5, 150);
         }
 
         public static string GetContinuationStyleName(ContinuationStyle continuationStyle)

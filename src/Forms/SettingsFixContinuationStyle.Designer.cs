@@ -33,6 +33,7 @@
             this.checkBoxUncheckInsertsAllCaps = new System.Windows.Forms.CheckBox();
             this.checkBoxUncheckInsertsItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxUncheckInsertsLowercase = new System.Windows.Forms.CheckBox();
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -40,7 +41,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(397, 107);
+            this.buttonCancel.Location = new System.Drawing.Point(397, 128);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -52,7 +53,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(316, 107);
+            this.buttonOK.Location = new System.Drawing.Point(316, 128);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 9;
@@ -90,13 +91,24 @@
             this.checkBoxUncheckInsertsLowercase.Text = "Try to detect and uncheck inserts or lyrics in lowercase";
             this.checkBoxUncheckInsertsLowercase.UseVisualStyleBackColor = true;
             // 
+            // checkBoxHideInterruptionContinuationCandidatesWithoutName
+            // 
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.AutoSize = true;
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Location = new System.Drawing.Point(12, 81);
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Name = "checkBoxHideInterruptionContinuationCandidatesWithoutName";
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Size = new System.Drawing.Size(349, 17);
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.TabIndex = 11;
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Text = "Hide interruption continuation candidates that don\'t start with a name";
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.UseVisualStyleBackColor = true;
+            // 
             // SettingsFixContinuationStyle
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(484, 142);
+            this.ClientSize = new System.Drawing.Size(484, 163);
+            this.Controls.Add(this.checkBoxHideInterruptionContinuationCandidatesWithoutName);
             this.Controls.Add(this.checkBoxUncheckInsertsLowercase);
             this.Controls.Add(this.checkBoxUncheckInsertsItalic);
             this.Controls.Add(this.checkBoxUncheckInsertsAllCaps);
@@ -123,5 +135,6 @@
         private System.Windows.Forms.CheckBox checkBoxUncheckInsertsAllCaps;
         private System.Windows.Forms.CheckBox checkBoxUncheckInsertsItalic;
         private System.Windows.Forms.CheckBox checkBoxUncheckInsertsLowercase;
+        private System.Windows.Forms.CheckBox checkBoxHideInterruptionContinuationCandidatesWithoutName;
     }
 }
