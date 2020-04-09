@@ -16467,7 +16467,8 @@ namespace Nikse.SubtitleEdit.Forms
                         item.SubItems[SubtitleListview1.ColumnIndexText].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor ||
                         item.SubItems[SubtitleListview1.ColumnIndexStart].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor ||
                         (SubtitleListview1.ColumnIndexCps >= 0 && item.SubItems[SubtitleListview1.ColumnIndexCps].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor) ||
-                        (SubtitleListview1.ColumnIndexWpm >= 0 && item.SubItems[SubtitleListview1.ColumnIndexWpm].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor))
+                        (SubtitleListview1.ColumnIndexWpm >= 0 && item.SubItems[SubtitleListview1.ColumnIndexWpm].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor) ||
+                        (SubtitleListview1.ColumnIndexGap >= 0 && item.SubItems[SubtitleListview1.ColumnIndexGap].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(i, true);
                         if (mediaPlayer.VideoPlayer != null)
