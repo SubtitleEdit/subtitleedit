@@ -130,8 +130,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             // If set, we'll hide interruption continuation candidates that don't start with a name,
                             // to prevent clogging up the window with a lot of unchecked items.
                             // For example, a candidate we DO want to list:  But wait...  Marty is still there!
+                            // If both sentences are all caps, DO show them.
                             if (Configuration.Settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName
-                                && !StartsWithName(textNextWithoutPrefix, callbacks.Language))
+                                && !StartsWithName(textNextWithoutPrefix, callbacks.Language)
+                                && (!ContinuationUtilities.IsAllCaps(text) && !ContinuationUtilities.IsAllCaps(textNext)))
                             {
                                 goto skipThisLine;
                             }
