@@ -2,6 +2,7 @@
 
 3.5.15 (xth April 2020) BETA
 * NEW:
+   * Allow generation of waveform without audio - thx serquis/grzesiek
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
    * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
    * Line width pixels in main-win/syntax-validation/statistics - thx Flitskikker
@@ -13,6 +14,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
    * Update Korean translation - thx domddol
+   * Update Brazilian translation - thx Igor
    * Update Tesseract version 4.1.1 to "5 Alpha 2020-03-28" 
    * Make shortcuts F4-F12 customizable
    * Minor UI improvements for "Batch convert" UI
@@ -37,6 +39,7 @@
    * Improve "Batch convert" with mkv language settings - thx Rodark
    * Make "Fix dialog style" work with ko, zh, ja, th - thx Jamakmake 
    * Sort plugins by name
+   * Improve check for loss of characters due to ANSI encoding
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
@@ -56,6 +59,7 @@
    * Fix issue with "Fix quotes" - thx Rouzax
    * Fix go to next error with too small gap - thx Nikola
    * Fix bug in "Remove text HI" - thx Perkolator
+   * Fix issue with make-two-color-threshold - thx Signy13
 
 
 3.5.14 (8th March 2020)
