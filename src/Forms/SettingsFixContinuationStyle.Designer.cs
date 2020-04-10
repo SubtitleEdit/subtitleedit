@@ -97,7 +97,7 @@
             this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Location = new System.Drawing.Point(12, 81);
             this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Name = "checkBoxHideInterruptionContinuationCandidatesWithoutName";
             this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Size = new System.Drawing.Size(349, 17);
-            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.TabIndex = 11;
+            this.checkBoxHideInterruptionContinuationCandidatesWithoutName.TabIndex = 4;
             this.checkBoxHideInterruptionContinuationCandidatesWithoutName.Text = "Hide interruption continuation candidates that don\'t start with a name";
             this.checkBoxHideInterruptionContinuationCandidatesWithoutName.UseVisualStyleBackColor = true;
             // 
