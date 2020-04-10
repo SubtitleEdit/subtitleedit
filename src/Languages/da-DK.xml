@@ -82,6 +82,8 @@
     <Width>Bredde</Width>
     <Height>Højde</Height>
     <Collapse>Fold sammen</Collapse>
+    <ShortcutX>Genvej: {0}</ShortcutX>
+    <ExampleX>Eksempel: {0}</ExampleX>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -111,7 +113,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <AddWaveform>
     <Title>Generer lyd kurve data</Title>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
-    <GenerateWaveformData>Generer lyd kurve data</GenerateWaveformData>
+    <GenerateWaveformData>Generer bølgeform data</GenerateWaveformData>
     <PleaseWait>Dette kan tage et par minutter - vent venligst</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player ikke fundet</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit behøver VLC media player 1.1.x eller nyere for kunne udpakke lyd data.</VlcMediaPlayerNotFound>
@@ -128,6 +130,7 @@ Kommandolinjen: {1} {2}
 Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <LowDiskSpace>LAV DISK PLADS!</LowDiskSpace>
     <FreeDiskSpace>{0} fri</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Intet lydspor fundet!  Generer tom bølgeform?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generer bølgeform data</Title>
@@ -220,6 +223,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Filnavn slutter</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS-indstillinger...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Fjern linjeskift</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Prøv at bruge kildekodning</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Sprog" i outputfilnavnet: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>To bogstavs sprogkode</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Tre bogstavs sprogkode</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Ingen sprogkode</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -1179,6 +1187,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <MergeSelectedLinesAsDialog>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
         <MergeWithLineAfter>Flet med linjen efter</MergeWithLineAfter>
+        <ExtendToLineBefore>Udvid til linjen før</ExtendToLineBefore>
+        <ExtendToLineAfter>Udvid til linjen efter</ExtendToLineAfter>
         <RemoveFormatting>Fjern formatering</RemoveFormatting>
         <RemoveFormattingAll>Fjern alle formateringer</RemoveFormattingAll>
         <RemoveFormattingBold>Fjern fed</RemoveFormattingBold>
@@ -1854,6 +1864,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <TimeCodeMode>Tidskode indstillinger</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Split indstillinger</SplitBehavior>
+    <SplitBehaviorPrevious>Tilføj gap til venstre for splitpunkt</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Tilføj gap i midten af ​​splitpunkt</SplitBehaviorHalf>
+    <SplitBehaviorNext>Tilføj gap til højre for splitpunkt</SplitBehaviorNext>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
@@ -1881,6 +1895,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformSetVideoPosMoveStartEnd>Sæt video position, når du flytter start/slut</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Sæt fokus ved mus over</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Enkeltklik for at vælge undertekster</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Skift til sceneændringer (hold "shift" nede for at override)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
     <WaveformColor>Farve</WaveformColor>
@@ -1975,6 +1991,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Udvid valgte linjer til næste sceneændring (eller næste undertekst)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToPreviousSceneChange>Udvid valgte linjer til forrige sceneændring (eller forrige undertekst)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Udvid valgte linjer til næste undertekst</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Udvid valgte linjer til forrige undertekst</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
@@ -2015,6 +2035,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformGoToPreviousSceneChange>Gå til forrige sceneændring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
+    <WaveformGuessStart>Autojuster start via lydstyrke/sceneændring</WaveformGuessStart>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
     <GoBack1FrameWithPlay>En frame tilbage (med afspilning)</GoBack1FrameWithPlay>
@@ -2027,8 +2048,13 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForward1Second>Et sekund fremad</GoForward1Second>
     <GoBack5Seconds>Fem sekunder tilbage</GoBack5Seconds>
     <GoForward5Seconds>Fem sekunder frem</GoForward5Seconds>
+    <GoBack3Second>Tre sekunder tilbage</GoBack3Second>
+    <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
+    <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
+    <PlayCurrent>Afspil nuværende undertekst</PlayCurrent>
     <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
+    <WaveformSelectNextSubtitle>Vælg næste undertekst (fra videoposition, behold videopos)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
@@ -2045,10 +2071,16 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SyntaxColorDurationIfTooSmall>Farve - varighed, hvis for kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Farve - varighed, hvis for længe</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Farv - tekst, hvis for bred (pixels)</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Farve - tekst, hvis mere end {0} linjer</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
     <SyntaxColorGap>Farv hvis mellemrum er for kort</SyntaxColorGap>
     <SyntaxErrorColor>Fejl farve</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Indstillinger...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Linjebreddeindstillinger</LineWidthSettings>
+    <MaximumLineWidth>Maksimal linjebredde:</MaximumLineWidth>
+    <Pixels>pixels</Pixels>
+    <MeasureFont>Måling af skrifttype:</MeasureFont>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Gå til næste tomme linje</GoToNextEmptyLine>
     <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
@@ -2260,6 +2292,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Enkelt linje længde - minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Enkelt linjelængde - maks.: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Enkelt linjebredde - minimum: {0} pixels</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Enkelt linjebredde - maksimalt: {0} pixels</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Enkelt linjebredde - gennemsnit: {0} pixels</SingleLineWidthAverage>
     <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
     <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
     <DurationAverage>Varihed - average: {0:0.000} sekunder</DurationAverage>
@@ -2519,11 +2554,15 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Sæt Aktuel som nyt valg</SetParagraphAsSelection>
     <FocusTextBox>Gå til tekstboks</FocusTextBox>
+    <GoToPrevious>Gå til forrige undertekst</GoToPrevious>
+    <GoToNext>Gå til næste undertekst</GoToNext>
     <DeleteParagraph>Slet tekst</DeleteParagraph>
     <Split>Split</Split>
     <SplitAtCursor>Split ved markør</SplitAtCursor>
     <MergeWithPrevious>Flet med forrige</MergeWithPrevious>
     <MergeWithNext>Flet med næste</MergeWithNext>
+    <ExtendToPrevious>Udvid til forrige</ExtendToPrevious>
+    <ExtendToNext>Udvid til næste</ExtendToNext>
     <PlaySelection>Afspil markering</PlaySelection>
     <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>

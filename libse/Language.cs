@@ -261,6 +261,7 @@ namespace Nikse.SubtitleEdit.Core
                                     "Note: Do check free disk space.",
                 LowDiskSpace = "LOW DISK SPACE!",
                 FreeDiskSpace = "{0} free",
+                NoAudioTracksFoundGenerateEmptyWaveform = "No audio tracks found! Generate empty waveform?",
             };
 
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch

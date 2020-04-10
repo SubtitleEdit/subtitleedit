@@ -131,6 +131,7 @@
             public string WaveFileMalformed { get; set; }
             public string LowDiskSpace { get; set; }
             public string FreeDiskSpace { get; set; }
+            public string NoAudioTracksFoundGenerateEmptyWaveform { get; set; }
         }
 
         public class AddWaveformBatch

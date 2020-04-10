@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -21,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string languageCode = callbacks.Language;
             string fixAction = language.FixMissingSpace;
             int missingSpaces = 0;
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = IsLanguageWithoutPeriods(callbacks.Language), ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
             const string expectedChars = @"""”<.";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -501,5 +502,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return text.Substring(startIndex, endIndex - startIndex + 1);
         }
 
+        private static bool IsLanguageWithoutPeriods(string language)
+        {
+            return new List<string> { "ko", "zh", "ja", "th" }.Contains(language);
+        }
     }
 }

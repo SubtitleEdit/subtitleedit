@@ -1679,7 +1679,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     bTemp.Dispose();
                     nb = new NikseBitmap(b);
                 }
-                nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
+                nb.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrTesseract4RgbThreshold, Color.White, Color.Black);
                 returnBmp.Dispose();
                 return nb.GetBitmap();
             }
@@ -1757,7 +1757,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            n.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold);
+            n.MakeTwoColor(_preprocessingSettings?.BinaryImageCompareThreshold ?? Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold);
             returnBmp.Dispose();
             return n.GetBitmap();
         }
