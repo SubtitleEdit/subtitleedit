@@ -3210,8 +3210,8 @@ namespace Nikse.SubtitleEdit.Core
             if ((ContinuationUtilities.HasSuffix(thisText, profile) && ContinuationUtilities.HasPrefix(nextTextWithDashPrefix, profile))
                 || (ContinuationUtilities.HasSuffix(thisText, profile) && !ContinuationUtilities.IsNewSentence(nextText)))
             {
-                var newText = ContinuationUtilities.RemoveSuffix(input, profile, StartsWithConjunction(nextText, language));
                 var newNextText = ContinuationUtilities.RemovePrefix(nextInput, profile);
+                var newText = ContinuationUtilities.RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
                 return new Tuple<string, string>(newText, newNextText);
             }
 
