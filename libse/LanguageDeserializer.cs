@@ -5326,6 +5326,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ContinuationStyleNone":
                     language.Settings.ContinuationStyleNone = reader.Value;
                     break;
+                case "Settings/ContinuationStyleNoneTrailingDots":
+                    language.Settings.ContinuationStyleNoneTrailingDots = reader.Value;
+                    break;
                 case "Settings/ContinuationStyleNoneLeadingTrailingDots":
                     language.Settings.ContinuationStyleNoneLeadingTrailingDots = reader.Value;
                     break;

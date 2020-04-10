@@ -3,6 +3,7 @@
     public enum ContinuationStyle
     {
         None,
+        NoneTrailingDots,
         NoneLeadingTrailingDots,
         OnlyTrailingDots,
         LeadingTrailingDots,
