@@ -376,6 +376,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "AddWaveform/FreeDiskSpace":
                     language.AddWaveform.FreeDiskSpace = reader.Value;
                     break;
+                case "AddWaveform/NoAudioTracksFoundGenerateEmptyWaveform":
+                    language.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform = reader.Value;
+                    break;
                 case "AddWaveformBatch/Title":
                     language.AddWaveformBatch.Title = reader.Value;
                     break;
