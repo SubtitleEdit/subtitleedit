@@ -1020,7 +1020,7 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithoutSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots
+                ContinuationStyle = ContinuationStyle.NoneTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1036,7 +1036,7 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
                 DialogStyle = DialogType.DashBothLinesWithSpace,
-                ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots
+                ContinuationStyle = ContinuationStyle.NoneTrailingDots
             });
             profiles.Add(new RulesProfile
             {

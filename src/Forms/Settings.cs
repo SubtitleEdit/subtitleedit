@@ -998,6 +998,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxContinuationStyle.Items.Clear();
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
@@ -1005,28 +1006,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
-            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(continuationStyle));
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.None:
-                    comboBoxContinuationStyle.SelectedIndex = 0;
-                    break;
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    comboBoxContinuationStyle.SelectedIndex = 1;
-                    break;
-                case ContinuationStyle.OnlyTrailingDots:
-                    comboBoxContinuationStyle.SelectedIndex = 2;
-                    break;
-                case ContinuationStyle.LeadingTrailingDots:
-                    comboBoxContinuationStyle.SelectedIndex = 3;
-                    break;
-                case ContinuationStyle.LeadingTrailingDash:
-                    comboBoxContinuationStyle.SelectedIndex = 4;
-                    break;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    comboBoxContinuationStyle.SelectedIndex = 5;
-                    break;
-            }
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
+            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(continuationStyle);
         }
 
         private Guid _oldProfileId = Guid.Empty;
@@ -1733,7 +1714,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
-            gs.ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            gs.ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -3231,10 +3212,10 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
-            _rulesProfiles[idx].ContinuationStyle = DialogSplitMerge.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
             
             toolTipContinuationPreview.RemoveAll();
-            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, DialogSplitMerge.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)

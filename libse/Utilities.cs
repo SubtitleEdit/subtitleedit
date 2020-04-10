@@ -2871,13 +2871,18 @@ namespace Nikse.SubtitleEdit.Core
             // Remove single-char quotes from the ending
             if (quotes.Contains(checkString[checkString.Length - 1]))
             {
-                if (singleQuotes.Contains(checkString[checkString.Length - 1]))
+                if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'") && Char.IsLetter(checkString[checkString.Length - 4]))
                 {
-                    // Could be something like: nothin'
-                    // TODO
+                    // nothin' -- Don't remove
                 }
-
-                checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+                else if (checkString[checkString.Length - 1] == '\'' && (checkString.EndsWith("déj'") || checkString.EndsWith("bon ap'") || checkString.EndsWith("bon app'")))
+                {
+                    // déj' -- Don't remove
+                }
+                else
+                {
+                    checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+                }
             }
 
             // Remove double-char quotes from the ending
@@ -3292,6 +3297,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             switch (continuationStyle)
             {
+                case ContinuationStyle.NoneTrailingDots:
+                    return Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots;
                 case ContinuationStyle.NoneLeadingTrailingDots:
                     return Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots;
                 case ContinuationStyle.OnlyTrailingDots:
@@ -3307,10 +3314,84 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static int GetIndexFromContinuationStyle(ContinuationStyle continuationStyle)
+        {
+            switch (continuationStyle)
+            {                
+                case ContinuationStyle.NoneTrailingDots:
+                    return 1;
+                case ContinuationStyle.NoneLeadingTrailingDots:
+                    return 2;
+                case ContinuationStyle.OnlyTrailingDots:
+                    return 3;
+                case ContinuationStyle.LeadingTrailingDots:
+                    return 4;
+                case ContinuationStyle.LeadingTrailingDash:
+                    return 5;
+                case ContinuationStyle.LeadingTrailingDashDots:
+                    return 6;
+                default:
+                    return 0;
+            }
+        }
+
+        public static ContinuationStyle GetContinuationStyleFromIndex(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return ContinuationStyle.NoneTrailingDots;
+                case 2:
+                    return ContinuationStyle.NoneLeadingTrailingDots;
+                case 3:
+                    return ContinuationStyle.OnlyTrailingDots;
+                case 4:
+                    return ContinuationStyle.LeadingTrailingDots;
+                case 5:
+                    return ContinuationStyle.LeadingTrailingDash;
+                case 6:
+                    return ContinuationStyle.LeadingTrailingDashDots;
+                default:
+                    return ContinuationStyle.None;
+            }
+        }
+
+        public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
+        {
+            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit";
+            string line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
+            string line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
+            string linePause = "(...)";
+            string line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
+
+            var profile = GetContinuationProfile(continuationStyle);
+
+            return AddSuffixIfNeeded(line1, profile, false) + "\n\n"
+                + AddSuffixIfNeeded(AddPrefixIfNeeded(line2, profile, false), profile, false) + "\n\n"
+                + AddSuffixIfNeeded(AddPrefixIfNeeded(line3, profile, false), profile, true) + "\n\n"
+                + linePause + "\n\n"
+                + AddPrefixIfNeeded(line4, profile, false);
+        }
+
         public static ContinuationProfile GetContinuationProfile(ContinuationStyle continuationStyle)
         {
             switch (continuationStyle)
             {
+                case ContinuationStyle.NoneTrailingDots:
+                    return new ContinuationProfile
+                    {
+                        Suffix = "",
+                        SuffixAddSpace = false,
+                        SuffixReplaceComma = false,
+                        Prefix = "",
+                        PrefixAddSpace = false,
+                        UseDifferentStyleGap = true,
+                        GapSuffix = "...",
+                        GapSuffixAddSpace = false,
+                        GapSuffixReplaceComma = true,
+                        GapPrefix = "",
+                        GapPrefixAddSpace = false
+                    };
                 case ContinuationStyle.NoneLeadingTrailingDots:
                     return new ContinuationProfile
                     {

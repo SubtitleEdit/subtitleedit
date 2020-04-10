@@ -2133,6 +2133,7 @@
             public string DialogStyleDashSecondLineWithoutSpace { get; set; }
             public string ContinuationStyle { get; set; }
             public string ContinuationStyleNone { get; set; }
+            public string ContinuationStyleNoneTrailingDots { get; set; }
             public string ContinuationStyleNoneLeadingTrailingDots { get; set; }
             public string ContinuationStyleOnlyTrailingDots { get; set; }
             public string ContinuationStyleLeadingTrailingDots { get; set; }

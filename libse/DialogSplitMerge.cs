@@ -319,51 +319,7 @@ namespace Nikse.SubtitleEdit.Core
                     return DialogType.DashBothLinesWithSpace;
             }
         }
-
-        public static ContinuationStyle GetContinuationStyleFromIndex(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return ContinuationStyle.NoneLeadingTrailingDots;
-                case 2:
-                    return ContinuationStyle.OnlyTrailingDots;
-                case 3:
-                    return ContinuationStyle.LeadingTrailingDots;
-                case 4:
-                    return ContinuationStyle.LeadingTrailingDash;
-                case 5:
-                    return ContinuationStyle.LeadingTrailingDashDots;
-                default:
-                    return ContinuationStyle.None;
-            }
-        }
-
-        public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
-        {
-            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit";
-            string line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
-            string line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
-            string linePause = "(...)";
-            string line4 = "mauris mollis consectetur nibh,\nnec congue est viverra quis.";
-
-            switch (continuationStyle)
-            {
-                case ContinuationStyle.NoneLeadingTrailingDots:
-                    return line1 + ",\n\n" + line2 + "\n\n" + line3 + "...\n\n" + linePause + "\n\n..." + line4;
-                case ContinuationStyle.OnlyTrailingDots:
-                    return line1 + "...\n\n" + line2 + "...\n\n" + line3 + "...\n\n" + linePause + "\n\n" + line4;
-                case ContinuationStyle.LeadingTrailingDots:
-                    return line1 + "...\n\n..." + line2 + "...\n\n..." + line3 + "...\n\n" + linePause + "\n\n..." + line4;
-                case ContinuationStyle.LeadingTrailingDash:
-                    return line1 + " -\n\n- " + line2 + " -\n\n- " + line3 + " -\n\n" + linePause + "\n\n- " + line4;
-                case ContinuationStyle.LeadingTrailingDashDots:
-                    return line1 + " -\n\n- " + line2 + " -\n\n- " + line3 + "...\n\n" + linePause + "\n\n..." + line4;
-                default:
-                    return line1 + ",\n\n" + line2 + "\n\n" + line3 + "\n\n" + linePause + "\n\n" + line4;
-            }
-        }
-
+                
         private static string GetStartTags(string input)
         {
             var pre = new StringBuilder();
