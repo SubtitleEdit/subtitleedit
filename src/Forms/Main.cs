@@ -3768,17 +3768,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.GetEncoding(12001)) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8);
-                if (!skipPrompts && !isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
-                {
-                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                    {
-                        return DialogResult.No;
-                    }
-                }
-
                 if (!isUnicode)
                 {
-                    allText = NormalizeUnicode(allText);
+                    if (!skipPrompts && currentEncoding.GetString(currentEncoding.GetBytes(allText)) != allText)
+                    {
+                        if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        {
+                            return DialogResult.No;
+                        }
+                    }
+
+                    allText = NormalizeUnicode(allText, currentEncoding);
                 }
 
                 bool containsNegativeTime = false;
@@ -3953,7 +3953,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = subAlt.ToText(format);
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding != null && (currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8));
-                if (!skipPrompts && !isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
+                if (!skipPrompts && !isUnicode && currentEncoding.GetString(currentEncoding.GetBytes(allText)) != allText)
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
@@ -3963,7 +3963,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!isUnicode)
                 {
-                    allText = NormalizeUnicode(allText);
+                    allText = NormalizeUnicode(allText, currentEncoding);
                 }
 
                 File.WriteAllText(_subtitleAlternateFileName, allText, currentEncoding);
@@ -3978,10 +3978,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public string NormalizeUnicode(string text)
+        public string NormalizeUnicode(string input, Encoding encoding)
         {
             const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
             const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+
+            var text = input;
+
+            bool hasSingleMusicNode = true;
+            if (encoding.GetString(encoding.GetBytes("♪")) != "♪")
+            {
+                text = text.Replace('♪', '#');
+                hasSingleMusicNode = false;
+            }
+
+            if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
+            {
+                text = text.Replace('♪', hasSingleMusicNode ? '♪' : '#');
+            }
 
             // Hyphens
             return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
@@ -3998,8 +4012,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // Others
                 .Replace("…", "...")
-                .Replace('♪', '#')
-                .Replace('♫', '#')
                 .Replace("⇒", "=>")
 
                 // Spaces
