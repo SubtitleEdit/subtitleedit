@@ -3994,7 +3994,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (encoding.GetString(encoding.GetBytes("♫")) != "♫")
             {
-                text = text.Replace('♪', hasSingleMusicNode ? '♪' : '#');
+                text = text.Replace('♫', hasSingleMusicNode ? '♪' : '#');
             }
 
             // Hyphens
