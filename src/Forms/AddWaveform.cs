@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
         private int _delayInMilliseconds;
+        private int _numberOfAudioTracks;
 
         public AddWaveform()
         {
@@ -231,6 +232,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (_numberOfAudioTracks == 0 && MessageBox.Show(Configuration.Settings.Language.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    MakeEmptyWaveFile();
+                    DialogResult = DialogResult.OK;
+                    return;
+                }
+
                 MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileNotFound, IntPtr.Size * 8, process.StartInfo.FileName, process.StartInfo.Arguments));
 
                 labelPleaseWait.Visible = false;
@@ -241,6 +249,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (targetFileInfo.Length <= 200)
             {
+                if (_numberOfAudioTracks == 0 && MessageBox.Show(Configuration.Settings.Language.AddWaveform.NoAudioTracksFoundGenerateEmptyWaveform, Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                {
+                    MakeEmptyWaveFile();
+                    DialogResult = DialogResult.OK;
+                    return;
+                }
+
                 MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileMalformed, encoderName, process.StartInfo.FileName, process.StartInfo.Arguments));
 
                 labelPleaseWait.Visible = false;
@@ -275,12 +290,21 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = false;
         }
 
+        private void MakeEmptyWaveFile()
+        {
+            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
+            Refresh();
+            var videoInfo = UiUtil.GetVideoInfo(SourceVideoFileName);
+            Peaks = WavePeakGenerator.GenerateEmptyPeaks(_peakWaveFileName, (int)videoInfo.TotalMilliseconds / 1000);
+            labelPleaseWait.Visible = false;
+        }
+
         private void AddWaveform_Shown(object sender, EventArgs e)
         {
             Refresh();
+            _numberOfAudioTracks = 0;
             var audioTrackNames = new List<string>();
             var mkvAudioTrackNumbers = new Dictionary<int, int>();
-            int numberOfAudioTracks = 0;
             if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
             {
                 if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
@@ -295,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (track.IsAudio)
                                 {
-                                    numberOfAudioTracks++;
+                                    _numberOfAudioTracks++;
                                     if (track.CodecId != null && track.Language != null)
                                     {
                                         audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
@@ -338,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 audioTrackNames.Add(i.ToString(CultureInfo.InvariantCulture));
                             }
                         }
-                        numberOfAudioTracks = tracks.Count;
+                        _numberOfAudioTracks = tracks.Count;
                     }
                     catch
                     {
@@ -347,7 +371,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // Choose audio track
-                if (numberOfAudioTracks > 1)
+                if (_numberOfAudioTracks > 1)
                 {
                     using (var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber))
                     {

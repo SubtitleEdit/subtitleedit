@@ -133,6 +133,7 @@ Command line: {1} {2}
 Note: Do check free disk space.</WaveFileMalformed>
     <LowDiskSpace>LOW DISK SPACE!</LowDiskSpace>
     <FreeDiskSpace>{0} free</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>No audio tracks found! Generate empty waveform?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generate waveform data</Title>

@@ -401,13 +401,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Returns true if the current wave file can be processed. Compressed wave files are not supported.
         /// </summary>
-        public bool IsSupported
-        {
-            get
-            {
-                return _header.AudioFormat == WaveHeader.AudioFormatPcm && _header.Format == "WAVE";
-            }
-        }
+        public bool IsSupported => _header.AudioFormat == WaveHeader.AudioFormatPcm && _header.Format == "WAVE";
 
         /// <summary>
         /// Generates peaks and saves them to disk.
@@ -484,6 +478,34 @@ namespace Nikse.SubtitleEdit.Core
                 // calculate peaks
                 peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount));
             }
+
+            // save results to file
+            using (var stream = File.Create(peakFileName))
+            {
+                WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
+                byte[] buffer = new byte[4];
+                foreach (var peak in peaks)
+                {
+                    WriteValue16Bit(buffer, 0, peak.Max);
+                    WriteValue16Bit(buffer, 2, peak.Min);
+                    stream.Write(buffer, 0, 4);
+                }
+            }
+
+            return new WavePeakData(peaksPerSecond, peaks);
+        }
+
+        public static WavePeakData GenerateEmptyPeaks(string peakFileName, int totalSeconds)
+        {
+            int peaksPerSecond = Configuration.Settings.VideoControls.WaveformMinimumSampleRate;
+            var peaks = new List<WavePeak>();
+            peaks.Add(new WavePeak(1000, -1000));
+            var totalPeaks = peaksPerSecond * totalSeconds;
+            for (int i = 0; i < totalPeaks; i++)
+            {
+                peaks.Add(new WavePeak(1, -1));
+            }
+            peaks.Add(new WavePeak(1000, -1000));
 
             // save results to file
             using (var stream = File.Create(peakFileName))

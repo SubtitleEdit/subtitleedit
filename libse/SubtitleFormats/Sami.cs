@@ -258,25 +258,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string syncTag = "<sync start=";
             const string syncTagEnc = "<sync encrypted=\"true\" start=";
             int syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
+            bool hasEncryptedTags = allInput.IndexOf(syncTagEnc, StringComparison.Ordinal) >= 0;
             int index = syncStartPos + syncTag.Length;
 
-            int syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, StringComparison.Ordinal);
-            if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncStartPos == -1)
+            int syncStartPosEnc = -1;
+            if (hasEncryptedTags)
             {
-                syncStartPos = syncStartPosEnc;
-                index = syncStartPosEnc + syncTagEnc.Length;
+                syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, StringComparison.Ordinal);
+                if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncStartPos == -1)
+                {
+                    syncStartPos = syncStartPosEnc;
+                    index = syncStartPosEnc + syncTagEnc.Length;
+                }
             }
 
             var p = new Paragraph();
             const string expectedChars = @"""'0123456789";
             while (syncStartPos >= 0)
             {
-                string millisecAsString = string.Empty;
+                string millisecondsAsString = string.Empty;
                 while (index < allInput.Length && expectedChars.Contains(allInput[index]))
                 {
                     if (allInput[index] != '"' && allInput[index] != '\'')
                     {
-                        millisecAsString += allInput[index];
+                        millisecondsAsString += allInput[index];
                     }
 
                     index++;
@@ -293,10 +298,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 int syncEndPos = allInputLower.IndexOf(syncTag, index, StringComparison.Ordinal);
-                int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index, StringComparison.Ordinal);
-                if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncEndPos == -1)
+                if (hasEncryptedTags)
                 {
-                    syncEndPos = syncEndPosEnc;
+                    int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index, StringComparison.Ordinal);
+                    if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncEndPos == -1)
+                    {
+                        syncEndPos = syncEndPosEnc;
+                    }
                 }
 
                 string text;
@@ -443,16 +451,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var cleanText = text.FixExtraSpaces();
                 cleanText = cleanText.Trim();
 
-                if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
+                if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecondsAsString))
                 {
-                    p.EndTime = new TimeCode(long.Parse(millisecAsString));
+                    p.EndTime = new TimeCode(long.Parse(millisecondsAsString));
                     subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
                 }
 
                 p.Text = cleanText;
                 long l;
-                if (long.TryParse(millisecAsString, out l))
+                if (long.TryParse(millisecondsAsString, out l))
                 {
                     p.StartTime = new TimeCode(l);
                 }
@@ -466,11 +474,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos, StringComparison.Ordinal);
                     index = syncStartPos + syncTag.Length;
 
-                    syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos, StringComparison.Ordinal);
-                    if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncStartPos == -1)
+                    if (hasEncryptedTags)
                     {
-                        syncStartPos = syncStartPosEnc;
-                        index = syncStartPosEnc + syncTagEnc.Length;
+                        syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos, StringComparison.Ordinal);
+                        if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncStartPos == -1)
+                        {
+                            syncStartPos = syncStartPosEnc;
+                            index = syncStartPosEnc + syncTagEnc.Length;
+                        }
                     }
                 }
             }
