@@ -410,6 +410,8 @@
             this.addParagraphAndPasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetParagraphAsSelection = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFocusTextbox = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToPreviousSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToNextSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteParagraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -517,8 +519,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.goToPreviousSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.goToNextSubtitleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -3935,7 +3935,7 @@
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 512);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 490);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -3966,6 +3966,20 @@
             this.toolStripMenuItemFocusTextbox.Size = new System.Drawing.Size(274, 22);
             this.toolStripMenuItemFocusTextbox.Text = "Focus textbox";
             this.toolStripMenuItemFocusTextbox.Click += new System.EventHandler(this.toolStripMenuItemFocusTextbox_Click);
+            // 
+            // goToPreviousSubtitleStripMenuItem
+            // 
+            this.goToPreviousSubtitleStripMenuItem.Name = "goToPreviousSubtitleStripMenuItem";
+            this.goToPreviousSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.goToPreviousSubtitleStripMenuItem.Text = "Go to previous subtitle";
+            this.goToPreviousSubtitleStripMenuItem.Click += new System.EventHandler(this.goToPreviousSubtitleToolStripMenuItem_Click);
+            // 
+            // goToNextSubtitleStripMenuItem
+            // 
+            this.goToNextSubtitleStripMenuItem.Name = "goToNextSubtitleStripMenuItem";
+            this.goToNextSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.goToNextSubtitleStripMenuItem.Text = "Go to next subtitle";
+            this.goToNextSubtitleStripMenuItem.Click += new System.EventHandler(this.goToNextSubtitleToolStripMenuItem_Click);
             // 
             // deleteParagraphToolStripMenuItem
             // 
@@ -5026,20 +5040,6 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // goToPreviousSubtitleStripMenuItem
-            // 
-            this.goToPreviousSubtitleStripMenuItem.Name = "goToPreviousSubtitleStripMenuItem";
-            this.goToPreviousSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.goToPreviousSubtitleStripMenuItem.Text = "Go to previous subtitle";
-            this.goToPreviousSubtitleStripMenuItem.Click += new System.EventHandler(this.goToPreviousSubtitleToolStripMenuItem_Click);
-            // 
-            // goToNextSubtitleStripMenuItem
-            // 
-            this.goToNextSubtitleStripMenuItem.Name = "goToNextSubtitleStripMenuItem";
-            this.goToNextSubtitleStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.goToNextSubtitleStripMenuItem.Text = "Go to next subtitle";
-            this.goToNextSubtitleStripMenuItem.Click += new System.EventHandler(this.goToNextSubtitleToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5057,6 +5057,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.Shown += new System.EventHandler(this.Main_Shown);
+            this.ResizeEnd += new System.EventHandler(this.Main_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainKeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainKeyUp);
             this.Resize += new System.EventHandler(this.Main_Resize);

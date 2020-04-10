@@ -18126,7 +18126,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             panelVideoPlayer.Invalidate();
+        }
 
+        private void Main_ResizeEnd(object sender, EventArgs e)
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            panelVideoPlayer.Invalidate();
             MainResize();
 
             // Due to strange bug in listview when maximizing
