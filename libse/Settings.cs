@@ -311,8 +311,8 @@ namespace Nikse.SubtitleEdit.Core
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
-            OcrBinaryImageCompareRgbThreshold = 270;
-            OcrTesseract4RgbThreshold = 200;
+            OcrBinaryImageCompareRgbThreshold = 112;
+            OcrTesseract4RgbThreshold = 112;
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
