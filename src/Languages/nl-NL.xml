@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.14</Version>
-    <TranslatedBy>Vertaald door Quetsbeek, minouhse en René Maassen</TranslatedBy>
+    <TranslatedBy>Vertaald door Quetsbeek, minouhse, René Maassen en Flitskikker</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -82,6 +82,8 @@
     <Width>Breedte</Width>
     <Height>Hoogte</Height>
     <Collapse>Samenvouwen</Collapse>
+    <ShortcutX>Sneltoets: {0}</ShortcutX>
+    <ExampleX>Voorbeeld: {0}</ExampleX>
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
@@ -223,6 +225,11 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TransportStreamFileNameEnding>Einde bestandsnaam</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>TS instellingen</TransportStreamSettingsButton>
     <RemoveLineBreaks>Regeleinden verwĳderen</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Proberen de broncodering te gebruiken</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Taal" in uitvoerbestandsnaam: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Tweeletterige taalcode</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Drieletterige taalcode</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Geen taalcode</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -689,6 +696,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 ⇒ 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! ⇒ Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Standaard kiezen</SelectDefault>
+    <FixContinuationStyleX>In-/uitpunten aanpassen: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} in-/uitpunten aangepast</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Overbodige inlooppunten verwijderen</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} overbodige inlooppunten verwijderd</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Woordenboek nodig?</Title>
@@ -1177,11 +1188,13 @@ Open “Instellingen -&gt; Voorkeuren -&gt; Extra” voor meer informatie.</Goog
         <ColumnTextDown>Tekst omlaag</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Tekst van origineel naar huidige kopiëren</ColumnCopyOriginalTextToCurrent>
         <Split>Afbreken</Split>
-        <MergeSelectedLines>Tekstselectie samenvoegen</MergeSelectedLines>
-        <MergeSelectedLinesAsDialog>Tekstselectie als dialoog samenvoegen</MergeSelectedLinesAsDialog>
-        <MergeWithLineBefore>Met vorige tekst samenvoegen</MergeWithLineBefore>
-        <MergeWithLineAfter>Met volgende tekst samenvoegen</MergeWithLineAfter>
-        <RemoveFormatting>Formateringstekens verwĳderen</RemoveFormatting>
+        <MergeSelectedLines>Geselecteerde titels samenvoegen</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>Geselecteerde titels samenvoegen als dialoog</MergeSelectedLinesAsDialog>
+        <MergeWithLineBefore>Samenvoegen met vorige titel</MergeWithLineBefore>
+        <MergeWithLineAfter>Samenvoegen met volgende titel</MergeWithLineAfter>
+        <ExtendToLineBefore>Verlengen tot vorige titel</ExtendToLineBefore>
+        <ExtendToLineAfter>Verlengen tot volgende titel</ExtendToLineAfter>
+        <RemoveFormatting>Opmaak verwĳderen</RemoveFormatting>
         <RemoveFormattingAll>Allemaal</RemoveFormattingAll>
         <RemoveFormattingBold>Vet</RemoveFormattingBold>
         <RemoveFormattingItalic>Cursief</RemoveFormattingItalic>
@@ -1863,6 +1876,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <TimeCodeMode>Tĳdcode-modus</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.ms (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01: 12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Splitsgedrag</SplitBehavior>
+    <SplitBehaviorPrevious>Tussenruimte links van splitspunt toevoegen</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Tussenruimte in het midden van splitspunt toevoegen</SplitBehaviorHalf>
+    <SplitBehaviorNext>Tussenruimte rechts van splitspunt toevoegen</SplitBehaviorNext>
     <VideoEngine>Videospeler</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in System32 map</DirectShowDescription>
@@ -1890,6 +1907,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformSetVideoPosMoveStartEnd>Stel de videopositie in bĳ het verplaatsen van start/einde</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Op muisinvoer focussen</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ook op muisinvoer focussen in de lĳstweergave</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Eén keer klikken om ondertitels te selecteren</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Uitlijnen op beeldwissels (houd Shift ingedrukt om te negeren)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveformColor>Golfvormkleur</WaveformColor>
@@ -1951,6 +1970,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Alleen een streepje op beide regels</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Streepje en spatie op tweede regel</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Alleen een streepje op tweede regel</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>In-/uitpunten</ContinuationStyle>
+    <ContinuationStyleNone>Niet</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Niet, alleen uitpunten bij pauzes</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Niet, in- en uitpunten bij pauzes</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Alleen uitpunten</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>In- en uitpunten</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>In- en uitstreepjes</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>In- en uitstreepjes, maar punten bij pauzes</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsReplace>Te vervangen muzieksymbolen (met komma scheiden)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren – ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
@@ -1984,6 +2011,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AdjustSetEndAndOffsetTheRest>Bepaal einde, pas de rest aan</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Bepaal einde, pas de rest aan en ga naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Tĳdsduur verlengen tot volgende tekst of maximale tĳdsduur</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Geselecteerde titels verlengen tot volgende beeldwissel (of volgende titel)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToPreviousSceneChange>Geselecteerde titels verlengen tot vorige beeldwissel (of vorige titel)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Geselecteerde titels verlengen tot volgende titel</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Geselecteerde titels verlengen tot vorige titel</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Tĳdsduur van huidige ondertitel herberekenen</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Toets indrukken maakt nieuwe ot, loslaten bepaalt eindtĳd</MainCreateStartDownEndUp>
     <MergeDialog>Dialoog samenvoegen (koppeltekens invoegen)</MergeDialog>
@@ -2024,6 +2055,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformGoToPreviousSceneChange>Naar vorige scènewisseling</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Naar volgende scènewisseling</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Scènewisseling omkeren</WaveformToggleSceneChange>
+    <WaveformGuessStart>Begin automatisch aanpassen aan de hand van volumewijziging/beeldwissel</WaveformGuessStart>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
     <GoBack1FrameWithPlay>Eén frame terug (met spelen)</GoBack1FrameWithPlay>
@@ -2036,28 +2068,39 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <GoForward1Second>Eén seconde vooruit</GoForward1Second>
     <GoBack5Seconds>Vĳf seconden terug</GoBack5Seconds>
     <GoForward5Seconds>Vĳf seconden vooruit</GoForward5Seconds>
+    <GoBack3Second>Drie seconden terug</GoBack3Second>
+    <GoToStartCurrent>Videopositie instellen op begin van huidige ondertitel</GoToStartCurrent>
+    <ToggleStartEndCurrent>Videopositie wisselen tussen begin/einde huidige ondertitel</ToggleStartEndCurrent>
+    <PlayCurrent>Huidige ondertitel afspelen</PlayCurrent>
     <WaveformGoToPrevSubtitle>Naar vorige ondertitel (vanuit videopositie)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Naar volgende ondertitel (vanuit videopositie)</WaveformGoToNextSubtitle>
+    <WaveformSelectNextSubtitle>Volgende ondertitel selecteren (vanuit videopositie, maar videopositie behouden)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Tussen afspelen/pauze wisselen</TogglePlayPause>
     <Pause>Pauze</Pause>
     <Fullscreen>Volledig Scherm</Fullscreen>
     <PlayRateSlower>Langzamer afspelen</PlayRateSlower>
     <PlayRateFaster>Sneller afspelen</PlayRateFaster>
     <VideoResetSpeedAndZoom>Snelheid en zoom terugstellen</VideoResetSpeedAndZoom>
-    <CustomSearch1>Vertalen, op maat zoeken 1</CustomSearch1>
-    <CustomSearch2>Vertalen, op maat zoeken 2</CustomSearch2>
-    <CustomSearch3>Vertalen, op maat zoeken 3</CustomSearch3>
-    <CustomSearch4>Vertalen, op maat zoeken 4</CustomSearch4>
-    <CustomSearch5>Vertalen, op maat zoeken 5</CustomSearch5>
-    <SyntaxColoring>Syntaxiskleuring</SyntaxColoring>
-    <ListViewSyntaxColoring>Lĳstweergave syntaxiskleuring</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>Kleur tĳdsduur indien te kort</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>Kleur tĳdsduur indien te lang</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Kleur tekst indien te lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanMaxLines>Kleur tekst bĳ meer dan {0} regels</SyntaxColorTextMoreThanMaxLines>
-    <SyntaxColorOverlap>Kleur tĳdcode bĳ overlap</SyntaxColorOverlap>
-    <SyntaxColorGap>Kleur afstand indien te kort</SyntaxColorGap>
+    <CustomSearch1>Vertalen, aangepaste zoekopdracht 1</CustomSearch1>
+    <CustomSearch2>Vertalen, aangepaste zoekopdracht 2</CustomSearch2>
+    <CustomSearch3>Vertalen, aangepaste zoekopdracht 3</CustomSearch3>
+    <CustomSearch4>Vertalen, aangepaste zoekopdracht 4</CustomSearch4>
+    <CustomSearch5>Vertalen, aangepaste zoekopdracht 5</CustomSearch5>
+    <SyntaxColoring>Syntaxismarkering</SyntaxColoring>
+    <ListViewSyntaxColoring>Syntaxismarkering lijstweergave</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Tĳdsduur markeren indien te kort</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Tĳdsduur markeren indien te lang</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Tekst markeren indien te lang</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Tekst markeren indien te breed (pixels)</SyntaxColorTextIfTooWide>
+    <SyntaxColorTextMoreThanMaxLines>Tekst markeren indien meer dan {0} regels</SyntaxColorTextMoreThanMaxLines>
+    <SyntaxColorOverlap>Tĳdcode markeren bĳ overlap</SyntaxColorOverlap>
+    <SyntaxColorGap>Tussenruimte markeren indien te kort</SyntaxColorGap>
     <SyntaxErrorColor>Foutkleur</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Instellingen...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Instellingen voor regelbreedte</LineWidthSettings>
+    <MaximumLineWidth>Maximale regelbreedte:</MaximumLineWidth>
+    <Pixels>pixels</Pixels>
+    <MeasureFont>Lettertype voor meten:</MeasureFont>
     <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Ga naar volgende lege regel</GoToNextEmptyLine>
     <MergeSelectedLines>Geselecteerde regels samenvoegen</MergeSelectedLines>
@@ -2116,6 +2159,12 @@ of tĳdens het exporteren naar op beeld gebaseerde formaten.</FontNote>
     <RestoreDefaultSettings>Standaardinstellingen herstellen</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Wilt u alle instellingen op hun standaardwaarde terugzetten?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Tĳdcodes verwĳderen</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Instellingen voor corrigeren in-/uitpunten wijzigen...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Instellingen voor corrigeren in-/uitpunten</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Beeldtitels in hoofdletters detecteren en uitvinken (bijvoorbeeld: GEEN TOEGANG)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Cursieve beeldtitels of songteksten detecteren en uitvinken</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Beeldtitels of songteksten in kleine letters detecteren en uitvinken</UncheckInsertsLowercase>
+    <HideInterruptionContinuationCandidatesWithoutName>Mogelijke vervolgzinnen na onderbrekingen verbergen die niet met een naam beginnen</HideInterruptionContinuationCandidatesWithoutName>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>
@@ -2264,13 +2313,16 @@ Probeer het later opnieuw a.u.b.</XDownloadFailed>
     <NumberOfUnderlineTags>Aantal onderstrepen tags: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Aantal lettertype tags: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Aantal uitlĳning tags: {0}</NumberOfAlignmentTags>
-    <LineLengthMinimum>Ondertitel lengte – minimum: {0}</LineLengthMinimum>
-    <LineLengthMaximum>Ondertitel lengte – maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Ondertitel lengte – gemiddeld: {0}</LineLengthAverage>
+    <LineLengthMinimum>Ondertitellengte – minimum: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Ondertitellengte – maximum: {0}</LineLengthMaximum>
+    <LineLengthAverage>Ondertitellengte – gemiddeld: {0}</LineLengthAverage>
     <LinesPerSubtitleAverage>Regels per ondertitel – gemiddeld: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Enkele regellengte – minimum: {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Enkele regellengte – maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Enkele regellengte – gemiddeld: {0}</SingleLineLengthAverage>
+    <SingleLineLengthMinimum>Lengte enkele regel – minimum: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Lengte enkele regel – maximum: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Lengte enkele regel – gemiddeld: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Breedte enkele regel - minimum: {0} pixels</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Breedte enkele regel - maximum: {0} pixels</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Breedte enkele regel - gemiddeld: {0} pixels</SingleLineWidthAverage>
     <DurationMinimum>Duur – minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur – maximum: {0:0.000} seconden</DurationMaximum>
     <DurationAverage>Duur – gemiddeld: {0:0.000} seconden</DurationAverage>
@@ -2532,11 +2584,15 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <AddParagraphHereAndPasteText>Klembordtekst hier invoegen</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Huidige als nieuwe selectie</SetParagraphAsSelection>
     <FocusTextBox>Focus op tekstveld</FocusTextBox>
+    <GoToPrevious>Naar vorige titel</GoToPrevious>
+    <GoToNext>Naar volgende titel</GoToNext>
     <DeleteParagraph>Tekst wissen</DeleteParagraph>
-    <Split>Opdelen</Split>
-    <SplitAtCursor>Op cursor afbreken</SplitAtCursor>
-    <MergeWithPrevious>Met vorige samenvoegen</MergeWithPrevious>
-    <MergeWithNext>Met volgende samenvoegen</MergeWithNext>
+    <Split>Splitsen</Split>
+    <SplitAtCursor>Splitsen op cursor</SplitAtCursor>
+    <MergeWithPrevious>Samenvoegen met vorige</MergeWithPrevious>
+    <MergeWithNext>Samenvoegen met volgende</MergeWithNext>
+    <ExtendToPrevious>Verlengen tot vorige</ExtendToPrevious>
+    <ExtendToNext>Verlengen tot volgende</ExtendToNext>
     <PlaySelection>Selectie afspelen</PlaySelection>
     <ShowWaveformAndSpectrogram>Golfvorm en spectrogram tonen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Alleen golfvorm tonen</ShowWaveformOnly>
