@@ -2979,9 +2979,7 @@ namespace Nikse.SubtitleEdit.Core
             // Replace it
             return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
         }
-
-
-
+        
         public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
         {
             // Get first word of the next paragraph
@@ -2993,7 +2991,7 @@ namespace Nikse.SubtitleEdit.Core
             if (gap && profile.UseDifferentStyleGap)
             {
                 // Check if needed
-                if (profile.GapPrefix.Length == 0 || !firstWord.StartsWith(profile.GapPrefix))
+                if (profile.GapPrefix.Length == 0 || firstWord.StartsWith(profile.GapPrefix))
                 {
                     return text;
                 }
@@ -3005,7 +3003,7 @@ namespace Nikse.SubtitleEdit.Core
             else
             {
                 // Check if needed
-                if (profile.Prefix.Length == 0 || !firstWord.StartsWith(profile.Prefix))
+                if (profile.Prefix.Length == 0 || firstWord.StartsWith(profile.Prefix))
                 {
                     return text;
                 }

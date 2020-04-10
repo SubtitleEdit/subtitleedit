@@ -1977,7 +1977,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ContinuationStyleOnlyTrailingDots>Alleen uitpunten</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>In- en uitpunten</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingDash>In- en uitstreepjes</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>In- en uitstreepjes, maar punten bij pauzes</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>In- en uitstreepjes, punten bij pauzes</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsReplace>Te vervangen muzieksymbolen (met komma scheiden)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren – ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
