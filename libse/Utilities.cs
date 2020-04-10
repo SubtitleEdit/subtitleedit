@@ -2980,77 +2980,9 @@ namespace Nikse.SubtitleEdit.Core
             return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
         }
 
+
+
         public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
-        {
-            // Get first word of the next paragraph
-            string text = ContinuationUtilities.SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string firstWord = split.First();
-            string newFirstWord = firstWord;
-                        
-            if (gap && profile.UseDifferentStyleGap)
-            {
-                // Check if needed
-                if (profile.GapPrefix.Length == 0 || firstWord.StartsWith(profile.GapPrefix))
-                {
-                    return text;
-                }
-
-                // Make new first word
-                newFirstWord = newFirstWord.Substring(profile.GapPrefix.Length);
-            }
-            else
-            {
-                // Check if needed
-                if (profile.Prefix.Length == 0 || firstWord.StartsWith(profile.Prefix))
-                {
-                    return text;
-                }
-
-                // Make new first word
-                newFirstWord = newFirstWord.Substring(profile.Prefix.Length);
-            }
-
-            // Replace it
-            return ContinuationUtilities.ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
-        }
-
-        public static string RemoveSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
-        {
-            // Get last word
-            string text = ContinuationUtilities.SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string lastWord = split.Last();
-            string newLastWord = lastWord;
-
-            if (gap && profile.UseDifferentStyleGap)
-            {
-                // Check if needed
-                if (profile.GapSuffix.Length == 0 || !lastWord.EndsWith(profile.GapSuffix))
-                {
-                    return text;
-                }
-
-                // Make new last word
-                newLastWord = newLastWord.Substring(0, newLastWord.Length - profile.GapSuffix.Length);
-            }
-            else
-            {
-                // Check if needed
-                if (profile.Suffix.Length == 0 || !lastWord.EndsWith(profile.Suffix))
-                {
-                    return text;
-                }
-
-                // Make new last word
-                newLastWord = newLastWord.Substring(0, newLastWord.Length - profile.Suffix.Length);
-            }
-
-            // Replace it
-            return ContinuationUtilities.ReplaceLastOccurrence(originalText, lastWord, newLastWord);
-        }
-
-        public static string RemovePrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
         {
             // Get first word of the next paragraph
             string text = ContinuationUtilities.SanitizeString(originalText);
@@ -3358,7 +3290,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string GetContinuationStylePreview(ContinuationStyle continuationStyle)
         {
-            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit";
+            string line1 = "Lorem ipsum dolor sit amet\nconsectetur adipiscing elit,";
             string line2 = "donec eget turpis consequat\nturpis commodo hendrerit";
             string line3 = "praesent vel velit rutrum tellus\npharetra tristique vel non orci";
             string linePause = "(...)";
@@ -3370,7 +3302,7 @@ namespace Nikse.SubtitleEdit.Core
                 + AddSuffixIfNeeded(AddPrefixIfNeeded(line2, profile, false), profile, false) + "\n\n"
                 + AddSuffixIfNeeded(AddPrefixIfNeeded(line3, profile, false), profile, true) + "\n\n"
                 + linePause + "\n\n"
-                + AddPrefixIfNeeded(line4, profile, false);
+                + AddPrefixIfNeeded(line4, profile, true);
         }
 
         public static ContinuationProfile GetContinuationProfile(ContinuationStyle continuationStyle)
