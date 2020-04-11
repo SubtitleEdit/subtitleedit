@@ -2566,7 +2566,7 @@ namespace Test.FixCommonErrors
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void FixContinuationStyle12()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -2577,7 +2577,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("I am <i>test</i>ing...", _subtitle.Paragraphs[0].Text);
                 Assert.AreEqual("...this right now.", _subtitle.Paragraphs[1].Text);
             }
-        }
+        }*/
 
         [TestMethod]
         public void FixContinuationStyle13()
@@ -2628,6 +2628,19 @@ namespace Test.FixCommonErrors
                 new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("I am testing...", _subtitle.Paragraphs[0].Text);
                 Assert.AreEqual("- ...this right now.\n- You kidding me?", _subtitle.Paragraphs[1].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixContinuationStyle17()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am testing", "- this right now.\n- You kidding me?");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDash;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am testing -", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("- this right now.\n- You kidding me?", _subtitle.Paragraphs[1].Text);
             }
         }
 

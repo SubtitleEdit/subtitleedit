@@ -24,24 +24,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 this.SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
-
-            // Prepare variables
-            string addEnd = (this._continuationProfile.SuffixAddSpace ? " " : "") + this._continuationProfile.Suffix;
-            string addStart = this._continuationProfile.Prefix + (this._continuationProfile.PrefixAddSpace ? " " : "");
-            bool replaceComma = this._continuationProfile.SuffixReplaceComma;
-
+            
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
-
-            string gapAddEnd = addEnd;
-            string gapAddStart = addStart;
-            bool gapReplaceComma = replaceComma;
-
-            if (this._continuationProfile.UseDifferentStyleGap)
-            {
-                gapAddEnd = (this._continuationProfile.GapSuffixAddSpace ? " " : "") + this._continuationProfile.GapSuffix;
-                gapAddStart = this._continuationProfile.GapPrefix + (this._continuationProfile.GapPrefixAddSpace ? " " : "");
-                gapReplaceComma = this._continuationProfile.GapSuffixReplaceComma;
-            }
 
             bool inSentence = false;
             bool? inItalicSentence = null;
@@ -93,38 +77,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
 
-                    // Remove any previous suffixes from first paragraph
-                    var textWithoutSuffix = text;
-                    foreach (string suffix in ContinuationUtilities.Suffixes.Union(new List<string> { "," }))
-                    {
-                        if (textWithoutSuffix.EndsWith(suffix))
-                        {
-                            textWithoutSuffix = textWithoutSuffix.Substring(0, textWithoutSuffix.Length - suffix.Length);
-                        }
-                    }
-                    textWithoutSuffix = textWithoutSuffix.Trim();
-
-                    // Remove any previous prefixes from second paragraph
-                    var textNextWithoutPrefix = textNext;
-                    foreach (string prefix in ContinuationUtilities.Prefixes)
-                    {
-                        if (textNextWithoutPrefix.StartsWith(prefix))
-                        {
-                            textNextWithoutPrefix = textNextWithoutPrefix.Substring(prefix.Length);
-                        }
-                    }
-                    textNextWithoutPrefix = textNextWithoutPrefix.Trim();
-
-                    // Get last word of this paragraph                    
-                    string lastWord = text.Split(Convert.ToChar(" ")).Last();
-                    string newLastWord = textWithoutSuffix.Split(Convert.ToChar(" ")).Last().Trim();
-
-                    // Get first word of the next paragraph
-                    string firstWord = textNext.Split(Convert.ToChar(" ")).First();
-                    string newFirstWord = textNextWithoutPrefix.Split(Convert.ToChar(" ")).First().Trim();
-
                     // Detect gap
                     bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
+
+                    // Remove any suffixes and prefixes
+                    var textWithoutSuffix = ContinuationUtilities.RemoveSuffix(oldText, _continuationProfile, new List<string> { "," }, false).Trim();
+                    var textNextWithoutPrefix = ContinuationUtilities.RemovePrefix(oldTextNext, _continuationProfile, true, gap);
+
+                    // Get last word of this paragraph                    
+                    string lastWord = ContinuationUtilities.GetLastWord(text);
 
                     
                     // If ends with dots (possible interruptions), check if next sentence is new sentence, otherwise don't check by default
@@ -158,22 +119,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // try to re-add comma
                         bool addComma = !lastWord.EndsWith(",")
                                         && HasSuffix(text)
-                                        && (gap ? !gapReplaceComma : !replaceComma)
+                                        && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
                                         && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language);
 
                         // Make new last word
-                        if (gap)
-                        {
-                            newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !gapReplaceComma ? "," : "") + gapAddEnd;
-                        }
-                        else
-                        {
-                            newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !replaceComma ? "," : "") + addEnd;
-                        }
-
-                        // Replace it
-                        var newText = ContinuationUtilities.ReplaceLastOccurrence(oldText, lastWord, newLastWord);
-
+                        var newText = ContinuationUtilities.AddSuffixIfNeeded(textWithoutSuffix, _continuationProfile, gap, addComma);
+                        
                         // Commit if changed
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
                         {
@@ -190,17 +141,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // Second paragraph...
 
                         // Make new first word
-                        if (gap)
-                        {
-                            newFirstWord = gapAddStart + newFirstWord;
-                        }
-                        else
-                        {
-                            newFirstWord = addStart + newFirstWord;
-                        }
-
-                        // Replace it
-                        var newTextNext = ContinuationUtilities.ReplaceFirstOccurrence(oldTextNext, firstWord, newFirstWord);
+                        var newTextNext = ContinuationUtilities.AddPrefixIfNeeded(textNextWithoutPrefix, _continuationProfile, gap);
 
                         // Commit if changed
                         if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))

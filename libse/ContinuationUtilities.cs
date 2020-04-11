@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string DoubleQuotes = "''‘‘’’‚‚‘‘";
 
         public static readonly List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
+        public static readonly List<string> DashPrefixes = new List<string> { "-", "‐", "–", "—" };
         public static readonly List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
 
         public static string SanitizeString(string input, bool removeDashes)
@@ -31,12 +32,27 @@ namespace Nikse.SubtitleEdit.Core
             checkString = checkString.Trim();
 
             // Remove string elevation
-            if (checkString.EndsWith("\r\n_", StringComparison.Ordinal) ||
-                checkString.EndsWith("\r\n.", StringComparison.Ordinal) ||
-                checkString.EndsWith("\n_", StringComparison.Ordinal) ||
-                checkString.EndsWith("\n.", StringComparison.Ordinal))
+            if (checkString.EndsWith("\n_", StringComparison.Ordinal) || checkString.EndsWith("\n.", StringComparison.Ordinal)
+                || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal)
+                || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal) /* Alt+255 */)
             {
                 checkString = checkString.Substring(0, checkString.Length - 1).Trim();
+            }
+
+            // Remove >> from the beginning
+            while (checkString.StartsWith(">"))
+            {
+                checkString = checkString.Substring(1).Trim();
+            }
+
+            // Remove SPEAKER: from the beginning
+            if (checkString.Contains(":"))
+            {
+                string[] split = checkString.Split(':');
+                if (IsAllCaps(split[0]))
+                {
+                    checkString = string.Join(":", split.Skip(1)).Trim();
+                }
             }
 
             // Remove dashes from the beginning
@@ -105,7 +121,9 @@ namespace Nikse.SubtitleEdit.Core
             checkString = checkString.Trim();
 
             // Remove string elevation
-            if (checkString.EndsWith("\r\n_") || checkString.EndsWith("\r\n.") || checkString.EndsWith("\n_") || checkString.EndsWith("\n."))
+            if (checkString.EndsWith("\n_", StringComparison.Ordinal) || checkString.EndsWith("\n.", StringComparison.Ordinal) 
+                || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal)
+                || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal) /* Alt+255 */)
             {
                 checkString = checkString.Substring(0, checkString.Length - 1).Trim();
             }
@@ -144,6 +162,42 @@ namespace Nikse.SubtitleEdit.Core
             return result;
         }
 
+        public static string GetFirstWord(string input)
+        {
+            string[] split = input.Split(' ');
+            string firstWord = split.First();
+
+            // For "... this is a test" we would only have the prefix in the first split item
+            foreach (string prefix in Prefixes)
+            {
+                if (firstWord == prefix)
+                {
+                    firstWord = split[0] + " " + split[1];
+                    break;
+                }
+            }
+
+            return firstWord;
+        }
+        
+        public static string GetLastWord(string input)
+        {
+            string[] split = input.Split(' ');
+            string lastWord = split.Last();
+
+            // For "This is a test ..." we would only have the suffix in the last split item
+            foreach (string suffix in Suffixes)
+            {
+                if (lastWord == suffix)
+                {
+                    lastWord = split[split.Length - 2] + " " + split[split.Length - 1];
+                    break;
+                }
+            }
+
+            return lastWord;
+        }
+
         public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize)
         {
             string text = sanitize ? SanitizeString(input) : input;
@@ -161,89 +215,191 @@ namespace Nikse.SubtitleEdit.Core
             return ShouldAddSuffix(input, profile, true);
         }
 
-        public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap, bool addComma)
         {
             // Get last word
             string text = SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string lastWord = split.Last();
+            string lastWord = GetLastWord(text);
             string newLastWord = lastWord;
 
             if (gap && profile.UseDifferentStyleGap)
             {
                 // Check if needed
-                if (profile.GapSuffix.Length == 0 || lastWord.EndsWith(profile.GapSuffix))
+                if (!addComma && !profile.GapSuffixReplaceComma && !profile.GapSuffixAddSpace && (profile.GapSuffix.Length == 0 || lastWord.EndsWith(profile.GapSuffix)))
                 {
-                    return text;
+                    return originalText;
                 }
 
                 // Make new last word
                 string gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
-                newLastWord = newLastWord.TrimEnd(',') + (lastWord.EndsWith(",") && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
+                newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
             }
             else
             {
                 // Check if needed
-                if (profile.Suffix.Length == 0 || lastWord.EndsWith(profile.Suffix))
+                if (!addComma && !profile.SuffixReplaceComma && !profile.SuffixAddSpace && (profile.Suffix.Length == 0 || lastWord.EndsWith(profile.Suffix)))
                 {
-                    return text;
+                    return originalText;
                 }
 
                 // Make new last word
                 string addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
-                newLastWord = newLastWord.TrimEnd(',') + (lastWord.EndsWith(",") && !profile.SuffixReplaceComma ? "," : "") + addEnd;
+                newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.SuffixReplaceComma ? "," : "") + addEnd;
+            }
+
+            // Check if it's not surrounded by HTML tags, then we'll place it outside the tags (remove comma if present)
+            // Only if it's not a tag across the whole subtitle.
+            var wordIndex = originalText.LastIndexOf(lastWord.TrimEnd(','), StringComparison.Ordinal);
+            if (wordIndex >= 0 && wordIndex < originalText.Length - 3)
+            {
+                int currentIndex = wordIndex + lastWord.TrimEnd(',').Length;
+                if (((currentIndex < originalText.Length && originalText[currentIndex] == '<') 
+                    || (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',' && originalText[currentIndex] == '<')) 
+                    && !IsFullLineTag(originalText, currentIndex))
+                {
+                    if (currentIndex < originalText.Length && originalText[currentIndex] == ',')
+                    {
+                        originalText = originalText.Remove(currentIndex, 1);
+                    }
+
+                    while (currentIndex + 1 < originalText.Length && !(originalText[currentIndex] == '>' && originalText[currentIndex + 1] != '<'))
+                    {
+                        currentIndex++;
+                    }
+
+                    var suffix = newLastWord.Replace(lastWord.TrimEnd(','), "");
+
+                    if (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',')
+                    {
+                        originalText = originalText.Remove(currentIndex + 1, 1);
+                    }
+
+                    return originalText.Insert(currentIndex + 1, suffix);
+                }
             }
 
             // Replace it
             return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
         }
 
-        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
         {
-            // Get first word of the next paragraph
-            string text = SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string firstWord = split.First();
+            return AddSuffixIfNeeded(originalText, profile, gap, false);
+        }
+
+        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool removeDashesDuringSanitization, bool gap)
+        {
+            // Decide if we need to remove dashes
+            string textWithDash = SanitizeString(originalText, false);
+            string textWithoutDash = SanitizeString(originalText, true);
+
+            // If we're using a profile with dashes, count those as dashes instead of dialog dashes.
+            if (removeDashesDuringSanitization)
+            {
+                foreach (string prefix in DashPrefixes)
+                {
+                    if ((!gap && profile.Prefix == prefix)
+                        || (gap && profile.UseDifferentStyleGap && profile.GapPrefix == prefix)
+                        || (gap && !profile.UseDifferentStyleGap && profile.Prefix == prefix))
+                    {
+                        removeDashesDuringSanitization = false;
+                        break;
+                    }
+                }
+            }
+
+            // If there is only a dash on the first line, count it as dash instead of dialog dash.
+            if (removeDashesDuringSanitization)
+            {
+                var split = textWithDash.SplitToLines();
+                int lastLineWithDash = -1;
+
+                for (var i = 0; i < split.Count; i++)
+                {
+                    foreach (string prefix in DashPrefixes)
+                    {
+                        if (split[i].StartsWith(prefix))
+                        {
+                            lastLineWithDash = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (lastLineWithDash == 0)
+                {
+                    removeDashesDuringSanitization = false;
+                }
+            }
+
+            // Get first word of the paragraph
+            string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
+            string firstWord = GetFirstWord(text);
             string newFirstWord = firstWord;
 
             if (gap && profile.UseDifferentStyleGap)
             {
                 // Check if needed
-                if (profile.GapPrefix.Length == 0 || firstWord.StartsWith(profile.GapPrefix))
+                if (!profile.GapPrefixAddSpace 
+                    && (profile.GapPrefix.Length == 0 || (firstWord.StartsWith(profile.GapPrefix) && !DashPrefixes.Contains(profile.GapPrefix))))
                 {
-                    return text;
+                    return originalText;
                 }
 
                 // Make new first word
+                newFirstWord = newFirstWord.Replace(profile.GapPrefix, "").Trim();
                 string gapAddStart = profile.GapPrefix + (profile.GapPrefixAddSpace ? " " : "");
                 newFirstWord = gapAddStart + newFirstWord;
             }
             else
             {
                 // Check if needed
-                if (profile.Prefix.Length == 0 || firstWord.StartsWith(profile.Prefix))
+                if (!profile.PrefixAddSpace 
+                    && (profile.Prefix.Length == 0 || (firstWord.StartsWith(profile.Prefix) && !DashPrefixes.Contains(profile.Prefix))))
                 {
-                    return text;
+                    return originalText;
                 }
 
                 // Make new first word
+                newFirstWord = newFirstWord.Replace(profile.Prefix, "").Trim();
                 string addStart = profile.Prefix + (profile.PrefixAddSpace ? " " : "");
                 newFirstWord = addStart + newFirstWord;
+            }
+
+            // Check if it's not surrounded by HTML tags, then we'll place it outside the tags
+            // Only if it's not a tag across the whole subtitle.
+            var wordIndex = originalText.IndexOf(firstWord, StringComparison.Ordinal);
+            if (wordIndex >= 3)
+            {
+                int currentIndex = wordIndex - 1;
+                if (currentIndex >= 0 && originalText[currentIndex] == '>' && !IsFullLineTag(originalText, currentIndex))
+                {
+                    while (currentIndex - 1 >= 0 && !(originalText[currentIndex - 1] != '>' && originalText[currentIndex] == '<'))
+                    {
+                        currentIndex--;
+                    }
+                    var prefix = newFirstWord.Replace(firstWord, "");
+                    return originalText.Insert(currentIndex, prefix);
+                }
             }
 
             // Replace it
             return ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
         }
 
-        public static string RemoveSuffix(string originalText, ContinuationProfile profile, bool addComma)
+        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
+        {
+            return AddPrefixIfNeeded(originalText, profile, true, gap);
+        }
+
+        public static string RemoveSuffix(string originalText, ContinuationProfile profile, List<string> additionalSuffixes, bool addComma)
         {
             // Get last word
             string text = SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string lastWord = split.Last();
+            string lastWord = GetLastWord(text);
             string newLastWord = lastWord;
 
-            foreach (string suffix in Suffixes)
+            foreach (string suffix in Suffixes.Union(additionalSuffixes))
             {
                 if (newLastWord.EndsWith(suffix))
                 {
@@ -252,27 +408,91 @@ namespace Nikse.SubtitleEdit.Core
             }
             newLastWord = newLastWord.Trim();
 
-            if (addComma)
+            if (addComma && !newLastWord.EndsWith(","))
             {
                 newLastWord = newLastWord + ",";
             }
 
-            // Replace it
-            return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+            // If we can find it...
+            if (originalText.LastIndexOf(lastWord, StringComparison.Ordinal) >= 0)
+            {
+                // Replace it
+                return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+            }
+            else
+            {
+                // Just remove whatever suffix we need to remove
+                var suffix = lastWord.Replace(newLastWord, "");
+                return ReplaceLastOccurrence(originalText, suffix, "");
+            }
         }
 
         public static string RemoveSuffix(string originalText, ContinuationProfile profile)
         {
-            return RemoveSuffix(originalText, profile, false);
+            return RemoveSuffix(originalText, profile, new List<string>(), false);
         }
 
-        public static string RemovePrefix(string originalText, ContinuationProfile profile)
+        public static string RemoveSuffix(string originalText, ContinuationProfile profile, bool addComma)
         {
-            // Get first word of the next paragraph
-            string text = SanitizeString(originalText);
-            string[] split = text.Split(Convert.ToChar(" "));
-            string firstWord = split.First();
+            return RemoveSuffix(originalText, profile, new List<string>(), addComma);
+        }
+
+        public static string RemovePrefix(string originalText, ContinuationProfile profile, bool removeDashesDuringSanitization, bool gap)
+        {
+            // Decide if we need to remove dashes
+            string textWithDash = SanitizeString(originalText, false);
+            string textWithoutDash = SanitizeString(originalText, true);
+            string leadingDialogDash = null;
+
+            // If we're using a profile with dashes, count those as dashes instead of dialog dashes.
+            if (removeDashesDuringSanitization)
+            {
+                foreach (string prefix in DashPrefixes)
+                {
+                    if ((!gap && profile.Prefix == prefix)
+                        || (gap && profile.UseDifferentStyleGap && profile.GapPrefix == prefix)
+                        || (gap && !profile.UseDifferentStyleGap && profile.Prefix == prefix))
+                    {
+                        removeDashesDuringSanitization = false;
+                        leadingDialogDash = prefix;
+                        break;
+                    }
+                }
+            }
+
+            // If there is only a dash on the first line, count it as dash instead of dialog dash.
+            if (removeDashesDuringSanitization)
+            {
+                var split = textWithDash.SplitToLines();
+                int lastLineWithDash = -1;
+
+                for (var i = 0; i < split.Count; i++)
+                {
+                    foreach (string prefix in DashPrefixes)
+                    {
+                        if (split[i].StartsWith(prefix))
+                        {
+                            lastLineWithDash = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (lastLineWithDash == 0)
+                {
+                    removeDashesDuringSanitization = false;
+                }
+            }
+
+            // Get first word of the paragraph
+            string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
+            string firstWord = GetFirstWord(text);
             string newFirstWord = firstWord;
+
+            if (leadingDialogDash != null)
+            {
+                newFirstWord = newFirstWord.TrimStart(Convert.ToChar(leadingDialogDash)).Trim();
+            }
 
             foreach (string prefix in Prefixes)
             {
@@ -283,8 +503,38 @@ namespace Nikse.SubtitleEdit.Core
             }
             newFirstWord = newFirstWord.Trim();
 
-            // Replace it
-            return ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
+            // If we can find it...
+            if (originalText.IndexOf(firstWord, StringComparison.Ordinal) >= 0)
+            {
+                // Replace it
+                return ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
+            }
+            else
+            {
+                // Just remove whatever prefix we need to remove
+                var prefix = firstWord.Replace(newFirstWord, "");
+                return ReplaceFirstOccurrence(originalText, prefix, "");
+            }
+        }
+
+        public static string RemovePrefix(string originalText, ContinuationProfile profile, bool gap)
+        {
+            return RemovePrefix(originalText, profile, true, gap);
+        }
+
+        public static string RemovePrefix(string originalText, ContinuationProfile profile)
+        {
+            return RemovePrefix(originalText, profile, true, false);
+        }
+
+        public static string RemoveAllPrefixes(string originalText, ContinuationProfile profile)
+        {
+            var text = originalText;
+            while (HasPrefix(SanitizeString(text, false), profile))
+            {
+                text = RemovePrefix(text, profile, false, false /* Not used because of false before */);
+            }
+            return text;
         }
 
         public static bool IsNewSentence(string input)
@@ -351,12 +601,74 @@ namespace Nikse.SubtitleEdit.Core
         {
             input = ExtractParagraphOnly(input);
 
-            if (input.Length > 2 && input.StartsWith("<i>") && (input.EndsWith("</i>") && !input.Substring(2).Contains("<i>") || !input.Contains("</i>")))
+            while (input.IndexOf("<i>", StringComparison.Ordinal) >= 0)
             {
-                return true;
+                var startIndex = input.IndexOf("<i>", StringComparison.Ordinal);
+                var endIndex = input.IndexOf("</i>", StringComparison.Ordinal);
+                var textToRemove = endIndex >= 0 ? input.Substring(startIndex, (endIndex + 4) - startIndex) : input.Substring(startIndex);
+                input = input.Replace(textToRemove, "");
             }
 
-            return false;
+            foreach (var c in input)
+            {
+                if (c != '\n' && c != '\r')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
+        public static bool IsFullLineTag(string input, int position)
+        {
+            input = ExtractParagraphOnly(input);
+
+            var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
+            if (lineStartIndex == -1)
+            {
+                lineStartIndex = 0;
+            }
+
+            var lineEndIndex = (position > 0 && position < input.Length) ? input.IndexOf("\n", position, StringComparison.Ordinal) : input.Length;
+            if (lineEndIndex == -1)
+            {
+                lineEndIndex = input.Length;
+            }
+
+            input = input.Substring(lineStartIndex, lineEndIndex - lineStartIndex);
+
+            var startIndex = input.IndexOf("<", StringComparison.Ordinal);
+            var endIndex = input.LastIndexOf("</", StringComparison.Ordinal);
+            if (endIndex >= 0)
+            {
+                if (startIndex == endIndex)
+                {
+                    startIndex = 0;
+                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                }
+                else
+                {
+                    endIndex = input.IndexOf(">", endIndex, StringComparison.Ordinal) + 1;
+                }
+            }
+            else
+            {
+                endIndex = input.Length;
+            }
+
+            var textToRemove = input.Substring(startIndex, endIndex - startIndex);
+            input = input.Replace(textToRemove, "");
+
+            foreach (var c in input)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static bool HasPrefix(string input, ContinuationProfile profile)
@@ -450,15 +762,15 @@ namespace Nikse.SubtitleEdit.Core
         {
             var thisText = SanitizeString(input);
             var nextText = SanitizeString(nextInput);
-            var nextTextWithDashPrefix = SanitizeString(nextInput, profile.GapPrefix != "-");
+            var nextTextWithDash = SanitizeString(nextInput, false);
 
             // Remove any prefix and suffix when:
             // - Title 1 ends with a suffix AND title 2 starts with a prefix
-            // - Title 1 ends with a suffix and title 2 is a continuing sentence
-            if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDashPrefix, profile)
-                || HasSuffix(thisText, profile) && !IsNewSentence(nextText))
+            // - Title 2 is a continuing sentence
+            if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile)
+                || !IsNewSentence(nextText))
             {
-                var newNextText = RemovePrefix(nextInput, profile);
+                var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
                 return new Tuple<string, string>(newText, newNextText);
             }
