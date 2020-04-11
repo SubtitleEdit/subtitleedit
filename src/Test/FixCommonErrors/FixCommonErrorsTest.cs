@@ -2235,6 +2235,36 @@ namespace Test.FixCommonErrors
             Assert.AreEqual("Foobar? Foobar! Foobar", processedText);
         }
 
+        [TestMethod]
+        public void FixUnneededPeriodsTestKorean()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("- 안녕하세요." + Environment.NewLine + "- 반갑습니다.", 0, 1000));
+            var fup = new FixUnneededPeriods();
+            fup.Fix(sub, new EmptyFixCallback { Language = "ko" });
+            Assert.AreEqual("- 안녕하세요" + Environment.NewLine + "- 반갑습니다", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixUnneededPeriodsTestKoreanItalic()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("<i>- 안녕하세요." + Environment.NewLine + "- 반갑습니다.</i>", 0, 1000));
+            var fup = new FixUnneededPeriods();
+            fup.Fix(sub, new EmptyFixCallback { Language = "ko" });
+            Assert.AreEqual("<i>- 안녕하세요" + Environment.NewLine + "- 반갑습니다</i>", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixUnneededPeriodsTestKoreanDoNotChange()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("안녕하세요...", 0, 1000));
+            var fup = new FixUnneededPeriods();
+            fup.Fix(sub, new EmptyFixCallback { Language = "ko" });
+            Assert.AreEqual("안녕하세요...", sub.Paragraphs[0].Text);
+        }
+
         #endregion
 
         #region Fix Danish letter "i"
