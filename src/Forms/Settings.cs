@@ -3176,7 +3176,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ProfileUiValueChanged(object sender, EventArgs e)
         {
             var idx = comboBoxRulesProfileName.SelectedIndex;
-            if (idx < 0 || _editProfileOn)
+            if (idx < 0 || _editProfileOn || idx >= _rulesProfiles.Count)
             {
                 return;
             }
