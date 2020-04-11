@@ -9,11 +9,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class DownloadTesseract4 : Form
     {
+        public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract500.Alpha.20200328.tar.gz";
+
         public DownloadTesseract4()
         {
             InitializeComponent();
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
-            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract500.Alpha.20200328.tar.gz"));
+            wc.DownloadDataAsync(new Uri(TesseractDownloadUrl));
             
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
@@ -27,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.Error != null)
             {
                 MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                                $"Please download {TesseractDownloadUrl} manually and unpack into this folder: \"{Configuration.TesseractDirectory}\"" + Environment.NewLine +
                                 Environment.NewLine +
                                 e.Error.Message + ": " + e.Error.StackTrace);
                 DialogResult = DialogResult.Cancel;
