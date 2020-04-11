@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core
         public static List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
         public static List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
 
-        public static string SanitizeString(string input, bool removeDashes = true)
+        public static string SanitizeString(string input, bool removeDashes = true, bool removeHtml = true)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -24,7 +24,10 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string checkString = input;
-            checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
+            if (removeHtml)
+            {
+                checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
+            }
             checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty);
             checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty);
             checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
@@ -74,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     // nothin' -- Don't remove
                 }
-                else if (checkString[checkString.Length - 1] == '\'' && (checkString.EndsWith("déj'") || checkString.EndsWith("bon ap'") || checkString.EndsWith("bon app'")))
+                else if (checkString[checkString.Length - 1] == '\'' && (checkString.EndsWith("déj'") || checkString.EndsWith("ap'") || checkString.EndsWith("app'")))
                 {
                     // déj' -- Don't remove
                 }
@@ -230,11 +233,17 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (string suffix in Suffixes)
             {
-                if (newLastWord.EndsWith(suffix)) newLastWord = newLastWord.Substring(0, newLastWord.Length - suffix.Length);
+                if (newLastWord.EndsWith(suffix))
+                {
+                    newLastWord = newLastWord.Substring(0, newLastWord.Length - suffix.Length);
+                }
             }
             newLastWord = newLastWord.Trim();
 
-            if (addComma) newLastWord = newLastWord + ",";
+            if (addComma)
+            {
+                newLastWord = newLastWord + ",";
+            }
 
             // Replace it
             return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
@@ -250,7 +259,10 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (string prefix in Prefixes)
             {
-                if (newFirstWord.StartsWith(prefix)) newFirstWord = newFirstWord.Substring(prefix.Length);
+                if (newFirstWord.StartsWith(prefix))
+                {
+                    newFirstWord = newFirstWord.Substring(prefix.Length);
+                }
             }
             newFirstWord = newFirstWord.Trim();
 
@@ -289,8 +301,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsEndOfSentence(string input)
         {
-            return input.EndsWith('.') &&
-                   !input.EndsWith("..", StringComparison.Ordinal) ||
+            return (input.EndsWith('.') && !input.EndsWith("..", StringComparison.Ordinal)) ||
                    input.EndsWith('?') ||
                    input.EndsWith('!') ||
                    input.EndsWith(';') /* Greek question mark */ ||
@@ -303,13 +314,13 @@ namespace Nikse.SubtitleEdit.Core
             int allCapsCount = 0;
 
             // Count all caps chars
-            for (int i = 0; i < input.Length; i++)
+            foreach (var c in input)
             {
-                if (char.IsLetter(input[i]))
+                if (char.IsLetter(c))
                 {
                     totalCount++;
 
-                    if (char.IsUpper(input[i]))
+                    if (char.IsUpper(c))
                     {
                         allCapsCount++;
                     }
@@ -391,11 +402,17 @@ namespace Nikse.SubtitleEdit.Core
             }
             else if (language == "en")
             {
-                conjunctions = new List<string> { "and", "but", "for", "nor", "yet", "or", "so", "such as" };
+                conjunctions = new List<string>
+                {
+                    "and", "but", "for", "nor", "yet", "or", "so", "such as"
+                };
             }
             else if (language == "fr")
             {
-                conjunctions = new List<string> { "mais", "car", "donc", "parce que", "par exemple" };
+                conjunctions = new List<string>
+                {
+                    "mais", "car", "donc", "parce que", "par exemple"
+                };
             }
 
             if (conjunctions != null)
@@ -418,6 +435,9 @@ namespace Nikse.SubtitleEdit.Core
             var nextText = SanitizeString(nextInput);
             var nextTextWithDashPrefix = SanitizeString(nextInput, profile.GapPrefix != "-");
 
+            // Remove any prefix and suffix when:
+            // - Title 1 ends with a suffix AND title 2 starts with a prefix
+            // - Title 1 ends with a suffix and title 2 is a continuing sentence
             if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDashPrefix, profile)
                 || HasSuffix(thisText, profile) && !IsNewSentence(nextText))
             {

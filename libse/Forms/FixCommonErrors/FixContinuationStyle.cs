@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixContinuationStyle : IFixCommonError
     {
-        private ContinuationUtilities.ContinuationProfile continuationProfile = null;
-        private List<string> names = null;
+        private ContinuationUtilities.ContinuationProfile _continuationProfile;
+        private List<string> _names;
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -20,15 +20,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int fixCount = 0;
 
             // Check continuation profile
-            if (this.continuationProfile == null)
+            if (this._continuationProfile == null)
             {
                 this.SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
 
             // Prepare variables
-            string addEnd = (this.continuationProfile.SuffixAddSpace ? " " : "") + this.continuationProfile.Suffix;
-            string addStart = this.continuationProfile.Prefix + (this.continuationProfile.PrefixAddSpace ? " " : "");
-            bool replaceComma = this.continuationProfile.SuffixReplaceComma;
+            string addEnd = (this._continuationProfile.SuffixAddSpace ? " " : "") + this._continuationProfile.Suffix;
+            string addStart = this._continuationProfile.Prefix + (this._continuationProfile.PrefixAddSpace ? " " : "");
+            bool replaceComma = this._continuationProfile.SuffixReplaceComma;
 
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
@@ -36,11 +36,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string gapAddStart = addStart;
             bool gapReplaceComma = replaceComma;
 
-            if (this.continuationProfile.UseDifferentStyleGap)
+            if (this._continuationProfile.UseDifferentStyleGap)
             {
-                gapAddEnd = (this.continuationProfile.GapSuffixAddSpace ? " " : "") + this.continuationProfile.GapSuffix;
-                gapAddStart = this.continuationProfile.GapPrefix + (this.continuationProfile.GapPrefixAddSpace ? " " : "");
-                gapReplaceComma = this.continuationProfile.GapSuffixReplaceComma;
+                gapAddEnd = (this._continuationProfile.GapSuffixAddSpace ? " " : "") + this._continuationProfile.GapSuffix;
+                gapAddStart = this._continuationProfile.GapPrefix + (this._continuationProfile.GapPrefixAddSpace ? " " : "");
+                gapReplaceComma = this._continuationProfile.GapSuffixReplaceComma;
             }
 
             bool inSentence = false;
@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var text = ContinuationUtilities.SanitizeString(p.Text);
                 var textNext = ContinuationUtilities.SanitizeString(pNext.Text);
                 var isChecked = true;
+                var shouldProcess = true;
 
                 // Check if we should fix this paragraph
                 if (ShouldFixParagraph(text))
@@ -96,7 +97,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var textWithoutSuffix = text;
                     foreach (string suffix in ContinuationUtilities.Suffixes.Union(new List<string> { "," }))
                     {
-                        if (textWithoutSuffix.EndsWith(suffix)) textWithoutSuffix = textWithoutSuffix.Substring(0, textWithoutSuffix.Length - suffix.Length);
+                        if (textWithoutSuffix.EndsWith(suffix))
+                        {
+                            textWithoutSuffix = textWithoutSuffix.Substring(0, textWithoutSuffix.Length - suffix.Length);
+                        }
                     }
                     textWithoutSuffix = textWithoutSuffix.Trim();
 
@@ -104,7 +108,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var textNextWithoutPrefix = textNext;
                     foreach (string prefix in ContinuationUtilities.Prefixes)
                     {
-                        if (textNextWithoutPrefix.StartsWith(prefix)) textNextWithoutPrefix = textNextWithoutPrefix.Substring(prefix.Length);
+                        if (textNextWithoutPrefix.StartsWith(prefix))
+                        {
+                            textNextWithoutPrefix = textNextWithoutPrefix.Substring(prefix.Length);
+                        }
                     }
                     textNextWithoutPrefix = textNextWithoutPrefix.Trim();
 
@@ -135,82 +142,79 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 && !StartsWithName(textNextWithoutPrefix, callbacks.Language)
                                 && (!ContinuationUtilities.IsAllCaps(text) && !ContinuationUtilities.IsAllCaps(textNext)))
                             {
-                                goto skipThisLine;
+                                shouldProcess = false;
                             }
                         }
                     }
 
 
-                    // First paragraph...
-
-                    // If first paragraphs ends with a suffix,
-                    // and profile states to NOT replace comma,
-                    // and next sentence starts with conjunction,
-                    // try to re-add comma
-                    var addComma = false;
-                    if (!lastWord.EndsWith(",")
-                        && HasSuffix(text) 
-                        && (gap ? !gapReplaceComma : !replaceComma)
-                        && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language))
+                    if (shouldProcess)
                     {
-                        addComma = true;
-                    }
+                        // First paragraph...
 
-                    // Make new last word
-                    if (gap)
-                    {
-                        newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !gapReplaceComma ? "," : "") + gapAddEnd;
-                    }
-                    else
-                    {
-                        newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !replaceComma ? "," : "") + addEnd;
-                    }
+                        // If first paragraphs ends with a suffix,
+                        // and profile states to NOT replace comma,
+                        // and next sentence starts with conjunction,
+                        // try to re-add comma
+                        bool addComma = !lastWord.EndsWith(",")
+                                        && HasSuffix(text)
+                                        && (gap ? !gapReplaceComma : !replaceComma)
+                                        && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language);
 
-                    // Replace it
-                    var newText = ContinuationUtilities.ReplaceLastOccurrence(oldText, lastWord, newLastWord);
-
-                    // Commit if changed
-                    if (oldText != newText && callbacks.AllowFix(p, fixAction))
-                    {
-                        // Don't apply fix when it's checked in step 1
-                        if ((IsPreviewStep() && isChecked) || !IsPreviewStep())
+                        // Make new last word
+                        if (gap)
                         {
-                            p.Text = newText;
+                            newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !gapReplaceComma ? "," : "") + gapAddEnd;
                         }
-                        fixCount++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, newText, isChecked);
-                    }
-                    
-
-                    // Second paragraph...
-
-                    // Make new first word
-                    if (gap)
-                    {
-                        newFirstWord = gapAddStart + newFirstWord;
-                    }
-                    else
-                    {
-                        newFirstWord = addStart + newFirstWord;
-                    }
-
-                    // Replace it
-                    var newTextNext = ContinuationUtilities.ReplaceFirstOccurrence(oldTextNext, firstWord, newFirstWord);
-                                        
-                    // Commit if changed
-                    if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))
-                    {
-                        // Don't apply fix when it's checked in step 1
-                        if ((IsPreviewStep() && isChecked) || !IsPreviewStep())
+                        else
                         {
-                            pNext.Text = newTextNext;
+                            newLastWord = newLastWord + ((lastWord.EndsWith(",") || addComma) && !replaceComma ? "," : "") + addEnd;
                         }
-                        fixCount++;
-                        callbacks.AddFixToListView(pNext, fixAction + " ", oldTextNext, newTextNext, isChecked);
+
+                        // Replace it
+                        var newText = ContinuationUtilities.ReplaceLastOccurrence(oldText, lastWord, newLastWord);
+
+                        // Commit if changed
+                        if (oldText != newText && callbacks.AllowFix(p, fixAction))
+                        {
+                            // Don't apply fix when it's checked in step 1
+                            if ((IsPreviewStep(callbacks) && isChecked) || !IsPreviewStep(callbacks))
+                            {
+                                p.Text = newText;
+                            }
+                            fixCount++;
+                            callbacks.AddFixToListView(p, fixAction, oldText, newText, isChecked);
+                        }
+
+
+                        // Second paragraph...
+
+                        // Make new first word
+                        if (gap)
+                        {
+                            newFirstWord = gapAddStart + newFirstWord;
+                        }
+                        else
+                        {
+                            newFirstWord = addStart + newFirstWord;
+                        }
+
+                        // Replace it
+                        var newTextNext = ContinuationUtilities.ReplaceFirstOccurrence(oldTextNext, firstWord, newFirstWord);
+
+                        // Commit if changed
+                        if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))
+                        {
+                            // Don't apply fix when it's checked in step 1
+                            if ((IsPreviewStep(callbacks) && isChecked) || !IsPreviewStep(callbacks))
+                            {
+                                pNext.Text = newTextNext;
+                            }
+                            fixCount++;
+                            callbacks.AddFixToListView(pNext, fixAction + " ", oldTextNext, newTextNext, isChecked);
+                        }
                     }
                 }
-
-                skipThisLine:
 
                 // Detect new sentence
                 if (ContinuationUtilities.IsNewSentence(text))
@@ -244,39 +248,39 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             callbacks.UpdateFixStatus(fixCount, language.FixUnnecessaryLeadingDots, language.XFixContinuationStyle);
+        }
 
-            bool IsPreviewStep()
-            {
-                return callbacks.AllowFix(new Paragraph() { Number = -1 }, string.Empty);
-            }
+        private bool IsPreviewStep(IFixCallbacks callbacks)
+        {
+            return callbacks.AllowFix(new Paragraph { Number = -1 }, string.Empty);
         }
 
         private bool ShouldFixParagraph(string input)
         {
-            return ContinuationUtilities.ShouldAddSuffix(input, this.continuationProfile, false);
+            return ContinuationUtilities.ShouldAddSuffix(input, this._continuationProfile, false);
         }
 
         private bool HasPrefix(string input)
         {
-            return ContinuationUtilities.HasPrefix(input, this.continuationProfile);
+            return ContinuationUtilities.HasPrefix(input, this._continuationProfile);
         }
 
         private bool HasSuffix(string input)
         {
-            return ContinuationUtilities.HasSuffix(input, this.continuationProfile);
+            return ContinuationUtilities.HasSuffix(input, this._continuationProfile);
         }
                 
         private bool StartsWithName(string input, string language)
         {
-            if (this.names == null)
+            if (this._names == null)
             {
                 NameList nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                this.names = nameList.GetAllNames();
+                this._names = nameList.GetAllNames();
             }
 
-            if (this.names != null)
+            if (this._names != null)
             {
-                foreach (string name in this.names)
+                foreach (string name in this._names)
                 {
                     if (input.StartsWith(name + " ") || input.StartsWith(name + ",") || input.StartsWith(name + ":"))
                     {
@@ -290,7 +294,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private void SetContinuationProfile(ContinuationStyle continuationStyle)
         {
-            this.continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            this._continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
         }
     }
 }

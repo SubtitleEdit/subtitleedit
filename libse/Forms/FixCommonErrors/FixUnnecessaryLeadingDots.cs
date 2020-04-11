@@ -35,10 +35,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         string newFirstWord = firstWord;
 
                         // Remove dots
-                        if (newFirstWord.StartsWith("...")) newFirstWord = newFirstWord.Substring(3);
-                        if (newFirstWord.StartsWith("..")) newFirstWord = newFirstWord.Substring(2);
-                        if (newFirstWord.StartsWith("…")) newFirstWord = newFirstWord.Substring(1);
+                        if (newFirstWord.StartsWith("..."))
+                        {
+                            newFirstWord = newFirstWord.Substring(3);
+                        }
+                        if (newFirstWord.StartsWith(".."))
+                        {
+                            newFirstWord = newFirstWord.Substring(2);
+                        }
+                        if (newFirstWord.StartsWith("…"))
+                        {
+                            newFirstWord = newFirstWord.Substring(1);
+                        }
                         newFirstWord = newFirstWord.Trim();
+
                         var newText = ContinuationUtilities.ReplaceFirstOccurrence(oldText, firstWord, newFirstWord);
 
                         // Commit
