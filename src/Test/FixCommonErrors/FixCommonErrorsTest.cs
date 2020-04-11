@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
@@ -2383,5 +2384,253 @@ namespace Test.FixCommonErrors
         }
 
         #endregion
+
+        #region Fix continuation style
+
+        [TestMethod]
+        public void FixUnnecessaryLeadingDots1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test...", "...and we need to do it.");
+                new FixUnnecessaryLeadingDots().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("and we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnnecessaryLeadingDots2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test.", "...coming in mid-sentence.");
+                new FixUnnecessaryLeadingDots().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test.", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...coming in mid-sentence.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnnecessaryLeadingDots3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "{\an8}<i>This is a test...</i>\n \n_", "{\an8}<i>...and we need to do it.</i>\n \n_");
+                new FixUnnecessaryLeadingDots().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("{\an8}<i>This is a test...</i>\n \n_", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("{\an8}<i>and we need to do it.</i>\n \n_", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test...", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixContinuationStyle2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "NO ENTRY", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("NO ENTRY", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test...", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.OnlyTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test,", "but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "no entry", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("no entry", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle6()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>la la la</i>", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>la la la</i>", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle7()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test,", "Mark should do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...Mark should do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle8()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test...", "...Mark can do.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("Mark can do.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle9()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "{\an8}<i>'This is a test...</i>\n \n_", "{\an8}<i>...Mark can do.'</i>\n \n_");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("{\an8}<i>'This is a test</i>\n \n_", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("{\an8}<i>Mark can do.'</i>\n \n_", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle10()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I'm just testin'", "and you can join.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I'm just testin'...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...and you can join.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle11()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am <i>testing</i>", "this right now.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am <i>testing</i>...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...this right now.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle12()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am <i>test</i>ing", "this right now.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am <i>test</i>ing...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...this right now.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle13()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am testing -", "- this right now.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am testing...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...this right now.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle14()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am testing...", "...this right now.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDash;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am testing -", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("- this right now.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixContinuationStyle15()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am testing...", "- ...this right now.\n- You kidding me?");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDash;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am testing -", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("- this right now.\n- You kidding me?", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle16()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I am testing", "- this right now.\n- You kidding me?");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("I am testing...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("- ...this right now.\n- You kidding me?", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        #endregion Fix continuation style
     }
 }
