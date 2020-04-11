@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string SingleQuotes = "'‘’‘";
         private static readonly string DoubleQuotes = "''‘‘’’‚‚‘‘";
 
-        public static List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
-        public static List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
+        public static readonly List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
+        public static readonly List<string> Suffixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
 
-        public static string SanitizeString(string input, bool removeDashes = true, bool removeHtml = true)
+        public static string SanitizeString(string input, bool removeDashes)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -24,10 +24,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string checkString = input;
-            if (removeHtml)
-            {
-                checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
-            }
+            checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
             checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty);
             checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty);
             checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
@@ -96,7 +93,12 @@ namespace Nikse.SubtitleEdit.Core
             return checkString;
         }
 
-        public static string ExtractParagraphOnly(string input, bool removeDashes = true)
+        public static string SanitizeString(string input)
+        {
+            return SanitizeString(input, true);
+        }
+
+        public static string ExtractParagraphOnly(string input, bool removeDashes)
         {
             string checkString = input;
             checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
@@ -109,6 +111,11 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return checkString;
+        }
+
+        public static string ExtractParagraphOnly(string input)
+        {
+            return ExtractParagraphOnly(input, true);
         }
 
         public static string ReplaceFirstOccurrence(string source, string find, string replace)
@@ -137,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core
             return result;
         }
 
-        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize = true)
+        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize)
         {
             string text = sanitize ? SanitizeString(input) : input;
 
@@ -147,6 +154,11 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return false;
+        }
+
+        public static bool ShouldAddSuffix(string input, ContinuationProfile profile)
+        {
+            return ShouldAddSuffix(input, profile, true);
         }
 
         public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap)
@@ -223,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core
             return ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
         }
 
-        public static string RemoveSuffix(string originalText, ContinuationProfile profile, bool addComma = false)
+        public static string RemoveSuffix(string originalText, ContinuationProfile profile, bool addComma)
         {
             // Get last word
             string text = SanitizeString(originalText);
@@ -247,6 +259,11 @@ namespace Nikse.SubtitleEdit.Core
 
             // Replace it
             return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+        }
+
+        public static string RemoveSuffix(string originalText, ContinuationProfile profile)
+        {
+            return RemoveSuffix(originalText, profile, false);
         }
 
         public static string RemovePrefix(string originalText, ContinuationProfile profile)

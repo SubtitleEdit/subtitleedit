@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(fixCount, language.FixUnnecessaryLeadingDots, language.XFixContinuationStyle);
         }
 
-        private bool IsPreviewStep(IFixCallbacks callbacks)
+        private static bool IsPreviewStep(IFixCallbacks callbacks)
         {
             return callbacks.AllowFix(new Paragraph { Number = -1 }, string.Empty);
         }
