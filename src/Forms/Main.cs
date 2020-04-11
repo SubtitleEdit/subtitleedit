@@ -4572,7 +4572,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RemoveAlternate(false, false);
                 }
 
-                Main_Resize(null, null);
+                Main_ResizeEnd(null, null);
             }
 
             SetLanguage(Configuration.Settings.General.Language);
@@ -18185,7 +18185,8 @@ namespace Nikse.SubtitleEdit.Forms
             lbText.Left = firstLeft;
             lbSingleLine.Left = firstLeft;
 
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 &&
+                textBoxListViewTextAlternate.Visible)
             {
                 tbText.Width = (groupBoxEdit.Width - (tbText.Left + 10)) / 2;
                 tbOriginal.Left = tbText.Left + tbText.Width + 3;
