@@ -911,6 +911,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
+            if (string.IsNullOrEmpty(textBoxFFmpegPath.Text) && Configuration.IsRunningOnWindows)
+            {
+                var guessPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                if (File.Exists(guessPath))
+                {
+                    textBoxFFmpegPath.Text = guessPath;
+                }
+            }
 
             MakeShortcutsTreeView(language);
             ShowShortcutsTreeView();
@@ -3250,10 +3258,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonLineWidthSettings_Click(object sender, EventArgs e)
         {
             using (var form = new SettingsLineWidth())
-            {                
+            {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    
+
                 }
             }
         }
