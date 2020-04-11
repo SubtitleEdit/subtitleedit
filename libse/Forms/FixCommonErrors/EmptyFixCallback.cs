@@ -15,30 +15,37 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void AddFixToListView(Paragraph p, string action, string before, string after)
         {
+            // Empty callback
         }
 
         public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
         {
+            // Empty callback
         }
 
         public void LogStatus(string sender, string message)
         {
+            // Empty callback
         }
 
         public void LogStatus(string sender, string message, bool isImportant)
         {
+            // Empty callback
         }
 
         public void UpdateFixStatus(int fixes, string message, string xMessage)
         {
+            // Empty callback
         }
 
         public void AddToTotalErrors(int count)
         {
+            // Empty callback
         }
 
         public void AddToDeleteIndices(int index)
         {
+            // Empty callback
         }
 
         public SubtitleFormat Format
