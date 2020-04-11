@@ -525,7 +525,12 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Items.Add(item);
         }
 
-        public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked = true)
+        public void AddFixToListView(Paragraph p, string action, string before, string after)
+        {
+            AddFixToListView(p, action, before, after, true);
+        }
+
+        public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
         {
             if (_onlyListFixes)
             {
