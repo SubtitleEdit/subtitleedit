@@ -2454,10 +2454,10 @@ can edit in same subtitle file (collaboration)",
                 RemoveTimeCodes = "Remove time codes",
                 EditFixContinuationStyleSettings = "Edit settings for fixing continuation style...",
                 FixContinuationStyleSettings = "Settings for fixing continuation style",
-                UncheckInsertsAllCaps = "Detect and uncheck inserts in all-caps (for example: NO ENTRY)",
-                UncheckInsertsItalic = "Try to detect and uncheck italic inserts or lyrics in lowercase",
-                UncheckInsertsLowercase = "Try to detect and uncheck inserts or lyrics in lowercase",
-                HideInterruptionContinuationCandidatesWithoutName = "Hide interruption continuation candidates start don't start with a name"
+                UncheckInsertsAllCaps = "Detect and uncheck single titles in all-caps (for example: NO ENTRY)",
+                UncheckInsertsItalic = "Detect and uncheck italic single titles, or lyrics",
+                UncheckInsertsLowercase = "Detect and uncheck single titles, or lyrics, in lowercase",
+                HideInterruptionContinuationCandidatesWithoutName = "Hide unlikely continuation sentences after interruptions"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

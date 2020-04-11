@@ -2164,7 +2164,7 @@ of tĳdens het exporteren naar op beeld gebaseerde formaten.</FontNote>
     <UncheckInsertsAllCaps>Beeldtitels in hoofdletters detecteren en uitvinken (bijvoorbeeld: GEEN TOEGANG)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Cursieve beeldtitels of songteksten detecteren en uitvinken</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Beeldtitels of songteksten in kleine letters detecteren en uitvinken</UncheckInsertsLowercase>
-    <HideInterruptionContinuationCandidatesWithoutName>Mogelijke vervolgzinnen na onderbrekingen verbergen die niet met een naam beginnen</HideInterruptionContinuationCandidatesWithoutName>
+    <HideInterruptionContinuationCandidatesWithoutName>Onwaarschijnlijke vervolgzinnen na onderbrekingen verbergen</HideInterruptionContinuationCandidatesWithoutName>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>
