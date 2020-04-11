@@ -638,7 +638,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Fast hash code for subtitle - includes pre (encoding atm) + header + number + start + end + text.
+        /// Fast hash code for subtitle - includes pre (encoding atm) + header + number + start + end + text + style + actor + extra.
         /// </summary>
         /// <returns>Hash value that can be used for quick compare</returns>
         public int GetFastHashCode(string pre)
@@ -662,6 +662,18 @@ namespace Nikse.SubtitleEdit.Core
                     hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                     hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
                     hash = hash * 23 + p.Text.GetHashCode();
+                    if (p.Style != null)
+                    {
+                        hash = hash * 23 + p.Style.GetHashCode();
+                    }
+                    if (p.Extra != null)
+                    {
+                        hash = hash * 23 + p.Extra.GetHashCode();
+                    }
+                    if (p.Actor != null)
+                    {
+                        hash = hash * 23 + p.Actor.GetHashCode();
+                    }
                 }
                 return hash;
             }
@@ -702,6 +714,5 @@ namespace Nikse.SubtitleEdit.Core
             }
             return sb.ToString();
         }
-
     }
 }
