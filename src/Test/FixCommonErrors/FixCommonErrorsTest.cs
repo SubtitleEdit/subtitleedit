@@ -2739,6 +2739,58 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixContinuationStyle23()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test with a comma,", "but it should stay here.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test with a comma,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but it should stay here.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle23B()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test with a comma, -", "- but it should stay here.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test with a comma,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("but it should stay here.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle24()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test with a comma, -", "- but it should be removed.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDash;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test with a comma -", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("- but it should be removed.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle25()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>This is a test...</i>\n_", "<i>but I should do it.</i>\n_");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>This is a test,</i>\n_", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("<i>but I should do it.</i>\n_", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
         #endregion Fix continuation style
     }
 }
