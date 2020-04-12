@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string Quotes = "'\"“”‘’«»‹›„“‚‘";
         private static readonly string SingleQuotes = "'‘’‘";
         private static readonly string DoubleQuotes = "''‘‘’’‚‚‘‘";
+        private static readonly string MusicSymbols = "♪♫#*¶";
 
         public static readonly List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
         public static readonly List<string> DashPrefixes = new List<string> { "-", "‐", "–", "—" };
@@ -27,8 +28,8 @@ namespace Nikse.SubtitleEdit.Core
 
             string checkString = input;
             checkString = Regex.Replace(checkString, "<.*?>", string.Empty);
-            checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty);
-            checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty);
+            checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty, RegexOptions.Singleline);
+            checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty, RegexOptions.Singleline);
             checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
             checkString = checkString.Trim();
 
@@ -56,7 +57,11 @@ namespace Nikse.SubtitleEdit.Core
             if (checkString.Contains(":"))
             {
                 string[] split = checkString.Split(':');
-                if (IsAllCaps(split[0]))
+                if (string.IsNullOrEmpty(split[0].Trim()))
+                {
+                    checkString = checkString.Substring(1).Trim();
+                }
+                else if (IsAllCaps(split[0]))
                 {
                     var newCheckString = string.Join(":", split.Skip(1)).Trim();
                     if (!string.IsNullOrEmpty(newCheckString))
@@ -69,18 +74,22 @@ namespace Nikse.SubtitleEdit.Core
             // Remove dashes from the beginning
             if (removeDashes)
             {
-                if (Dashes.Contains(checkString[0]))
+                if (checkString.Length > 1 && Dashes.Contains(checkString[0]) && (checkString[1] != '\r' && checkString[1] != '\n'))
                 {
                     checkString = checkString.Substring(1).Trim();
                 }
             }
 
             // Remove single-char quotes from the beginning
-            if (Quotes.Contains(checkString[0]))
+            if (checkString.Length > 0 && Quotes.Contains(checkString[0]))
             {
-                if (SingleQuotes.Contains(checkString[0]) && char.IsLetter(checkString[1]) && !char.IsUpper(checkString[1]) && char.IsWhiteSpace(checkString[2]) && char.IsLetter(checkString[3]))
+                if (checkString.Length > 3 && SingleQuotes.Contains(checkString[0]) && char.IsLetter(checkString[1]) && !char.IsUpper(checkString[1]) && char.IsWhiteSpace(checkString[2]) && char.IsLetter(checkString[3]))
                 {
                     // 's Avonds -- don't remove
+                }
+                else if (checkString.Length > 2 && SingleQuotes.Contains(checkString[0]) && checkString.Substring(1).StartsWith("cause"))
+                {
+                    // 'cause -- don't remove
                 }
                 else
                 {
@@ -93,9 +102,15 @@ namespace Nikse.SubtitleEdit.Core
             {
                 checkString = checkString.Substring(2).Trim();
             }
+            
+            // Remove music symbols from the beginning
+            if (checkString.Length > 0 && MusicSymbols.Contains(checkString[0]))
+            {
+                checkString = checkString.Substring(1).Trim();
+            }
 
             // Remove single-char quotes from the ending
-            if (Quotes.Contains(checkString[checkString.Length - 1]))
+            if (checkString.Length > 0 && Quotes.Contains(checkString[checkString.Length - 1]))
             {
                 if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'") && char.IsLetter(checkString[checkString.Length - 4]))
                 {
@@ -115,6 +130,12 @@ namespace Nikse.SubtitleEdit.Core
             if (checkString.Length > 1 && DoubleQuotes.Contains(checkString.Substring(checkString.Length - 2, 2)))
             {
                 checkString = checkString.Substring(0, checkString.Length - 2).Trim();
+            }
+            
+            // Remove music symbols from the ending
+            if (checkString.Length > 0 && MusicSymbols.Contains(checkString[checkString.Length - 1]))
+            {
+                checkString = checkString.Substring(0, checkString.Length - 1).Trim();
             }
 
             return checkString;
@@ -266,27 +287,21 @@ namespace Nikse.SubtitleEdit.Core
 
             if (gap && profile.UseDifferentStyleGap)
             {
-                // Check if needed
-                if (!addComma && !profile.GapSuffixReplaceComma && !profile.GapSuffixAddSpace && (profile.GapSuffix.Length == 0 || lastWord.EndsWith(profile.GapSuffix)))
-                {
-                    return originalText;
-                }
-
                 // Make new last word
                 string gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
-                newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
+
+                if (gapAddEnd.Length == 0 || !newLastWord.EndsWith(gapAddEnd)) { 
+                    newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
+                }
             }
             else
             {
-                // Check if needed
-                if (!addComma && !profile.SuffixReplaceComma && !profile.SuffixAddSpace && (profile.Suffix.Length == 0 || lastWord.EndsWith(profile.Suffix)))
-                {
-                    return originalText;
-                }
-
                 // Make new last word
                 string addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
-                newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.SuffixReplaceComma ? "," : "") + addEnd;
+
+                if (addEnd.Length == 0 || !newLastWord.EndsWith(addEnd)) { 
+                    newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.SuffixReplaceComma ? "," : "") + addEnd;
+                }
             }
 
             // Check if it's not surrounded by HTML tags, then we'll place it outside the tags (remove comma if present)
@@ -401,31 +416,23 @@ namespace Nikse.SubtitleEdit.Core
 
             if (gap && profile.UseDifferentStyleGap)
             {
-                // Check if needed
-                if (!profile.GapPrefixAddSpace 
-                    && (profile.GapPrefix.Length == 0 || (firstWord.StartsWith(profile.GapPrefix) && !DashPrefixes.Contains(profile.GapPrefix))))
-                {
-                    return originalText;
-                }
-
                 // Make new first word
-                newFirstWord = newFirstWord.Replace(profile.GapPrefix, "").Trim();
                 string gapAddStart = profile.GapPrefix + (profile.GapPrefixAddSpace ? " " : "");
-                newFirstWord = gapAddStart + newFirstWord;
+
+                if (gapAddStart.Length == 0 || !newFirstWord.StartsWith(gapAddStart))
+                {
+                    newFirstWord = gapAddStart + newFirstWord;
+                }
             }
             else
             {
-                // Check if needed
-                if (!profile.PrefixAddSpace 
-                    && (profile.Prefix.Length == 0 || (firstWord.StartsWith(profile.Prefix) && !DashPrefixes.Contains(profile.Prefix))))
-                {
-                    return originalText;
-                }
-
                 // Make new first word
-                newFirstWord = newFirstWord.Replace(profile.Prefix, "").Trim();
                 string addStart = profile.Prefix + (profile.PrefixAddSpace ? " " : "");
-                newFirstWord = addStart + newFirstWord;
+
+                if (addStart.Length == 0 || !newFirstWord.StartsWith(addStart))
+                {
+                    newFirstWord = addStart + newFirstWord;
+                }
             }
 
             // Check if it's not surrounded by HTML tags, then we'll place it outside the tags
@@ -470,7 +477,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (string suffix in Suffixes.Union(additionalSuffixes))
             {
-                if (newLastWord.EndsWith(suffix))
+                if (newLastWord.EndsWith(suffix) && !newLastWord.EndsWith(Environment.NewLine + suffix))
                 {
                     newLastWord = newLastWord.Substring(0, newLastWord.Length - suffix.Length);
                 }
@@ -589,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (string prefix in Prefixes)
             {
-                if (newFirstWord.StartsWith(prefix))
+                if (newFirstWord.StartsWith(prefix) && !newFirstWord.EndsWith(prefix + Environment.NewLine))
                 {
                     newFirstWord = newFirstWord.Substring(prefix.Length);
                 }
@@ -647,7 +654,7 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static bool IsNewSentence(string input)
+        public static bool IsNewSentence(string input, bool iNewSentence)
         {
             // Return if empty string
             if (string.IsNullOrEmpty(input))
@@ -655,31 +662,45 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            if (char.IsLetter(input[0]) && char.IsUpper(input[0]))
+            if (!iNewSentence)
+            {
+                if (input.StartsWith("I ") || input.StartsWith("I'"))
+                {
+                    // English I
+                    return false;
+                }
+            }
+
+            if (input.Length > 0 && char.IsLetter(input[0]) && char.IsUpper(input[0]))
             {
                 // First letter
                 return true;
             }
 
-            if (char.IsLetter(input[0]) && !char.IsUpper(input[0]) && char.IsLetter(input[1]) && char.IsUpper(input[1]))
+            if (input.Length > 1 && char.IsLetter(input[0]) && !char.IsUpper(input[0]) && char.IsLetter(input[1]) && char.IsUpper(input[1]))
             {
                 // iPhone
                 return true;
             }
 
-            if (char.IsPunctuation(input[0]) && char.IsLetter(input[1]) && !char.IsUpper(input[1]) && char.IsWhiteSpace(input[2]) && char.IsLetter(input[3]) && char.IsUpper(input[3]))
+            if (input.Length > 3 && char.IsPunctuation(input[0]) && char.IsLetter(input[1]) && !char.IsUpper(input[1]) && char.IsWhiteSpace(input[2]) && char.IsLetter(input[3]) && char.IsUpper(input[3]))
             {
                 // 's Avonds
                 return true;
             }
 
-            if ("¿¡".Contains(input[0]) && char.IsLetter(input[1]) && char.IsUpper(input[1]))
+            if (input.Length > 1 && "¿¡".Contains(input[0]) && char.IsLetter(input[1]) && char.IsUpper(input[1]))
             {
                 // Spanish
                 return true;
             }
 
             return false;
+        }
+
+        public static bool IsNewSentence(string input)
+        {
+            return IsNewSentence(input, false);
         }
 
         public static bool IsEndOfSentence(string input)
@@ -888,19 +909,19 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            if (profile.Prefix.Length > 0 && input.StartsWith(profile.Prefix))
+            if (profile.Prefix.Length > 0 && (input.StartsWith(profile.Prefix) && !input.StartsWith(profile.Prefix + Environment.NewLine)))
             {
                 return true;
             }
 
-            if (profile.UseDifferentStyleGap && profile.GapPrefix.Length > 0 && input.StartsWith(profile.GapPrefix))
+            if (profile.UseDifferentStyleGap && profile.GapPrefix.Length > 0 && (input.StartsWith(profile.GapPrefix) && !input.StartsWith(profile.GapPrefix + Environment.NewLine)))
             {
                 return true;
             }
 
             foreach (string prefix in Prefixes)
             {
-                if (input.StartsWith(prefix))
+                if (input.StartsWith(prefix) && !input.StartsWith(prefix + Environment.NewLine))
                 {
                     return true;
                 }
@@ -917,19 +938,19 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            if (profile.Suffix.Length > 0 && input.EndsWith(profile.Suffix))
+            if (profile.Suffix.Length > 0 && (input.EndsWith(profile.Suffix) && !input.EndsWith(Environment.NewLine + profile.Suffix)))
             {
                 return true;
             }
 
-            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && input.EndsWith(profile.GapSuffix))
+            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && (input.EndsWith(profile.GapSuffix) && !input.EndsWith(Environment.NewLine + profile.GapSuffix)))
             {
                 return true;
             }
 
             foreach (string suffix in Suffixes)
             {
-                if (input.EndsWith(suffix))
+                if ((input.EndsWith(suffix) && !input.EndsWith(Environment.NewLine + suffix)) && input.Length > suffix.Length)
                 {
                     return true;
                 }
@@ -940,19 +961,19 @@ namespace Nikse.SubtitleEdit.Core
 
         private static bool HasSuffixUnsafe(string input, ContinuationProfile profile)
         {
-            if (profile.Suffix.Length > 0 && input.EndsWith(profile.Suffix))
+            if (profile.Suffix.Length > 0 && (input.EndsWith(profile.Suffix) && !input.EndsWith(Environment.NewLine + profile.Suffix)))
             {
                 return true;
             }
 
-            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && input.EndsWith(profile.GapSuffix))
+            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && (input.EndsWith(profile.GapSuffix) && !input.EndsWith(Environment.NewLine + profile.GapSuffix)))
             {
                 return true;
             }
 
             foreach (string suffix in Suffixes)
             {
-                if (input.EndsWith(suffix) && input.Length > suffix.Length)
+                if ((input.EndsWith(suffix) && !input.EndsWith(Environment.NewLine + suffix)) && input.Length > suffix.Length)
                 {
                     return true;
                 }
