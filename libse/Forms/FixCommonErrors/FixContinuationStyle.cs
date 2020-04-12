@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...ignore inserts
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
                         {
-                            if (ContinuationUtilities.IsAllCaps(text))
+                            if (ContinuationUtilities.IsAllCaps(text) || (!ContinuationUtilities.IsAllCaps(text) && ContinuationUtilities.IsAllCaps(textNext)))
                             {
                                 isChecked = false;
                             }
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             // If both sentences are all caps, DO show them.
                             if (Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName
                                 && !StartsWithName(textNextWithoutPrefix, callbacks.Language)
-                                && (!ContinuationUtilities.IsAllCaps(text) && !ContinuationUtilities.IsAllCaps(textNext)))
+                                && !(ContinuationUtilities.IsAllCaps(text) && ContinuationUtilities.IsAllCaps(textNext)))
                             {
                                 shouldProcess = false;
                             }
