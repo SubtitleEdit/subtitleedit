@@ -172,7 +172,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
-                if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
+                var twoLetterCode = "?";
+                if (threeLetterIsoLanguageName != null && IsoCountryCodes.ThreeToTweLetterLookup.TryGetValue(threeLetterIsoLanguageName, out twoLetterCode))
+                {
+                    twoLetterCode = twoLetterCode.ToLowerInvariant();
+                }
+
+                if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || culture.TwoLetterISOLanguageName == twoLetterCode)
                 {
                     string dictionaryFileName = null;
                     if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
@@ -195,7 +201,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
 
                                 var ci = CultureInfo.GetCultureInfo(name);
-                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+                                var threeLetterCode = IsoCountryCodes.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName ||
+                                    threeLetterCode == threeLetterIsoLanguageName ||
+                                    ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
                                     break;
