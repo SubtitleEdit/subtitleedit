@@ -7066,10 +7066,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     comboBoxDictionaries.SelectedIndex = 0;
                 }
-                else
-                {
-                    comboBoxDictionaries_SelectedIndexChanged(null, null);
-                }
             }
 
             comboBoxModiLanguage.SelectedIndex = -1;
