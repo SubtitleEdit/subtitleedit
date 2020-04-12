@@ -30,6 +30,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            if (new UnknownSubtitle97().IsMine(lines, fileName))
+            {
+                return false;
+            }
+
+            return base.IsMine(lines, fileName);
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             Paragraph paragraph = null;
