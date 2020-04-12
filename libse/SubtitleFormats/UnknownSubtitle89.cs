@@ -33,15 +33,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string s;
             if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
             {
-                s = string.Format("0:{0:00}", ts.Seconds);
+                s = $"0:{ts.Seconds:00}";
             }
             else if (ts.Hours == 0 && ts.Days == 0)
             {
-                s = string.Format("{0:0}:{1:00}", ts.Minutes, ts.Seconds);
+                s = $"{ts.Minutes:0}:{ts.Seconds:00}";
             }
             else
             {
-                s = string.Format("{0:0}:{1:00}:{2:00}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds);
+                s = $"{ts.Hours + ts.Days * 24:0}:{ts.Minutes:00}:{ts.Seconds:00}";
             }
 
             if (timeCode.TotalMilliseconds >= 0)
@@ -69,11 +69,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         p.Text = sb.ToString().Trim();
                         subtitle.Paragraphs.Add(p);
+                        if (string.IsNullOrEmpty(p.Text))
+                        {
+                            _errorCount++;
+                        }
                     }
-                    p = new Paragraph();
-                    p.StartTime = DecodeTimeCode(m.Value.Trim(), SplitCharColon);
-                    p.Actor = s.Remove(0, m.Value.Length).Trim();
+
+                    p = new Paragraph
+                    {
+                        StartTime = DecodeTimeCode(m.Value.Trim(), SplitCharColon),
+                        Actor = s.Remove(0, m.Value.Length).Trim(),
+                    };
                     sb.Clear();
+                    if (p.Actor.Split().Length > 3)
+                    {
+                        _errorCount++;
+                    }
                 }
                 else if (p != null)
                 {
@@ -98,10 +109,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), 0);
             }
-            else if (arr.Length == 3)
+
+            if (arr.Length == 3)
             {
                 return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
             }
+
             throw new InvalidOperationException();
         }
     }
