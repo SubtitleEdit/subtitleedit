@@ -260,11 +260,11 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Get three letter language code, from two letter language code.
         /// </summary>
-        /// <param name="twoLettercode">Two letter language code (casing not important)</param>
+        /// <param name="twoLetterCode">Two letter language code (casing not important)</param>
         /// <returns>Three letter language code in lowercase, string.Empty if not found</returns>
-        public static string GetThreeLetterCodeFromTwoLettercode(string twoLettercode)
+        public static string GetThreeLetterCodeFromTwoLetterCode(string twoLetterCode)
         {
-            var threeLetters = ThreeToTweLetterLookup.FirstOrDefault(p => p.Value == twoLettercode.ToUpperInvariant());
+            var threeLetters = ThreeToTweLetterLookup.FirstOrDefault(p => p.Value == twoLetterCode.ToUpperInvariant());
             if (threeLetters.Key?.Length == 3)
             {
                 return threeLetters.Key.ToLowerInvariant();
