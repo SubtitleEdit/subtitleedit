@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...and italic lyrics    
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
                         {
-                            if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text) && inItalicSentence == false)
+                            if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
                             {
                                 isChecked = false;
                             }
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...and smallcaps inserts or non-italic lyrics
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
                         {
-                            if (!ContinuationUtilities.IsNewSentence(text) && !inSentence)
+                            if (!ContinuationUtilities.IsNewSentence(text, true) && !inSentence)
                             {
                                 isChecked = false;
                             }
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
-                        if (!HasPrefix(textNext) && ContinuationUtilities.IsNewSentence(textNext))
+                        if (!HasPrefix(textNext) && (ContinuationUtilities.IsNewSentence(textNext, true) || string.IsNullOrEmpty(textNext)))
                         {
                             isChecked = false;
 
@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             //                                          or:  This is something   Marty can do.
                             // If both sentences are all caps, DO show them.
                             if (Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName
+                                && !(textNextWithoutPrefix.StartsWith("I ") || textNextWithoutPrefix.StartsWith("I'"))
                                 && !StartsWithName(textNextWithoutPrefix, callbacks.Language)
                                 && !(ContinuationUtilities.IsAllCaps(text) && ContinuationUtilities.IsAllCaps(textNext)))
                             {
@@ -109,8 +110,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
-
-
+                    
                     if (shouldProcess)
                     {
                         // First paragraph...
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 // Detect new sentence
-                if (ContinuationUtilities.IsNewSentence(text))
+                if (ContinuationUtilities.IsNewSentence(text, true))
                 {
                     inSentence = true;
 
