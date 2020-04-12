@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Core
 {
     public static class IsoCountryCodes
     {
-        public static Dictionary<string, string> ThreeToTweLetterLookup = new Dictionary<string, string>
+        public static Dictionary<string, string> ThreeToTwoLetterLookup = new Dictionary<string, string>
         {
             { "AFG", "AF" },
             { "ALA", "AX" },
@@ -256,7 +256,6 @@ namespace Nikse.SubtitleEdit.Core
             { "ZWE", "ZW" },
         };
 
-
         /// <summary>
         /// Get three letter language code, from two letter language code.
         /// </summary>
@@ -264,13 +263,8 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>Three letter language code in lowercase, string.Empty if not found</returns>
         public static string GetThreeLetterCodeFromTwoLetterCode(string twoLetterCode)
         {
-            var threeLetters = ThreeToTweLetterLookup.FirstOrDefault(p => p.Value == twoLetterCode.ToUpperInvariant());
-            if (threeLetters.Key?.Length == 3)
-            {
-                return threeLetters.Key.ToLowerInvariant();
-            }
-
-            return string.Empty;
+            var lookupResult = ThreeToTwoLetterLookup.FirstOrDefault(p => p.Value == twoLetterCode.ToUpperInvariant());
+            return lookupResult.Key?.Length == 3 ? lookupResult.Key.ToLowerInvariant() : string.Empty;
         }
     }
 }

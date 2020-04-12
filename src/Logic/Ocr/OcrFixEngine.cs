@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
                 var twoLetterCode = "?";
-                if (threeLetterIsoLanguageName != null && IsoCountryCodes.ThreeToTweLetterLookup.TryGetValue(threeLetterIsoLanguageName, out twoLetterCode))
+                if (threeLetterIsoLanguageName != null && IsoCountryCodes.ThreeToTwoLetterLookup.TryGetValue(threeLetterIsoLanguageName, out twoLetterCode))
                 {
                     twoLetterCode = twoLetterCode.ToLowerInvariant();
                 }
