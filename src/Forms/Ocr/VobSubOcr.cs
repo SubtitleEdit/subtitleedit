@@ -6576,38 +6576,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string dir = _ocrMethodIndex == _ocrMethodTesseract302 ? Configuration.Tesseract302DataDirectory : Configuration.TesseractDataDirectory;
             if (Directory.Exists(dir))
             {
-                var list = new List<string>();
                 comboBoxTesseractLanguages.Items.Clear();
-                foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList();
+                foreach (var fileName in Directory.GetFiles(dir, "*.traineddata"))
                 {
-                    string tesseractName = culture.ThreeLetterISOLanguageName;
-                    var trainDataFileName = Path.Combine(dir, tesseractName + ".traineddata");
-                    if (culture.LCID == 0x4 && !File.Exists(trainDataFileName))
+                    string tesseractName = Path.GetFileNameWithoutExtension(fileName);
+                    if (tesseractName != "osd" && tesseractName != "music" && !tesseractName.EndsWith("-frak", StringComparison.Ordinal))
                     {
-                        tesseractName = "chi_sim";
-                    }
-                    else if (culture.Name == "zh-CHT" && !File.Exists(trainDataFileName))
-                    {
-                        tesseractName = "chi_tra";
-                    }
-                    else if (tesseractName == "fas" && !File.Exists(trainDataFileName))
-                    {
-                        tesseractName = "per";
-                    }
-                    else if (tesseractName == "nob" && !File.Exists(trainDataFileName))
-                    {
-                        tesseractName = "nor";
-                    }
-
-                    trainDataFileName = Path.Combine(dir, tesseractName + ".traineddata");
-                    if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
-                    {
-                        if (culture.ThreeLetterISOLanguageName != "zho")
+                        string cultureName = tesseractName;
+                        var match = cultures.FirstOrDefault(p => p.ThreeLetterISOLanguageName == tesseractName);
+                        if (match != null)
                         {
-                            list.Add(culture.ThreeLetterISOLanguageName);
+                            cultureName = match.EnglishName;
                         }
-
-                        comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = tesseractName, Text = culture.EnglishName });
+                        else if (tesseractName == "chi_sim")
+                        {
+                            cultureName = "Chinese simplified";
+                        }
+                        else if (tesseractName == "chi_tra")
+                        {
+                            cultureName = "Chinese traditional";
+                        }
+                        else if (tesseractName == "per")
+                        {
+                            cultureName = "Farsi";
+                        }
+                        else if (tesseractName == "nor")
+                        {
+                            cultureName = "Norwegian";
+                        }
+                        comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = tesseractName, Text = cultureName });
                     }
                 }
             }
