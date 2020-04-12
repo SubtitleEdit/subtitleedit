@@ -81,8 +81,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
 
                     // Remove any suffixes and prefixes
-                    var textWithoutSuffix = ContinuationUtilities.RemoveSuffix(oldText, _continuationProfile, new List<string> { "," }, false).Trim();
-                    var textNextWithoutPrefix = ContinuationUtilities.RemovePrefix(oldTextNext, _continuationProfile, true, gap);
+                    var oldTextWithoutSuffix = ContinuationUtilities.RemoveSuffix(oldText, _continuationProfile, new List<string> { "," }, false).Trim();
+                    var oldTextNextWithoutPrefix = ContinuationUtilities.RemovePrefix(oldTextNext, _continuationProfile, true, gap);
+                    var textNextWithoutPrefix = ContinuationUtilities.SanitizeString(oldTextNextWithoutPrefix, true);
 
                     // Get last word of this paragraph                    
                     string lastWord = ContinuationUtilities.GetLastWord(text);
@@ -118,13 +119,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // and profile states to NOT replace comma,
                         // and next sentence starts with conjunction,
                         // try to re-add comma
-                        bool addComma = !lastWord.EndsWith(",")
-                                        && HasSuffix(text)
-                                        && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
-                                        && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language);
+                        bool addComma = lastWord.EndsWith(",") || (HasSuffix(text)
+                                                                   && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
+                                                                   && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language));
 
                         // Make new last word
-                        var newText = ContinuationUtilities.AddSuffixIfNeeded(textWithoutSuffix, _continuationProfile, gap, addComma);
+                        var newText = ContinuationUtilities.AddSuffixIfNeeded(oldTextWithoutSuffix, _continuationProfile, gap, addComma);
                         
                         // Commit if changed
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // Second paragraph...
 
                         // Make new first word
-                        var newTextNext = ContinuationUtilities.AddPrefixIfNeeded(textNextWithoutPrefix, _continuationProfile, gap);
+                        var newTextNext = ContinuationUtilities.AddPrefixIfNeeded(oldTextNextWithoutPrefix, _continuationProfile, gap);
 
                         // Commit if changed
                         if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))
