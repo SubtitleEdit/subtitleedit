@@ -134,9 +134,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             var language = GetSubtitleLanguage(packetId);
             var uppercaseLanguage = language.ToUpperInvariant();
-            if (IsoCountryCodes.ThreeToTweLetterLookup.ContainsKey(uppercaseLanguage))
+            if (IsoCountryCodes.ThreeToTwoLetterLookup.ContainsKey(uppercaseLanguage))
             {
-                return IsoCountryCodes.ThreeToTweLetterLookup[uppercaseLanguage].ToLowerInvariant();
+                return IsoCountryCodes.ThreeToTwoLetterLookup[uppercaseLanguage].ToLowerInvariant();
             }
             return language;
         }

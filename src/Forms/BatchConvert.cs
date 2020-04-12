@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2" &&
-                IsoCountryCodes.ThreeToTweLetterLookup.TryGetValue(languageCode.ToUpperInvariant(), out var twoLetterCode))
+                IsoCountryCodes.ThreeToTwoLetterLookup.TryGetValue(languageCode.ToUpperInvariant(), out var twoLetterCode))
             {
                 return twoLetterCode.ToLowerInvariant() + ".";
             }
