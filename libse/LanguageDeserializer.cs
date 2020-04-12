@@ -5902,6 +5902,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/HideContinuationCandidatesWithoutName":
                     language.Settings.HideContinuationCandidatesWithoutName = reader.Value;
                     break;
+                case "Settings/IgnoreLyrics":
+                    language.Settings.IgnoreLyrics = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;

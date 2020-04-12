@@ -2164,6 +2164,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsItalic>Detect and uncheck italic single titles, or lyrics</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignore lyrics between music symbols</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>

@@ -26,11 +26,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUncheckInsertsItalic.Text = language.UncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Text = language.UncheckInsertsLowercase;
             checkBoxHideContinuationCandidatesWithoutName.Text = language.HideContinuationCandidatesWithoutName;
+            checkBoxIgnoreLyrics.Text = language.IgnoreLyrics;
 
             checkBoxUncheckInsertsAllCaps.Checked = settings.FixContinuationStyleUncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Checked = settings.FixContinuationStyleUncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Checked = settings.FixContinuationStyleUncheckInsertsLowercase;
             checkBoxHideContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideContinuationCandidatesWithoutName;
+            checkBoxIgnoreLyrics.Checked = settings.FixContinuationStyleIgnoreLyrics;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -43,6 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic = checkBoxUncheckInsertsItalic.Checked;
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase = checkBoxUncheckInsertsLowercase.Checked;
             Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = checkBoxHideContinuationCandidatesWithoutName.Checked;
+            Configuration.Settings.General.FixContinuationStyleIgnoreLyrics = checkBoxIgnoreLyrics.Checked;
 
             DialogResult = DialogResult.OK;
         }
