@@ -6997,6 +6997,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
                         _languageId = ci.ThreeLetterISOLanguageName;
                         threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                        if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
+                        {
+                            var threeLetters = IsoCountryCodes.GetThreeLetterCodeFromTwoLettercode(ci.TwoLetterISOLanguageName);
+                            if (!string.IsNullOrEmpty(threeLetters))
+                            {
+                                threeLetterIsoLanguageName = threeLetters;
+                            }
+                        }
                     }
                 }
                 catch
@@ -7528,7 +7536,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             string threeLetterIsoLanguageName = string.Empty;
-            if (LanguageString == null)
+            var language = LanguageString;
+            if (language == null)
             {
                 _ocrFixEngine?.Dispose();
                 _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
@@ -7539,12 +7548,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _ocrFixEngine?.Dispose();
                 _ocrFixEngine = null;
-                var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
+                var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
                 threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
+                {
+                    var threeLetters = IsoCountryCodes.GetThreeLetterCodeFromTwoLettercode(ci.TwoLetterISOLanguageName);
+                    if (!string.IsNullOrEmpty(threeLetters))
+                    {
+                        threeLetterIsoLanguageName = threeLetters;
+                    }
+                }
             }
             catch
             {
-                var arr = LanguageString.Split('-', '_');
+                var arr = language.Split('-', '_');
                 if (arr.Length > 1 && arr[0].Length == 2)
                 {
                     foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -7552,9 +7569,27 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (string.Equals(x.TwoLetterISOLanguageName, arr[0], StringComparison.OrdinalIgnoreCase))
                         {
                             threeLetterIsoLanguageName = x.ThreeLetterISOLanguageName;
+                            if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
+                            {
+                                var threeLetters = IsoCountryCodes.GetThreeLetterCodeFromTwoLettercode(x.TwoLetterISOLanguageName);
+                                if (!string.IsNullOrEmpty(threeLetters))
+                                {
+                                    threeLetterIsoLanguageName = threeLetters;
+                                }
+                            }
                             break;
                         }
                     }
+                }
+            }
+
+            if (string.IsNullOrEmpty(threeLetterIsoLanguageName) && !string.IsNullOrEmpty(language) && language.Length >= 2)
+            {
+                var twoLetterCode = language.Substring(0, 2);
+                var threeLetters = IsoCountryCodes.GetThreeLetterCodeFromTwoLettercode(twoLetterCode);
+                if (!string.IsNullOrEmpty(threeLetters))
+                {
+                    threeLetterIsoLanguageName = threeLetters;
                 }
             }
 
