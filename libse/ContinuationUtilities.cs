@@ -329,12 +329,13 @@ namespace Nikse.SubtitleEdit.Core
             return AddSuffixIfNeeded(originalText, profile, gap, false);
         }
 
-        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool removeDashesDuringSanitization, bool gap)
+        public static string AddPrefixIfNeeded(string originalText, ContinuationProfile profile, bool shouldRemoveDashesDuringSanitization, bool gap)
         {
             // Decide if we need to remove dashes
             string textWithDash = SanitizeString(originalText, false);
             string textWithoutDash = SanitizeString(originalText, true);
-            
+            bool removeDashesDuringSanitization = shouldRemoveDashesDuringSanitization;
+
             // Return if empty string
             if (string.IsNullOrEmpty(textWithDash) && string.IsNullOrEmpty(textWithoutDash))
             {
@@ -515,12 +516,13 @@ namespace Nikse.SubtitleEdit.Core
             return RemoveSuffix(originalText, profile, new List<string>(), addComma);
         }
 
-        public static string RemovePrefix(string originalText, ContinuationProfile profile, bool removeDashesDuringSanitization, bool gap)
+        public static string RemovePrefix(string originalText, ContinuationProfile profile, bool shouldRemoveDashesDuringSanitization, bool gap)
         {
             // Decide if we need to remove dashes
             string textWithDash = SanitizeString(originalText, false);
             string textWithoutDash = SanitizeString(originalText, true);
             string leadingDialogDash = null;
+            bool removeDashesDuringSanitization = shouldRemoveDashesDuringSanitization;
 
             // Return if empty string
             if (string.IsNullOrEmpty(textWithDash) && string.IsNullOrEmpty(textWithoutDash))
@@ -545,7 +547,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // If there is only a dash on the first line, count it as dash instead of dialog dash.
-            if (removeDashesDuringSanitization)
+            if (removeDashesDuringSanitization && textWithDash != null)
             {
                 var split = textWithDash.SplitToLines();
                 int lastLineWithDash = -1;
