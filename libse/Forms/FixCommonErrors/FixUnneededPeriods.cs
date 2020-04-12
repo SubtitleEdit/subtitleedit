@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -36,6 +37,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     while (procText.Contains("….", StringComparison.Ordinal))
                     {
                         procText = procText.Replace("….", "…");
+                    }
+
+                    var l = callbacks.Language;
+                    if (procText.Contains('.') && (l == "ko" || l == "ja" || l == "th" || l == "zh"))
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var line in procText.SplitToLines())
+                        {
+                            var s = line;
+                            if (s.EndsWith('.') && !s.EndsWith("..", StringComparison.Ordinal))
+                            {
+                                s = s.TrimEnd('.');
+                            }
+                            else if (s.EndsWith(".</i>", StringComparison.Ordinal) && !s.EndsWith("..</i>", StringComparison.Ordinal))
+                            {
+                                s = s.Remove(s.Length - 5, 1);
+                            }
+
+                            sb.AppendLine(s);
+                        }
+
+                        procText = sb.ToString().TrimEnd();
                     }
 
                     int diff = p.Text.Length - procText.Length;
