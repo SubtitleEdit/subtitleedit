@@ -358,7 +358,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // If there is only a dash on the first line, count it as dash instead of dialog dash.
-            if (removeDashesDuringSanitization)
+            if (removeDashesDuringSanitization && textWithDash != null)
             {
                 var split = textWithDash.SplitToLines();
                 int lastLineWithDash = -1;
