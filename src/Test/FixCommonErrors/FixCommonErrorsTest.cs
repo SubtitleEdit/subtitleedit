@@ -2480,6 +2480,45 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixContinuationStyle2A()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "10 LANDMINES", "...but we need to do it.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("10 LANDMINES", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...but we need to do it.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle2B()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "No wait...", "NO ENTRY");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("No wait...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("NO ENTRY", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle2C()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "No wait...", "10 LANDMINES");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("No wait...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("10 LANDMINES", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixContinuationStyle3()
         {
             using (var target = GetFixCommonErrorsLib())
