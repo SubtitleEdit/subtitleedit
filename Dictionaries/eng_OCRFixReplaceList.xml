@@ -2692,6 +2692,9 @@
     <WordPart from=")/" to="y" />
     <WordPart from=")'" to="y" />
     <WordPart from="a’" to="d" />
+    <WordPart from="|" to="l" />
+    <WordPart from="¤" to="o" />
+    <WordPart from="vx/" to="w" />
   </PartialWords>
   <WholeLines>
     <!-- Whole lines - including -" etc -->
