@@ -540,7 +540,37 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = FixCommonOcrLineErrors(text, lastLine);
 
+            // check words split by only space and new line (as other split chars might by a part of from-replace-string, like "\/\/e're" contains slash)
+            sb = new StringBuilder();
+            word = new StringBuilder();
             string lastWord = null;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] != '.' && "\r\n ".Contains(text[i]))
+                {
+                    if (word.Length > 0)
+                    {
+                        var fixedWord = FixOcrErrorsWord(lastWord, word, sb);
+                        lastWord = fixedWord;
+                        word.Clear();
+                    }
+                    sb.Append(text[i]);
+                }
+                else
+                {
+                    word.Append(text[i]);
+                }
+            }
+            if (word.Length > 0) // last word
+            {
+                FixOcrErrorsWord(lastWord, word, sb);
+            }
+
+            // check words split by many chars like "()/-" etc.
+            text = sb.ToString();
+            sb = new StringBuilder();
+            word = new StringBuilder();
+            lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] != '.' && _expectedChars.Contains(text[i]))
