@@ -100,6 +100,24 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void SanitizeString9()
+        {
+            string line1 = "";
+            string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void SanitizeString10()
+        {
+            string line1 = "<i></i>";
+            string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
         public void ExtractParagraphOnly1()
         {
             string line1 = "{\an8}<i>'This is a test.'</i>\n \n _";
@@ -118,11 +136,29 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void ReplaceFirstOccurrence2()
+        {
+            string line1 = "Mark and Fred. Mark is the strongest.";
+            string line1Actual = ContinuationUtilities.ReplaceFirstOccurrence(line1, "John", "...John");
+            string line1Expected = "Mark and Fred. Mark is the strongest.";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
         public void ReplaceLastOccurrence1()
         {
             string line1 = "You ask who's the strongest. Mark is the strongest";
             string line1Actual = ContinuationUtilities.ReplaceLastOccurrence(line1, "strongest", "strongest...");
             string line1Expected = "You ask who's the strongest. Mark is the strongest...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void ReplaceLastOccurrence2()
+        {
+            string line1 = "You ask who's the strongest. Mark is the strongest";
+            string line1Actual = ContinuationUtilities.ReplaceLastOccurrence(line1, "tallest", "tallest...");
+            string line1Expected = "You ask who's the strongest. Mark is the strongest";
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
@@ -151,6 +187,42 @@ namespace Test.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
             Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void ShouldAddSuffix4()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void ShouldAddSuffix4B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void ShouldAddSuffix5()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void ShouldAddSuffix6()
+        {
+            string line1 = "<i>...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.ShouldAddSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
         }
 
         [TestMethod]
@@ -333,8 +405,58 @@ namespace Test.Logic
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void AddSuffixIfNeeded12()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded12B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = " ";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded13()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded14()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+        
+        [TestMethod]
+        public void AddSuffixIfNeeded15()
+        {
+            string line1 = "妈";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "妈...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        /*[TestMethod]
+        public void AddSuffixIfNeeded13()
         {
             string line1 = "What are you <i>do</i>ing,";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
@@ -462,6 +584,66 @@ namespace Test.Logic
             string line1Expected = "- ...<i>this</i> is a test.\n- Okay.";
             Assert.AreEqual(line1Expected, line1Actual);
         }
+        
+        [TestMethod]
+        public void AddPrefixIfNeeded10()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded10B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = " ";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded10C()
+        {
+            string line1 = "象";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = "...象";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded11()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded12()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded13()
+        {
+            string line1 = "<i>...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
+            string line1Expected = "<i>...</i>";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
 
         /*[TestMethod]
         public void AddPrefixIfNeeded8()
@@ -544,6 +726,36 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void RemoveSuffix6()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void RemoveSuffix6B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
+            string line1Expected = " ";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void RemoveSuffix7()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemoveSuffix(line1, profile);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
         public void RemovePrefix1()
         {
             string line1 = "<i>...this is a test.</i>\n \n_";
@@ -614,6 +826,36 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void RemovePrefix7()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
+            string line1Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void RemovePrefix7B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
+            string line1Expected = " ";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void RemovePrefix8()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.RemovePrefix(line1, profile);
+            string line1Expected = "...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
         public void IsNewSentence1()
         {
             string line1 = "This is a new sentence.";
@@ -665,6 +907,22 @@ namespace Test.Logic
         public void IsNewSentence7()
         {
             string line1 = "¿habla Español?";
+            bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsNewSentence8()
+        {
+            string line1 = "";
+            bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsNewSentence9()
+        {
+            string line1 = " ";
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
             Assert.IsFalse(line1Actual);
         }
@@ -750,6 +1008,164 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void IsEndOfSentence11()
+        {
+            string line1 = "";
+            bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsEndOfSentence11B()
+        {
+            string line1 = " ";
+            bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsEndOfSentence12()
+        {
+            string line1 = "Hey...";
+            bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsEndOfSentence13()
+        {
+            string line1 = "...";
+            bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing1()
+        {
+            string line1 = "This ends with nothing";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+        
+        [TestMethod]
+        public void EndsWithNothing2()
+        {
+            string line1 = "THIS ENDS WITH NOTHING";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing3()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing3B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing4()
+        {
+            string line1 = "This ends with something,";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing5()
+        {
+            string line1 = "This ends with something..";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing6()
+        {
+            string line1 = "This ends with something--";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing7()
+        {
+            string line1 = "This ends with something --";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing8()
+        {
+            string line1 = "This ends with something:";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing9()
+        {
+            string line1 = "This ends with something;";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing9B()
+        {
+            string line1 = "Ψάξατε πραγματικά αυτό;";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing10()
+        {
+            string line1 = "This ends with something?";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing11()
+        {
+            string line1 = "This ends with something...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void EndsWithNothing12()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
         public void IsAllCaps1()
         {
             string line1 = "THIS IS ALL CAPS.";
@@ -779,6 +1195,22 @@ namespace Test.Logic
             string line1 = "ИГРА В ПРЯТКИ";
             bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
             Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsAllCaps5()
+        {
+            string line1 = "";
+            bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsAllCaps5B()
+        {
+            string line1 = " ";
+            bool line1Actual = ContinuationUtilities.IsAllCaps(line1);
+            Assert.IsFalse(line1Actual);
         }
 
         [TestMethod]
@@ -854,6 +1286,46 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void IsItalic10()
+        {
+            string line1 = "";
+            bool line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsItalic10B()
+        {
+            string line1 = " ";
+            bool line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsItalic11()
+        {
+            string line1 = "<i>";
+            bool line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsItalic12()
+        {
+            string line1 = "<i></i>";
+            bool line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsItalic13()
+        {
+            string line1 = "<i> </i>";
+            bool line1Actual = ContinuationUtilities.IsItalic(line1);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
         public void HasPrefix1()
         {
             string line1 = "...this is a prefix.";
@@ -886,6 +1358,78 @@ namespace Test.Logic
             string line1 = "~~ this is my own prefix.";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             profile.Prefix = "~~";
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix5()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix5B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix6()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix7()
+        {
+            string line1 = "<i>...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix8()
+        {
+            string line1 = "...a";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix8B()
+        {
+            string line1 = "... a";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix9()
+        {
+            string line1 = "-a";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
+            bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasPrefix10()
+        {
+            string line1 = "- a";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
             bool line1Actual = ContinuationUtilities.HasPrefix(line1, profile);
             Assert.IsTrue(line1Actual);
         }
@@ -928,6 +1472,177 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void HasSuffix5()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix5B()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix6()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix6B()
+        {
+            string line1 = " ...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix6C()
+        {
+            string line1 = "象...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix7()
+        {
+            string line1 = "a...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix7B()
+        {
+            string line1 = "a ...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix7C()
+        {
+            string line1 = "a-";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix7D()
+        {
+            string line1 = "a -";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDash);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void HasSuffix8()
+        {
+            string line1 = "<i>...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+        
+        [TestMethod]
+        public void IsOnlySuffix1()
+        {
+            string line1 = "...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix2()
+        {
+            string line1 = "-";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+        
+        [TestMethod]
+        public void IsOnlySuffix3()
+        {
+            string line1 = "a...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix4()
+        {
+            string line1 = " ... ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsTrue(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix5()
+        {
+            string line1 = "!...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix6()
+        {
+            string line1 = "?";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix7()
+        {
+            string line1 = "象";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix8()
+        {
+            string line1 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void IsOnlySuffix9()
+        {
+            string line1 = " ";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
         public void StartsWithConjunction1()
         {
             string line1 = "but is this reality?";
@@ -955,6 +1670,22 @@ namespace Test.Logic
         public void StartsWithConjunction4()
         {
             string line1 = "is een fluitje van een cent.";
+            bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void StartsWithConjunction5()
+        {
+            string line1 = "";
+            bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
+            Assert.IsFalse(line1Actual);
+        }
+
+        [TestMethod]
+        public void StartsWithConjunction6()
+        {
+            string line1 = " ";
             bool line1Actual = ContinuationUtilities.StartsWithConjunction(line1, "nl");
             Assert.IsFalse(line1Actual);
         }
@@ -1105,6 +1836,36 @@ namespace Test.Logic
             string line2Actual = result.Item2;
             string line1Expected = "This needs to be merged";
             string line2Expected = "as smoothly as possible.\n- Shut up.";
+            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.AreEqual(line2Expected, line2Actual);
+        }
+
+        [TestMethod]
+        public void MergeHelper10()
+        {
+            string line1 = "This needs to be merged...";
+            string line2 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            var result = ContinuationUtilities.MergeHelper(line1, line2, profile, "en");
+            string line1Actual = result.Item1;
+            string line2Actual = result.Item2;
+            string line1Expected = "This needs to be merged...";
+            string line2Expected = "";
+            Assert.AreEqual(line1Expected, line1Actual);
+            Assert.AreEqual(line2Expected, line2Actual);
+        }
+
+        [TestMethod]
+        public void MergeHelper11()
+        {
+            string line1 = "This needs to be merged";
+            string line2 = "";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            var result = ContinuationUtilities.MergeHelper(line1, line2, profile, "en");
+            string line1Actual = result.Item1;
+            string line2Actual = result.Item2;
+            string line1Expected = "This needs to be merged";
+            string line2Expected = "";
             Assert.AreEqual(line1Expected, line1Actual);
             Assert.AreEqual(line2Expected, line2Actual);
         }

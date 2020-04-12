@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string SanitizeString(string input, bool removeDashes)
         {
+            // Return if empty string
             if (string.IsNullOrEmpty(input))
             {
                 return input;
@@ -39,6 +40,12 @@ namespace Nikse.SubtitleEdit.Core
                 checkString = checkString.Substring(0, checkString.Length - 1).Trim();
             }
 
+            // Return if empty string by now
+            if (string.IsNullOrEmpty(checkString))
+            {
+                return "";
+            }
+
             // Remove >> from the beginning
             while (checkString.StartsWith(">"))
             {
@@ -51,7 +58,11 @@ namespace Nikse.SubtitleEdit.Core
                 string[] split = checkString.Split(':');
                 if (IsAllCaps(split[0]))
                 {
-                    checkString = string.Join(":", split.Skip(1)).Trim();
+                    var newCheckString = string.Join(":", split.Skip(1)).Trim();
+                    if (!string.IsNullOrEmpty(newCheckString))
+                    {
+                        checkString = newCheckString;
+                    }
                 }
             }
 
@@ -78,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // Remove double-char quotes from the beginning
-            if (DoubleQuotes.Contains(checkString.Substring(0, 2)))
+            if (checkString.Length > 1 && DoubleQuotes.Contains(checkString.Substring(0, 2)))
             {
                 checkString = checkString.Substring(2).Trim();
             }
@@ -101,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // Remove double-char quotes from the ending
-            if (DoubleQuotes.Contains(checkString.Substring(checkString.Length - 2, 2)))
+            if (checkString.Length > 1 && DoubleQuotes.Contains(checkString.Substring(checkString.Length - 2, 2)))
             {
                 checkString = checkString.Substring(0, checkString.Length - 2).Trim();
             }
@@ -164,13 +175,19 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string GetFirstWord(string input)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return "";
+            }
+
             string[] split = input.Split(' ');
             string firstWord = split.First();
 
             // For "... this is a test" we would only have the prefix in the first split item
             foreach (string prefix in Prefixes)
             {
-                if (firstWord == prefix)
+                if (firstWord == prefix && split.Length > 1)
                 {
                     firstWord = split[0] + " " + split[1];
                     break;
@@ -182,13 +199,19 @@ namespace Nikse.SubtitleEdit.Core
         
         public static string GetLastWord(string input)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return "";
+            }
+
             string[] split = input.Split(' ');
             string lastWord = split.Last();
 
             // For "This is a test ..." we would only have the suffix in the last split item
             foreach (string suffix in Suffixes)
             {
-                if (lastWord == suffix)
+                if (lastWord == suffix && split.Length > 1)
                 {
                     lastWord = split[split.Length - 2] + " " + split[split.Length - 1];
                     break;
@@ -202,7 +225,13 @@ namespace Nikse.SubtitleEdit.Core
         {
             string text = sanitize ? SanitizeString(input) : input;
 
-            if ((!IsEndOfSentence(text) || text.EndsWith(",") || HasSuffix(text, profile)) && !text.EndsWith("--") && !text.EndsWith(":"))
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+
+            if ((EndsWithNothing(text, profile) || text.EndsWith(",") || HasSuffix(text, profile)) && !text.EndsWith("--") && !text.EndsWith(":") && !text.EndsWith(";"))
             {
                 return true;
             }
@@ -217,8 +246,21 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AddSuffixIfNeeded(string originalText, ContinuationProfile profile, bool gap, bool addComma)
         {
-            // Get last word
             string text = SanitizeString(originalText);
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return originalText;
+            }
+            
+            // Return if only suffix/prefix
+            if (IsOnlySuffix(text, profile) || IsOnlyPrefix(text, profile))
+            {
+                return originalText;
+            }
+
+            // Get last word
             string lastWord = GetLastWord(text);
             string newLastWord = lastWord;
 
@@ -292,6 +334,12 @@ namespace Nikse.SubtitleEdit.Core
             // Decide if we need to remove dashes
             string textWithDash = SanitizeString(originalText, false);
             string textWithoutDash = SanitizeString(originalText, true);
+            
+            // Return if empty string
+            if (string.IsNullOrEmpty(textWithDash) && string.IsNullOrEmpty(textWithoutDash))
+            {
+                return originalText;
+            }
 
             // If we're using a profile with dashes, count those as dashes instead of dialog dashes.
             if (removeDashesDuringSanitization)
@@ -331,9 +379,22 @@ namespace Nikse.SubtitleEdit.Core
                     removeDashesDuringSanitization = false;
                 }
             }
+            
+            string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return originalText;
+            }
+
+            // Return if only suffix/prefix
+            if (IsOnlySuffix(text, profile) || IsOnlyPrefix(text, profile))
+            {
+                return originalText;
+            }
 
             // Get first word of the paragraph
-            string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
             string firstWord = GetFirstWord(text);
             string newFirstWord = firstWord;
 
@@ -394,8 +455,15 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string RemoveSuffix(string originalText, ContinuationProfile profile, List<string> additionalSuffixes, bool addComma)
         {
-            // Get last word
             string text = SanitizeString(originalText);
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return originalText;
+            }
+
+            // Get last word
             string lastWord = GetLastWord(text);
             string newLastWord = lastWord;
 
@@ -413,18 +481,28 @@ namespace Nikse.SubtitleEdit.Core
                 newLastWord = newLastWord + ",";
             }
 
+            string result;
+
             // If we can find it...
             if (originalText.LastIndexOf(lastWord, StringComparison.Ordinal) >= 0)
             {
                 // Replace it
-                return ReplaceLastOccurrence(originalText, lastWord, newLastWord);
+                result = ReplaceLastOccurrence(originalText, lastWord, newLastWord);
             }
             else
             {
                 // Just remove whatever suffix we need to remove
                 var suffix = lastWord.Replace(newLastWord, "");
-                return ReplaceLastOccurrence(originalText, suffix, "");
+                result = ReplaceLastOccurrence(originalText, suffix, "");
             }
+
+            // Return original if empty string
+            if (string.IsNullOrEmpty(result))
+            {
+                return originalText;
+            }
+
+            return result;
         }
 
         public static string RemoveSuffix(string originalText, ContinuationProfile profile)
@@ -443,6 +521,12 @@ namespace Nikse.SubtitleEdit.Core
             string textWithDash = SanitizeString(originalText, false);
             string textWithoutDash = SanitizeString(originalText, true);
             string leadingDialogDash = null;
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(textWithDash) && string.IsNullOrEmpty(textWithoutDash))
+            {
+                return originalText;
+            }
 
             // If we're using a profile with dashes, count those as dashes instead of dialog dashes.
             if (removeDashesDuringSanitization)
@@ -484,8 +568,15 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            // Get first word of the paragraph
             string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return originalText;
+            }
+
+            // Get first word of the paragraph
             string firstWord = GetFirstWord(text);
             string newFirstWord = firstWord;
 
@@ -503,18 +594,28 @@ namespace Nikse.SubtitleEdit.Core
             }
             newFirstWord = newFirstWord.Trim();
 
+            string result;
+
             // If we can find it...
             if (originalText.IndexOf(firstWord, StringComparison.Ordinal) >= 0)
             {
                 // Replace it
-                return ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
+                result = ReplaceFirstOccurrence(originalText, firstWord, newFirstWord);
             }
             else
             {
                 // Just remove whatever prefix we need to remove
                 var prefix = firstWord.Replace(newFirstWord, "");
-                return ReplaceFirstOccurrence(originalText, prefix, "");
+                result = ReplaceFirstOccurrence(originalText, prefix, "");
             }
+            
+            // Return original if empty string
+            if (string.IsNullOrEmpty(result))
+            {
+                return originalText;
+            }
+
+            return result;
         }
 
         public static string RemovePrefix(string originalText, ContinuationProfile profile, bool gap)
@@ -530,6 +631,13 @@ namespace Nikse.SubtitleEdit.Core
         public static string RemoveAllPrefixes(string originalText, ContinuationProfile profile)
         {
             var text = originalText;
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(text))
+            {
+                return originalText;
+            }
+
             while (HasPrefix(SanitizeString(text, false), profile))
             {
                 text = RemovePrefix(text, profile, false, false /* Not used because of false before */);
@@ -539,6 +647,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsNewSentence(string input)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             if (char.IsLetter(input[0]) && char.IsUpper(input[0]))
             {
                 // First letter
@@ -568,6 +682,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsEndOfSentence(string input)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             return (input.EndsWith('.') && !input.EndsWith("..", StringComparison.Ordinal)) ||
                    input.EndsWith('?') ||
                    input.EndsWith('!') ||
@@ -575,8 +695,25 @@ namespace Nikse.SubtitleEdit.Core
                    input.EndsWith("--", StringComparison.Ordinal);
         }
 
+        public static bool EndsWithNothing(string input, ContinuationProfile profile)
+        {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return true;
+            }
+
+            return !HasSuffixUnsafe(input, profile) && !IsEndOfSentence(input) && !input.EndsWith(",") && !input.EndsWith(":") && !input.EndsWith(";") && !input.EndsWith("-");
+        }
+
         public static bool IsAllCaps(string input)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             int totalCount = 0;
             int allCapsCount = 0;
 
@@ -601,6 +738,12 @@ namespace Nikse.SubtitleEdit.Core
         {
             input = ExtractParagraphOnly(input);
 
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             while (input.IndexOf("<i>", StringComparison.Ordinal) >= 0)
             {
                 var startIndex = input.IndexOf("<i>", StringComparison.Ordinal);
@@ -623,6 +766,12 @@ namespace Nikse.SubtitleEdit.Core
         public static bool IsFullLineTag(string input, int position)
         {
             input = ExtractParagraphOnly(input);
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
 
             var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
             if (lineStartIndex == -1)
@@ -671,8 +820,72 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public static bool IsOnlyPrefix(string input, ContinuationProfile profile)
+        {
+            var checkString = input;
+
+            if (string.IsNullOrEmpty(input.Trim()))
+            {
+                return false;
+            }
+
+            if (profile.Prefix.Length > 0)
+            {
+                checkString = checkString.Replace(profile.Prefix, "");
+            }
+
+            if (profile.UseDifferentStyleGap && profile.GapPrefix.Length > 0)
+            {
+                checkString = checkString.Replace(profile.GapPrefix, "");
+            }
+
+            foreach (string prefix in Prefixes)
+            {
+                checkString = checkString.Replace(prefix, "");
+            }
+
+            checkString = checkString.Trim();
+
+            return string.IsNullOrEmpty(checkString);
+        }
+
+        public static bool IsOnlySuffix(string input, ContinuationProfile profile)
+        {
+            var checkString = input;
+
+            if (string.IsNullOrEmpty(input.Trim()))
+            {
+                return false;
+            }
+
+            if (profile.Suffix.Length > 0)
+            {
+                checkString = checkString.Replace(profile.Suffix, "");
+            }
+
+            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0)
+            {
+                checkString = checkString.Replace(profile.GapSuffix, "");
+            }
+
+            foreach (string suffix in Suffixes)
+            {
+                checkString = checkString.Replace(suffix, "");
+            }
+
+            checkString = checkString.Trim();
+
+            return string.IsNullOrEmpty(checkString);
+        }
+
         public static bool HasPrefix(string input, ContinuationProfile profile)
         {
+            // Return if only prefix
+            if (IsOnlyPrefix(input, profile))
+            {
+                return false;
+            }
+
             if (profile.Prefix.Length > 0 && input.StartsWith(profile.Prefix))
             {
                 return true;
@@ -696,6 +909,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool HasSuffix(string input, ContinuationProfile profile)
         {
+            // Return if only suffix
+            if (IsOnlySuffix(input, profile))
+            {
+                return false;
+            }
+
             if (profile.Suffix.Length > 0 && input.EndsWith(profile.Suffix))
             {
                 return true;
@@ -717,8 +936,37 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        private static bool HasSuffixUnsafe(string input, ContinuationProfile profile)
+        {
+            if (profile.Suffix.Length > 0 && input.EndsWith(profile.Suffix))
+            {
+                return true;
+            }
+
+            if (profile.UseDifferentStyleGap && profile.GapSuffix.Length > 0 && input.EndsWith(profile.GapSuffix))
+            {
+                return true;
+            }
+
+            foreach (string suffix in Suffixes)
+            {
+                if (input.EndsWith(suffix) && input.Length > suffix.Length)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool StartsWithConjunction(string input, string language)
         {
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             List<string> conjunctions = null;
 
             if (language == "nl")
@@ -768,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Core
             // - Title 1 ends with a suffix AND title 2 starts with a prefix
             // - Title 2 is a continuing sentence
             if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile)
-                || !IsNewSentence(nextText))
+                || !IsNewSentence(nextText) && !string.IsNullOrEmpty(nextText))
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));

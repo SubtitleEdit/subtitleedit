@@ -2163,7 +2163,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsAllCaps>Detect and uncheck single titles in all-caps (for example: NO ENTRY)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Detect and uncheck italic single titles, or lyrics</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
-    <HideInterruptionContinuationCandidatesWithoutName>Hide unlikely continuation sentences after interruptions</HideInterruptionContinuationCandidatesWithoutName>
+    <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>

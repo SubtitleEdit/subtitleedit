@@ -2674,6 +2674,71 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixContinuationStyle18()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test", "to see if it works.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...to see if it works.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle19()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a test", "To see if it works.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("To see if it works.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixContinuationStyle20()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>This is a test</i>", "to see if it works.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>This is a test...</i>", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...to see if it works.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle21()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a <i>test</i>", "to see if it works.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a <i>test</i>...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...to see if it works.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+        
+        [TestMethod]
+        public void FixContinuationStyle22()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is a <i>test</i>", "To see if it works.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is a <i>test</i>", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("To see if it works.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
         #endregion Fix continuation style
     }
 }

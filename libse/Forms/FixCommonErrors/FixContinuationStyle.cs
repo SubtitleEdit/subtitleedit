@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string lastWord = ContinuationUtilities.GetLastWord(text);
 
                     
-                    // If ends with dots (possible interruptions), check if next sentence is new sentence, otherwise don't check by default
-                    if (text.EndsWith("..") || text.EndsWith("…"))
+                    // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
+                    if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
                         if (!HasPrefix(textNext) && ContinuationUtilities.IsNewSentence(textNext))
                         {
@@ -97,9 +97,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                             // If set, we'll hide interruption continuation candidates that don't start with a name,
                             // to prevent clogging up the window with a lot of unchecked items.
-                            // For example, a candidate we DO want to list:  But wait...  Marty is still there!
+                            // For example, a candidate we DO want to list:  But wait...   Marty is still there!
+                            //                                          or:  This is something   Marty can do.
                             // If both sentences are all caps, DO show them.
-                            if (Configuration.Settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName
+                            if (Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName
                                 && !StartsWithName(textNextWithoutPrefix, callbacks.Language)
                                 && (!ContinuationUtilities.IsAllCaps(text) && !ContinuationUtilities.IsAllCaps(textNext)))
                             {
