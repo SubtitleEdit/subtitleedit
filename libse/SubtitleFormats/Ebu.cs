@@ -923,7 +923,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case "nb": return "1E"; // Norwegian
                 case "oc": return "1F"; // Occitan
                 case "pl": return "20"; // Polish
-                case "pt": return "21"; // Portugese
+                case "pt": return "21"; // Portuguese
                 case "ro": return "22"; // Romanian
                 case "rm": return "23"; // Romansh
                 case "sr": return "24"; // Serbian
