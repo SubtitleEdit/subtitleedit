@@ -25,12 +25,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUncheckInsertsAllCaps.Text = language.UncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Text = language.UncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Text = language.UncheckInsertsLowercase;
-            checkBoxHideInterruptionContinuationCandidatesWithoutName.Text = language.HideInterruptionContinuationCandidatesWithoutName;
+            checkBoxHideContinuationCandidatesWithoutName.Text = language.HideContinuationCandidatesWithoutName;
 
             checkBoxUncheckInsertsAllCaps.Checked = settings.FixContinuationStyleUncheckInsertsAllCaps;
             checkBoxUncheckInsertsItalic.Checked = settings.FixContinuationStyleUncheckInsertsItalic;
             checkBoxUncheckInsertsLowercase.Checked = settings.FixContinuationStyleUncheckInsertsLowercase;
-            checkBoxHideInterruptionContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName;
+            checkBoxHideContinuationCandidatesWithoutName.Checked = settings.FixContinuationStyleHideContinuationCandidatesWithoutName;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps = checkBoxUncheckInsertsAllCaps.Checked;
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic = checkBoxUncheckInsertsItalic.Checked;
             Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase = checkBoxUncheckInsertsLowercase.Checked;
-            Configuration.Settings.General.FixContinuationStyleHideInterruptionContinuationCandidatesWithoutName = checkBoxHideInterruptionContinuationCandidatesWithoutName.Checked;
+            Configuration.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = checkBoxHideContinuationCandidatesWithoutName.Checked;
 
             DialogResult = DialogResult.OK;
         }

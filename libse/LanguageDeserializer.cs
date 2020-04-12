@@ -5899,8 +5899,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UncheckInsertsLowercase":
                     language.Settings.UncheckInsertsLowercase = reader.Value;
                     break;
-                case "Settings/HideInterruptionContinuationCandidatesWithoutName":
-                    language.Settings.HideInterruptionContinuationCandidatesWithoutName = reader.Value;
+                case "Settings/HideContinuationCandidatesWithoutName":
+                    language.Settings.HideContinuationCandidatesWithoutName = reader.Value;
                     break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;

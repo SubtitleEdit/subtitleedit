@@ -2457,7 +2457,7 @@ can edit in same subtitle file (collaboration)",
                 UncheckInsertsAllCaps = "Detect and uncheck single titles in all-caps (for example: NO ENTRY)",
                 UncheckInsertsItalic = "Detect and uncheck italic single titles, or lyrics",
                 UncheckInsertsLowercase = "Detect and uncheck single titles, or lyrics, in lowercase",
-                HideInterruptionContinuationCandidatesWithoutName = "Hide unlikely continuation sentences after interruptions"
+                HideContinuationCandidatesWithoutName = "Hide unlikely continuation sentences"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv
