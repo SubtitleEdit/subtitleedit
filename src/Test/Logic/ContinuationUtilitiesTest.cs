@@ -121,6 +121,7 @@ namespace Test.Logic
         public void SanitizeString11()
         {
             string line1 = "<i>♪ la la la ♪</i>";
+            Configuration.Settings.General.FixContinuationStyleIgnoreLyrics = false;
             string line1Actual = ContinuationUtilities.SanitizeString(line1, false);
             string line1Expected = "la la la";
             Assert.AreEqual(line1Expected, line1Actual);

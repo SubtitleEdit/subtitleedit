@@ -2165,6 +2165,7 @@ of tĳdens het exporteren naar op beeld gebaseerde formaten.</FontNote>
     <UncheckInsertsItalic>Cursieve beeldtitels of songteksten detecteren en uitvinken</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Beeldtitels of songteksten in kleine letters detecteren en uitvinken</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Onwaarschijnlijke vervolgzinnen verbergen</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Songteksten tussen muzieksymbolen negeren</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>

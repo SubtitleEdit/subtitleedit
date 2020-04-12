@@ -780,6 +780,7 @@ $HorzAlign          =   Center
         public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
         public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
         public bool FixContinuationStyleHideContinuationCandidatesWithoutName { get; set; }
+        public bool FixContinuationStyleIgnoreLyrics { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -926,6 +927,7 @@ $HorzAlign          =   Center
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
             FixContinuationStyleHideContinuationCandidatesWithoutName = true;
+            FixContinuationStyleIgnoreLyrics = true;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -2590,7 +2592,13 @@ $HorzAlign          =   Center
             {
                 settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-                        
+            
+            subNode = node.SelectSingleNode("FixContinuationStyleIgnoreLyrics");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleIgnoreLyrics = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
             {

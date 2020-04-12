@@ -34,6 +34,7 @@
             this.checkBoxUncheckInsertsItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxUncheckInsertsLowercase = new System.Windows.Forms.CheckBox();
             this.checkBoxHideContinuationCandidatesWithoutName = new System.Windows.Forms.CheckBox();
+            this.checkBoxIgnoreLyrics = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -41,7 +42,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(351, 128);
+            this.buttonCancel.Location = new System.Drawing.Point(351, 151);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -53,7 +54,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(270, 128);
+            this.buttonOK.Location = new System.Drawing.Point(270, 151);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 9;
@@ -101,13 +102,24 @@
             this.checkBoxHideContinuationCandidatesWithoutName.Text = "Hide interruption continuation candidates that don\'t start with a name";
             this.checkBoxHideContinuationCandidatesWithoutName.UseVisualStyleBackColor = true;
             // 
+            // checkBoxIgnoreLyrics
+            // 
+            this.checkBoxIgnoreLyrics.AutoSize = true;
+            this.checkBoxIgnoreLyrics.Location = new System.Drawing.Point(12, 104);
+            this.checkBoxIgnoreLyrics.Name = "checkBoxIgnoreLyrics";
+            this.checkBoxIgnoreLyrics.Size = new System.Drawing.Size(196, 17);
+            this.checkBoxIgnoreLyrics.TabIndex = 5;
+            this.checkBoxIgnoreLyrics.Text = "Ignore lyrics between music symbols";
+            this.checkBoxIgnoreLyrics.UseVisualStyleBackColor = true;
+            // 
             // SettingsFixContinuationStyle
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(438, 163);
+            this.ClientSize = new System.Drawing.Size(438, 186);
+            this.Controls.Add(this.checkBoxIgnoreLyrics);
             this.Controls.Add(this.checkBoxHideContinuationCandidatesWithoutName);
             this.Controls.Add(this.checkBoxUncheckInsertsLowercase);
             this.Controls.Add(this.checkBoxUncheckInsertsItalic);
@@ -136,5 +148,6 @@
         private System.Windows.Forms.CheckBox checkBoxUncheckInsertsItalic;
         private System.Windows.Forms.CheckBox checkBoxUncheckInsertsLowercase;
         private System.Windows.Forms.CheckBox checkBoxHideContinuationCandidatesWithoutName;
+        private System.Windows.Forms.CheckBox checkBoxIgnoreLyrics;
     }
 }

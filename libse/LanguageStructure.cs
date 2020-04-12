@@ -2325,7 +2325,8 @@
             public string UncheckInsertsAllCaps { get; set; }
             public string UncheckInsertsItalic { get; set; }
             public string UncheckInsertsLowercase { get; set; }
-            public string HideContinuationCandidatesWithoutName { get; set; }            
+            public string HideContinuationCandidatesWithoutName { get; set; }      
+            public string IgnoreLyrics { get; set; }
         }
 
         public class SettingsMpv

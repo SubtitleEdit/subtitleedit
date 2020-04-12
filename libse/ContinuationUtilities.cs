@@ -31,6 +31,15 @@ namespace Nikse.SubtitleEdit.Core
             checkString = Regex.Replace(checkString, "\\(.*?\\)", string.Empty, RegexOptions.Singleline);
             checkString = Regex.Replace(checkString, "\\[.*?\\]", string.Empty, RegexOptions.Singleline);
             checkString = Regex.Replace(checkString, "\\{.*?\\}", string.Empty);
+
+            if (Configuration.Settings.General.FixContinuationStyleIgnoreLyrics)
+            {
+                foreach (char c in MusicSymbols)
+                {
+                    checkString = Regex.Replace(checkString, "\\" + c + ".*?\\" + c, string.Empty, RegexOptions.Singleline);
+                }
+            }
+
             checkString = checkString.Trim();
 
             // Remove string elevation
@@ -102,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 checkString = checkString.Substring(2).Trim();
             }
-            
+
             // Remove music symbols from the beginning
             if (checkString.Length > 0 && MusicSymbols.Contains(checkString[0]))
             {
@@ -131,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 checkString = checkString.Substring(0, checkString.Length - 2).Trim();
             }
-            
+
             // Remove music symbols from the ending
             if (checkString.Length > 0 && MusicSymbols.Contains(checkString[checkString.Length - 1]))
             {
