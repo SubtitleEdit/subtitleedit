@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             new LanguageItem("1E", "Norwegian"),
             new LanguageItem("1F", "Occitan"),
             new LanguageItem("20", "Polish"),
-            new LanguageItem("21", "Portugese"),
+            new LanguageItem("21", "Portuguese"),
             new LanguageItem("22", "Romanian"),
             new LanguageItem("23", "Romansh"),
             new LanguageItem("24", "Serbian"),
