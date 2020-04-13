@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _numberOfImportantLogMessages;
         private HashSet<string> _allowedFixes;
         private bool _linesDeletedOrMerged;
+        private bool _oldFixContinuationStyleTicked;
 
         public SubtitleFormat Format => _format;
 
@@ -363,7 +364,14 @@ namespace Nikse.SubtitleEdit.Forms
             _spanishInvertedQuestionAndExclamationMarksIndex = -1;
             _indexAloneLowercaseIToUppercaseIEnglish = -1;
 
-            FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
+            var ce = Configuration.Settings.CommonErrors;
+
+            _oldFixContinuationStyleTicked = ce.FixContinuationStyleTicked;
+            if (Language == "ko" || Language == "zh" || Language == "ja" || Language == "th")
+            {
+                ce.FixContinuationStyleTicked = false;
+            }
+
             _fixActions = new List<FixItem>
             {
                 new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
@@ -1064,6 +1072,11 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixContinuationStyleTicked = listView1.Items[IndexFixContinuationStyle].Checked;
+            if (Language == "ko" || Language == "zh" || Language == "ja" || Language == "th")
+            {
+                ce.FixContinuationStyleTicked = _oldFixContinuationStyleTicked;
+            }
+
             if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
             {
                 ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
