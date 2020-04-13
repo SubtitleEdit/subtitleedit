@@ -2,6 +2,7 @@
 
 3.5.15 (xth April 2020) BETA
 * NEW:
+   * Add "sentence continuation style" - thx Flitskikker
    * Allow generation of waveform without audio - thx serquis/grzesiek
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
    * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
@@ -9,6 +10,7 @@
    * Add shortcuts for extending to line before/after - thx Flitskikker
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
+   * Add new subtitle format - thx Bersu
    * Add support for pasting file from clipboard in list view - thx 5j9
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
@@ -38,8 +40,14 @@
    * Add "Actor" to "Modify selection" for ASS/SSA
    * Improve "Batch convert" with mkv language settings - thx Rodark
    * Make "Fix dialog style" work with ko, zh, ja, th - thx Jamakmake 
+   * Improve "Fix unneeded periods for ko, zh, ja, th - thx Jamakmake
    * Sort plugins by name
    * Improve check for loss of characters due to ANSI encoding
+   * Allow custom named Tesseract languages - thx Signy13
+   * Improve "Tesseract download failed" message - thx Signy13
+   * Update preview on video when changing ASS style
+   * Optimize Sami format read speed - thx Jamakmake
+   * Speed up resize of main windows a little
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
@@ -60,6 +68,8 @@
    * Fix go to next error with too small gap - thx Nikola
    * Fix bug in "Remove text HI" - thx Perkolator
    * Fix issue with make-two-color-threshold - thx Signy13
+   * Fix OCR word replace issue - thx thehulk
+   * Fix crash after add new profile + reset - thx Jamakmake
 
 
 3.5.14 (8th March 2020)
