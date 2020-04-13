@@ -3915,12 +3915,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SetUnknownWordsColor(int index, int wordsNotFound, string line)
         {
-            if (wordsNotFound >= 3)
+            if (_ocrFixEngine == null || !_ocrFixEngine.IsDictionaryLoaded)
             {
-                subtitleListView1.SetBackgroundColor(index, Color.Red);
+                subtitleListView1.SetBackgroundColor(index, DefaultBackColor);
+                return;
             }
 
-            if (wordsNotFound == 2)
+            if (wordsNotFound > 3)
+            {
+                subtitleListView1.SetBackgroundColor(index, Configuration.Settings.Tools.ListViewSyntaxErrorColor);
+                return;
+            }
+
+            if (wordsNotFound >= 2)
             {
                 subtitleListView1.SetBackgroundColor(index, Color.Orange);
             }
