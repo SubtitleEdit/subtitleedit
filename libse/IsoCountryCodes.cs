@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -255,16 +254,5 @@ namespace Nikse.SubtitleEdit.Core
             { "ZMB", "ZM" },
             { "ZWE", "ZW" },
         };
-
-        /// <summary>
-        /// Get three letter language code, from two letter language code.
-        /// </summary>
-        /// <param name="twoLetterCode">Two letter language code (casing not important)</param>
-        /// <returns>Three letter language code in lowercase, string.Empty if not found</returns>
-        public static string GetThreeLetterCodeFromTwoLetterCode(string twoLetterCode)
-        {
-            var lookupResult = ThreeToTwoLetterLookup.FirstOrDefault(p => p.Value == twoLetterCode.ToUpperInvariant());
-            return lookupResult.Key?.Length == 3 ? lookupResult.Key.ToLowerInvariant() : string.Empty;
-        }
     }
 }
