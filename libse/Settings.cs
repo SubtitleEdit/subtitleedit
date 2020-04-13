@@ -665,6 +665,8 @@ $HorzAlign          =   Center
         public bool FixEllipsesStartTicked { get; set; }
         public bool FixMissingOpenBracketTicked { get; set; }
         public bool FixMusicNotationTicked { get; set; }
+        public bool FixContinuationStyleTicked { get; set; }
+        public bool FixUnnecessaryLeadingDotsTicked { get; set; }
 
         public FixCommonErrorsSettings()
         {
@@ -698,6 +700,8 @@ $HorzAlign          =   Center
             FixEllipsesStartTicked = true;
             FixMissingOpenBracketTicked = true;
             FixMusicNotationTicked = true;
+            FixContinuationStyleTicked = true;
+            FixUnnecessaryLeadingDotsTicked = true;
         }
 
     }
@@ -771,6 +775,12 @@ $HorzAlign          =   Center
         public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public DialogType DialogStyle { get; set; }
+        public ContinuationStyle ContinuationStyle { get; set; }
+        public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
+        public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
+        public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
+        public bool FixContinuationStyleHideContinuationCandidatesWithoutName { get; set; }
+        public bool FixContinuationStyleIgnoreLyrics { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -912,6 +922,12 @@ $HorzAlign          =   Center
             SubtitleOptimalCharactersPerSeconds = 15.0;
             SubtitleMaximumWordsPerMinute = 300;
             DialogStyle = DialogType.DashBothLinesWithSpace;
+            ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+            FixContinuationStyleUncheckInsertsAllCaps = true;
+            FixContinuationStyleUncheckInsertsItalic = true;
+            FixContinuationStyleUncheckInsertsLowercase = true;
+            FixContinuationStyleHideContinuationCandidatesWithoutName = true;
+            FixContinuationStyleIgnoreLyrics = true;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -967,6 +983,7 @@ $HorzAlign          =   Center
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
             DialogStyle = DialogType.DashBothLinesWithSpace;
+            ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
 
             Profiles = new List<RulesProfile>();
             CurrentProfile = "Default";
@@ -984,6 +1001,7 @@ $HorzAlign          =   Center
                 CpsIncludesSpace = !CharactersPerSecondsIgnoreWhiteSpace,
                 MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
                 DialogStyle = DialogStyle,
+                ContinuationStyle = ContinuationStyle
             });
             AddExtraProfiles(Profiles);
         }
@@ -1003,7 +1021,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithoutSpace
+                DialogStyle = DialogType.DashBothLinesWithoutSpace,
+                ContinuationStyle = ContinuationStyle.NoneTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1018,7 +1037,24 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 200,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.NoneTrailingDots
+            });
+            profiles.Add(new RulesProfile
+            {
+                Name = "Netflix (Dutch)",
+                SubtitleLineMaximumLength = 42,
+                MaxNumberOfLines = 2,
+                MergeLinesShorterThan = 42,
+                SubtitleMaximumCharactersPerSeconds = 17,
+                SubtitleOptimalCharactersPerSeconds = 12,
+                SubtitleMaximumDisplayMilliseconds = 7000,
+                SubtitleMinimumDisplayMilliseconds = 833,
+                SubtitleMaximumWordsPerMinute = 200,
+                CpsIncludesSpace = true,
+                MinimumMillisecondsBetweenLines = 84, // 2 frames for 23.976 fps videos
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.LeadingTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1033,7 +1069,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 200, // 5 frames for 25 fps videos
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1048,7 +1085,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashSecondLineWithoutSpace
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1063,7 +1101,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashSecondLineWithoutSpace
+                DialogStyle = DialogType.DashSecondLineWithoutSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1078,7 +1117,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 240,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashSecondLineWithSpace
+                DialogStyle = DialogType.DashSecondLineWithSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1093,7 +1133,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 240,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashSecondLineWithSpace
+                DialogStyle = DialogType.DashSecondLineWithSpace,
+                ContinuationStyle = ContinuationStyle.OnlyTrailingDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1108,7 +1149,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1123,7 +1165,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 180,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.LeadingTrailingDashDots
             });
             profiles.Add(new RulesProfile
             {
@@ -1138,7 +1181,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 125,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1153,7 +1197,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 120,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1168,7 +1213,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 167,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1183,7 +1229,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 160,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1198,7 +1245,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 250,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
             profiles.Add(new RulesProfile
             {
@@ -1213,7 +1261,8 @@ $HorzAlign          =   Center
                 SubtitleMaximumWordsPerMinute = 300,
                 CpsIncludesSpace = true,
                 MinimumMillisecondsBetweenLines = 240,
-                DialogStyle = DialogType.DashBothLinesWithSpace
+                DialogStyle = DialogType.DashBothLinesWithSpace,
+                ContinuationStyle = ContinuationStyle.None
             });
         }
     }
@@ -2088,6 +2137,29 @@ $HorzAlign          =   Center
                     dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), listNode.SelectSingleNode("DialogStyle")?.InnerText);
                 }
 
+                var continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                if (listNode.SelectSingleNode("ContinuationStyle") == null || !Enum.IsDefined(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle").InnerText))
+                { //TODO: Remove after 2022
+                    if (listNode.SelectSingleNode("Name") != null)
+                    {
+                        var lookup = new List<RulesProfile>();
+                        GeneralSettings.AddExtraProfiles(lookup);
+                        var match = lookup.FirstOrDefault(LookupProfile => LookupProfile.Name == listNode.SelectSingleNode("Name").InnerText);
+                        if (match != null)
+                        {
+                            continuationStyle = match.ContinuationStyle; // update style when upgrading from 3.5.13 or below
+                        }
+                        else
+                        {
+                            continuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                        }
+                    }
+                }
+                else
+                {
+                    continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), listNode.SelectSingleNode("ContinuationStyle")?.InnerText);
+                }
+
                 settings.General.Profiles.Add(new RulesProfile
                 {
                     Name = listNode.SelectSingleNode("Name")?.InnerText,
@@ -2101,7 +2173,8 @@ $HorzAlign          =   Center
                     MaxNumberOfLines = Convert.ToInt32(maxNumberOfLines, CultureInfo.InvariantCulture),
                     MergeLinesShorterThan = Convert.ToInt32(mergeLinesShorterThan, CultureInfo.InvariantCulture),
                     MinimumMillisecondsBetweenLines = Convert.ToInt32(minimumMillisecondsBetweenLines, CultureInfo.InvariantCulture),
-                    DialogStyle = dialogStyle
+                    DialogStyle = dialogStyle,
+                    ContinuationStyle = continuationStyle
                 });
                 profileCount++;
             }
@@ -2488,6 +2561,42 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.DialogStyle = (DialogType)Enum.Parse(typeof(DialogType), subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("ContinuationStyle");
+            if (subNode != null)
+            {
+                settings.General.ContinuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsAllCaps");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsAllCaps = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsItalic");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsItalic = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleUncheckInsertsLowercase");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleUncheckInsertsLowercase = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
+            subNode = node.SelectSingleNode("FixContinuationStyleHideContinuationCandidatesWithoutName");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
+            subNode = node.SelectSingleNode("FixContinuationStyleIgnoreLyrics");
+            if (subNode != null)
+            {
+                settings.General.FixContinuationStyleIgnoreLyrics = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("SpellCheckLanguage");
@@ -4590,6 +4699,18 @@ $HorzAlign          =   Center
                 settings.CommonErrors.FixMusicNotationTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("FixContinuationStyleTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixContinuationStyleTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("FixUnnecessaryLeadingDotsTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixUnnecessaryLeadingDotsTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             // Video Controls
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
             subNode = node.SelectSingleNode("CustomSearchText1");
@@ -6516,7 +6637,8 @@ $HorzAlign          =   Center
                     SubtitleMaximumWordsPerMinute = (decimal)settings.General.SubtitleMaximumWordsPerMinute,
                     CpsIncludesSpace = !settings.General.CharactersPerSecondsIgnoreWhiteSpace,
                     MinimumMillisecondsBetweenLines = settings.General.MinimumMillisecondsBetweenLines,
-                    DialogStyle = settings.General.DialogStyle
+                    DialogStyle = settings.General.DialogStyle,
+                    ContinuationStyle = settings.General.ContinuationStyle
                 });
                 GeneralSettings.AddExtraProfiles(settings.General.Profiles);
             }
@@ -6589,6 +6711,7 @@ $HorzAlign          =   Center
                     textWriter.WriteElementString("MaxNumberOfLines", profile.MaxNumberOfLines.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("MergeLinesShorterThan", profile.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteElementString("DialogStyle", profile.DialogStyle.ToString());
+                    textWriter.WriteElementString("ContinuationStyle", profile.ContinuationStyle.ToString());
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
@@ -6656,6 +6779,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
+                textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsAllCaps", settings.General.FixContinuationStyleUncheckInsertsAllCaps.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsItalic", settings.General.FixContinuationStyleUncheckInsertsItalic.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleUncheckInsertsLowercase", settings.General.FixContinuationStyleUncheckInsertsLowercase.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleHideContinuationCandidatesWithoutName", settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
@@ -7037,6 +7165,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixEllipsesStartTicked", settings.CommonErrors.FixEllipsesStartTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixMissingOpenBracketTicked", settings.CommonErrors.FixMissingOpenBracketTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VideoControls", string.Empty);

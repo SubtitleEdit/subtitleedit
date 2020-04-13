@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -887,7 +888,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / optimalCharactersPerSecond * TimeCode.BaseUnit;
-        
+
             if (duration < 1400)
             {
                 duration *= 1.2;
@@ -2214,7 +2215,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (text.Contains("-") && text.Length > 2 && !text.StartsWith("--", StringComparison.Ordinal))
             {
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.RemoveSpaces(text);
 
                 int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);

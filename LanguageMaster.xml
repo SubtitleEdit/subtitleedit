@@ -698,6 +698,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Select default</SelectDefault>
+    <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} fixed continuation style</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Remove unnecessary leading dots</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} removed unnecessary leading dots</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -1963,6 +1967,14 @@ can edit in same subtitle file (collaboration)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Dash both lines without space</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Dash second line with space</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Dash second line without space</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Continuation style</ContinuationStyle>
+    <ContinuationStyleNone>None</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>None, dots for pauses (trailing only)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>None, dots for pauses</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Dots (trailing only)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Dots</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Dash</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Dash, but dots for pauses</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
@@ -2146,6 +2158,13 @@ Setting a font for a subtitle is normally done in the video player, but can also
 
 Continue?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Remove time codes</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Edit settings for fixing continuation style...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Settings for fixing continuation style</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Detect and uncheck single titles in all-caps (for example: NO ENTRY)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Detect and uncheck italic single titles, or lyrics</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignore lyrics between music symbols</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>

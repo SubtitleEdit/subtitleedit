@@ -895,6 +895,10 @@ namespace Nikse.SubtitleEdit.Core
                 FixSpaceBetweenNumbersExample = "1 100 -> 1100",
                 FixDialogsOneLineExample = "Hi John! - Hi Ida! -> Hi John!<br />- Hi Ida!",
                 SelectDefault = "Select default",
+                FixContinuationStyleX = "Fix continuation style: {0}",
+                XFixContinuationStyle = "{0} fixed continuation style",
+                FixUnnecessaryLeadingDots = "Remove unnecessary leading dots",
+                XFixUnnecessaryLeadingDots = "{0} removed unnecessary leading dots"
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
@@ -2257,6 +2261,14 @@ can edit in same subtitle file (collaboration)",
                 DialogStyleDashBothLinesWithoutSpace = "Dash both lines without space",
                 DialogStyleDashSecondLineWithSpace = "Dash second line with space",
                 DialogStyleDashSecondLineWithoutSpace = "Dash second line without space",
+                ContinuationStyle = "Continuation style",
+                ContinuationStyleNone = "None",
+                ContinuationStyleNoneTrailingDots = "None, dots for pauses (trailing only)",
+                ContinuationStyleNoneLeadingTrailingDots = "None, dots for pauses",
+                ContinuationStyleOnlyTrailingDots = "Dots (trailing only)",
+                ContinuationStyleLeadingTrailingDots = "Dots",
+                ContinuationStyleLeadingTrailingDash = "Dash",
+                ContinuationStyleLeadingTrailingDashDots = "Dash, but dots for pauses",
                 MusicSymbol = "Music symbol",
                 MusicSymbolsReplace = "Music symbols to replace (separate by comma)",
                 FixCommonOcrErrorsUseHardcodedRules = "Fix common OCR errors - also use hard-coded rules",
@@ -2439,7 +2451,14 @@ can edit in same subtitle file (collaboration)",
                 RestoreDefaultSettingsMsg = "All settings will be restored to default values" + Environment.NewLine +
                                             Environment.NewLine +
                                             "Continue?",
-                RemoveTimeCodes = "Remove time codes"
+                RemoveTimeCodes = "Remove time codes",
+                EditFixContinuationStyleSettings = "Edit settings for fixing continuation style...",
+                FixContinuationStyleSettings = "Settings for fixing continuation style",
+                UncheckInsertsAllCaps = "Detect and uncheck single titles in all-caps (for example: NO ENTRY)",
+                UncheckInsertsItalic = "Detect and uncheck italic single titles, or lyrics",
+                UncheckInsertsLowercase = "Detect and uncheck single titles, or lyrics, in lowercase",
+                HideContinuationCandidatesWithoutName = "Hide unlikely continuation sentences",
+                IgnoreLyrics = "Ignore lyrics between music symbols"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

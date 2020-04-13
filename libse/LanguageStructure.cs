@@ -766,6 +766,10 @@
             public string FixSpaceBetweenNumbersExample { get; set; }
             public string FixDialogsOneLineExample { get; set; }
             public string SelectDefault { get; set; }
+            public string FixContinuationStyleX { get; set; }
+            public string XFixContinuationStyle { get; set; }
+            public string FixUnnecessaryLeadingDots { get; set; }
+            public string XFixUnnecessaryLeadingDots { get; set; }
         }
 
         public class GetDictionaries
@@ -2128,6 +2132,14 @@
             public string DialogStyleDashBothLinesWithoutSpace { get; set; }
             public string DialogStyleDashSecondLineWithSpace { get; set; }
             public string DialogStyleDashSecondLineWithoutSpace { get; set; }
+            public string ContinuationStyle { get; set; }
+            public string ContinuationStyleNone { get; set; }
+            public string ContinuationStyleNoneTrailingDots { get; set; }
+            public string ContinuationStyleNoneLeadingTrailingDots { get; set; }
+            public string ContinuationStyleOnlyTrailingDots { get; set; }
+            public string ContinuationStyleLeadingTrailingDots { get; set; }
+            public string ContinuationStyleLeadingTrailingDash { get; set; }
+            public string ContinuationStyleLeadingTrailingDashDots { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
@@ -2308,6 +2320,13 @@
             public string RestoreDefaultSettings { get; set; }
             public string RestoreDefaultSettingsMsg { get; set; }
             public string RemoveTimeCodes { get; set; }
+            public string EditFixContinuationStyleSettings { get; set; }
+            public string FixContinuationStyleSettings { get; set; }
+            public string UncheckInsertsAllCaps { get; set; }
+            public string UncheckInsertsItalic { get; set; }
+            public string UncheckInsertsLowercase { get; set; }
+            public string HideContinuationCandidatesWithoutName { get; set; }      
+            public string IgnoreLyrics { get; set; }
         }
 
         public class SettingsMpv

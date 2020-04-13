@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Interfaces
     {
         bool AllowFix(Paragraph p, string action);
         void AddFixToListView(Paragraph p, string action, string before, string after);
+        void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked);
         void LogStatus(string sender, string message);
         void LogStatus(string sender, string message, bool isImportant);
         void UpdateFixStatus(int fixes, string message, string xMessage);

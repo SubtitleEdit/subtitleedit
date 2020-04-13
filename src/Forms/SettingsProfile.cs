@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxLines.Text = language.MaximumLines;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
+            labelContinuationStyle.Text = language.ContinuationStyle;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             listViewProfiles.Columns[0].Text = Configuration.Settings.Language.General.Name;
             listViewProfiles.Columns[1].Text = language.SubtitleLineMaximumLength;
@@ -55,6 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxDialogStyle.Left = labelDialogStyle.Left + labelDialogStyle.Width + 5;
             comboBoxDialogStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxDialogStyle.Left);
+
+            comboBoxContinuationStyle.Left = labelContinuationStyle.Left + labelContinuationStyle.Width + 5;
+            comboBoxContinuationStyle.Width = comboBoxMergeShortLineLength.Width + (comboBoxMergeShortLineLength.Left - comboBoxContinuationStyle.Left);
 
             comboBoxMergeShortLineLength.BeginUpdate();
             comboBoxMergeShortLineLength.Items.Clear();
@@ -192,7 +196,11 @@ namespace Nikse.SubtitleEdit.Forms
             RulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             RulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 10;
             RulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            RulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
             UpdateRulesProfilesLine(idx);
+
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
         }
 
         private void listViewProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -275,6 +283,19 @@ namespace Nikse.SubtitleEdit.Forms
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            comboBoxContinuationStyle.Items.Clear();
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
+            comboBoxContinuationStyle.SelectedIndex = 0;
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
+            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);                       
 
             _editOn = oldEditOn;
         }

@@ -970,7 +970,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     text = Helper.FixHyphensRemoveForSingleLine(subtitle, text, index);
                 }
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.FixDashesAndSpaces(text);
             }
             return text.Trim();
