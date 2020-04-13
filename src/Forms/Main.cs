@@ -9544,7 +9544,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
-                                        
+
                     if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                     {
@@ -9910,12 +9910,6 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
-
-                if (Configuration.Settings.General.SplitBehavior == 0)
-                {
-                    firstSelectedIndex++;
-                }
-                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
         }
 
@@ -10185,7 +10179,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var addText = _subtitle.Paragraphs[index].Text;
-                                        
+
                     if (firstIndex != index)
                     {
                         addText = RemoveAssStartAlignmentTag(addText);
@@ -10399,14 +10393,14 @@ namespace Nikse.SubtitleEdit.Forms
             var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
 
             if (nextParagraph != null && currentParagraph != null)
-            {                
+            {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(_language.BeforeMergeLines);
 
                 var continuationStyle = Configuration.Settings.General.ContinuationStyle;
                 if (continuationStyle != ContinuationStyle.None)
                 {
-                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);                    
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                     var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
                     currentParagraph.Text = mergeResult.Item1;
                     nextParagraph.Text = mergeResult.Item2;
