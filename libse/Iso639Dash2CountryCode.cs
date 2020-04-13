@@ -177,7 +177,6 @@ namespace Nikse.SubtitleEdit.Core
             new Iso639Dash2CountryCode("swa", "sw", "Swahili"),
             new Iso639Dash2CountryCode("swe", "sv", "Swedish"),
             new Iso639Dash2CountryCode("tah", "ty", "Tahitian"),
-            new Iso639Dash2CountryCode("tai", "Tai", "languages"),
             new Iso639Dash2CountryCode("tam", "ta", "Tamil"),
             new Iso639Dash2CountryCode("tat", "tt", "Tatar"),
             new Iso639Dash2CountryCode("tel", "te", "Telugu"),
