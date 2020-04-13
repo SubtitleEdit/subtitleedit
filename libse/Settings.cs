@@ -967,7 +967,7 @@ $HorzAlign          =   Center
             MpvHandlesPreviewText = true;
             FFmpegSceneThreshold = "0.4"; // threshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
-            SplitBehavior = 0;
+            SplitBehavior = 0; // 0=take gap from left, 1=divide evenly, 2=take gap from right
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
             DisableVideoAutoLoading = false;

@@ -6966,8 +6966,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var l = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = l;
-            _ocrFixEngine?.Dispose();
-            _ocrFixEngine = null;
             LoadOcrFixEngine(null, null);
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
@@ -7025,10 +7023,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 threeLetterIsoLanguageName = _languageId;
             }
 
-            _ocrFixEngine?.Dispose();
-            _ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
-            if (_ocrFixEngine.IsDictionaryLoaded)
+            var tempOcrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+            if (tempOcrFixEngine.IsDictionaryLoaded)
             {
+                _ocrFixEngine?.Dispose();
+                _ocrFixEngine = tempOcrFixEngine;
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
                 var found = false;
                 comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
@@ -7069,13 +7068,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                if (comboBoxDictionaries.SelectedIndex < 0)
-                {
-                    comboBoxDictionaries.SelectedIndex = 0;
-                }
+                tempOcrFixEngine.Dispose();
+                comboBoxModiLanguage.SelectedIndex = -1;
             }
-
-            comboBoxModiLanguage.SelectedIndex = -1;
         }
 
         private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
