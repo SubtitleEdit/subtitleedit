@@ -173,9 +173,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
                 var twoLetterCode = "?";
-                if (threeLetterIsoLanguageName != null && IsoCountryCodes.ThreeToTwoLetterLookup.TryGetValue(threeLetterIsoLanguageName, out twoLetterCode))
+                if (threeLetterIsoLanguageName != null && !string.IsNullOrEmpty(Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName)))
                 {
-                    twoLetterCode = twoLetterCode.ToLowerInvariant();
+                    twoLetterCode = Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName);
                 }
 
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || culture.TwoLetterISOLanguageName == twoLetterCode)
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
 
                                 var ci = CultureInfo.GetCultureInfo(name);
-                                var threeLetterCode = IsoCountryCodes.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                                var threeLetterCode = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
                                 if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName ||
                                     threeLetterCode == threeLetterIsoLanguageName ||
                                     ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))

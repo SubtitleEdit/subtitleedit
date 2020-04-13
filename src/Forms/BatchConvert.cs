@@ -726,12 +726,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2" &&
-                IsoCountryCodes.ThreeToTwoLetterLookup.TryGetValue(languageCode.ToUpperInvariant(), out var twoLetterCode))
+                !string.IsNullOrEmpty(Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(languageCode)))
             {
-                return twoLetterCode.ToLowerInvariant() + ".";
+                return Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(languageCode) + ".";
             }
 
-            return string.IsNullOrEmpty(languageCode) ? string.Empty : languageCode.TrimEnd('.')  + ".";
+            return string.IsNullOrEmpty(languageCode) ? string.Empty : languageCode.TrimEnd('.') + ".";
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
