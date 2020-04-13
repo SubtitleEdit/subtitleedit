@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Core
     public class DialogSplitMerge
     {
         public DialogType DialogStyle { get; set; }
+        public ContinuationStyle ContinuationStyle { get; set; }
         public bool AllowDialogWithNoSentenceEnding { get; set; }
 
         public string FixDashesAndSpaces(string input)
@@ -318,7 +319,7 @@ namespace Nikse.SubtitleEdit.Core
                     return DialogType.DashBothLinesWithSpace;
             }
         }
-
+                
         private static string GetStartTags(string input)
         {
             var pre = new StringBuilder();

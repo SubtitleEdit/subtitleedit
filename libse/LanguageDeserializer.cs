@@ -1861,6 +1861,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/SelectDefault":
                     language.FixCommonErrors.SelectDefault = reader.Value;
                     break;
+                case "FixCommonErrors/FixContinuationStyleX":
+                    language.FixCommonErrors.FixContinuationStyleX = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixContinuationStyle":
+                    language.FixCommonErrors.XFixContinuationStyle = reader.Value;
+                    break;
+                case "FixCommonErrors/FixUnnecessaryLeadingDots":
+                    language.FixCommonErrors.FixUnnecessaryLeadingDots = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixUnnecessaryLeadingDots":
+                    language.FixCommonErrors.XFixUnnecessaryLeadingDots = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
@@ -5311,6 +5323,30 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/DialogStyleDashSecondLineWithoutSpace":
                     language.Settings.DialogStyleDashSecondLineWithoutSpace = reader.Value;
                     break;
+                case "Settings/ContinuationStyle":
+                    language.Settings.ContinuationStyle = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNone":
+                    language.Settings.ContinuationStyleNone = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNoneTrailingDots":
+                    language.Settings.ContinuationStyleNoneTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleNoneLeadingTrailingDots":
+                    language.Settings.ContinuationStyleNoneLeadingTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleOnlyTrailingDots":
+                    language.Settings.ContinuationStyleOnlyTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDots":
+                    language.Settings.ContinuationStyleLeadingTrailingDots = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDash":
+                    language.Settings.ContinuationStyleLeadingTrailingDash = reader.Value;
+                    break;
+                case "Settings/ContinuationStyleLeadingTrailingDashDots":
+                    language.Settings.ContinuationStyleLeadingTrailingDashDots = reader.Value;
+                    break;
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;
                     break;
@@ -5847,6 +5883,27 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/RemoveTimeCodes":
                     language.Settings.RemoveTimeCodes = reader.Value;
+                    break;
+                case "Settings/EditFixContinuationStyleSettings":
+                    language.Settings.EditFixContinuationStyleSettings = reader.Value;
+                    break;
+                case "Settings/FixContinuationStyleSettings":
+                    language.Settings.FixContinuationStyleSettings = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsAllCaps":
+                    language.Settings.UncheckInsertsAllCaps = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsItalic":
+                    language.Settings.UncheckInsertsItalic = reader.Value;
+                    break;
+                case "Settings/UncheckInsertsLowercase":
+                    language.Settings.UncheckInsertsLowercase = reader.Value;
+                    break;
+                case "Settings/HideContinuationCandidatesWithoutName":
+                    language.Settings.HideContinuationCandidatesWithoutName = reader.Value;
+                    break;
+                case "Settings/IgnoreLyrics":
+                    language.Settings.IgnoreLyrics = reader.Value;
                     break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;

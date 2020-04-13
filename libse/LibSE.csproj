@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Forms\FixCommonErrors\HelperContinuation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

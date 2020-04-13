@@ -9544,6 +9544,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
+                                        
                     if (oldText.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && oldText.TrimEnd().EndsWith("</i>", StringComparison.Ordinal) &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                     {
@@ -9711,6 +9712,17 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
                 }
 
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                    if (ContinuationUtilities.ShouldAddSuffix(currentParagraph.Text, continuationProfile))
+                    {
+                        currentParagraph.Text = ContinuationUtilities.AddSuffixIfNeeded(currentParagraph.Text, continuationProfile, false);
+                        newParagraph.Text = ContinuationUtilities.AddPrefixIfNeeded(newParagraph.Text, continuationProfile, false);
+                    }
+                }
+
                 SetSplitTime(splitSeconds, currentParagraph, newParagraph, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -9861,6 +9873,16 @@ namespace Nikse.SubtitleEdit.Forms
                             if (originalNew.Text.StartsWith("<i> ", StringComparison.Ordinal))
                             {
                                 originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
+                            }
+
+                            if (continuationStyle != ContinuationStyle.None)
+                            {
+                                var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                                if (ContinuationUtilities.ShouldAddSuffix(originalCurrent.Text, continuationProfile))
+                                {
+                                    originalCurrent.Text = ContinuationUtilities.AddSuffixIfNeeded(originalCurrent.Text, continuationProfile, false);
+                                    originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
+                                }
                             }
                         }
 
@@ -10150,7 +10172,20 @@ namespace Nikse.SubtitleEdit.Forms
                         next++;
                     }
 
+                    var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                    if (continuationStyle != ContinuationStyle.None)
+                    {
+                        var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                        if (next < firstIndex + SubtitleListview1.SelectedIndices.Count)
+                        {
+                            var mergeResult = ContinuationUtilities.MergeHelper(_subtitle.Paragraphs[index].Text, _subtitle.Paragraphs[index + 1].Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                            _subtitle.Paragraphs[index].Text = mergeResult.Item1;
+                            _subtitle.Paragraphs[index + 1].Text = mergeResult.Item2;
+                        }
+                    }
+
                     var addText = _subtitle.Paragraphs[index].Text;
+                                        
                     if (firstIndex != index)
                     {
                         addText = RemoveAssStartAlignmentTag(addText);
@@ -10364,14 +10399,34 @@ namespace Nikse.SubtitleEdit.Forms
             var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
 
             if (nextParagraph != null && currentParagraph != null)
-            {
+            {                
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                var continuationStyle = Configuration.Settings.General.ContinuationStyle;
+                if (continuationStyle != ContinuationStyle.None)
+                {
+                    var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);                    
+                    var mergeResult = ContinuationUtilities.MergeHelper(currentParagraph.Text, nextParagraph.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                    currentParagraph.Text = mergeResult.Item1;
+                    nextParagraph.Text = mergeResult.Item2;
+                }
 
                 if (_subtitleAlternate != null)
                 {
                     var original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                     var originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, nextParagraph, _subtitleAlternate.Paragraphs);
+
+                    if (original != null && originalNext != null)
+                    {
+                        if (continuationStyle != ContinuationStyle.None)
+                        {
+                            var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+                            var mergeResult = ContinuationUtilities.MergeHelper(original.Text, originalNext.Text, continuationProfile, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate));
+                            original.Text = mergeResult.Item1;
+                            originalNext.Text = mergeResult.Item2;
+                        }
+                    }
 
                     if (originalNext != null)
                     {

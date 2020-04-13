@@ -44,12 +44,13 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexFix3PlusLines = 21;
         private const int IndexFixDoubleDash = 22;
         private const int IndexFixDoubleGreaterThan = 23;
-        private const int IndexFixEllipsesStart = 24;
+        private const int IndexFixContinuationStyle = 24;
         private const int IndexFixMissingOpenBracket = 25;
         private const int IndexFixOcrErrorsViaReplaceList = 26;
         private const int IndexUppercaseIInsideLowercaseWord = 27;
         private const int IndexRemoveSpaceBetweenNumbers = 28;
         private const int IndexDialogsOnOneLine = 29;
+        private const int IndexFixEllipsesStart = 30;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -389,7 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.Fix3PlusLines, string.Empty, () => new Fix3PlusLines().Fix(Subtitle, this), ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, () => new FixDoubleDash().Fix(Subtitle, this), ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, () => new FixDoubleGreaterThan().Fix(Subtitle, this), ce.FixDoubleGreaterThanTicked),
-                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, () => new FixEllipsesStart().Fix(Subtitle, this), ce.FixEllipsesStartTicked),
+                new FixItem( string.Format(_language.FixContinuationStyleX, ContinuationUtilities.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle)), string.Empty, () => new FixContinuationStyle().Fix(Subtitle, this), ce.FixContinuationStyleTicked),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, () => new FixMissingOpenBracket().Fix(Subtitle, this), ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
@@ -397,6 +398,10 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked)
             };
 
+            if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
+            {
+                _fixActions.Add(new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, () => new FixEllipsesStart().Fix(Subtitle, this), ce.FixEllipsesStartTicked));
+            }
             if (Language == "en")
             {
                 _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
@@ -443,7 +448,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace;
         }
-
+        
         public FixCommonErrors()
         {
             UiUtil.PreInitialize(this);
@@ -522,9 +527,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void AddFixToListView(Paragraph p, string action, string before, string after)
         {
+            AddFixToListView(p, action, before, after, true);
+        }
+
+        public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
+        {
             if (_onlyListFixes)
             {
-                var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+                var item = new ListViewItem(string.Empty) { Checked = isChecked, Tag = p };
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(action);
                 item.SubItems.Add(UiUtil.GetListViewTextFromString(before));
@@ -1053,7 +1063,12 @@ namespace Nikse.SubtitleEdit.Forms
             ce.Fix3PlusLinesTicked = listView1.Items[IndexFix3PlusLines].Checked;
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
-            ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
+            ce.FixContinuationStyleTicked = listView1.Items[IndexFixContinuationStyle].Checked;
+            if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
+            {
+                ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
+            }
+            
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;
             if (_indexAloneLowercaseIToUppercaseIEnglish >= 0)
             {

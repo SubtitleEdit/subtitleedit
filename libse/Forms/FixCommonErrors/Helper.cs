@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -589,6 +590,5 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
             return text;
         }
-
     }
 }

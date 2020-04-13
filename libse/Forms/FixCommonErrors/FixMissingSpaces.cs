@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string languageCode = callbacks.Language;
             string fixAction = language.FixMissingSpace;
             int missingSpaces = 0;
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = IsLanguageWithoutPeriods(callbacks.Language) };
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = IsLanguageWithoutPeriods(callbacks.Language), ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
             const string expectedChars = @"""”<.";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {

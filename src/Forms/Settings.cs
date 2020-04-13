@@ -663,6 +663,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxFixCommonErrors.Text = language.FixCommonerrors;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelDialogStyle.Text = language.DialogStyle;
+            labelContinuationStyle.Text = language.ContinuationStyle;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
@@ -673,6 +674,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
+            buttonFixContinuationStyleSettings.Text = language.EditFixContinuationStyleSettings;
 
             groupBoxToolsAutoBr.Text = Configuration.Settings.Language.Main.Controls.AutoBreak.Replace("&", string.Empty);
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
@@ -806,6 +808,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetDialogStyle(Configuration.Settings.General.DialogStyle);
+            SetContinuationStyle(Configuration.Settings.General.ContinuationStyle);
 
             UpdateProfileNames(gs.Profiles);
 
@@ -997,6 +1000,22 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDialogStyle.SelectedIndex = 3;
                     break;
             }
+        }
+
+        private void SetContinuationStyle(ContinuationStyle continuationStyle)
+        {
+            comboBoxContinuationStyle.Items.Clear();
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNone);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleNoneLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleOnlyTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDots);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDash);
+            comboBoxContinuationStyle.Items.Add(Configuration.Settings.Language.Settings.ContinuationStyleLeadingTrailingDashDots);
+            comboBoxContinuationStyle.SelectedIndex = 0;
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
+            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(continuationStyle);
         }
 
         private Guid _oldProfileId = Guid.Empty;
@@ -1703,6 +1722,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             gs.DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            gs.ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
 
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
@@ -3175,6 +3195,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SetDialogStyle(profile.DialogStyle);
+            SetContinuationStyle(profile.ContinuationStyle);
 
             checkBoxCpsIncludeWhiteSpace.Checked = profile.CpsIncludesSpace;
             _oldProfileId = profile.Id;
@@ -3199,6 +3220,10 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].CpsIncludesSpace = checkBoxCpsIncludeWhiteSpace.Checked;
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
+            _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
+            
+            toolTipContinuationPreview.RemoveAll();
+            toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
         }
 
         private void checkBoxToolsBreakByPixelWidth_CheckedChanged(object sender, EventArgs e)
@@ -3261,7 +3286,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    // Saving settings handled by dialog
+                }
+            }
+        }
 
+        private void buttonFixContinuationStyleSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsFixContinuationStyle())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Saving settings handled by dialog
                 }
             }
         }
