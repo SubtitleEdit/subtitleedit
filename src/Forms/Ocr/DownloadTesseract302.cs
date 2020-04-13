@@ -7,11 +7,15 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class DownloadTesseract302 : Form
+    public sealed partial class DownloadTesseract302 : Form
     {
         public DownloadTesseract302()
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract 3.02";
+            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract OCR";
+
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
             wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract302.tar.gz"));
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;

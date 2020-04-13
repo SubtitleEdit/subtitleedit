@@ -1,22 +1,26 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class DownloadTesseract4 : Form
+    public sealed partial class DownloadTesseract4 : Form
     {
         public const string TesseractDownloadUrl = "https://github.com/SubtitleEdit/support-files/raw/master/Tesseract500.Alpha.20200328.tar.gz";
 
-        public DownloadTesseract4()
+        public DownloadTesseract4(string version)
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract " + version;
+            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download + " Tesseract OCR";
+
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
             wc.DownloadDataAsync(new Uri(TesseractDownloadUrl));
-            
+
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
             {
