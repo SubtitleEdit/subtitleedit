@@ -580,9 +580,6 @@
             // 
             this.comboBoxSplitBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSplitBehavior.FormattingEnabled = true;
-            this.comboBoxSplitBehavior.Items.AddRange(new object[] {
-            "HH:MM:SS:MSEC (00:00:00.000)",
-            "HH:MM:SS:FF (00:00:00.00)"});
             this.comboBoxSplitBehavior.Location = new System.Drawing.Point(528, 288);
             this.comboBoxSplitBehavior.Name = "comboBoxSplitBehavior";
             this.comboBoxSplitBehavior.Size = new System.Drawing.Size(207, 21);

@@ -1648,8 +1648,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 gs.VideoPlayer = "MPV";
             }
-            //else if (radioButtonVideoPlayerManagedDirectX.Checked)
-            //    gs.VideoPlayer = "ManagedDirectX";
             else if (radioButtonVideoPlayerMpcHc.Checked)
             {
                 gs.VideoPlayer = "MPC-HC";
