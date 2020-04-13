@@ -7090,10 +7090,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show("Download Tesseract " + Tesseract4Version, "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show($"{Configuration.Settings.Language.GetTesseractDictionaries.Download} Tesseract {Tesseract4Version}", Configuration.Settings.Language.General.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         comboBoxTesseractLanguages.Items.Clear();
-                        using (var form = new DownloadTesseract4())
+                        using (var form = new DownloadTesseract4(Tesseract4Version))
                         {
                             if (form.ShowDialog(this) == DialogResult.OK)
                             {

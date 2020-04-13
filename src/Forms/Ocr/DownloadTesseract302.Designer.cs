@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class DownloadTesseract302
+    sealed partial class DownloadTesseract302
     {
         /// <summary>
         /// Required designer variable.
