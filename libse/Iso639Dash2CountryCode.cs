@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core
             EnglishName = englishName;
         }
 
-        public static List<Iso639Dash2CountryCode> List = new List<Iso639Dash2CountryCode>
+        public static readonly List<Iso639Dash2CountryCode> List = new List<Iso639Dash2CountryCode>
         {
             new Iso639Dash2CountryCode("aar", "aa", "Afar"),
             new Iso639Dash2CountryCode("abk", "ab", "Abkhazian"),
