@@ -95,7 +95,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public List<LogItem> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
 
-        public CultureInfo DictionaryCulture { get; private set; }
         private readonly HashSet<char> _expectedChars = new HashSet<char> { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '\\', '"', '”', '„', '“', '«', '»', '#', '&', '%', '\r', '\n', '؟' }; // removed $
         private readonly HashSet<char> _expectedCharsNoComma = new HashSet<char> { ' ', '¡', '¿', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '\\', '"', '”', '„', '“', '«', '»', '#', '&', '%', '\r', '\n', '؟' }; // removed $ + comma
 
@@ -141,36 +140,36 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en_GB.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en_GB.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en-gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en-GB.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en-GB.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en-GB.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-CA"), "en_CA.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en_CA.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-AU"), "en_AU.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en_AU.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-ZA"), "en_ZA.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en_ZA.dic", true);
                 return;
             }
             if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-US"), "en_US.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", "en_US.dic", true);
                 return;
             }
 
-            foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            foreach (var culture in Iso639Dash2CountryCode.List)
             {
                 var twoLetterCode = "?";
                 if (threeLetterIsoLanguageName != null && !string.IsNullOrEmpty(Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName)))
@@ -178,13 +177,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     twoLetterCode = Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName);
                 }
 
-                if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || culture.TwoLetterISOLanguageName == twoLetterCode)
+                if (culture.ThreeLetterCode == threeLetterIsoLanguageName || culture.TwoLetterCode == twoLetterCode)
                 {
                     string dictionaryFileName = null;
-                    if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
+                    if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterCode, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
                     {
                         dictionaryFileName = Path.Combine(dictionaryFolder, hunspellName + ".dic");
-                        LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
+                        LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dictionaryFileName, true);
                         return;
                     }
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
@@ -222,55 +221,51 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         return;
                     }
 
-                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
+                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dictionaryFileName, true);
                     return;
                 }
             }
 
-            foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
+            string dicFileName = null;
+            foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
             {
-                if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
+                string name = Path.GetFileNameWithoutExtension(dic);
+                if (!string.IsNullOrEmpty(name) && !name.StartsWith("hyph", StringComparison.Ordinal))
                 {
-                    string dictionaryFileName = null;
-                    foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+                    try
                     {
-                        string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!string.IsNullOrEmpty(name) && !name.StartsWith("hyph", StringComparison.Ordinal))
+                        name = name.Replace('_', '-');
+                        if (name.Length > 5)
                         {
-                            try
-                            {
-                                name = name.Replace('_', '-');
-                                if (name.Length > 5)
-                                {
-                                    name = name.Substring(0, 5);
-                                }
+                            name = name.Substring(0, 5);
+                        }
 
-                                var ci = CultureInfo.GetCultureInfo(name);
-                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    dictionaryFileName = dic;
-                                    break;
-                                }
-                            }
-                            catch (Exception exception)
-                            {
-                                System.Diagnostics.Debug.WriteLine(exception.Message);
-                            }
+                        var ci = CultureInfo.GetCultureInfo(name);
+                        var threeLetterCode = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                        if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName ||
+                            threeLetterCode == threeLetterIsoLanguageName ||
+                            ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            dicFileName = dic;
+                            break;
                         }
                     }
-
-                    if (dictionaryFileName == null)
+                    catch (Exception exception)
                     {
-                        return;
+                        System.Diagnostics.Debug.WriteLine(exception.Message);
                     }
-
-                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
-                    return;
                 }
             }
+
+            if (dicFileName == null)
+            {
+                return;
+            }
+
+            LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, dicFileName, true);
         }
 
-        private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, CultureInfo culture, string dictionaryFileName, bool resetSkipList)
+        private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, string dictionaryFileName, bool resetSkipList)
         {
             _fiveLetterWordListLanguageName = Path.GetFileNameWithoutExtension(dictionaryFileName);
             if (_fiveLetterWordListLanguageName != null && _fiveLetterWordListLanguageName.Length > 5)
@@ -365,7 +360,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 _hunspell = Hunspell.GetHunspell(dictionary);
                 IsDictionaryLoaded = true;
                 _spellCheckDictionaryName = dictionary;
-                DictionaryCulture = culture;
             }
             catch
             {
@@ -415,7 +409,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     ci = CultureInfo.CurrentUICulture;
                 }
-                LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, spellCheckDictionaryName, false);
+
+                var threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
+                {
+                    var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                    if (!string.IsNullOrEmpty(threeLetters))
+                    {
+                        threeLetterIsoLanguageName = threeLetters;
+                    }
+                }
+
+                LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, spellCheckDictionaryName, false);
             }
         }
 
@@ -485,7 +490,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
             var sb = new StringBuilder(text.Length + 2);
-            var word = new StringBuilder();
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
@@ -551,7 +555,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // check words split by only space and new line (as other split chars might by a part of from-replace-string, like "\/\/e're" contains slash)
             sb = new StringBuilder();
-            word = new StringBuilder();
+            var word = new StringBuilder();
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
