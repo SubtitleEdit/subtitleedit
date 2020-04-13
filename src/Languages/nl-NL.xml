@@ -133,6 +133,7 @@ Opdrachtregel: {1} {2}
 Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <LowDiskSpace>ONVOLDOENDE VRĲE SCHĲFRUIMTE</LowDiskSpace>
     <FreeDiskSpace>{0} beschikbaar</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Geen audiosporen gevonden! Lege golfvorm genereren?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Golfvormdata in batch genereren</Title>
@@ -698,8 +699,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <SelectDefault>Standaard kiezen</SelectDefault>
     <FixContinuationStyleX>In-/uitpunten aanpassen: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} in-/uitpunten aangepast</XFixContinuationStyle>
-    <FixUnnecessaryLeadingDots>Overbodige inlooppunten verwijderen</FixUnnecessaryLeadingDots>
-    <XFixUnnecessaryLeadingDots>{0} overbodige inlooppunten verwijderd</XFixUnnecessaryLeadingDots>
+    <FixUnnecessaryLeadingDots>Overbodige inlooppunten verwĳderen</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} overbodige inlooppunten verwĳderd</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Woordenboek nodig?</Title>
@@ -1112,7 +1113,7 @@ Open “Instellingen -&gt; Voorkeuren -&gt; Extra” voor meer informatie.</Goog
       <AutoTranslate>
         <Title>Ver&amp;talen</Title>
         <TranslatePoweredByGoogle>Vertalen (aangestuurd door Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Vertalen (aangestuurd door Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByMicrosoft>Vertalen (aangestuurd door Bing)...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Vertalen van Zweeds naar Deens (aangestuurd door nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -1908,7 +1909,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformFocusMouseEnter>Op muisinvoer focussen</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ook op muisinvoer focussen in de lĳstweergave</WaveformListViewFocusMouseEnter>
     <WaveformSingleClickSelect>Eén keer klikken om ondertitels te selecteren</WaveformSingleClickSelect>
-    <WaveformSnapToSceneChanges>Uitlijnen op beeldwissels (houd Shift ingedrukt om te negeren)</WaveformSnapToSceneChanges>
+    <WaveformSnapToSceneChanges>Uitlĳnen op beeldwissels (houd Shift ingedrukt om te negeren)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveformColor>Golfvormkleur</WaveformColor>
@@ -1972,12 +1973,12 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DialogStyleDashSecondLineWithoutSpace>Alleen een streepje op tweede regel</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>In-/uitpunten</ContinuationStyle>
     <ContinuationStyleNone>Niet</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Niet, alleen uitpunten bij pauzes</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>Niet, in- en uitpunten bij pauzes</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Niet, alleen uitpunten bĳ pauzes</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Niet, in- en uitpunten bĳ pauzes</ContinuationStyleNoneLeadingTrailingDots>
     <ContinuationStyleOnlyTrailingDots>Alleen uitpunten</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>In- en uitpunten</ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingDash>In- en uitstreepjes</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>In- en uitstreepjes, punten bij pauzes</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>In- en uitstreepjes, punten bĳ pauzes</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsReplace>Te vervangen muzieksymbolen (met komma scheiden)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren – ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
@@ -2055,7 +2056,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformGoToPreviousSceneChange>Naar vorige scènewisseling</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Naar volgende scènewisseling</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Scènewisseling omkeren</WaveformToggleSceneChange>
-    <WaveformGuessStart>Begin automatisch aanpassen aan de hand van volumewijziging/beeldwissel</WaveformGuessStart>
+    <WaveformGuessStart>Begin automatisch aanpassen aan de hand van volumewĳziging/beeldwissel</WaveformGuessStart>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
     <GoBack1FrameWithPlay>Eén frame terug (met spelen)</GoBack1FrameWithPlay>
@@ -2087,7 +2088,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <CustomSearch4>Vertalen, aangepaste zoekopdracht 4</CustomSearch4>
     <CustomSearch5>Vertalen, aangepaste zoekopdracht 5</CustomSearch5>
     <SyntaxColoring>Syntaxismarkering</SyntaxColoring>
-    <ListViewSyntaxColoring>Syntaxismarkering lijstweergave</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>Syntaxismarkering lĳstweergave</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Tĳdsduur markeren indien te kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Tĳdsduur markeren indien te lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Tekst markeren indien te lang</SyntaxColorTextIfTooLong>
@@ -2159,12 +2160,12 @@ of tĳdens het exporteren naar op beeld gebaseerde formaten.</FontNote>
     <RestoreDefaultSettings>Standaardinstellingen herstellen</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Wilt u alle instellingen op hun standaardwaarde terugzetten?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Tĳdcodes verwĳderen</RemoveTimeCodes>
-    <EditFixContinuationStyleSettings>Instellingen voor corrigeren in-/uitpunten wijzigen...</EditFixContinuationStyleSettings>
+    <EditFixContinuationStyleSettings>Instellingen voor corrigeren in-/uitpunten wĳzigen...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Instellingen voor corrigeren in-/uitpunten</FixContinuationStyleSettings>
-    <UncheckInsertsAllCaps>Beeldtitels in hoofdletters detecteren en uitvinken (bijvoorbeeld: GEEN TOEGANG)</UncheckInsertsAllCaps>
+    <UncheckInsertsAllCaps>Beeldtitels in hoofdletters detecteren en uitvinken (bĳvoorbeeld: GEEN TOEGANG)</UncheckInsertsAllCaps>
     <UncheckInsertsItalic>Cursieve beeldtitels of songteksten detecteren en uitvinken</UncheckInsertsItalic>
     <UncheckInsertsLowercase>Beeldtitels of songteksten in kleine letters detecteren en uitvinken</UncheckInsertsLowercase>
-    <HideContinuationCandidatesWithoutName>Onwaarschijnlijke vervolgzinnen verbergen</HideContinuationCandidatesWithoutName>
+    <HideContinuationCandidatesWithoutName>Onwaarschĳnlĳke vervolgzinnen verbergen</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Songteksten tussen muzieksymbolen negeren</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
