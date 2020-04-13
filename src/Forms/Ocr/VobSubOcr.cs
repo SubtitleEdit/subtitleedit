@@ -5612,6 +5612,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrFixEngine == null)
             {
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
+                if (_ocrFixEngine == null)
+                {
+                    _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
+                }
             }
 
             const int badWords = 0;
@@ -6584,14 +6588,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (Directory.Exists(dir))
             {
                 comboBoxTesseractLanguages.Items.Clear();
-                var cultures = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList();
+                var cultures = Iso639Dash2CountryCode.List;
                 foreach (var fileName in Directory.GetFiles(dir, "*.traineddata"))
                 {
                     string tesseractName = Path.GetFileNameWithoutExtension(fileName);
                     if (tesseractName != "osd" && tesseractName != "music" && !tesseractName.EndsWith("-frak", StringComparison.Ordinal))
                     {
                         string cultureName = tesseractName;
-                        var match = cultures.FirstOrDefault(p => p.ThreeLetterISOLanguageName == tesseractName);
+                        var match = cultures.FirstOrDefault(p => p.ThreeLetterCode == tesseractName);
                         if (match != null)
                         {
                             cultureName = match.EnglishName;
@@ -7008,6 +7012,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (!string.IsNullOrEmpty(threeLetters))
                             {
                                 threeLetterIsoLanguageName = threeLetters;
+                                _languageId = threeLetters;
                             }
                         }
                     }
