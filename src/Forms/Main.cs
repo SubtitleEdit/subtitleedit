@@ -12930,6 +12930,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 comboBoxEncoding.BeginUpdate();
+                comboBoxSubtitleFormats.BeginUpdate();
 
                 if (file.Length < Subtitle.MaxFileSize)
                 {
@@ -12964,6 +12965,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(_language.DropFileXNotAccepted, fileName));
                 }
 
+                comboBoxSubtitleFormats.EndUpdate();
                 comboBoxEncoding.EndUpdate();
             }
         }
