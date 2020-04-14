@@ -6693,7 +6693,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (index < _subtitle.Paragraphs.Count)
                             {
-                                _subtitle.Paragraphs[index].Text = s;
+                                _subtitle.Paragraphs[index].Text = s.Trim();
                             }
 
                             index++;
