@@ -537,7 +537,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     if ((indexOfDialogChar < 0 || indexOfDialogChar > 6) && !(second.StartsWith('-') || second.StartsWith("<i>-", StringComparison.Ordinal)))
                     {
-                        var st = new StrippableText(second, String.Empty, String.Empty);
+                        var st = new StrippableText(second, string.Empty, string.Empty);
                         second = st.Pre + "- " + st.StrippedText + st.Post;
                         var firstLine = newText.Remove(indexOfNewLine);
                         newText = firstLine + Environment.NewLine + second;
@@ -675,9 +675,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return RemoveTextFromHearImpaired(input, null, -1);
         }
 
-        public string RemoveTextFromHearImpaired(string input, Subtitle subtitle, int index)
+        public string RemoveTextFromHearImpaired(string inputWithoutUnicodeReplace, Subtitle subtitle, int index)
         {
-            if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(input, true).TrimStart(TrimStartNoiseChar)))
+            if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(inputWithoutUnicodeReplace, true).TrimStart(TrimStartNoiseChar)))
             {
                 return string.Empty;
             }
@@ -686,12 +686,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
                 {
-                    if (input.Contains(removeIfTextContain))
+                    if (inputWithoutUnicodeReplace.Contains(removeIfTextContain))
                     {
                         return string.Empty;
                     }
                 }
             }
+
+            // change unicode symbol U2010 with normal dash
+            var input = inputWithoutUnicodeReplace.Replace("\u2010", "-");
+            var originalAfterU2010Replace = input;
 
             var text = RemoveColon(input);
             string pre = " >-\"'‘`´♪¿¡.…—";
@@ -973,6 +977,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
                 text = dialogHelper.FixDashesAndSpaces(text);
             }
+
+            text = text.Trim();
+
+            // keep U2010 dashes if no changes
+            if (originalAfterU2010Replace == text)
+            {
+                return inputWithoutUnicodeReplace;
+            }
+
+            if (inputWithoutUnicodeReplace.Contains("\u2010") && !inputWithoutUnicodeReplace.Contains("-"))
+            {
+                text = text.Replace("-", "\u2010"); // try to keep original dashes
+            }
+
             return text.Trim();
         }
 
