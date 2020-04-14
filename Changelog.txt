@@ -48,6 +48,7 @@
    * Update preview on video when changing ASS style
    * Optimize Sami format read speed - thx Jamakmake
    * Speed up resize of main windows a little
+   * Handle Unicode dash \u2010 in remove text for HI - thx JereckNET
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
@@ -70,6 +71,7 @@
    * Fix issue with make-two-color-threshold - thx Signy13
    * Fix OCR word replace issue - thx thehulk
    * Fix crash after add new profile + reset - thx Jamakmake
+   * Fix "color unknown words" issue in OCR - thx Signy13
 
 
 3.5.14 (8th March 2020)
