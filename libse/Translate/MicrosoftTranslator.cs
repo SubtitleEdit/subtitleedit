@@ -20,10 +20,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
         private static List<TranslationPair> _translationPairs;
         private readonly string _accessToken;
+        private readonly string _category;
 
-        public MicrosoftTranslator(string apiKey, string tokenEndpoint)
+        public MicrosoftTranslator(string apiKey, string tokenEndpoint, string category)
         {
             _accessToken = GetAccessToken(apiKey, tokenEndpoint);
+            _category = category; // Optional parameter - used to get translations from a customized system built with Custom Translator
         }
 
         private static string GetAccessToken(string apiKey, string tokenEndpoint)
@@ -90,6 +92,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
         public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
             var url = string.Format(TranslateUrl, sourceLanguage, targetLanguage);
+            if (!string.IsNullOrEmpty(_category))
+            {
+                url += "&category=" + _category.Trim();
+            }
+
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.Proxy = Utilities.GetProxy();
             httpWebRequest.ContentType = "application/json";
