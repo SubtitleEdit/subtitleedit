@@ -1878,6 +1878,32 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiDialogHearingImpairedSecondLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("- You're weird!" + Environment.NewLine + "- [sigh]");
+            Assert.AreEqual("You're weird!", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiAlternateHyphenU2010()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveTextFromHearImpaired("\u2010 You're weird!" + Environment.NewLine + "\u2010 [sigh]");
+            Assert.AreEqual("You're weird!", actual);
+        }
+
+        [TestMethod]
         public void RemoveInterjectionsAfterComma()
         {
             string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Hey, ahhhh.", onlyInSeparatedLine: false));
