@@ -145,6 +145,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
             labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             openContainingFolderToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.OpenContainingFolder;
+            removeToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
+            removeAllToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
@@ -2001,6 +2003,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewInputFiles.Items.Clear();
             UpdateNumberOfFiles();
+            UpdateTransportStreamSettings();
         }
 
         private void RemoveSelectedFiles()
@@ -2032,11 +2035,27 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewInputFiles.FocusedItem = listViewInputFiles.Items[listViewInputFiles.Items.Count - 1];
             }
             UpdateNumberOfFiles();
+            UpdateTransportStreamSettings();
         }
 
         private void RemoveToolStripMenuItemClick(object sender, EventArgs e)
         {
             RemoveSelectedFiles();
+        }
+
+        private void UpdateTransportStreamSettings()
+        {
+            bool hasTransportStream = false;
+            foreach (ListViewItem lvi in listViewInputFiles.Items)
+            {
+                if (lvi.SubItems[2].Text.Equals("Transport Stream", StringComparison.OrdinalIgnoreCase))
+                {
+                    hasTransportStream = true;
+                    break;
+                }
+            }
+
+            buttonTransportStreamSettings.Visible = hasTransportStream;
         }
 
         private void ListViewInputFilesKeyDown(object sender, KeyEventArgs e)

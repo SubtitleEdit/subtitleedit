@@ -188,8 +188,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBack.Visible = false;
             buttonNextFinish.Visible = false;
             buttonCancel.Text = _languageGeneral.Ok;
-            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
-            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
         }
 
         public string Language
@@ -501,6 +499,12 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
             mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
             buttonResetDefault.Text = _language.SelectDefault;
+
+            toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+
+            toolStripMenuItemInverseRules.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
+            toolStripMenuItemSelectAllRules.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;

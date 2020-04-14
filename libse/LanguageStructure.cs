@@ -237,6 +237,7 @@
             public string TransportStreamSettingsButton { get; set; }
             public string RemoveLineBreaks { get; set; }
             public string TryToUseSourceEncoding { get; set; }
+            public string MkvLanguageInOutputFileName { get; set; }
             public string MkvLanguageInOutputFileNameX { get; set; }
             public string MkvLanguageStyleTwoLetter { get; set; }
             public string MkvLanguageStyleThreeLetter { get; set; }

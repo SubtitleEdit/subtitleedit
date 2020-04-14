@@ -367,6 +367,7 @@ namespace Nikse.SubtitleEdit.Core
                 TransportStreamSettingsButton = "TS settings...",
                 RemoveLineBreaks = "Remove line-breaks",
                 TryToUseSourceEncoding = "Try to use source encoding",
+                MkvLanguageInOutputFileName = "\"Language\" in output file name",
                 MkvLanguageInOutputFileNameX = "Matroska (.mkv) \"Language\" in output file name: {0}",
                 MkvLanguageStyleTwoLetter = "Two letter language code",
                 MkvLanguageStyleThreeLetter = "Three letter language code",

@@ -622,6 +622,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/TryToUseSourceEncoding":
                     language.BatchConvert.TryToUseSourceEncoding = reader.Value;
                     break;
+                case "BatchConvert/MkvLanguageInOutputFileName":
+                    language.BatchConvert.MkvLanguageInOutputFileName = reader.Value;
+                    break;
                 case "BatchConvert/MkvLanguageInOutputFileNameX":
                     language.BatchConvert.MkvLanguageInOutputFileNameX = reader.Value;
                     break;
