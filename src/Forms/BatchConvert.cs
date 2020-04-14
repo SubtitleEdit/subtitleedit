@@ -726,9 +726,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (Configuration.Settings.Tools.BatchConvertMkvLanguageCodeStyle == "2" &&
-                !string.IsNullOrEmpty(Iso639Dash2CountryCode.GetTwoLetterCodeFromThreeLetterCode(languageCode)))
+                !string.IsNullOrEmpty(Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(languageCode)))
             {
-                return Iso639Dash2CountryCode.GetTwoLetterCodeFromThreeLetterCode(languageCode) + ".";
+                return Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(languageCode) + ".";
             }
 
             return string.IsNullOrEmpty(languageCode) ? string.Empty : languageCode.TrimEnd('.') + ".";
