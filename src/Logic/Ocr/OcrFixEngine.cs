@@ -171,13 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             foreach (var culture in Iso639Dash2CountryCode.List)
             {
-                var twoLetterCode = "?";
-                if (threeLetterIsoLanguageName != null && !string.IsNullOrEmpty(Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName)))
-                {
-                    twoLetterCode = Iso639Dash2CountryCode.GetTwoLetterCodeFromTTheLetterCode(threeLetterIsoLanguageName);
-                }
-
-                if (culture.ThreeLetterCode == threeLetterIsoLanguageName || culture.TwoLetterCode == twoLetterCode)
+                if (culture.ThreeLetterCode == threeLetterIsoLanguageName)
                 {
                     string dictionaryFileName = null;
                     if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterCode, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
@@ -334,6 +328,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _abbreviationList.Add("o.r.");
                 }
             }
+
             // Load user words
             _userWordList = new HashSet<string>();
             _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
@@ -389,38 +384,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 return string.Empty;
-            }
-            set
-            {
-                string spellCheckDictionaryName = Path.Combine(Utilities.DictionaryFolder, value);
-                CultureInfo ci;
-                try
-                {
-                    if (value == "sh")
-                    {
-                        ci = CultureInfo.GetCultureInfo("sr-Latn-RS");
-                    }
-                    else
-                    {
-                        ci = CultureInfo.GetCultureInfo(value);
-                    }
-                }
-                catch
-                {
-                    ci = CultureInfo.CurrentUICulture;
-                }
-
-                var threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
-                if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
-                {
-                    var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
-                    if (!string.IsNullOrEmpty(threeLetters))
-                    {
-                        threeLetterIsoLanguageName = threeLetters;
-                    }
-                }
-
-                LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, spellCheckDictionaryName, false);
             }
         }
 

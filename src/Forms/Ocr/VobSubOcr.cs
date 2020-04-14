@@ -6993,6 +6993,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     checkBoxTesseractFallback.Checked = false;
                 }
             }
+
+            if (comboBoxDictionaries.SelectedIndex == -1)
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
+            }
         }
 
         private void LoadOcrFixEngine(string threeLetterIsoLanguageName, string hunspellName)

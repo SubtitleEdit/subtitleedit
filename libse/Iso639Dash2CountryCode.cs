@@ -219,11 +219,11 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Get three letter language code, from two letter language code.
+        /// Get two letter language code, from three letter language code.
         /// </summary>
-        /// <param name="twoLetterCode">Two letter language code (casing not important)</param>
-        /// <returns>Three letter language code in lowercase, string.Empty if not found</returns>
-        public static string GetTwoLetterCodeFromTTheLetterCode(string threeLetterCode)
+        /// <param name="threeLetterCode">Three letter language code (casing not important)</param>
+        /// <returns>Two letter language code in lowercase, string.Empty if not found</returns>
+        public static string GetTwoLetterCodeFromThreeLetterCode(string threeLetterCode)
         {
             var lookupResult = List.FirstOrDefault(p => p.ThreeLetterCode == threeLetterCode.ToLowerInvariant());
             return lookupResult == null ? string.Empty : lookupResult.TwoLetterCode;
