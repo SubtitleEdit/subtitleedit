@@ -3921,12 +3921,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (wordsNotFound > 3)
-            {
-                subtitleListView1.SetBackgroundColor(index, Configuration.Settings.Tools.ListViewSyntaxErrorColor);
-                return;
-            }
-
             if (wordsNotFound >= 2)
             {
                 subtitleListView1.SetBackgroundColor(index, Color.Orange);
