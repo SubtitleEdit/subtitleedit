@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
         public string MicrosoftTranslatorTokenEndpoint { get; set; }
+        public string MicrosoftTranslatorCategory { get; set; }
         public string GoogleApiV2Key { get; set; }
         public bool GoogleApiV2KeyInfoShow { get; set; }
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
@@ -3175,6 +3176,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.MicrosoftTranslatorTokenEndpoint = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("MicrosoftTranslatorCategory");
+            if (subNode != null)
+            {
+                settings.Tools.MicrosoftTranslatorCategory = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("GoogleApiV2Key");
@@ -6883,6 +6890,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
                 textWriter.WriteElementString("MicrosoftTranslatorTokenEndpoint", settings.Tools.MicrosoftTranslatorTokenEndpoint);
+                textWriter.WriteElementString("MicrosoftTranslatorCategory", settings.Tools.MicrosoftTranslatorCategory);
                 textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
                 textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
