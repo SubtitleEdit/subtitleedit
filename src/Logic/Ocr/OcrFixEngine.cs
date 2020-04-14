@@ -138,6 +138,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return;
             }
 
+            if (!string.IsNullOrEmpty(hunspellName))
+            {
+                var directDicFile = Path.Combine(dictionaryFolder, hunspellName + ".dic");
+                if (File.Exists(directDicFile))
+                {
+                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, directDicFile, true);
+                    return;
+                }
+            }
+
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", "en_GB.dic", true);
@@ -343,7 +353,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // Load Hunspell spell checker
             try
             {
-                if (!File.Exists(dictionary + ".dic"))
+                if (dictionaryFileName.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) && File.Exists(dictionaryFileName))
+                {
+                    dictionary = dictionaryFileName.Substring(0, dictionaryFileName.Length - 4);
+                }
+                else if (dictionaryFileName.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(Utilities.DictionaryFolder, dictionaryFileName)))
+                {
+                    var f = Path.Combine(Utilities.DictionaryFolder, dictionaryFileName);
+                    dictionary = f.Substring(0, f.Length - 4);
+                }
+                else if (!File.Exists(dictionary + ".dic"))
                 {
                     var fileMatches = Directory.GetFiles(Utilities.DictionaryFolder, _fiveLetterWordListLanguageName + "*.dic");
                     if (fileMatches.Length > 0)
