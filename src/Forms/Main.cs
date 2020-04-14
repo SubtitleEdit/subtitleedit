@@ -18174,6 +18174,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (WindowState == FormWindowState.Maximized)
+            {
+                Main_ResizeEnd(sender, e);
+                return;
+            }
+
             panelVideoPlayer.Invalidate();
         }
 
