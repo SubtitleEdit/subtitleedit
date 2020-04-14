@@ -6582,7 +6582,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (Directory.Exists(dir))
             {
                 comboBoxTesseractLanguages.Items.Clear();
-                var cultures = Iso639Dash2CountryCode.List;
+                var cultures = Iso639Dash2LanguageCode.List;
                 foreach (var fileName in Directory.GetFiles(dir, "*.traineddata"))
                 {
                     string tesseractName = Path.GetFileNameWithoutExtension(fileName);
@@ -7007,7 +7007,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
                         if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
                         {
-                            var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                            var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
                             if (!string.IsNullOrEmpty(threeLetters))
                             {
                                 threeLetterIsoLanguageName = threeLetters;
@@ -7554,7 +7554,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
                 if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
                 {
-                    var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
+                    var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
                     if (!string.IsNullOrEmpty(threeLetters))
                     {
                         threeLetterIsoLanguageName = threeLetters;
@@ -7573,7 +7573,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             threeLetterIsoLanguageName = x.ThreeLetterISOLanguageName;
                             if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
                             {
-                                var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(x.TwoLetterISOLanguageName);
+                                var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(x.TwoLetterISOLanguageName);
                                 if (!string.IsNullOrEmpty(threeLetters))
                                 {
                                     threeLetterIsoLanguageName = threeLetters;
@@ -7588,7 +7588,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (string.IsNullOrEmpty(threeLetterIsoLanguageName) && !string.IsNullOrEmpty(language) && language.Length >= 2)
             {
                 var twoLetterCode = language.Substring(0, 2);
-                var threeLetters = Iso639Dash2CountryCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterCode);
+                var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterCode);
                 if (!string.IsNullOrEmpty(threeLetters))
                 {
                     threeLetterIsoLanguageName = threeLetters;
