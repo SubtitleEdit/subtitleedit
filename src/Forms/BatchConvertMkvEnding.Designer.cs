@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class BatchConvertMkvEnding
+    sealed partial class BatchConvertMkvEnding
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(235, 123);
+            this.buttonOK.Location = new System.Drawing.Point(287, 123);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 106;
@@ -63,7 +63,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(316, 123);
+            this.buttonCancel.Location = new System.Drawing.Point(368, 123);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 107;
@@ -121,7 +121,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 158);
+            this.ClientSize = new System.Drawing.Size(455, 158);
             this.Controls.Add(this.radioButtonNone);
             this.Controls.Add(this.radioButton2Letter);
             this.Controls.Add(this.radioButton3Letter);

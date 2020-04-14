@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class BatchConvertMkvEnding : Form
+    public sealed partial class BatchConvertMkvEnding : Form
     {
         public string LanguageCodeStyle { get; set; }
 
@@ -19,8 +19,25 @@ namespace Nikse.SubtitleEdit.Forms
             radioButton2Letter.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleTwoLetter;
             radioButton3Letter.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleThreeLetter;
             radioButtonNone.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleEmpty;
+            labelFileNameEnding.Text = Configuration.Settings.Language.BatchConvert.MkvLanguageInOutputFileName;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
+
+        private void SetMkvLanguageTitle()
+        {
+            var styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleThreeLetter;
+            if (radioButton2Letter.Checked)
+            {
+                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleTwoLetter;
+            }
+            else if (radioButtonNone.Checked)
+            {
+                styleName = Configuration.Settings.Language.BatchConvert.MkvLanguageStyleEmpty;
+            }
+
+            Text = string.Format(Configuration.Settings.Language.BatchConvert.MkvLanguageInOutputFileNameX, styleName);
+        }
+
 
         private void BatchConvertMkvEnding_KeyDown(object sender, KeyEventArgs e)
         {
@@ -57,6 +74,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelFileNameExample.Text = string.Format(Configuration.Settings.Language.General.ExampleX, "Video.eng.srt");
                 LanguageCodeStyle = "3";
             }
+
+            SetMkvLanguageTitle();
         }
 
         private void BatchConvertMkvEnding_Load(object sender, EventArgs e)
@@ -73,6 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 radioButton3Letter.Checked = true;
             }
+            SetMkvLanguageTitle();
         }
     }
 }
