@@ -124,7 +124,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(threeLetterIsoLanguageName);
-            LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
+            if (!string.IsNullOrEmpty(threeLetterIsoLanguageName) || !string.IsNullOrEmpty(hunspellName))
+            {
+                LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
+            }
 
             AutoGuessesUsed = new List<LogItem>();
             UnknownWordsFound = new List<LogItem>();
