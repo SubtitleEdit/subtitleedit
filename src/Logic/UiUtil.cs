@@ -1102,7 +1102,8 @@ namespace Nikse.SubtitleEdit.Logic
             for (int k = tsmi.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = tsmi.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
+                var fileName = (string)x.Tag;
+                if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                 {
                     tsmi.DropDownItems.Remove(x);
                 }
