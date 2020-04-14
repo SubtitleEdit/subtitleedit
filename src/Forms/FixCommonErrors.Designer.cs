@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -46,6 +46,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripRules = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelectAllRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInverseRules = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageFixes = new System.Windows.Forms.TabPage();
@@ -85,10 +88,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
-            this.contextMenuStripRules = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelectAllRules = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemInverseRules = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxStep1.SuspendLayout();
+            this.contextMenuStripRules.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageFixes.SuspendLayout();
@@ -101,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEditPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
-            this.contextMenuStripRules.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -262,6 +262,28 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.columnHeader3.Text = "Example";
             this.columnHeader3.Width = 158;
+            // 
+            // contextMenuStripRules
+            // 
+            this.contextMenuStripRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelectAllRules,
+            this.toolStripMenuItemInverseRules});
+            this.contextMenuStripRules.Name = "contextMenuStrip1";
+            this.contextMenuStripRules.Size = new System.Drawing.Size(162, 48);
+            // 
+            // toolStripMenuItemSelectAllRules
+            // 
+            this.toolStripMenuItemSelectAllRules.Name = "toolStripMenuItemSelectAllRules";
+            this.toolStripMenuItemSelectAllRules.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemSelectAllRules.Text = "Select all";
+            this.toolStripMenuItemSelectAllRules.Click += new System.EventHandler(this.ButtonSelectAllClick);
+            // 
+            // toolStripMenuItemInverseRules
+            // 
+            this.toolStripMenuItemInverseRules.Name = "toolStripMenuItemInverseRules";
+            this.toolStripMenuItemInverseRules.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItemInverseRules.Text = "Inverse selection";
+            this.toolStripMenuItemInverseRules.Click += new System.EventHandler(this.ButtonInverseSelectionClick);
             // 
             // groupBox2
             // 
@@ -595,14 +617,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 112;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -716,28 +738,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
             // 
-            // contextMenuStripRules
-            // 
-            this.contextMenuStripRules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelectAllRules,
-            this.toolStripMenuItemInverseRules});
-            this.contextMenuStripRules.Name = "contextMenuStrip1";
-            this.contextMenuStripRules.Size = new System.Drawing.Size(162, 48);
-            // 
-            // toolStripMenuItemSelectAllRules
-            // 
-            this.toolStripMenuItemSelectAllRules.Name = "toolStripMenuItemSelectAllRules";
-            this.toolStripMenuItemSelectAllRules.Size = new System.Drawing.Size(161, 22);
-            this.toolStripMenuItemSelectAllRules.Text = "Select all";
-            this.toolStripMenuItemSelectAllRules.Click += new System.EventHandler(this.ButtonSelectAllClick);
-            // 
-            // toolStripMenuItemInverseRules
-            // 
-            this.toolStripMenuItemInverseRules.Name = "toolStripMenuItemInverseRules";
-            this.toolStripMenuItemInverseRules.Size = new System.Drawing.Size(161, 22);
-            this.toolStripMenuItemInverseRules.Text = "Inverse selection";
-            this.toolStripMenuItemInverseRules.Click += new System.EventHandler(this.ButtonInverseSelectionClick);
-            // 
             // FixCommonErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -753,7 +753,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.groupBox2);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(840, 580);
             this.Name = "FixCommonErrors";
@@ -766,6 +765,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFixKeyDown);
             this.Resize += new System.EventHandler(this.FixCommonErrorsResize);
             this.groupBoxStep1.ResumeLayout(false);
+            this.contextMenuStripRules.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPageFixes.ResumeLayout(false);
@@ -780,7 +780,6 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.tabPageLog.PerformLayout();
-            this.contextMenuStripRules.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
