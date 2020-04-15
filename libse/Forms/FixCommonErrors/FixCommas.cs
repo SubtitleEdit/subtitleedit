@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var commaTriple = new Regex(@"([\p{L}\d\s])(, *, *,)([\p{L}\d\s])");
             var commaTripleEndOfLine = new Regex(@"([\p{L}\d\s])(, *, *,)$");
             var commaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s])(,\s+,)([\p{L}\d\s])");
+            var commaFollowedByLetter = new Regex(@",(\p{L})");
 
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixCommas;
             int fixCount = 0;
@@ -26,6 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     s = commaTriple.Replace(s, "$1...$3");
                     s = commaTripleEndOfLine.Replace(s, "$1...");
                     s = commaWhiteSpaceBetween.Replace(s, "$1,$3");
+                    s = commaFollowedByLetter.Replace(s, ", $1");
 
                     while (s.Contains(",."))
                     {
@@ -48,10 +50,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         var commaTripleAr = new Regex(@"([\p{L}\d\s])(، *، *،)([\p{L}\d\s])");
                         var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s])(، *، *،)$");
                         var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s])(،\s+،)([\p{L}\d\s])");
+                        var commaFollowedByLetterAr = new Regex(@"،(\p{L})");
                         s = commaDoubleAr.Replace(s, "$1،$3");
                         s = commaTripleAr.Replace(s, "$1...$3");
                         s = commaTripleEndOfLineAr.Replace(s, "$1...");
                         s = commaWhiteSpaceBetweenAr.Replace(s, "$1،$3");
+                        s = commaFollowedByLetterAr.Replace(s, "، $1");
 
                         while (s.Contains("،."))
                         {
