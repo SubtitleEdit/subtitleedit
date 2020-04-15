@@ -1657,7 +1657,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Controls.Add(this.groupBoxOcrMethod);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
-            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(920, 560);
             this.Name = "VobSubOcr";
             this.ShowIcon = false;

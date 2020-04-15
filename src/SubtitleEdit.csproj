@@ -1056,6 +1056,7 @@
     <Compile Include="Logic\SpellCheck\VoikkoSpellCheck.cs" />
     <Compile Include="Logic\SpellCheck\WindowsHunspell.cs" />
     <Compile Include="Logic\SyncContextExtensions.cs" />
+    <Compile Include="Logic\TaskbarList.cs" />
     <Compile Include="Logic\TextWidth.cs" />
     <Compile Include="Logic\UiEbuSaveHelper.cs" />
     <Compile Include="Logic\UiGetPacEncoding.cs" />

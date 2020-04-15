@@ -219,6 +219,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcrCharacter_Shown(object sender, EventArgs e)
         {
             textBoxCharacters.Focus();
+
+            if (ActiveForm == null)
+            {
+                TaskbarList.StartBlink(_vobSubForm);
+            }
         }
 
         private void checkBoxAutoSubmitOfFirstChar_CheckedChanged(object sender, EventArgs e)
@@ -259,6 +264,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             textBoxCharacters.Text = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+        }
+
+        private void VobSubOcrCharacter_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TaskbarList.StopBlink(_vobSubForm);
         }
     }
 }
