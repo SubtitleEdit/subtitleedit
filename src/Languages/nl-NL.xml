@@ -126,7 +126,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
 Voor deze functie is VLC media player 1.1.x of nieuwer ({0}-bit) vereist.
 
 Opdrachtregel: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>De uitpakken van audiogegevens met {0} is mislukt!
+    <WaveFileMalformed>Het uitpakken van audiogegevens met {0} is mislukt!
 
 Opdrachtregel: {1} {2}
 
@@ -227,8 +227,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TransportStreamSettingsButton>TS-instellingen...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Regeleinden verwĳderen</RemoveLineBreaks>
     <TryToUseSourceEncoding>Proberen de broncodering te gebruiken</TryToUseSourceEncoding>
-    <MkvLanguageInOutputFileName>"Taal" in uitvoerbestandsnaam</MkvLanguageInOutputFileName>
-    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Taal" in uitvoerbestandsnaam: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageInOutputFileName>“Taal” in uitvoerbestandsnaam</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) “Taal” in uitvoerbestandsnaam: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Tweeletterige taalcode</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Drieletterige taalcode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Geen taalcode</MkvLanguageStyleEmpty>
@@ -409,8 +409,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TranslatorsName>Vertaler (TN)</TranslatorsName>
     <SubtitleListReferenceCode>Referentiecode (SLR)</SubtitleListReferenceCode>
     <CountryOfOrigin>Land van herkomst (CO)</CountryOfOrigin>
-    <TimeCodeStatus>Tĳdcode - status (TCS)</TimeCodeStatus>
-    <TimeCodeStartOfProgramme>Tĳdcode - begintĳd uitzending (TCP)</TimeCodeStartOfProgramme>
+    <TimeCodeStatus>Tĳdcode – status (TCS)</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Tĳdcode – begintĳd uitzending (TCP)</TimeCodeStartOfProgramme>
     <RevisionNumber>Revisienummer (RN)</RevisionNumber>
     <MaxNoOfDisplayableChars>Max. aantal tekens per rĳ (MNC)</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max. aantal rĳen (MNR)</MaxNumberOfDisplayableRows>
@@ -433,7 +433,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TextLeftJustifiedText>Links uitgelĳnde tekst</TextLeftJustifiedText>
     <TextCenteredText>Gecentreerde tekst</TextCenteredText>
     <TextRightJustifiedText>Rechts uitgelĳnde tekst</TextRightJustifiedText>
-    <UseBoxForOneNewLine>'Tekst in kader weergeven' aanvinken voor één enkel regeleindeteken</UseBoxForOneNewLine>
+    <UseBoxForOneNewLine>‘Tekst in kader weergeven’ aanvinken voor één enkel regeleindeteken</UseBoxForOneNewLine>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke-effect</Title>
@@ -732,10 +732,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <PoweredByMicrosoftTranslate>Aangestuurd door Microsoft Translator</PoweredByMicrosoftTranslate>
     <MsClientSecretNeeded>Voor toegang tot Microsoft Translator is een Cognitive Services ‘Translator Text’-sleutel van Microsoft vereist.
 
-Open 'Instellingen -&gt; Voorkeuren -&gt; Extra' voor meer informatie.</MsClientSecretNeeded>
+Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</MsClientSecretNeeded>
     <GoogleApiKeyNeeded>Voor toegang tot Google Vertalen is een API-sleutel van Google vereist.
 
-Open 'Instellingen -&gt; Voorkeuren -&gt; Extra' voor meer informatie.</GoogleApiKeyNeeded>
+Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</GoogleApiKeyNeeded>
     <GoogleNoApiKeyWarning>Google Vertalen zonder API-sleutel... (traag en beperkt)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -850,7 +850,7 @@ Open 'Instellingen -&gt; Voorkeuren -&gt; Extra' voor meer informatie.</GoogleAp
     <euName>Baskisch</euName>
     <faName>Perzisch</faName>
     <fiName>Fins</fiName>
-    <fjName>Fĳisch</fjName>
+    <fjName>Fijisch</fjName>
     <foName>Faeröers</foName>
     <frName>Frans</frName>
     <fyName>Fries</fyName>
@@ -1556,7 +1556,7 @@ Wilt u toch doorgaan?</PromptInsertSubtitleOverlap>
     <ErrorLoadTorrent>Dit is een BitTorrent-bestand, géén ondertitelbestand.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes.
 
-Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vinden onder het menu 'Bestand -&gt; Back-up herstellen...'</ErrorLoadBinaryZeroes>
+Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vinden onder het menu ‘Bestand -&gt; Back-up herstellen...’</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>U kunt hier geen map naartoe slepen.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>U kunt hier geen blu-ray-sup-bestand opgeven.</NoSupportHereBluRaySup>
@@ -1696,8 +1696,8 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <Date>Datum</Date>
     <Type>Type</Type>
     <OpenPluginsFolder>Map met plug-ins openen</OpenPluginsFolder>
-    <GetPluginsInfo1>Plug-ins moeten in de map 'Plugins' worden opslagen</GetPluginsInfo1>
-    <GetPluginsInfo2>Kies een plug-in en klik op Downloaden</GetPluginsInfo2>
+    <GetPluginsInfo1>Plug-ins moeten in de map ‘Plugins’ worden opslagen</GetPluginsInfo1>
+    <GetPluginsInfo2>Kies een plug-in en klik op ‘Downloaden’</GetPluginsInfo2>
     <PluginXDownloaded>Plug-in {0} gedownload</PluginXDownloaded>
     <Download>&amp;Downloaden</Download>
     <Remove>&amp;Verwĳderen</Remove>
@@ -1850,7 +1850,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <StartInSourceView>In bronweergave starten</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Lege titels bĳ het openen van een ondertitel verwĳderen</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Regeleinden in lĳstweergave weergeven als</ShowLineBreaksAs>
-    <SaveAsFileNameFrom>'Opslaan als...' gebruikt bestandsnaam van</SaveAsFileNameFrom>
+    <SaveAsFileNameFrom>‘Opslaan als...’ gebruikt bestandsnaam van</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Bĳ dubbelklikken op een regel in de lĳstweergave</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Zichtbare kolommen in lĳstweergave kiezen</MainListViewColumnsInfo>
     <MainListViewNothing>Niets</MainListViewNothing>
@@ -1937,7 +1937,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <SsaOpaqueBox>Ondoorzichtig vak</SsaOpaqueBox>
     <Testing123>Testing 123...</Testing123>
     <Language>Taal</Language>
-    <NamesIgnoreLists>Naam/ruis-lĳst (hoofdlettergevoelig)</NamesIgnoreLists>
+    <NamesIgnoreLists>Namenlĳst (hoofdlettergevoelig)</NamesIgnoreLists>
     <AddName>Toevoegen</AddName>
     <AddWord>Toevoegen</AddWord>
     <Remove>Wissen</Remove>
@@ -1945,7 +1945,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <UserWordList>Gebruikerswoordenlĳst</UserWordList>
     <OcrFixList>OCR-correctielĳst</OcrFixList>
     <Location>Plaats</Location>
-    <UseOnlineNames>Online naam/ruis-lĳst gebruiken</UseOnlineNames>
+    <UseOnlineNames>Online namenlĳst gebruiken</UseOnlineNames>
     <WordAddedX>Woord toegevoegd: {0}</WordAddedX>
     <WordAlreadyExists>Woord bestaat al!</WordAlreadyExists>
     <WordNotFound>Woord niet gevonden</WordNotFound>
@@ -2220,7 +2220,7 @@ Probeer het later opnieuw.</XDownloadFailed>
     <SkipOnce>Deze overslaan</SkipOnce>
     <SkipAll>Alle &amp;overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Toevoegen aan naam/ruis-lĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Toevoegen aan namenlĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
     <Abort>&amp;Afbreken</Abort>
     <Use>Hier gebruiken</Use>
@@ -2234,7 +2234,7 @@ Probeer het later opnieuw.</XDownloadFailed>
     <AutoFixNames>Automatische correctie van hoofd-/kleine letters in namen</AutoFixNames>
     <CheckOneLetterWords>Naar onbekende éénletterwoorden vragen</CheckOneLetterWords>
     <TreatINQuoteAsING>Woordeinde “in'” als “ing” behandelen (alleen Engels)</TreatINQuoteAsING>
-    <RememberUseAlwaysList>'Altĳd gebruiken'-lĳst onthouden</RememberUseAlwaysList>
+    <RememberUseAlwaysList>‘Altĳd gebruiken’-lĳst onthouden</RememberUseAlwaysList>
     <ImageText>Afbeeldingstekst</ImageText>
     <SpellCheckCompleted>Spellingcontrole voltooid</SpellCheckCompleted>
     <SpellCheckAborted>Spellingcontrole afgebroken</SpellCheckAborted>
@@ -2323,9 +2323,9 @@ Probeer het later opnieuw.</XDownloadFailed>
     <SingleLineLengthMinimum>Lengte enkele regel – minimum: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Lengte enkele regel – maximum: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Lengte enkele regel – gemiddeld: {0}</SingleLineLengthAverage>
-    <SingleLineWidthMinimum>Breedte enkele regel - minimum: {0} pixels</SingleLineWidthMinimum>
-    <SingleLineWidthMaximum>Breedte enkele regel - maximum: {0} pixels</SingleLineWidthMaximum>
-    <SingleLineWidthAverage>Breedte enkele regel - gemiddeld: {0} pixels</SingleLineWidthAverage>
+    <SingleLineWidthMinimum>Breedte enkele regel – minimum: {0} pixels</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Breedte enkele regel – maximum: {0} pixels</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Breedte enkele regel – gemiddeld: {0} pixels</SingleLineWidthAverage>
     <DurationMinimum>Duur – minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur – maximum: {0:0.000} seconden</DurationMaximum>
     <DurationAverage>Duur – gemiddeld: {0:0.000} seconden</DurationAverage>
@@ -2434,7 +2434,7 @@ Probeer het later opnieuw.</XDownloadFailed>
     <FindText>Tekst zoeken</FindText>
     <GoToSubPosition>Naar ondertitelpositie</GoToSubPosition>
     <KeepChangesTitle>Wĳzigingen behouden?</KeepChangesTitle>
-    <KeepChangesMessage>'Visuele synchronisatie' heeft wĳzigingen aangebracht in de ondertitels.
+    <KeepChangesMessage>‘Visuele synchronisatie’ heeft wĳzigingen aangebracht in de ondertitels.
 
 Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <SynchronizationDone>Synchroniseren voltooid!</SynchronizationDone>
@@ -2496,7 +2496,7 @@ Wilt u deze wĳzigingen behouden?</KeepChangesMessage>
     <AllFixes>Alle correcties</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
-    <UnknownWordToGuessInLine>{0} ⇒ {1} via 'OCRFixReplaceList.xml' in tekst: {2}</UnknownWordToGuessInLine>
+    <UnknownWordToGuessInLine>{0} ⇒ {1} via ‘OCRFixReplaceList.xml’ in tekst: {2}</UnknownWordToGuessInLine>
     <OcrAutoCorrectionSpellChecking>Automatische correctie / spellingcontrole OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR-fouten corrigeren</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Tekst met bĳpassende tĳdcodes importeren...</ImportTextWithMatchingTimeCodes>
