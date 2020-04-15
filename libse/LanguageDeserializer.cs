@@ -1561,6 +1561,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/RemoveUnneededPeriods":
                     language.FixCommonErrors.RemoveUnneededPeriods = reader.Value;
                     break;
+                case "FixCommonErrors/FixCommas":
+                    language.FixCommonErrors.FixCommas = reader.Value;
+                    break;
                 case "FixCommonErrors/FixMissingSpaces":
                     language.FixCommonErrors.FixMissingSpaces = reader.Value;
                     break;

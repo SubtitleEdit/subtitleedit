@@ -666,6 +666,7 @@
             public string FixInvalidItalicTags { get; set; }
             public string RemoveUnneededSpaces { get; set; }
             public string RemoveUnneededPeriods { get; set; }
+            public string FixCommas { get; set; }
             public string FixMissingSpaces { get; set; }
             public string BreakLongLines { get; set; }
             public string RemoveLineBreaks { get; set; }

@@ -643,6 +643,7 @@ $HorzAlign          =   Center
         public bool MergeShortLinesAllTicked { get; set; }
         public bool UnneededSpacesTicked { get; set; }
         public bool UnneededPeriodsTicked { get; set; }
+        public bool FixCommasTicked { get; set; }
         public bool MissingSpacesTicked { get; set; }
         public bool AddMissingQuotesTicked { get; set; }
         public bool Fix3PlusLinesTicked { get; set; }
@@ -685,6 +686,7 @@ $HorzAlign          =   Center
             BreakLongLinesTicked = true;
             MergeShortLinesTicked = true;
             UnneededPeriodsTicked = true;
+            FixCommasTicked = true;
             UnneededSpacesTicked = true;
             MissingSpacesTicked = true;
             UppercaseIInsideLowercaseWordTicked = true;
@@ -4568,6 +4570,12 @@ $HorzAlign          =   Center
                 settings.CommonErrors.UnneededPeriodsTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("FixCommasTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.FixCommasTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MissingSpacesTicked");
             if (subNode != null)
             {
@@ -7150,6 +7158,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FixCommasTicked", settings.CommonErrors.FixCommasTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MissingSpacesTicked", settings.CommonErrors.MissingSpacesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString(CultureInfo.InvariantCulture));
