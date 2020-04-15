@@ -42,6 +42,34 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = s.Replace(",?", "?");
                     }
 
+                    if (p.Text.IndexOf('،') >= 0 && callbacks.Language == "ar")
+                    {
+                        var commaDoubleAr = new Regex(@"([\p{L}\d\s])(،،)([\p{L}\d\s])");
+                        var commaTripleAr = new Regex(@"([\p{L}\d\s])(، *، *،)([\p{L}\d\s])");
+                        var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s])(، *، *،)$");
+                        var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s])(،\s+،)([\p{L}\d\s])");
+                        s = commaDoubleAr.Replace(s, "$1،$3");
+                        s = commaTripleAr.Replace(s, "$1...$3");
+                        s = commaTripleEndOfLineAr.Replace(s, "$1...");
+                        s = commaWhiteSpaceBetweenAr.Replace(s, "$1،$3");
+
+                        while (s.Contains("،."))
+                        {
+                            s = s.Replace("،.", ".");
+                        }
+
+                        while (s.Contains("،!"))
+                        {
+                            s = s.Replace("،!", "!");
+                        }
+
+                        while (s.Contains("،?"))
+                        {
+                            s = s.Replace("،?", "?");
+                        }
+
+                    }
+
                     if (oldText != s)
                     {
                         fixCount++;
