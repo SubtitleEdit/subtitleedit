@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly HashSet<string> _blackList;
         private readonly string _languageName;
 
-        public NameList(string dictionaryFolder, string languageName, bool useOnlinenames, string namesUrl)
+        public NameList(string dictionaryFolder, string languageName, bool useOnlineNameList, string namesUrl)
         {
             _dictionaryFolder = dictionaryFolder;
             _languageName = languageName;
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             LoadNamesList(GetLocalNamesUserFileName()); // e.g: en_names_user.xml (culture sensitive)
             LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture sensitive)
-            if (useOnlinenames && !string.IsNullOrEmpty(namesUrl))
+            if (useOnlineNameList && !string.IsNullOrEmpty(namesUrl))
             {
                 try
                 {
@@ -166,11 +166,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
 
                 // Add removed name to blacklist
-                var xnode = nameListXml.CreateElement("name");
-                xnode.InnerText = name;
+                var nameNode = nameListXml.CreateElement("name");
+                nameNode.InnerText = name;
                 if (nameListXml.DocumentElement != null)
                 {
-                    nameListXml.DocumentElement.SelectSingleNode("blacklist")?.AppendChild(xnode);
+                    nameListXml.DocumentElement.SelectSingleNode("blacklist")?.AppendChild(nameNode);
                     var nodeToRemove = default(XmlNode);
 
                     // Remove remove-name from name-list
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 return false;
             }
 
-           var  text = input.Replace(Environment.NewLine, " ");
+            var text = input.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
 
             if (_namesMultiList.Contains(word))
@@ -302,6 +302,5 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             return false;
         }
-
     }
 }
