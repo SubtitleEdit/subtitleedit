@@ -1196,6 +1196,7 @@ namespace Nikse.SubtitleEdit.Controls
             Items.Clear();
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
+            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             var items = new ListViewItem[paragraphs.Count];
             for (var index = 0; index < paragraphs.Count; index++)
             {
@@ -1205,7 +1206,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     next = paragraphs[index + 1];
                 }
-                items[index] = MakeListViewItem(paragraph, next, null);
+                items[index] = MakeListViewItem(paragraph, next, null, font);
             }
 
             Items.AddRange(items);
@@ -1237,6 +1238,7 @@ namespace Nikse.SubtitleEdit.Controls
             var x = ListViewItemSorter;
             ListViewItemSorter = null;
             var items = new ListViewItem[paragraphs.Count];
+            var font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             for (var index = 0; index < paragraphs.Count; index++)
             {
                 var paragraph = paragraphs[index];
@@ -1246,7 +1248,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     next = paragraphs[index + 1];
                 }
-                items[index] = MakeListViewItem(paragraph, next, alternate);
+                items[index] = MakeListViewItem(paragraph, next, alternate, font);
             }
 
             Items.AddRange(items);
@@ -1415,7 +1417,7 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         return;
                     }
-                }                
+                }
             }
             if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                 item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
@@ -1437,7 +1439,7 @@ namespace Nikse.SubtitleEdit.Controls
             return timeCode.ToDisplayString();
         }
 
-        private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphAlternate)
+        private ListViewItem MakeListViewItem(Paragraph paragraph, Paragraph next, Paragraph paragraphAlternate, Font font)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
             foreach (var column in SubtitleColumns)
@@ -1485,7 +1487,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
-            item.Font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
+            item.Font = font;
             return item;
         }
 
