@@ -1717,7 +1717,7 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <NonDigit>Geen cĳfer (\D)</NonDigit>
     <AnyCharacter>Elk teken (.)</AnyCharacter>
     <AnyWhitespace>Elke witruimte (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Witruimte zonder breedte (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Geen witruimte (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
     <InCharacterGroup>In tekengroep ([a-z])</InCharacterGroup>
