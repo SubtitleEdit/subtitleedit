@@ -1,5 +1,5 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Core
                     return DialogType.DashBothLinesWithSpace;
             }
         }
-                
+
         private static string GetStartTags(string input)
         {
             var pre = new StringBuilder();
@@ -350,12 +350,9 @@ namespace Nikse.SubtitleEdit.Core
             var l0 = HtmlUtil.RemoveHtmlTags(lines[0]);
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
 
-            if (lines.Count == 2)
+            if (lines.Count == 2 && (l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
             {
-                if ((l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
-                {
-                    return true;
-                }
+                return true;
             }
 
             if (lines.Count == 3)
@@ -392,28 +389,18 @@ namespace Nikse.SubtitleEdit.Core
 
         private static bool IsDialogThreeLinesOneTwo(string l0, string l1, string l2)
         {
-            if (l0.HasSentenceEnding() &&
-                (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                !l1.HasSentenceEnding() &&
-                !(l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
-            {
-                return true;
-            }
-
-            return false;
+            return l0.HasSentenceEnding() &&
+                   (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                   !l1.HasSentenceEnding() &&
+                   !(l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar()));
         }
 
         private static bool IsDialogThreeLinesTwoOne(string l0, string l1, string l2)
         {
-            if (!l0.HasSentenceEnding() &&
-                l1.HasSentenceEnding() &&
-                !(l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                (l2.TrimStart().StartsWith(GetDashChar())) || l2.TrimStart().StartsWith(GetAlternateDashChar()))
-            {
-                return true;
-            }
-
-            return false;
+            return !l0.HasSentenceEnding() &&
+                   l1.HasSentenceEnding() &&
+                   !(l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
+                   (l2.TrimStart().StartsWith(GetDashChar())) || l2.TrimStart().StartsWith(GetAlternateDashChar());
         }
 
         private string GetLineStartFromDashStyle(int lineIndex)
@@ -435,6 +422,6 @@ namespace Nikse.SubtitleEdit.Core
 
         private static char GetDashChar() => '-';
 
-        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash
+        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
     }
 }
