@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (parentForm.GetType() != typeof(FixCommonErrors))
             {
-                _spellCheck = new OcrSpellCheck { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
+                _spellCheck = new OcrSpellCheck(_parentForm) { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
                 _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                     parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
             }

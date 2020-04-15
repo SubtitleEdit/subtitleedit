@@ -1266,6 +1266,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSub - Manual image to text";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VobSubOcrCharacter_FormClosing);
             this.Shown += new System.EventHandler(this.VobSubOcrCharacter_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();

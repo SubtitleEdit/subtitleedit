@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Core
+namespace Nikse.SubtitleEdit.Logic
 {
     /// <summary>
     /// Windows 7+ taskbar list - http://msdn.microsoft.com/en-us/library/windows/desktop/dd391692%28v=vs.85%29.aspx
@@ -11,8 +12,8 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly Lazy<bool> SupportedLazy = new Lazy<bool>(() => Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(6, 1));
         private static readonly Lazy<ITaskbarList3> TaskbarListLazy = new Lazy<ITaskbarList3>(() => (ITaskbarList3)new CLSID_TaskbarList());
 
-        public static bool Supported { get { return SupportedLazy.Value; } }
-        internal static ITaskbarList3 Taskbar { get { return TaskbarListLazy.Value; } }
+        public static bool Supported => SupportedLazy.Value;
+        internal static ITaskbarList3 Taskbar => TaskbarListLazy.Value;
 
         public static void MarkFullscreenWindow(IntPtr hwnd, bool fullScreen)
         {
@@ -36,6 +37,48 @@ namespace Nikse.SubtitleEdit.Core
             {
                 Taskbar.SetProgressValue(hwnd, (ulong)value, (ulong)max);
             }
+        }
+
+        private static int _timerBlinkCount;
+        private static Timer _timerBlink;
+        public static void StartBlink(Form form)
+        {
+            _timerBlinkCount = 0;
+            _timerBlink?.Dispose();
+            _timerBlink = new Timer { Interval = 500 };
+            _timerBlink.Tick += (o, args) =>
+            {
+                var handle = form.Handle;
+                if (!form.ShowInTaskbar)
+                {
+                    handle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                }
+
+                _timerBlink.Stop();
+                SetProgressValue(handle, _timerBlinkCount % 2 == 0 ? 0 : 100, 100);
+                if (_timerBlinkCount > 50 || Form.ActiveForm != null)
+                {
+                    SetProgressValue(handle, 0, 100);
+                    return;
+                }
+
+                _timerBlinkCount++;
+                _timerBlink.Start();
+            };
+            _timerBlink.Start();
+        }
+
+        public static void StopBlink(Form form)
+        {
+            _timerBlink?.Stop();
+            _timerBlink?.Dispose();
+
+            var handle = form.Handle;
+            if (!form.ShowInTaskbar)
+            {
+                handle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+            }
+            SetProgressValue(handle, 0, 100);
         }
 
         [ClassInterface(ClassInterfaceType.None),

@@ -38,12 +38,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         public string OriginalWholeText { get; private set; }
 
         private string _originalWord;
+        private readonly Form _blinkForm;
 
-        public OcrSpellCheck()
+        public OcrSpellCheck(Form blinkForm)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            _blinkForm = blinkForm;
             Text = Configuration.Settings.Language.SpellCheck.Title;
             buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
             buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
@@ -360,6 +362,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             HighLightWord(richTextBoxParagraph, textBoxWord.Text);
             ButtonEditWordClick(null, null);
             textBoxWord.DeselectAll();
+
+            if (ActiveForm == null)
+            {
+                TaskbarList.StartBlink(_blinkForm);
+            }
+        }
+
+        private void OcrSpellCheck_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TaskbarList.StopBlink(_blinkForm);
         }
     }
 }
