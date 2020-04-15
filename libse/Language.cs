@@ -795,6 +795,7 @@ namespace Nikse.SubtitleEdit.Core
                 FixInvalidItalicTags = "Fix invalid italic tags",
                 RemoveUnneededSpaces = "Remove unneeded spaces",
                 RemoveUnneededPeriods = "Remove unneeded periods",
+                FixCommas = "Fix commas",
                 FixMissingSpaces = "Fix missing spaces",
                 BreakLongLines = "Break long lines",
                 RemoveLineBreaks = "Remove line breaks in short texts with only one sentence",

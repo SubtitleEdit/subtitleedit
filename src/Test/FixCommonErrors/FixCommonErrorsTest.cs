@@ -2266,6 +2266,56 @@ namespace Test.FixCommonErrors
             Assert.AreEqual("안녕하세요...", sub.Paragraphs[0].Text);
         }
 
+        [TestMethod]
+        public void FixCommas1()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi,, how are you?", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("Hi, how are you?", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas2()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi, , how are you?", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("Hi, how are you?", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas3()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi,,,", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("Hi...", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas4()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi,!", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("Hi!", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas5()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("Hi,,, are you okay?", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("Hi... are you okay?", sub.Paragraphs[0].Text);
+        }
+
         #endregion
 
         #region Fix Danish letter "i"
@@ -2465,7 +2515,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("but we need to do it.", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixContinuationStyle2()
         {
@@ -2673,7 +2723,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("- this right now.", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixContinuationStyle15()
         {
@@ -2699,7 +2749,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("- ...this right now." + Environment.NewLine + "- You kidding me?", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixContinuationStyle17()
         {
@@ -2738,7 +2788,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("To see if it works.", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixContinuationStyle20()
         {
@@ -2764,7 +2814,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("...to see if it works.", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         [TestMethod]
         public void FixContinuationStyle22()
         {
@@ -2908,7 +2958,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("...test...", _subtitle.Paragraphs[1].Text);
             }
         }
-        
+
         /*[TestMethod]
         public void FixContinuationStyle32()
         {

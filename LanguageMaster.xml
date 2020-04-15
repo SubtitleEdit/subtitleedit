@@ -598,6 +598,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixInvalidItalicTags>Fix invalid italic tags</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Remove unneeded spaces</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Remove unneeded periods</RemoveUnneededPeriods>
+    <FixCommas>Fix commas</FixCommas>
     <FixMissingSpaces>Fix missing spaces</FixMissingSpaces>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>

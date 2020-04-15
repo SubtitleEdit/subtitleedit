@@ -27,30 +27,31 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexTooShortGap = 4;
         private const int IndexInvalidItalicTags = 5;
         private const int IndexUnneededSpaces = 6;
-        private const int IndexUnneededPeriods = 7;
-        private const int IndexMissingSpaces = 8;
-        private const int IndexBreakLongLines = 9;
-        private const int IndexMergeShortLines = 10;
-        private const int IndexMergeShortLinesAll = 11;
-        private const int IndexDoubleApostropheToQuote = 12;
-        private const int IndexFixMusicNotation = 13;
-        private const int IndexAddPeriodAfterParagraph = 14;
-        private const int IndexStartWithUppercaseLetterAfterParagraph = 15;
-        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 16;
-        private const int IndexStartWithUppercaseLetterAfterColon = 17;
-        private const int IndexAddMissingQuotes = 18;
-        private const int IndexFixHyphens = 19;
-        private const int IndexRemoveHyphensSingleLine = 20;
-        private const int IndexFix3PlusLines = 21;
-        private const int IndexFixDoubleDash = 22;
-        private const int IndexFixDoubleGreaterThan = 23;
-        private const int IndexFixContinuationStyle = 24;
-        private const int IndexFixMissingOpenBracket = 25;
-        private const int IndexFixOcrErrorsViaReplaceList = 26;
-        private const int IndexUppercaseIInsideLowercaseWord = 27;
-        private const int IndexRemoveSpaceBetweenNumbers = 28;
-        private const int IndexDialogsOnOneLine = 29;
-        private const int IndexFixEllipsesStart = 30;
+        private const int IndexMissingSpaces = 7;
+        private const int IndexUnneededPeriods = 8;
+        private const int IndexFixCommas = 9;
+        private const int IndexBreakLongLines = 10;
+        private const int IndexMergeShortLines = 11;
+        private const int IndexMergeShortLinesAll = 12;
+        private const int IndexDoubleApostropheToQuote = 13;
+        private const int IndexFixMusicNotation = 14;
+        private const int IndexAddPeriodAfterParagraph = 15;
+        private const int IndexStartWithUppercaseLetterAfterParagraph = 16;
+        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 17;
+        private const int IndexStartWithUppercaseLetterAfterColon = 18;
+        private const int IndexAddMissingQuotes = 19;
+        private const int IndexFixHyphens = 20;
+        private const int IndexRemoveHyphensSingleLine = 21;
+        private const int IndexFix3PlusLines = 22;
+        private const int IndexFixDoubleDash = 23;
+        private const int IndexFixDoubleGreaterThan = 24;
+        private const int IndexFixContinuationStyle = 25;
+        private const int IndexFixMissingOpenBracket = 26;
+        private const int IndexFixOcrErrorsViaReplaceList = 27;
+        private const int IndexUppercaseIInsideLowercaseWord = 28;
+        private const int IndexRemoveSpaceBetweenNumbers = 29;
+        private const int IndexDialogsOnOneLine = 30;
+        private const int IndexFixEllipsesStart = 31;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -379,8 +380,9 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixShortGaps, string.Empty, () => new FixShortGaps().Fix(Subtitle, this), ce.TooShortGapTicked),
                 new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, () => new FixInvalidItalicTags().Fix(Subtitle, this), ce.InvalidItalicTagsTicked),
                 new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, () => new FixUnneededSpaces().Fix(Subtitle, this), ce.UnneededSpacesTicked),
-                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, () => new FixUnneededPeriods().Fix(Subtitle, this), ce.UnneededPeriodsTicked),
                 new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, () => new FixMissingSpaces().Fix(Subtitle, this), ce.MissingSpacesTicked),
+                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, () => new FixUnneededPeriods().Fix(Subtitle, this), ce.UnneededPeriodsTicked),
+                new FixItem(_language.FixCommas, ",, -> ,", () => new FixCommas().Fix(Subtitle, this), ce.FixCommasTicked),
                 new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
                 new FixItem(_language.RemoveLineBreaks, string.Empty, () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, () => new FixShortLinesAll().Fix(Subtitle, this), ce.MergeShortLinesAllTicked),
@@ -454,7 +456,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return Configuration.Settings.Language.Settings.DialogStyleDashBothLinesWithSpace;
         }
-        
+
         public FixCommonErrors()
         {
             UiUtil.PreInitialize(this);
@@ -1057,6 +1059,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.InvalidItalicTagsTicked = listView1.Items[IndexInvalidItalicTags].Checked;
             ce.UnneededSpacesTicked = listView1.Items[IndexUnneededSpaces].Checked;
             ce.UnneededPeriodsTicked = listView1.Items[IndexUnneededPeriods].Checked;
+            ce.FixCommasTicked = listView1.Items[IndexFixCommas].Checked;
             ce.MissingSpacesTicked = listView1.Items[IndexMissingSpaces].Checked;
             ce.BreakLongLinesTicked = listView1.Items[IndexBreakLongLines].Checked;
             ce.MergeShortLinesTicked = listView1.Items[IndexMergeShortLines].Checked;
@@ -1085,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
             }
-            
+
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;
             if (_indexAloneLowercaseIToUppercaseIEnglish >= 0)
             {
