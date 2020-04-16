@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
 
             InitializeLanguageNames(new LanguageItem(null, "-Auto-"));
             int languageIndex = 0;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             InitializeLanguageNames();
             int languageIndex = 0;
             int j = 0;
@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             InitializeLanguageNames();
             int languageIndex = 0;
             int j = 0;
@@ -1869,7 +1869,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBoxLanguage.SelectedItem is LanguageItem ci)
                 {
                     _autoDetectGoogleLanguage = ci.Code.TwoLetterISOLanguageName;
-                    AddFixActions(ci.Code.ThreeLetterISOLanguageName);
+                    AddFixActions(ci.Code.GetThreeLetterIsoLanguageName());
                 }
             }
         }
@@ -1882,7 +1882,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonResetDefault_Click(object sender, EventArgs e)
         {
             Configuration.Settings.CommonErrors.SetDefaultFixes();
-            AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).ThreeLetterISOLanguageName);
+            AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).GetThreeLetterIsoLanguageName());
         }
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)

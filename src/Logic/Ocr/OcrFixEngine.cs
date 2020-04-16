@@ -207,10 +207,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
 
                                 var ci = CultureInfo.GetCultureInfo(name);
-                                var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
-                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName ||
-                                    threeLetterCode == threeLetterIsoLanguageName ||
-                                    ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+                                if (ci.GetThreeLetterIsoLanguageName() == threeLetterIsoLanguageName ||
+                                    ci.GetThreeLetterIsoLanguageName().Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
                                     break;
@@ -248,10 +246,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
 
                         var ci = CultureInfo.GetCultureInfo(name);
-                        var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
-                        if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName ||
-                            threeLetterCode == threeLetterIsoLanguageName ||
-                            ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
+                        if (ci.GetThreeLetterIsoLanguageName() == threeLetterIsoLanguageName ||
+                            ci.GetThreeLetterIsoLanguageName().Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                         {
                             dicFileName = dic;
                             break;

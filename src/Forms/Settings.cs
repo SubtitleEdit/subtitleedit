@@ -1033,7 +1033,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             comboBoxRulesProfileName.EndUpdate();
-            if (comboBoxRulesProfileName.SelectedIndex < 0 && comboBoxRulesProfileName.Items.Count > 0)
+            if (comboBoxRulesProfileName.SelectedIndex < 0 && comboBoxRulesProfileName.Items.Count > 0 && comboBoxRulesProfileName.Items.Count > 0)
             {
                 comboBoxRulesProfileName.SelectedIndex = 0;
             }
@@ -1493,8 +1493,8 @@ namespace Nikse.SubtitleEdit.Forms
                 // Neutral culture e.g: "en" for all (en-US, en-GB, en-JM...)
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
-                    string ocrFixGeneralFile = Path.Combine(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml");
-                    string ocrFixUserFile = Path.Combine(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml");
+                    string ocrFixGeneralFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList.xml");
+                    string ocrFixUserFile = Path.Combine(dir, culture.GetThreeLetterIsoLanguageName() + "_OCRFixReplaceList_User.xml");
                     string namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
                     if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile))
                     {
@@ -1502,7 +1502,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var ci in cultures)
                         {
                             // If culture is already added to the list, it doesn't matter if it's "culture specific" do not re-add.
-                            if (ci.ThreeLetterISOLanguageName.Equals(culture.ThreeLetterISOLanguageName, StringComparison.Ordinal))
+                            if (ci.GetThreeLetterIsoLanguageName().Equals(culture.GetThreeLetterIsoLanguageName(), StringComparison.Ordinal))
                             {
                                 alreadyInList = true;
                                 break;
@@ -1981,7 +1981,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.ThreeLetterISOLanguageName);
+            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.GetThreeLetterIsoLanguageName());
             if (reloadListBox)
             {
                 listBoxOcrFixList.BeginUpdate();
@@ -3219,7 +3219,7 @@ namespace Nikse.SubtitleEdit.Forms
             _rulesProfiles[idx].MergeLinesShorterThan = comboBoxMergeShortLineLength.SelectedIndex + 5;
             _rulesProfiles[idx].DialogStyle = DialogSplitMerge.GetDialogStyleFromIndex(comboBoxDialogStyle.SelectedIndex);
             _rulesProfiles[idx].ContinuationStyle = ContinuationUtilities.GetContinuationStyleFromIndex(comboBoxContinuationStyle.SelectedIndex);
-            
+
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(_rulesProfiles[idx].ContinuationStyle));
         }
