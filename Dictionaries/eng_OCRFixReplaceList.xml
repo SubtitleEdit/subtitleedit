@@ -1304,6 +1304,7 @@
     <Word from="Ldid" to="I did" />
     <Word from="ldiot" to="Idiot" />
     <Word from="L'djump" to="I'd jump" />
+    <Word from="L'Il" to="I'll" />
     <Word from="ldon't" to="I don't" />
     <Word from="Ldon't" to="I don't" />
     <Word from="leastpeople" to="least people" />
@@ -2459,6 +2460,8 @@
     <Word from="Whodunit" to="Whodunnit" />
     <Word from="whoJuma" to="who Juma" />
     <Word from="whoJuma's" to="who Juma's" />
+    <Word from="whojust" to="who just" />
+    <Word from="Whojust" to="Who just" />
     <Word from="Whyyou" to="Why you" />
     <Word from="whyyou" to="why you" />
     <Word from="wi//" to="will" />
@@ -3060,6 +3063,7 @@
     <Beginning from="-l don't" to="-I don't" />
     <Beginning from="l don't" to="I don't" />
     <Beginning from="L " to="I " />
+    <Beginning from="L'Il " to="I'll " />
     <Beginning from="-L " to="-I " />
     <Beginning from="-l " to="-I " />
     <Beginning from="- l " to="- I " />

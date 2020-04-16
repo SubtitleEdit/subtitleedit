@@ -547,26 +547,42 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private bool GetReplaceWord(string pre, string word, string post, out string result)
         {
+            if (string.IsNullOrEmpty(pre) && string.IsNullOrEmpty(post))
+            {
+                if (WordReplaceList.ContainsKey(word))
+                {
+                    result = WordReplaceList[word];
+                    return true;
+                }
+
+                result = null;
+                return false;
+            }
+
             if (WordReplaceList.ContainsKey(pre + word + post))
             {
                 result = WordReplaceList[pre + word + post];
                 return true;
             }
+
             if (WordReplaceList.ContainsKey(pre + word))
             {
                 result = WordReplaceList[pre + word] + post;
                 return true;
             }
+
             if (WordReplaceList.ContainsKey(word + post))
             {
                 result = pre + WordReplaceList[word + post];
                 return true;
             }
+
             if (WordReplaceList.ContainsKey(word))
             {
                 result = pre + WordReplaceList[word] + post;
                 return true;
             }
+
             result = null;
             return false;
         }
