@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxGenerateSceneChanges.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             checkBoxGenerateSceneChanges.Left = groupBoxInput.Left + listViewInputFiles.Width - checkBoxGenerateSceneChanges.Width;
             checkBoxGenerateSceneChanges.Visible = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            removeToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Remove;
+            removeAllToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             UiUtil.FixLargeFonts(this, buttonDone);
         }
 
