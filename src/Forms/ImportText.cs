@@ -1030,14 +1030,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetVideoFileName(string fileName)
         {
-            var videoExtensions = new[] { ".mkv", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mpg" };
             _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
             if (_videoFileName.EndsWith(".en", StringComparison.Ordinal))
             {
                 _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
             }
 
-            foreach (var ext in videoExtensions)
+            foreach (var ext in Utilities.VideoFileExtensions)
             {
                 if (File.Exists(_videoFileName + ext))
                 {
@@ -1049,7 +1048,7 @@ namespace Nikse.SubtitleEdit.Forms
             var dir = Path.GetDirectoryName(fileName);
             if (dir != null)
             {
-                foreach (var ext in videoExtensions)
+                foreach (var ext in Utilities.VideoFileExtensions)
                 {
                     var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*" + ext);
                     if (files.Length > 0)
