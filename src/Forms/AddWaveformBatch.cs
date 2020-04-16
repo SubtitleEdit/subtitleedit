@@ -63,9 +63,20 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var idx = listViewInputFiles.SelectedIndices[0];
+            listViewInputFiles.BeginUpdate();
             for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
+            }
+            listViewInputFiles.EndUpdate();
+            if (idx >= 0 && idx < listViewInputFiles.Items.Count)
+            {
+                listViewInputFiles.Items[idx].Selected = true;
+            }
+            else if (listViewInputFiles.Items.Count > 0)
+            {
+                listViewInputFiles.Items[listViewInputFiles.Items.Count - 1].Selected = true;
             }
         }
 
@@ -123,6 +134,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSearchFolder_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.ShowNewFolderButton = false;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.WaveformBatchLastFolder) &&
+                Directory.Exists(Configuration.Settings.Tools.WaveformBatchLastFolder))
+            {
+                folderBrowserDialog1.SelectedPath = Configuration.Settings.Tools.WaveformBatchLastFolder;
+            }
+
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 listViewInputFiles.BeginUpdate();
@@ -141,17 +158,30 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonInputBrowse.Enabled = true;
                 buttonSearchFolder.Enabled = true;
                 listViewInputFiles.EndUpdate();
+                Configuration.Settings.Tools.WaveformBatchLastFolder = folderBrowserDialog1.SelectedPath;
             }
         }
 
         private void SearchFolder(string path)
         {
-            foreach (string fileName in Directory.GetFiles(path))
+            if (checkBoxScanFolderRecursive.Checked)
+            {
+                ScanFiles(Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories));
+            }
+            else
+            {
+                ScanFiles(Directory.EnumerateFiles(path));
+            }
+        }
+
+        private void ScanFiles(IEnumerable<string> fileNames)
+        {
+            foreach (string fileName in fileNames)
             {
                 try
                 {
-                    string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (Utilities.VideoFileExtensions.Contains(ext))
+                    string ext = Path.GetExtension(fileName);
+                    if (ext != null && Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()))
                     {
                         var fi = new FileInfo(fileName);
                         if (ext == ".mkv" && FileUtil.IsVobSub(fileName))
@@ -173,21 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     // ignored
-                }
-            }
-            if (checkBoxScanFolderRecursive.Checked)
-            {
-                foreach (string directory in Directory.GetDirectories(path))
-                {
-                    if (directory != "." && directory != "..")
-                    {
-                        SearchFolder(directory);
-                    }
-
-                    if (_abort)
-                    {
-                        return;
-                    }
                 }
             }
         }
@@ -442,10 +457,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            listViewInputFiles.BeginUpdate();
             foreach (string fileName in fileNames)
             {
-                AddInputFile(fileName);
+                if (File.Exists(fileName))
+                {
+                    AddInputFile(fileName);
+                }
+                else if (Directory.Exists(fileName))
+                {
+                    SearchFolder(fileName);
+                }
             }
+            listViewInputFiles.EndUpdate();
         }
 
         private void ListViewInputFiles_KeyDown(object sender, KeyEventArgs e)
