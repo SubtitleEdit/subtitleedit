@@ -575,6 +575,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             comboBoxLineSplitMinLineHeight.SelectedIndex = 0;
+
+            if (comboBoxDictionaries.SelectedIndex == -1)
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
+            }
         }
 
         private void FillSpellCheckDictionaries()
@@ -4151,7 +4156,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             //OCR fix engine
             string textWithOutFixes = line;
-            if (_ocrFixEngine.IsDictionaryLoaded)
+            if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
             {
                 var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
                 if (checkBoxGuessUnknownWords.Checked)
@@ -5076,6 +5081,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_subtitle.Paragraphs.Count == 0)
             {
                 return;
+            }
+
+            if (comboBoxDictionaries.SelectedIndex <= 0)
+            {
+                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
             }
 
             InitializeTopAlign();
