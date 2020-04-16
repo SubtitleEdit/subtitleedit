@@ -169,9 +169,9 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ShowMore>Meer weergeven  ▼</ShowMore>
   </AudioToText>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>Geselecteerde teksten uitlĳnen</TitleAutoBreak>
-    <TitleUnbreak>Regeleinden uit geselecteerde teksten verwĳderen</TitleUnbreak>
-    <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
+    <TitleAutoBreak>Geselecteerde titels uitlĳnen</TitleAutoBreak>
+    <TitleUnbreak>Regeleinden uit geselecteerde titels verwĳderen</TitleUnbreak>
+    <LinesFoundX>Gevonden titels: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Regel afbreken indien langer dan</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Regels samenvoegen indien tekst langer dan</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
@@ -256,7 +256,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <NamesFoundInSubtitleX>Gevonden namen: {0}</NamesFoundInSubtitleX>
     <Enabled>Ingeschakeld</Enabled>
     <Name>Naam</Name>
-    <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
+    <LinesFoundX>Gevonden titels: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Beeldsnelheid wĳzigen</Title>
@@ -1048,11 +1048,11 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
         <ChangeCasing>Hoofd-/kleine letters wĳzigen...</ChangeCasing>
         <ChangeFrameRate>Beeldsnelheid wĳzigen...</ChangeFrameRate>
         <ChangeSpeedInPercent>Snelheid procentueel wĳzigen...</ChangeSpeedInPercent>
-        <MergeShortLines>Korte teksten samenvoegen...</MergeShortLines>
-        <MergeDuplicateText>Identieke teksten samenvoegen...</MergeDuplicateText>
-        <MergeSameTimeCodes>Teksten met dezelfde tĳdcodes samenvoegen...</MergeSameTimeCodes>
-        <SplitLongLines>Lange teksten opdelen...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Minimale weergavetĳd tussen teksten...</MinimumDisplayTimeBetweenParagraphs>
+        <MergeShortLines>Korte titels samenvoegen...</MergeShortLines>
+        <MergeDuplicateText>Identieke titels samenvoegen...</MergeDuplicateText>
+        <MergeSameTimeCodes>Titels met dezelfde tĳdcodes samenvoegen...</MergeSameTimeCodes>
+        <SplitLongLines>Lange titels opdelen...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Minimale weergavetĳd tussen titels...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorteren op</SortBy>
         <NetflixQualityCheck>Netflix-kwaliteitscontrole...</NetflixQualityCheck>
         <Number>Nummer</Number>
@@ -1100,7 +1100,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
         <SpellCheck>&amp;Spellingcontrole...</SpellCheck>
         <SpellCheckFromCurrentLine>Spellingcontrole vanaf huidige tekst...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Dubbele woorden zoeken</FindDoubleWords>
-        <FindDoubleLines>Dubbele teksten zoeken</FindDoubleLines>
+        <FindDoubleLines>Dubbele regels zoeken</FindDoubleLines>
         <GetDictionaries>Woordenboeken downloaden...</GetDictionaries>
         <AddToNameList>Woord aan namenlĳst toevoegen</AddToNameList>
       </SpellCheck>
@@ -1406,7 +1406,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <XLinesSavedAsY>{0} titels opgeslagen als {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} titels verwĳderd</XLinesDeleted>
     <BeforeDeletingXLines>Vóór verwĳderen van {0:#.##0} titels</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>{0:#,##0} teksten verwĳderen?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>{0:#,##0} titels verwĳderen?</DeleteXLinesPrompt>
     <OneLineDeleted>Tekst verwĳderd</OneLineDeleted>
     <BeforeDeletingOneLine>Vóór verwĳderen van één titel</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Eén titel verwĳderen?</DeleteOneLinePrompt>
@@ -1474,7 +1474,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <WordXNotAddedToUserDic>Het woord ‘{0}’ is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Woordpaar ‘{0} -&gt; {1}’ is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Woordpaar ‘{0} -&gt; {1}’ is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
-    <XLinesSelected>{0} teksten geselecteerd</XLinesSelected>
+    <XLinesSelected>{0} titels geselecteerd</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat Unicode-muzieknootsymbolen. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Ondertitel bevat negatieve tĳdcodes. Toch opslaan?</NegativeTimeWarning>
     <BeforeMergeShortLines>Vóór samenvoegen korte titels</BeforeMergeShortLines>
@@ -1483,7 +1483,7 @@ Wilt u deze bewerking voortzetten?</SubtitleAppendPrompt>
     <LongLinesSplitX>Aantal opgedeelde titels: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Vóór overbruggen tussenruimten</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Vóór bepalen minimum-weergavetĳd tussen ondertitels</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Aantal teksten met gewĳzigde minimum-weergavetĳd: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Aantal titels met gewĳzigde minimum-weergavetĳd: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Vóór importeren van platte tekst</BeforeImportText>
     <TextImported>Tekst geïmporteerd</TextImported>
     <BeforePointSynchronization>Vóór puntsynchronisatie</BeforePointSynchronization>
@@ -1615,7 +1615,7 @@ Indien u dit bestand met Subtitle Edit hebt bewerkt, kunt u een vorige versie vi
     <AddToCurrentSelection>Met huidige selectie verenigen</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Van huidige selectie aftrekken</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Met huidige selectie doorsnĳden</IntersectWithCurrentSelection>
-    <MatchingLinesX>Overeenkomende teksten: {0}</MatchingLinesX>
+    <MatchingLinesX>Overeenkomende titels: {0}</MatchingLinesX>
     <Contains>Bevat</Contains>
     <StartsWith>Begint met</StartsWith>
     <EndsWith>Eindigt met</EndsWith>
@@ -2268,7 +2268,7 @@ Probeer het later opnieuw.</XDownloadFailed>
     <Basic>Basis</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Lange teksten opdelen</Title>
+    <Title>Lange titels opdelen</Title>
     <SingleLineMaximumLength>Maximale regellengte</SingleLineMaximumLength>
     <LineMaximumLength>Maximale titellengte</LineMaximumLength>
     <LineContinuationBeginEndStrings>Tekens voor in-/uitpunten titels</LineContinuationBeginEndStrings>
