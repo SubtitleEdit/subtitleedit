@@ -8,6 +8,8 @@
    * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
    * Line width pixels in main-win/syntax-validation/statistics - thx Flitskikker
    * Add shortcuts for extending to line before/after - thx Flitskikker
+   * Add "snap to scene change" option for waveform - thx Flitskikker
+   * Add FCE rule about commas - thx Jamakmake/OmrSi
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
    * Add new subtitle format - thx Bersu
@@ -49,6 +51,8 @@
    * Optimize Sami format read speed - thx Jamakmake
    * Speed up resize of main windows a little
    * Handle Unicode dash \u2010 in remove text for HI - thx JereckNET
+   * Remember last folder in "Batch convert waveforms" - thx Tony
+   * Add some OCR blink in Taskbar - thx wtester7
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
