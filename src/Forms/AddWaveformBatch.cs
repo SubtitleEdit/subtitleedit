@@ -97,13 +97,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonInputBrowse.Enabled = true;
         }
 
-        private static readonly ICollection<string> ExcludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
         private void AddInputFile(string fileName)
         {
             try
             {
                 var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
-                if (string.IsNullOrEmpty(ext) || ExcludedExtensions.Contains(ext))
+                if (string.IsNullOrEmpty(ext) ||
+                    !Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()) &&
+                    !Utilities.AudioFileExtensions.Contains(ext.ToLowerInvariant()))
                 {
                     return;
                 }
@@ -181,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     string ext = Path.GetExtension(fileName);
-                    if (ext != null && Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()))
+                    if (ext != null && (Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()) || Utilities.AudioFileExtensions.Contains(ext.ToLowerInvariant())))
                     {
                         var fi = new FileInfo(fileName);
                         if (ext == ".mkv" && FileUtil.IsVobSub(fileName))
