@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var commaDouble = new Regex(@"([\p{L}\d\s])(,,)([\p{L}\d\s])");
-            var commaTriple = new Regex(@"([\p{L}\d\s])(, *, *,)([\p{L}\d\s])");
+            var commaTriple = new Regex(@"([\p{L}\d\s])( *, *, *,)([\p{L}\d\s])");
             var commaTripleEndOfLine = new Regex(@"([\p{L}\d\s])(, *, *,)$");
             var commaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s])(,\s+,)([\p{L}\d\s])");
             var commaFollowedByLetter = new Regex(@",(\p{L})");
@@ -18,38 +18,41 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                if (p.Text.IndexOf(',') >= 0 && callbacks.AllowFix(p, fixAction))
+                if ((p.Text.IndexOf(',') >= 0 || p.Text.IndexOf('،') >= 0) && callbacks.AllowFix(p, fixAction))
                 {
                     var s = p.Text;
                     var oldText = s;
 
-                    s = commaDouble.Replace(s, "$1,$3");
-                    s = commaTriple.Replace(s, "$1...$3");
-                    s = commaTripleEndOfLine.Replace(s, "$1...");
-                    s = commaWhiteSpaceBetween.Replace(s, "$1,$3");
-                    s = commaFollowedByLetter.Replace(s, ", $1");
-
-                    while (s.Contains(",."))
+                    if (p.Text.IndexOf(',') >= 0)
                     {
-                        s = s.Replace(",.", ".");
+                        s = commaDouble.Replace(s, "$1,$3");
+                        s = commaTriple.Replace(s, "$1...$3");
+                        s = commaTripleEndOfLine.Replace(s, "$1...");
+                        s = commaWhiteSpaceBetween.Replace(s, "$1,$3");
+                        s = commaFollowedByLetter.Replace(s, ", $1");
+
+                        while (s.Contains(",."))
+                        {
+                            s = s.Replace(",.", ".");
+                        }
+
+                        while (s.Contains(",!"))
+                        {
+                            s = s.Replace(",!", "!");
+                        }
+
+                        while (s.Contains(",?"))
+                        {
+                            s = s.Replace(",?", "?");
+                        }
                     }
 
-                    while (s.Contains(",!"))
+                    if (p.Text.IndexOf('،') >= 0)
                     {
-                        s = s.Replace(",!", "!");
-                    }
-
-                    while (s.Contains(",?"))
-                    {
-                        s = s.Replace(",?", "?");
-                    }
-
-                    if (p.Text.IndexOf('،') >= 0 && callbacks.Language == "ar")
-                    {
-                        var commaDoubleAr = new Regex(@"([\p{L}\d\s])(،،)([\p{L}\d\s])");
-                        var commaTripleAr = new Regex(@"([\p{L}\d\s])(، *، *،)([\p{L}\d\s])");
-                        var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s])(، *، *،)$");
-                        var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s])(،\s+،)([\p{L}\d\s])");
+                        var commaDoubleAr = new Regex(@"([\p{L}\d\s])( *،،)([\p{L}\d\s])");
+                        var commaTripleAr = new Regex(@"([\p{L}\d\s])( *، *، *،)([\p{L}\d\s])");
+                        var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s])( *، *، *،)$");
+                        var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s])( *،\s+،)([\p{L}\d\s])");
                         var commaFollowedByLetterAr = new Regex(@"،(\p{L})");
                         s = commaDoubleAr.Replace(s, "$1،$3");
                         s = commaTripleAr.Replace(s, "$1...$3");
@@ -71,7 +74,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             s = s.Replace("،?", "?");
                         }
-
                     }
 
                     if (oldText != s)

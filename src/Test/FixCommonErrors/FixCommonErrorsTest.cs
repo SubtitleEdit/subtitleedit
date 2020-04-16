@@ -2316,6 +2316,16 @@ namespace Test.FixCommonErrors
             Assert.AreEqual("Hi... are you okay?", sub.Paragraphs[0].Text);
         }
 
+        [TestMethod]
+        public void FixCommasArabic()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("مرحبا ، ، مرحبا", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback { Language = "ar" });
+            Assert.AreEqual("مرحبا، مرحبا", sub.Paragraphs[0].Text);
+        }
+
         #endregion
 
         #region Fix Danish letter "i"
