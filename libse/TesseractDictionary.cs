@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                var cultureInfo = cultures.FirstOrDefault(ci => string.Equals(ci.ThreeLetterISOLanguageName, code, StringComparison.OrdinalIgnoreCase));
+                var cultureInfo = cultures.FirstOrDefault(ci => string.Equals(ci.GetThreeLetterIsoLanguageName(), code, StringComparison.OrdinalIgnoreCase));
                 if (cultureInfo != null)
                 {
                     code = cultureInfo.EnglishName;

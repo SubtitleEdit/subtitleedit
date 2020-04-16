@@ -7013,17 +7013,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (!string.IsNullOrEmpty(LanguageString))
                     {
                         var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
-                        _languageId = ci.ThreeLetterISOLanguageName;
-                        threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
-                        if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
-                        {
-                            var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
-                            if (!string.IsNullOrEmpty(threeLetters))
-                            {
-                                threeLetterIsoLanguageName = threeLetters;
-                                _languageId = threeLetters;
-                            }
-                        }
+                        _languageId = ci.GetThreeLetterIsoLanguageName();
                     }
                 }
                 catch
@@ -7561,15 +7551,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _ocrFixEngine?.Dispose();
                 _ocrFixEngine = null;
                 var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
-                threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
-                if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
-                {
-                    var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(ci.TwoLetterISOLanguageName);
-                    if (!string.IsNullOrEmpty(threeLetters))
-                    {
-                        threeLetterIsoLanguageName = threeLetters;
-                    }
-                }
+                threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             }
             catch
             {
@@ -7580,15 +7562,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         if (string.Equals(x.TwoLetterISOLanguageName, arr[0], StringComparison.OrdinalIgnoreCase))
                         {
-                            threeLetterIsoLanguageName = x.ThreeLetterISOLanguageName;
-                            if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
-                            {
-                                var threeLetters = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(x.TwoLetterISOLanguageName);
-                                if (!string.IsNullOrEmpty(threeLetters))
-                                {
-                                    threeLetterIsoLanguageName = threeLetters;
-                                }
-                            }
+                            threeLetterIsoLanguageName = x.GetThreeLetterIsoLanguageName();
                             break;
                         }
                     }

@@ -7578,7 +7578,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var twoLetterLower = x.TwoLetterISOLanguageName.ToLowerInvariant();
                         if (!languages.Contains(twoLetterLower) &&
-                            !languages.Contains(x.ThreeLetterISOLanguageName.ToLowerInvariant()) &&
+                            !languages.Contains(x.GetThreeLetterIsoLanguageName().ToLowerInvariant()) &&
                             twoLetterLower != "iv")
                         {
                             moreLanguages.Add(x);

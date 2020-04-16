@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             try
             {
                 var ci = new CultureInfo(LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle));
-                threeLetterLanguage = ci.ThreeLetterISOLanguageName;
+                threeLetterLanguage = ci.GetThreeLetterIsoLanguageName();
                 languageDisplay = ci.EnglishName;
             }
             catch

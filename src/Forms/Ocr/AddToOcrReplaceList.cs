@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             try
             {
                 var ci = CultureInfo.GetCultureInfo(languageString.Replace('_', '-'));
-                _threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                _threeLetterIsoLanguageName = ci.GetThreeLetterIsoLanguageName();
             }
             catch (CultureNotFoundException exception)
             {
