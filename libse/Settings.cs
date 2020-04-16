@@ -201,6 +201,7 @@ namespace Nikse.SubtitleEdit.Core
         public int BatchConvertTsScreenHeight { get; set; }
         public string BatchConvertTsFileNameAppend { get; set; }
         public string BatchConvertMkvLanguageCodeStyle { get; set; }
+        public string WaveformBatchLastFolder { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -3594,6 +3595,12 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertMkvLanguageCodeStyle = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("WaveformBatchLastFolder");
+            if (subNode != null)
+            {
+                settings.Tools.WaveformBatchLastFolder = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
             {
@@ -6967,6 +6974,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertTsScreenHeight", settings.Tools.BatchConvertTsScreenHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertTsFileNameAppend", settings.Tools.BatchConvertTsFileNameAppend);
                 textWriter.WriteElementString("BatchConvertMkvLanguageCodeStyle", settings.Tools.BatchConvertMkvLanguageCodeStyle);
+                textWriter.WriteElementString("WaveformBatchLastFolder", settings.Tools.WaveformBatchLastFolder);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString(CultureInfo.InvariantCulture));
