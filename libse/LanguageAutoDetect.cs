@@ -194,7 +194,10 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsHungarian =
         {
-            "hogy", "lesz", "tudom", "vagy", "mondtam", "még"
+            "hogy", "lesz", "tudom", "vagy", "mondtam", "még", "vagyok", "csak", "Hát", "felesége", "Csak", "utána", "jött",
+            "Miért", "Akkor", "magát", "holnap", "Tudja", "Köszönöm", "élet", "Örvendek", "vissza", "hogy", "tudom", "Rendben",
+            "Istenem", "Gyerünk", "értem", "vagyok", "hiszem", "történt", "rendben", "olyan", "őket", "vannak", "mindig", "Kérlek",
+            "Gyere", "kicsim", "vagyunk"
         };
 
         private static readonly string[] AutoDetectWordsTurkish =
@@ -1103,6 +1106,11 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 if (GetCount(textEnc1250, AutoDetectWordsCzechAndSlovak) > wordMinCount)
+                {
+                    return encoding1250;
+                }
+
+                if (GetCount(textEnc1250, AutoDetectWordsHungarian) > wordMinCount)
                 {
                     return encoding1250;
                 }
