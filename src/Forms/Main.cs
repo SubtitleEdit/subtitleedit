@@ -7110,6 +7110,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SetStartTimeAndDuration(index, p, _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                 }
             }
+
+            _subtitleListViewIndex = -1;
+            SubtitleListview1_SelectedIndexChanged(null, null);
         }
 
         private int GetPositionFromWordIndex(string text, int wordIndex)
