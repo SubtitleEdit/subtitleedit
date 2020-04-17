@@ -6968,6 +6968,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 SelectBestImageCompareDatabase();
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
+            {
+                using (var form = new BinaryOcrTrain())
+                {
+                    form.ShowDialog(this);
+                }
+            }
         }
 
         private void ComboBoxTesseractLanguagesSelectedIndexChanged(object sender, EventArgs e)
