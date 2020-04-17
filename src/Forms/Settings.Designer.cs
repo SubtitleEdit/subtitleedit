@@ -651,6 +651,7 @@
             // comboBoxContinuationStyle
             // 
             this.comboBoxContinuationStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxContinuationStyle.DropDownWidth = 190;
             this.comboBoxContinuationStyle.FormattingEnabled = true;
             this.comboBoxContinuationStyle.Location = new System.Drawing.Point(203, 324);
             this.comboBoxContinuationStyle.Name = "comboBoxContinuationStyle";
