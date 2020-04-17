@@ -1173,12 +1173,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            if (string.IsNullOrEmpty(lastLine) ||
-                lastLine.EndsWith('.') ||
-                lastLine.EndsWith('!') ||
-                lastLine.EndsWith('?') ||
-                lastLine.EndsWith(']') ||
-                lastLine.EndsWith('♪'))
+            var lastLineNoTags = lastLine;
+            if (!string.IsNullOrEmpty(lastLineNoTags))
+            {
+                lastLineNoTags = HtmlUtil.RemoveHtmlTags(lastLineNoTags);
+                lastLineNoTags = lastLineNoTags.Trim('♪', '♫', ' ', '"');
+                if (lastLine.EndsWith(']') && lastLineNoTags.IndexOf('[') > 0 &&
+                    Utilities.CountTagInText(lastLineNoTags, '[') == 1 && Utilities.CountTagInText(lastLineNoTags, ']') == 1)
+                {
+                    lastLineNoTags = lastLineNoTags.Substring(0, lastLineNoTags.IndexOf('[')).Trim();
+                }
+            }
+
+            if (string.IsNullOrEmpty(lastLine) || lastLineNoTags.HasSentenceEnding(Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(_threeLetterIsoLanguageName)))
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
                 var st = new StrippableText(text);
@@ -1212,6 +1219,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 uppercaseLetter = 'I';
                                 st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
                             }
+
                             st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
                             text = st.Pre + st.StrippedText + st.Post;
                         }
