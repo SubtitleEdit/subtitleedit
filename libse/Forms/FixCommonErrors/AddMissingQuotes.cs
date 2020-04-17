@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     { // not dialog
                         if (p.Text.StartsWith('"'))
                         {
-                            if (next == null || !next.Text.Contains('"') && p.Text.HasSentenceEnding())
+                            if (next == null || !next.Text.Contains('"') && p.Text.HasSentenceEnding(callbacks.Language))
                             {
                                 p.Text += "\"";
                             }

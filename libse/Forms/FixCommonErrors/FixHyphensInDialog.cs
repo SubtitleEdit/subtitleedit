@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var dialogHelper = new DialogSplitMerge
             {
                 DialogStyle = Configuration.Settings.General.DialogStyle,
-                AllowDialogWithNoSentenceEnding = LanguageAutoDetect.IsLanguageWithoutPeriods(callbacks.Language),
+                TwoLetterLanguageCode = callbacks.Language,
                 ContinuationStyle = Configuration.Settings.General.ContinuationStyle
             };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)

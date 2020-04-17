@@ -7,9 +7,14 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class DialogSplitMerge
     {
+        public static readonly string TwoLetterLanguageCodeSkipEndingCheck = "skip-ending-check";
+
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
-        public bool AllowDialogWithNoSentenceEnding { get; set; }
+        public string TwoLetterLanguageCode { get; set; }
+
+        private static char GetDashChar() => '-';
+        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
 
         public string FixDashesAndSpaces(string input)
         {
@@ -349,8 +354,9 @@ namespace Nikse.SubtitleEdit.Core
 
             var l0 = HtmlUtil.RemoveHtmlTags(lines[0]);
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
+            var noLineEnding = TwoLetterLanguageCode == TwoLetterLanguageCodeSkipEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
 
-            if (lines.Count == 2 && (l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
+            if (lines.Count == 2 && (l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
             {
                 return true;
             }
@@ -375,9 +381,9 @@ namespace Nikse.SubtitleEdit.Core
                     return true;
                 }
 
-                if ((l0.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) &&
+                if ((l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
                     (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                    (l1.HasSentenceEnding() || AllowDialogWithNoSentenceEnding) &&
+                    (l1.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) &&
                     (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar())))
                 {
                     return true;
@@ -387,18 +393,18 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-        private static bool IsDialogThreeLinesOneTwo(string l0, string l1, string l2)
+        private bool IsDialogThreeLinesOneTwo(string l0, string l1, string l2)
         {
-            return l0.HasSentenceEnding() &&
+            return l0.HasSentenceEnding(TwoLetterLanguageCode) &&
                    (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                   !l1.HasSentenceEnding() &&
+                   !l1.HasSentenceEnding(TwoLetterLanguageCode) &&
                    !(l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar()));
         }
 
-        private static bool IsDialogThreeLinesTwoOne(string l0, string l1, string l2)
+        private bool IsDialogThreeLinesTwoOne(string l0, string l1, string l2)
         {
-            return !l0.HasSentenceEnding() &&
-                   l1.HasSentenceEnding() &&
+            return !l0.HasSentenceEnding(TwoLetterLanguageCode) &&
+                   l1.HasSentenceEnding(TwoLetterLanguageCode) &&
                    !(l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
                    (l2.TrimStart().StartsWith(GetDashChar())) || l2.TrimStart().StartsWith(GetAlternateDashChar());
         }
@@ -419,9 +425,5 @@ namespace Nikse.SubtitleEdit.Core
                     return string.Empty;
             }
         }
-
-        private static char GetDashChar() => '-';
-
-        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
     }
 }

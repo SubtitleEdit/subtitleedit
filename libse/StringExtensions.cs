@@ -473,6 +473,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool HasSentenceEnding(this string value)
         {
+            return value.HasSentenceEnding(string.Empty);
+        }
+
+        public static bool HasSentenceEnding(this string value, string twoLetterLanguageCode)
+        {
             if (string.IsNullOrEmpty(value))
             {
                 return false;
@@ -485,7 +490,8 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var last = s[s.Length - 1];
-            return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟';
+            return last == '.' || last == '!' || last == '?' || last == ']' || last == ')' || last == '…' || last == '♪' || last == '؟' ||
+                   twoLetterLanguageCode == "el" && last == ';' || twoLetterLanguageCode == "el" && last == '\u037E';
         }
     }
 }
