@@ -7,11 +7,10 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class DialogSplitMerge
     {
-        public static readonly string TwoLetterLanguageCodeSkipEndingCheck = "skip-ending-check";
-
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
         public string TwoLetterLanguageCode { get; set; }
+        public bool SkipLineEndingCheck { get; set; }
 
         private static char GetDashChar() => '-';
         private static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
@@ -354,7 +353,7 @@ namespace Nikse.SubtitleEdit.Core
 
             var l0 = HtmlUtil.RemoveHtmlTags(lines[0]);
             var l1 = HtmlUtil.RemoveHtmlTags(lines[1], true);
-            var noLineEnding = TwoLetterLanguageCode == TwoLetterLanguageCodeSkipEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
+            var noLineEnding = SkipLineEndingCheck || LanguageAutoDetect.IsLanguageWithoutPeriods(TwoLetterLanguageCode);
 
             if (lines.Count == 2 && (l0.HasSentenceEnding(TwoLetterLanguageCode) || noLineEnding) && (l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())))
             {
