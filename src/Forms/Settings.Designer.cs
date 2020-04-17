@@ -2298,6 +2298,7 @@
             this.groupBoxFfmpeg.Size = new System.Drawing.Size(419, 118);
             this.groupBoxFfmpeg.TabIndex = 2;
             this.groupBoxFfmpeg.TabStop = false;
+            this.groupBoxFfmpeg.Text = "FFmpeg";
             // 
             // buttonDownloadFfmpeg
             // 
@@ -3420,7 +3421,7 @@
             // 
             this.textBoxNamesOnline.Location = new System.Drawing.Point(6, 45);
             this.textBoxNamesOnline.Name = "textBoxNamesOnline";
-            this.textBoxNamesOnline.Size = new System.Drawing.Size(488, 21);
+            this.textBoxNamesOnline.Size = new System.Drawing.Size(764, 21);
             this.textBoxNamesOnline.TabIndex = 28;
             this.textBoxNamesOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/n" +
     "ames.xml";

@@ -537,7 +537,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveformTextColor.Text = language.WaveformTextColor;
             buttonWaveformBackgroundColor.Text = language.WaveformBackgroundColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
-            groupBoxFfmpeg.Top = groupBoxSpectrogram.Top;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
             labelSpectrogramAppearance.Text = language.SpectrogramAppearance;
             comboBoxSpectrogramAppearance.Items.Clear();
