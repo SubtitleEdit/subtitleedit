@@ -431,7 +431,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 pre += Environment.NewLine;
                 word = word.Substring(2);
             }
-
             while (word.Length > 1 && word[0] == '-')
             {
                 pre += "-";
@@ -457,46 +456,28 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.Length > 2 && word.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+
+            while (word.Length > Environment.NewLine.Length && word.EndsWith(Environment.NewLine, StringComparison.Ordinal))
             {
-                post += Environment.NewLine;
-                word = word.Substring(0, word.Length - 2);
+                post = Environment.NewLine + post;
+                word = word.Substring(0, word.Length - Environment.NewLine.Length);
             }
-            while (word.Length > 1 && word.EndsWith('"'))
+            if (word.EndsWith("</i>", StringComparison.Ordinal))
             {
-                post = post + "\"";
-                word = word.Substring(0, word.Length - 1);
+                post = "</i>" + post;
+                word = word.Remove(word.Length - 4, 4);
             }
-            while (word.Length > 1 && word.EndsWith('.'))
+            while (word.Length > 1 && "\".,!?)]:;".Contains(word[word.Length - 1]))
             {
-                post = post + ".";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith(',') && word.Length > 1)
-            {
-                post = post + ",";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith('?') && word.Length > 1)
-            {
-                post = post + "?";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith('!') && word.Length > 1)
-            {
-                post = post + "!";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith(')') && word.Length > 1)
-            {
-                post = post + ")";
+                post = word[word.Length - 1] + post;
                 word = word.Substring(0, word.Length - 1);
             }
             if (word.EndsWith("</i>", StringComparison.Ordinal))
             {
-                post = post + "</i>";
+                post = "</i>" + post;
                 word = word.Remove(word.Length - 4, 4);
             }
+
             string preWordPost = pre + word + post;
             if (word.Length == 0)
             {
