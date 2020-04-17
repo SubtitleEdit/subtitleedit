@@ -90,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, comboBoxTimeCode.Text) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, comboBoxTimeCode.Text, Utilities.GetCharactersPerSecond(p1)) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, comboBoxTimeCode.Text, Utilities.GetCharactersPerSecond(p2)) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
@@ -114,7 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
             s = s.Replace("{actor}", "{7}");
             s = s.Replace("{text-line-1}", "{8}");
             s = s.Replace("{text-line-2}", "{9}");
-            s = s.Replace("{actor}", "{7}");
+            s = s.Replace("{cps-comma}", "{10}");
+            s = s.Replace("{cps-period}", "{11}");
+            s = s.Replace("{text-length}", "{12}");
             s = s.Replace("{tab}", "\t");
             return s;
         }
@@ -307,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, string actor, TimeCode duration, string timeCodeTemplate)
+        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, string actor, TimeCode duration, string timeCodeTemplate, double cps)
         {
             string d = duration.ToString();
             if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
@@ -389,7 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
             string s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2, cps.ToString(CultureInfo.InvariantCulture).Replace(".", ","), cps.ToString(CultureInfo.InvariantCulture), text.Length);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;
