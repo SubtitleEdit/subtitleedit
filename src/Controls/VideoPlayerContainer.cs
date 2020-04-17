@@ -416,7 +416,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 var paragraph = subtitle.Paragraphs[index];
                                 if (LanguageAutoDetect.ContainsRightToLeftLetter(paragraph.Text))
                                 {
-                                    paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
+                                    paragraph.Text = Utilities.FixRtlViaUnicodeChars(paragraph.Text);
                                 }
                             }
                         }
@@ -1231,8 +1231,8 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxPlayOverMouseUp(object sender, MouseEventArgs e)
-        {            
-            if (IsMouseOverControl((PictureBox) sender, e.Location))
+        {
+            if (IsMouseOverControl((PictureBox)sender, e.Location))
             {
                 HideAllPlayImages();
                 _pictureBoxPause.Visible = true;
@@ -1286,7 +1286,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxPauseOverMouseUp(object sender, MouseEventArgs e)
-        {            
+        {
             if (IsMouseOverControl((PictureBox)sender, e.Location))
             {
                 HideAllPauseImages();
@@ -1342,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxStopOverMouseUp(object sender, MouseEventArgs e)
-        {            
+        {
             if (IsMouseOverControl((PictureBox)sender, e.Location))
             {
                 HideAllStopImages();
@@ -1461,7 +1461,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private void PictureBoxMuteOverMouseUp(object sender, MouseEventArgs e)
-        {            
+        {
             if (IsMouseOverControl((PictureBox)sender, e.Location))
             {
                 HideAllMuteImages();
