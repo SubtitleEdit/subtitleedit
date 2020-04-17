@@ -28,6 +28,18 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
             radioButtonSelectedLineAndForward.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesAndForward;
             UiUtil.FixLargeFonts(this, buttonShowEarlier);
+
+            timeUpDownAdjust.MaskedTextBox.TextChanged += (sender, args) =>
+            {
+                if (timeUpDownAdjust.GetTotalMilliseconds() < 0)
+                {
+                    timeUpDownAdjust.SetTotalMilliseconds(0);
+                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(10), () =>
+                    {
+                        timeUpDownAdjust.SetTotalMilliseconds(0);
+                    });
+                }
+            };
         }
 
         public void ResetTotalAdjustment()
