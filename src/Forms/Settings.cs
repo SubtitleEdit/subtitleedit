@@ -537,6 +537,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveformTextColor.Text = language.WaveformTextColor;
             buttonWaveformBackgroundColor.Text = language.WaveformBackgroundColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
+            groupBoxFfmpeg.Top = groupBoxSpectrogram.Top;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
             labelSpectrogramAppearance.Text = language.SpectrogramAppearance;
             comboBoxSpectrogramAppearance.Items.Clear();
@@ -691,11 +692,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxGoogleTranslate.Text = language.GoogleTranslate;
             labelGoogleTranslateApiKey.Text = language.GoogleTranslateApiKey;
             linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp;
+            linkLabelGoogleTranslateSignUp.Left = textBoxGoogleTransleApiKey.Left + textBoxGoogleTransleApiKey.Width - linkLabelGoogleTranslateSignUp.Width;
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             labelBingApiKey.Text = language.MicrosoftTranslateApiKey;
             labelBingTokenEndpoint.Text = language.MicrosoftTranslateTokenEndpoint;
             linkLabelBingSubscribe.Text = language.HowToSignUp;
+            linkLabelBingSubscribe.Left = textBoxBingClientSecret.Left + textBoxBingClientSecret.Width - linkLabelGoogleTranslateSignUp.Width;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
