@@ -1445,5 +1445,9 @@ namespace Nikse.SubtitleEdit.Core
             return maxHitsLanguage.Value > 0 ? maxHitsLanguage.Key : null;
         }
 
+        public static bool IsLanguageWithoutPeriods(string language)
+        {
+            return language == "ko" || language == "zh" || language == "ja" || language == "th";
+        }
     }
 }

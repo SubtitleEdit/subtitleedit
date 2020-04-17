@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -10,7 +9,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = string.Format(language.FixHyphensInDialogs, Configuration.Settings.General.DialogStyle);
             int iFixes = 0;
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = IsLanguageWithoutPeriods(callbacks.Language), ContinuationStyle = Configuration.Settings.General.ContinuationStyle };
+            var dialogHelper = new DialogSplitMerge
+            {
+                DialogStyle = Configuration.Settings.General.DialogStyle,
+                AllowDialogWithNoSentenceEnding = LanguageAutoDetect.IsLanguageWithoutPeriods(callbacks.Language),
+                ContinuationStyle = Configuration.Settings.General.ContinuationStyle
+            };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
@@ -27,11 +31,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             callbacks.UpdateFixStatus(iFixes, fixAction, language.XHyphensInDialogsFixed);
-        }
-
-        private static bool IsLanguageWithoutPeriods(string language)
-        {
-            return new List<string> { "ko", "zh", "ja", "th" }.Contains(language);
         }
     }
 }
