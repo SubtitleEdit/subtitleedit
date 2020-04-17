@@ -166,7 +166,7 @@
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
             this.tabPageWaveform = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBoxFfmpeg = new System.Windows.Forms.GroupBox();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
             this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
@@ -404,7 +404,7 @@
             this.groupBoxVideoPlayerDefault.SuspendLayout();
             this.groupBoxVideoEngine.SuspendLayout();
             this.tabPageWaveform.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.groupBoxFfmpeg.SuspendLayout();
             this.groupBoxSpectrogram.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxWaveformAppearence.SuspendLayout();
@@ -2272,7 +2272,7 @@
             // 
             // tabPageWaveform
             // 
-            this.tabPageWaveform.Controls.Add(this.groupBox3);
+            this.tabPageWaveform.Controls.Add(this.groupBoxFfmpeg);
             this.tabPageWaveform.Controls.Add(this.groupBoxSpectrogram);
             this.tabPageWaveform.Controls.Add(this.groupBox1);
             this.tabPageWaveform.Controls.Add(this.groupBoxWaveformAppearence);
@@ -2283,21 +2283,21 @@
             this.tabPageWaveform.Text = "Waveform/spectrogram";
             this.tabPageWaveform.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
+            // groupBoxFfmpeg
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.Controls.Add(this.buttonDownloadFfmpeg);
-            this.groupBox3.Controls.Add(this.buttonBrowseToFFmpeg);
-            this.groupBox3.Controls.Add(this.textBoxFFmpegPath);
-            this.groupBox3.Controls.Add(this.labelFFmpegPath);
-            this.groupBox3.Controls.Add(this.checkBoxUseFFmpeg);
-            this.groupBox3.Location = new System.Drawing.Point(406, 266);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(419, 118);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
+            this.groupBoxFfmpeg.Controls.Add(this.buttonDownloadFfmpeg);
+            this.groupBoxFfmpeg.Controls.Add(this.buttonBrowseToFFmpeg);
+            this.groupBoxFfmpeg.Controls.Add(this.textBoxFFmpegPath);
+            this.groupBoxFfmpeg.Controls.Add(this.labelFFmpegPath);
+            this.groupBoxFfmpeg.Controls.Add(this.checkBoxUseFFmpeg);
+            this.groupBoxFfmpeg.Location = new System.Drawing.Point(406, 266);
+            this.groupBoxFfmpeg.Name = "groupBoxFfmpeg";
+            this.groupBoxFfmpeg.Size = new System.Drawing.Size(419, 118);
+            this.groupBoxFfmpeg.TabIndex = 2;
+            this.groupBoxFfmpeg.TabStop = false;
             // 
             // buttonDownloadFfmpeg
             // 
@@ -2744,7 +2744,7 @@
             this.tabPageTools.Location = new System.Drawing.Point(4, 22);
             this.tabPageTools.Name = "tabPageTools";
             this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTools.Size = new System.Drawing.Size(832, 515);
+            this.tabPageTools.Size = new System.Drawing.Size(832, 520);
             this.tabPageTools.TabIndex = 5;
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
@@ -2777,18 +2777,18 @@
             // 
             this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(94, 47);
             this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
-            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(304, 21);
+            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(290, 21);
             this.textBoxGoogleTransleApiKey.TabIndex = 26;
             // 
             // linkLabelGoogleTranslateSignUp
             // 
-            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(201, 15);
+            this.linkLabelGoogleTranslateSignUp.AutoSize = true;
+            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(306, 19);
             this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
-            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(183, 27);
+            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(78, 13);
             this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
             this.linkLabelGoogleTranslateSignUp.TabStop = true;
             this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
-            this.linkLabelGoogleTranslateSignUp.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
             // 
             // label3
@@ -2812,7 +2812,7 @@
             this.groupBoxBing.Controls.Add(this.label1);
             this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(404, 178);
+            this.groupBoxBing.Size = new System.Drawing.Size(404, 183);
             this.groupBoxBing.TabIndex = 32;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -2851,13 +2851,13 @@
             // 
             // linkLabelBingSubscribe
             // 
-            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(201, 15);
+            this.linkLabelBingSubscribe.AutoSize = true;
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(306, 17);
             this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
-            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(183, 27);
+            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(78, 13);
             this.linkLabelBingSubscribe.TabIndex = 24;
             this.linkLabelBingSubscribe.TabStop = true;
             this.linkLabelBingSubscribe.Text = "How to sign up";
-            this.linkLabelBingSubscribe.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
             // 
             // label1
@@ -3009,7 +3009,7 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 360);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 149);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 154);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -3243,7 +3243,7 @@
             this.tabPageWordLists.Location = new System.Drawing.Point(4, 22);
             this.tabPageWordLists.Name = "tabPageWordLists";
             this.tabPageWordLists.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageWordLists.Size = new System.Drawing.Size(832, 515);
+            this.tabPageWordLists.Size = new System.Drawing.Size(832, 520);
             this.tabPageWordLists.TabIndex = 3;
             this.tabPageWordLists.Text = "Word lists";
             this.tabPageWordLists.UseVisualStyleBackColor = true;
@@ -3504,7 +3504,7 @@
             this.tabPageToolBar.Location = new System.Drawing.Point(4, 22);
             this.tabPageToolBar.Name = "tabPageToolBar";
             this.tabPageToolBar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageToolBar.Size = new System.Drawing.Size(832, 515);
+            this.tabPageToolBar.Size = new System.Drawing.Size(832, 520);
             this.tabPageToolBar.TabIndex = 7;
             this.tabPageToolBar.Text = "Toolbar ";
             this.tabPageToolBar.UseVisualStyleBackColor = true;
@@ -3937,7 +3937,7 @@
             this.tabPageFont.Controls.Add(this.groupBoxFont);
             this.tabPageFont.Location = new System.Drawing.Point(4, 22);
             this.tabPageFont.Name = "tabPageFont";
-            this.tabPageFont.Size = new System.Drawing.Size(832, 515);
+            this.tabPageFont.Size = new System.Drawing.Size(832, 520);
             this.tabPageFont.TabIndex = 10;
             this.tabPageFont.Text = "Font";
             this.tabPageFont.UseVisualStyleBackColor = true;
@@ -4169,7 +4169,7 @@
             this.tabPageSsaStyle.Location = new System.Drawing.Point(4, 22);
             this.tabPageSsaStyle.Name = "tabPageSsaStyle";
             this.tabPageSsaStyle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSsaStyle.Size = new System.Drawing.Size(832, 515);
+            this.tabPageSsaStyle.Size = new System.Drawing.Size(832, 520);
             this.tabPageSsaStyle.TabIndex = 1;
             this.tabPageSsaStyle.Text = "SSA style";
             this.tabPageSsaStyle.UseVisualStyleBackColor = true;
@@ -4455,7 +4455,7 @@
             this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabPageNetwork.Name = "tabPageNetwork";
             this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNetwork.Size = new System.Drawing.Size(832, 515);
+            this.tabPageNetwork.Size = new System.Drawing.Size(832, 520);
             this.tabPageNetwork.TabIndex = 4;
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
@@ -4674,8 +4674,8 @@
             this.groupBoxVideoEngine.ResumeLayout(false);
             this.groupBoxVideoEngine.PerformLayout();
             this.tabPageWaveform.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.groupBoxFfmpeg.ResumeLayout(false);
+            this.groupBoxFfmpeg.PerformLayout();
             this.groupBoxSpectrogram.ResumeLayout(false);
             this.groupBoxSpectrogram.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -4979,7 +4979,7 @@
         private System.Windows.Forms.CheckBox checkBoxSsaOpaqueBox;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
         private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBoxFfmpeg;
         private System.Windows.Forms.Button buttonBrowseToFFmpeg;
         private System.Windows.Forms.TextBox textBoxFFmpegPath;
         private System.Windows.Forms.Label labelFFmpegPath;
