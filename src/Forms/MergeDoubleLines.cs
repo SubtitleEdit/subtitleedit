@@ -138,9 +138,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var next = subtitle.GetParagraphOrDefault(j);
-                    if ((MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween)) && IsFixAllowed(p))
+                    var incrementText = string.Empty;
+                    if ((MergeLinesSameTextUtils.QualifiesForMerge(p, next, maxMsBetween) || fixIncrementing && MergeLinesSameTextUtils.QualifiesForMergeIncrement(p, next, maxMsBetween, out incrementText)) && IsFixAllowed(p))
                     {
                         p.Text = next.Text;
+                        if (!string.IsNullOrEmpty(incrementText))
+                        {
+                            p.Text = incrementText;
+                        }
+
                         p.EndTime.TotalMilliseconds = next.EndTime.TotalMilliseconds;
                         if (lineNumbers.Length > 0)
                         {

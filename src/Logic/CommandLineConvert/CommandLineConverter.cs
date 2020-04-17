@@ -1156,7 +1156,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                 }
                                 break;
                             case BatchAction.MergeSameTexts:
-                                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, true, 250);
+                                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, 250);
                                 if (mergedSameTextsSub.Paragraphs.Count != sub.Paragraphs.Count)
                                 {
                                     sub.Paragraphs.Clear();
