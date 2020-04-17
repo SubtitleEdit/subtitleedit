@@ -82,36 +82,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (!isNextCloseAndStartsWithI)
                         {
                             //test to see if the first word of the next line is a name
-                            if (!callbacks.IsName(next.Text.Split(WordSplitChars)[0]) && callbacks.AllowFix(p, fixAction))
+                            if (callbacks.AllowFix(p, fixAction))
                             {
                                 string oldText = p.Text;
-                                if (p.Text.EndsWith('>'))
+                                if (callbacks.IsName(next.Text.Split(WordSplitChars)[0]))
                                 {
-                                    int lastLessThan = p.Text.LastIndexOf('<');
-                                    if (lastLessThan > 0)
+                                    if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000)
                                     {
-                                        p.Text = p.Text.Insert(lastLessThan, ".");
+                                        AddPeriod(p, tempNoHtml);
                                     }
                                 }
                                 else
                                 {
-                                    if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
-                                    {
-                                        p.Text = p.Text.TrimEnd('“') + ".“";
-                                    }
-                                    else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
-                                    {
-                                        p.Text = p.Text.TrimEnd('"') + ".\"";
-                                    }
-                                    else
-                                    {
-                                        var lines = p.Text.SplitToLines();
-                                        if (!IsOneLineUrl(lines.Last()))
-                                        {
-                                            p.Text += ".";
-                                        }
-                                    }
+                                    AddPeriod(p, tempNoHtml);
                                 }
+
                                 if (p.Text != oldText)
                                 {
                                     missingPeriodsAtEndOfLine++;
@@ -202,5 +187,35 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(missingPeriodsAtEndOfLine, language.AddPeriods, language.XPeriodsAdded);
         }
 
+        private static void AddPeriod(Paragraph p, string tempNoHtml)
+        {
+            if (p.Text.EndsWith('>'))
+            {
+                int lastLessThan = p.Text.LastIndexOf('<');
+                if (lastLessThan > 0)
+                {
+                    p.Text = p.Text.Insert(lastLessThan, ".");
+                }
+            }
+            else
+            {
+                if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
+                {
+                    p.Text = p.Text.TrimEnd('“') + ".“";
+                }
+                else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
+                {
+                    p.Text = p.Text.TrimEnd('"') + ".\"";
+                }
+                else
+                {
+                    var lines = p.Text.SplitToLines();
+                    if (!IsOneLineUrl(lines.Last()))
+                    {
+                        p.Text += ".";
+                    }
+                }
+            }
+        }
     }
 }
