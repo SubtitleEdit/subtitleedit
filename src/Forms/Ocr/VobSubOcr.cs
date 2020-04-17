@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
-
+            
             comboBoxTesseractEngineMode.Items.Clear();
             comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeLegacy);
             comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeNeural);
@@ -6555,6 +6555,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _modiEnabled = false;
             comboBoxModiLanguage.Enabled = false;
+
+            if (!Configuration.IsRunningOnWindows)
+            {
+                return;
+            }
+
             try
             {
                 InitializeModiLanguages();
