@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
@@ -25,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var dialogHelper = new DialogSplitMerge
             {
                 DialogStyle = Configuration.Settings.General.DialogStyle,
-                AllowDialogWithNoSentenceEnding = LanguageAutoDetect.IsLanguageWithoutPeriods(callbacks.Language),
+                TwoLetterLanguageCode = callbacks.Language,
                 ContinuationStyle = Configuration.Settings.General.ContinuationStyle
             };
             const string expectedChars = @"""”<.";
@@ -506,7 +505,5 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             return text.Substring(startIndex, endIndex - startIndex + 1);
         }
-
-
     }
 }

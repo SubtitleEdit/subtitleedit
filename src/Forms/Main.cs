@@ -15927,7 +15927,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var text = sb.ToString().Trim();
-                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = DialogSplitMerge.TwoLetterLanguageCodeSkipEndingCheck };
                 text = dialogHelper.FixDashesAndSpaces(text);
                 tb.Text = text;
             }
@@ -15935,7 +15935,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddDashes()
         {
-            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, AllowDialogWithNoSentenceEnding = true };
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = DialogSplitMerge.TwoLetterLanguageCodeSkipEndingCheck };
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
