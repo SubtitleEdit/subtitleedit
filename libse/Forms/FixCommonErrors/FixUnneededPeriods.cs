@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     var l = callbacks.Language;
-                    if (procText.Contains('.') && (l == "ko" || l == "ja" || l == "th" || l == "zh"))
+                    if (procText.Contains('.') && LanguageAutoDetect.IsLanguageWithoutPeriods(l))
                     {
                         var sb = new StringBuilder();
                         foreach (var line in procText.SplitToLines())

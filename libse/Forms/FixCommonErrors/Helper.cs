@@ -470,7 +470,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (parts.Count == 2 && !string.IsNullOrWhiteSpace(parts[0]))
                         {
                             var part0 = parts[0].TrimEnd().Trim('"');
-                            bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";
+                            bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || LanguageAutoDetect.IsLanguageWithoutPeriods(language);
                             if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':') && doAdd ||
                                 parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':') && doAdd)
                             {

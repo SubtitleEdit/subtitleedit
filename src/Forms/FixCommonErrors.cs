@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
             var ce = Configuration.Settings.CommonErrors;
 
             _oldFixContinuationStyleTicked = ce.FixContinuationStyleTicked;
-            if (Language == "ko" || Language == "zh" || Language == "ja" || Language == "th")
+            if (LanguageAutoDetect.IsLanguageWithoutPeriods(Language))
             {
                 ce.FixContinuationStyleTicked = false;
             }
@@ -1079,7 +1079,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixContinuationStyleTicked = listView1.Items[IndexFixContinuationStyle].Checked;
-            if (Language == "ko" || Language == "zh" || Language == "ja" || Language == "th")
+            if (LanguageAutoDetect.IsLanguageWithoutPeriods(Language))
             {
                 ce.FixContinuationStyleTicked = _oldFixContinuationStyleTicked;
             }
