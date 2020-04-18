@@ -597,6 +597,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixInvalidItalicTags>Ongeldige cursief-tags corrigeren</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Onnodige spaties verwĳderen</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Onnodige punten verwĳderen</RemoveUnneededPeriods>
+    <FixCommas>Onnodige komma's verwĳderen</FixCommas>
     <FixMissingSpaces>Ontbrekende spaties invoegen</FixMissingSpaces>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
     <RemoveLineBreaks>Regeleinde in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
