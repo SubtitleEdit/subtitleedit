@@ -5,9 +5,9 @@
    * Add "sentence continuation style" - thx Flitskikker
    * Allow generation of waveform without audio - thx serquis/grzesiek
    * "Auto-adjust start via volume/scene-change" shortcut - thx Odaylton
-   * Add new shortcut "Select next subtitle (from video pos)" - thx OmrSi
-   * Line width pixels in main-win/syntax-validation/statistics - thx Flitskikker
+   * Add shortcut "Select next subtitle (from video pos)" - thx OmrSi
    * Add shortcuts for extending to line before/after - thx Flitskikker
+   * Line width pixels in main-win/syntax-validation/statistics - thx Flitskikker
    * Add "snap to scene change" option for waveform - thx Flitskikker
    * Add FCE rule about commas - thx Jamakmake/OmrSi
    * Add new subtitle format - thx Marko
@@ -45,14 +45,17 @@
    * Improve "Fix unneeded periods for ko, zh, ja, th - thx Jamakmake
    * Sort plugins by name
    * Improve check for loss of characters due to ANSI encoding
+   * Improve ANSI encoding detection for Hungarian - thx Mounter81
    * Allow custom named Tesseract languages - thx Signy13
    * Improve "Tesseract download failed" message - thx Signy13
    * Update preview on video when changing ASS style
    * Optimize Sami format read speed - thx Jamakmake
-   * Speed up resize of main windows a little
+   * Speed up resize of main window a little
    * Handle Unicode dash \u2010 in remove text for HI - thx JereckNET
    * Remember last folder in "Batch convert waveforms" - thx Tony
    * Add some OCR blink in Taskbar - thx wtester7
+   * Add CPS+text-length to custom format - thx aaaxx/philippwr
+   * Support for Greek questionmark in dialogs - thx Lero91
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
@@ -76,6 +79,8 @@
    * Fix OCR word replace issue - thx thehulk
    * Fix crash after add new profile + reset - thx Jamakmake
    * Fix "color unknown words" issue in OCR - thx Signy13
+   * Fix switch of end chars in OCR-fix - thx moob 
+   * Fix RTL in MPV preview - thx darnn/OmrSi
 
 
 3.5.14 (8th March 2020)
