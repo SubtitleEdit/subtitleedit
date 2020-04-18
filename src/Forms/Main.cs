@@ -26935,20 +26935,21 @@ namespace Nikse.SubtitleEdit.Forms
             ToggleBookmarks(true);
         }
 
-
-        delegate string FixText(Paragraph p);
-
-        private void RunActionOnAllParagraphs(FixText action, string historyMessage)
+        private void RunActionOnAllParagraphs(Func<Paragraph, string> action, string historyMessage)
         {
             if (_subtitle.Paragraphs.Count <= 0 || SubtitleListview1.SelectedItems.Count <= 0)
             {
                 return;
             }
 
+            Cursor.Current = Cursors.WaitCursor;
+            int subCount = 0;
+            int originalSubCount = 0;
             int linesUpdated = 0;
-            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+            for (int i = SubtitleListview1.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                var p = _subtitle.GetParagraphOrDefault(item.Index);
+                int idx = SubtitleListview1.SelectedIndices[i];
+                var p = _subtitle.GetParagraphOrDefault(idx);
                 if (p != null)
                 {
                     var newText = action.Invoke(p);
@@ -26958,16 +26959,20 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MakeHistoryForUndo(historyMessage);
                         }
-
+                        if (newText.IsOnlyControlCharactersOrWhiteSpace())
+                        {
+                            _subtitle.Paragraphs.RemoveAt(idx);
+                        }
+                        else
+                        {
+                            p.Text = newText;
+                        }
                         linesUpdated++;
-                        p.Text = newText;
                     }
-
-                    SubtitleListview1.SetText(item.Index, p.Text);
 
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
-                        var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                        var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
                             newText = action.Invoke(original);
@@ -26977,20 +26982,41 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     MakeHistoryForUndo(historyMessage);
                                 }
-
+                                if (newText.IsOnlyControlCharactersOrWhiteSpace())
+                                {
+                                    _subtitleAlternate.Paragraphs.RemoveAt(idx);
+                                }
+                                else
+                                {
+                                    original.Text = newText;
+                                }
                                 linesUpdated++;
-                                original.Text = newText;
                             }
-
-                            SubtitleListview1.SetAlternateText(item.Index, original.Text);
                         }
                     }
                 }
             }
 
+            // nothing changed
+            if (linesUpdated == 0)
+            {
+                return;
+            }
+
+            if (subCount != _subtitle.Paragraphs.Count)
+            {
+                _subtitle.Renumber();
+            }
+            if (originalSubCount > 0 && originalSubCount != _subtitleAlternate.Paragraphs.Count)
+            {
+                _subtitleAlternate.Renumber();
+            }
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             ShowSource();
             RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.LinesUpdatedX, linesUpdated));
+            Cursor.Current = Cursors.Default;
         }
 
         private void removeAllFormattingsToolStripMenuItem_Click(object sender, EventArgs e)
