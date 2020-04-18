@@ -83,6 +83,8 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Width>Largura</Width>
     <Height>Altura</Height>
     <Collapse>Recolher</Collapse>
+    <ShortcutX>Atalho: {0}</ShortcutX>
+    <ExampleX>Exemplo: {0}</ExampleX>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -132,6 +134,7 @@ Linha de comando: {1} {2}
 Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <LowDiskSpace>ESPAÇO INSUFICIENTE EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Não foi encontrado áudio! Gerar forma de onda em branco?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Gerar pacote de dados de forma de onda</Title>
@@ -224,6 +227,12 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <TransportStreamFileNameEnding>Fim do nome do ficheiro</TransportStreamFileNameEnding>
     <TransportStreamSettingsButton>Configurações de TS...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Eliminar quebras de linha</RemoveLineBreaks>
+    <TryToUseSourceEncoding>Tentar usar a codificação de origem</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileName>"Idioma" no nome do ficheiro de saída</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Idioma" no nome do ficheiro de saída: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Código de idioma com 2 letras</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Código de idioma com 3 letras</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Sem código de idioma</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -297,7 +306,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </ColorChooser>
   <ColumnPaste>
     <Title>Colar coluna</Title>
-    <ChooseColumn>Escolha a coluna</ChooseColumn>
+    <ChooseColumn>Escolher coluna</ChooseColumn>
     <OverwriteShiftCellsDown>Substituir/Deslocar células para baixo</OverwriteShiftCellsDown>
     <Overwrite>Substituir</Overwrite>
     <ShiftCellsDown>Deslocar células para baixo</ShiftCellsDown>
@@ -514,7 +523,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
     <Forced>Forçada</Forced>
-    <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
+    <ChooseBackgroundColor>Escolher cor do fundo</ChooseBackgroundColor>
     <SaveImageAs>Guardar imagem como...</SaveImageAs>
     <FcpUseFullPathUrl>Utilizar o caminho completo do endereço no FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
@@ -589,6 +598,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixInvalidItalicTags>Corrigir etiquetas itálicas inválidas</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Eliminar espaços desnecessários</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Eliminar pontos desnecessários</RemoveUnneededPeriods>
+    <FixCommas>Corrigir vírgulas</FixCommas>
     <FixMissingSpaces>Corrigir espaços em falta</FixMissingSpaces>
     <BreakLongLines>Dividir linhas longas</BreakLongLines>
     <RemoveLineBreaks>Eliminar quebras de linha em textos curtos só com uma frase</RemoveLineBreaks>
@@ -690,6 +700,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
     <SelectDefault>Predefinição</SelectDefault>
+    <FixContinuationStyleX>Corrigir estilo de continuação: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} estilos de continuação corrigidos</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Eliminar reticências iniciais desnecessárias</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} reticências iniciais desnecessárias eliminadas</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -705,7 +719,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <DescriptionLine1>Obter Tesseract OCR dicionários da web</DescriptionLine1>
     <DownloadFailed>A transferência falhou!</DownloadFailed>
     <GetDictionariesHere>Obter dicionários aqui:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Escolha o seu idioma e clique em transferir</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Escolher o idioma e clicar transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta 'Dicionários'</OpenDictionariesFolder>
     <Download>Transferir</Download>
     <XDownloaded>{0} transferidos e instalados</XDownloaded>
@@ -733,7 +747,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <Translate>Traduzir</Translate>
     <SourceText>Texto original</SourceText>
     <GoogleTranslate>Tradutor do Google</GoogleTranslate>
-    <MicrosoftTranslate>Tradutor da Microsoft</MicrosoftTranslate>
+    <MicrosoftTranslate>Tradutor da Microsoft Bing</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Ir para a linha número</Title>
@@ -743,7 +757,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <Title>Importar imagens</Title>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
-    <InputDescription>Escolha os ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
     <Remove>Eliminar</Remove>
     <RemoveAll>Eliminar tudo</RemoveAll>
   </ImportImages>
@@ -1101,8 +1115,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
       </Synchronization>
       <AutoTranslate>
         <Title>Tradução automática</Title>
-        <TranslatePoweredByGoogle>Traduzir (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Traduzir (powered by Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByGoogle>Traduzir com o Google...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Traduzir com o Bing...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Traduzir de Sueco para Dinamarquês (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -1182,6 +1196,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
+        <ExtendToLineBefore>Prolongar até à linha anterior</ExtendToLineBefore>
+        <ExtendToLineAfter>Prolongar até à linha seguinte</ExtendToLineAfter>
         <RemoveFormatting>Eliminar formatação</RemoveFormatting>
         <RemoveFormattingAll>Eliminar qualquer formatação</RemoveFormattingAll>
         <RemoveFormattingBold>Eliminar negrito</RemoveFormattingBold>
@@ -1388,8 +1404,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <LineXOfY>line {0} de {1}</LineXOfY>
     <XLinesSavedAsY>{0} linhas guardadas como {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} linhas eliminadas</XLinesDeleted>
-    <BeforeDeletingXLines>Antes de eliminar {0} linhas</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Eliminar {0} linhas?</DeleteXLinesPrompt>
+    <BeforeDeletingXLines>Antes de eliminar {0:#,##0} linhas</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Eliminar {0:#,##0} linhas?</DeleteXLinesPrompt>
     <OneLineDeleted>Linha eliminada</OneLineDeleted>
     <BeforeDeletingOneLine>Antes de eliminar linha</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Deseja eliminar linha?</DeleteOneLinePrompt>
@@ -1510,7 +1526,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadingPluginXErrorY>Erro ao carregar plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Antes de executar plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Impossível de ler o resultado da legenda do plugin!</UnableToReadPluginResult>
-    <UnableToCreateBackupDirectory>É impossível de criar directório da cópia de segurança {0}: {1}</UnableToCreateBackupDirectory>
+    <UnableToCreateBackupDirectory>É impossível de criar a pasta da cópia de segurança {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Antes de juntar legendas</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Legendas unidas</SubtitlesJoined>
     <StatusLog>Estado do registo</StatusLog>
@@ -1538,7 +1554,7 @@ Deseja continuar?</PromptInsertSubtitleOverlap>
     <ErrorLoadBinaryZeroes>Lamentamos, mas este ficheiro só contém zeros no formato binário!
 
 Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de segurança através do menu Ficheiro -&gt; Restaurar cópia de segurança automática...</ErrorLoadBinaryZeroes>
-    <ErrorDirectoryDropNotAllowed>Arrastar e largar uma directoria não é suportado aqui.</ErrorDirectoryDropNotAllowed>
+    <ErrorDirectoryDropNotAllowed>Arrastar e largar uma pasta não é suportado aqui.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conteúdo encriptado do VobSub não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Ficheiros Blu-ray sup não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Ficheiros DVD sup não são suportados aqui.</NoSupportHereDvdSup>
@@ -1596,7 +1612,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <AddToCurrentSelection>Adicionar à selecção corrente</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Extrair da selecção corrente</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Intersectar com a selecção corrente</IntersectWithCurrentSelection>
-    <MatchingLinesX>Linhas com correspondência: {0}</MatchingLinesX>
+    <MatchingLinesX>Linhas com correspondência: {0:#,##0}</MatchingLinesX>
     <Contains>Contém</Contains>
     <StartsWith>Começa com</StartsWith>
     <EndsWith>Termina com</EndsWith>
@@ -1665,8 +1681,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <OpenDvdFrom>Abrir DVD apartir de...</OpenDvdFrom>
     <Disc>Disco</Disc>
     <Folder>Pasta</Folder>
-    <ChooseDrive>Escolha o disco</ChooseDrive>
-    <ChooseFolder>Escolha a pasta</ChooseFolder>
+    <ChooseDrive>Escolher disco</ChooseDrive>
+    <ChooseFolder>Escolher pasta</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
@@ -1859,6 +1875,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <TimeCodeMode>Modo de tempos</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Tipo de divisão</SplitBehavior>
+    <SplitBehaviorPrevious>Adicionar intervalo à esquerda do ponto de divisão</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Adicionar intervalo no centro do ponto de divisão</SplitBehaviorHalf>
+    <SplitBehaviorNext>Adicionar intervalo à direita do ponto de divisão</SplitBehaviorNext>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
@@ -1886,6 +1906,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Apenas um clique para seleccionar linhas</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Encaixar para mudar de cena (premir Shift para substituir)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
     <WaveformColor>Cor</WaveformColor>
@@ -1906,7 +1928,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
-    <ChooseColor>Escolha a cor</ChooseColor>
+    <ChooseColor>Escolher cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
@@ -1947,6 +1969,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Travessão em ambas as linhas sem espaço</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Travessão só na segunda linha com espaço</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Travessão só na segunda linha sem espaço</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Estilo de continuação</ContinuationStyle>
+    <ContinuationStyleNone>Nenhum</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Nenhum, reticências para pausas (apenas para continuação)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Nenhum, reticências para pausas</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Reticências (apenas para continuação de frases)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Reticências</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Travessão</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Travessão, mas reticências para pausas</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -1979,7 +2009,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Alongar o tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>Prolongar tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Prolongar linhas seleccionadas até à mudança de cena seguinte (ou linha seguinte)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToPreviousSceneChange>Prolongar linhas seleccionadas até à mudança de cena anterior (ou linha anterior)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Prolongar linhas seleccionadas até à linha seguinte</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Prolongar linhas seleccionadas até à linha anterior</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir travessões)</MergeDialog>
@@ -2020,6 +2054,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
+    <WaveformGuessStart>Ajuste automático do início através da mudança de volume/cena</WaveformGuessStart>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
     <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
     <GoBack1FrameWithPlay>Um fotograma para atrás (através do reprodutor)</GoBack1FrameWithPlay>
@@ -2032,8 +2067,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoForward1Second>Um segundo para a frente</GoForward1Second>
     <GoBack5Seconds>Cinco segundos para trás</GoBack5Seconds>
     <GoForward5Seconds>Cinco segundos para a frente</GoForward5Seconds>
+    <GoBack3Second>Três segundos para trás</GoBack3Second>
+    <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
+    <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
+    <PlayCurrent>Reproduzir linha actual</PlayCurrent>
     <WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
     <WaveformGoToNextSubtitle>Ir para a próxima linha (da posição do vídeo)</WaveformGoToNextSubtitle>
+    <WaveformSelectNextSubtitle>Seleccionar linha seguinte (da posição de vídeo, manter posição de vídeo)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Alternar reproduzir/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
@@ -2050,10 +2090,16 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SyntaxColorDurationIfTooSmall>Cor se a duração for muito curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Cor se a duração for muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Texto colorido se for muito longo</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Texto colorido se for muito longo (pixéis)</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Texto colorido se for superior a {0} linhas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Cor se houver tempos sobrepostos</SyntaxColorOverlap>
     <SyntaxColorGap>Cor se o intervalo for muito curto</SyntaxColorGap>
     <SyntaxErrorColor>Cor dos erros</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Configurações...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Configurações da largura da linha</LineWidthSettings>
+    <MaximumLineWidth>Largura máxima da linha:</MaximumLineWidth>
+    <Pixels>pixéis</Pixels>
+    <MeasureFont>Medição do tipo de letra:</MeasureFont>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>
     <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
@@ -2115,9 +2161,16 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
 
 Continuar?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Eliminar tempos</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Editar configurações para fixar o estilo de continuação...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Definições da fixação do estilo de continuação</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Detectar e desmarcar linhas só em maiúscula (por exemplo: SEM ENTRADA)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Detectar e desmarcar linhas em itálico, ou com símbolos musicais</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Detectar e desmarcar linhas, ou símbolos musicais, em minúsculas</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Ocultar pontuação improvavél de continuação de frases</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignorar letras de música entre símbolos musicais</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
-    <Title>Definições do mpv</Title>
+    <Title>Configurações do mpv</Title>
     <DownloadMpv>Transferir o mpv lib</DownloadMpv>
     <DownloadMpvFailed>Não é possível transferir o mpv - por favor, tente novamente mais tarde!</DownloadMpvFailed>
     <DownloadMpvOk>O mpv lib foi transferido e está disponível para ser usado.</DownloadMpvOk>
@@ -2266,6 +2319,9 @@ Continuar?</RestoreDefaultSettingsMsg>
     <SingleLineLengthMinimum>Comprimento de uma linha - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Comprimento de uma linha - máximo: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Comprimento de uma linha - médio: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Largura de uma linha - mínimo: {0} pixéis</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Largura de uma linha - máximo: {0} pixéis</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Largura de uma linha - média: {0} pixéis</SingleLineWidthAverage>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
@@ -2337,7 +2393,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <RemoveAll>Eliminar tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do ficheiro...</ImportStyleFromFile>
     <ExportStyleToFile>Exportar estilo para ficheiro... (adiciona o estilo se já existir o ficheiro)</ExportStyleToFile>
-    <ChooseStyle>Escolha o estilo para importar</ChooseStyle>
+    <ChooseStyle>Escolher estilo para importar</ChooseStyle>
     <StyleAlreadyExits>Estilo já existente: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Estilo '{0}' exportado para o ficheiro '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Estilo '{0}' importado do ficheiro '{1}'</StyleXImportedFromFileY>
@@ -2527,11 +2583,15 @@ Manter as alterações?</KeepChangesMessage>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
     <FocusTextBox>Destacar a caixa de texto</FocusTextBox>
+    <GoToPrevious>Ir para linha anterior</GoToPrevious>
+    <GoToNext>Ir para linha seguinte</GoToNext>
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
     <Split>Dividir</Split>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
     <MergeWithPrevious>Combinar com anterior</MergeWithPrevious>
     <MergeWithNext>Combinar com a seguinte</MergeWithNext>
+    <ExtendToPrevious>Prolongar até à anterior</ExtendToPrevious>
+    <ExtendToNext>Prolongar até à seguinte</ExtendToNext>
     <PlaySelection>Reporduzir a selecção</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar só forma de onda</ShowWaveformOnly>
