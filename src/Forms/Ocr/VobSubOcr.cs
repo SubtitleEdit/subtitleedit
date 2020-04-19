@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
-            
+
             comboBoxTesseractEngineMode.Items.Clear();
             comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeLegacy);
             comboBoxTesseractEngineMode.Items.Add(language.TesseractEngineModeNeural);
@@ -3958,7 +3958,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_ocrFixEngine == null)
             {
-                LoadOcrFixEngine(null, LanguageString);
+                LoadOcrFixEngine(string.Empty, LanguageString);
             }
 
             var matches = new List<CompareMatch>();
@@ -6987,7 +6987,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var l = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = l;
-            LoadOcrFixEngine(null, null);
+            LoadOcrFixEngine(string.Empty, string.Empty);
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {

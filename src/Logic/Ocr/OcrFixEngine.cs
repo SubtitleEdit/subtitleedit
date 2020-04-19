@@ -107,6 +107,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="isBinaryImageCompare">Calling from OCR via "Image compare"</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompare = false)
         {
+            if (string.IsNullOrEmpty(threeLetterIsoLanguageName))
+            {
+                if (hunspellName != null && hunspellName.Length >= 2)
+                {
+                    threeLetterIsoLanguageName = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(hunspellName.Substring(0, 2));
+                }
+                else
+                {
+                    threeLetterIsoLanguageName = string.Empty;
+                }
+            }
+
             IsBinaryImageCompare = isBinaryImageCompare;
             if (threeLetterIsoLanguageName == "per")
             {
