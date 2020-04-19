@@ -224,6 +224,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <TransportStreamSettingsButton>TS-indstillinger...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Fjern linjeskift</RemoveLineBreaks>
     <TryToUseSourceEncoding>Prøv at bruge kildekodning</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileName>"Sprog" i outputfilnavn</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>Matroska (.mkv) "Sprog" i outputfilnavnet: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>To bogstavs sprogkode</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Tre bogstavs sprogkode</MkvLanguageStyleThreeLetter>
@@ -594,6 +595,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixInvalidItalicTags>Ret ugyldige kursiv tags</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Fjern unødvendige mellemrum</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Fjern unødvendige punktummer</RemoveUnneededPeriods>
+    <FixCommas>Fix kommaer</FixCommas>
     <FixMissingSpaces>Ret manglende mellemrum</FixMissingSpaces>
     <BreakLongLines>Ombryd lange linjer</BreakLongLines>
     <RemoveLineBreaks>Fjern linjeskift i korte afsnit med kun én sætning</RemoveLineBreaks>
@@ -695,6 +697,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hej John! - Hej Ida! -&gt; Hej John!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
     <SelectDefault>Vælg standard</SelectDefault>
+    <FixContinuationStyleX>Fix fortsættelsestil: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} fast fortsættelsesstil</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Fjern unødvendige førende punktummer</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} fjernede unødvendige førende punktummer</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1958,6 +1964,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Dialog-bindestreg begge linjer uden mellemrum</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Dialog-bindestreg anden linje med mellemrum</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Dialog-bindestreg anden linje uden mellemrum</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Fortsættelsesstil</ContinuationStyle>
+    <ContinuationStyleNone>Ingen</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Ingen, punktummer til pauser (kun bageste)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Ingen, punktummer til pauser</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>punktummer (kun bageste)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Punktummer </ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Bindestreg</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Stip, men prikker til pauser</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
@@ -2141,6 +2155,13 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <RestoreDefaultSettingsMsg>Alle indstillinger vil blive sat til standardværdier.
 Fortsæt?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Fjern tidskoder</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Rediger indstillinger til fastsættelse af fortsættelsestil...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Indstillinger til fastsættelse af fortsættelsestil</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Registrer og fjern markeringen af ​​enkelt titler i all-caps (for eksempel: NO ENTRY)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Registrer og fjern markeringen af ​​kursive enkelt titler eller tekster</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Registrer og fjern markeringen af ​​enkelt titler eller tekster med små bogstaver</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Skjul usandsynlige fortsættelsessætninger</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignorer tekster mellem musiksymboler</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
