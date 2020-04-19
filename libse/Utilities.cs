@@ -2115,6 +2115,21 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
             }
 
+            if (language == "en" && text.ContainsNumber())
+            {
+                // 1 st => 1st
+                text = new Regex(@"(1) (st)\b").Replace(text, "$1$2");
+
+                // 2 nd => 2nd
+                text = new Regex(@"(2) (nd)\b").Replace(text, "$1$2");
+
+                // 3 rd => 2rd
+                text = new Regex(@"(3) (rd)\b").Replace(text, "$1$2");
+
+                // 4 th => 4th
+                text = new Regex(@"([0456789]) (th)\b").Replace(text, "$1$2");
+            }
+
             if (language != "fr") // special rules for French
             {
                 if (text.Contains(" !"))

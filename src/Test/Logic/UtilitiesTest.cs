@@ -594,7 +594,14 @@ namespace Test.Logic
             string s = Utilities.RemoveUnneededSpaces("The time is 8. 40.", "en");
             Assert.AreEqual("The time is 8.40.", s);
         }
-        
+
+        [TestMethod]
+        public void RemoveUnneededSpacesBetweenNumbersDates()
+        {
+            string s = Utilities.RemoveUnneededSpaces("The 4 th and 1 st 3 rd and 2 nd.", "en");
+            Assert.AreEqual("The 4th and 1st 3rd and 2nd.", s);
+        }
+
         [TestMethod]
         public void CountTagInTextStringOneLetterString()
         {
