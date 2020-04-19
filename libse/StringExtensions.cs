@@ -297,6 +297,26 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        public static bool ContainsNumber(this string s)
+        {
+            if (s == null)
+            {
+                return false;
+            }
+
+            int max = s.Length;
+            for (int index = 0; index < max; index++)
+            {
+                var ch = s[index];
+                if (char.IsNumber(ch))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string RemoveControlCharacters(this string s)
         {
             int max = s.Length;
