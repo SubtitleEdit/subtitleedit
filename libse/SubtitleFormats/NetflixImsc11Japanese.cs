@@ -738,59 +738,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return pText.ToString().TrimEnd();
         }
 
+        private static string[] GetTags() => new string[] { "<ruby-base>", "<ruby-text>", "</ruby-base>", "</ruby-text>", "<bouten-auto>",
+            "</bouten-auto>", "<ruby-container>", "<horizontalDigit>", "</ruby-container>", "<ruby-text-after>",
+            "<bouten-dot-after>", "</horizontalDigit>", "<ruby-base-italic>", "</ruby-text-after>", "<ruby-text-italic>",
+            "<bouten-dot-before>", "</bouten-dot-after>", "</ruby-base-italic>", "</ruby-text-italic>", "</bouten-dot-before>",
+            "<bouten-dot-outside>", "</bouten-dot-outside>", "<bouten-auto-outside>", "</bouten-auto-outside>",
+            "<bouten-open-dot-outside>", "</bouten-open-dot-outside>", "<bouten-open-circle-outside>", "<bouten-open-sesame-outside>",
+            "</bouten-open-circle-outside>", "</bouten-open-sesame-outside>", "<bouten-filled-circle-outside>",
+            "<bouten-filled-sesame-outside>", "</bouten-filled-circle-outside>", "</bouten-filled-sesame-outside>" };
+
         public static string RemoveTags(string text)
         {
-            return text
-                .Replace("<bouten-dot-before>", string.Empty)
-                .Replace("</bouten-dot-before>", string.Empty)
-
-                .Replace("<bouten-dot-after>", string.Empty)
-                .Replace("</bouten-dot-after>", string.Empty)
-
-                .Replace("<bouten-dot-outside>", string.Empty)
-                .Replace("</bouten-dot-outside>", string.Empty)
-
-                .Replace("<bouten-filled-circle-outside>", string.Empty)
-                .Replace("</bouten-filled-circle-outside>", string.Empty)
-
-                .Replace("<bouten-open-circle-outside>", string.Empty)
-                .Replace("</bouten-open-circle-outside>", string.Empty)
-
-                .Replace("<bouten-open-dot-outside>", string.Empty)
-                .Replace("</bouten-open-dot-outside>", string.Empty)
-
-                .Replace("<bouten-filled-sesame-outside>", string.Empty)
-                .Replace("</bouten-filled-sesame-outside>", string.Empty)
-
-                .Replace("<bouten-open-sesame-outside>", string.Empty)
-                .Replace("</bouten-open-sesame-outside>", string.Empty)
-
-                .Replace("<bouten-auto-outside>", string.Empty)
-                .Replace("</bouten-auto-outside>", string.Empty)
-
-                .Replace("<bouten-auto>", string.Empty)
-                .Replace("</bouten-auto>", string.Empty)
-
-                .Replace("<horizontalDigit>", string.Empty)
-                .Replace("</horizontalDigit>", string.Empty)
-
-                .Replace("<ruby-container>", string.Empty)
-                .Replace("</ruby-container>", string.Empty)
-
-                .Replace("<ruby-base>", string.Empty)
-                .Replace("</ruby-base>", string.Empty)
-
-                .Replace("<ruby-base-italic>", string.Empty)
-                .Replace("</ruby-base-italic>", string.Empty)
-
-                .Replace("<ruby-text>", string.Empty)
-                .Replace("</ruby-text>", string.Empty)
-
-                .Replace("<ruby-text-after>", string.Empty)
-                .Replace("</ruby-text-after>", string.Empty)
-
-                .Replace("<ruby-text-italic>", string.Empty)
-                .Replace("</ruby-text-italic>", string.Empty);
+            // min tag length
+            if (text.Length < 11)
+            {
+                return text;
+            }
+            if (!text.Contains('<'))
+            {
+                return text;
+            }
+            foreach (var tag in GetTags())
+            {
+                if (tag.Length > text.Length)
+                {
+                    continue;
+                }
+                text = text.Replace(tag, string.Empty);
+            }
+            return text;
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
