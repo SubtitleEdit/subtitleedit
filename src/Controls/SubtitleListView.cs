@@ -1508,12 +1508,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             BeginUpdate();
-            var selectedIndices = new List<int>(SelectedIndices.Count);
-            foreach (int selectedIndex in SelectedIndices)
-            {
-                selectedIndices.Add(selectedIndex);
-            }
-            foreach (int selectedIndex in selectedIndices)
+            foreach (var selectedIndex in GetSelectedIndices())
             {
                 Items[selectedIndex].Selected = false;
             }
@@ -2067,6 +2062,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[index].StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
             }
+        }
+
+        /// <summary>
+        /// Get SelectedIndices as array for faster performance.
+        /// </summary>
+        /// <returns>SelectedIndices as int array</returns>
+        public int[] GetSelectedIndices()
+        {
+            var selectedIndices = new int[SelectedIndices.Count];
+            SelectedIndices.CopyTo(selectedIndices, 0);
+            return selectedIndices;
         }
     }
 }

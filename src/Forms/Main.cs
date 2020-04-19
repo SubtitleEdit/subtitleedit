@@ -6175,9 +6175,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                for (int index = SubtitleListview1.SelectedIndices.Count - 1; index >= 0; index--)
+                                var selectedIndices = SubtitleListview1.GetSelectedIndices();
+                                for (int index = selectedIndices.Length - 1; index >= 0; index--)
                                 {
-                                    var idx = SubtitleListview1.SelectedIndices[index];
+                                    var idx = selectedIndices[index];
                                     var pOld = _subtitle.Paragraphs[idx];
                                     var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.Id);
                                     if (p == null)
@@ -7101,9 +7102,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshSelectedParagraphs()
         {
-            for (int i = 0; i < SubtitleListview1.SelectedIndices.Count; i++)
+            foreach (var index in SubtitleListview1.GetSelectedIndices())
             {
-                var index = SubtitleListview1.SelectedIndices[i];
                 var p = _subtitle.GetParagraphOrDefault(index);
                 if (p != null)
                 {
@@ -26942,13 +26942,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-            int subCount = 0;
-            int originalSubCount = 0;
             int linesUpdated = 0;
-            for (int i = SubtitleListview1.SelectedIndices.Count - 1; i >= 0; i--)
+            var selectedIndices = SubtitleListview1.GetSelectedIndices();
+            for (int i = selectedIndices.Length - 1; i >= 0; i--)
             {
-                int idx = SubtitleListview1.SelectedIndices[i];
+                int idx = selectedIndices[i];
                 var p = _subtitle.GetParagraphOrDefault(idx);
                 if (p != null)
                 {
@@ -27003,20 +27001,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (subCount != _subtitle.Paragraphs.Count)
-            {
-                _subtitle.Renumber();
-            }
-            if (originalSubCount > 0 && originalSubCount != _subtitleAlternate.Paragraphs.Count)
-            {
-                _subtitleAlternate.Renumber();
-            }
-
+            _subtitle.Renumber();
+            _subtitleAlternate?.Renumber();
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             ShowSource();
             RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.LinesUpdatedX, linesUpdated));
-            Cursor.Current = Cursors.Default;
         }
 
         private void removeAllFormattingsToolStripMenuItem_Click(object sender, EventArgs e)
