@@ -771,6 +771,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
+                // ignored
             }
 
             var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
@@ -903,6 +904,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            // remove {\an2} as it's the default alignment
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                if (paragraph.Text.StartsWith("{\\an2}", StringComparison.Ordinal))
+                {
+                    paragraph.Text = paragraph.Text.Remove(0, "{\\an2}".Length);
+                }
+            }
+
             subtitle.Renumber();
         }
 
