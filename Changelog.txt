@@ -57,6 +57,7 @@
    * Add CPS+text-length to custom format - thx aaaxx/philippwr
    * Support for Greek questionmark in dialogs - thx Lero91
    * Add date postfixes in "remove spaces" - thx Boulder08
+   * Add Arabic no-break-after list - thx OmrSi
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
