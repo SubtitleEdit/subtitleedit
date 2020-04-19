@@ -1,10 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -20,11 +17,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int fixCount = 0;
 
             // Check continuation profile
-            if (this._continuationProfile == null)
+            if (_continuationProfile == null)
             {
-                this.SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
+                SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
-            
+
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
             bool inSentence = false;
@@ -49,30 +46,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!ContinuationUtilities.IsEndOfSentence(text))
                     {
                         // ...ignore inserts
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps
+                            && (ContinuationUtilities.IsAllCaps(text) || ContinuationUtilities.IsAllCaps(textNext)))
                         {
-                            if (ContinuationUtilities.IsAllCaps(text) || (!ContinuationUtilities.IsAllCaps(text) && ContinuationUtilities.IsAllCaps(textNext)))
-                            {
-                                isChecked = false;
-                            }
+                            isChecked = false;
                         }
 
                         // ...and italic lyrics    
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic && ContinuationUtilities.IsItalic(oldText)
+                            && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
                         {
-                            if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
-                            {
-                                isChecked = false;
-                            }
+                            isChecked = false;
                         }
 
                         // ...and smallcaps inserts or non-italic lyrics
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
+                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase
+                            && !ContinuationUtilities.IsNewSentence(text, true) && !inSentence)
                         {
-                            if (!ContinuationUtilities.IsNewSentence(text, true) && !inSentence)
-                            {
-                                isChecked = false;
-                            }
+                            isChecked = false;
                         }
                     }
 
@@ -88,7 +79,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // Get last word of this paragraph                    
                     string lastWord = ContinuationUtilities.GetLastWord(text);
 
-                    
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
@@ -110,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
-                    
+
                     if (shouldProcess)
                     {
                         // First paragraph...
@@ -125,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         // Make new last word
                         var newText = ContinuationUtilities.AddSuffixIfNeeded(oldTextWithoutSuffix, _continuationProfile, gap, addComma);
-                        
+
                         // Commit if changed
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
                         {
@@ -137,7 +127,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             fixCount++;
                             callbacks.AddFixToListView(p, fixAction, oldText, newText, isChecked);
                         }
-
 
                         // Second paragraph...
 
@@ -199,30 +188,30 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private bool ShouldFixParagraph(string input)
         {
-            return ContinuationUtilities.ShouldAddSuffix(input, this._continuationProfile, false);
+            return ContinuationUtilities.ShouldAddSuffix(input, _continuationProfile, false);
         }
 
         private bool HasPrefix(string input)
         {
-            return ContinuationUtilities.HasPrefix(input, this._continuationProfile);
+            return ContinuationUtilities.HasPrefix(input, _continuationProfile);
         }
 
         private bool HasSuffix(string input)
         {
-            return ContinuationUtilities.HasSuffix(input, this._continuationProfile);
+            return ContinuationUtilities.HasSuffix(input, _continuationProfile);
         }
-                
+
         private bool StartsWithName(string input, string language)
         {
-            if (this._names == null)
+            if (_names == null)
             {
                 NameList nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                this._names = nameList.GetAllNames();
+                _names = nameList.GetAllNames();
             }
 
-            if (this._names != null)
+            if (_names != null)
             {
-                foreach (string name in this._names)
+                foreach (string name in _names)
                 {
                     if (input.StartsWith(name + " ") || input.StartsWith(name + ",") || input.StartsWith(name + ":"))
                     {
@@ -236,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private void SetContinuationProfile(ContinuationStyle continuationStyle)
         {
-            this._continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            _continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
         }
     }
 }
