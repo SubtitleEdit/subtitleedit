@@ -89,7 +89,7 @@ namespace Test.Logic
             string line1Expected = "...this is a test." + Environment.NewLine + "- Another test...";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void SanitizeString8()
         {
@@ -361,7 +361,7 @@ namespace Test.Logic
             string line1Expected = "<i>This is a test...</i>";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void AddSuffixIfNeeded9()
         {
@@ -481,7 +481,7 @@ namespace Test.Logic
             string line1Expected = "...";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void AddSuffixIfNeeded15()
         {
@@ -491,7 +491,7 @@ namespace Test.Logic
             string line1Expected = "妈...";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void AddSuffixIfNeeded16()
         {
@@ -601,7 +601,7 @@ namespace Test.Logic
             string line1Expected = "- <b>this</b> is a test." + Environment.NewLine + "-A what do you say?";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void AddPrefixIfNeeded8()
         {
@@ -641,7 +641,7 @@ namespace Test.Logic
             string line1Expected = "- ...<i>this</i> is a test." + Environment.NewLine + "- Okay.";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void AddPrefixIfNeeded10()
         {
@@ -741,7 +741,7 @@ namespace Test.Logic
             string line1Expected = "<i>This is a test</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void RemoveSuffix2()
         {
@@ -861,7 +861,7 @@ namespace Test.Logic
             string line1Expected = "<i><b>this</b> is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             Assert.AreEqual(line1Expected, line1Actual);
         }
-        
+
         [TestMethod]
         public void RemovePrefix4()
         {
@@ -945,7 +945,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.IsNewSentence(line1);
             Assert.IsTrue(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsNewSentence4()
         {
@@ -1009,7 +1009,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
             Assert.IsTrue(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsEndOfSentence3()
         {
@@ -1025,7 +1025,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
             Assert.IsTrue(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsEndOfSentence5()
         {
@@ -1049,7 +1049,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.IsEndOfSentence(line1);
             Assert.IsFalse(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsEndOfSentence8()
         {
@@ -1114,7 +1114,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.EndsWithNothing(line1, profile);
             Assert.IsTrue(line1Actual);
         }
-        
+
         [TestMethod]
         public void EndsWithNothing2()
         {
@@ -1627,7 +1627,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.HasSuffix(line1, profile);
             Assert.IsFalse(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsOnlySuffix1()
         {
@@ -1645,7 +1645,7 @@ namespace Test.Logic
             bool line1Actual = ContinuationUtilities.IsOnlySuffix(line1, profile);
             Assert.IsTrue(line1Actual);
         }
-        
+
         [TestMethod]
         public void IsOnlySuffix3()
         {
@@ -1771,7 +1771,7 @@ namespace Test.Logic
             Assert.AreEqual(line1Expected, line1Actual);
             Assert.AreEqual(line2Expected, line2Actual);
         }
-        
+
         [TestMethod]
         public void MergeHelper2()
         {

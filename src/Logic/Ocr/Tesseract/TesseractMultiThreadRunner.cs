@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
             var jobs = (List<TesseractThreadRunner.ImageJob>)j;
             var job = jobs.First();
-            var results = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, jobs.Select(p=>p.FileName).ToList(), job.Run302);
+            var results = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, jobs.Select(p => p.FileName).ToList(), job.Run302);
 
             lock (QueueLock)
             {

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                //0:13	0:14	I'm from Londrina, Paraná, Brasil.
+                //0:13<HT>0:14<HT>I'm from Londrina, Paraná, Brasil.
                 sb.AppendLine($"{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, " ")}");
             }
             return sb.ToString();

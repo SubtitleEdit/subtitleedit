@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core
             checkString = checkString.Trim();
 
             // Remove string elevation
-            if (checkString.EndsWith("\n_", StringComparison.Ordinal) || checkString.EndsWith("\n.", StringComparison.Ordinal) 
+            if (checkString.EndsWith("\n_", StringComparison.Ordinal) || checkString.EndsWith("\n.", StringComparison.Ordinal)
                 || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal)
                 || checkString.EndsWith("\n _", StringComparison.Ordinal) || checkString.EndsWith("\n .", StringComparison.Ordinal) /* Alt+255 */)
             {
@@ -226,7 +226,7 @@ namespace Nikse.SubtitleEdit.Core
 
             return firstWord;
         }
-        
+
         public static string GetLastWord(string input)
         {
             // Return if empty string
@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return originalText;
             }
-            
+
             // Return if only suffix/prefix
             if (IsOnlySuffix(text, profile) || IsOnlyPrefix(text, profile))
             {
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core
                 // Make new last word
                 string gapAddEnd = (profile.GapSuffixAddSpace ? " " : "") + profile.GapSuffix;
 
-                if (gapAddEnd.Length == 0 || !newLastWord.EndsWith(gapAddEnd)) { 
+                if (gapAddEnd.Length == 0 || !newLastWord.EndsWith(gapAddEnd)) {
                     newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.GapSuffixReplaceComma ? "," : "") + gapAddEnd;
                 }
             }
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Core
                 // Make new last word
                 string addEnd = (profile.SuffixAddSpace ? " " : "") + profile.Suffix;
 
-                if (addEnd.Length == 0 || !newLastWord.EndsWith(addEnd)) { 
+                if (addEnd.Length == 0 || !newLastWord.EndsWith(addEnd)) {
                     newLastWord = newLastWord.TrimEnd(',') + ((lastWord.EndsWith(",") || addComma) && !profile.SuffixReplaceComma ? "," : "") + addEnd;
                 }
             }
@@ -319,8 +319,8 @@ namespace Nikse.SubtitleEdit.Core
             if (wordIndex >= 0 && wordIndex < originalText.Length - 3)
             {
                 int currentIndex = wordIndex + lastWord.TrimEnd(',').Length;
-                if (((currentIndex < originalText.Length && originalText[currentIndex] == '<') 
-                    || (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',' && originalText[currentIndex] == '<')) 
+                if (((currentIndex < originalText.Length && originalText[currentIndex] == '<')
+                    || (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',' && originalText[currentIndex] == '<'))
                     && !IsFullLineTag(originalText, currentIndex))
                 {
                     if (currentIndex < originalText.Length && originalText[currentIndex] == ',')
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Core
                     removeDashesDuringSanitization = false;
                 }
             }
-            
+
             string text = removeDashesDuringSanitization ? textWithoutDash : textWithDash;
 
             // Return if empty string
@@ -626,7 +626,7 @@ namespace Nikse.SubtitleEdit.Core
                 var prefix = firstWord.Replace(newFirstWord, "");
                 result = ReplaceFirstOccurrence(originalText, prefix, "");
             }
-            
+
             // Return original if empty string
             if (string.IsNullOrEmpty(result))
             {
@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Core
 
             return true;
         }
-        
+
         public static bool IsFullLineTag(string input, int position)
         {
             input = ExtractParagraphOnly(input);

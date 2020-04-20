@@ -445,7 +445,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-
         private static Font _defaultSystemFont;
         private static Font DefaultSystemFont
         {
@@ -592,9 +591,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     c.Font = GetDefaultFont();
                 }
-
-
-
 
                 foreach (Control inner in c.Controls)
                 {
