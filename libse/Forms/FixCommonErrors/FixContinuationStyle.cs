@@ -1,10 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core.Dictionaries;
+﻿using System;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -20,9 +18,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int fixCount = 0;
 
             // Check continuation profile
-            if (this._continuationProfile == null)
+            if (_continuationProfile == null)
             {
-                this.SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
+                SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
 
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
@@ -51,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // ...ignore inserts
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
                         {
-                            if (ContinuationUtilities.IsAllCaps(text) || (!ContinuationUtilities.IsAllCaps(text) && ContinuationUtilities.IsAllCaps(textNext)))
+                            if (ContinuationUtilities.IsAllCaps(text) || ContinuationUtilities.IsAllCaps(textNext))
                             {
                                 isChecked = false;
                             }
@@ -119,9 +117,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // and profile states to NOT replace comma,
                         // and next sentence starts with conjunction,
                         // try to re-add comma
-                        bool addComma = lastWord.EndsWith(",") || (HasSuffix(text)
-                                                                   && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
-                                                                   && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language));
+                        bool addComma = lastWord.EndsWith(",") || HasSuffix(text)
+                                        && (gap ? !_continuationProfile.GapSuffixReplaceComma : !_continuationProfile.SuffixReplaceComma)
+                                        && ContinuationUtilities.StartsWithConjunction(textNextWithoutPrefix, callbacks.Language);
 
                         // Make new last word
                         var newText = ContinuationUtilities.AddSuffixIfNeeded(oldTextWithoutSuffix, _continuationProfile, gap, addComma);
@@ -130,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
                         {
                             // Don't apply fix when it's checked in step 1
-                            if ((IsPreviewStep(callbacks) && isChecked) || !IsPreviewStep(callbacks))
+                            if (IsPreviewStep(callbacks) && isChecked || !IsPreviewStep(callbacks))
                             {
                                 p.Text = newText;
                             }
@@ -148,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))
                         {
                             // Don't apply fix when it's checked in step 1
-                            if ((IsPreviewStep(callbacks) && isChecked) || !IsPreviewStep(callbacks))
+                            if (IsPreviewStep(callbacks) && isChecked || !IsPreviewStep(callbacks))
                             {
                                 pNext.Text = newTextNext;
                             }
@@ -199,32 +197,32 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private bool ShouldFixParagraph(string input)
         {
-            return ContinuationUtilities.ShouldAddSuffix(input, this._continuationProfile, false);
+            return ContinuationUtilities.ShouldAddSuffix(input, _continuationProfile, false);
         }
 
         private bool HasPrefix(string input)
         {
-            return ContinuationUtilities.HasPrefix(input, this._continuationProfile);
+            return ContinuationUtilities.HasPrefix(input, _continuationProfile);
         }
 
         private bool HasSuffix(string input)
         {
-            return ContinuationUtilities.HasSuffix(input, this._continuationProfile);
+            return ContinuationUtilities.HasSuffix(input, _continuationProfile);
         }
 
         private bool StartsWithName(string input, string language)
         {
-            if (this._names == null)
+            if (_names == null)
             {
                 NameList nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                this._names = nameList.GetAllNames();
+                _names = nameList.GetAllNames();
             }
 
-            if (this._names != null)
+            if (_names != null)
             {
-                foreach (string name in this._names)
+                foreach (string name in _names)
                 {
-                    if (input.StartsWith(name + " ") || input.StartsWith(name + ",") || input.StartsWith(name + ":"))
+                    if (input.StartsWith(name + " ", StringComparison.Ordinal) || input.StartsWith(name + ",", StringComparison.Ordinal) || input.StartsWith(name + ":", StringComparison.Ordinal))
                     {
                         return true;
                     }
@@ -236,7 +234,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private void SetContinuationProfile(ContinuationStyle continuationStyle)
         {
-            this._continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
+            _continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
         }
     }
 }
