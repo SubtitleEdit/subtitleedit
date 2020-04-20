@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 string s = Path.GetFileNameWithoutExtension(dir);
                 list.Add(s);
             }
-            return list.OrderBy(p=>p).ToList();
+            return list.OrderBy(p => p).ToList();
         }
 
     }

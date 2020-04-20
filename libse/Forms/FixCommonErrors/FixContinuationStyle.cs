@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 this.SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
-            
+
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
             bool inSentence = false;
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        // ...and italic lyrics    
+                        // ...and italic lyrics
                         if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
                         {
                             if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
@@ -85,10 +85,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var oldTextNextWithoutPrefix = ContinuationUtilities.RemovePrefix(oldTextNext, _continuationProfile, true, gap);
                     var textNextWithoutPrefix = ContinuationUtilities.SanitizeString(oldTextNextWithoutPrefix, true);
 
-                    // Get last word of this paragraph                    
+                    // Get last word of this paragraph
                     string lastWord = ContinuationUtilities.GetLastWord(text);
 
-                    
+
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
-                    
+
                     if (shouldProcess)
                     {
                         // First paragraph...
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         // Make new last word
                         var newText = ContinuationUtilities.AddSuffixIfNeeded(oldTextWithoutSuffix, _continuationProfile, gap, addComma);
-                        
+
                         // Commit if changed
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
                         {
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             return ContinuationUtilities.HasSuffix(input, this._continuationProfile);
         }
-                
+
         private bool StartsWithName(string input, string language)
         {
             if (this._names == null)

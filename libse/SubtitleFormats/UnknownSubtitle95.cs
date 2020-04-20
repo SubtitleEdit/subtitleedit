@@ -15,13 +15,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //001	10:00:00.22	10:00:04.22	00:00:04.00	#F CC00000D0	#C 
+            //001<HT>10:00:00.22<HT>10:00:04.22<HT>00:00:04.00<HT>#F CC00000D0<HT>#C
             //Studio presents
-            //002 10:00:13.02 10:00:15.22 00:00:02.20	#F CC00000D0	#C 
+            //002 10:00:13.02 10:00:15.22 00:00:02.20<HT>#F CC00000D0<HT>#C
             //What does my stuff
             //mean to me ?
 
-            const string writeFormat = "{0:000} {1} {2} {3}	#F CC00000D0	#C{4}{5}";
+            const string writeFormat = "{0:000} {1} {2} {3}\t#F CC00000D0\t#C{4}{5}";
             var sb = new StringBuilder();
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {

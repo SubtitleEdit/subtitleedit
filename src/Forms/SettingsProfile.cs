@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxContinuationStyle.SelectedIndex = 0;
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(RulesProfiles[idx].ContinuationStyle));
-            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);                       
+            comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(RulesProfiles[idx].ContinuationStyle);
 
             _editOn = oldEditOn;
         }

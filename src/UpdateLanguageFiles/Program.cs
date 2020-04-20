@@ -70,7 +70,7 @@ namespace UpdateLanguageFiles
                     {
                         File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
                     }
-                    catch 
+                    catch
                     {
                         System.Threading.Thread.Sleep(100);
                         File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
