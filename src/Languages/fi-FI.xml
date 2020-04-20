@@ -2373,14 +2373,12 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Tuo/tekstintunnista VobSub (sub/idx) -tekstitys</Title>
     <TitleBluRay>Tuo/tekstintunnista Blu-ray (.sup) -tekstitys</TitleBluRay>
     <OcrMethod>Tekstintunnistusmenetelmä</OcrMethod>
-    <OcrViaTesseractVersionX></OcrViaTesseractVersionX>
     <OcrViaImageCompare>Tekstintunnistus kuvavertailun avulla</OcrViaImageCompare>
     <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää Microsoft Officea</OcrViaModi>
     <OcrViaNOCR>Tekstintunnistus käyttäen nOCR:ia</OcrViaNOCR>
     <TesseractEngineMode>Tunnistustapa</TesseractEngineMode>
     <TesseractEngineModeLegacy>Vain alkuperäinen Tesseract (tunnistaa italian)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Vain LSTM (Keinoälyverkot)</TesseractEngineModeNeural>
-    <TesseractEngineModeBoth></TesseractEngineModeBoth>
     <TesseractEngineModeDefault>Oletus, perustuen käytettävissäoleviin</TesseractEngineModeDefault>
     <Language>Kieli</Language>
     <ImageDatabase>Kuvapankki</ImageDatabase>
