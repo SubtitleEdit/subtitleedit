@@ -2317,6 +2317,26 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixCommas6()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("[Hi,]", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("[Hi]", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas7()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("(Hi,)", 0, 1000));
+            var fup = new FixCommas();
+            fup.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Hi)", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
         public void FixCommasArabic()
         {
             var sub = new Subtitle();
