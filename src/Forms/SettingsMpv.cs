@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         private readonly bool _justDownload;
+        private string _downloadUrl;
 
         public SettingsMpv(bool justDownload)
         {
@@ -57,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null)
             {
                 MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed + Environment.NewLine +
+                                Environment.NewLine +
+                                $"Manual action: Download \"{_downloadUrl}\" and unpack to \"{Configuration.DataDirectory}\"." + Environment.NewLine +
                                 Environment.NewLine +
                                 e.Error.Message);
                 labelPleaseWait.Text = string.Empty;
@@ -109,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
-                string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
+                _downloadUrl = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
 
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -117,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
-                wc.DownloadDataAsync(new Uri(url));
+                wc.DownloadDataAsync(new Uri(_downloadUrl));
             }
             catch (Exception exception)
             {
