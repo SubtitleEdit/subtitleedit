@@ -150,6 +150,8 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _showBookmarkLabel = true;
         private ContextMenu _bookmarkContextMenu;
         private MainShortcuts _shortcuts = new MainShortcuts();
+        private bool _winLeftDown = false;
+        private bool _winRightDown = false;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -13436,8 +13438,26 @@ namespace Nikse.SubtitleEdit.Forms
             return control;
         }
 
+
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.LWin)
+            {
+                _winLeftDown = true;
+            }
+
+            if (e.KeyCode == Keys.RWin)
+            {
+                _winRightDown = true;
+            }
+
+            if (_winLeftDown || _winRightDown)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                return;
+            }
+
             if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey) && textBoxListViewText.Focused)
             { // annoying that focus leaves textbox while typing, when pressing Alt alone
                 e.SuppressKeyPress = true;
@@ -24148,6 +24168,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MainKeyUp(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.LWin)
+            {
+                _winLeftDown = false;
+            }
+
+            if (e.KeyCode == Keys.RWin)
+            {
+                _winRightDown = false;
+            }
+
             if (_mainCreateStartDownEndUpParagraph != null)
             {
                 var p = _subtitle.Paragraphs[_subtitleListViewIndex];
