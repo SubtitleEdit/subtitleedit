@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(fixCount, Configuration.Settings.Language.FixCommonErrors.FixCommas, fixCount.ToString());
         }
 
-        private IDictionary<Regex, string> GetInvertedRegexList()
+        private static IDictionary<Regex, string> GetInvertedRegexList()
         {
             return new Dictionary<Regex, string>
             {
@@ -72,9 +72,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             };
         }
 
-        private string RemovePrefixCommaSymbol(string s, char comma)
+        private static string RemovePrefixCommaSymbol(string s, char comma)
         {
-            for (int i = s.Length - 1; i >= 0; i--)
+            int i = s.Length - 1;
+            while (i >= 0)
             {
                 char ch = s[i];
                 if (i - 1 >= 0 && s[i - 1] == comma && IsCloseChar(ch))
@@ -92,8 +93,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         s = s.Remove(i, k - i);
                     }
                 }
+                i--;
             }
-
             return s;
         }
 
