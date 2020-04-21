@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _descriptions = new List<string>();
         private List<string> _englishNames = new List<string>();
         private string _xmlName;
+        private string _downloadLink;
         private int _testAllIndex = -1;
 
         public string SelectedEnglishName { get; private set; }
@@ -43,19 +44,19 @@ namespace Nikse.SubtitleEdit.Forms
 #endif
         }
 
-        private void LoadDictionaryList(string xmlRessourceName)
+        private void LoadDictionaryList(string xmlResourceName)
         {
             _dictionaryDownloadLinks = new List<string>();
             _descriptions = new List<string>();
             _englishNames = new List<string>();
-            _xmlName = xmlRessourceName;
+            _xmlName = xmlResourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            var strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            var stream = asm.GetManifestResourceStream(_xmlName);
+            if (stream != null)
             {
                 comboBoxDictionaries.Items.Clear();
                 var doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
+                using (var rdr = new StreamReader(stream))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
                 {
@@ -141,6 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
+                _downloadLink = _dictionaryDownloadLinks[index];
                 string url = _dictionaryDownloadLinks[index];
                 SelectedEnglishName = _englishNames[index];
 
@@ -169,7 +171,8 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
             if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
             {
-                MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
+                MessageBox.Show("Unable to download " + _downloadLink + Environment.NewLine +
+                                "Switching host - please re-try!");
                 LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
