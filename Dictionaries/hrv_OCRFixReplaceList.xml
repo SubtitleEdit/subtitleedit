@@ -3583,6 +3583,7 @@
     <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="ljubc" replaceWith="ljupc" />
     <RegEx find="ljutić" replaceWith="ljutit ć" />
+    <RegEx find="lrd" replaceWith="led" />
     <RegEx find="lša" replaceWith="iša" />
     <RegEx find="Lša" replaceWith="Iša" />
     <RegEx find="ltovan" replaceWith="ltiran" />
