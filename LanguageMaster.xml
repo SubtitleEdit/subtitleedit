@@ -205,7 +205,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <AutoBalance>Auto balance lines</AutoBalance>
     <ScanFolder>Scan folder...</ScanFolder>
     <Recursive>Include sub folders</Recursive>
-    <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
     <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
