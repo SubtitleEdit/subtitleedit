@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Test.FixCommonErrors
 {
@@ -2271,8 +2270,8 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("Hi,, how are you?", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback());
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("Hi, how are you?", sub.Paragraphs[0].Text);
         }
 
@@ -2281,8 +2280,8 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("Hi, , how are you?", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback());
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("Hi, how are you?", sub.Paragraphs[0].Text);
         }
 
@@ -2291,8 +2290,8 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("Hi,,,", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback());
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("Hi...", sub.Paragraphs[0].Text);
         }
 
@@ -2301,8 +2300,8 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("Hi,!", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback());
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("Hi!", sub.Paragraphs[0].Text);
         }
 
@@ -2311,8 +2310,8 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("Hi,,, are you okay?", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback());
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
             Assert.AreEqual("Hi... are you okay?", sub.Paragraphs[0].Text);
         }
 
@@ -2321,9 +2320,29 @@ namespace Test.FixCommonErrors
         {
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph("مرحبا ، ، مرحبا", 0, 1000));
-            var fup = new FixCommas();
-            fup.Fix(sub, new EmptyFixCallback { Language = "ar" });
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback { Language = "ar" });
             Assert.AreEqual("مرحبا، مرحبا", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas6()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("[Hi,]", 0, 1000));
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("[Hi]", sub.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void FixCommas7()
+        {
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph("(Hi,)", 0, 1000));
+            var fc = new FixCommas();
+            fc.Fix(sub, new EmptyFixCallback());
+            Assert.AreEqual("(Hi)", sub.Paragraphs[0].Text);
         }
 
         #endregion
