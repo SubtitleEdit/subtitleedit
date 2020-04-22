@@ -13047,10 +13047,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Cursor.Current = Cursors.WaitCursor;
                     var selectedLines = new Subtitle();
-                    var selectedIndices = SubtitleListview1.SelectedIndices.Cast<int>().ToList();
+                    var selectedIndices = new List<int>(SubtitleListview1.GetSelectedIndices());
                     if (onlySelectedLines)
                     {
-                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        foreach (int index in selectedIndices)
                         {
                             selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index]));
                         }
