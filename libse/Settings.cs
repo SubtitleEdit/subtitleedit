@@ -860,7 +860,7 @@ $HorzAlign          =   Center
         public bool ShowProgress { get; set; }
         public bool ShowNegativeDurationInfoOnSave { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
-        public string TitleBarAsterisk { get; set; } // "before", "after", "none"
+        public string TitleBarAsterisk { get; set; } // Show asteriks "before" or "after" file name (any other value will hide asteriks)
         public bool UseDarkTheme { get; set; }
         public bool ShowBetaStuff { get; set; }
 

@@ -18008,13 +18008,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (_changeSubtitleHash != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName))
+            var currentChanged = _changeSubtitleHash != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            var originalActive = Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
+                                 _subtitleAlternate != null &&
+                                 _subtitleAlternate.Paragraphs.Count > 0;
+            var originalChanged = originalActive &&
+                                    _changeAlternateSubtitleHash != _subtitleAlternate.GetFastHashCode(GetCurrentEncoding().BodyName);
+            if (currentChanged || originalChanged)
             {
-                if (!Text.Contains('*'))
-                {
-                    AddTitleBarChangeAsterisk();
-                }
-
+                AddTitleBarChangeAsterisk(currentChanged, originalChanged, originalActive);
                 AutoSave();
             }
             else if (Text.Contains('*'))
@@ -18025,15 +18027,32 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSubtitleTimer.Start();
         }
 
-        private void AddTitleBarChangeAsterisk()
+        private void AddTitleBarChangeAsterisk(bool currentChanged, bool originalChanged, bool originalActive)
         {
             if (Configuration.Settings.General.TitleBarAsterisk.Equals("before", StringComparison.Ordinal))
             {
+                if (!Text.Contains('*'))
+                {
                     Text = "*" + Text;
+                }
             }
             else if (Configuration.Settings.General.TitleBarAsterisk.Equals("after", StringComparison.Ordinal))
             {
-                Text = Text.TrimEnd() + "*";
+                var s = Text.RemoveChar('*').TrimEnd();
+                if (currentChanged && !originalActive || originalChanged)
+                {
+                    var length = Title.Length;
+                    if (s.Length > length)
+                    {
+                        s = s.Substring(0, s.Length - length).TrimEnd(' ', '*', '-') + "* - " + Title;
+                    }
+                }
+                if (currentChanged)
+                {
+                    s = s.Replace(" + ", "* + ");
+                }
+
+                Text = s;
             }
         }
 
