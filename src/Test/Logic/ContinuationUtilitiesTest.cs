@@ -12,7 +12,7 @@ namespace Test.Logic
         [TestMethod]
         public void SanitizeString1()
         {
-            string line1 = "{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
+            string line1 = @"{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
             string line1Actual = ContinuationUtilities.SanitizeString(line1);
             string line1Expected = "This is a test.";
             Assert.AreEqual(line1Expected, line1Actual);
@@ -157,7 +157,7 @@ namespace Test.Logic
         [TestMethod]
         public void ExtractParagraphOnly1()
         {
-            string line1 = "{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
+            string line1 = @"{\an8}<i>'This is a test.'</i>" + Environment.NewLine + " " + Environment.NewLine + " _";
             string line1Actual = ContinuationUtilities.ExtractParagraphOnly(line1);
             string line1Expected = "<i>'This is a test.'</i>";
             Assert.AreEqual(line1Expected, line1Actual);
@@ -295,10 +295,10 @@ namespace Test.Logic
         [TestMethod]
         public void AddSuffixIfNeeded4()
         {
-            string line1 = "{\an8}<i>This is a test,</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
+            string line1 = @"{\an8}<i>This is a test,</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
-            string line1Expected = "{\an8}<i>This is a test...</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
+            string line1Expected = @"{\an8}<i>This is a test...</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
@@ -555,10 +555,10 @@ namespace Test.Logic
         [TestMethod]
         public void AddPrefixIfNeeded4()
         {
-            string line1 = "{\an8}<i>this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
+            string line1 = @"{\an8}<i>this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
-            string line1Expected = "{\an8}<i>...this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
+            string line1Expected = @"{\an8}<i>...this is a test.</i>" + Environment.NewLine + " " + Environment.NewLine + "_";
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
