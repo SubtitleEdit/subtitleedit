@@ -18029,6 +18029,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.TitleBarAsterisk.Equals("before", StringComparison.Ordinal))
             {
+                    Text = "*" + Text;
+            }
+            else if (Configuration.Settings.General.TitleBarAsterisk.Equals("middle", StringComparison.Ordinal))
+            {
                 if (Text.Length > Title.Length + 3)
                 {
                     Text = Text.Insert(Title.Length + 3, "*");
