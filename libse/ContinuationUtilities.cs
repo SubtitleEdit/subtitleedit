@@ -1047,10 +1047,11 @@ namespace Nikse.SubtitleEdit.Core
             var nextTextWithDash = SanitizeString(nextInput, false);
 
             // Remove any prefix and suffix when:
-            // - Title 1 ends with a suffix AND title 2 starts with a prefix
-            // - Title 2 is a continuing sentence
-            if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile)
-                || !IsNewSentence(nextText) && !string.IsNullOrEmpty(nextText))
+            // - Title 1 ends with a suffix AND title 2 starts with a prefix AND it's both the same type
+            // - Title 2 is a continuing sentence, but only remove a leading dash if it's a dialog
+            if ((HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile) && thisText[thisText.Length - 1] == nextTextWithDash[0])
+                || (!string.IsNullOrEmpty(nextText) && !IsNewSentence(nextText) && !IsEndOfSentence(thisText) 
+                    && (!Dashes.Contains(nextTextWithDash[0]) || (Dashes.Contains(nextTextWithDash[0]) && nextTextWithDash.IndexOf(nextTextWithDash[0], 1) != -1))))
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
