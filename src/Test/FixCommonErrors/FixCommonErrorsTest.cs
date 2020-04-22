@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Test.FixCommonErrors
 {
