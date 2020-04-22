@@ -19,6 +19,9 @@
    * Update Finnish translation - thx Teijo S
    * Update Korean translation - thx domddol
    * Update Brazilian translation - thx Igor
+   * Update Greek translation - thx Lero91
+   * Update Dutch translation - thx xylographe/Flitskikker
+   * Update Portuguese translation - thx moob
    * Update Tesseract version 4.1.1 to "5 Alpha 2020-03-28" 
    * Make shortcuts F4-F12 customizable
    * Minor UI improvements for "Batch convert" UI
@@ -58,6 +61,8 @@
    * Support for Greek questionmark in dialogs - thx Lero91
    * Add date postfixes in "remove spaces" - thx Boulder08
    * Add Arabic no-break-after list - thx OmrSi
+   * Titlebar changed to: "*file - SE" - thx Signy13/GCRaistlin
+   * Remove default alignment in TTML 1.0 - thx Arjan
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash
@@ -83,6 +88,9 @@
    * Fix "color unknown words" issue in OCR - thx Signy13
    * Fix switch of end chars in OCR-fix - thx moob 
    * Fix RTL in MPV preview - thx darnn/OmrSi
+   * Remember video player buttons - thx Lero91
+   * Remember plain text options - thx raidsan
+   * Ignore shortcuts when "Win-Key" is down - thx GCRaistlin
 
 
 3.5.14 (8th March 2020)
