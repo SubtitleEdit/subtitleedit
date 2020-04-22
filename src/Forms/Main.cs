@@ -16125,32 +16125,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetTitle()
         {
-            Text = Title;
-
-            string separator = " - ";
+            var text = "Untitled";
+            string separator = " + ";
             if (!string.IsNullOrEmpty(_fileName))
             {
-                Text = Text + separator + _fileName;
-                separator = " + ";
+                text = _fileName;
             }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                Text = Text + separator;
+                text += separator;
                 if (string.IsNullOrEmpty(_fileName))
                 {
-                    Text = Text + _language.New + " + ";
+                    text = text + _language.New + " + ";
                 }
 
                 if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                 {
-                    Text = Text + _subtitleAlternateFileName;
+                    text += _subtitleAlternateFileName;
                 }
                 else
                 {
-                    Text = Text + _language.New;
+                    text += _language.New;
                 }
             }
+
+            Text = text + " - " + Title;
         }
 
         private void SubtitleListview1KeyDown(object sender, KeyEventArgs e)
@@ -18031,17 +18031,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                     Text = "*" + Text;
             }
-            else if (Configuration.Settings.General.TitleBarAsterisk.Equals("middle", StringComparison.Ordinal))
-            {
-                if (Text.Length > Title.Length + 3)
-                {
-                    Text = Text.Insert(Title.Length + 3, "*");
-                }
-                else
-                {
-                    Text = Text.TrimEnd() + "*";
-                }
-            }
             else if (Configuration.Settings.General.TitleBarAsterisk.Equals("after", StringComparison.Ordinal))
             {
                 Text = Text.TrimEnd() + "*";
@@ -19739,6 +19728,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
+            SetTitle();
         }
 
         private void InitializePlayRateDropDown()
