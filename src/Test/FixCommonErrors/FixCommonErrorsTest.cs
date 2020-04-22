@@ -2980,12 +2980,178 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "Test,", "test...");
-                _subtitle.Paragraphs.Add(new Paragraph("Test.", 10000, 12000));
+                InitializeFixCommonErrorsLine(target, "Test,", "test,");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
                 Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
                 new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("Test...", _subtitle.Paragraphs[0].Text);
                 Assert.AreEqual("...test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("...test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle31B()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test,", "test,");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test,", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle31C()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test,", "test,");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("...test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle31D()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test,", "test,");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test,", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle32()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("...test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle32B()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle32C()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("...test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle32D()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle33()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("Test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("Test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle33B()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("Test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.None;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("Test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle33C()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("Test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("Test.", _subtitle.Paragraphs[2].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle33D()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Test...", "test...");
+                _subtitle.Paragraphs.Add(new Paragraph("Test.", 40000, 50000));
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.NoneTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Test", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("test...", _subtitle.Paragraphs[1].Text);
+                Assert.AreEqual("Test.", _subtitle.Paragraphs[2].Text);
             }
         }
 
