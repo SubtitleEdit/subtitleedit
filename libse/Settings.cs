@@ -927,7 +927,7 @@ $HorzAlign          =   Center
             SubtitleOptimalCharactersPerSeconds = 15.0;
             SubtitleMaximumWordsPerMinute = 300;
             DialogStyle = DialogType.DashBothLinesWithSpace;
-            ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+            ContinuationStyle = ContinuationStyle.None;
             FixContinuationStyleUncheckInsertsAllCaps = true;
             FixContinuationStyleUncheckInsertsItalic = true;
             FixContinuationStyleUncheckInsertsLowercase = true;
@@ -989,7 +989,7 @@ $HorzAlign          =   Center
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
             DialogStyle = DialogType.DashBothLinesWithSpace;
-            ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+            ContinuationStyle = ContinuationStyle.None;
 
             Profiles = new List<RulesProfile>();
             CurrentProfile = "Default";
