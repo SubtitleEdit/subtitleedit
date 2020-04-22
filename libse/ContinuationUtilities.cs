@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core
             // Remove single-char quotes from the ending
             if (checkString.Length > 0 && Quotes.Contains(checkString[checkString.Length - 1]))
             {
-                if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'", StringComparison.Ordinal) && char.IsLetter(checkString[checkString.Length - 4]))
+                if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'", StringComparison.Ordinal) && checkString.Length > 4 && char.IsLetter(checkString[checkString.Length - 4]))
                 {
                     // nothin' -- Don't remove
                 }
