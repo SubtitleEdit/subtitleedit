@@ -18010,19 +18010,38 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_changeSubtitleHash != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName))
             {
-                if (!Text.EndsWith('*'))
+                if (!Text.Contains('*'))
                 {
-                    Text = Text.TrimEnd() + "*";
+                    AddTitleBarChangeAsterisk();
                 }
 
                 AutoSave();
             }
-            else if (Text.EndsWith('*'))
+            else if (Text.Contains('*'))
             {
-                Text = Text.TrimEnd('*').TrimEnd();
+                Text = Text.RemoveChar('*').TrimEnd();
             }
 
             ShowSubtitleTimer.Start();
+        }
+
+        private void AddTitleBarChangeAsterisk()
+        {
+            if (Configuration.Settings.General.TitleBarAsterisk.Equals("before", StringComparison.Ordinal))
+            {
+                if (Text.Length > Title.Length + 3)
+                {
+                    Text = Text.Insert(Title.Length + 3, "*");
+                }
+                else
+                {
+                    Text = Text.TrimEnd() + "*";
+                }
+            }
+            else if (Configuration.Settings.General.TitleBarAsterisk.Equals("after", StringComparison.Ordinal))
+            {
+                Text = Text.TrimEnd() + "*";
+            }
         }
 
         private void HideVideoPlayer()
