@@ -215,7 +215,6 @@
             public string AutoBalance { get; set; }
             public string ScanFolder { get; set; }
             public string Recursive { get; set; }
-            public string SetMinMsBetweenSubtitles { get; set; }
             public string BridgeGaps { get; set; }
             public string PlainText { get; set; }
             public string Ocr { get; set; }

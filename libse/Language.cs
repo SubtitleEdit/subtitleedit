@@ -345,7 +345,6 @@ namespace Nikse.SubtitleEdit.Core
                 OverwriteOriginalFiles = "Overwrite original files (new extension if format is changed)",
                 ScanFolder = "Scan folder...",
                 Recursive = "Include sub folders",
-                SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
                 BridgeGaps = "Bridge gaps",
                 PlainText = "Plain text",
                 Ocr = "OCR...",

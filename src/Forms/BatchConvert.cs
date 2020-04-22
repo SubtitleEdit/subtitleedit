@@ -385,7 +385,7 @@ namespace Nikse.SubtitleEdit.Forms
                 },
                 new FixActionItem
                 {
-                    Text = l.SetMinMsBetweenSubtitles,
+                    Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Title,
                     Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles,
                     Action = CommandLineConverter.BatchAction.SetMinGap
                 },
