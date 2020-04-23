@@ -310,8 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     fixedLines++;
                     fixes.Add(MakePreviewListItem(p, newText));
-                    int index = _subtitle.GetIndex(p);
-                    FixedSubtitle.Paragraphs[index].Text = newText;
+                    FixedSubtitle.Paragraphs[i].Text = newText;
                 }
             }
 
@@ -419,6 +418,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            listViewRules.BeginUpdate();
             for (int i = listViewRules.Items.Count - 1; i >= 0; i--)
             {
                 ListViewItem item = listViewRules.Items[i];
@@ -428,6 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _currentGroup.Rules.Remove(item.Tag as MultipleSearchAndReplaceSetting);
                 }
             }
+            listViewRules.EndUpdate();
             GeneratePreview();
         }
 
