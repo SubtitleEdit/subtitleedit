@@ -17897,6 +17897,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 (mediaPlayer.VideoPlayer as LibMpvDynamic)?.RemoveSubtitle();
             }
+
+            if (trackBarWaveformPosition.Maximum <= 0)
+            {
+                trackBarWaveformPosition.Maximum = (int)mediaPlayer.Duration;
+            }
         }
 
         private void VideoEnded(object sender, EventArgs e)
