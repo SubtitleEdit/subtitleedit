@@ -5206,13 +5206,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _captureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
             if (_captureTopAlign && _captureTopAlignHeight == -1 && _subtitle.Paragraphs.Count > 2)
             {
-                int top = 0;
-                int height = 0;
                 int maxHeight = -1;
                 var idxList = new List<int> { 0, 1, _subtitle.Paragraphs.Count / 2, _subtitle.Paragraphs.Count - 1 };
                 foreach (var idx in idxList)
                 {
-                    GetSubtitleTopAndHeight(idx, out top, out height);
+                    GetSubtitleTopAndHeight(idx, out var top, out var height);
                     if (top + height > maxHeight)
                     {
                         maxHeight = top + height;
@@ -5220,7 +5218,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 if (maxHeight > 320)
                 {
-                    _captureTopAlignHeight = maxHeight / 4;
+                    _captureTopAlignHeight = maxHeight / 3;
                 }
             }
         }
@@ -5469,9 +5467,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_captureTopAlign && _captureTopAlignHeight > 0)
             {
-                int top = 0;
-                int height = 0;
-                GetSubtitleTopAndHeight(i, out top, out height);
+                GetSubtitleTopAndHeight(i, out var top, out var height);
                 if (top + height < _captureTopAlignHeight)
                 {
                     text = "{\\an8}" + text;
