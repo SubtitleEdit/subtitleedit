@@ -3185,6 +3185,32 @@ namespace Test.FixCommonErrors
         {
             using (var target = GetFixCommonErrorsLib())
             {
+                InitializeFixCommonErrorsLine(target, "This is what you call a 'test,'", "and you can join.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is what you call a 'test'...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...and you can join.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle34D()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "This is what you call a 'test...'", "and you can join.");
+                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
+                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("This is what you call a 'test'...", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual("...and you can join.", _subtitle.Paragraphs[1].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixContinuationStyle34E()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
                 InitializeFixCommonErrorsLine(target, "'This is what you call a test'", "'and you can join.'");
                 Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
                 new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
@@ -3205,47 +3231,7 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("But they couldn't.", _subtitle.Paragraphs[1].Text);
             }
         }
-
-        [TestMethod]
-        public void FixContinuationStyle35B()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "They wanted to 'test'", "But they couldn't.");
-                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
-                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("They wanted to 'test'", _subtitle.Paragraphs[0].Text);
-                Assert.AreEqual("But they couldn't.", _subtitle.Paragraphs[1].Text);
-            }
-        }
-
-        [TestMethod]
-        public void FixContinuationStyle35C()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "They wanted to 'test?'", "But they couldn't.");
-                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
-                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("They wanted to 'test?'", _subtitle.Paragraphs[0].Text);
-                Assert.AreEqual("But they couldn't.", _subtitle.Paragraphs[1].Text);
-            }
-        }
-
-        [TestMethod]
-        public void FixContinuationStyle35D()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "They wanted to 'test?'", "'But they couldn't.' Yeah, sure.");
-                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
-                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("They wanted to 'test?'", _subtitle.Paragraphs[0].Text);
-                Assert.AreEqual("'But they couldn't.' Yeah, sure.", _subtitle.Paragraphs[1].Text);
-            }
-        }
-
-
+        
         /*[TestMethod]
         public void FixContinuationStyle32()
         {

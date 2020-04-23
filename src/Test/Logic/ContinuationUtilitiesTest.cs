@@ -363,26 +363,6 @@ namespace Test.Logic
         }
 
         [TestMethod]
-        public void AddSuffixIfNeeded8D()
-        {
-            string line1 = "This is a 'test'";
-            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
-            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
-            string line1Expected = "This is a 'test'...";
-            Assert.AreEqual(line1Expected, line1Actual);
-        }
-
-        [TestMethod]
-        public void AddSuffixIfNeeded8E()
-        {
-            string line1 = "'This is a test'";
-            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
-            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
-            string line1Expected = "'This is a test...'";
-            Assert.AreEqual(line1Expected, line1Actual);
-        }
-
-        [TestMethod]
         public void AddSuffixIfNeeded8F()
         {
             string line1 = "We just vibin' here you know";
@@ -465,6 +445,16 @@ namespace Test.Logic
         [TestMethod]
         public void AddSuffixIfNeeded10()
         {
+            string line1 = "This is a <i>test</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a <i>test</i>...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded10B()
+        {
             string line1 = "This is a <i>test</i>,";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
@@ -473,7 +463,17 @@ namespace Test.Logic
         }
 
         [TestMethod]
-        public void AddSuffixIfNeeded10A()
+        public void AddSuffixIfNeeded10C()
+        {
+            string line1 = "This is a <i>test</i>...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a <i>test</i>...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded10D()
         {
             string line1 = "<i>This is a test,</i>";
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
@@ -481,6 +481,36 @@ namespace Test.Logic
             string line1Expected = "<i>This is a test...</i>";
             Assert.AreEqual(line1Expected, line1Actual);
         }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded10E()
+        {
+            string line1 = "<i>This is a test...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "<i>This is a test...</i>";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        /*[TestMethod]
+        public void AddSuffixIfNeeded10F()
+        {
+            string line1 = "This is a <i>test,</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a <i>test</i>...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded10G()
+        {
+            string line1 = "This is a <i>test...</i>";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a <i>test</i>...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }*/
 
         [TestMethod]
         public void AddSuffixIfNeeded11()
@@ -579,6 +609,86 @@ namespace Test.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
             string line1Expected = "...test...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+        
+        [TestMethod]
+        public void AddSuffixIfNeeded18()
+        {
+            string line1 = "This is a 'test'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a 'test'...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded18B()
+        {
+            string line1 = "This is a 'test'...";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a 'test'...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded18C()
+        {
+            string line1 = "This is a 'test',";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a 'test'...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        /*[TestMethod]
+        public void AddSuffixIfNeeded18D()
+        {
+            string line1 = "This is a 'test...'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a 'test'...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded18E()
+        {
+            string line1 = "This is a 'test,'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "This is a 'test'...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }*/
+
+        [TestMethod]
+        public void AddSuffixIfNeeded19()
+        {
+            string line1 = "'This is a test'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "'This is a test...'";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded19B()
+        {
+            string line1 = "'This is a test...'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "'This is a test...'";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddSuffixIfNeeded19C()
+        {
+            string line1 = "'This is a test,'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddSuffixIfNeeded(line1, profile, false);
+            string line1Expected = "'This is a test...'";
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
@@ -779,6 +889,56 @@ namespace Test.Logic
             var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
             string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, true);
             string line1Expected = "...test...";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+        
+        [TestMethod]
+        public void AddPrefixIfNeeded15()
+        {
+            string line1 = "'this' is a test.";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
+            string line1Expected = "...'this' is a test.";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded15B()
+        {
+            string line1 = "...'this' is a test.";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
+            string line1Expected = "...'this' is a test.";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        /*[TestMethod]
+        public void AddPrefixIfNeeded15D()
+        {
+            string line1 = "'...this' is a test.";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
+            string line1Expected = "...'this' is a test.";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }*/
+
+        [TestMethod]
+        public void AddPrefixIfNeeded16()
+        {
+            string line1 = "'this is a test'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
+            string line1Expected = "'...this is a test'";
+            Assert.AreEqual(line1Expected, line1Actual);
+        }
+
+        [TestMethod]
+        public void AddPrefixIfNeeded16B()
+        {
+            string line1 = "'...this is a test'";
+            var profile = ContinuationUtilities.GetContinuationProfile(ContinuationStyle.LeadingTrailingDots);
+            string line1Actual = ContinuationUtilities.AddPrefixIfNeeded(line1, profile, false);
+            string line1Expected = "'...this is a test'";
             Assert.AreEqual(line1Expected, line1Actual);
         }
 
