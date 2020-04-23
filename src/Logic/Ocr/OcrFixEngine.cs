@@ -1386,7 +1386,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             var words = new List<string>();
-            var splitChars = SpellCheckWordLists.SplitChars.Where(ch => ch != '/').ToArray();
+            var splitChars = SpellCheckWordLists.SplitChars.Where(ch => ch != '/' && ch != '|').ToArray();
             foreach (var w in tempLine
                 .Replace("<i>", string.Empty).Replace("</i>", string.Empty)
                 .Replace("<b>", string.Empty).Replace("</b>", string.Empty)
@@ -1552,6 +1552,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                         guesses.Add(newWord);
                                     }
                                 }
+                            }
+
+                            var wordWithVerticalLine = word.Replace("|", "l");
+                            if (word.Length > 3 && DoSpell(wordWithVerticalLine))
+                            {
+                                if (word == word.ToUpperInvariant())
+                                {
+                                    wordWithVerticalLine = wordWithVerticalLine.ToUpperInvariant();
+                                }
+
+                                guesses.Add(wordWithVerticalLine);
                             }
 
                             if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
