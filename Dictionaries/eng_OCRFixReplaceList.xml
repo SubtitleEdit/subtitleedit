@@ -1064,6 +1064,7 @@
     <Word from="Iknow" to="I know" />
     <Word from="Ile" to="lie" />
     <Word from="Ileft" to="I left" />
+    <Word from="Ilive" to="I live" />
     <Word from="I'LL" to="I'll" />
     <Word from="I'lldo" to="I'll do" />
     <Word from="I'llgo" to="I'll go" />
@@ -3174,9 +3175,11 @@
     <Beginning from="J ust " to="Just " />
     <Beginning from="W-w-wh" to="W-W-Wh" />
     <Beginning from="W-wh" to="W-Wh" />
+    <Beginning from="I-i-i-i " to="I-I-I-I " />
     <Beginning from="I-i-i " to="I-I-I " />
     <Beginning from="I-i " to="I-I " />
     <Beginning from="H m, " to="Hm, " />
+    <Beginning from="Im sorry" to="I'm sorry" />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -3196,5 +3199,6 @@
     <RegEx find="^-_\.(\p{L})" replaceWith="- ...$1" />
     <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
     <RegEx find=" l([!?\.])" replaceWith=" I$1" />
+    <RegEx find="\b\|\b" replaceWith="I" />
   </RegularExpressions>
 </OCRFixReplaceList>
