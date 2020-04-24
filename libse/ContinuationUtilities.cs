@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string MusicSymbols = "♪♫#*¶";
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
-        private static readonly Dictionary<char, char> QuotePairs = new Dictionary<char, char>()
+        private static readonly Dictionary<char, char> QuotePairs = new Dictionary<char, char>
         {
             {'\'', '\''},
             {'"', '"'},
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     needsInsertion = true;
                 }
-                
+
                 if (needsInsertion)
                 {
                     var suffix = newLastWord.Replace(lastWord.TrimEnd(','), "");
@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core
                 bool needsInsertion = false;
                 int currentIndex = wordIndex - 1;
 
-                if (currentIndex >= 0 && ExplanationQuotes.Contains(originalText[currentIndex]) 
+                if (currentIndex >= 0 && ExplanationQuotes.Contains(originalText[currentIndex])
                                       && !IsFullLineQuote(originalText, currentIndex + 1, originalText[currentIndex], QuotePairs[originalText[currentIndex]]))
                 {
                     char quote = originalText[currentIndex];
@@ -492,7 +492,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     needsInsertion = true;
                 }
-                
+
                 if (currentIndex >= 0 && originalText[currentIndex] == '>' && !IsFullLineTag(originalText, currentIndex))
                 {
                     while (currentIndex - 1 >= 0 && originalText[currentIndex] != '<')
@@ -1150,9 +1150,9 @@ namespace Nikse.SubtitleEdit.Core
             // Remove any prefix and suffix when:
             // - Title 1 ends with a suffix AND title 2 starts with a prefix AND it's both the same type
             // - Title 2 is a continuing sentence, but only remove a leading dash if it's a dialog
-            if ((HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile) && thisText[thisText.Length - 1] == nextTextWithDash[0])
-                || (!string.IsNullOrEmpty(nextText) && !IsNewSentence(nextText) && !IsEndOfSentence(thisText) 
-                    && (!Dashes.Contains(nextTextWithDash[0]) || (Dashes.Contains(nextTextWithDash[0]) && nextTextWithDash.IndexOf(nextTextWithDash[0], 1) != -1))))
+            if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile) && thisText[thisText.Length - 1] == nextTextWithDash[0]
+                || !string.IsNullOrEmpty(nextText) && !IsNewSentence(nextText) && !IsEndOfSentence(thisText)
+                && (!Dashes.Contains(nextTextWithDash[0]) || Dashes.Contains(nextTextWithDash[0]) && nextTextWithDash.IndexOf(nextTextWithDash[0], 1) != -1))
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
