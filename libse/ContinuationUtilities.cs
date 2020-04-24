@@ -13,6 +13,21 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string SingleQuotes = "'‘’‘";
         private static readonly string DoubleQuotes = "''‘‘’’‚‚‘‘";
         private static readonly string MusicSymbols = "♪♫#*¶";
+        private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
+
+        private static readonly Dictionary<char, char> QuotePairs = new Dictionary<char, char>()
+        {
+            {'\'', '\''},
+            {'"', '"'},
+            {'“', '”'},
+            {'”', '“'},
+            {'‘', '’'},
+            {'’', '‘'},
+            {'«', '»'},
+            {'»', '«'},
+            {'‹', '›'},
+            {'›', '‹'}
+        };
 
         public static readonly List<string> Prefixes = new List<string> { "...", "..", "-", "‐", "–", "—", "…" };
         public static readonly List<string> DashPrefixes = new List<string> { "-", "‐", "–", "—" };
@@ -121,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core
             // Remove single-char quotes from the ending
             if (checkString.Length > 0 && Quotes.Contains(checkString[checkString.Length - 1]))
             {
-                if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'", StringComparison.Ordinal) && char.IsLetter(checkString[checkString.Length - 4]))
+                if (checkString[checkString.Length - 1] == '\'' && checkString.EndsWith("in'", StringComparison.Ordinal) && checkString.Length > 4 && char.IsLetter(checkString[checkString.Length - 4]))
                 {
                     // nothin' -- Don't remove
                 }
@@ -315,26 +330,38 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            // Check if it's not surrounded by HTML tags, then we'll place it outside the tags (remove comma if present)
-            // Only if it's not a tag across the whole subtitle.
+            // Check if it's not surrounded by HTML tags or quotes, then we'll place it outside the tags (remove comma if present)
+            // Only if it's not a tag/quote across the whole subtitle.
             var wordIndex = originalText.LastIndexOf(lastWord.TrimEnd(','), StringComparison.Ordinal);
-            if (wordIndex >= 0 && wordIndex < originalText.Length - 3)
+            if (wordIndex >= 0 && wordIndex < originalText.Length - 1)
             {
+                bool needsInsertion = false;
                 int currentIndex = wordIndex + lastWord.TrimEnd(',').Length;
-                if (((currentIndex < originalText.Length && originalText[currentIndex] == '<')
-                    || (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',' && originalText[currentIndex] == '<'))
-                    && !IsFullLineTag(originalText, currentIndex))
-                {
-                    if (currentIndex < originalText.Length && originalText[currentIndex] == ',')
-                    {
-                        originalText = originalText.Remove(currentIndex, 1);
-                    }
 
-                    while (currentIndex + 1 < originalText.Length && !(originalText[currentIndex] == '>' && originalText[currentIndex + 1] != '<'))
+                if (currentIndex < originalText.Length && ExplanationQuotes.Contains(originalText[currentIndex])
+                                                       && !IsFullLineQuote(originalText, currentIndex, QuotePairs[originalText[currentIndex]], originalText[currentIndex]))
+                {
+                    char quote = originalText[currentIndex];
+                    while (currentIndex + 1 < originalText.Length && originalText[currentIndex] != quote)
                     {
                         currentIndex++;
                     }
 
+                    needsInsertion = true;
+                }
+
+                if (currentIndex < originalText.Length && originalText[currentIndex] == '<' && !IsFullLineTag(originalText, currentIndex))
+                {
+                    while (currentIndex + 1 < originalText.Length && originalText[currentIndex] != '>')
+                    {
+                        currentIndex++;
+                    }
+
+                    needsInsertion = true;
+                }
+                
+                if (needsInsertion)
+                {
                     var suffix = newLastWord.Replace(lastWord.TrimEnd(','), "");
 
                     if (currentIndex + 1 < originalText.Length && originalText[currentIndex + 1] == ',')
@@ -446,18 +473,38 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            // Check if it's not surrounded by HTML tags, then we'll place it outside the tags
-            // Only if it's not a tag across the whole subtitle.
+            // Check if it's not surrounded by HTML tags or quotes, then we'll place it outside the tags
+            // Only if it's not a tag/quote across the whole subtitle.
             var wordIndex = originalText.IndexOf(firstWord, StringComparison.Ordinal);
-            if (wordIndex >= 3)
+            if (wordIndex >= 1)
             {
+                bool needsInsertion = false;
                 int currentIndex = wordIndex - 1;
-                if (currentIndex >= 0 && originalText[currentIndex] == '>' && !IsFullLineTag(originalText, currentIndex))
+
+                if (currentIndex >= 0 && ExplanationQuotes.Contains(originalText[currentIndex]) 
+                                      && !IsFullLineQuote(originalText, currentIndex + 1, originalText[currentIndex], QuotePairs[originalText[currentIndex]]))
                 {
-                    while (currentIndex - 1 >= 0 && !(originalText[currentIndex - 1] != '>' && originalText[currentIndex] == '<'))
+                    char quote = originalText[currentIndex];
+                    while (currentIndex - 1 >= 0 && originalText[currentIndex] != quote)
                     {
                         currentIndex--;
                     }
+
+                    needsInsertion = true;
+                }
+                
+                if (currentIndex >= 0 && originalText[currentIndex] == '>' && !IsFullLineTag(originalText, currentIndex))
+                {
+                    while (currentIndex - 1 >= 0 && originalText[currentIndex] != '<')
+                    {
+                        currentIndex--;
+                    }
+
+                    needsInsertion = true;
+                }
+
+                if (needsInsertion)
+                {
                     var prefix = newFirstWord.Replace(firstWord, "");
                     return originalText.Insert(currentIndex, prefix);
                 }
@@ -854,6 +901,60 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public static bool IsFullLineQuote(string input, int position, char quoteStart, char quoteEnd)
+        {
+            input = ExtractParagraphOnly(input);
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            var startIndex = position;
+            var endIndex = position;
+
+            while (startIndex >= 0 && !(input[startIndex] == quoteStart
+                                        && (startIndex - 1 >= 0 && (!char.IsLetterOrDigit(input[startIndex - 1]) && input[startIndex - 1] != '\r' && input[startIndex - 1] != '\n'))))
+            {
+                if (startIndex - 1 >= 0 && (input[startIndex - 1] == '\r' || input[startIndex - 1] == '\n'))
+                {
+                    startIndex = 0;
+                    break;
+                }
+
+                startIndex--;
+            }
+
+            while (endIndex < input.Length && !(input[endIndex] == quoteEnd
+                                                && (endIndex + 1 < input.Length && (!char.IsLetterOrDigit(input[endIndex + 1]) && input[endIndex + 1] != '\r' && input[endIndex + 1] != '\n'))))
+            {
+                if (endIndex + 1 < input.Length && (input[endIndex + 1] == '\r' || input[endIndex + 1] == '\n'))
+                {
+                    endIndex = input.Length;
+                    break;
+                }
+
+                endIndex++;
+            }
+
+            startIndex = Math.Max(0, startIndex);
+            endIndex = Math.Min(input.Length, endIndex);
+
+            var textToRemove = input.Substring(startIndex, endIndex - startIndex);
+            input = input.Replace(textToRemove, "");
+
+            foreach (var c in input)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsOnlyPrefix(string input, ContinuationProfile profile)
         {
             var checkString = input;
@@ -1047,10 +1148,11 @@ namespace Nikse.SubtitleEdit.Core
             var nextTextWithDash = SanitizeString(nextInput, false);
 
             // Remove any prefix and suffix when:
-            // - Title 1 ends with a suffix AND title 2 starts with a prefix
-            // - Title 2 is a continuing sentence
-            if (HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile)
-                || !IsNewSentence(nextText) && !string.IsNullOrEmpty(nextText))
+            // - Title 1 ends with a suffix AND title 2 starts with a prefix AND it's both the same type
+            // - Title 2 is a continuing sentence, but only remove a leading dash if it's a dialog
+            if ((HasSuffix(thisText, profile) && HasPrefix(nextTextWithDash, profile) && thisText[thisText.Length - 1] == nextTextWithDash[0])
+                || (!string.IsNullOrEmpty(nextText) && !IsNewSentence(nextText) && !IsEndOfSentence(thisText) 
+                    && (!Dashes.Contains(nextTextWithDash[0]) || (Dashes.Contains(nextTextWithDash[0]) && nextTextWithDash.IndexOf(nextTextWithDash[0], 1) != -1))))
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
