@@ -408,10 +408,6 @@ namespace Test.FixCommonErrors
 
         #endregion Fix Missing Periods At End Of Line
 
-
-
-
-
         #region Fix OCR errors
 
         [TestMethod]
@@ -2715,19 +2711,6 @@ namespace Test.FixCommonErrors
             }
         }
 
-        /*[TestMethod]
-        public void FixContinuationStyle12()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "I am <i>test</i>ing", "this right now.");
-                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
-                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("I am <i>test</i>ing...", _subtitle.Paragraphs[0].Text);
-                Assert.AreEqual("...this right now.", _subtitle.Paragraphs[1].Text);
-            }
-        }*/
-
         [TestMethod]
         public void FixContinuationStyle13()
         {
@@ -3231,19 +3214,6 @@ namespace Test.FixCommonErrors
                 Assert.AreEqual("But they couldn't.", _subtitle.Paragraphs[1].Text);
             }
         }
-        
-        /*[TestMethod]
-        public void FixContinuationStyle32()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "Well...", "I wonder.");
-                Configuration.Settings.General.ContinuationStyle = ContinuationStyle.LeadingTrailingDots;
-                new FixContinuationStyle().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("Well...", _subtitle.Paragraphs[0].Text);
-                Assert.AreEqual("...I wonder.", _subtitle.Paragraphs[1].Text);
-            }
-        }*/
 
         #endregion Fix continuation style
     }
