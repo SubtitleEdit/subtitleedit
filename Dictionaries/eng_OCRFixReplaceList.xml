@@ -173,6 +173,7 @@
     <Word from="AIso" to="Also" />
     <Word from="AIVIBULANCE" to="AMBULANCE" />
     <Word from="AIways" to="Always" />
+    <Word from="aimost" to="almost" />
     <Word from="ajanitor" to="a janitor" />
     <Word from="ajealous" to="a jealous" />
     <Word from="ajob" to="a job" />
@@ -2201,6 +2202,7 @@
     <Word from="theysay" to="they say" />
     <Word from="theyve" to="they've" />
     <Word from="Theyve" to="They've" />
+    <Word from="thing'II" to="thing'll" />
     <Word from="Thinkbackto" to="Think back to" />
     <Word from="thinkl" to="think l" />
     <Word from="thinkofafew" to="think of a few" />
@@ -2380,6 +2382,7 @@
     <Word from="we,re" to="we're" />
     <Word from="we,ve" to="we've" />
     <Word from="We,ve" to="We've" />
+    <Word from="We'il" to="We'll" />
     <Word from="We//" to="Well" />
     <Word from="We/came" to="Welcome" />
     <Word from="we/come" to="welcome" />
@@ -3201,5 +3204,6 @@
     <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
     <RegEx find=" l([!?\.])" replaceWith=" I$1" />
     <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="\b1 (know|will|almost|didn't|get|got|have|apologize|paid|like|think|would|hope|shall|chose|choose|won|am|was|don't|just|start|run|saw|said|believe|try|ever|need|certainly|can't|anticipated|did|can|rang|heard|gave|came|decided|should|took|wanted|read|thought|was|still|do|love|want|overstepped|accept|authorized|owe|understand|made|guess|bumped|wasn't|mean|admire|had|spent|told|see|walk|were|help|definitely|could|say|take|brought|assume|proposed|realized|loved|base|left|change|changed|rule|feel|date|dated|imagine|went|kind|couldn't|wouldn't|work|care|make|lost)+\b"  replaceWith="I $1" />
   </RegularExpressions>
 </OCRFixReplaceList>

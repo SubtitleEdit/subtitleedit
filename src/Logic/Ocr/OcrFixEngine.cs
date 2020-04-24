@@ -2015,6 +2015,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             correct = word.Length > 2 && _hunspell.Spell(word.Trim('\''));
                         }
 
+                        if (!correct && word.Length == 1 && _threeLetterIsoLanguageName == "eng" && (word == "I" || word == "A" || word == "a"))
+                        {
+                            correct = true;
+                        }
+
                         if (correct)
                         {
                             numberOfCorrectWords++;
