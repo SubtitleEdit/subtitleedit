@@ -858,7 +858,7 @@ namespace Nikse.SubtitleEdit.Core
                 XInvalidHtmlTagsFixed = "{0} invalid HTML tags fixed",
                 XDisplayTimesShortned = "{0} display times shortened",
                 XGapsFixed = "{0} short gaps fixed",
-                XLinesUnbreaked = "{0} lines unbreaked",
+                XLinesUnbreaked = "{0} lines unbroken",
                 UnneededSpace = "Unneeded space",
                 XUnneededSpacesRemoved = "{0} unneeded spaces removed",
                 UnneededPeriod = "Unneeded period",
@@ -1450,7 +1450,7 @@ namespace Nikse.SubtitleEdit.Core
                 NoSupportHereBluRaySup = "Blu-ray sup files are not supported here.",
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
                 NoSupportHereVobSub = "VobSub files are not supported here.",
-                NoSupportHereDivx = "Divx files are not supported here.",
+                NoSupportHereDivx = "DivX files are not supported here.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1480,7 +1480,7 @@ namespace Nikse.SubtitleEdit.Core
                         ImportOcrFromDvd = "Import/OCR subtitle from VOB/IFO (DVD)...",
                         ImportOcrVobSubSubtitle = "Import/OCR VobSub (sub/idx) subtitle...",
                         ImportBluRaySupFile = "Import/OCR Blu-ray (.sup) subtitle file...",
-                        ImportXSub = "Import/OCR XSub from divx/avi...",
+                        ImportXSub = "Import/OCR XSub from DivX/avi...",
                         ImportSubtitleFromMatroskaFile = "Import subtitle from Matroska (.mkv) file...",
                         ImportSubtitleWithManualChosenEncoding = "Import subtitle with manually chosen encoding...",
                         ImportText = "Import plain text...",
