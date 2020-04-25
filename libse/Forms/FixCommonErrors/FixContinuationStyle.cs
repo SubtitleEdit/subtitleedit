@@ -40,6 +40,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var isChecked = true;
                 var shouldProcess = true;
 
+                // Convert for Arabic
+                if (callbacks.Language == "ar")
+                {
+                    oldText = ContinuationUtilities.ConvertToForArabic(oldText);
+                    oldTextNext = ContinuationUtilities.ConvertToForArabic(oldTextNext);
+                    text = ContinuationUtilities.ConvertToForArabic(text);
+                    textNext = ContinuationUtilities.ConvertToForArabic(textNext);
+                }
+
                 // Check if we should fix this paragraph
                 if (ShouldFixParagraph(text))
                 {
@@ -127,6 +136,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // Commit if changed
                         if (oldText != newText && callbacks.AllowFix(p, fixAction))
                         {
+                            // Convert back for Arabic
+                            if (callbacks.Language == "ar")
+                            {
+                                newText = ContinuationUtilities.ConvertBackForArabic(newText);
+                            }
+
                             // Don't apply fix when it's checked in step 1
                             if (IsPreviewStep(callbacks) && isChecked || !IsPreviewStep(callbacks))
                             {
@@ -145,6 +160,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         // Commit if changed
                         if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, fixAction + " "))
                         {
+                            // Convert back for Arabic
+                            if (callbacks.Language == "ar")
+                            {
+                                newTextNext = ContinuationUtilities.ConvertBackForArabic(newTextNext);
+                            }
+
                             // Don't apply fix when it's checked in step 1
                             if (IsPreviewStep(callbacks) && isChecked || !IsPreviewStep(callbacks))
                             {
