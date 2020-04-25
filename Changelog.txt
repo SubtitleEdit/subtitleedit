@@ -13,6 +13,7 @@
    * Add new subtitle format - thx Marko
    * Add new subtitle format - thx José
    * Add new subtitle format - thx Bersu
+   * Add new subtitle format - thx Michael
    * Add support for pasting file from clipboard in list view - thx 5j9
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
