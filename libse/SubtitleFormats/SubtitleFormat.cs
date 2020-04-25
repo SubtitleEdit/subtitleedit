@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new GpacTtxt(),
                     new Gremots(),
                     new ImageLogicAutocaption(),
+                    new InqScribe(),
                     new IssXml(),
                     new ItunesTimedText(),
                     new JacoSub(),

@@ -662,7 +662,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
     <XGapsFixed>{0} short gaps fixed</XGapsFixed>
-    <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
+    <XLinesUnbreaked>{0} lines unbroken</XLinesUnbreaked>
     <UnneededSpace>Unneeded space</UnneededSpace>
     <XUnneededSpacesRemoved>{0} unneeded spaces removed</XUnneededSpacesRemoved>
     <UnneededPeriod>Unneeded period</UnneededPeriod>
@@ -988,7 +988,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR XSub from divx/avi...</ImportXSub>
+        <ImportXSub>Import/OCR XSub from DivX/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitle with manually chosen encoding...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import plain text...</ImportText>
@@ -1558,7 +1558,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
-    <NoSupportHereDivx>Divx files are not supported here.</NoSupportHereDivx>
+    <NoSupportHereDivx>DivX files are not supported here.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
