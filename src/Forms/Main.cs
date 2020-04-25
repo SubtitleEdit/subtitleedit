@@ -9760,11 +9760,23 @@ namespace Nikse.SubtitleEdit.Forms
                 var continuationStyle = Configuration.Settings.General.ContinuationStyle;
                 if (continuationStyle != ContinuationStyle.None)
                 {
+                    if (language == "ar")
+                    {
+                        currentParagraph.Text = ContinuationUtilities.ConvertToForArabic(currentParagraph.Text);
+                        newParagraph.Text = ContinuationUtilities.ConvertToForArabic(newParagraph.Text);
+                    }
+
                     var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                     if (ContinuationUtilities.ShouldAddSuffix(currentParagraph.Text, continuationProfile))
                     {
                         currentParagraph.Text = ContinuationUtilities.AddSuffixIfNeeded(currentParagraph.Text, continuationProfile, false);
                         newParagraph.Text = ContinuationUtilities.AddPrefixIfNeeded(newParagraph.Text, continuationProfile, false);
+                    }
+
+                    if (language == "ar")
+                    {
+                        currentParagraph.Text = ContinuationUtilities.ConvertBackForArabic(currentParagraph.Text);
+                        newParagraph.Text = ContinuationUtilities.ConvertBackForArabic(newParagraph.Text);
                     }
                 }
 
@@ -9922,11 +9934,23 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (continuationStyle != ContinuationStyle.None)
                             {
+                                if (language == "ar")
+                                {
+                                    originalCurrent.Text = ContinuationUtilities.ConvertToForArabic(originalCurrent.Text);
+                                    originalNew.Text = ContinuationUtilities.ConvertToForArabic(originalNew.Text);
+                                }
+                                
                                 var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                                 if (ContinuationUtilities.ShouldAddSuffix(originalCurrent.Text, continuationProfile))
                                 {
                                     originalCurrent.Text = ContinuationUtilities.AddSuffixIfNeeded(originalCurrent.Text, continuationProfile, false);
                                     originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
+                                }
+
+                                if (language == "ar")
+                                {
+                                    originalCurrent.Text = ContinuationUtilities.ConvertBackForArabic(originalCurrent.Text);
+                                    originalNew.Text = ContinuationUtilities.ConvertBackForArabic(originalNew.Text);
                                 }
                             }
                         }
