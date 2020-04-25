@@ -846,13 +846,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsFullLineTag(string input, int position)
         {
-            input = ExtractParagraphOnly(input);
-
             // Return if empty string
             if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
+
+            input = ExtractParagraphOnly(input);
 
             var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
             if (lineStartIndex == -1)
@@ -888,7 +888,10 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var textToRemove = input.Substring(startIndex, endIndex - startIndex);
-            input = input.Replace(textToRemove, "");
+            if (!string.IsNullOrEmpty(textToRemove))
+            {
+                input = input.Replace(textToRemove, "");
+            }
 
             foreach (var c in input)
             {
@@ -901,15 +904,18 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        public static bool IsFullLineQuote(string input, int position, char quoteStart, char quoteEnd)
+        public static bool IsFullLineQuote(string originalInput, int position, char quoteStart, char quoteEnd)
         {
-            input = ExtractParagraphOnly(input);
-
             // Return if empty string
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(originalInput))
             {
                 return false;
             }
+
+            string input = ExtractParagraphOnly(originalInput);
+
+            // Shift index if needed after deleting { } tags
+            position -= Math.Max(0, originalInput.IndexOf(input, StringComparison.Ordinal));
 
             var startIndex = position;
             var endIndex = position;
@@ -942,7 +948,10 @@ namespace Nikse.SubtitleEdit.Core
             endIndex = Math.Min(input.Length, endIndex);
 
             var textToRemove = input.Substring(startIndex, endIndex - startIndex);
-            input = input.Replace(textToRemove, "");
+            if (!string.IsNullOrEmpty(textToRemove))
+            {
+                input = input.Replace(textToRemove, "");
+            }
 
             foreach (var c in input)
             {
