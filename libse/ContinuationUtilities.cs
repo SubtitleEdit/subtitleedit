@@ -1152,6 +1152,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public static Tuple<string, string> MergeHelper(string input, string nextInput, ContinuationProfile profile, string language)
         {
+            // Convert for Arabic
+            if (language == "ar")
+            {
+                input = ConvertToForArabic(input);
+                nextInput = ConvertToForArabic(nextInput);
+            }
+
             var thisText = SanitizeString(input);
             var nextText = SanitizeString(nextInput);
             var nextTextWithDash = SanitizeString(nextInput, false);
@@ -1168,7 +1175,24 @@ namespace Nikse.SubtitleEdit.Core
                 return new Tuple<string, string>(newText, newNextText);
             }
 
+            // Convert back for Arabic
+            if (language == "ar")
+            {
+                input = ConvertBackForArabic(input);
+                nextInput = ConvertBackForArabic(nextInput);
+            }
+
             return new Tuple<string, string>(input, nextInput);
+        }
+
+        public static string ConvertToForArabic(string input)
+        {
+            return input.Replace("،", ",").Replace("؟", "?");
+        }
+
+        public static string ConvertBackForArabic(string input)
+        {
+            return input.Replace(",", "،").Replace("?", "؟");
         }
 
         public static int GetMinimumGapMs()
