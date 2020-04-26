@@ -1058,7 +1058,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
-                var durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
+                var durationInSeconds = (decimal)paragraph.Duration.TotalSeconds;
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 {
                     SetDurationInSeconds((double)durationInSeconds);
@@ -9934,7 +9934,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     originalCurrent.Text = ContinuationUtilities.ConvertToForArabic(originalCurrent.Text);
                                     originalNew.Text = ContinuationUtilities.ConvertToForArabic(originalNew.Text);
                                 }
-                                
+
                                 var continuationProfile = ContinuationUtilities.GetContinuationProfile(continuationStyle);
                                 if (ContinuationUtilities.ShouldAddSuffix(originalCurrent.Text, continuationProfile))
                                 {

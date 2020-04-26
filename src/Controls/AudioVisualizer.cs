@@ -1017,6 +1017,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (_mouseDownParagraph != null)
                         {
                             _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                            OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                         }
 
                         NewSelectionParagraph.StartTime.TotalMilliseconds = milliseconds;
@@ -1028,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (_mouseDownParagraph != null)
                         {
                             _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                            OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                         }
 
                         NewSelectionParagraph.EndTime.TotalMilliseconds = milliseconds;
@@ -1036,8 +1038,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     SetMinMaxViaSeconds(seconds);
                 }
-                else if (SetParagraphBorderHit(milliseconds, _selectedParagraph) ||
-                         SetParagraphBorderHit(milliseconds, _displayableParagraphs))
+                else if (SetParagraphBorderHit(milliseconds, _selectedParagraph) || SetParagraphBorderHit(milliseconds, _displayableParagraphs))
                 {
                     NewSelectionParagraph = null;
                     if (_mouseDownParagraph != null)
@@ -1052,11 +1053,13 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < milliseconds)
                                 {
                                     _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                                    OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                 }
                             }
                             else
                             {
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                                OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                             }
                         }
                         else
@@ -1067,11 +1070,13 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (milliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                                 {
                                     _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                                    OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                 }
                             }
                             else
                             {
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                                OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                             }
                         }
                     }
