@@ -2081,6 +2081,21 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.Remove(text.Length - 6, 1);
             }
 
+            while (text.Contains(" .</i>" + Environment.NewLine))
+            {
+                text = text.Replace(" .</i>" + Environment.NewLine, ".</i>" + Environment.NewLine);
+            }
+
+            while (text.Contains(" !</i>" + Environment.NewLine))
+            {
+                text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+            }
+
+            while (text.Contains(" ?</i>" + Environment.NewLine))
+            {
+                text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+            }
+
             if (text.StartsWith("- ... ", StringComparison.Ordinal))
             {
                 text = text.Remove(5, 1);
