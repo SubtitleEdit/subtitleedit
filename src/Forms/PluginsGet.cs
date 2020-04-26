@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
                     {
                         installed.BackColor = Color.LightPink;
-                        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
+                        installed.SubItems[1].Text = $"{_language.UpdateAvailable} {installed.SubItems[1].Text}";
                         buttonUpdateAll.Visible = true;
                         _updateAllListUrls.Add(item.Url);
                     }
@@ -216,19 +216,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     listViewGetPlugins.Items.Add(item);
                 }
-
-                foreach (ListViewItem installed in listViewInstalledPlugins.Items)
-                {
-                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                    var currentVer = Convert.ToDouble(plugin.Version.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-
-                    if (string.Compare(installed.Text, plugin.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
-                    {
-                        installed.BackColor = Color.LightPink;
-                        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
-                        buttonUpdateAll.Visible = true;
-                    }
-                }
             }
             listViewGetPlugins.EndUpdate();
         }
@@ -258,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show($"Error loading plugin:{pluginFileName}: {exception.Message}");
+                        MessageBox.Show($"Error loading plugin \"{pluginFileName}\": {exception.Message}");
                     }
                 }
             }
