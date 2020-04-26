@@ -15,6 +15,12 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string MusicSymbols = "♪♫#*¶";
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
+        private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>
+        {
+            "am", "ar", "as", "az", "bn", "my", "zh", "ka", "gu", "he", "hi", "ja", "kn", "ks", "km", "ko", "ku", "lo",
+            "ml", "ps", "fa", "pa", "sd", "si", "su", "ta", "te", "th", "bo", "ti", "ur", "ug", "yi"
+        };
+
         private static readonly Dictionary<char, char> QuotePairs = new Dictionary<char, char>
         {
             {'\'', '\''},
@@ -846,13 +852,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsFullLineTag(string input, int position)
         {
+            input = ExtractParagraphOnly(input);
+
             // Return if empty string
             if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
-
-            input = ExtractParagraphOnly(input);
 
             var lineStartIndex = (position > 0 && position < input.Length) ? input.LastIndexOf("\n", position, StringComparison.Ordinal) : 0;
             if (lineStartIndex == -1)
@@ -906,13 +912,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsFullLineQuote(string originalInput, int position, char quoteStart, char quoteEnd)
         {
+            string input = ExtractParagraphOnly(originalInput);
+
             // Return if empty string
             if (string.IsNullOrEmpty(originalInput))
             {
                 return false;
             }
-
-            string input = ExtractParagraphOnly(originalInput);
 
             // Shift index if needed after deleting { } tags
             position -= Math.Max(0, originalInput.IndexOf(input, StringComparison.Ordinal));
@@ -1193,6 +1199,27 @@ namespace Nikse.SubtitleEdit.Core
         public static string ConvertBackForArabic(string input)
         {
             return input.Replace(",", "،").Replace("?", "؟");
+        }
+
+        public static bool IsArabicInsert(string originalInput, string sanitizedInput)
+        {
+            string input = ExtractParagraphOnly(originalInput);
+            input = Regex.Replace(input, "<.*?>", string.Empty);
+
+            if (input.Length >= 2)
+            {
+                if (Quotes.Contains(input[0]) && Quotes.Contains(input[input.Length - 1]) && !sanitizedInput.EndsWith(",") && !IsEndOfSentence(sanitizedInput))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsLanguageWithoutCaseDistinction(string language)
+        {
+            return LanguagesWithoutCaseDistinction.Contains(language);
         }
 
         public static int GetMinimumGapMs()

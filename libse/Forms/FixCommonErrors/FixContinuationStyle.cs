@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string fixAction = string.Format(language.FixContinuationStyleX, ContinuationUtilities.GetContinuationStyleName(Configuration.Settings.General.ContinuationStyle));
             int fixCount = 0;
 
+            var isLanguageWithoutCaseDistinction = ContinuationUtilities.IsLanguageWithoutCaseDistinction(callbacks.Language);
+
             // Check continuation profile
             if (_continuationProfile == null)
             {
@@ -55,28 +57,40 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // If ends with nothing...
                     if (!ContinuationUtilities.IsEndOfSentence(text))
                     {
-                        // ...ignore inserts
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
+                        if (!isLanguageWithoutCaseDistinction)
                         {
-                            if (ContinuationUtilities.IsAllCaps(text) || ContinuationUtilities.IsAllCaps(textNext))
+                            // ...ignore inserts
+                            if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsAllCaps)
                             {
-                                isChecked = false;
+                                if (ContinuationUtilities.IsAllCaps(text) || ContinuationUtilities.IsAllCaps(textNext))
+                                {
+                                    isChecked = false;
+                                }
+                            }
+
+                            // ...and italic lyrics
+                            if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
+                            {
+                                if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
+                                {
+                                    isChecked = false;
+                                }
+                            }
+
+                            // ...and smallcaps inserts or non-italic lyrics
+                            if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
+                            {
+                                if (!ContinuationUtilities.IsNewSentence(text, true) && !inSentence)
+                                {
+                                    isChecked = false;
+                                }
                             }
                         }
-
-                        // ...and italic lyrics
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsItalic)
+                        
+                        // ...ignore Arabic inserts
+                        if (callbacks.Language == "ar")
                         {
-                            if (ContinuationUtilities.IsItalic(oldText) && !ContinuationUtilities.IsNewSentence(text, true) && inItalicSentence == false)
-                            {
-                                isChecked = false;
-                            }
-                        }
-
-                        // ...and smallcaps inserts or non-italic lyrics
-                        if (Configuration.Settings.General.FixContinuationStyleUncheckInsertsLowercase)
-                        {
-                            if (!ContinuationUtilities.IsNewSentence(text, true) && !inSentence)
+                            if (ContinuationUtilities.IsArabicInsert(oldText, text) || ContinuationUtilities.IsArabicInsert(oldTextNext, textNext))
                             {
                                 isChecked = false;
                             }
@@ -99,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
-                        if (!HasPrefix(textNext) && (ContinuationUtilities.IsNewSentence(textNext, true) || string.IsNullOrEmpty(textNext)))
+                        if (!HasPrefix(textNext) && ((!isLanguageWithoutCaseDistinction && ContinuationUtilities.IsNewSentence(textNext, true)) || string.IsNullOrEmpty(textNext)))
                         {
                             isChecked = false;
 
