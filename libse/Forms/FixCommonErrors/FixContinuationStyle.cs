@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // If ends with dots (possible interruptions), or nothing, check if next sentence is new sentence, otherwise don't check by default
                     if (text.EndsWith("..") || text.EndsWith("…") || ContinuationUtilities.EndsWithNothing(text, _continuationProfile))
                     {
-                        if (!HasPrefix(textNext) && (ContinuationUtilities.IsNewSentence(textNext, true) || string.IsNullOrEmpty(textNext)))
+                        if (!HasPrefix(textNext) && ((!isLanguageWithoutCaseDistinction && ContinuationUtilities.IsNewSentence(textNext, true)) || string.IsNullOrEmpty(textNext)))
                         {
                             isChecked = false;
 
