@@ -81,6 +81,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 isChecked = false;
                             }
                         }
+
+                        // ...and Arabic inserts
+                        if (callbacks.Language == "ar")
+                        {
+                            if (ContinuationUtilities.IsArabicInsert(oldText, text) || ContinuationUtilities.IsArabicInsert(oldTextNext, textNext))
+                            {
+                                isChecked = false;
+                            }
+                        }
                     }
 
 
