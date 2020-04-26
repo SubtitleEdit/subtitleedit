@@ -1200,7 +1200,7 @@ namespace Nikse.SubtitleEdit.Core
             string input = ExtractParagraphOnly(originalInput);
             input = Regex.Replace(input, "<.*?>", string.Empty);
 
-            if (input.Length > 0)
+            if (input.Length >= 2)
             {
                 if (Quotes.Contains(input[0]) && Quotes.Contains(input[input.Length - 1]) && !sanitizedInput.EndsWith(",") && !IsEndOfSentence(sanitizedInput))
                 {
