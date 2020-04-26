@@ -27068,10 +27068,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var firstIdx = FirstSelectedIndex;
             _subtitle.Renumber();
             _subtitleAlternate?.Renumber();
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             ShowSource();
+            SubtitleListview1.SelectIndexAndEnsureVisibleFaster(firstIdx);
             RefreshSelectedParagraph();
             ShowStatus(string.Format(_language.LinesUpdatedX, linesUpdated));
         }
