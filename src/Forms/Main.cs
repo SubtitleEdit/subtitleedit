@@ -9370,11 +9370,6 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertAfter(string.Empty);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
-            {
-                GoToNextSyntaxError();
-                e.SuppressKeyPress = true;
-            }
             else if (e.KeyData == _shortcuts.MainListViewRemoveTimeCodes)
             {
                 int i = _subtitleListViewIndex;
@@ -14567,6 +14562,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainAdjustExtendToPreviousSceneChange == e.KeyData)
             {
                 ExtendSelectedLinesToPreviousSceneChange();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
+            {
+                GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
 
