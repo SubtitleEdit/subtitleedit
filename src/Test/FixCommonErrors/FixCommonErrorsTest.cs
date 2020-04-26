@@ -1155,6 +1155,17 @@ namespace Test.FixCommonErrors
             }
         }
 
+        [TestMethod]
+        public void FixUnneededSpacesBeforeEndTag()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>I happen to have" + Environment.NewLine + " the blood of an ancient family .</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>I happen to have" + Environment.NewLine + "the blood of an ancient family.</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix unneeded spaces
 
         #region Fix EmptyLines

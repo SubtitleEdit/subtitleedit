@@ -27062,10 +27062,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            // nothing changed
             if (linesUpdated == 0)
             {
-                return;
+                return; // nothing changed
             }
 
             var firstIdx = FirstSelectedIndex;

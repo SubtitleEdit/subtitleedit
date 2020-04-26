@@ -2056,14 +2056,29 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.Remove(3, 1);
             }
 
-            if (text.EndsWith(" ...", StringComparison.Ordinal))
+            while (text.EndsWith(" ...", StringComparison.Ordinal))
             {
                 text = text.Remove(text.Length - 4, 1);
             }
 
-            if (text.EndsWith(" ...</i>", StringComparison.Ordinal))
+            while (text.EndsWith(" ...</i>", StringComparison.Ordinal))
             {
                 text = text.Remove(text.Length - 8, 1);
+            }
+
+            while (text.EndsWith(" .</i>", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.Length - 6, 1);
+            }
+
+            while (text.EndsWith(" !</i>", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.Length - 6, 1);
+            }
+
+            while (text.EndsWith(" ?</i>", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.Length - 6, 1);
             }
 
             if (text.StartsWith("- ... ", StringComparison.Ordinal))
