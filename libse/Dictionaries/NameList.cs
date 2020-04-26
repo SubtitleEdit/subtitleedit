@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
@@ -215,7 +216,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             if (name.Contains(' '))
             {
-                if (!_namesMultiList.Contains(name))
+                if (!_namesMultiList.Contains(name) && !AllWordsInSingleWordNameList(name))
                 {
                     _namesMultiList.Add(name);
                 }
@@ -257,6 +258,19 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 nameListXml.Save(fileName);
             }
             return true;
+        }
+
+        private readonly char[] _wordSplitChars = new[] { ' ', '-', '\r', '\n' };
+
+        private bool AllWordsInSingleWordNameList(string input)
+        {
+            var words = input.Split(_wordSplitChars, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length > 2)
+            {
+                return false;
+            }
+
+            return words.All(word => _namesList.Contains(word));
         }
 
         public bool IsInNamesMultiWordList(string input, string word)
