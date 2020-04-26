@@ -15,6 +15,12 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string MusicSymbols = "♪♫#*¶";
         private static readonly string ExplanationQuotes = "'\"“”‘’«»‹›";
 
+        private static readonly List<string> LanguagesWithoutCaseDistinction = new List<string>
+        {
+            "am", "ar", "as", "az", "bn", "my", "zh", "ka", "gu", "he", "hi", "ja", "kn", "ks", "km", "ko", "ku", "lo",
+            "ml", "ps", "fa", "pa", "sd", "si", "su", "ta", "te", "th", "bo", "ti", "ur", "ug", "yi"
+        };
+
         private static readonly Dictionary<char, char> QuotePairs = new Dictionary<char, char>
         {
             {'\'', '\''},
@@ -1209,6 +1215,11 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return false;
+        }
+
+        public static bool IsLanguageWithoutCaseDistinction(string language)
+        {
+            return LanguagesWithoutCaseDistinction.Contains(language);
         }
 
         public static int GetMinimumGapMs()
