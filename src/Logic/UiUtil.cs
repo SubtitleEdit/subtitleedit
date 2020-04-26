@@ -1032,6 +1032,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             AddExtension(sb, ".son");
+            AddExtension(sb, ".mts");
             AddExtension(sb, ".m2ts");
 
             sb.Append('|');
