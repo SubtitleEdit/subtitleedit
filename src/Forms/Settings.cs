@@ -1018,6 +1018,18 @@ namespace Nikse.SubtitleEdit.Forms
             toolTipContinuationPreview.RemoveAll();
             toolTipContinuationPreview.SetToolTip(comboBoxContinuationStyle, ContinuationUtilities.GetContinuationStylePreview(continuationStyle));
             comboBoxContinuationStyle.SelectedIndex = ContinuationUtilities.GetIndexFromContinuationStyle(continuationStyle);
+
+            var dropDownWidth = comboBoxContinuationStyle.Width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                foreach (var item in comboBoxContinuationStyle.Items)
+                {
+                    var itemWidth = (int)g.MeasureString((string)item, Font).Width + 5;
+                    dropDownWidth = Math.Max(itemWidth, dropDownWidth);
+                }
+            }
+
+            comboBoxContinuationStyle.DropDownWidth = dropDownWidth;
         }
 
         private Guid _oldProfileId = Guid.Empty;
