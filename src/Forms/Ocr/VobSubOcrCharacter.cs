@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (ActiveForm == null)
             {
-                TaskbarList.StartBlink(_vobSubForm);
+                TaskbarList.StartBlink(_vobSubForm, 5);
             }
         }
 

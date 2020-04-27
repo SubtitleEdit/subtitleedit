@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static int _timerBlinkCount;
         private static Timer _timerBlink;
-        public static void StartBlink(Form form)
+        public static void StartBlink(Form form, int beepAtEvery)
         {
             _timerBlinkCount = 0;
             _timerBlink?.Dispose();
@@ -52,6 +53,11 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!form.ShowInTaskbar)
                 {
                     handle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                }
+
+                if (_timerBlinkCount % beepAtEvery == 0)
+                {
+                    SystemSounds.Beep.Play();
                 }
 
                 _timerBlink.Stop();

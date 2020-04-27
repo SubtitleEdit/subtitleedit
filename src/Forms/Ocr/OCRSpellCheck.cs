@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (ActiveForm == null)
             {
-                TaskbarList.StartBlink(_blinkForm);
+                TaskbarList.StartBlink(_blinkForm, 5);
             }
         }
 
