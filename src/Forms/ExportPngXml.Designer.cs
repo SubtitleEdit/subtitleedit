@@ -617,6 +617,7 @@
             // comboBoxResolution
             // 
             this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResolution.DropDownWidth = 160;
             this.comboBoxResolution.FormattingEnabled = true;
             this.comboBoxResolution.Items.AddRange(new object[] {
             "4K (4096x2160)",
