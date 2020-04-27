@@ -39,23 +39,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             next = null; // seems to have valid quotes, so no spanning
                         }
                     }
-                    if (next != null && !HtmlUtil.RemoveHtmlTags(p.Text).EndsWith('"') && next.Text.EndsWith('"'))
+                    if (next != null && !HtmlUtil.RemoveHtmlTags(p.Text).EndsWith('"') && next.Text.TrimEnd('.', '!', '?').EndsWith('"'))
                     {
                         skipTo = i + 2;
                         continue;
                     }
 
-                    if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 500 && !HtmlUtil.RemoveHtmlTags(p.Text).EndsWith('"') && next.Text.IndexOf('"') < 0)
+                    if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 500 && !HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd('.', '!', '?').EndsWith('"') && next.Text.IndexOf('"') < 0)
                     {
                         var next2 = subtitle.GetParagraphOrDefault(i + 2);
-                        if (next2 != null && next2.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < 500 && Utilities.CountTagInText(next2.Text, '"') == 1 && next2.Text.EndsWith('"'))
+                        if (next2 != null && next2.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < 500 && Utilities.CountTagInText(next2.Text, '"') == 1 && next2.Text.TrimEnd('.', '!', '?').EndsWith('"'))
                         {
                             skipTo = i + 3;
                             continue;
                         }
                         var next3 = subtitle.GetParagraphOrDefault(i + 3);
                         if (next2 != null && next3 != null && next2.StartTime.TotalMilliseconds - next.EndTime.TotalMilliseconds < 500 && next3.StartTime.TotalMilliseconds - next2.EndTime.TotalMilliseconds < 500 &&
-                            next2.Text.IndexOf('"') < 0 && Utilities.CountTagInText(next3.Text, '"') == 1 && next3.Text.EndsWith('"'))
+                            next2.Text.IndexOf('"') < 0 && Utilities.CountTagInText(next3.Text, '"') == 1 && next3.Text.TrimEnd('.', '!', '?').EndsWith('"'))
                         {
                             skipTo = i + 4;
                             continue;
