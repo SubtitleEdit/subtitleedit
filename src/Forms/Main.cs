@@ -13458,6 +13458,8 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
+        private readonly object _mainKeyDownLock = new object();
+
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LWin)
@@ -13522,1290 +13524,1279 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
 
-            if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
+            //lock (_mainKeyDownLock)
             {
-                _cancelWordSpellCheck = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoom)
-            {
-                audioVisualizer.VerticalZoomFactor *= 1.1;
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoomOut)
-            {
-                audioVisualizer.VerticalZoomFactor /= 1.1;
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomIn)
-            {
-                audioVisualizer.ZoomIn();
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomOut)
-            {
-                audioVisualizer.ZoomOut();
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSplit)
-            {
-                if (mediaPlayer.IsPaused)
+
+                if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
                 {
-                    var pos = mediaPlayer.VideoPlayer.CurrentPosition;
-                    var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
-                    if (paragraph != null &&
-                        pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
-                        pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
+                    _cancelWordSpellCheck = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoom)
+                {
+                    audioVisualizer.VerticalZoomFactor *= 1.1;
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformVerticalZoomOut)
+                {
+                    audioVisualizer.VerticalZoomFactor /= 1.1;
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomIn)
+                {
+                    audioVisualizer.ZoomIn();
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformZoomOut)
+                {
+                    audioVisualizer.ZoomOut();
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSplit)
+                {
+                    if (mediaPlayer.IsPaused)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
-                        SplitSelectedParagraph(pos, null);
+                        var pos = mediaPlayer.VideoPlayer.CurrentPosition;
+                        var paragraph = _subtitle.GetFirstParagraphOrDefaultByTime(pos * TimeCode.BaseUnit);
+                        if (paragraph != null &&
+                            pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
+                            pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
+                            SplitSelectedParagraph(pos, null);
+                        }
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyData == _shortcuts.VideoPlayFirstSelected && !string.IsNullOrEmpty(_videoFileName))
+                {
+                    PlayFirstSelectedSubtitle();
+                }
+                else if (audioVisualizer.Visible && (e.KeyData == _shortcuts.WaveformPlaySelection || e.KeyData == _shortcuts.WaveformPlaySelectionEnd))
+                {
+                    WaveformPlaySelection(nearEnd: e.KeyData == _shortcuts.WaveformPlaySelectionEnd);
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceForward)
+                {
+                    if (audioVisualizer.WavePeaks != null)
+                    {
+                        audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                    }
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceBack)
+                {
+                    if (audioVisualizer.WavePeaks != null)
+                    {
+                        audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                    }
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
+                {
+                    InsertAfter(string.Empty);
+                    e.SuppressKeyPress = true;
+                    textBoxListViewText.Focus();
+                }
+                else if (_shortcuts.MainInsertBefore == e.KeyData && inListView)
+                {
+                    InsertBefore();
+                    e.SuppressKeyPress = true;
+                    textBoxListViewText.Focus();
+                }
+                else if (_shortcuts.MainMergeDialog == e.KeyData && inListView)
+                {
+                    MergeDialogs();
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
+                {
+                    if (textBoxListViewText.Focused)
+                    {
+                        ToggleDashesTextBox(textBoxListViewText);
+                    }
+                    else if (textBoxListViewTextAlternate.Focused)
+                    {
+                        ToggleDashesTextBox(textBoxListViewTextAlternate);
+                    }
+                    else
+                    {
+                        ToggleDashes();
+                    }
+                    e.SuppressKeyPress = true;
+                }
+                else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
+                {
+                    ReverseStartAndEndingForRtl();
+                    e.SuppressKeyPress = true;
+                }
+                else if (toolStripMenuItemUndo.ShortcutKeys == e.KeyData) // undo
+                {
+                    toolStripMenuItemUndo_Click(sender, e);
+                    e.SuppressKeyPress = true;
+                }
+                else if (toolStripMenuItemRedo.ShortcutKeys == e.KeyData) // redo
+                {
+                    toolStripMenuItemRedo_Click(sender, e);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
+                {
+                    if (AutoRepeatContinueOn || AutoRepeatOn)
+                    {
+                        PlayNext();
+                    }
+                    else
+                    {
+                        ButtonNextClick(null, null);
                     }
                 }
+                else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
+                {
+                    if (AutoRepeatContinueOn || AutoRepeatOn)
+                    {
+                        PlayPrevious();
+                    }
+                    else
+                    {
+                        ButtonPreviousClick(null, null);
+                    }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.VideoPlayFirstSelected && !string.IsNullOrEmpty(_videoFileName))
-            {
-                PlayFirstSelectedSubtitle();
-            }
-            else if (audioVisualizer.Visible && (e.KeyData == _shortcuts.WaveformPlaySelection || e.KeyData == _shortcuts.WaveformPlaySelectionEnd))
-            {
-                WaveformPlaySelection(nearEnd: e.KeyData == _shortcuts.WaveformPlaySelectionEnd);
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceForward)
-            {
-                if (audioVisualizer.WavePeaks != null)
-                {
-                    audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                    e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Visible && e.KeyData == _shortcuts.WaveformSearchSilenceBack)
-            {
-                if (audioVisualizer.WavePeaks != null)
-                {
-                    audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainInsertAfter == e.KeyData && inListView)
-            {
-                InsertAfter(string.Empty);
-                e.SuppressKeyPress = true;
-                textBoxListViewText.Focus();
-            }
-            else if (_shortcuts.MainInsertBefore == e.KeyData && inListView)
-            {
-                InsertBefore();
-                e.SuppressKeyPress = true;
-                textBoxListViewText.Focus();
-            }
-            else if (_shortcuts.MainMergeDialog == e.KeyData && inListView)
-            {
-                MergeDialogs();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainListViewToggleDashes == e.KeyData && inListView)
-            {
-                if (textBoxListViewText.Focused)
-                {
-                    ToggleDashesTextBox(textBoxListViewText);
-                }
-                else if (textBoxListViewTextAlternate.Focused)
-                {
-                    ToggleDashesTextBox(textBoxListViewTextAlternate);
-                }
-                else
-                {
-                    ToggleDashes();
-                }
-                e.SuppressKeyPress = true;
-            }
-            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
-            {
-                ReverseStartAndEndingForRtl();
-                e.SuppressKeyPress = true;
-            }
-            else if (toolStripMenuItemUndo.ShortcutKeys == e.KeyData) // undo
-            {
-                toolStripMenuItemUndo_Click(sender, e);
-                e.SuppressKeyPress = true;
-            }
-            else if (toolStripMenuItemRedo.ShortcutKeys == e.KeyData) // redo
-            {
-                toolStripMenuItemRedo_Click(sender, e);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
-            {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayNext();
-                }
-                else
+                else if (_shortcuts.MainGeneralGoToNextSubtitle == e.KeyData)
                 {
                     ButtonNextClick(null, null);
-                }
-            }
-            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
-            {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayPrevious();
-                }
-                else
-                {
-                    ButtonPreviousClick(null, null);
-                }
-
-                e.SuppressKeyPress = true;
-                e.Handled = true;
-            }
-            else if (_shortcuts.MainGeneralGoToNextSubtitle == e.KeyData)
-            {
-                ButtonNextClick(null, null);
-                e.SuppressKeyPress = true;
-                e.Handled = true;
-            }
-            else if (_shortcuts.MainGeneralGoToPrevSubtitle == e.KeyData)
-            {
-                if (AutoRepeatContinueOn || AutoRepeatOn)
-                {
-                    PlayPrevious();
-                }
-                else
-                {
-                    ButtonPreviousClick(null, null);
-                }
-
-                e.SuppressKeyPress = true;
-                e.Handled = true;
-            }
-            else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
-                {
-                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].StartTime.TotalSeconds;
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
+                else if (_shortcuts.MainGeneralGoToPrevSubtitle == e.KeyData)
                 {
-                    mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].EndTime.TotalSeconds;
-                    e.SuppressKeyPress = true;
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGoToPreviousSubtitleAndFocusVideo == e.KeyData)
-            {
-                int newIndex = _subtitleListViewIndex - 1;
-                if (newIndex >= 0)
-                {
-                    SubtitleListview1.BeginUpdate();
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    if (AutoRepeatContinueOn || AutoRepeatOn)
                     {
-                        item.Selected = false;
+                        PlayPrevious();
+                    }
+                    else
+                    {
+                        ButtonPreviousClick(null, null);
                     }
 
-                    SubtitleListview1.Items[newIndex].Selected = true;
-                    SubtitleListview1.Items[newIndex].EnsureVisible();
-                    textBoxListViewText.Focus();
-                    textBoxListViewText.SelectAll();
-                    _subtitleListViewIndex = newIndex;
-                    SubtitleListview1.EndUpdate();
-                    GotoSubtitleIndex(newIndex);
-                    ShowSubtitle();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
-            }
-            else if (_shortcuts.MainGoToNextSubtitleAndFocusVideo == e.KeyData)
-            {
-                int newIndex = _subtitleListViewIndex + 1;
-                if (newIndex < _subtitle.Paragraphs.Count)
+                else if (_shortcuts.MainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
                 {
-                    SubtitleListview1.BeginUpdate();
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
                     {
-                        item.Selected = false;
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].StartTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
                     }
 
-                    SubtitleListview1.Items[newIndex].Selected = true;
-                    SubtitleListview1.Items[newIndex].EnsureVisible();
-                    textBoxListViewText.Focus();
-                    textBoxListViewText.SelectAll();
-                    _subtitleListViewIndex = newIndex;
-                    SubtitleListview1.EndUpdate();
-                    GotoSubtitleIndex(newIndex);
-                    ShowSubtitle();
                     e.SuppressKeyPress = true;
                 }
-            }
-            else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
-            {
-                Unbreak(true);
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
-            {
-                ToggleBookmarks(false);
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
-            {
-                ClearBookmarks();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralGoToBookmark == e.KeyData)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                GoToBookmark();
-            }
-            else if (_shortcuts.MainGeneralGoToPreviousBookmark == e.KeyData)
-            {
-                GoToPrevoiusBookmark();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralGoToNextBookmark == e.KeyData)
-            {
-                GoToNextBookmark();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralChooseProfile == e.KeyData)
-            {
-                ChooseProfile();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
-            {
-                DuplicateLine();
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
-            {
-                SaveAll();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainToggleFocus == e.KeyData && inListView)
-            {
-                if (SubtitleListview1.Focused)
+                else if (_shortcuts.MainGeneralGoToEndOfCurrentSubtitle == e.KeyData)
                 {
-                    textBoxListViewText.Focus();
-                }
-                else
-                {
-                    SubtitleListview1.Focus();
-                }
+                    if (SubtitleListview1.SelectedItems.Count == 1 && mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index].EndTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
-            {
-                SubtitleListview1.FirstVisibleIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.End && e.Modifiers == Keys.Alt)
-            {
-                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0)
-                {
-                    SubtitleListview1.SelectedItems[0].EnsureVisible();
+                    e.SuppressKeyPress = true;
                 }
+                else if (_shortcuts.MainGoToPreviousSubtitleAndFocusVideo == e.KeyData)
+                {
+                    int newIndex = _subtitleListViewIndex - 1;
+                    if (newIndex >= 0)
+                    {
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.SelectIndexAndEnsureVisibleFaster(newIndex);
+                        _subtitleListViewIndex = newIndex;
+                        textBoxListViewText.Focus();
+                        textBoxListViewText.SelectAll();
+                        GotoSubtitleIndex(newIndex);
+                        ShowSubtitle();
+                        e.SuppressKeyPress = true;
+                    }
+                }
+                else if (_shortcuts.MainGoToNextSubtitleAndFocusVideo == e.KeyData)
+                {
+                    int newIndex = _subtitleListViewIndex + 1;
+                    if (newIndex < _subtitle.Paragraphs.Count)
+                    {
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.SelectIndexAndEnsureVisibleFaster(newIndex);
+                        _subtitleListViewIndex = newIndex;
+                        textBoxListViewText.Focus();
+                        textBoxListViewText.SelectAll();
+                        GotoSubtitleIndex(newIndex);
+                        ShowSubtitle();
+                        e.SuppressKeyPress = true;
+                    }
+                }
+                else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
+                {
+                    Unbreak(true);
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralToggleBookmarks == e.KeyData)
+                {
+                    ToggleBookmarks(false);
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralClearBookmarks == e.KeyData)
+                {
+                    ClearBookmarks();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralGoToBookmark == e.KeyData)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    GoToBookmark();
+                }
+                else if (_shortcuts.MainGeneralGoToPreviousBookmark == e.KeyData)
+                {
+                    GoToPrevoiusBookmark();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralGoToNextBookmark == e.KeyData)
+                {
+                    GoToNextBookmark();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralChooseProfile == e.KeyData)
+                {
+                    ChooseProfile();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralDuplicateLine == e.KeyData && SubtitleListview1.SelectedItems.Count == 1)
+                {
+                    DuplicateLine();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralFileSaveAll == e.KeyData)
+                {
+                    SaveAll();
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainToggleFocus == e.KeyData && inListView)
+                {
+                    if (SubtitleListview1.Focused)
+                    {
+                        textBoxListViewText.Focus();
+                    }
+                    else
+                    {
+                        SubtitleListview1.Focus();
+                    }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralGoToFirstEmptyLine == e.KeyData) //Go to first empty line - if any
-            {
-                GoToFirstEmptyLine();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLines == e.KeyData)
-            {
-                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
+                {
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyCode == Keys.End && e.Modifiers == Keys.Alt)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralGoToFirstSelectedLine == e.KeyData) //Locate first selected line in subtitle listview
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0)
+                    {
+                        SubtitleListview1.SelectedItems[0].EnsureVisible();
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralGoToFirstEmptyLine == e.KeyData) //Go to first empty line - if any
+                {
+                    GoToFirstEmptyLine();
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainGeneralMergeSelectedLines == e.KeyData)
+                {
+                    if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                    {
+                        e.SuppressKeyPress = true;
+                        if (SubtitleListview1.SelectedItems.Count == 2)
+                        {
+                            MergeAfterToolStripMenuItemClick(null, null);
+                        }
+                        else
+                        {
+                            MergeSelectedLines();
+                        }
+                    }
+                }
+                else if (_shortcuts.MainGeneralMergeSelectedLinesAndAutoBreak == e.KeyData)
                 {
                     e.SuppressKeyPress = true;
                     if (SubtitleListview1.SelectedItems.Count == 2)
                     {
-                        MergeAfterToolStripMenuItemClick(null, null);
+                        MergeWithLineAfter(false, BreakMode.AutoBreak);
                     }
                     else
                     {
-                        MergeSelectedLines();
+                        MergeSelectedLines(BreakMode.AutoBreak);
                     }
                 }
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLinesAndAutoBreak == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                if (SubtitleListview1.SelectedItems.Count == 2)
-                {
-                    MergeWithLineAfter(false, BreakMode.AutoBreak);
-                }
-                else
-                {
-                    MergeSelectedLines(BreakMode.AutoBreak);
-                }
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                if (SubtitleListview1.SelectedItems.Count == 2)
-                {
-                    MergeWithLineAfter(false, BreakMode.Unbreak);
-                }
-                else
-                {
-                    MergeSelectedLines(BreakMode.Unbreak);
-                }
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreakNoSpace == e.KeyData)
-            {
-                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
                 {
                     e.SuppressKeyPress = true;
                     if (SubtitleListview1.SelectedItems.Count == 2)
                     {
-                        MergeWithLineAfter(false, BreakMode.UnbreakNoSpace);
+                        MergeWithLineAfter(false, BreakMode.Unbreak);
                     }
                     else
                     {
-                        MergeSelectedLines(BreakMode.UnbreakNoSpace);
+                        MergeSelectedLines(BreakMode.Unbreak);
                     }
                 }
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLinesBilingual == e.KeyData)
-            {
-                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
+                else if (_shortcuts.MainGeneralMergeSelectedLinesAndUnbreakNoSpace == e.KeyData)
                 {
-                    e.SuppressKeyPress = true;
-                    MergeSelectedLinesBilingual();
-                }
-            }
-            else if (_shortcuts.MainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
-            {
-                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
-                {
-                    e.SuppressKeyPress = true;
-                    MergeSelectedLinesOnlyFirstText();
-                }
-            }
-            else if (_shortcuts.MainGeneralMergeWithNext == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count >= 1)
-                {
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
-                        MergeAfterToolStripMenuItemClick(null, null);
                         e.SuppressKeyPress = true;
+                        if (SubtitleListview1.SelectedItems.Count == 2)
+                        {
+                            MergeWithLineAfter(false, BreakMode.UnbreakNoSpace);
+                        }
+                        else
+                        {
+                            MergeSelectedLines(BreakMode.UnbreakNoSpace);
+                        }
                     }
                 }
-            }
-            else if (_shortcuts.MainGeneralMergeWithPrevious == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count >= 1)
+                else if (_shortcuts.MainGeneralMergeSelectedLinesBilingual == e.KeyData)
                 {
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    if (idx > 0)
+                    if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
-                        MergeAfterToolStripMenuItemClick(null, null);
                         e.SuppressKeyPress = true;
+                        MergeSelectedLinesBilingual();
                     }
                 }
-            }
-            else if (_shortcuts.MainGeneralToggleTranslationMode == e.KeyData)
-            { // toggle translator mode
-                EditToolStripMenuItemDropDownOpening(null, null);
-                toolStripMenuItemTranslationMode_Click(null, null);
-            }
-            else if (e.KeyData == _shortcuts.VideoPlayPauseToggle)
-            {
-                if (mediaPlayer.VideoPlayer != null)
+                else if (_shortcuts.MainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
                 {
-                    _endSeconds = -1;
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
-                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
+                    if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                    {
+                        e.SuppressKeyPress = true;
+                        MergeSelectedLinesOnlyFirstText();
+                    }
                 }
-            }
-            else if (e.KeyData == _shortcuts.VideoPause)
-            {
-                if (mediaPlayer.VideoPlayer != null)
+                else if (_shortcuts.MainGeneralMergeWithNext == e.KeyData)
                 {
-                    _endSeconds = -1;
-                    mediaPlayer.Pause();
-                    e.SuppressKeyPress = true;
-                    e.Handled = true;
+                    if (SubtitleListview1.SelectedItems.Count >= 1)
+                    {
+                        var idx = SubtitleListview1.SelectedItems[0].Index;
+                        if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
+                            MergeAfterToolStripMenuItemClick(null, null);
+                            e.SuppressKeyPress = true;
+                        }
+                    }
                 }
-            }
-            else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
-            {
-                buttonBeforeText_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
-            {
-                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
+                else if (_shortcuts.MainGeneralMergeWithPrevious == e.KeyData)
                 {
-                    mediaPlayer.CurrentPosition += 1.0;
-                    e.SuppressKeyPress = true;
+                    if (SubtitleListview1.SelectedItems.Count >= 1)
+                    {
+                        var idx = SubtitleListview1.SelectedItems[0].Index;
+                        if (idx > 0)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                            MergeAfterToolStripMenuItemClick(null, null);
+                            e.SuppressKeyPress = true;
+                        }
+                    }
                 }
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
-            {
-                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
-                {
-                    mediaPlayer.CurrentPosition -= 1.0;
-                    e.SuppressKeyPress = true;
+                else if (_shortcuts.MainGeneralToggleTranslationMode == e.KeyData)
+                { // toggle translator mode
+                    EditToolStripMenuItemDropDownOpening(null, null);
+                    toolStripMenuItemTranslationMode_Click(null, null);
                 }
-            }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
-            {
-                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
+                else if (e.KeyData == _shortcuts.VideoPlayPauseToggle)
                 {
-                    if (audioVisualizer.Focused || mediaPlayer.Focused || SubtitleListview1.Focused)
+                    if (mediaPlayer.VideoPlayer != null)
                     {
                         _endSeconds = -1;
-                        mediaPlayer.TogglePlayPause();
+                        e.SuppressKeyPress = true;
+                        e.Handled = true;
+                        System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
+                    }
+                }
+                else if (e.KeyData == _shortcuts.VideoPause)
+                {
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        _endSeconds = -1;
+                        mediaPlayer.Pause();
                         e.SuppressKeyPress = true;
                         e.Handled = true;
                     }
                 }
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D1)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                else if (_shortcuts.MainVideoPlayFromJustBefore == e.KeyData)
                 {
-                    var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
-                    if (p != null)
+                    buttonBeforeText_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
+                {
+                    if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                     {
-                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        mediaPlayer.CurrentPosition += 1.0;
                         e.SuppressKeyPress = true;
                     }
                 }
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D2)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
                 {
-                    var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
-                    if (p != null)
+                    if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                     {
-                        mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                        mediaPlayer.CurrentPosition -= 1.0;
                         e.SuppressKeyPress = true;
                     }
                 }
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D3)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
                 {
-                    int index = SubtitleListview1.SelectedItems[0].Index - 1;
-                    var p = _subtitle.GetParagraphOrDefault(index);
-                    if (p != null)
+                    if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
-                    }
-                }
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D4)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
-                {
-                    int index = SubtitleListview1.SelectedItems[0].Index + 1;
-                    var p = _subtitle.GetParagraphOrDefault(index);
-                    if (p != null)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
-                    }
-                }
-            }
-            else if (_shortcuts.MainVideoToggleStartEndCurrent == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
-                {
-                    mediaPlayer.Pause();
-                    var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
-                    if (p != null)
-                    {
-                        if (Math.Abs(mediaPlayer.CurrentPosition - p.StartTime.TotalSeconds) < 0.1)
+                        if (audioVisualizer.Focused || mediaPlayer.Focused || SubtitleListview1.Focused)
                         {
-                            mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                            _endSeconds = -1;
+                            mediaPlayer.TogglePlayPause();
+                            e.SuppressKeyPress = true;
+                            e.Handled = true;
                         }
-                        else
+                    }
+                }
+                else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D1)
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                        if (p != null)
                         {
                             mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                            e.SuppressKeyPress = true;
                         }
-
-                        e.SuppressKeyPress = true;
                     }
                 }
-            }
-            else if (_shortcuts.MainVideoPlayCurrent == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D2)
                 {
-                    var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
-                    if (p != null)
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                     {
-                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        ShowSubtitle();
-                        mediaPlayer.Play();
-                        _endSeconds = p.EndTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
-                    }
-                }
-            }
-            else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
-            {
-                if (mediaPlayer.VideoPlayer != null)
-                {
-                    GotoSubPositionAndPause();
-                }
-            }
-            else if (_shortcuts.MainVideo3000MsLeft == e.KeyData)
-            {
-                if (mediaPlayer.VideoPlayer != null)
-                {
-                    GoBackSeconds(3);
-                }
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
-            {
-                var enc = GetCurrentEncoding();
-                if (enc != Encoding.UTF8 && enc != Encoding.UTF32 && enc != Encoding.Unicode && enc != Encoding.UTF7)
-                {
-                    MessageBox.Show(Configuration.Settings.Language.Watermark.ErrorUnicodeEncodingOnly);
-                }
-                else
-                {
-                    using (var watermarkForm = new Watermark())
-                    {
-                        MakeHistoryForUndo(Configuration.Settings.Language.Watermark.BeforeWatermark);
-                        watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
-                        if (watermarkForm.ShowDialog(this) == DialogResult.OK)
+                        var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                        if (p != null)
                         {
-                            watermarkForm.AddOrRemove(_subtitle);
-                            RefreshSelectedParagraph();
+                            mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                            e.SuppressKeyPress = true;
                         }
                     }
                 }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.F) // Toggle HHMMSSFF / HHMMSSMMM
-            {
-                Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
-                RefreshTimeCodeMode();
-            }
-            else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
-            {
-                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+                else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D3)
                 {
-                    int firstIndex = FirstSelectedIndex;
-                    double firstMs = -1;
-                    if (firstIndex >= 0)
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                     {
-                        firstMs = _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds;
+                        int index = SubtitleListview1.SelectedItems[0].Index - 1;
+                        var p = _subtitle.GetParagraphOrDefault(index);
+                        if (p != null)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                            mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                            e.SuppressKeyPress = true;
+                        }
                     }
-
-                    var temp = _subtitle;
-                    _subtitle = _subtitleAlternate;
-                    _subtitleAlternate = temp;
-
-                    var tempName = _fileName;
-                    _fileName = _subtitleAlternateFileName;
-                    _subtitleAlternateFileName = tempName;
-
-                    var tempChangeSubText = _changeSubtitleHash;
-                    _changeSubtitleHash = _changeAlternateSubtitleHash;
-                    _changeAlternateSubtitleHash = tempChangeSubText;
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-
-                    _subtitleListViewIndex = -1;
-                    if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
+                }
+                else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D4)
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                        int index = SubtitleListview1.SelectedItems[0].Index + 1;
+                        var p = _subtitle.GetParagraphOrDefault(index);
+                        if (p != null)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                            mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                            e.SuppressKeyPress = true;
+                        }
+                    }
+                }
+                else if (_shortcuts.MainVideoToggleStartEndCurrent == e.KeyData)
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.Pause();
+                        var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                        if (p != null)
+                        {
+                            if (Math.Abs(mediaPlayer.CurrentPosition - p.StartTime.TotalSeconds) < 0.1)
+                            {
+                                mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                            }
+                            else
+                            {
+                                mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                            }
+
+                            e.SuppressKeyPress = true;
+                        }
+                    }
+                }
+                else if (_shortcuts.MainVideoPlayCurrent == e.KeyData)
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                        if (p != null)
+                        {
+                            mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                            ShowSubtitle();
+                            mediaPlayer.Play();
+                            _endSeconds = p.EndTime.TotalSeconds;
+                            e.SuppressKeyPress = true;
+                        }
+                    }
+                }
+                else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
+                {
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        GotoSubPositionAndPause();
+                    }
+                }
+                else if (_shortcuts.MainVideo3000MsLeft == e.KeyData)
+                {
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        GoBackSeconds(3);
+                    }
+                }
+                else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
+                {
+                    var enc = GetCurrentEncoding();
+                    if (enc != Encoding.UTF8 && enc != Encoding.UTF32 && enc != Encoding.Unicode && enc != Encoding.UTF7)
+                    {
+                        MessageBox.Show(Configuration.Settings.Language.Watermark.ErrorUnicodeEncodingOnly);
                     }
                     else
                     {
-                        RefreshSelectedParagraph();
+                        using (var watermarkForm = new Watermark())
+                        {
+                            MakeHistoryForUndo(Configuration.Settings.Language.Watermark.BeforeWatermark);
+                            watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
+                            if (watermarkForm.ShowDialog(this) == DialogResult.OK)
+                            {
+                                watermarkForm.AddOrRemove(_subtitle);
+                                RefreshSelectedParagraph();
+                            }
+                        }
                     }
 
-                    SetTitle();
-
-                    _fileDateTime = new DateTime();
+                    e.SuppressKeyPress = true;
                 }
-            }
-            else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
-            {
-                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+                else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.F) // Toggle HHMMSSFF / HHMMSSMMM
                 {
-                    if (ContinueNewOrExit())
+                    Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
+                    RefreshTimeCodeMode();
+                }
+                else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
+                {
+                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
                     {
-                        var subtitle = new Subtitle();
-                        var fr = CurrentFrameRate;
-                        var format = GetCurrentSubtitleFormat();
-                        var videoFileName = _videoFileName;
-                        foreach (var p in _subtitle.Paragraphs)
+                        int firstIndex = FirstSelectedIndex;
+                        double firstMs = -1;
+                        if (firstIndex >= 0)
                         {
-                            var newP = new Paragraph(p);
-                            var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
+                            firstMs = _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds;
+                        }
+
+                        var temp = _subtitle;
+                        _subtitle = _subtitleAlternate;
+                        _subtitleAlternate = temp;
+
+                        var tempName = _fileName;
+                        _fileName = _subtitleAlternateFileName;
+                        _subtitleAlternateFileName = tempName;
+
+                        var tempChangeSubText = _changeSubtitleHash;
+                        _changeSubtitleHash = _changeAlternateSubtitleHash;
+                        _changeAlternateSubtitleHash = tempChangeSubText;
+
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+
+                        _subtitleListViewIndex = -1;
+                        if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
+                        {
+                            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                        }
+                        else
+                        {
+                            RefreshSelectedParagraph();
+                        }
+
+                        SetTitle();
+
+                        _fileDateTime = new DateTime();
+                    }
+                }
+                else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
+                {
+                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            var subtitle = new Subtitle();
+                            var fr = CurrentFrameRate;
+                            var format = GetCurrentSubtitleFormat();
+                            var videoFileName = _videoFileName;
+                            foreach (var p in _subtitle.Paragraphs)
+                            {
+                                var newP = new Paragraph(p);
+                                var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
+                                if (original != null)
+                                {
+                                    newP.Text = (newP.Text.TrimEnd() + Environment.NewLine + original.Text.TrimStart()).Trim();
+                                }
+
+                                subtitle.Paragraphs.Add(newP);
+                            }
+
+                            RemoveAlternate(true, true);
+                            FileNew();
+                            SetCurrentFormat(format);
+                            toolStripComboBoxFrameRate.Text = fr.ToString();
+                            _subtitle = subtitle;
+                            _subtitleListViewIndex = -1;
+                            ShowSource();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                            if (!string.IsNullOrEmpty(videoFileName))
+                            {
+                                OpenVideo(videoFileName);
+                            }
+                            e.SuppressKeyPress = true;
+                        }
+                    }
+                }
+                else if (e.KeyData == _shortcuts.ToggleVideoDockUndock)
+                {
+                    if (_isVideoControlsUndocked)
+                    {
+                        RedockVideoControlsToolStripMenuItemClick(null, null);
+                    }
+                    else
+                    {
+                        UndockVideoControlsToolStripMenuItemClick(null, null);
+                    }
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
+                {
+                    var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                    if (libMpv != null)
+                    {
+                        libMpv.GetPreviousFrame();
+                    }
+                    else
+                    {
+                        MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRight)
+                {
+                    var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                    if (libMpv != null)
+                    {
+                        libMpv.GetNextFrame();
+                    }
+                    else
+                    {
+                        MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeftWithPlay)
+                {
+                    double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSecondsNewPosition = startSeconds;
+                    mediaPlayer.CurrentPosition = startSeconds;
+                    UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                    mediaPlayer.Play();
+                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRightWithPlay)
+                {
+                    double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSecondsNewPosition = startSeconds;
+                    mediaPlayer.CurrentPosition = startSeconds;
+                    UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                    mediaPlayer.Play();
+                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsLeft)
+                {
+                    MoveVideoSeconds(-0.1);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsRight)
+                {
+                    MoveVideoSeconds(0.1);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsLeft)
+                {
+                    MoveVideoSeconds(-0.5);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsRight)
+                {
+                    MoveVideoSeconds(0.5);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsLeft)
+                {
+                    MoveVideoSeconds(-1.0);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsRight)
+                {
+                    MoveVideoSeconds(1.0);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsLeft)
+                {
+                    MoveVideoSeconds(-5.0);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsRight)
+                {
+                    MoveVideoSeconds(5.0);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainToolsBeamer == e.KeyData)
+                {
+                    var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
+                    beamer.ShowDialog(this);
+                }
+                else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
+                {
+                    GoFullscreen(false);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyData == _shortcuts.MainVideoSlower)
+                {
+                    e.SuppressKeyPress = true;
+                    for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                    {
+                        var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
+                        if (item.Checked && index > 0)
+                        {
+                            SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index - 1], null);
+                            return;
+                        }
+                    }
+                }
+                else if (e.KeyData == _shortcuts.MainVideoFaster)
+                {
+                    e.SuppressKeyPress = true;
+                    for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                    {
+                        var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
+                        if (item.Checked && index + 1 < toolStripSplitButtonPlayRate.DropDownItems.Count)
+                        {
+                            SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index + 1], null);
+                            return;
+                        }
+                    }
+                }
+                else if (e.KeyData == _shortcuts.MainVideoReset)
+                {
+                    e.SuppressKeyPress = true;
+                    if (audioVisualizer != null)
+                    {
+                        audioVisualizer.ZoomFactor = 1.0;
+                        audioVisualizer.VerticalZoomFactor = 1.0;
+                        InitializeWaveformZoomDropdown();
+                    }
+
+                    if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.VideoPlayer.PlayRate = 1.0;
+                        InitializePlayRateDropDown();
+                        toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
+                    }
+                }
+                else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHere)
+                {
+                    addParagraphHereToolStripMenuItem_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHereFromClipboard)
+                {
+                    addParagraphAndPasteToolStripMenuItem_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformSetParagraphAsNewSelection)
+                {
+                    toolStripMenuItemSetParagraphAsSelection_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Focused && e.KeyData == _shortcuts.WaveformFocusListView)
+                {
+                    SubtitleListview1.Focus();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyData == _shortcuts.VideoGoToPrevSubtitle)
+                {
+                    GoToPreviousSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyData == _shortcuts.VideoGoToNextSubtitle)
+                {
+                    GoToNextSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.KeyData == _shortcuts.VideoSelectNextSubtitle)
+                {
+                    var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        if (p.StartTime.TotalMilliseconds > cp)
+                        {
+                            SubtitleListview1.SelectNone();
+                            SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Selected = true;
+                            SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Focused = true;
+                            break;
+                        }
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToPreviousSceneChange)
+                {
+                    var cp = mediaPlayer.CurrentPosition - 0.01;
+                    foreach (var sceneChange in audioVisualizer.SceneChanges.Reverse<double>())
+                    {
+                        if (sceneChange < cp)
+                        {
+                            mediaPlayer.CurrentPosition = sceneChange;
+                            break;
+                        }
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToNextSceneChange)
+                {
+                    var cp = mediaPlayer.CurrentPosition + 0.01;
+                    foreach (var sceneChange in audioVisualizer.SceneChanges)
+                    {
+                        if (sceneChange > cp)
+                        {
+                            mediaPlayer.CurrentPosition = sceneChange;
+                            break;
+                        }
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformToggleSceneChange)
+                {
+                    var cp = mediaPlayer.CurrentPosition;
+                    var idx = audioVisualizer.GetSceneChangeIndex(cp);
+                    if (idx >= 0)
+                    {
+                        RemoveSceneChange(idx);
+                    }
+                    else
+                    { // add scene change
+                        var list = audioVisualizer.SceneChanges.Where(p => p > 0).ToList();
+                        list.Add(cp);
+                        list.Sort();
+                        audioVisualizer.SceneChanges = list;
+                        SceneChangeHelper.SaveSceneChanges(_videoFileName, list);
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformGuessStart)
+                {
+                    AutoGuessStartTime(_subtitleListViewIndex);
+                    e.SuppressKeyPress = true;
+                }
+                else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
+                {
+                    ToolStripMenuItemDeleteClick(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainToolsAutoDuration == e.KeyData)
+                {
+                    MakeAutoDuration();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I)
+                {
+                    using (var form = new ImportUnknownFormat(string.Empty))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            if (form.ImportedSubitle?.Paragraphs.Count > 0)
+                            {
+                                _subtitle = form.ImportedSubitle;
+                                _fileName = null;
+                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                                SetTitle();
+                            }
+                        }
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+                else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDown == e.KeyData)
+                {
+                    MoveLastWordDown();
+                    e.SuppressKeyPress = true;
+                }
+                else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordFromNextUp == e.KeyData)
+                {
+                    MoveFirstWordInNextUp();
+                    e.SuppressKeyPress = true;
+                }
+                else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDownCurrent == e.KeyData)
+                {
+                    MoveWordUpDownInCurrent(true);
+                    e.SuppressKeyPress = true;
+                }
+                else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordUpCurrent == e.KeyData)
+                {
+                    MoveWordUpDownInCurrent(false);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    if (SubtitleListview1.SelectedItems.Count >= 1)
+                    {
+                        MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                        _makeHistoryPaused = true;
+                        var idx = SubtitleListview1.SelectedItems[0].Index;
+                        _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
+                        SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
+                        _makeHistoryPaused = false;
+                    }
+                }
+                else if (_shortcuts.MainAdjustExtendCurrentSubtitle == e.KeyData)
+                {
+                    if (SubtitleListview1.SelectedItems.Count == 1)
+                    {
+                        var historyAdded = false;
+                        var idx = SubtitleListview1.SelectedItems[0].Index;
+                        var p = _subtitle.Paragraphs[idx];
+                        var next = _subtitle.GetParagraphOrDefault(idx + 1);
+                        if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                            historyAdded = true;
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                        }
+                        else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
+                        {
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                            historyAdded = true;
+                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        }
+
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        {
+                            var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                newP.Text = (newP.Text.TrimEnd() + Environment.NewLine + original.Text.TrimStart()).Trim();
+                                var originalNext = _subtitleAlternate.GetParagraphOrDefault(_subtitleAlternate.GetIndex(original) + 1);
+                                if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                                {
+                                    if (!historyAdded)
+                                    {
+                                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                    }
+
+                                    original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                                }
+                                else if (originalNext != null && originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds)
+                                {
+                                    if (!historyAdded)
+                                    {
+                                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
+                                    }
+
+                                    original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                }
                             }
-
-                            subtitle.Paragraphs.Add(newP);
                         }
 
-                        RemoveAlternate(true, true);
-                        FileNew();
-                        SetCurrentFormat(format);
-                        toolStripComboBoxFrameRate.Text = fr.ToString();
-                        _subtitle = subtitle;
-                        _subtitleListViewIndex = -1;
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                        if (!string.IsNullOrEmpty(videoFileName))
-                        {
-                            OpenVideo(videoFileName);
-                        }
+                        RefreshSelectedParagraph();
                         e.SuppressKeyPress = true;
                     }
-                }
-            }
-            else if (e.KeyData == _shortcuts.ToggleVideoDockUndock)
-            {
-                if (_isVideoControlsUndocked)
-                {
-                    RedockVideoControlsToolStripMenuItemClick(null, null);
-                }
-                else
-                {
-                    UndockVideoControlsToolStripMenuItemClick(null, null);
-                }
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
-            {
-                var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-                if (libMpv != null)
-                {
-                    libMpv.GetPreviousFrame();
-                }
-                else
-                {
-                    MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
-                }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRight)
-            {
-                var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-                if (libMpv != null)
-                {
-                    libMpv.GetNextFrame();
+                    e.SuppressKeyPress = true;
                 }
-                else
+                else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)
                 {
-                    MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    FindPrevious();
+                    e.SuppressKeyPress = true;
                 }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeftWithPlay)
-            {
-                double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSecondsNewPosition = startSeconds;
-                mediaPlayer.CurrentPosition = startSeconds;
-                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
-                mediaPlayer.Play();
-                _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRightWithPlay)
-            {
-                double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSecondsNewPosition = startSeconds;
-                mediaPlayer.CurrentPosition = startSeconds;
-                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
-                mediaPlayer.Play();
-                _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsLeft)
-            {
-                MoveVideoSeconds(-0.1);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsRight)
-            {
-                MoveVideoSeconds(0.1);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsLeft)
-            {
-                MoveVideoSeconds(-0.5);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video500MsRight)
-            {
-                MoveVideoSeconds(0.5);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsLeft)
-            {
-                MoveVideoSeconds(-1.0);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1000MsRight)
-            {
-                MoveVideoSeconds(1.0);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsLeft)
-            {
-                MoveVideoSeconds(-5.0);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsRight)
-            {
-                MoveVideoSeconds(5.0);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainToolsBeamer == e.KeyData)
-            {
-                var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
-                beamer.ShowDialog(this);
-            }
-            else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
-            {
-                GoFullscreen(false);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainVideoSlower)
-            {
-                e.SuppressKeyPress = true;
-                for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                else if (_shortcuts.MainAdjustExtendToNextSubtitle == e.KeyData)
                 {
-                    var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
-                    if (item.Checked && index > 0)
-                    {
-                        SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index - 1], null);
-                        return;
-                    }
+                    ExtendSelectedLinesToNextLine();
+                    e.SuppressKeyPress = true;
                 }
-            }
-            else if (e.KeyData == _shortcuts.MainVideoFaster)
-            {
-                e.SuppressKeyPress = true;
-                for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+                else if (_shortcuts.MainAdjustExtendToPreviousSubtitle == e.KeyData)
                 {
-                    var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
-                    if (item.Checked && index + 1 < toolStripSplitButtonPlayRate.DropDownItems.Count)
-                    {
-                        SetPlayRate(toolStripSplitButtonPlayRate.DropDownItems[index + 1], null);
-                        return;
-                    }
+                    ExtendSelectedLinesToPreviousLine();
+                    e.SuppressKeyPress = true;
                 }
-            }
-            else if (e.KeyData == _shortcuts.MainVideoReset)
-            {
-                e.SuppressKeyPress = true;
-                if (audioVisualizer != null)
+                else if (_shortcuts.MainAdjustExtendToNextSceneChange == e.KeyData)
                 {
-                    audioVisualizer.ZoomFactor = 1.0;
-                    audioVisualizer.VerticalZoomFactor = 1.0;
-                    InitializeWaveformZoomDropdown();
+                    ExtendSelectedLinesToNextSceneChange();
+                    e.SuppressKeyPress = true;
                 }
-
-                if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+                else if (_shortcuts.MainAdjustExtendToPreviousSceneChange == e.KeyData)
                 {
-                    mediaPlayer.VideoPlayer.PlayRate = 1.0;
-                    InitializePlayRateDropDown();
-                    toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
+                    ExtendSelectedLinesToPreviousSceneChange();
+                    e.SuppressKeyPress = true;
                 }
-            }
-            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHere)
-            {
-                addParagraphHereToolStripMenuItem_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformAddTextAtHereFromClipboard)
-            {
-                addParagraphAndPasteToolStripMenuItem_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _shortcuts.WaveformSetParagraphAsNewSelection)
-            {
-                toolStripMenuItemSetParagraphAsSelection_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Focused && e.KeyData == _shortcuts.WaveformFocusListView)
-            {
-                SubtitleListview1.Focus();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.VideoGoToPrevSubtitle)
-            {
-                GoToPreviousSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.VideoGoToNextSubtitle)
-            {
-                GoToNextSubtitle(mediaPlayer.CurrentPosition * TimeCode.BaseUnit);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.VideoSelectNextSubtitle)
-            {
-                var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
-                foreach (var p in _subtitle.Paragraphs)
+                else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
                 {
-                    if (p.StartTime.TotalMilliseconds > cp)
-                    {
-                        SubtitleListview1.SelectNone();
-                        SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Selected = true;
-                        SubtitleListview1.Items[_subtitle.Paragraphs.IndexOf(p)].Focused = true;
-                        break;
-                    }
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToPreviousSceneChange)
-            {
-                var cp = mediaPlayer.CurrentPosition - 0.01;
-                foreach (var sceneChange in audioVisualizer.SceneChanges.Reverse<double>())
-                {
-                    if (sceneChange < cp)
-                    {
-                        mediaPlayer.CurrentPosition = sceneChange;
-                        break;
-                    }
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.SceneChanges != null && e.KeyData == _shortcuts.WaveformGoToNextSceneChange)
-            {
-                var cp = mediaPlayer.CurrentPosition + 0.01;
-                foreach (var sceneChange in audioVisualizer.SceneChanges)
-                {
-                    if (sceneChange > cp)
-                    {
-                        mediaPlayer.CurrentPosition = sceneChange;
-                        break;
-                    }
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformToggleSceneChange)
-            {
-                var cp = mediaPlayer.CurrentPosition;
-                var idx = audioVisualizer.GetSceneChangeIndex(cp);
-                if (idx >= 0)
-                {
-                    RemoveSceneChange(idx);
-                }
-                else
-                { // add scene change
-                    var list = audioVisualizer.SceneChanges.Where(p => p > 0).ToList();
-                    list.Add(cp);
-                    list.Sort();
-                    audioVisualizer.SceneChanges = list;
-                    SceneChangeHelper.SaveSceneChanges(_videoFileName, list);
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _shortcuts.WaveformGuessStart)
-            {
-                AutoGuessStartTime(_subtitleListViewIndex);
-                e.SuppressKeyPress = true;
-            }
-            else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
-            {
-                ToolStripMenuItemDeleteClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainToolsAutoDuration == e.KeyData)
-            {
-                MakeAutoDuration();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I)
-            {
-                using (var form = new ImportUnknownFormat(string.Empty))
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK)
-                    {
-                        if (form.ImportedSubitle?.Paragraphs.Count > 0)
-                        {
-                            _subtitle = form.ImportedSubitle;
-                            _fileName = null;
-                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            SetTitle();
-                        }
-                    }
-                }
-
-                e.SuppressKeyPress = true;
-            }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDown == e.KeyData)
-            {
-                MoveLastWordDown();
-                e.SuppressKeyPress = true;
-            }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordFromNextUp == e.KeyData)
-            {
-                MoveFirstWordInNextUp();
-                e.SuppressKeyPress = true;
-            }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDownCurrent == e.KeyData)
-            {
-                MoveWordUpDownInCurrent(true);
-                e.SuppressKeyPress = true;
-            }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordUpCurrent == e.KeyData)
-            {
-                MoveWordUpDownInCurrent(false);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                if (SubtitleListview1.SelectedItems.Count >= 1)
-                {
-                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
-                    _makeHistoryPaused = true;
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
-                    SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
-                    _makeHistoryPaused = false;
-                }
-            }
-            else if (_shortcuts.MainAdjustExtendCurrentSubtitle == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count == 1)
-                {
-                    var historyAdded = false;
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    var p = _subtitle.Paragraphs[idx];
-                    var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                    if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
-                        historyAdded = true;
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                    }
-                    else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
-                        historyAdded = true;
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
-
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            var originalNext = _subtitleAlternate.GetParagraphOrDefault(_subtitleAlternate.GetIndex(original) + 1);
-                            if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                            {
-                                if (!historyAdded)
-                                {
-                                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
-                                }
-
-                                original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                            }
-                            else if (originalNext != null && originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds)
-                            {
-                                if (!historyAdded)
-                                {
-                                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
-                                }
-
-                                original.EndTime.TotalMilliseconds = originalNext.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            }
-                        }
-                    }
-
-                    RefreshSelectedParagraph();
+                    GoToNextSyntaxError();
                     e.SuppressKeyPress = true;
                 }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)
-            {
-                FindPrevious();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustExtendToNextSubtitle == e.KeyData)
-            {
-                ExtendSelectedLinesToNextLine();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustExtendToPreviousSubtitle == e.KeyData)
-            {
-                ExtendSelectedLinesToPreviousLine();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustExtendToNextSceneChange == e.KeyData)
-            {
-                ExtendSelectedLinesToNextSceneChange();
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustExtendToPreviousSceneChange == e.KeyData)
-            {
-                ExtendSelectedLinesToPreviousSceneChange();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
-            {
-                GoToNextSyntaxError();
-                e.SuppressKeyPress = true;
-            }
 
+                //TABS: Create / adjust / translate
 
-            //TABS: Create / adjust / translate
-
-            // create
-            else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
-            {
-                var p = InsertNewTextAtVideoPosition();
-                p.Text = string.Empty;
-                SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
-                textBoxListViewText.Text = p.Text;
-                e.SuppressKeyPress = true;
-            }
-            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
-            {
-                StopAutoDuration();
-                ButtonSetEndClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainCreateSetStart == e.KeyData)
-            {
-                buttonSetStartTime_Click(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainCreateSetEnd == e.KeyData)
-            {
-                StopAutoDuration();
-                ButtonSetEndClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainCreateSetEndAddNewAndGoToNew == e.KeyData)
-            {
-                StopAutoDuration();
-                e.SuppressKeyPress = true;
-
-                if (SubtitleListview1.SelectedItems.Count == 1)
+                // create
+                else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
                 {
-                    double videoPosition = mediaPlayer.CurrentPosition;
-                    if (!mediaPlayer.IsPaused)
-                    {
-                        videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
-                    }
+                    var p = InsertNewTextAtVideoPosition();
+                    p.Text = string.Empty;
+                    SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
+                    textBoxListViewText.Text = p.Text;
+                    e.SuppressKeyPress = true;
+                }
+                else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
+                {
+                    StopAutoDuration();
+                    ButtonSetEndClick(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainCreateSetStart == e.KeyData)
+                {
+                    buttonSetStartTime_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainCreateSetEnd == e.KeyData)
+                {
+                    StopAutoDuration();
+                    ButtonSetEndClick(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainCreateSetEndAddNewAndGoToNew == e.KeyData)
+                {
+                    StopAutoDuration();
+                    e.SuppressKeyPress = true;
 
-                    int index = SubtitleListview1.SelectedItems[0].Index;
-                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
-
-                    var p = _subtitle.Paragraphs[index];
-                    p.EndTime = TimeCode.FromSeconds(videoPosition);
-                    if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    if (SubtitleListview1.SelectedItems.Count == 1)
                     {
-                        var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
-                        double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
-                        if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        double videoPosition = mediaPlayer.CurrentPosition;
+                        if (!mediaPlayer.IsPaused)
                         {
-                            p.EndTime = newEndTime;
+                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                         }
+
+                        int index = SubtitleListview1.SelectedItems[0].Index;
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+
+                        var p = _subtitle.Paragraphs[index];
+                        p.EndTime = TimeCode.FromSeconds(videoPosition);
+                        if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                        {
+                            var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
+                            if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                            {
+                                p.EndTime = newEndTime;
+                            }
+                        }
+
+                        SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                        SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                        ButtonInsertNewTextClick(null, null);
+                    }
+                }
+                else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
+                {
+                    if (_mainCreateStartDownEndUpParagraph == null)
+                    {
+                        _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
                     }
 
-                    SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
-                    SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
-                    ButtonInsertNewTextClick(null, null);
+                    e.SuppressKeyPress = true;
                 }
-            }
-            else if (_shortcuts.MainCreateStartDownEndUp == e.KeyData)
-            {
-                if (_mainCreateStartDownEndUpParagraph == null)
+                else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
                 {
-                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
+                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
+                {
+                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
                 }
 
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
-            {
-                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
-            {
-                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
-                e.SuppressKeyPress = true;
-            }
 
+                // adjust
+                else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
+                {
+                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
+                {
+                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustAdjustStartXMsBack == e.KeyData)
+                {
+                    MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustAdjustStartXMsForward == e.KeyData)
+                {
+                    MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustAdjustEndXMsBack == e.KeyData)
+                {
+                    MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_shortcuts.MainAdjustAdjustEndXMsForward == e.KeyData)
+                {
+                    MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
+                {
+                    ButtonSetStartAndOffsetRestClick(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRest == e.KeyData)
+                {
+                    SetEndAndOffsetTheRest(false);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
+                {
+                    SetEndAndOffsetTheRest(true);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndGotoNext == e.KeyData)
+                {
+                    ShowNextSubtitleLabel();
+                    ButtonSetEndAndGoToNextClick(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartKeepDuration == e.KeyData)
+                {
+                    SetStartTime(true);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStart == e.KeyData)
+                {
+                    SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
+                {
+                    ShowNextSubtitleLabel();
+                    SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
+                {
+                    SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndNextStartAndGoToNext == e.KeyData)
+                {
+                    ShowNextSubtitleLabel();
+                    SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
+                    e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
+                {
+                    ShowNextSubtitleLabel();
+                    _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                    SetStartTime(true);
+                    e.SuppressKeyPress = true;
+                }
 
-            // adjust
-            else if (_shortcuts.MainAdjustSelected100MsForward == e.KeyData)
-            {
-                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
-                e.SuppressKeyPress = true;
+                // translate
+                else if (_shortcuts.MainTranslateGoogleIt == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    buttonGoogleIt_Click(null, null);
+                }
+                else if (_shortcuts.MainTranslateGoogleTranslate == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    buttonGoogleTranslateIt_Click(null, null);
+                }
+                else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
+                }
+                else if (_shortcuts.MainTranslateCustomSearch2 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
+                }
+                else if (_shortcuts.MainTranslateCustomSearch3 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
+                }
+                else if (_shortcuts.MainTranslateCustomSearch4 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
+                }
+                else if (_shortcuts.MainTranslateCustomSearch5 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
+                }
+                // put new entries above tabs
             }
-            else if (_shortcuts.MainAdjustSelected100MsBack == e.KeyData)
-            {
-                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustAdjustStartXMsBack == e.KeyData)
-            {
-                MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustAdjustStartXMsForward == e.KeyData)
-            {
-                MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustAdjustEndXMsBack == e.KeyData)
-            {
-                MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
-                e.SuppressKeyPress = true;
-            }
-            else if (_shortcuts.MainAdjustAdjustEndXMsForward == e.KeyData)
-            {
-                MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
-            {
-                ButtonSetStartAndOffsetRestClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRest == e.KeyData)
-            {
-                SetEndAndOffsetTheRest(false);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
-            {
-                SetEndAndOffsetTheRest(true);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndAndGotoNext == e.KeyData)
-            {
-                ShowNextSubtitleLabel();
-                ButtonSetEndAndGoToNextClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartKeepDuration == e.KeyData)
-            {
-                SetStartTime(true);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStart == e.KeyData)
-            {
-                SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
-            {
-                ShowNextSubtitleLabel();
-                SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
-            {
-                SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustSetEndNextStartAndGoToNext == e.KeyData)
-            {
-                ShowNextSubtitleLabel();
-                SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
-                e.SuppressKeyPress = true;
-            }
-            else if (mediaPlayer.VideoPlayer != null && _shortcuts.MainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
-            {
-                ShowNextSubtitleLabel();
-                _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                SetStartTime(true);
-                e.SuppressKeyPress = true;
-            }
-
-            // translate
-            else if (_shortcuts.MainTranslateGoogleIt == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                buttonGoogleIt_Click(null, null);
-            }
-            else if (_shortcuts.MainTranslateGoogleTranslate == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                buttonGoogleTranslateIt_Click(null, null);
-            }
-            else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
-            }
-            else if (_shortcuts.MainTranslateCustomSearch2 == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
-            }
-            else if (_shortcuts.MainTranslateCustomSearch3 == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
-            }
-            else if (_shortcuts.MainTranslateCustomSearch4 == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
-            }
-            else if (_shortcuts.MainTranslateCustomSearch5 == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
-            }
-
-            // put new entries above tabs
         }
 
         private void ExtendSelectedLinesToNextLine()
