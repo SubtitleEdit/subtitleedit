@@ -13706,6 +13706,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int newIndex = _subtitleListViewIndex - 1;
                 if (newIndex >= 0)
                 {
+                    SubtitleListview1.BeginUpdate();
                     foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     {
                         item.Selected = false;
@@ -13716,6 +13717,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Focus();
                     textBoxListViewText.SelectAll();
                     _subtitleListViewIndex = newIndex;
+                    SubtitleListview1.EndUpdate();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
                     e.SuppressKeyPress = true;
@@ -13726,6 +13728,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int newIndex = _subtitleListViewIndex + 1;
                 if (newIndex < _subtitle.Paragraphs.Count)
                 {
+                    SubtitleListview1.BeginUpdate();
                     foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     {
                         item.Selected = false;
@@ -13736,6 +13739,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Focus();
                     textBoxListViewText.SelectAll();
                     _subtitleListViewIndex = newIndex;
+                    SubtitleListview1.EndUpdate();
                     GotoSubtitleIndex(newIndex);
                     ShowSubtitle();
                     e.SuppressKeyPress = true;
