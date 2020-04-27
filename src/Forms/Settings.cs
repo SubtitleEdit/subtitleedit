@@ -472,6 +472,22 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSplitBehavior.SelectedIndex = gs.SplitBehavior;
             labelSplitBehavior.Text = language.SplitBehavior;
             comboBoxSplitBehavior.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
+            if (labelSplitBehavior.Width > labelTimeCodeMode.Width)
+            {
+                comboBoxSplitBehavior.Left = labelSplitBehavior.Left + labelSplitBehavior.Width + 4;
+            }
+
+            var dropDownSplitBehaviorWidth = comboBoxSplitBehavior.Width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                foreach (var item in comboBoxSplitBehavior.Items)
+                {
+                    var itemWidth = (int)g.MeasureString((string)item, Font).Width + 5;
+                    dropDownSplitBehaviorWidth = Math.Max(itemWidth, dropDownSplitBehaviorWidth);
+                }
+            }
+            comboBoxSplitBehavior.DropDownWidth = dropDownSplitBehaviorWidth;
+
 
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
