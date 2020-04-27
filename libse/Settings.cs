@@ -704,7 +704,7 @@ $HorzAlign          =   Center
             FixEllipsesStartTicked = true;
             FixMissingOpenBracketTicked = true;
             FixMusicNotationTicked = true;
-            FixContinuationStyleTicked = true;
+            FixContinuationStyleTicked = false;
             FixUnnecessaryLeadingDotsTicked = true;
         }
 
