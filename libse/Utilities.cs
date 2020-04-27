@@ -2093,7 +2093,7 @@ namespace Nikse.SubtitleEdit.Core
 
             while (text.Contains(" ?</i>" + Environment.NewLine))
             {
-                text = text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+                text = text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
             }
 
             if (text.StartsWith("- ... ", StringComparison.Ordinal))
