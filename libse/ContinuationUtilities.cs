@@ -272,9 +272,10 @@ namespace Nikse.SubtitleEdit.Core
             return lastWord;
         }
 
-        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize)
+        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize, bool gap)
         {
             string text = sanitize ? SanitizeString(input) : input;
+            bool applyIfComma = gap && profile.UseDifferentStyleGap ? profile.GapSuffixApplyIfComma : profile.SuffixApplyIfComma;
 
             // Return if empty string
             if (string.IsNullOrEmpty(text))
@@ -282,12 +283,17 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            if ((EndsWithNothing(text, profile) || text.EndsWith(',') || HasSuffix(text, profile)) && !text.EndsWith("--", StringComparison.Ordinal) && !text.EndsWith(':') && !text.EndsWith(';'))
+            if ((EndsWithNothing(text, profile) || (applyIfComma && text.EndsWith(',')) || HasSuffix(text, profile)) && !text.EndsWith("--", StringComparison.Ordinal) && !text.EndsWith(':') && !text.EndsWith(';'))
             {
                 return true;
             }
 
             return false;
+        }
+        
+        public static bool ShouldAddSuffix(string input, ContinuationProfile profile, bool sanitize)
+        {
+            return ShouldAddSuffix(input, profile, sanitize, false);
         }
 
         public static bool ShouldAddSuffix(string input, ContinuationProfile profile)
@@ -850,6 +856,35 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public static bool IsBold(string input)
+        {
+            input = ExtractParagraphOnly(input);
+
+            // Return if empty string
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            while (input.IndexOf("<b>", StringComparison.Ordinal) >= 0)
+            {
+                var startIndex = input.IndexOf("<b>", StringComparison.Ordinal);
+                var endIndex = input.IndexOf("</b>", StringComparison.Ordinal);
+                var textToRemove = endIndex >= 0 ? input.Substring(startIndex, (endIndex + 4) - startIndex) : input.Substring(startIndex);
+                input = input.Replace(textToRemove, "");
+            }
+
+            foreach (var c in input)
+            {
+                if (c != '\n' && c != '\r')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool IsFullLineTag(string input, int position)
         {
             input = ExtractParagraphOnly(input);
@@ -1315,12 +1350,14 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "",
+                        SuffixApplyIfComma = false,
                         SuffixAddSpace = false,
                         SuffixReplaceComma = false,
                         Prefix = "",
                         PrefixAddSpace = false,
                         UseDifferentStyleGap = true,
                         GapSuffix = "...",
+                        GapSuffixApplyIfComma = true,
                         GapSuffixAddSpace = false,
                         GapSuffixReplaceComma = true,
                         GapPrefix = "",
@@ -1330,12 +1367,14 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "",
+                        SuffixApplyIfComma = false,
                         SuffixAddSpace = false,
                         SuffixReplaceComma = false,
                         Prefix = "",
                         PrefixAddSpace = false,
                         UseDifferentStyleGap = true,
                         GapSuffix = "...",
+                        GapSuffixApplyIfComma = true,
                         GapSuffixAddSpace = false,
                         GapSuffixReplaceComma = true,
                         GapPrefix = "...",
@@ -1345,6 +1384,7 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "...",
+                        SuffixApplyIfComma = true,
                         SuffixAddSpace = false,
                         SuffixReplaceComma = true,
                         Prefix = "",
@@ -1355,6 +1395,7 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "...",
+                        SuffixApplyIfComma = true,
                         SuffixAddSpace = false,
                         SuffixReplaceComma = true,
                         Prefix = "...",
@@ -1365,6 +1406,7 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "-",
+                        SuffixApplyIfComma = true,
                         SuffixAddSpace = true,
                         SuffixReplaceComma = true,
                         Prefix = "-",
@@ -1375,12 +1417,14 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "-",
+                        SuffixApplyIfComma = true,
                         SuffixAddSpace = true,
                         SuffixReplaceComma = true,
                         Prefix = "-",
                         PrefixAddSpace = true,
                         UseDifferentStyleGap = true,
                         GapSuffix = "...",
+                        GapSuffixApplyIfComma = true,
                         GapSuffixAddSpace = false,
                         GapSuffixReplaceComma = true,
                         GapPrefix = "...",
@@ -1390,6 +1434,7 @@ namespace Nikse.SubtitleEdit.Core
                     return new ContinuationProfile
                     {
                         Suffix = "",
+                        SuffixApplyIfComma = false,
                         SuffixAddSpace = false,
                         SuffixReplaceComma = false,
                         Prefix = "",
@@ -1402,12 +1447,14 @@ namespace Nikse.SubtitleEdit.Core
         public class ContinuationProfile
         {
             public string Suffix { get; set; }
+            public bool SuffixApplyIfComma { get; set; }
             public bool SuffixAddSpace { get; set; }
             public bool SuffixReplaceComma { get; set; }
             public string Prefix { get; set; }
             public bool PrefixAddSpace { get; set; }
             public bool UseDifferentStyleGap { get; set; }
             public string GapSuffix { get; set; }
+            public bool GapSuffixApplyIfComma { get; set; }
             public bool GapSuffixAddSpace { get; set; }
             public bool GapSuffixReplaceComma { get; set; }
             public string GapPrefix { get; set; }

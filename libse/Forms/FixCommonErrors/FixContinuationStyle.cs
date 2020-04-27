@@ -25,6 +25,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 SetContinuationProfile(Configuration.Settings.General.ContinuationStyle);
             }
 
+            // Quick fix for Portuguese
+            if (callbacks.Language == "pt")
+            {
+                _continuationProfile.SuffixApplyIfComma = false;
+                _continuationProfile.GapSuffixApplyIfComma = false;
+
+                if (_continuationProfile.Prefix == "...")
+                {
+                    _continuationProfile.PrefixAddSpace = true;
+                }
+
+                if (_continuationProfile.GapPrefix == "...")
+                {
+                    _continuationProfile.GapPrefixAddSpace = true;
+                }
+            }
+
             int minGapMs = ContinuationUtilities.GetMinimumGapMs();
 
             bool inSentence = false;
@@ -42,6 +59,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var isChecked = true;
                 var shouldProcess = true;
 
+                // Detect gap
+                bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
+
                 // Convert for Arabic
                 if (callbacks.Language == "ar")
                 {
@@ -52,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 // Check if we should fix this paragraph
-                if (ShouldFixParagraph(text))
+                if (ShouldFixParagraph(text, gap))
                 {
                     // If ends with nothing...
                     if (!ContinuationUtilities.IsEndOfSentence(text))
@@ -85,6 +105,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     isChecked = false;
                                 }
                             }
+
+                            // ...ignore bold tags for Portuguese
+                            if (callbacks.Language == "pt")
+                            {
+                                if (ContinuationUtilities.IsBold(oldText) || ContinuationUtilities.IsBold(oldText))
+                                {
+                                    isChecked = false;
+                                }
+                            }
                         }
                         
                         // ...ignore Arabic inserts
@@ -96,11 +125,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
                     }
-
-
-                    // Detect gap
-                    bool gap = pNext.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > minGapMs;
-
+                    
                     // Remove any suffixes and prefixes
                     var oldTextWithoutSuffix = ContinuationUtilities.RemoveSuffix(oldText, _continuationProfile, new List<string> { "," }, false).Trim();
                     var oldTextNextWithoutPrefix = ContinuationUtilities.RemovePrefix(oldTextNext, _continuationProfile, true, gap);
@@ -230,9 +255,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return callbacks.AllowFix(new Paragraph { Number = -1 }, string.Empty);
         }
 
-        private bool ShouldFixParagraph(string input)
+        private bool ShouldFixParagraph(string input, bool gap)
         {
-            return ContinuationUtilities.ShouldAddSuffix(input, _continuationProfile, false);
+            return ContinuationUtilities.ShouldAddSuffix(input, _continuationProfile, false, gap);
         }
 
         private bool HasPrefix(string input)
