@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             // ...ignore bold tags for Portuguese
                             if (callbacks.Language == "pt")
                             {
-                                if (ContinuationUtilities.IsBold(oldText) || ContinuationUtilities.IsBold(oldText))
+                                if (ContinuationUtilities.IsBold(oldText) || ContinuationUtilities.IsBold(oldTextNext))
                                 {
                                     isChecked = false;
                                 }
