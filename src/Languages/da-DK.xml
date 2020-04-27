@@ -202,7 +202,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <AutoBalance>Auto-balancer linjer</AutoBalance>
     <ScanFolder>Scan mappe...</ScanFolder>
     <Recursive>Medtag undermapper</Recursive>
-    <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
     <BridgeGaps>Lap små huller</BridgeGaps>
     <PlainText>Almindelig tekst</PlainText>
     <Ocr>OCR...</Ocr>
@@ -1966,12 +1965,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DialogStyleDashSecondLineWithoutSpace>Dialog-bindestreg anden linje uden mellemrum</DialogStyleDashSecondLineWithoutSpace>
     <ContinuationStyle>Fortsættelsesstil</ContinuationStyle>
     <ContinuationStyleNone>Ingen</ContinuationStyleNone>
-    <ContinuationStyleNoneTrailingDots>Ingen, punktummer til pauser (kun bageste)</ContinuationStyleNoneTrailingDots>
-    <ContinuationStyleNoneLeadingTrailingDots>Ingen, punktummer til pauser</ContinuationStyleNoneLeadingTrailingDots>
-    <ContinuationStyleOnlyTrailingDots>punktummer (kun bageste)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleNoneTrailingDots>Ingen, punktummer for pauser (kun bageste)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Ingen, punktummer for pauser</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>punktummer (kun bagest)</ContinuationStyleOnlyTrailingDots>
     <ContinuationStyleLeadingTrailingDots>Punktummer </ContinuationStyleLeadingTrailingDots>
     <ContinuationStyleLeadingTrailingDash>Bindestreg</ContinuationStyleLeadingTrailingDash>
-    <ContinuationStyleLeadingTrailingDashDots>Stip, men prikker til pauser</ContinuationStyleLeadingTrailingDashDots>
+    <ContinuationStyleLeadingTrailingDashDots>Stip, men punktummer for pauser</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
