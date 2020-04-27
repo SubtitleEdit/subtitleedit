@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     else
                     {
-                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
                         {
                             return text;
                         }
