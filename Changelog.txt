@@ -92,6 +92,7 @@
    * Remember video player buttons - thx Lero91
    * Remember plain text options - thx raidsan
    * Ignore shortcuts when "Win-Key" is down - thx GCRaistlin
+   * Fix "go to next/prev sub + set video pos" - thx Waldkoenig
 
 
 3.5.14 (8th March 2020)
