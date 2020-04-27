@@ -206,7 +206,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
     <ScanFolder>Examinar pasta...</ScanFolder>
     <Recursive>Incluir sub-pastas</Recursive>
-    <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as linhas</SetMinMsBetweenSubtitles>
     <BridgeGaps>Unir intervalos</BridgeGaps>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
@@ -989,7 +988,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar legenda /OCR Blu-ray (.sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importar /OCR XSub de ficheiros divx/avi...</ImportXSub>
+        <ImportXSub>Importar /OCR XSub de ficheiros DivX/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto sem formatação...</ImportText>
@@ -1559,7 +1558,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <NoSupportHereBluRaySup>Ficheiros Blu-ray sup não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Ficheiros DVD sup não são suportados aqui.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Ficheiros VobSub não são suportados aqui.</NoSupportHereVobSub>
-    <NoSupportHereDivx>Ficheiros Divx não são suportados aqui.</NoSupportHereDivx>
+    <NoSupportHereDivx>Ficheiros DivX não são suportados aqui.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
