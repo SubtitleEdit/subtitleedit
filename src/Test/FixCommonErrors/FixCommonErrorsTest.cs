@@ -1156,7 +1156,7 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
-        public void FixUnneededSpacesBeforeEndTag()
+        public void FixUnneededSpacesBeforeEndTag1()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -1167,6 +1167,30 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixUnneededSpacesBeforeEndTag1b()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>I happen to have" + Environment.NewLine + " the blood of an ancient family !</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>I happen to have" + Environment.NewLine + "the blood of an ancient family!</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+
+        [TestMethod]
+        public void FixUnneededSpacesBeforeEndTag1c()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>I happen to have" + Environment.NewLine + " the blood of an ancient family ?</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>I happen to have" + Environment.NewLine + "the blood of an ancient family?</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+
+        [TestMethod]
         public void FixUnneededSpacesBeforeEndTag2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1174,6 +1198,28 @@ namespace Test.FixCommonErrors
                 InitializeFixCommonErrorsLine(target, "<i>I happen to have to. </i>" + Environment.NewLine + "Right?");
                 new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("<i>I happen to have to.</i>" + Environment.NewLine + "Right?", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesBeforeEndTag2a()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>I happen to have to! </i>" + Environment.NewLine + "Right?");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>I happen to have to!</i>" + Environment.NewLine + "Right?", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesBeforeEndTag2b()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>I happen to have to? </i>" + Environment.NewLine + "Right?");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>I happen to have to?</i>" + Environment.NewLine + "Right?", _subtitle.Paragraphs[0].Text);
             }
         }
 
