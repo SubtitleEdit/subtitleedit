@@ -87,6 +87,7 @@
     <Word from="boksuješ" to="boksaš" />
     <Word from="Boksuješ" to="Boksaš" />
     <Word from="bolesan" to="bolestan" />
+    <Word from="Bolesan" to="Bolestan" />
     <Word from="bolila" to="boljela" />
     <Word from="borićeš" to="borit ćeš" />
     <Word from="Borićeš" to="Borit ćeš" />
@@ -755,6 +756,7 @@
     <Word from="martu" to="ožujku" />
     <Word from="martom" to="ožujkom" />
     <Word from="matori" to="stari" />
+    <Word from="matorom" to="starom" />
     <Word from="mehur" to="mjehur" />
     <Word from="menom" to="mnom" />
     <Word from="menjajući" to="mijenjajući" />
@@ -2325,6 +2327,8 @@
     <Word from="Šona" to="Seana" />
     <Word from="Šone" to="Seane" />
     <Word from="Šonu" to="Seanu" />
+    <Word from="Šopen" to="Chopin" />
+    <Word from="Šopenu" to="Chopinu" />
     <Word from="Španiji" to="Španjolskoj" />
     <Word from="Tajms" to="Times" />
     <Word from="Tejlor" to="Taylor" />
@@ -2332,6 +2336,9 @@
     <Word from="Tokijo" to="Tokio" />
     <Word from="Trejsi" to="Tracy" />
     <Word from="Vajlder" to="Wilder" />
+    <Word from="Vajt" to="Wyatt" />
+    <Word from="Vajtom" to="Wyattom" />
+    <Word from="Vajtu" to="Wyattu" />
     <Word from="Valš" to="Walsh" />
     <Word from="Vankuver" to="Vancouver" />
     <Word from="Vankuveru" to="Vancouveru" />
@@ -3500,6 +3507,7 @@
     <RegEx find="dks" replaceWith="dsk" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="dnp" replaceWith="dno" />
+    <RegEx find="domač" replaceWith="domać" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
     <RegEx find="dsek" replaceWith="dsjek" />
@@ -3684,6 +3692,7 @@
     <RegEx find="prostav" replaceWith="protstav" />
     <RegEx find="ptre" replaceWith="potre" />
     <RegEx find="pulis" replaceWith="pulir" />
+    <RegEx find="pzn" replaceWith="pozn" />
     <RegEx find="riaj" replaceWith="rija" />
     <RegEx find="rićemo" replaceWith="rit ćemo" />
     <RegEx find="rčaće" replaceWith="rčat će" />
