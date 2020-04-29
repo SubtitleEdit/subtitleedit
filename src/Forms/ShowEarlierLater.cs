@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
-            Text = Configuration.Settings.Language.ShowEarlierLater.Title;
+            Text = Configuration.Settings.Language.ShowEarlierLater.Title.RemoveChar('&');
             labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             buttonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            Text = ((RadioButton)sender).Text;
+            Text = ((RadioButton)sender).Text.RemoveChar('&');
         }
 
         private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)

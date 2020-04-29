@@ -227,8 +227,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxOverwrite.Checked = Configuration.Settings.Tools.BatchConvertOverwriteExisting;
             buttonConvertOptionsSettings.Text = l.Settings;
-            radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
-            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
+            radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier.RemoveChar('&');
+            radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater.RemoveChar('&');
             radioButtonSpeedCustom.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Custom;
             radioButtonSpeedFromDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.FromDropFrame;
             radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;

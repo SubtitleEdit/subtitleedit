@@ -2491,12 +2491,12 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Show selected lines earlier/later",
                 TitleAll = "Show all lines earlier/later",
-                ShowEarlier = "Show earlier",
-                ShowLater = "Show later",
+                ShowEarlier = "Show &earlier",
+                ShowLater = "Show &later",
                 TotalAdjustmentX = "Total adjustment: {0}",
-                AllLines = "All lines",
-                SelectedLinesOnly = "Selected lines only",
-                SelectedLinesAndForward = "Selected line(s) and forward",
+                AllLines = "&All lines",
+                SelectedLinesOnly = "&Selected lines only",
+                SelectedLinesAndForward = "Selected line(s) and &forward",
             };
 
             ShowHistory = new LanguageStructure.ShowHistory
