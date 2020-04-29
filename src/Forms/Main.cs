@@ -4055,7 +4055,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             _fileName = string.Empty;
             _fileDateTime = new DateTime();
-            Text = Title;
             _oldSubtitleFormat = null;
             labelSingleLine.Text = string.Empty;
             labelSingleLinePixels.Text = string.Empty;
@@ -4114,6 +4113,7 @@ namespace Nikse.SubtitleEdit.Forms
             _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             _converted = false;
 
+            SetTitle();
             SetUndockedWindowsTitle();
             mediaPlayer.SubtitleText = string.Empty;
             labelNextWord.Visible = false;
@@ -11990,15 +11990,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
                 _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + format.Extension;
-                Text = Title + " - " + _fileName;
-            }
-            else
-            {
-                Text = Title;
             }
 
+            SetTitle();
             _fileDateTime = new DateTime();
-
             _converted = true;
 
             if (batchMode)
@@ -12070,13 +12065,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
                 _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + GetCurrentSubtitleFormat().Extension;
-                Text = Title + " - " + _fileName;
             }
-            else
-            {
-                Text = Title;
-            }
-
+            
+            SetTitle();
             _fileDateTime = new DateTime();
             _converted = true;
             if (batchMode)
@@ -12215,7 +12206,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
-                    Text = Title;
+                    SetTitle();
 
                     Configuration.Settings.Save();
                     return true;
@@ -12312,7 +12303,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = Utilities.GetPathAndFileNameWithoutExtension(matroska.Path) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
-                    Text = Title;
+                    SetTitle();
 
                     Configuration.Settings.Save();
                     return true;
@@ -12423,7 +12414,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
                     _fileName = string.Empty;
-                    Text = Title;
+                    SetTitle();
 
                     Configuration.Settings.Save();
                     return true;
@@ -12484,7 +12475,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
                     _fileName = string.Empty;
-                    Text = Title;
+                    SetTitle();
 
                     Configuration.Settings.Save();
                 }
@@ -12735,7 +12726,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                     _converted = true;
-                    Text = Title;
+                    SetTitle();
 
                     Configuration.Settings.Save();
                     if (!Configuration.Settings.General.DisableVideoAutoLoading)
@@ -12800,7 +12791,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _fileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) + GetCurrentSubtitleFormat().Extension;
                         _converted = true;
-                        Text = Title;
+                        SetTitle();
 
                         Configuration.Settings.Save();
                     }
@@ -12820,13 +12811,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 {
                     _fileName = fileName.Substring(0, fileName.Length - 4) + GetCurrentSubtitleFormat().Extension;
-                    Text = Title + " - " + _fileName;
-                }
-                else
-                {
-                    Text = Title;
                 }
 
+                SetTitle();
                 _fileDateTime = new DateTime();
                 _converted = true;
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -16973,7 +16960,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
                                     _fileName = string.Empty;
-                                    Text = Title;
+                                    SetTitle();
 
                                     Configuration.Settings.Save();
                                 }
@@ -21634,7 +21621,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = networkJoin.FileName;
                     SetTitle();
-                    Text = Title;
                     toolStripStatusNetworking.Visible = true;
                     toolStripStatusNetworking.Text = _language.NetworkMode;
                     EnableDisableControlsNotWorkingInNetworkMode(false);
