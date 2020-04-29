@@ -2188,12 +2188,12 @@ Continue?</RestoreDefaultSettingsMsg>
   <ShowEarlierLater>
     <Title>Show selected lines earlier/later</Title>
     <TitleAll>Show all lines earlier/later</TitleAll>
-    <ShowEarlier>Show earlier</ShowEarlier>
-    <ShowLater>Show later</ShowLater>
+    <ShowEarlier>Show &amp;earlier</ShowEarlier>
+    <ShowLater>Show &amp;later</ShowLater>
     <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
-    <AllLines>All lines</AllLines>
-    <SelectedLinesOnly>Selected lines only</SelectedLinesOnly>
-    <SelectedLinesAndForward>Selected line(s) and forward</SelectedLinesAndForward>
+    <AllLines>All l&amp;ines</AllLines>
+    <SelectedLinesOnly>&amp;Selected lines only</SelectedLinesOnly>
+    <SelectedLinesAndForward>Selected line(s) and &amp;forward</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>History (for undo)</Title>
