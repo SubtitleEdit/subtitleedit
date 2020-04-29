@@ -523,6 +523,13 @@ namespace Nikse.SubtitleEdit.Core
                         return text;
                     }
                 }
+
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
+                if (dialogHelper.IsDialog(noTagLines))
+                {
+                    return text;
+                }
+
             }
 
             string s = RemoveLineBreaks(text);
