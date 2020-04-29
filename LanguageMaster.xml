@@ -2191,7 +2191,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <ShowEarlier>Show &amp;earlier</ShowEarlier>
     <ShowLater>Show &amp;later</ShowLater>
     <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
-    <AllLines>All l&amp;ines</AllLines>
+    <AllLines>&amp;All lines</AllLines>
     <SelectedLinesOnly>&amp;Selected lines only</SelectedLinesOnly>
     <SelectedLinesAndForward>Selected line(s) and &amp;forward</SelectedLinesAndForward>
   </ShowEarlierLater>
