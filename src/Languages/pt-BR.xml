@@ -131,6 +131,7 @@ Linha de comando: {1} {2}
 Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <LowDiskSpace>POUCO ESPAÇO EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livres</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Nenhuma faixa de áudio encontrada! Gerar forma de onda vazia?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Gerar dados em forma de onda em lote</Title>
@@ -202,7 +203,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <AutoBalance>Ajuste automático de linhas</AutoBalance>
     <ScanFolder>Analisar pasta...</ScanFolder>
     <Recursive>Incluir subpastas</Recursive>
-    <SetMinMsBetweenSubtitles>Definir milissegundos entre legendas</SetMinMsBetweenSubtitles>
     <BridgeGaps>Ligar intervalos</BridgeGaps>
     <PlainText>Texto simples</PlainText>
     <Ocr>OCR...</Ocr>
@@ -224,6 +224,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <TransportStreamSettingsButton>Configurações TS...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Remover quebras de linha</RemoveLineBreaks>
     <TryToUseSourceEncoding>Tentar usar codificação da fonte</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileName>"Idioma" no nome do arquivo de saída</MkvLanguageInOutputFileName>
     <MkvLanguageInOutputFileNameX>"Idioma" do Matroska (.mkv) no nome do arquivo de saída: {0}</MkvLanguageInOutputFileNameX>
     <MkvLanguageStyleTwoLetter>Código de idioma de 2 letras</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Código de idioma de 3 letras</MkvLanguageStyleThreeLetter>
@@ -593,6 +594,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixInvalidItalicTags>Corrigir tags itálicas inválidas</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Eliminar espaços desnecessários</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Eliminar períodos desnecessários</RemoveUnneededPeriods>
+    <FixCommas>Corrigir vírgulas</FixCommas>
     <FixMissingSpaces>Corrigir espaços em falta</FixMissingSpaces>
     <BreakLongLines>Dividir linhas longas</BreakLongLines>
     <RemoveLineBreaks>Eliminar quebras de linha em textos curtos com somente uma frase</RemoveLineBreaks>
@@ -657,7 +659,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <XInvalidHtmlTagsFixed>{0} tags HTML inválidas corrigidas</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} duração encurtada</XDisplayTimesShortned>
     <XGapsFixed>{0} intervalos curtos corrigidos</XGapsFixed>
-    <XLinesUnbreaked>{0} linhas unidas</XLinesUnbreaked>
+    <XLinesUnbreaked>{0} linhas com quebras removidas</XLinesUnbreaked>
     <UnneededSpace>Espaço desnecessário</UnneededSpace>
     <XUnneededSpacesRemoved>{0} espaços desnecessários removidos</XUnneededSpacesRemoved>
     <UnneededPeriod>Pontos desnecessários</UnneededPeriod>
@@ -694,6 +696,10 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Selecionar padrão</SelectDefault>
+    <FixContinuationStyleX>Corrigir estilo de continuação: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>{0} estilos de continuação corrigidos</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Remover pontos iniciais desnecessários</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>{0} pontos iniciais desnecessários removidos</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -979,7 +985,7 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
         <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar arquivo /OCR Blu-ray sup...</ImportBluRaySupFile>
-        <ImportXSub>Importar/OCR XSub de divx/AVI...</ImportXSub>
+        <ImportXSub>Importar/OCR XSub de DivX/AVI...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar legenda de arquivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda com codificação selecionada manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto simples...</ImportText>
@@ -1957,6 +1963,14 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <DialogStyleDashBothLinesWithoutSpace>Traço em ambas as linhas sem espaço</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Traço na segunda linha com espaço</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Traço na segunda linha sem espaço</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Estilo de continuação</ContinuationStyle>
+    <ContinuationStyleNone>Nenhum</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Nenhum, pontos para pausas (apenas à direita)</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Nenhum, pontos para pausas</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Pontos (apenas à direita)</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Pontos</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Traço</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Traço, mas pontos para pausas</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
@@ -2140,6 +2154,13 @@ Definir uma fonte para a legenda geralmente é feito no player de vídeo, mas ta
 
 Continuar?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Remover códigos de tempo</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Editar configurações para corrigir o estilo de continuação...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Configurações para corrigir o estilo de continuação</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Detecte e desmarcar títulos únicos em caixa alta (por exemplo: SEM ENTRADA)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Detectar e desmarcar títulos ou letras simples itálicas</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Detectar e desmarcar títulos únicos, ou letras, em minúsculo</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Ocultar sentenças de continuação improváveis</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Ignorar letra entre símbolos musicais</IgnoreLyrics>
   </Settings>
   <SettingsMpv>
     <Title>Configurações do mpv</Title>
