@@ -560,8 +560,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <FindDialog>
     <Title>Εύρεση</Title>
     <Find>Εύρεση</Find>
-    <Normal>Κανονική</Normal>
-    <CaseSensitive>Διάκριση πεζών-κεφαλαίων</CaseSensitive>
+    <Normal>&amp;Κανονική</Normal>
+    <CaseSensitive>&amp;Διάκριση πεζών-κεφαλαίων</CaseSensitive>
     <RegularExpression>Τυπική έκφραση</RegularExpression>
     <WholeWord>Ολόκληρη τη λέξη</WholeWord>
     <Count>Μέτρηση</Count>
@@ -678,8 +678,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} κεφαλαία 'i' βρέθηκαν μέσα σε πεζές λέξεις</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Ανανέωση διαθέσιμων επιδιορθώσεων</RefreshFixes>
     <ApplyFixes>Εφαρμογή επιδιορθώσεων</ApplyFixes>
-    <AutoBreak>Αυτόματη &amp;αλλαγή γραμμής</AutoBreak>
-    <Unbreak>Σ&amp;υνένωση γραμμών</Unbreak>
+    <AutoBreak>&amp;Διάσπαση</AutoBreak>
+    <Unbreak>Σ&amp;υνένωση</Unbreak>
     <FixDoubleDash>Επιδιόρθωση '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Αφαίρεση '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Αφαίρεση αρχικού '...'</FixEllipsesStart>
@@ -1045,7 +1045,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SubtitlesBridgeGaps>Ένωση κενών στις διάρκειες...</SubtitlesBridgeGaps>
         <FixCommonErrors>&amp;Επιδιόρθωση κοινών σφαλμάτων...</FixCommonErrors>
         <StartNumberingFrom>Επαναρίθμηση...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για άτομα με προβλήματα ακοής...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Αφαίρεση κειμένου για κωφούς...</RemoveTextForHearingImpaired>
         <ChangeCasing>Αλλαγή πεζών-κεφαλαίων...</ChangeCasing>
         <ChangeFrameRate>Αλλαγή ρυθμού καρέ...</ChangeFrameRate>
         <ChangeSpeedInPercent>Αλλαγή ταχύτητας (επί τοις εκατό)...</ChangeSpeedInPercent>
@@ -1742,8 +1742,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReplaceAll>Αντικατάσταση ό&amp;λων</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
-    <Title>Επαναφορά αυτόματης δημιουργίας αντιγράφων ασφαλείας</Title>
-    <Information>Άνοιγμα αυτόματα αποθηκευμένων αντιγράφων ασφαλείας</Information>
+    <Title>Επαναφορά αντιγράφων ασφαλείας</Title>
+    <Information>Άνοιγμα αντιγράφων ασφαλείας</Information>
     <DateAndTime>Ημερομηνία</DateAndTime>
     <FileName>Όνομα αρχείου</FileName>
     <Extension>Επέκταση</Extension>
@@ -1809,7 +1809,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowFrameRate>Εμφάνιση ρυθμού καρέ στη γραμμή εργαλείων</ShowFrameRate>
     <DefaultFrameRate>Προεπιλεγμένος ρυθμός καρέ</DefaultFrameRate>
     <DefaultFileEncoding>Προεπιλεγμένη κωδικοποίηση</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>Αυτόματη ανίχνευση κωδικοποίησης ANSI</AutoDetectAnsiEncoding>
+    <AutoDetectAnsiEncoding>Ανίχνευση κωδικοποίησης ANSI</AutoDetectAnsiEncoding>
     <Profile>Προφίλ</Profile>
     <Profiles>Προφίλ</Profiles>
     <ImportProfiles>Εισαγωγή προφίλ</ImportProfiles>
@@ -1852,8 +1852,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewEditTextAndPause>Πηγαίνετε να επεξεργαστείτε το πλαίσιο κειμένου, και παύση στη θέση βίντεο</MainListViewEditTextAndPause>
     <VideoFileName>Όνομα αρχείου βίντεο</VideoFileName>
     <ExistingFileName>Υπάρχον όνομα</ExistingFileName>
-    <AutoBackup>Αυτόματα αντίγραφα ασφαλείας</AutoBackup>
-    <AutoBackupEveryMinute>Κάθε λεπτό</AutoBackupEveryMinute>
+    <AutoBackup>Aντίγραφα ασφαλείας</AutoBackup>
+    <AutoBackupEveryMinute>Κάθε 1 λεπτό</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Κάθε 5 λεπτά</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Κάθε 15 λεπτά</AutoBackupEveryFifteenMinutes>
     <AutoBackupDeleteAfter>Διαγραφή μετά από</AutoBackupDeleteAfter>
@@ -1878,7 +1878,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io</MpvPlayerDescription>
-    <MpvHandlesPreviewText>Προεπισκόπηση από mpv</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>Προεπισκόπηση κειμένου από mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll από VLC media player 1.1.0 ή νεότερο</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Διαδρομή του VLC (μόνο για τη φορητή έκδοση VLC)</VlcBrowseToLabel>
@@ -1972,7 +1972,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MusicSymbol>Μουσικό σύμβολο</MusicSymbol>
     <MusicSymbolsReplace>Αντικατάσταση μουσικών συμβόλων (χωρισμένα με κόμμα)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Επιδιόρθωση κοινών σφαλμάτων OCR - επίσης χρήση ενσωματωμένων κανόνων</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Επιδιόρθωση του σύντομου χρονικόυ διαστήματος εμφάνισης - να επιτραπεί η μετακίνηση του χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Επιδιόρθωση του σύντομου χρόνου εμφάνισης - μετακίνηση του χρόνου έναρξης</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Παράβλεψη πρώτου βήματος (προκαθορισμένες επιλογές)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Συντομεύσεις</Shortcuts>
     <Shortcut>Συντόμευση</Shortcut>
@@ -2159,7 +2159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Settings>
   <SettingsMpv>
     <Title>Ρυθμίσεις mpv</Title>
-    <DownloadMpv> Λήψη mpv lib</DownloadMpv>
+    <DownloadMpv>Λήψη mpv lib</DownloadMpv>
     <DownloadMpvFailed>Αδυναμία λήψης mpv - παρακαλώ, προσπαθήστε αργότερα!</DownloadMpvFailed>
     <DownloadMpvOk>Ολοκλήρωση λήψης mpv lib και έτοιμο προς χρήση.</DownloadMpvOk>
   </SettingsMpv>
