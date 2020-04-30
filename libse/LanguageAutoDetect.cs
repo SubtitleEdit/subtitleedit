@@ -1291,7 +1291,10 @@ namespace Nikse.SubtitleEdit.Core
                         else if (Configuration.Settings.General.AutoGuessAnsiEncoding && !skipAnsiAuto)
                         {
                             var autoDetected = DetectAnsiEncoding(buffer);
-                            return autoDetected.CodePage < 874 ? Encoding.Default : autoDetected;
+                            if (autoDetected != null)
+                            {
+                                return autoDetected.CodePage < 874 ? Encoding.Default : autoDetected;
+                            }
                         }
                     }
                 }
