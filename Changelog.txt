@@ -64,6 +64,7 @@
    * Add Arabic no-break-after list - thx OmrSi
    * Titlebar changed to: "*file - SE" - thx Signy13/GCRaistlin
    * Remove default alignment in TTML 1.0 - thx Arjan
+   * Improve reading of faulty DVD SUP files - thx GCRaistlin
 * FIXED:
    * Fix extraction from MKV via drag-n-drop - thx ryvec/Symos404/uckthis
    * Fix issue with line break in MS translate - thx cocowash

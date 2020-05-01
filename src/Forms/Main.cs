@@ -12066,7 +12066,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + GetCurrentSubtitleFormat().Extension;
             }
-            
+
             SetTitle();
             _fileDateTime = new DateTime();
             _converted = true;
@@ -13253,6 +13253,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     buffer = new byte[SpHeader.SpHeaderLength];
                     bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    while (bytesRead == buffer.Length && Encoding.ASCII.GetString(buffer, 0, 2) != "SP")
+                    {
+                        fs.Seek(fs.Position - buffer.Length + 1, SeekOrigin.Begin);
+                        bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    }
                     header = new SpHeader(buffer);
                 }
             }
