@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.15 (xth April 2020) BETA
+3.5.15 (1st May 2020)
 * NEW:
    * Add "sentence continuation style" - thx Flitskikker
    * Allow generation of waveform without audio - thx serquis/grzesiek
