@@ -1884,7 +1884,8 @@ namespace Nikse.SubtitleEdit.Core
                 UnequalLines = "Odd-numbered lines",
                 EqualLines = "Even-numbered lines",
                 DurationLessThan = "Duration less than",
-                DurationGreaterThan = "Duration greater than"
+                DurationGreaterThan = "Duration greater than",
+                MoreThanTwoLines = "More than two lines",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace

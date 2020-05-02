@@ -27,8 +27,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int FunctionEqual = 7;
         private const int FunctionDurationLessThan = 8;
         private const int FunctionDurationGreaterThan = 9;
-        private const int FunctionStyle = 10;
-        private const int FunctionActor = 11;
+        private const int FunctionMoreThanTwoLines = 10;
+        private const int FunctionStyle = 11;
+        private const int FunctionActor = 12;
 
         public ModifySelection(Subtitle subtitle, SubtitleFormat format, SubtitleListView subtitleListView)
         {
@@ -73,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.DurationLessThan);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.DurationGreaterThan);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.MoreThanTwoLines);
             if (_format.HasStyleSupport)
             {
                 comboBoxRule.Items.Add(Configuration.Settings.Language.General.Style);
@@ -111,6 +113,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Duration >")
             {
                 comboBoxRule.SelectedIndex = FunctionDurationGreaterThan;
+            }
+            else if (Configuration.Settings.Tools.ModifySelectionRule == "More than two lines")
+            {
+                comboBoxRule.SelectedIndex = FunctionMoreThanTwoLines;
             }
             else if (Configuration.Settings.Tools.ModifySelectionRule == "Style" && _format.HasStyleSupport)
             {
@@ -186,6 +192,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxRule.SelectedIndex == FunctionDurationGreaterThan)
             {
                 Configuration.Settings.Tools.ModifySelectionRule = "Duration >";
+            }
+            else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
+            {
+                Configuration.Settings.Tools.ModifySelectionRule = "More than two lines";
             }
             else if (comboBoxRule.SelectedIndex == FunctionStyle)
             {
@@ -340,6 +350,13 @@ namespace Nikse.SubtitleEdit.Forms
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
+                    else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines) 
+                    {
+                        if (p.Text.SplitToLines().Count > 2)
+                        {
+                            listViewItems.Add(MakeListViewItem(p, i));
+                        }
+                    }
                     else if (comboBoxRule.SelectedIndex == FunctionAlUppercase) // all uppercase
                     {
                         if (p.Text == p.Text.ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
@@ -417,10 +434,11 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxText);
                 checkBoxCaseSensitive.Enabled = false;
             }
-            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual)
+            else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual || comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
             {
                 textBoxText.ContextMenuStrip = null;
                 checkBoxCaseSensitive.Enabled = false;
+                textBoxText.Visible = false;
             }
             else if (comboBoxRule.SelectedIndex == FunctionStyle)
             {
