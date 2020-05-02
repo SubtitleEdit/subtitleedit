@@ -1621,6 +1621,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <EqualLines>Even-numbered lines</EqualLines>
     <DurationLessThan>Duration less than</DurationLessThan>
     <DurationGreaterThan>Duration greater than</DurationGreaterThan>
+    <MoreThanTwoLines>More than two lines</MoreThanTwoLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>

@@ -4381,6 +4381,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ModifySelection/DurationGreaterThan":
                     language.ModifySelection.DurationGreaterThan = reader.Value;
                     break;
+                case "ModifySelection/MoreThanTwoLines":
+                    language.ModifySelection.MoreThanTwoLines = reader.Value;
+                    break;
                 case "MultipleReplace/Title":
                     language.MultipleReplace.Title = reader.Value;
                     break;
