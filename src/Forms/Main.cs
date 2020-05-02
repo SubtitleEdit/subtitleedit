@@ -4283,7 +4283,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                 {
                     styles = Sami.GetStylesFromHeader(_subtitle.Header);
-                    if (_subtitle.Header == null)
+                    if (string.IsNullOrEmpty(_subtitle.Header))
                     {
                         styles = Sami.GetStylesFromSubtitle(_subtitle);
                     }
