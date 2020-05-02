@@ -43,6 +43,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+            {
+                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
+                {
+                    foreach (ToolStripItem item in i.DropDownItems)
+                    {
+                        item.Click += InsertLanguageCharacter;
+                    }
+                }
+                else
+                {
+                    toolStripItem.Click += InsertLanguageCharacter;
+                }
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -555,5 +571,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
+                var start = textBoxText.SelectionStart;
+                textBoxText.SelectedText = toolStripMenuItem.Text;
+                textBoxText.SelectionLength = 0;
+                textBoxText.SelectionStart = start + toolStripMenuItem.Text.Length;
+            }
+        }
     }
 }
