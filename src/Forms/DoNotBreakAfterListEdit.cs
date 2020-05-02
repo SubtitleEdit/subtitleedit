@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
+            var idx = 0;
             foreach (string fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
             {
                 try
@@ -39,6 +40,10 @@ namespace Nikse.SubtitleEdit.Forms
                     string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
+                    if ((Configuration.Settings.WordLists.LastLanguage ?? "en-US").StartsWith(languageId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        idx = _languages.Count;
+                    }
                     _languages.Add(fileName);
                 }
                 catch
@@ -46,9 +51,9 @@ namespace Nikse.SubtitleEdit.Forms
                     // ignored
                 }
             }
-            if (comboBoxDictionaries.Items.Count > 0)
+            if (comboBoxDictionaries.Items.Count > 0 && idx < comboBoxDictionaries.Items.Count)
             {
-                comboBoxDictionaries.SelectedIndex = 0;
+                comboBoxDictionaries.SelectedIndex = idx;
             }
         }
 
