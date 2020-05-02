@@ -7686,6 +7686,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
+
+            // Hack for resize after minimize...
+            groupBoxSubtitleImage.Width = Width - groupBoxSubtitleImage.Left - 25;
+            splitContainerBottom.Width = Width - 40;
         }
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
