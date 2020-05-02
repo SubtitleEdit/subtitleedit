@@ -80,6 +80,19 @@
             this.üToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.üToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ßToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.italianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.àToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.èToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ìToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.òToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ùToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.AeToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -242,13 +255,14 @@
             this.contextMenuStripLetters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.latinToolStripMenuItem,
             this.germanToolStripMenuItem,
+            this.italianToolStripMenuItem,
             this.nordicToolStripMenuItem,
             this.portugueseToolStripMenuItem,
             this.spanishToolStripMenuItem,
             this.toolStripMenuItemMusicSymbol1,
             this.toolStripMenuItemMusicSymbol2});
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 158);
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 180);
             // 
             // latinToolStripMenuItem
             // 
@@ -282,140 +296,120 @@
             this.àToolStripMenuItem1.Name = "àToolStripMenuItem1";
             this.àToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem1.Text = "à";
-            this.àToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // àToolStripMenuItem
             // 
             this.àToolStripMenuItem.Name = "àToolStripMenuItem";
             this.àToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem.Text = "À";
-            this.àToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem3
             // 
             this.éToolStripMenuItem3.Name = "éToolStripMenuItem3";
             this.éToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem3.Text = "é";
-            this.éToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem2
             // 
             this.éToolStripMenuItem2.Name = "éToolStripMenuItem2";
             this.éToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem2.Text = "É";
-            this.éToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // èToolStripMenuItem1
             // 
             this.èToolStripMenuItem1.Name = "èToolStripMenuItem1";
             this.èToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.èToolStripMenuItem1.Text = "è";
-            this.èToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // èToolStripMenuItem
             // 
             this.èToolStripMenuItem.Name = "èToolStripMenuItem";
             this.èToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.èToolStripMenuItem.Text = "È";
-            this.èToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // íToolStripMenuItem1
             // 
             this.íToolStripMenuItem1.Name = "íToolStripMenuItem1";
             this.íToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.íToolStripMenuItem1.Text = "í";
-            this.íToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // íToolStripMenuItem
             // 
             this.íToolStripMenuItem.Name = "íToolStripMenuItem";
             this.íToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.íToolStripMenuItem.Text = "Í";
-            this.íToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ïToolStripMenuItem1
             // 
             this.ïToolStripMenuItem1.Name = "ïToolStripMenuItem1";
             this.ïToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.ïToolStripMenuItem1.Text = "ï";
-            this.ïToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ïToolStripMenuItem
             // 
             this.ïToolStripMenuItem.Name = "ïToolStripMenuItem";
             this.ïToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ïToolStripMenuItem.Text = "Ï";
-            this.ïToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // óToolStripMenuItem1
             // 
             this.óToolStripMenuItem1.Name = "óToolStripMenuItem1";
             this.óToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.óToolStripMenuItem1.Text = "ó";
-            this.óToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // óToolStripMenuItem
             // 
             this.óToolStripMenuItem.Name = "óToolStripMenuItem";
             this.óToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.óToolStripMenuItem.Text = "Ó";
-            this.óToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // òToolStripMenuItem
             // 
             this.òToolStripMenuItem.Name = "òToolStripMenuItem";
             this.òToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.òToolStripMenuItem.Text = "ò";
-            this.òToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // òToolStripMenuItem1
             // 
             this.òToolStripMenuItem1.Name = "òToolStripMenuItem1";
             this.òToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.òToolStripMenuItem1.Text = "Ò";
-            this.òToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // úToolStripMenuItem1
             // 
             this.úToolStripMenuItem1.Name = "úToolStripMenuItem1";
             this.úToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.úToolStripMenuItem1.Text = "ú";
-            this.úToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // úToolStripMenuItem
             // 
             this.úToolStripMenuItem.Name = "úToolStripMenuItem";
             this.úToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.úToolStripMenuItem.Text = "Ú";
-            this.úToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // üToolStripMenuItem2
             // 
             this.üToolStripMenuItem2.Name = "üToolStripMenuItem2";
             this.üToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.üToolStripMenuItem2.Text = "ü";
-            this.üToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // üToolStripMenuItem3
             // 
             this.üToolStripMenuItem3.Name = "üToolStripMenuItem3";
             this.üToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.üToolStripMenuItem3.Text = "Ü";
-            this.üToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // çToolStripMenuItem1
             // 
             this.çToolStripMenuItem1.Name = "çToolStripMenuItem1";
             this.çToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.çToolStripMenuItem1.Text = "ç";
-            this.çToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // çToolStripMenuItem
             // 
             this.çToolStripMenuItem.Name = "çToolStripMenuItem";
             this.çToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.çToolStripMenuItem.Text = "Ç";
-            this.çToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // germanToolStripMenuItem
             // 
@@ -436,49 +430,133 @@
             this.äToolStripMenuItem2.Name = "äToolStripMenuItem2";
             this.äToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.äToolStripMenuItem2.Text = "ä";
-            this.äToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // äToolStripMenuItem3
             // 
             this.äToolStripMenuItem3.Name = "äToolStripMenuItem3";
             this.äToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.äToolStripMenuItem3.Text = "Ä";
-            this.äToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // öToolStripMenuItem2
             // 
             this.öToolStripMenuItem2.Name = "öToolStripMenuItem2";
             this.öToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.öToolStripMenuItem2.Text = "ö";
-            this.öToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // öToolStripMenuItem3
             // 
             this.öToolStripMenuItem3.Name = "öToolStripMenuItem3";
             this.öToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.öToolStripMenuItem3.Text = "Ö";
-            this.öToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // üToolStripMenuItem
             // 
             this.üToolStripMenuItem.Name = "üToolStripMenuItem";
             this.üToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.üToolStripMenuItem.Text = "ü";
-            this.üToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // üToolStripMenuItem1
             // 
             this.üToolStripMenuItem1.Name = "üToolStripMenuItem1";
             this.üToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.üToolStripMenuItem1.Text = "Ü";
-            this.üToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ßToolStripMenuItem
             // 
             this.ßToolStripMenuItem.Name = "ßToolStripMenuItem";
             this.ßToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ßToolStripMenuItem.Text = "ß";
-            this.ßToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // italianToolStripMenuItem
+            // 
+            this.italianToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.àToolStripMenuItem4,
+            this.àToolStripMenuItem5,
+            this.èToolStripMenuItem2,
+            this.èToolStripMenuItem3,
+            this.éToolStripMenuItem6,
+            this.éToolStripMenuItem7,
+            this.ìToolStripMenuItem,
+            this.ìToolStripMenuItem1,
+            this.òToolStripMenuItem2,
+            this.òToolStripMenuItem3,
+            this.ùToolStripMenuItem,
+            this.ùToolStripMenuItem1});
+            this.italianToolStripMenuItem.Name = "italianToolStripMenuItem";
+            this.italianToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.italianToolStripMenuItem.Text = "Italian";
+            // 
+            // àToolStripMenuItem5
+            // 
+            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
+            this.àToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.àToolStripMenuItem5.Text = "À";
+            // 
+            // àToolStripMenuItem4
+            // 
+            this.àToolStripMenuItem4.Name = "àToolStripMenuItem4";
+            this.àToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.àToolStripMenuItem4.Text = "à";
+            // 
+            // èToolStripMenuItem3
+            // 
+            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
+            this.èToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.èToolStripMenuItem3.Text = "È";
+            // 
+            // èToolStripMenuItem2
+            // 
+            this.èToolStripMenuItem2.Name = "èToolStripMenuItem2";
+            this.èToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.èToolStripMenuItem2.Text = "è";
+            // 
+            // éToolStripMenuItem7
+            // 
+            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
+            this.éToolStripMenuItem7.Size = new System.Drawing.Size(180, 22);
+            this.éToolStripMenuItem7.Text = "É";
+            // 
+            // éToolStripMenuItem6
+            // 
+            this.éToolStripMenuItem6.Name = "éToolStripMenuItem6";
+            this.éToolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.éToolStripMenuItem6.Text = "é";
+            // 
+            // ìToolStripMenuItem1
+            // 
+            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
+            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ìToolStripMenuItem1.Text = "Ì";
+            // 
+            // ìToolStripMenuItem
+            // 
+            this.ìToolStripMenuItem.Name = "ìToolStripMenuItem";
+            this.ìToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ìToolStripMenuItem.Text = "ì";
+            // 
+            // òToolStripMenuItem3
+            // 
+            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
+            this.òToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.òToolStripMenuItem3.Text = "Ò";
+            // 
+            // òToolStripMenuItem2
+            // 
+            this.òToolStripMenuItem2.Name = "òToolStripMenuItem2";
+            this.òToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.òToolStripMenuItem2.Text = "ò";
+            // 
+            // ùToolStripMenuItem1
+            // 
+            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
+            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ùToolStripMenuItem1.Text = "Ù";
+            // 
+            // ùToolStripMenuItem
+            // 
+            this.ùToolStripMenuItem.Name = "ùToolStripMenuItem";
+            this.ùToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ùToolStripMenuItem.Text = "ù";
             // 
             // nordicToolStripMenuItem
             // 
@@ -502,70 +580,60 @@
             this.aeToolStripMenuItem1.Name = "aeToolStripMenuItem1";
             this.aeToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
             this.aeToolStripMenuItem1.Text = "æ";
-            this.aeToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // AeToolStripMenuItem2
             // 
             this.AeToolStripMenuItem2.Name = "AeToolStripMenuItem2";
             this.AeToolStripMenuItem2.Size = new System.Drawing.Size(84, 22);
             this.AeToolStripMenuItem2.Text = "Æ";
-            this.AeToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // øToolStripMenuItem
             // 
             this.øToolStripMenuItem.Name = "øToolStripMenuItem";
             this.øToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
             this.øToolStripMenuItem.Text = "ø";
-            this.øToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // øToolStripMenuItem1
             // 
             this.øToolStripMenuItem1.Name = "øToolStripMenuItem1";
             this.øToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
             this.øToolStripMenuItem1.Text = "Ø";
-            this.øToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // åToolStripMenuItem
             // 
             this.åToolStripMenuItem.Name = "åToolStripMenuItem";
             this.åToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
             this.åToolStripMenuItem.Text = "å";
-            this.åToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // åToolStripMenuItem1
             // 
             this.åToolStripMenuItem1.Name = "åToolStripMenuItem1";
             this.åToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
             this.åToolStripMenuItem1.Text = "Å";
-            this.åToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // äToolStripMenuItem
             // 
             this.äToolStripMenuItem.Name = "äToolStripMenuItem";
             this.äToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
             this.äToolStripMenuItem.Text = "ä";
-            this.äToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // äToolStripMenuItem1
             // 
             this.äToolStripMenuItem1.Name = "äToolStripMenuItem1";
             this.äToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
             this.äToolStripMenuItem1.Text = "Ä";
-            this.äToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // öToolStripMenuItem
             // 
             this.öToolStripMenuItem.Name = "öToolStripMenuItem";
             this.öToolStripMenuItem.Size = new System.Drawing.Size(84, 22);
             this.öToolStripMenuItem.Text = "ö";
-            this.öToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // öToolStripMenuItem1
             // 
             this.öToolStripMenuItem1.Name = "öToolStripMenuItem1";
             this.öToolStripMenuItem1.Size = new System.Drawing.Size(84, 22);
             this.öToolStripMenuItem1.Text = "Ö";
-            this.öToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // portugueseToolStripMenuItem
             // 
@@ -603,168 +671,144 @@
             this.ãToolStripMenuItem.Name = "ãToolStripMenuItem";
             this.ãToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ãToolStripMenuItem.Text = "ã";
-            this.ãToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ãToolStripMenuItem1
             // 
             this.ãToolStripMenuItem1.Name = "ãToolStripMenuItem1";
             this.ãToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.ãToolStripMenuItem1.Text = "Ã";
-            this.ãToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // õToolStripMenuItem
             // 
             this.õToolStripMenuItem.Name = "õToolStripMenuItem";
             this.õToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.õToolStripMenuItem.Text = "õ";
-            this.õToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // õToolStripMenuItem1
             // 
             this.õToolStripMenuItem1.Name = "õToolStripMenuItem1";
             this.õToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.õToolStripMenuItem1.Text = "Õ";
-            this.õToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // áToolStripMenuItem2
             // 
             this.áToolStripMenuItem2.Name = "áToolStripMenuItem2";
             this.áToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.áToolStripMenuItem2.Text = "á";
-            this.áToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // áToolStripMenuItem3
             // 
             this.áToolStripMenuItem3.Name = "áToolStripMenuItem3";
             this.áToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.áToolStripMenuItem3.Text = "Á";
-            this.áToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem4
             // 
             this.éToolStripMenuItem4.Name = "éToolStripMenuItem4";
             this.éToolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem4.Text = "é";
-            this.éToolStripMenuItem4.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem5
             // 
             this.éToolStripMenuItem5.Name = "éToolStripMenuItem5";
             this.éToolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem5.Text = "É";
-            this.éToolStripMenuItem5.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // íToolStripMenuItem2
             // 
             this.íToolStripMenuItem2.Name = "íToolStripMenuItem2";
             this.íToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.íToolStripMenuItem2.Text = "í";
-            this.íToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // íToolStripMenuItem3
             // 
             this.íToolStripMenuItem3.Name = "íToolStripMenuItem3";
             this.íToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.íToolStripMenuItem3.Text = "Í";
-            this.íToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // óToolStripMenuItem2
             // 
             this.óToolStripMenuItem2.Name = "óToolStripMenuItem2";
             this.óToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.óToolStripMenuItem2.Text = "ó";
-            this.óToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // óToolStripMenuItem3
             // 
             this.óToolStripMenuItem3.Name = "óToolStripMenuItem3";
             this.óToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.óToolStripMenuItem3.Text = "Ó";
-            this.óToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // úToolStripMenuItem2
             // 
             this.úToolStripMenuItem2.Name = "úToolStripMenuItem2";
             this.úToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.úToolStripMenuItem2.Text = "ú";
-            this.úToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // úToolStripMenuItem3
             // 
             this.úToolStripMenuItem3.Name = "úToolStripMenuItem3";
             this.úToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.úToolStripMenuItem3.Text = "Ú";
-            this.úToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // âToolStripMenuItem
             // 
             this.âToolStripMenuItem.Name = "âToolStripMenuItem";
             this.âToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.âToolStripMenuItem.Text = "â";
-            this.âToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // âToolStripMenuItem1
             // 
             this.âToolStripMenuItem1.Name = "âToolStripMenuItem1";
             this.âToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.âToolStripMenuItem1.Text = "Â";
-            this.âToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // êToolStripMenuItem
             // 
             this.êToolStripMenuItem.Name = "êToolStripMenuItem";
             this.êToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.êToolStripMenuItem.Text = "ê";
-            this.êToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // êToolStripMenuItem1
             // 
             this.êToolStripMenuItem1.Name = "êToolStripMenuItem1";
             this.êToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.êToolStripMenuItem1.Text = "Ê";
-            this.êToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ôToolStripMenuItem1
             // 
             this.ôToolStripMenuItem1.Name = "ôToolStripMenuItem1";
             this.ôToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.ôToolStripMenuItem1.Text = "ô";
-            this.ôToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ôToolStripMenuItem
             // 
             this.ôToolStripMenuItem.Name = "ôToolStripMenuItem";
             this.ôToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ôToolStripMenuItem.Text = "Ô";
-            this.ôToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // àToolStripMenuItem2
             // 
             this.àToolStripMenuItem2.Name = "àToolStripMenuItem2";
             this.àToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem2.Text = "à";
-            this.àToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // àToolStripMenuItem3
             // 
             this.àToolStripMenuItem3.Name = "àToolStripMenuItem3";
             this.àToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem3.Text = "À";
-            this.àToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // çToolStripMenuItem2
             // 
             this.çToolStripMenuItem2.Name = "çToolStripMenuItem2";
             this.çToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.çToolStripMenuItem2.Text = "ç";
-            this.çToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // çToolStripMenuItem3
             // 
             this.çToolStripMenuItem3.Name = "çToolStripMenuItem3";
             this.çToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.çToolStripMenuItem3.Text = "Ç";
-            this.çToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // spanishToolStripMenuItem
             // 
@@ -794,126 +838,108 @@
             this.áToolStripMenuItem.Name = "áToolStripMenuItem";
             this.áToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.áToolStripMenuItem.Text = "á";
-            this.áToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // áToolStripMenuItem1
             // 
             this.áToolStripMenuItem1.Name = "áToolStripMenuItem1";
             this.áToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.áToolStripMenuItem1.Text = "Á";
-            this.áToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem
             // 
             this.éToolStripMenuItem.Name = "éToolStripMenuItem";
             this.éToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem.Text = "é";
-            this.éToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // éToolStripMenuItem1
             // 
             this.éToolStripMenuItem1.Name = "éToolStripMenuItem1";
             this.éToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem1.Text = "É";
-            this.éToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem1.Text = "í";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             this.toolStripMenuItem6.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem6.Text = "Í";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem4.Text = "ó";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
             this.toolStripMenuItem7.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem7.Text = "Ó";
-            this.toolStripMenuItem7.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
             this.toolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem5.Text = "ú";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem8.Text = "Ú";
-            this.toolStripMenuItem8.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
             this.toolStripMenuItem9.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem9.Text = "ü";
-            this.toolStripMenuItem9.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
             this.toolStripMenuItem10.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem10.Text = "Ü";
-            this.toolStripMenuItem10.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ñToolStripMenuItem
             // 
             this.ñToolStripMenuItem.Name = "ñToolStripMenuItem";
             this.ñToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ñToolStripMenuItem.Text = "ñ";
-            this.ñToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // ñToolStripMenuItem1
             // 
             this.ñToolStripMenuItem1.Name = "ñToolStripMenuItem1";
             this.ñToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
             this.ñToolStripMenuItem1.Text = "Ñ";
-            this.ñToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem2.Text = "¿";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
             this.toolStripMenuItem3.Text = "¡";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItemMusicSymbol1
             // 
             this.toolStripMenuItemMusicSymbol1.Name = "toolStripMenuItemMusicSymbol1";
             this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol1.Text = "♪";
-            this.toolStripMenuItemMusicSymbol1.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // toolStripMenuItemMusicSymbol2
             // 
             this.toolStripMenuItemMusicSymbol2.Name = "toolStripMenuItemMusicSymbol2";
             this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol2.Text = "♫";
-            this.toolStripMenuItemMusicSymbol2.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // pictureBoxCharacter
             // 
@@ -1399,5 +1425,18 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column14;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
+        private System.Windows.Forms.ToolStripMenuItem italianToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem àToolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem èToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem7;
+        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem ìToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ìToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem;
     }
 }

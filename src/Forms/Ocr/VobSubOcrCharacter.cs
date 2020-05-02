@@ -40,6 +40,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű", "x", "z");
             dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű", "X", "Z");
 
+            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+            {
+                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
+                {
+                    foreach (ToolStripItem item in i.DropDownItems)
+                    {
+                        item.Click += InsertLanguageCharacter;
+                    }
+                }
+                else
+                {
+                    toolStripItem.Click += InsertLanguageCharacter;
+                }
+            }
+
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
@@ -204,7 +219,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (sender is ToolStripMenuItem toolStripMenuItem)
             {
-                textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, toolStripMenuItem.Text);
+                var start = textBoxCharacters.SelectionStart;
+                textBoxCharacters.SelectedText = toolStripMenuItem.Text;
+                textBoxCharacters.SelectionLength = 0;
+                textBoxCharacters.SelectionStart = start + toolStripMenuItem.Text.Length;
             }
         }
 
