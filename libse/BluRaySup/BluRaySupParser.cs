@@ -829,6 +829,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
             }
 
+            // merge images that are the same (probably due to fade)
             for (int pcsIndex = pcsList.Count - 1; pcsIndex > 0; pcsIndex--)
             {
                 var cur = pcsList[pcsIndex];
@@ -836,11 +837,36 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 if (Math.Abs(prev.EndTime - cur.StartTime) < 10 && prev.Size.Width == cur.Size.Width && prev.Size.Height == cur.Size.Height)
                 {
                     if (cur.BitmapObjects.Count > 0 && cur.BitmapObjects[0].Count > 0 &&
-                        prev.BitmapObjects.Count > 0 && prev.BitmapObjects[0].Count > 0 &&
-                        ByteArraysEqual(cur.BitmapObjects[0][0].Fragment.ImageBuffer, prev.BitmapObjects[0][0].Fragment.ImageBuffer))
+                        prev.BitmapObjects.Count == cur.BitmapObjects.Count && prev.BitmapObjects[0].Count == cur.BitmapObjects[0].Count)
                     {
-                        prev.EndTime = cur.EndTime;
-                        pcsList.RemoveAt(pcsIndex);
+                        var remove = true;
+                        for (int k = 0; k < cur.BitmapObjects.Count; k++)
+                        {
+                            var c = cur.BitmapObjects[k];
+                            var p = prev.BitmapObjects[k];
+                            if (p.Count == c.Count)
+                            {
+                                for (int j = 0; j < c.Count; j++)
+                                {
+                                    if (!ByteArraysEqual(c[j].Fragment.ImageBuffer, p[j].Fragment.ImageBuffer))
+                                    {
+                                        remove = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                remove = false;
+                                break;
+                            }
+                        }
+
+                        if (remove)
+                        {
+                            prev.EndTime = cur.EndTime;
+                            pcsList.RemoveAt(pcsIndex);
+                        }
                     }
                 }
             }
