@@ -48,6 +48,7 @@
     <Word from="beg" to="bijeg" />
     <Word from="begu" to="bijegu" />
     <Word from="begstva" to="bijega" />
+    <Word from="begstvo" to="bijeg" />
     <Word from="Bejaše" to="Bijaše" />
     <Word from="bejaše" to="bijaše" />
     <Word from="bekstva" to="bijega" />
@@ -235,6 +236,7 @@
     <Word from="Dejstvo" to="Djelovanje" />
     <Word from="dejstvom" to="djelovanjem" />
     <Word from="Dejstvom" to="Djelovanjem" />
+    <Word from="dele" to="dijele" />
     <Word from="deleći" to="dijeleći" />
     <Word from="deo" to="dio" />
     <Word from="Deo" to="Dio" />
@@ -329,6 +331,7 @@
     <Word from="gasova" to="plinova" />
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
+    <Word from="gdke" to="gdje" />
     <Word from="gjde" to="gdje" />
     <Word from="gke" to="gle" />
     <Word from="g-đica" to="gđica" />
@@ -524,6 +527,7 @@
     <Word from="kancelariji" to="uredu" />
     <Word from="kancelarije" to="ureda" />
     <Word from="kancelarijom" to="uredom" />
+    <Word from="kancer" to="rak" />
     <Word from="kancera" to="raka" />
     <Word from="kandidovati" to="kandidirati" />
     <Word from="kandidujem" to="kandidiram" />
@@ -1045,6 +1049,7 @@
     <Word from="parčetu" to="komadiću" />
     <Word from="parčetom" to="komadićem" />
     <Word from="paramparčad" to="komadići" />
+    <Word from="pasoš" to="putovnica" />   
     <Word from="pastuv" to="pastuh" />
     <Word from="pastuva" to="pastuha" />
     <Word from="pastuvu" to="pastuhu" />
@@ -1096,6 +1101,7 @@
     <Word from="pljenom" to="plijenom" />
     <Word from="Pljenom" to="Plijenom" />
     <Word from="ploveča" to="ploveća" />
+    <Word from="pnovo" to="ponovo" />
     <Word from="pocepala" to="poderala" />
     <Word from="pocetku" to="početku" />
     <Word from="počeću" to="počet ću" />
@@ -3780,6 +3786,7 @@
     <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
     <RegEx find="uzp" replaceWith="usp" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
+    <RegEx find="vdr" replaceWith="vrd" />
     <RegEx find="veri([lt])" replaceWith="vjeri$1" />
     <RegEx find="([do])vešć" replaceWith="$1vest ć" />
     <RegEx find="vetion" replaceWith="vjetion" />
