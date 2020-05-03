@@ -7255,7 +7255,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;
-            saveFileDialog1.FileName = "Image" + _selectedIndex;
+            saveFileDialog1.FileName = "Image" + (_selectedIndex + 1);
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
             saveFileDialog1.FilterIndex = 0;
 
@@ -8072,7 +8072,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 // ocr'ed more than 10 lines - or perhaps manually translated more than 10 lines in at least 30 seconds
-                if (_linesOcred > 10 || (numberOfLinesWithText > 10 && secondsSinceOcrWindowOpened > 30))
+                if (_linesOcred > 10 || numberOfLinesWithText > 10 && secondsSinceOcrWindowOpened > 30)
                 {
                     return true;
                 }
