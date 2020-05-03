@@ -10760,6 +10760,7 @@ namespace Nikse.SubtitleEdit.Forms
             return ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
         }
 
+        private bool _skipDurationChangedEvent = false;
         private void SetDurationInSeconds(double seconds)
         {
             _durationIsDirty = false;
@@ -10773,7 +10774,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var v = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
                 if (v >= numericUpDownDuration.Minimum && v <= numericUpDownDuration.Maximum)
                 {
+                    _skipDurationChangedEvent = true;
                     numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
+                    _skipDurationChangedEvent = false;
                 }
             }
             else
@@ -10796,6 +10799,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NumericUpDownDurationValueChanged(object sender, EventArgs e)
         {
+            if (_skipDurationChangedEvent)
+            {
+                return;
+            }
+
             _durationIsDirty = true;
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -10818,7 +10826,7 @@ namespace Nikse.SubtitleEdit.Forms
                             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
                             if (frames >= 99)
                             {
-                                numericUpDownDuration.Value = (decimal)(seconds + ((Math.Round((Configuration.Settings.General.CurrentFrameRate - 1))) / 100.0));
+                                numericUpDownDuration.Value = (decimal)(seconds + (Math.Round((Configuration.Settings.General.CurrentFrameRate - 1)) / 100.0));
                             }
                             else
                             {
