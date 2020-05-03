@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -37,8 +38,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
-            dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű", "x", "z");
-            dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű", "X", "Z");
+            dataGridView1.Columns.Clear();
+            var row1 = Configuration.Settings.Tools.OcrAddLetterRow1.Split(';').ToArray<object>();
+            var row2 = Configuration.Settings.Tools.OcrAddLetterRow2.Split(';').ToArray<object>();
+            for (int i = 0; i < Math.Max(row1.Length, row2.Length); i++)
+            {
+                dataGridView1.Columns.Add(string.Empty, string.Empty);
+                dataGridView1.Columns[dataGridView1.Columns.Count - 1].Width = 25;
+                dataGridView1.Columns[dataGridView1.Columns.Count - 1].DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter };
+            }
+            dataGridView1.Rows.Add(row1);
+            dataGridView1.Rows.Add(row2);
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
