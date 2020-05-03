@@ -620,17 +620,19 @@ namespace Nikse.SubtitleEdit.Forms
                         richTextBox1.SelectionStart = i;
                         richTextBox1.SelectionLength = 1;
                         richTextBox1.SelectionColor = _foregroundDifferenceColor;
-                        if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
+                        if (" .,".Contains(richTextBox1.SelectedText))
                         {
                             richTextBox1.SelectionBackColor = _backDifferenceColor;
+                            richTextBox1.SelectionColor = DefaultForeColor;
                         }
 
                         richTextBox2.SelectionStart = i;
                         richTextBox2.SelectionLength = 1;
                         richTextBox2.SelectionColor = _foregroundDifferenceColor;
-                        if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
+                        if (" .,".Contains(richTextBox2.SelectedText))
                         {
                             richTextBox2.SelectionBackColor = _backDifferenceColor;
+                            richTextBox2.SelectionColor = DefaultForeColor;
                         }
                     }
                     else
@@ -647,10 +649,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionBackColor = _backDifferenceColor;
-                    if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
+                    richTextBox1.SelectionColor = _backDifferenceColor;
+                    if (" .,".Contains(richTextBox1.SelectedText))
                     {
                         richTextBox1.SelectionBackColor = _backDifferenceColor;
+                        richTextBox1.SelectionColor = DefaultForeColor;
                     }
                 }
                 if (i < richTextBox2.Text.Length)
@@ -658,9 +661,10 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBox2.SelectionStart = i;
                     richTextBox2.SelectionLength = 1;
                     richTextBox2.SelectionColor = _foregroundDifferenceColor;
-                    if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
+                    if (" .,".Contains(richTextBox2.SelectedText))
                     {
                         richTextBox2.SelectionBackColor = _backDifferenceColor;
+                        richTextBox2.SelectionColor = DefaultForeColor;
                     }
                 }
             }
@@ -668,6 +672,11 @@ namespace Nikse.SubtitleEdit.Forms
             // from end
             for (int i = 1; i < minLength; i++)
             {
+                if (richTextBox1.Text.Length - i < startCharactersOk || richTextBox2.Text.Length - i < startCharactersOk)
+                {
+                    break;
+                }
+
                 if (richTextBox1.Text[richTextBox1.Text.Length - i] == richTextBox2.Text[richTextBox2.Text.Length - i])
                 {
                     richTextBox1.SelectionStart = richTextBox1.Text.Length - i;
