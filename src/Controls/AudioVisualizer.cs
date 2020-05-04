@@ -263,6 +263,7 @@ namespace Nikse.SubtitleEdit.Controls
         public Color SelectedColor { get; set; }
         public Color ParagraphColor { get; set; }
         public Color TextColor { get; set; }
+        public Color CursorColor { get; set; }
         public float TextSize { get; set; }
         public bool TextBold { get; set; }
         public Color GridColor { get; set; }
@@ -595,7 +596,7 @@ namespace Nikse.SubtitleEdit.Controls
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
 
-                                    using (var p = new Pen(Color.Turquoise, 2) { DashStyle = DashStyle.Dash })
+                                    using (var p = new Pen(CursorColor, 2) { DashStyle = DashStyle.Dash })
                                     {
                                         graphics.DrawLine(p, pos, 0, pos, Height);
                                     }
@@ -643,7 +644,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // current video position
                 if (_currentVideoPositionSeconds > 0 && !currentPosDone && currentPositionPos > 0 && currentPositionPos < Width)
                 {
-                    using (var p = new Pen(Color.Turquoise))
+                    using (var p = new Pen(CursorColor))
                     {
                         graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
                     }
@@ -664,7 +665,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (currentRegionWidth > 40)
                         {
-                            using (var brush = new SolidBrush(Color.Turquoise))
+                            using (var brush = new SolidBrush(CursorColor))
                             {
                                 graphics.DrawString($"{(double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor:0.###} {Configuration.Settings.Language.Waveform.Seconds}", Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
                             }

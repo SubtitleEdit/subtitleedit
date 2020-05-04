@@ -1309,6 +1309,7 @@ $HorzAlign          =   Center
         public Color WaveformSelectedColor { get; set; }
         public Color WaveformBackgroundColor { get; set; }
         public Color WaveformTextColor { get; set; }
+        public Color WaveformCursorColor { get; set; }
         public int WaveformTextSize { get; set; }
         public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
@@ -1339,6 +1340,7 @@ $HorzAlign          =   Center
             WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
             WaveformBackgroundColor = Color.Black;
             WaveformTextColor = Color.Gray;
+            WaveformCursorColor = Color.Turquoise;
             WaveformTextSize = 9;
             WaveformTextBold = true;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
@@ -4932,6 +4934,12 @@ $HorzAlign          =   Center
                 settings.VideoControls.WaveformTextColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
             }
 
+            subNode = node.SelectSingleNode("WaveformCursorColor");
+            if (subNode != null)
+            {
+                settings.VideoControls.WaveformCursorColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformTextSize");
             if (subNode != null)
             {
@@ -7265,6 +7273,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformSelectedColor", settings.VideoControls.WaveformSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformCursorColor", settings.VideoControls.WaveformCursorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);

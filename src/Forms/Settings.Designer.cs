@@ -382,6 +382,8 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
+            this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
+            this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2293,7 +2295,7 @@
             this.groupBoxFfmpeg.Controls.Add(this.textBoxFFmpegPath);
             this.groupBoxFfmpeg.Controls.Add(this.labelFFmpegPath);
             this.groupBoxFfmpeg.Controls.Add(this.checkBoxUseFFmpeg);
-            this.groupBoxFfmpeg.Location = new System.Drawing.Point(406, 266);
+            this.groupBoxFfmpeg.Location = new System.Drawing.Point(406, 299);
             this.groupBoxFfmpeg.Name = "groupBoxFfmpeg";
             this.groupBoxFfmpeg.Size = new System.Drawing.Size(419, 118);
             this.groupBoxFfmpeg.TabIndex = 2;
@@ -2354,7 +2356,7 @@
             this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.comboBoxSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.checkBoxGenerateSpectrogram);
-            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 266);
+            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 299);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
             this.groupBoxSpectrogram.Size = new System.Drawing.Size(394, 118);
             this.groupBoxSpectrogram.TabIndex = 1;
@@ -2398,9 +2400,9 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox1.Controls.Add(this.buttonWaveformsFolderEmpty);
             this.groupBox1.Controls.Add(this.labelWaveformsFolderInfo);
-            this.groupBox1.Location = new System.Drawing.Point(6, 390);
+            this.groupBox1.Location = new System.Drawing.Point(10, 423);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(819, 110);
+            this.groupBox1.Size = new System.Drawing.Size(819, 80);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             // 
@@ -2427,6 +2429,8 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.panelWaveformCursorColor);
+            this.groupBoxWaveformAppearence.Controls.Add(this.buttonWaveformCursorColor);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSnapToSceneChanges);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSingleClickSelect);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowWpm);
@@ -2455,7 +2459,7 @@
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowGrid);
             this.groupBoxWaveformAppearence.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWaveformAppearence.Name = "groupBoxWaveformAppearence";
-            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 254);
+            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 287);
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
@@ -2483,20 +2487,20 @@
             // checkBoxWaveformShowWpm
             // 
             this.checkBoxWaveformShowWpm.AutoSize = true;
-            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 218);
+            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 248);
             this.checkBoxWaveformShowWpm.Name = "checkBoxWaveformShowWpm";
             this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(104, 17);
-            this.checkBoxWaveformShowWpm.TabIndex = 7;
+            this.checkBoxWaveformShowWpm.TabIndex = 8;
             this.checkBoxWaveformShowWpm.Text = "Show words/min";
             this.checkBoxWaveformShowWpm.UseVisualStyleBackColor = true;
             // 
             // checkBoxWaveformShowCps
             // 
             this.checkBoxWaveformShowCps.AutoSize = true;
-            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 195);
+            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 225);
             this.checkBoxWaveformShowCps.Name = "checkBoxWaveformShowCps";
             this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(96, 17);
-            this.checkBoxWaveformShowCps.TabIndex = 6;
+            this.checkBoxWaveformShowCps.TabIndex = 7;
             this.checkBoxWaveformShowCps.Text = "Show char/sec";
             this.checkBoxWaveformShowCps.UseVisualStyleBackColor = true;
             // 
@@ -2651,7 +2655,7 @@
             // panelWaveformGridColor
             // 
             this.panelWaveformGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformGridColor.Location = new System.Drawing.Point(138, 135);
+            this.panelWaveformGridColor.Location = new System.Drawing.Point(138, 163);
             this.panelWaveformGridColor.Name = "panelWaveformGridColor";
             this.panelWaveformGridColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformGridColor.TabIndex = 9;
@@ -2659,10 +2663,10 @@
             // 
             // buttonWaveformGridColor
             // 
-            this.buttonWaveformGridColor.Location = new System.Drawing.Point(16, 135);
+            this.buttonWaveformGridColor.Location = new System.Drawing.Point(16, 162);
             this.buttonWaveformGridColor.Name = "buttonWaveformGridColor";
             this.buttonWaveformGridColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveformGridColor.TabIndex = 4;
+            this.buttonWaveformGridColor.TabIndex = 5;
             this.buttonWaveformGridColor.Text = "Grid color";
             this.buttonWaveformGridColor.UseVisualStyleBackColor = true;
             this.buttonWaveformGridColor.Click += new System.EventHandler(this.buttonWaveformGridColor_Click);
@@ -2727,10 +2731,10 @@
             // checkBoxWaveformShowGrid
             // 
             this.checkBoxWaveformShowGrid.AutoSize = true;
-            this.checkBoxWaveformShowGrid.Location = new System.Drawing.Point(16, 162);
+            this.checkBoxWaveformShowGrid.Location = new System.Drawing.Point(16, 192);
             this.checkBoxWaveformShowGrid.Name = "checkBoxWaveformShowGrid";
             this.checkBoxWaveformShowGrid.Size = new System.Drawing.Size(73, 17);
-            this.checkBoxWaveformShowGrid.TabIndex = 5;
+            this.checkBoxWaveformShowGrid.TabIndex = 6;
             this.checkBoxWaveformShowGrid.Text = "Show grid";
             this.checkBoxWaveformShowGrid.UseVisualStyleBackColor = true;
             // 
@@ -4636,6 +4640,25 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // panelWaveformCursorColor
+            // 
+            this.panelWaveformCursorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelWaveformCursorColor.Location = new System.Drawing.Point(138, 136);
+            this.panelWaveformCursorColor.Name = "panelWaveformCursorColor";
+            this.panelWaveformCursorColor.Size = new System.Drawing.Size(21, 20);
+            this.panelWaveformCursorColor.TabIndex = 34;
+            this.panelWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
+            // 
+            // buttonWaveformCursorColor
+            // 
+            this.buttonWaveformCursorColor.Location = new System.Drawing.Point(16, 135);
+            this.buttonWaveformCursorColor.Name = "buttonWaveformCursorColor";
+            this.buttonWaveformCursorColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformCursorColor.TabIndex = 4;
+            this.buttonWaveformCursorColor.Text = "Cursor color";
+            this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
+            this.buttonWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5129,5 +5152,7 @@
         private System.Windows.Forms.Button buttonFixContinuationStyleSettings;
         private System.Windows.Forms.ComboBox comboBoxContinuationStyle;
         private System.Windows.Forms.ToolTip toolTipContinuationPreview;
+        private System.Windows.Forms.Panel panelWaveformCursorColor;
+        private System.Windows.Forms.Button buttonWaveformCursorColor;
     }
 }

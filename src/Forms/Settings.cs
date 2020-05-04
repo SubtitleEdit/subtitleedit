@@ -552,6 +552,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveformSelectedColor.Text = language.WaveformSelectedColor;
             buttonWaveformTextColor.Text = language.WaveformTextColor;
             buttonWaveformBackgroundColor.Text = language.WaveformBackgroundColor;
+            buttonWaveformCursorColor.Text = language.WaveformCursorColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
             labelSpectrogramAppearance.Text = language.SpectrogramAppearance;
@@ -913,6 +914,7 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveformColor.BackColor = Configuration.Settings.VideoControls.WaveformColor;
             panelWaveformBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
             panelWaveformTextColor.BackColor = Configuration.Settings.VideoControls.WaveformTextColor;
+            panelWaveformCursorColor.BackColor = Configuration.Settings.VideoControls.WaveformCursorColor;
             checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
             comboBoxSpectrogramAppearance.SelectedIndex = Configuration.Settings.VideoControls.SpectrogramAppearance == "OneColorGradient" ? 0 : 1;
             comboBoxWaveformTextSize.Text = Configuration.Settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture);
@@ -1839,6 +1841,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;
             Configuration.Settings.VideoControls.WaveformBackgroundColor = panelWaveformBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveformTextColor = panelWaveformTextColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformCursorColor = panelWaveformCursorColor.BackColor ;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
             Configuration.Settings.VideoControls.SpectrogramAppearance = comboBoxSpectrogramAppearance.SelectedIndex == 0 ? "OneColorGradient" : "Classic";
 
@@ -2630,6 +2633,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
                 panelWaveformTextColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void buttonWaveformCursorColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelWaveformCursorColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelWaveformCursorColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
