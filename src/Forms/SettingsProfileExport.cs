@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
             foreach (var profile in profiles)
             {
-                listViewExportStyles.Items.Add(new ListViewItem(profile.Name) { Checked = true, Tag = profile });
+                listViewExportStyles.Items.Add(new ListViewItem(profile.Name) { Checked = false, Tag = profile });
             }
 
             selectAllToolStripMenuItem.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
