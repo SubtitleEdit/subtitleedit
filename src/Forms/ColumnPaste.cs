@@ -36,6 +36,38 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            if (Configuration.Settings.Tools.ColumnPasteColumn == "timecodes")
+            {
+                radioButtonTimeCodes.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.ColumnPasteColumn == "text")
+            {
+                radioButtonTextOnly.Checked = true;
+            }
+            else if (isOriginalAvailable && Configuration.Settings.Tools.ColumnPasteColumn == "originaltext")
+            {
+                radioButtonOriginalText.Checked = true;
+            }
+            else
+            {
+                radioButtonAll.Checked = true;
+            }
+
+            if (onlyText)
+            {
+                radioButtonTextOnly.Checked = true;
+            }
+
+
+            if (Configuration.Settings.Tools.ColumnPasteOverwriteMode == "shiftdown")
+            {
+                radioButtonShiftCellsDown.Checked = true;
+            }
+            else
+            {
+                radioButtonOverwrite.Checked = true;
+            }
         }
 
         private void PasteSpecial_KeyDown(object sender, KeyEventArgs e)
@@ -52,7 +84,6 @@ namespace Nikse.SubtitleEdit.Forms
             PasteTimeCodesOnly = radioButtonTimeCodes.Checked;
             PasteTextOnly = radioButtonTextOnly.Checked;
             PasteOriginalTextOnly = radioButtonOriginalText.Checked;
-
             PasteOverwrite = radioButtonOverwrite.Checked;
 
             DialogResult = DialogResult.OK;
@@ -63,5 +94,26 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
+        private void ColumnPaste_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (radioButtonTimeCodes.Checked)
+            {
+                Configuration.Settings.Tools.ColumnPasteColumn = "timecodes";
+            }
+            else if (radioButtonTextOnly.Checked)
+            {
+                Configuration.Settings.Tools.ColumnPasteColumn = "text";
+            }
+            else if (radioButtonOriginalText.Checked)
+            {
+                Configuration.Settings.Tools.ColumnPasteColumn = "originaltext";
+            }
+            else
+            {
+                Configuration.Settings.Tools.ColumnPasteColumn = "all";
+            }
+
+            Configuration.Settings.Tools.ColumnPasteOverwriteMode = radioButtonOverwrite.Checked ? "overwrite" : "shiftdown";
+        }
     }
 }

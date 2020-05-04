@@ -176,6 +176,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Column paste";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ColumnPaste_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PasteSpecial_KeyDown);
             this.groupBoxChooseColumn.ResumeLayout(false);
             this.groupBoxChooseColumn.PerformLayout();

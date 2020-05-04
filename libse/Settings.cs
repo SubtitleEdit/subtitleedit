@@ -300,6 +300,8 @@ namespace Nikse.SubtitleEdit.Core
         public int MergeShortLinesMaxGap { get; set; }
         public int MergeShortLinesMaxChars { get; set; }
         public bool MergeShortLinesOnlyContinuous { get; set; }
+        public string ColumnPasteColumn { get; set; }
+        public string ColumnPasteOverwriteMode { get; set; }
 
         public ToolsSettings()
         {
@@ -412,6 +414,8 @@ namespace Nikse.SubtitleEdit.Core
             MergeShortLinesMaxGap = 250;
             MergeShortLinesMaxChars = 50;
             MergeShortLinesOnlyContinuous = true;
+            ColumnPasteColumn = "all";
+            ColumnPasteOverwriteMode = "overwrite";
         }
     }
 
@@ -4201,6 +4205,18 @@ $HorzAlign          =   Center
                 settings.Tools.MergeShortLinesOnlyContinuous = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("ColumnPasteColumn");
+            if (subNode != null)
+            {
+                settings.Tools.ColumnPasteColumn = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("ColumnPasteOverwriteMode");
+            if (subNode != null)
+            {
+                settings.Tools.ColumnPasteOverwriteMode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -7091,6 +7107,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MergeShortLinesMaxGap", settings.Tools.MergeShortLinesMaxGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesMaxChars", settings.Tools.MergeShortLinesMaxChars.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeShortLinesOnlyContinuous", settings.Tools.MergeShortLinesOnlyContinuous.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ColumnPasteColumn", settings.Tools.ColumnPasteColumn);
+                textWriter.WriteElementString("ColumnPasteOverwriteMode", settings.Tools.ColumnPasteOverwriteMode);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
