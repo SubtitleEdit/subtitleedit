@@ -25288,9 +25288,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string text = Clipboard.GetText();
             var tmp = new Subtitle();
-            var format = new SubRip();
             var list = new List<string>(text.SplitToLines());
-            format.LoadSubtitle(tmp, list, null);
+            new SubRip().LoadSubtitle(tmp, list, null);
+            if (tmp.Paragraphs.Count == 0)
+            {
+                tmp = SubtitleFormat.LoadSubtitleFromLines(list, null);
+            }
 
             if (SubtitleListview1.SelectedItems.Count == 1 && text.Length > 0)
             {

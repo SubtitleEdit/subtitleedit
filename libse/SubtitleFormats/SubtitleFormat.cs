@@ -522,6 +522,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
+        /// <summary>
+        /// Load subtitle from a list of lines and a file name (the last can be null).
+        /// </summary>
+        /// <param name="lines">Text lines from subtitle file</param>
+        /// <param name="fileName">Optional file name</param>
+        /// <returns>Subtitle, null if format not recognized</returns>
+        public static Subtitle LoadSubtitleFromLines(List<string> lines, string fileName)
+        {
+            if (lines == null || lines.Count == 0)
+            {
+                return null;
+            }
+
+            var subtitle = new Subtitle();
+            foreach (var subtitleFormat in AllSubtitleFormats)
+            {
+                if (subtitleFormat.IsMine(lines, fileName))
+                {
+                    subtitleFormat.LoadSubtitle(subtitle, lines, fileName);
+                    return subtitle;
+                }
+            }
+
+            return null;
+        }
+
         public static SubtitleFormat[] GetBinaryFormats(bool batchMode)
         {
             return new SubtitleFormat[]
