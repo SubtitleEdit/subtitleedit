@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Enums;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -105,7 +105,12 @@ namespace Nikse.SubtitleEdit.Core
                 var subtitleMinimumDisplayMilliseconds = Convert.ToInt32(Json.ReadTag(p, "subtitleMinimumDisplayMilliseconds"), CultureInfo.InvariantCulture);
                 var subtitleOptimalCharactersPerSeconds = Convert.ToDecimal(Json.ReadTag(p, "subtitleOptimalCharactersPerSeconds"), CultureInfo.InvariantCulture);
                 var dialogStyle = (DialogType)Enum.Parse(typeof(DialogType), Json.ReadTag(p, "dialogStyle"));
-                var continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), Json.ReadTag(p, "continuationStyle"));
+                var continuationStyle = ContinuationStyle.None;
+                var continuationStyleJson = Json.ReadTag(p, "continuationStyle");
+                if (!string.IsNullOrEmpty(continuationStyleJson))
+                {
+                    continuationStyle = (ContinuationStyle)Enum.Parse(typeof(ContinuationStyle), continuationStyleJson);
+                }
                 list.Add(new RulesProfile
                 {
                     Name = name,
