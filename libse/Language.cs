@@ -1786,6 +1786,7 @@ namespace Nikse.SubtitleEdit.Core
                     StillTypingAutoContinueStopped = "Still typing... auto continue stopped",
 
                     InsertNewSubtitleAtVideoPosition = "&Insert new subtitle at video pos",
+                    InsertNewSubtitleAtVideoPositionNoTextBoxFocus = "Insert new subtitle at video pos (no text box focus)",
                     Auto = "Auto",
                     PlayFromJustBeforeText = "Play from just before &text",
                     Pause = "Pause",
