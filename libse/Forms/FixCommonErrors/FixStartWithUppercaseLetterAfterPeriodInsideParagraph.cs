@@ -1,11 +1,12 @@
-﻿using System.Globalization;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterPeriodInsideParagraph : IFixCommonError
     {
-        private readonly static char[] ExpectedChars = { '.', '!', '?' };
+        private static readonly char[] ExpectedChars = { '.', '!', '?' };
 
         private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
                         }
 
-                        if ((start + 3 < text.Length) && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
+                        if (start + 3 < text.Length && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
                         {
                             var textBefore = text.Substring(0, start + 1);
                             var subText = new StrippableText(text.Substring(start + 2));
@@ -82,7 +83,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         p.Text = text;
                         noOfFixes++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        var isChecked = true;
+                        if (callbacks.Language == "bg" && text.Contains("г. "))
+                        {
+                            // Bulgarian have "г." after years but the sentence continues with lowercase
+                            var regex = new Regex(@"\d г\. \p{L}");
+                            var t1 = regex.Replace(oldText, string.Empty);
+                            var t2 = regex.Replace(text, string.Empty);
+                            isChecked = t1 != t2;
+                        }
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text, isChecked);
                     }
                 }
             }
