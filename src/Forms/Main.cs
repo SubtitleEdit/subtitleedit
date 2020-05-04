@@ -19733,7 +19733,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelDuration.Left = numericUpDownDuration.Left;
             }
 
-            _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
             InitializePlayRateDropDown();
