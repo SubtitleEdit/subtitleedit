@@ -1598,6 +1598,7 @@ $HorzAlign          =   Center
         public string MainTextBoxSelectionToRuby { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
+        public string MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
@@ -6191,6 +6192,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPosNoTextBoxFocus");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateSetStart");
                 if (subNode != null)
                 {
@@ -7489,6 +7496,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainTextBoxSelectionToRuby", settings.Shortcuts.MainTextBoxSelectionToRuby);
                 textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
+                textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
                 textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
                 textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);

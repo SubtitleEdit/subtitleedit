@@ -4171,6 +4171,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/VideoControls/InsertNewSubtitleAtVideoPosition":
                     language.Main.VideoControls.InsertNewSubtitleAtVideoPosition = reader.Value;
                     break;
+                case "Main/VideoControls/InsertNewSubtitleAtVideoPositionNoTextBoxFocus":
+                    language.Main.VideoControls.InsertNewSubtitleAtVideoPositionNoTextBoxFocus = reader.Value;
+                    break;
                 case "Main/VideoControls/Auto":
                     language.Main.VideoControls.Auto = reader.Value;
                     break;

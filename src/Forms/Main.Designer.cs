@@ -4932,7 +4932,7 @@
             // labelAutoDuration
             // 
             this.labelAutoDuration.AutoSize = true;
-            this.labelAutoDuration.Location = new System.Drawing.Point(94, 11);
+            this.labelAutoDuration.Location = new System.Drawing.Point(92, 11);
             this.labelAutoDuration.Name = "labelAutoDuration";
             this.labelAutoDuration.Size = new System.Drawing.Size(29, 13);
             this.labelAutoDuration.TabIndex = 30;

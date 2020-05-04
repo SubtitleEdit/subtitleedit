@@ -1656,6 +1656,7 @@
 
                 // create/adjust
                 public string InsertNewSubtitleAtVideoPosition { get; set; }
+                public string InsertNewSubtitleAtVideoPositionNoTextBoxFocus { get; set; }
 
                 public string Auto { get; set; }
                 public string PlayFromJustBeforeText { get; set; }

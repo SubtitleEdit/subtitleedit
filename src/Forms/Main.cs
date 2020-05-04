@@ -236,7 +236,6 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Left = timeUpDownStartTime.Right + 15;
                     numericUpDownDuration.Width += 5;
                     labelDuration.Left = numericUpDownDuration.Left - 3;
-                    labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
                 }
                 var xDiff = timeUpDownStartTime.Top - (labelStartTime.Top + labelStartTime.Height);
                 if (xDiff < 0) // DPI auto-size fixes: see https://github.com/SubtitleEdit/subtitleedit/issues/3981
@@ -253,6 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxAutoContinue.Top += xDiff;
                 }
             }
+            labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
 
             base.OnLoad(e);
         }
@@ -14590,6 +14590,11 @@ namespace Nikse.SubtitleEdit.Forms
             // create
             else if (_shortcuts.MainCreateInsertSubAtVideoPos == e.KeyData)
             {
+                ButtonInsertNewTextClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus == e.KeyData)
+            {
                 var p = InsertNewTextAtVideoPosition();
                 p.Text = string.Empty;
                 SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
@@ -18239,7 +18244,6 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
                     numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
                     labelDuration.Left = numericUpDownDuration.Left - 3;
-                    labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
 
                     // Video controls - Create
                     timeUpDownVideoPosition.Left = labelVideoPosition.Left + labelVideoPosition.Width;
