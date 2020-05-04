@@ -5164,6 +5164,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformBackgroundColor":
                     language.Settings.WaveformBackgroundColor = reader.Value;
                     break;
+                case "Settings/WaveformCursorColor":
+                    language.Settings.WaveformCursorColor = reader.Value;
+                    break;
                 case "Settings/WaveformTextColor":
                     language.Settings.WaveformTextColor = reader.Value;
                     break;

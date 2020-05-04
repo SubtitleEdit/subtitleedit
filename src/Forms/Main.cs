@@ -510,17 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
                 audioVisualizer.PasteAtVideoPosition += audioVisualizer_PasteAtVideoPosition;
                 audioVisualizer.KeyDown += AudioVisualizer_KeyDown;
-                audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
-                audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
-                audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
-                audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
-                audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
-                audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
-                audioVisualizer.TextSize = Configuration.Settings.VideoControls.WaveformTextSize;
-                audioVisualizer.TextBold = Configuration.Settings.VideoControls.WaveformTextBold;
-                audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
-                audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
-                audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
+                SetAudioVisualizerSettings();
                 if (Configuration.Settings.General.WaveformUpdateIntervalMs > 0 && Configuration.Settings.General.WaveformUpdateIntervalMs < 200)
                 {
                     timerWaveform.Interval = Configuration.Settings.General.WaveformUpdateIntervalMs;
@@ -4443,17 +4433,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
             buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
-            audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
-            audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
-            audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
-            audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
-            audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
-            audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
-            audioVisualizer.TextSize = Configuration.Settings.VideoControls.WaveformTextSize;
-            audioVisualizer.TextBold = Configuration.Settings.VideoControls.WaveformTextBold;
-            audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
-            audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
-            audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
+            SetAudioVisualizerSettings();
 
             string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
                                        Configuration.Settings.Tools.ListViewSyntaxColorDurationBig +
@@ -4621,6 +4601,22 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.VideoPlayerContainerResize(null, null);
             ShowLineInformationListView();
             ShowSourceLineNumber();
+        }
+
+        private void SetAudioVisualizerSettings()
+        {
+            audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
+            audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
+            audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
+            audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
+            audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
+            audioVisualizer.CursorColor = Configuration.Settings.VideoControls.WaveformCursorColor;
+            audioVisualizer.TextSize = Configuration.Settings.VideoControls.WaveformTextSize;
+            audioVisualizer.TextBold = Configuration.Settings.VideoControls.WaveformTextBold;
+            audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
+            audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
+            audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls()

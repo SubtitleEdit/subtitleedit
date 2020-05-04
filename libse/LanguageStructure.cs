@@ -2079,6 +2079,7 @@
             public string WaveformColor { get; set; }
             public string WaveformSelectedColor { get; set; }
             public string WaveformBackgroundColor { get; set; }
+            public string WaveformCursorColor { get; set; }
             public string WaveformTextColor { get; set; }
             public string WaveformTextFontSize { get; set; }
             public string WaveformAndSpectrogramsFolderEmpty { get; set; }

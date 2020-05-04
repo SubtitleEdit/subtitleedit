@@ -1914,6 +1914,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformColor>Color</WaveformColor>
     <WaveformSelectedColor>Selected color</WaveformSelectedColor>
     <WaveformBackgroundColor>Back color</WaveformBackgroundColor>
+    <WaveformCursorColor>Cursor color</WaveformCursorColor>
     <WaveformTextColor>Text color</WaveformTextColor>
     <WaveformTextFontSize>Text font size</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Empty 'Spectrograms' and 'Waveforms' folders</WaveformAndSpectrogramsFolderEmpty>
