@@ -1,3 +1,17 @@
 ﻿<NoBreakAfterList>
+  <Item>Д-р</Item>
+  <Item>Г-н</Item>
+  <Item>Проф.</Item>
   <Item>д-р</Item>
+  <Item>г-н</Item>
+  <Item>г-жа</Item>
+  <Item>Г-жа</Item>
+  <Item>г-ца</Item>
+  <Item>Г-ца</Item>
+  <Item>инж.</Item>
+  <Item>Инж.</Item>
+  <Item>Св.</Item>
+  <Item>Н. Св.</Item>
+  <Item>доц.</Item>
+  <Item>Доц.</Item>
 </NoBreakAfterList>
