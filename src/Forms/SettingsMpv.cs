@@ -80,12 +80,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string fileName = Path.GetFileName(entry.FilenameInZip);
                         string path = Path.Combine(dictionaryFolder, fileName);
-                        if (File.Exists(path))
+                        
+                        try
+                        {
+                            zip.ExtractFile(entry, path);
+                        }
+                        catch
                         {
                             path = Path.Combine(dictionaryFolder, fileName + ".new-mpv");
+                            zip.ExtractFile(entry, path);
                         }
-
-                        zip.ExtractFile(entry, path);
                     }
                 }
             }

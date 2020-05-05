@@ -431,6 +431,8 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
                 buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
+                CheckAndGetNewlyDownloadedMpvDlls(string.Empty);
+
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
                     fileName = Path.GetFullPath(fileName);
@@ -4566,7 +4568,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetShortcuts();
 
-            CheckAndGetNewlyDownloadedMpvDlls();
+            CheckAndGetNewlyDownloadedMpvDlls("Please restart to use new libmpv dll");
 
             if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null ||
                 (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase)))
@@ -4622,9 +4624,9 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
         }
 
-        private void CheckAndGetNewlyDownloadedMpvDlls()
+        private void CheckAndGetNewlyDownloadedMpvDlls(string message)
         {
-            if (_videoFileName == null || Configuration.Settings.General.VideoPlayer != "MPV" || mediaPlayer.VideoPlayer == null)
+            if (Configuration.Settings.General.VideoPlayer != "MPV")
             {
                 return;
             }
@@ -4635,9 +4637,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var mpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-            mediaPlayer.VideoPlayer = null;
-            mpv?.HardDispose();
+            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            {
+                var mpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                mediaPlayer.VideoPlayer = null;
+                mpv?.HardDispose();
+            }
 
             foreach (string newDllFileName in newMpvFiles)
             {
@@ -4649,15 +4654,17 @@ namespace Nikse.SubtitleEdit.Forms
                         File.Copy(newDllFileName, targetFileName, true);
                         File.Delete(newDllFileName);
                     }
-                    catch (Exception)
+                    catch
                     {
-                        MessageBox.Show("Failed to activate new libmpv dll");
-                        return;
+                       // ignore
                     }
                 }
             }
 
-            MessageBox.Show("Please restart to use new libmpv dll");
+            if (!string.IsNullOrEmpty(message))
+            {
+                MessageBox.Show(message);
+            }
         }
 
         private void AddAlternate()
@@ -15539,6 +15546,8 @@ namespace Nikse.SubtitleEdit.Forms
                     original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
                 }
             }
+
+            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, p);
         }
 
         private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
@@ -15643,6 +15652,8 @@ namespace Nikse.SubtitleEdit.Forms
                     original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
                 }
             }
+
+            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, i, p);
         }
 
         private void ShowNextSubtitleLabel()
