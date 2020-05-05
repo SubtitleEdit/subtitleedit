@@ -328,7 +328,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractAsyncIndex;
         private int _tesseractEngineMode;
 
-        private readonly DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred;
         private bool _okClicked;
         private readonly Dictionary<string, int> _unknownWordsDictionary;
@@ -8059,26 +8058,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private bool HasChangesBeenMade()
         {
-            var secondsSinceOcrWindowOpened = DateTime.Now.Subtract(_windowStartTime).TotalSeconds;
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 10 && secondsSinceOcrWindowOpened > 10)
-            {
-                int numberOfLinesWithText = 0;
-                foreach (var p in _subtitle.Paragraphs)
-                {
-                    if (p != null && !string.IsNullOrWhiteSpace(p.Text))
-                    {
-                        numberOfLinesWithText++;
-                    }
-                }
-
-                // ocr'ed more than 10 lines - or perhaps manually translated more than 10 lines in at least 30 seconds
-                if (_linesOcred > 10 || numberOfLinesWithText > 10 && secondsSinceOcrWindowOpened > 30)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return _subtitle != null && _subtitle.Paragraphs.Any(p => !string.IsNullOrWhiteSpace(p.Text));
         }
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
