@@ -2177,6 +2177,10 @@
             public string AdjustStartOneFrameForward { get; set; }
             public string AdjustEndOneFrameBack { get; set; }
             public string AdjustEndOneFrameForward { get; set; }
+            public string AdjustStartOneFrameBackKeepGapPrev { get; set; }
+            public string AdjustStartOneFrameForwardKeepGapPrev { get; set; }
+            public string AdjustEndOneFrameBackKeepGapNext { get; set; }
+            public string AdjustEndOneFrameForwardKeepGapNext { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }

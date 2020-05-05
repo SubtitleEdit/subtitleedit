@@ -14680,41 +14680,59 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_shortcuts.MainAdjustAdjustStartXMsBack == e.KeyData)
             {
-                MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustAdjustStartXMsForward == e.KeyData)
             {
-                MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustAdjustEndXMsBack == e.KeyData)
             {
-                MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs, false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustAdjustEndXMsForward == e.KeyData)
             {
-                MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs, false);
                 e.SuppressKeyPress = true;
             }
 
             else if (_shortcuts.MainAdjustMoveStartOneFrameBack == e.KeyData)
             {
-                MoveStartCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate));
+                MoveStartCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), false);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustMoveStartOneFrameForward == e.KeyData)
             {
-                MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate));
+                MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate), false);
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameBack == e.KeyData)
             {
-                MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate));
+                MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), false);
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameForward == e.KeyData)
             {
-                MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate));
+                MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate), false);
+            }
+
+            else if (_shortcuts.MainAdjustMoveStartOneFrameBackKeepGapPrev == e.KeyData)
+            {
+                MoveStartCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), true);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustMoveStartOneFrameForwardKeepGapPrev == e.KeyData)
+            {
+                MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate), true);
+            }
+            else if (_shortcuts.MainAdjustMoveEndOneFrameBackKeepGapNext == e.KeyData)
+            {
+                MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), true);
+            }
+            else if (_shortcuts.MainAdjustMoveEndOneFrameForwardKeepGapNext == e.KeyData)
+            {
+                MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate), true);
             }
 
             else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
@@ -15414,7 +15432,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MoveStartCurrent(int ms)
+        private void MoveStartCurrent(int ms, bool keepGapPrevIfClose)
         {
             var i = _subtitleListViewIndex;
             if (i < 0 || i >= _subtitle.Paragraphs.Count || ms == 0)
@@ -15439,6 +15457,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var prevGap = 0.0;
+            var prev = _subtitle.GetParagraphOrDefault(i - 1);
+            if (keepGapPrevIfClose && prev != null)
+            {
+                if (prev.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds && prev.EndTime.TotalMilliseconds + 200 >= p.StartTime.TotalMilliseconds)
+                {
+                    prevGap = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
+                    if (ms < 0 && prev.Duration.TotalMilliseconds + ms < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    prev = null;
+                }
+            }
+
             if (ms > 0)
             {
                 if (p.StartTime.TotalMilliseconds + ms + 100 > p.EndTime.TotalMilliseconds)
@@ -15460,8 +15496,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var prev = _subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) > prev.EndTime.TotalMilliseconds)
+                if (keepGapPrevIfClose || prev == null || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) > prev.EndTime.TotalMilliseconds)
                 {
                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + ms;
                 }
@@ -15481,6 +15516,19 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             SetDurationInSeconds(p.Duration.TotalSeconds);
 
+            if (keepGapPrevIfClose && prev != null)
+            {
+                prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - prevGap;
+                if (_subtitleAlternate != null)
+                {
+                    var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(prev), prev, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        original.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                    }
+                }
+            }
+
             if (_subtitleAlternate != null)
             {
                 var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
@@ -15492,7 +15540,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MoveEndCurrent(int ms)
+        private void MoveEndCurrent(int ms, bool keepGapNextIfClose)
         {
             var i = _subtitleListViewIndex;
             if (i < 0 || i >= _subtitle.Paragraphs.Count || ms == 0)
@@ -15517,6 +15565,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var nextGap = 0.0;
+            var next = _subtitle.GetParagraphOrDefault(i + 1);
+            if (keepGapNextIfClose && next != null)
+            {
+                if (next.StartTime.TotalMilliseconds >= p.EndTime.TotalMilliseconds && next.StartTime.TotalMilliseconds - 200 < p.EndTime.TotalMilliseconds)
+                {
+                    nextGap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                    if (ms > 0 && next.Duration.TotalMilliseconds + ms < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    next = null;
+                }
+            }
+
             if (ms > 0)
             {
                 if (p.Duration.TotalMilliseconds + ms > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
@@ -15524,8 +15590,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var next = _subtitle.GetParagraphOrDefault(i + 1);
-                if (next == null || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                if (keepGapNextIfClose || next == null || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                 {
                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
                 }
@@ -15553,6 +15618,19 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.TimeCode = p.StartTime;
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             SetDurationInSeconds(p.Duration.TotalSeconds);
+
+            if (keepGapNextIfClose && next != null)
+            {
+                next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + nextGap;
+                if (_subtitleAlternate != null)
+                {
+                    var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(next), next, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        original.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                    }
+                }
+            }
 
             if (_subtitleAlternate != null)
             {
