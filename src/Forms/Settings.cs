@@ -1335,6 +1335,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, string.Format(language.AdjustStartXMsForward, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustStartXMsForward));
             AddNode(createAndAdjustNode, string.Format(language.AdjustEndXMsBack, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustEndXMsBack));
             AddNode(createAndAdjustNode, string.Format(language.AdjustEndXMsForward, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustEndXMsForward));
+            AddNode(createAndAdjustNode, language.AdjustStartOneFrameBack, nameof(Configuration.Settings.Shortcuts.MoveStartOneFrameBack));
+            AddNode(createAndAdjustNode, language.AdjustStartOneFrameForward, nameof(Configuration.Settings.Shortcuts.MoveStartOneFrameForward));
+            AddNode(createAndAdjustNode, language.AdjustEndOneFrameBack, nameof(Configuration.Settings.Shortcuts.MoveEndOneFrameBack));
+            AddNode(createAndAdjustNode, language.AdjustEndOneFrameForward, nameof(Configuration.Settings.Shortcuts.MoveEndOneFrameForward));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange));
@@ -1841,7 +1845,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;
             Configuration.Settings.VideoControls.WaveformBackgroundColor = panelWaveformBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveformTextColor = panelWaveformTextColor.BackColor;
-            Configuration.Settings.VideoControls.WaveformCursorColor = panelWaveformCursorColor.BackColor ;
+            Configuration.Settings.VideoControls.WaveformCursorColor = panelWaveformCursorColor.BackColor;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
             Configuration.Settings.VideoControls.SpectrogramAppearance = comboBoxSpectrogramAppearance.SelectedIndex == 0 ? "OneColorGradient" : "Classic";
 

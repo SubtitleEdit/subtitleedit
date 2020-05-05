@@ -5446,6 +5446,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustEndXMsForward":
                     language.Settings.AdjustEndXMsForward = reader.Value;
                     break;
+                case "Settings/AdjustStartOneFrameBack":
+                    language.Settings.AdjustStartOneFrameBack = reader.Value;
+                    break;
+                case "Settings/AdjustStartOneFrameForward":
+                    language.Settings.AdjustStartOneFrameForward = reader.Value;
+                    break;
+                case "Settings/AdjustEndOneFrameBack":
+                    language.Settings.AdjustEndOneFrameBack = reader.Value;
+                    break;
+                case "Settings/AdjustEndOneFrameForward":
+                    language.Settings.AdjustEndOneFrameForward = reader.Value;
+                    break;
                 case "Settings/AdjustSetStartTimeKeepDuration":
                     language.Settings.AdjustSetStartTimeKeepDuration = reader.Value;
                     break;

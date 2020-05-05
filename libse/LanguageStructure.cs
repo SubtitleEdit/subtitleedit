@@ -2173,6 +2173,10 @@
             public string AdjustStartXMsForward { get; set; }
             public string AdjustEndXMsBack { get; set; }
             public string AdjustEndXMsForward { get; set; }
+            public string AdjustStartOneFrameBack { get; set; }
+            public string AdjustStartOneFrameForward { get; set; }
+            public string AdjustEndOneFrameBack { get; set; }
+            public string AdjustEndOneFrameForward { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
