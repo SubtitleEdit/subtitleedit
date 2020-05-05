@@ -21235,6 +21235,12 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
+                    if (!FileUtil.IsBluRaySup(openFileDialog1.FileName) && FileUtil.IsSpDvdSup(openFileDialog1.FileName))
+                    {
+                        ImportAndOcrSpDvdSup(openFileDialog1.FileName, false);
+                        return;
+                    }
+
                     ImportAndOcrBluRaySup(openFileDialog1.FileName, false);
                 }
             }
