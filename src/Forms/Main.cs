@@ -15527,6 +15527,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
                     }
                 }
+                SubtitleListview1.SetStartTimeAndDuration(i - 1, prev, p, _subtitle.GetParagraphOrDefault(i - 2));
             }
 
             if (_subtitleAlternate != null)
@@ -15630,6 +15631,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
                     }
                 }
+                SubtitleListview1.SetStartTimeAndDuration(i + 1, next, _subtitle.GetParagraphOrDefault(i + 2), p);
             }
 
             if (_subtitleAlternate != null)
