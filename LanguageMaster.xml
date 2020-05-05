@@ -2008,6 +2008,10 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustStartXMsForward>Move start {0} ms forward</AdjustStartXMsForward>
     <AdjustEndXMsBack>Move end {0} ms back</AdjustEndXMsBack>
     <AdjustEndXMsForward>Move end {0} ms forward</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Move start 1 frame back</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Move start 1 frame forward</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Move end 1 frame back</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Move start 1 frame forward</AdjustEndOneFrameForward>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>

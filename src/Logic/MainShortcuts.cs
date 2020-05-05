@@ -98,6 +98,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustAdjustStartXMsForward { get; set; }
         public Keys MainAdjustAdjustEndXMsBack { get; set; }
         public Keys MainAdjustAdjustEndXMsForward { get; set; }
+        public Keys MainAdjustMoveStartOneFrameBack { get; set; }
+        public Keys MainAdjustMoveStartOneFrameForward { get; set; }
+        public Keys MainAdjustMoveEndOneFrameBack { get; set; }
+        public Keys MainAdjustMoveEndOneFrameForward { get; set; }
         public Keys MainAdjustExtendToNextSceneChange { get; set; }
         public Keys MainAdjustExtendToPreviousSceneChange { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
@@ -264,6 +268,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustAdjustStartXMsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartXMsForward);
             MainAdjustAdjustEndXMsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustEndXMsBack);
             MainAdjustAdjustEndXMsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustEndXMsForward);
+            MainAdjustMoveStartOneFrameBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameBack);
+            MainAdjustMoveStartOneFrameForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameForward);
+            MainAdjustMoveEndOneFrameBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBack);
+            MainAdjustMoveEndOneFrameForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForward);
             MainAdjustExtendToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange);
             MainAdjustExtendToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);

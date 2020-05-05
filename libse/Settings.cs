@@ -1622,6 +1622,10 @@ $HorzAlign          =   Center
         public string MainAdjustStartXMsForward { get; set; }
         public string MainAdjustEndXMsBack { get; set; }
         public string MainAdjustEndXMsForward { get; set; }
+        public string MoveStartOneFrameBack { get; set; }
+        public string MoveStartOneFrameForward { get; set; }
+        public string MoveEndOneFrameBack { get; set; }
+        public string MoveEndOneFrameForward { get; set; }
         public string MainAdjustExtendToNextSceneChange { get; set; }
         public string MainAdjustExtendToPreviousSceneChange { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
@@ -6332,6 +6336,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MoveStartOneFrameBack");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveStartOneFrameBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameForward");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveStartOneFrameForward = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameBack");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveEndOneFrameBack = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameForward");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveEndOneFrameForward = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
                 if (subNode != null)
                 {
@@ -7527,6 +7555,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustStartXMsForward", settings.Shortcuts.MainAdjustStartXMsForward);
                 textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
                 textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
+                textWriter.WriteElementString("MoveStartOneFrameBack", settings.Shortcuts.MoveStartOneFrameBack);
+                textWriter.WriteElementString("MoveStartOneFrameForward", settings.Shortcuts.MoveStartOneFrameForward);
+                textWriter.WriteElementString("MoveEndOneFrameBack", settings.Shortcuts.MoveEndOneFrameBack);
+                textWriter.WriteElementString("MoveEndOneFrameForward", settings.Shortcuts.MoveEndOneFrameForward);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);

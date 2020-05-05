@@ -14699,6 +14699,25 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
                 e.SuppressKeyPress = true;
             }
+
+            else if (_shortcuts.MainAdjustMoveStartOneFrameBack == e.KeyData)
+            {
+                MoveStartCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate));
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustMoveStartOneFrameForward == e.KeyData)
+            {
+                MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate));
+            }
+            else if (_shortcuts.MainAdjustMoveEndOneFrameBack == e.KeyData)
+            {
+                MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate));
+            }
+            else if (_shortcuts.MainAdjustMoveEndOneFrameForward == e.KeyData)
+            {
+                MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate));
+            }
+
             else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
             {
                 ButtonSetStartAndOffsetRestClick(null, null);
@@ -15410,6 +15429,17 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // snap to scene change
+            if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && audioVisualizer?.SceneChanges?.Count > 0)
+            {
+                var seconds = (p.StartTime.TotalMilliseconds + ms) / 1000.0;
+                var closest = audioVisualizer.SceneChanges.OrderBy(sc => Math.Abs(seconds - sc)).First() * 1000.0;
+                if (Math.Abs(p.StartTime.TotalMilliseconds + ms - closest) < CurrentFrameRate * 0.9)
+                {
+                    ms = (int)Math.Round(closest - p.StartTime.TotalMilliseconds);
+                }
+            }
+
             if (ms > 0)
             {
                 if (p.StartTime.TotalMilliseconds + ms + 100 > p.EndTime.TotalMilliseconds)
@@ -15472,6 +15502,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var p = _subtitle.GetParagraphOrDefault(i);
+            if (p == null)
+            {
+                return;
+            }
+
+            // snap to scene change
+            if (Configuration.Settings.VideoControls.WaveformSnapToSceneChanges && audioVisualizer?.SceneChanges?.Count > 0)
+            {
+                var seconds = (p.EndTime.TotalMilliseconds + ms) / 1000.0;
+                var closest = audioVisualizer.SceneChanges.OrderBy(sc => Math.Abs(seconds - sc)).First() * 1000.0;
+                if (Math.Abs(p.EndTime.TotalMilliseconds + ms - closest) < CurrentFrameRate * 0.9)
+                {
+                    ms = (int)Math.Round(closest - p.EndTime.TotalMilliseconds);
+                }
+            }
+
             if (ms > 0)
             {
                 if (p.Duration.TotalMilliseconds + ms > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
