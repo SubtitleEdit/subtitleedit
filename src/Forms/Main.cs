@@ -19783,6 +19783,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelDuration.Left = numericUpDownDuration.Left;
             }
 
+            if (string.IsNullOrEmpty(_fileName) && (_subtitle == null || _subtitle.Paragraphs.Count == 0))
+            {
+                _changeSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            }
+
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
             InitializePlayRateDropDown();
