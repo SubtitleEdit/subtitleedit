@@ -13299,6 +13299,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.Save();
                 }
+                else
+                {
+                    _exitWhenLoaded = _loading;
+                }
             }
         }
 
