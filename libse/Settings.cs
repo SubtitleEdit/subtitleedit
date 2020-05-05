@@ -1626,6 +1626,10 @@ $HorzAlign          =   Center
         public string MoveStartOneFrameForward { get; set; }
         public string MoveEndOneFrameBack { get; set; }
         public string MoveEndOneFrameForward { get; set; }
+        public string MoveStartOneFrameBackKeepGapPrev { get; set; }
+        public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
+        public string MoveEndOneFrameBackKeepGapNext { get; set; }
+        public string MoveEndOneFrameForwardKeepGapNext { get; set; }
         public string MainAdjustExtendToNextSceneChange { get; set; }
         public string MainAdjustExtendToPreviousSceneChange { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
@@ -6360,6 +6364,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MoveEndOneFrameForward = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MoveStartOneFrameBackKeepGapPrev");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveStartOneFrameBackKeepGapPrev = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveStartOneFrameForwardKeepGapPrev");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameBackKeepGapNext");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveEndOneFrameBackKeepGapNext = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MoveEndOneFrameForwardKeepGapNext");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
                 if (subNode != null)
                 {
@@ -7559,6 +7587,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MoveStartOneFrameForward", settings.Shortcuts.MoveStartOneFrameForward);
                 textWriter.WriteElementString("MoveEndOneFrameBack", settings.Shortcuts.MoveEndOneFrameBack);
                 textWriter.WriteElementString("MoveEndOneFrameForward", settings.Shortcuts.MoveEndOneFrameForward);
+                textWriter.WriteElementString("MoveStartOneFrameBackKeepGapPrev", settings.Shortcuts.MoveStartOneFrameBackKeepGapPrev);
+                textWriter.WriteElementString("MoveStartOneFrameForwardKeepGapPrev", settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
+                textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
+                textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);

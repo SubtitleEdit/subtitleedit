@@ -102,6 +102,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustMoveStartOneFrameForward { get; set; }
         public Keys MainAdjustMoveEndOneFrameBack { get; set; }
         public Keys MainAdjustMoveEndOneFrameForward { get; set; }
+        public Keys MainAdjustMoveStartOneFrameBackKeepGapPrev { get; set; }
+        public Keys MainAdjustMoveStartOneFrameForwardKeepGapPrev { get; set; }
+        public Keys MainAdjustMoveEndOneFrameBackKeepGapNext { get; set; }
+        public Keys MainAdjustMoveEndOneFrameForwardKeepGapNext { get; set; }
         public Keys MainAdjustExtendToNextSceneChange { get; set; }
         public Keys MainAdjustExtendToPreviousSceneChange { get; set; }
         public Keys MainAdjustExtendToNextSubtitle { get; set; }
@@ -272,6 +276,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustMoveStartOneFrameForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameForward);
             MainAdjustMoveEndOneFrameBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBack);
             MainAdjustMoveEndOneFrameForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForward);
+            MainAdjustMoveStartOneFrameBackKeepGapPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameBackKeepGapPrev);
+            MainAdjustMoveStartOneFrameForwardKeepGapPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
+            MainAdjustMoveEndOneFrameBackKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
+            MainAdjustMoveEndOneFrameForwardKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
             MainAdjustExtendToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange);
             MainAdjustExtendToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
             MainAdjustExtendToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle);
