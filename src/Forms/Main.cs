@@ -20085,6 +20085,10 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
 
             audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+            audioVisualizer.Move100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsLeft);
+            audioVisualizer.Move100MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform100MsRight);
+            audioVisualizer.MoveOneSecondLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform1000MsLeft);
+            audioVisualizer.MoveOneSecondRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.Waveform1000MsRight);
 
             UiUtil.HelpKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
             helpToolStripMenuItem1.ShortcutKeys = UiUtil.HelpKeys;

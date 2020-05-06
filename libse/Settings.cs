@@ -1660,6 +1660,10 @@ $HorzAlign          =   Center
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
         public string WaveformGuessStart { get; set; }
+        public string Waveform100MsLeft { get; set; }
+        public string Waveform100MsRight { get; set; }
+        public string Waveform1000MsLeft { get; set; }
+        public string Waveform1000MsRight { get; set; }
         public string MainTranslateGoogleIt { get; set; }
         public string MainTranslateGoogleTranslate { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
@@ -1777,6 +1781,10 @@ $HorzAlign          =   Center
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
             WaveformAddTextHere = "Return";
+            Waveform100MsLeft = "Shift+Left";
+            Waveform100MsRight = "Shift+Right";
+            Waveform1000MsLeft = "Left";
+            Waveform1000MsRight = "Right";
             MainAdjustExtendToNextSceneChange = string.Empty;
             MainAdjustExtendToPreviousSceneChange = string.Empty;
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
@@ -6568,6 +6576,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.WaveformGuessStart = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("Waveform100MsLeft");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.Waveform100MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform100MsRight");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.Waveform100MsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform1000MsLeft");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.Waveform1000MsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("Waveform1000MsRight");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.Waveform1000MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateGoogleIt");
                 if (subNode != null)
                 {
@@ -7621,6 +7653,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
                 textWriter.WriteElementString("WaveformGuessStart", settings.Shortcuts.WaveformGuessStart);
+                textWriter.WriteElementString("Waveform100MsLeft", settings.Shortcuts.Waveform100MsLeft);
+                textWriter.WriteElementString("Waveform100MsRight", settings.Shortcuts.Waveform100MsRight);
+                textWriter.WriteElementString("Waveform1000MsLeft", settings.Shortcuts.Waveform1000MsLeft);
+                textWriter.WriteElementString("Waveform1000MsRight", settings.Shortcuts.Waveform1000MsRight);
                 textWriter.WriteElementString("MainTranslateGoogleIt", settings.Shortcuts.MainTranslateGoogleIt);
                 textWriter.WriteElementString("MainTranslateGoogleTranslate", settings.Shortcuts.MainTranslateGoogleTranslate);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
