@@ -180,6 +180,8 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
+            this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformSnapToSceneChanges = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformSingleClickSelect = new System.Windows.Forms.CheckBox();
             this.checkBoxWaveformShowWpm = new System.Windows.Forms.CheckBox();
@@ -382,8 +384,7 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
-            this.panelWaveformCursorColor = new System.Windows.Forms.Panel();
-            this.buttonWaveformCursorColor = new System.Windows.Forms.Button();
+            this.buttonGapChoose = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -617,6 +618,7 @@
             // 
             // groupBoxGeneralRules
             // 
+            this.groupBoxGeneralRules.Controls.Add(this.buttonGapChoose);
             this.groupBoxGeneralRules.Controls.Add(this.comboBoxContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelContinuationStyle);
             this.groupBoxGeneralRules.Controls.Add(this.labelDialogStyle);
@@ -2463,6 +2465,25 @@
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
+            // 
+            // panelWaveformCursorColor
+            // 
+            this.panelWaveformCursorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelWaveformCursorColor.Location = new System.Drawing.Point(138, 136);
+            this.panelWaveformCursorColor.Name = "panelWaveformCursorColor";
+            this.panelWaveformCursorColor.Size = new System.Drawing.Size(21, 20);
+            this.panelWaveformCursorColor.TabIndex = 34;
+            this.panelWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
+            // 
+            // buttonWaveformCursorColor
+            // 
+            this.buttonWaveformCursorColor.Location = new System.Drawing.Point(16, 135);
+            this.buttonWaveformCursorColor.Name = "buttonWaveformCursorColor";
+            this.buttonWaveformCursorColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformCursorColor.TabIndex = 4;
+            this.buttonWaveformCursorColor.Text = "Cursor color";
+            this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
+            this.buttonWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
             // 
             // checkBoxWaveformSnapToSceneChanges
             // 
@@ -4640,24 +4661,15 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // panelWaveformCursorColor
+            // buttonGapChoose
             // 
-            this.panelWaveformCursorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformCursorColor.Location = new System.Drawing.Point(138, 136);
-            this.panelWaveformCursorColor.Name = "panelWaveformCursorColor";
-            this.panelWaveformCursorColor.Size = new System.Drawing.Size(21, 20);
-            this.panelWaveformCursorColor.TabIndex = 34;
-            this.panelWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
-            // 
-            // buttonWaveformCursorColor
-            // 
-            this.buttonWaveformCursorColor.Location = new System.Drawing.Point(16, 135);
-            this.buttonWaveformCursorColor.Name = "buttonWaveformCursorColor";
-            this.buttonWaveformCursorColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveformCursorColor.TabIndex = 4;
-            this.buttonWaveformCursorColor.Text = "Cursor color";
-            this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
-            this.buttonWaveformCursorColor.Click += new System.EventHandler(this.buttonWaveformCursorColor_Click);
+            this.buttonGapChoose.Location = new System.Drawing.Point(265, 213);
+            this.buttonGapChoose.Name = "buttonGapChoose";
+            this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
+            this.buttonGapChoose.TabIndex = 46;
+            this.buttonGapChoose.Text = "...";
+            this.buttonGapChoose.UseVisualStyleBackColor = true;
+            this.buttonGapChoose.Click += new System.EventHandler(this.buttonGapChoose_Click);
             // 
             // Settings
             // 
@@ -5154,5 +5166,6 @@
         private System.Windows.Forms.ToolTip toolTipContinuationPreview;
         private System.Windows.Forms.Panel panelWaveformCursorColor;
         private System.Windows.Forms.Button buttonWaveformCursorColor;
+        private System.Windows.Forms.Button buttonGapChoose;
     }
 }

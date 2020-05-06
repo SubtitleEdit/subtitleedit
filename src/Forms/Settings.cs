@@ -3358,5 +3358,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void buttonGapChoose_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsGapChoose())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    numericUpDownMinGapMs.Value = form.MinGapMs;
+                }
+            }
+        }
     }
 }

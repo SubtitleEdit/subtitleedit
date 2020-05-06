@@ -5941,6 +5941,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/IgnoreLyrics":
                     language.Settings.IgnoreLyrics = reader.Value;
                     break;
+                case "Settings/MinFrameGap":
+                    language.Settings.MinFrameGap = reader.Value;
+                    break;
+                case "Settings/XFramesAtYFrameRateGivesZMs":
+                    language.Settings.XFramesAtYFrameRateGivesZMs = reader.Value;
+                    break;
+                case "Settings/UseXAsNewGap":
+                    language.Settings.UseXAsNewGap = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;
