@@ -324,6 +324,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
             }
 
+            // allow missing hours as some (buggy) websites generate these time codes: 04:48,460 --> 04:52,364
+            if (line.Length == 23 && line[2] == ':' && line[5] == ',' && line[9] == ' ' && line[12] == '>' && line[13] == ' ' && line[16] == ':' && line[19] == ',')
+            {
+                line = "00:" + line.Insert(14, "00:");
+            }
+
             if (IsValidTimeCode(line))
             {
                 string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');

@@ -4653,6 +4653,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string targetFileName = newDllFileName.Replace(".dll.new-mpv", ".dll");
                         File.Copy(newDllFileName, targetFileName, true);
                         File.Delete(newDllFileName);
+                        ShowStatus("libmpv updated");
                     }
                     catch
                     {
