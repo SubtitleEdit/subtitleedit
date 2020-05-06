@@ -743,6 +743,12 @@
     <Compile Include="Forms\SettingsFixContinuationStyle.Designer.cs">
       <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SettingsGapChoose.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsGapChoose.Designer.cs">
+      <DependentUpon>SettingsGapChoose.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SettingsLineWidth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1431,6 +1437,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsFixContinuationStyle.resx">
       <DependentUpon>SettingsFixContinuationStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsGapChoose.resx">
+      <DependentUpon>SettingsGapChoose.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsLineWidth.resx">
       <DependentUpon>SettingsLineWidth.cs</DependentUpon>

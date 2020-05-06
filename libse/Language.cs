@@ -2470,7 +2470,10 @@ can edit in same subtitle file (collaboration)",
                 UncheckInsertsItalic = "Detect and uncheck italic single titles, or lyrics",
                 UncheckInsertsLowercase = "Detect and uncheck single titles, or lyrics, in lowercase",
                 HideContinuationCandidatesWithoutName = "Hide unlikely continuation sentences",
-                IgnoreLyrics = "Ignore lyrics between music symbols"
+                IgnoreLyrics = "Ignore lyrics between music symbols",
+                MinFrameGap = "Min. gap in frames",
+                XFramesAtYFrameRateGivesZMs = "{0} frames at a frame rate of {1} gives {2} milliseconds.",
+                UseXAsNewGap = "Use \"{0}\" milliseconds as new minimum gap?",
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

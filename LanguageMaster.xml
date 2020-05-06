@@ -2177,6 +2177,9 @@ Continue?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Detect and uncheck single titles, or lyrics, in lowercase</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Hide unlikely continuation sentences</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignore lyrics between music symbols</IgnoreLyrics>
+    <MinFrameGap>Min. gap in frames</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} frames at a frame rate of {1} gives {2} milliseconds.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>Use "{0}" milliseconds as new minimum gap?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
