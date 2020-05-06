@@ -15496,9 +15496,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ms > 0)
             {
-                if (p.StartTime.TotalMilliseconds + ms + 100 > p.EndTime.TotalMilliseconds)
+                if (p.StartTime.TotalMilliseconds + ms + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds > p.EndTime.TotalMilliseconds)
                 {
-                    return; // do not allow duration smaller than 100ms
+                    return; // do not allow duration smaller than min duration in ms
                 }
 
                 p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + ms;
@@ -15627,9 +15627,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (p.EndTime.TotalMilliseconds + ms - 100 < p.StartTime.TotalMilliseconds)
+                if (p.EndTime.TotalMilliseconds + ms - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds < p.StartTime.TotalMilliseconds)
                 {
-                    return; // do not allow duration smaller than 100ms
+                    return; // do not allow duration smaller than min duration in ms
                 }
 
                 p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
