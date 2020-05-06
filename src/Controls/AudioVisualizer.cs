@@ -115,6 +115,10 @@ namespace Nikse.SubtitleEdit.Controls
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
         public Keys InsertAtVideoPositionShortcut { get; set; }
+        public Keys Move100MsLeft { get; set; }
+        public Keys Move100MsRight { get; set; }
+        public Keys MoveOneSecondLeft { get; set; }
+        public Keys MoveOneSecondRight { get; set; }
         public bool MouseWheelScrollUpIsForward { get; set; } = true;
 
         public const double ZoomMinimum = 0.1;
@@ -348,6 +352,23 @@ namespace Nikse.SubtitleEdit.Controls
             ShowSpectrogram = true;
             ShowWaveform = true;
             InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            Keys key = keyData & Keys.KeyCode;
+
+            switch (key)
+            {
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Right:
+                case Keys.Left:
+                    return true;
+
+                default:
+                    return base.IsInputKey(keyData);
+            }
         }
 
         private void LoadParagraphs(Subtitle subtitle, int primarySelectedIndex, ListView.SelectedIndexCollection selectedIndexes)
@@ -1957,6 +1978,38 @@ namespace Nikse.SubtitleEdit.Controls
                     e.SuppressKeyPress = true;
                     e.Handled = true;
                 }
+            }
+            else if (e.KeyData == Move100MsLeft)
+            {
+                var pos = Math.Max(0, _currentVideoPositionSeconds - 0.1);
+                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
+                Invalidate();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+            else if (e.KeyData == Move100MsRight)
+            {
+                var pos = _currentVideoPositionSeconds + 0.1;
+                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
+                Invalidate();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+            else if (e.KeyData == MoveOneSecondLeft)
+            {
+                var pos = Math.Max(0, _currentVideoPositionSeconds - 1);
+                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
+                Invalidate();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+            else if (e.KeyData == MoveOneSecondRight)
+            {
+                var pos = _currentVideoPositionSeconds + 1;
+                OnPositionSelected?.Invoke(this, new ParagraphEventArgs(pos, null));
+                Invalidate();
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
         }
 
