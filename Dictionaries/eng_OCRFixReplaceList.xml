@@ -2656,6 +2656,112 @@
     <Word from="ZSth" to="25th" />
     <Word from="d0n't" to="don't" />
     <Word from="D0n't" to="Don't" />
+    <Word from="anyjobs" to="any jobs" />
+    <Word from="Sogreat" to="So great" />
+    <Word from="hearfromyou" to="hear from you" />
+    <Word from="meansyou're" to="means you're" />
+    <Word from="forjust" to="for just" />
+    <Word from="notjoking" to="not joking" />
+    <Word from="hidbehind" to="hid behind" />
+    <Word from="Itstarts" to="It starts" />
+    <Word from="outlike" to="out like" />
+    <Word from="reallyfast" to="really fast" />
+    <Word from="Andthe" to="And the" />
+    <Word from="andit's" to="and it's" />
+    <Word from="completelyalone" to="completely alone" />
+    <Word from="wonderedifanyone" to="wondered if anyone" />
+    <Word from="changedevery" to="changed every" />
+    <Word from="reallyjuvenile" to="really juvenile" />
+    <Word from="lovedher" to="loved her" />
+    <Word from="thingsyou" to="things you" />
+    <Word from="Butmyheartache's" to="But my heartache's" />
+    <Word from="Didyou" to="Did you" />
+    <Word from="standbyme" to="stand by me" />
+    <Word from="notatall" to="not at all" />
+    <Word from="Nowdeparting" to="Now departing" />
+    <Word from="haveyourattention" to="have your attention" />
+    <Word from="IosAngeles" to="Los Angeles" />
+    <Word from="haveyourtickets" to="have your tickets" />
+    <Word from="Atlast" to="At last" />
+    <Word from="Mylove" to="My love" />
+    <Word from="walkedto" to="walked to" />
+    <Word from="herapartment" to="her apartment" />
+    <Word from="intoxicatedby" to="intoxicated by" />
+    <Word from="thepromise" to="the promise" />
+    <Word from="wouldalign" to="would align" />
+    <Word from="Whatjust" to="What just" />
+    <Word from="oftheyearare" to="of the year are" />
+    <Word from="Theybegin" to="They begin" />
+    <Word from="andtheyend" to="and they end" />
+    <Word from="IfTom" to="If Tom" />
+    <Word from="hadlearnedanything" to="had learned anything" />
+    <Word from="thatyou" to="that you" />
+    <Word from="cosmicsigniflcance" to="cosmic signiflcance" />
+    <Word from="allanything" to="all anything" />
+    <Word from="everis" to="ever is" />
+    <Word from="wasprettysure" to="was pretty sure" />
+    <Word from="grewup" to="grew up" />
+    <Word from="untilthe" to="until the" />
+    <Word from="totalmisreading" to="total misreading" />
+    <Word from="Thegirl" to="The girl" />
+    <Word from="didnotshare" to="did not share" />
+    <Word from="herlong" to="her long" />
+    <Word from="darkhair" to="dark hair" />
+    <Word from="Andfeelnothing" to="And feel nothing" />
+    <Word from="slightlyabove" to="slightly above" />
+    <Word from="Forallintents" to="For all intents" />
+    <Word from="andpurposes" to="and purposes" />
+    <Word from="justanothergirl" to="just another girl" />
+    <Word from="schoolyearbook" to="school yearbook" />
+    <Word from="Colormylife" to="Color my life" />
+    <Word from="Thisspike" to="This spike" />
+    <Word from="oftheiralbum" to="of their album" />
+    <Word from="topuzzle" to="to puzzle" />
+    <Word from="theirlives" to="their lives" />
+    <Word from="finditnow" to="find it now" />
+    <Word from="commercialbuildings" to="commercial buildings" />
+    <Word from="andyours" to="and yours" />
+    <Word from="anypity" to="any pity" />
+    <Word from="Areyou" to="Are you" />
+    <Word from="armyis" to="army is" />
+    <Word from="caughtsome" to="caught some" />
+    <Word from="cityofthe" to="city of the" />
+    <Word from="Didhegive" to="Did he give" />
+    <Word from="everyonego" to="everyone go" />
+    <Word from="evilandgood" to="evil and good" />
+    <Word from="findthe" to="find the" />
+    <Word from="flndthem" to="flnd them" />
+    <Word from="Forbeing" to="For being" />
+    <Word from="greatnumbers" to="great numbers" />
+    <Word from="heardthe" to="heard the" />
+    <Word from="helltheyare" to="hell they are" />
+    <Word from="hisprivate" to="his private" />
+    <Word from="Howdo" to="How do" />
+    <Word from="inflictmore" to="inflict more" />
+    <Word from="inyourinflnite" to="in your inflnite" />
+    <Word from="mydear" to="my dear" />
+    <Word from="ofwar" to="of war" />
+    <Word from="orgreed" to="or greed" />
+    <Word from="orlust" to="or lust" />
+    <Word from="ourhands" to="our hands" />
+    <Word from="ratherprimitive" to="rather primitive" />
+    <Word from="realnice" to="real nice" />
+    <Word from="talklike" to="talk like" />
+    <Word from="That'llbe" to="That'll be" />
+    <Word from="thatpowerhere" to="that power here" />
+    <Word from="Theyare" to="They are" />
+    <Word from="topossess" to="to possess" />
+    <Word from="toyou" to="to you" />
+    <Word from="wantpeace" to="want peace" />
+    <Word from="we'dbe" to="we'd be" />
+    <Word from="whichyou" to="which you" />
+    <Word from="Whycan't" to="Why can't" />
+    <Word from="willlook" to="will look" />
+    <Word from="willmake" to="will make" />
+    <Word from="willmurderhis" to="will murder his" />
+    <Word from="wishyou" to="wish you" />
+    <Word from="wouldnot" to="would not" />
+    <Word from="yourpeople" to="your people" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2725,6 +2831,7 @@
   </WholeLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
+    <LinePart from=",.," to="..." />
   </PartialLinesAlways>
   <PartialLines>
     <LinePart from=" /be " to=" I be " />
@@ -3045,6 +3152,10 @@
     <LinePart from="You' re" to="You're" />
     <LinePart from="you' re" to="you're" />
     <LinePart from="You' ve " to="You've " />
+    <LinePart from="he 'd " to="he'd " />
+    <LinePart from="ofb" to="of b" />
+    <LinePart from="ofM" to="of M" />
+    <LinePart from="ofS" to="of S" />
   </PartialLines>
   <BeginLines>
     <Beginning from="lgot it" to="I got it" />
@@ -3197,6 +3308,7 @@
     <Ending from="pshycol" to="psycho!" />
     <Ending from=" i..." to=" I..." />
     <Ending from=" L." to=" I." />
+    <Ending from=" ." to="." />
   </EndLines>
   <RegularExpressions>
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />

@@ -5583,13 +5583,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return false;
             }
 
-            line = line.Replace("[", string.Empty);
-            line = line.Replace("]", string.Empty);
+            line = line.RemoveChar('[');
+            line = line.RemoveChar(']');
             line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic);
 
             var arr = line.Replace("a.m", string.Empty).Replace("p.m", string.Empty).Replace("o.r", string.Empty)
                 .Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty)
-                .Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(new[] { ' ', ',', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
                 if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
