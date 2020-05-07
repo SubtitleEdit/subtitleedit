@@ -150,8 +150,8 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _showBookmarkLabel = true;
         private ContextMenu _bookmarkContextMenu;
         private MainShortcuts _shortcuts = new MainShortcuts();
-        private bool _winLeftDown = false;
-        private bool _winRightDown = false;
+        private long _winLeftDownTicks = -1;
+        private long _winRightDownTicks = -1;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -13464,16 +13464,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.LWin)
             {
-                _winLeftDown = true;
+                _winLeftDownTicks = DateTime.UtcNow.Ticks;
             }
 
             if (e.KeyCode == Keys.RWin)
             {
-                _winRightDown = true;
+                _winRightDownTicks = DateTime.UtcNow.Ticks;
             }
 
-            if (_winLeftDown || _winRightDown)
+            if ((DateTime.UtcNow.Ticks - _winLeftDownTicks) <= 10000 * 999 || (DateTime.UtcNow.Ticks - _winRightDownTicks) <= 10000 * 999) // less than 999 ms
             {
+                // if it's less than one second since Win key was pressed we ignore key (not perfect...)
                 e.SuppressKeyPress = true;
                 e.Handled = true;
                 return;
@@ -24379,16 +24380,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MainKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.LWin)
-            {
-                _winLeftDown = false;
-            }
-
-            if (e.KeyCode == Keys.RWin)
-            {
-                _winRightDown = false;
-            }
-
             if (_mainCreateStartDownEndUpParagraph != null)
             {
                 var p = _subtitle.Paragraphs[_subtitleListViewIndex];
