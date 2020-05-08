@@ -278,11 +278,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     using (var vlc = new LibVlcDynamic())
                     {
                         vlc.Initialize(null, null, null, null);
-                        return vlc.IsAllMethodsLoaded();
+                        var allMethodsLoaded = vlc.IsAllMethodsLoaded();
+                        if (!allMethodsLoaded)
+                        {
+                            SeLogger.Error("Not all required methods was found in libvlc");
+                        }
+                        return allMethodsLoaded;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    SeLogger.Error(ex, "LibVlcDynamic.IsInstalled");
                     return false;
                 }
             }
@@ -757,9 +763,34 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     }
                 }
             }
-            _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
+
+            try
+            {
+                _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
+            }
+            catch
+            {
+                if (Configuration.IsRunningOnLinux)
+                {
+                    try
+                    {
+                        dllFile = "libvlc.so.5"; // Ubuntu 20.04
+                        _libVlcDll = NativeMethods.CrossLoadLibrary(dllFile);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             if (_libVlcDll == IntPtr.Zero)
             {
+                SeLogger.Error($"Unable to load '{dllFile}' (also check libc.so.6 + libdl.so.2)");
                 return;
             }
             LoadLibVlcDynamic();

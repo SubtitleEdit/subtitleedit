@@ -46,5 +46,21 @@ namespace Nikse.SubtitleEdit.Core
                 throw exception;
             }
         }
+
+        public static void Error(string message)
+        {
+            string filePath = Path.Combine(Configuration.DataDirectory, "error_log.txt");
+            using (var writer = new StreamWriter(filePath, true, Encoding.UTF8))
+            {
+                writer.WriteLine("-----------------------------------------------------------------------------");
+                writer.WriteLine("Date: " + DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    writer.WriteLine("Message: " + message);
+                }
+
+                writer.WriteLine();
+            }
+        }
     }
 }
