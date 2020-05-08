@@ -118,11 +118,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var hideTime = parser.GetAllTagsByNameAsStrings(item, "HideTime");
                 if (textLines.Count > 0 && showTime.Count == 1 && hideTime.Count == 1 && long.TryParse(showTime[0], out var startMs) && long.TryParse(hideTime[0], out var endMs))
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(string.Join(Environment.NewLine, textLines), startMs, endMs));
+                    var p = new Paragraph(string.Join(Environment.NewLine, textLines), startMs, endMs);
+
+                    var className = parser.GetAllTagsByNameAsStrings(item, "ClassName");
+                    if (className.Count == 1)
+                    {
+                        p.Language = className[0];
+                    }
+
+                    subtitle.Paragraphs.Add(p);
                 }
             }
 
-            subtitle.Sort(Enums.SubtitleSortCriteria.StartTime);
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
