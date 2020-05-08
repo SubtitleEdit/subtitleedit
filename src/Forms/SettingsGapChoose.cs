@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
 
+            labelUseCalc.Font = new System.Drawing.Font(labelCalcInfo.Font.Name, labelCalcInfo.Font.Size, System.Drawing.FontStyle.Bold);
             CalcMilliseconds();
         }
 
