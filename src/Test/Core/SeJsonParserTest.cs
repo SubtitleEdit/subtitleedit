@@ -111,6 +111,25 @@ namespace Test.Core
             Assert.AreEqual("", result[0].Trim());
         }
 
+
+        [TestMethod]
+        public void GetArrayElementsByName_Get_Two_Lines()
+        {
+            var json = @"{                    
+	        'TextLines': [                        
+		        'Aussi dur que ce soit pour nous,',
+		        'tout ce qui nous arrive'
+		        ],                    
+	        'ClassName': 'fr',
+	        'ShowTime': 115801,                    
+	        'HideTime': 120040".Replace('\'', '"');
+            var parser = new SeJsonParser();
+            var result = parser.GetArrayElementsByName(json, "TextLines");
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("Aussi dur que ce soit pour nous,", result[0].Trim());
+            Assert.AreEqual("tout ce qui nous arrive", result[1].Trim());
+        }
+
         [TestMethod]
         public void GetArrayElementsByName_Advanced()
         {

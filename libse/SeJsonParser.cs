@@ -5,18 +5,22 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class SeJsonParser
     {
+        public enum SeJsonState
+        { 
+            Object,
+            Array,
+            Value,
+        }
+
         public List<string> Errors { get; private set; } = new List<string>();
 
         public class StateElement
         {
-            public int State { get; set; }
+            public SeJsonState State { get; set; }
             public string Name { get; set; }
             public int Count { get; set; }
         }
 
-        private const int JStateObject = 0;
-        private const int JStateArray = 1;
-        private const int JStateValue = 2;
         private readonly HashSet<char> _whiteSpace = new HashSet<char> { ' ', '\r', '\n', '\t' };
 
         public List<string> GetAllTagsByNameAsStrings(string content, string name)
@@ -42,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
@@ -51,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateArray
+                            State = SeJsonState.Array
                         });
                         i++;
                     }
@@ -62,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateObject) // after '{'
+                else if (state.Peek().State == SeJsonState.Object) // after '{'
                 {
                     if (ch == '"')
                     {
@@ -80,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateValue
+                            State = SeJsonState.Value
                         });
                     }
                     else if (ch == '}')
@@ -121,7 +125,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
+                else if (state.Peek().State == SeJsonState.Value) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
                     if (ch == '"') // string
                     {
@@ -166,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core
                         var value = state.Pop();
                         if (state.Count > 0)
                         {
-                            if (value.State == JStateValue)
+                            if (value.State == SeJsonState.Value)
                             {
                                 state.Pop();
                             }
@@ -258,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateObject,
+                            State = SeJsonState.Object,
                             Name = objectName
                         });
                         i++;
@@ -273,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateArray,
+                            State = SeJsonState.Array,
                             Name = objectName
                         });
                         i++;
@@ -285,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateArray) // array, after '['
+                else if (state.Peek().State == SeJsonState.Array) // array, after '['
                 {
                     if (ch == ']')
                     {
@@ -314,14 +318,21 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
                     else
                     {
-                        Errors.Add($"Unexpected char {ch} at position {i}");
-                        return list;
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName + "_array_value",
+                            State = SeJsonState.Value
+                        });
                     }
                 }
 
@@ -353,7 +364,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
@@ -362,7 +373,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateArray
+                            State = SeJsonState.Array
                         });
                         i++;
                     }
@@ -373,7 +384,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateObject) // after '{'
+                else if (state.Peek().State == SeJsonState.Object) // after '{'
                 {
                     if (ch == '"')
                     {
@@ -391,7 +402,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateValue
+                            State = SeJsonState.Value
                         });
                     }
                     else if (ch == '}')
@@ -432,7 +443,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
+                else if (state.Peek().State == SeJsonState.Value) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
                     if (ch == '"') // string
                     {
@@ -463,6 +474,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (objectName == name)
                         {
                             list.Add(objectValue);
+                            start = -1;
                         }
                         i += end - i + 1;
                         state.Pop();
@@ -477,7 +489,7 @@ namespace Nikse.SubtitleEdit.Core
                         var value = state.Pop();
                         if (state.Count > 0)
                         {
-                            if (value.State == JStateValue)
+                            if (value.State == SeJsonState.Value)
                             {
                                 state.Pop();
                             }
@@ -544,7 +556,7 @@ namespace Nikse.SubtitleEdit.Core
                     else if ("+-0123456789".IndexOf(ch) >= 0)
                     {
                         var sb = new StringBuilder();
-                        while ("+-0123456789.Ee".IndexOf(content[i]) >= 0 && i < max)
+                        while (i < max && "+-0123456789.Ee".IndexOf(content[i]) >= 0)
                         {
                             sb.Append(content[i]);
                             i++;
@@ -569,7 +581,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateObject,
+                            State = SeJsonState.Object,
                             Name = objectName
                         });
                         i++;
@@ -584,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateArray,
+                            State = SeJsonState.Array,
                             Name = objectName
                         });
                         i++;
@@ -600,7 +612,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateArray) // array, after '['
+                else if (state.Peek().State == SeJsonState.Array) // array, after '['
                 {
                     if (ch == ']')
                     {
@@ -608,15 +620,15 @@ namespace Nikse.SubtitleEdit.Core
                         i++;
                         if (state.Count > 0 && state.Peek().Name == name && start > -1)
                         {
-                            list.Add(content.Substring(start, i - start - 1));
+                            list.Add(content.Substring(start, i - start - 1).Trim());
                             start = -1;
                         }
                     }
                     else if (ch == ',' && state.Peek().Count > 0)
                     {
-                        if (start >= 0 && state.Peek().State == JStateArray && state.Peek().Name == name)
+                        if (start >= 0 && state.Peek().State == SeJsonState.Array && state.Peek().Name == name)
                         {
-                            list.Add(content.Substring(start, i - start));
+                            list.Add(content.Substring(start, i - start).Trim());
                             start = i + 1;
                         }
                         if (state.Count > 0 && state.Peek().Count > 0)
@@ -639,14 +651,21 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
                     else
                     {
-                        Errors.Add($"Unexpected char {ch} at position {i}");
-                        return list;
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName + "_array_value",
+                            State = SeJsonState.Value
+                        });
                     }
                 }
 
@@ -678,7 +697,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
@@ -687,7 +706,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateArray
+                            State = SeJsonState.Array
                         });
                         i++;
                         start = i;
@@ -699,7 +718,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateObject) // after '{'
+                else if (state.Peek().State == SeJsonState.Object) // after '{'
                 {
                     if (ch == '"')
                     {
@@ -717,7 +736,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateValue
+                            State = SeJsonState.Value
                         });
                     }
                     else if (ch == '}')
@@ -758,7 +777,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
+                else if (state.Peek().State == SeJsonState.Value) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
                     if (ch == '"') // string
                     {
@@ -798,7 +817,7 @@ namespace Nikse.SubtitleEdit.Core
                         var value = state.Pop();
                         if (state.Count > 0)
                         {
-                            if (value.State == JStateValue)
+                            if (value.State == SeJsonState.Value)
                             {
                                 state.Pop();
                             }
@@ -873,7 +892,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateObject,
+                            State = SeJsonState.Object,
                             Name = objectName
                         });
                         i++;
@@ -888,7 +907,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateArray,
+                            State = SeJsonState.Array,
                             Name = objectName
                         });
                         i++;
@@ -900,7 +919,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateArray) // array, after '['
+                else if (state.Peek().State == SeJsonState.Array) // array, after '['
                 {
                     if (ch == ']')
                     {
@@ -914,7 +933,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     else if (ch == ',' && state.Peek().Count > 0)
                     {
-                        if (start >= 0 && state.Count == 1 && state.Peek().State == JStateArray && state.Peek().Name == "Root")
+                        if (start >= 0 && state.Count == 1 && state.Peek().State == SeJsonState.Array && state.Peek().Name == "Root")
                         {
                             list.Add(content.Substring(start, i - start));
                             start = i + 1;
@@ -939,14 +958,21 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
                     else
                     {
-                        Errors.Add($"Unexpected char {ch} at position {i}");
-                        return list;
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName + "_array_value",
+                            State = SeJsonState.Value
+                        });
                     }
                 }
 
@@ -978,7 +1004,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
@@ -987,7 +1013,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = "Root",
-                            State = JStateArray
+                            State = SeJsonState.Array
                         });
                         i++;
                     }
@@ -998,7 +1024,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateObject) // after '{'
+                else if (state.Peek().State == SeJsonState.Object) // after '{'
                 {
                     if (ch == '"')
                     {
@@ -1016,7 +1042,7 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateValue
+                            State = SeJsonState.Value
                         });
                         if (objectName == name && start == -1)
                         {
@@ -1066,7 +1092,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateValue) // value - string/ number / object / array / true / false / null + "," + "}"
+                else if (state.Peek().State == SeJsonState.Value) // value - string/ number / object / array / true / false / null + "," + "}"
                 {
                     if (ch == '"') // string
                     {
@@ -1106,7 +1132,7 @@ namespace Nikse.SubtitleEdit.Core
                         var value = state.Pop();
                         if (state.Count > 0)
                         {
-                            if (value.State == JStateValue)
+                            if (value.State == SeJsonState.Value)
                             {
                                 state.Pop();
                             }
@@ -1181,7 +1207,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateObject,
+                            State = SeJsonState.Object,
                             Name = objectName
                         });
                         i++;
@@ -1196,7 +1222,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         state.Push(new StateElement
                         {
-                            State = JStateArray,
+                            State = SeJsonState.Array,
                             Name = objectName
                         });
                         i++;
@@ -1208,7 +1234,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                else if (state.Peek().State == JStateArray) // array, after '['
+                else if (state.Peek().State == SeJsonState.Array) // array, after '['
                 {
                     if (ch == ']')
                     {
@@ -1237,14 +1263,21 @@ namespace Nikse.SubtitleEdit.Core
                         state.Push(new StateElement
                         {
                             Name = objectName,
-                            State = JStateObject
+                            State = SeJsonState.Object
                         });
                         i++;
                     }
                     else
                     {
-                        Errors.Add($"Unexpected char {ch} at position {i}");
-                        return string.Empty;
+                        if (state.Count > 0)
+                        {
+                            state.Peek().Count++;
+                        }
+                        state.Push(new StateElement
+                        {
+                            Name = objectName + "_array_value",
+                            State = SeJsonState.Value
+                        });
                     }
                 }
 

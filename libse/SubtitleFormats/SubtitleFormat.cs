@@ -91,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new GooglePlayJson(),
                     new GpacTtxt(),
                     new Gremots(),
+                    new HollyStarJson(),
                     new ImageLogicAutocaption(),
                     new InqScribe(),
                     new IssXml(),
