@@ -1,5 +1,32 @@
 ﻿Subtitle Edit Changelog
 
+3.5.16 (xth July 2020) BETA
+* NEW:
+   * Enable custom color for waveform cursor
+   * New shortcuts to move start/end one frame
+   * New shortcuts to move start/end with gap - thx matmaggi/Fhining/btsix
+   * Add move shortcuts to waveform (arrow left/right) - thx Shaddy
+   * Add new subtitle format - thx Matmanamane
+   * Add Bulgarian no-break-after-list - thx Eva
+   * Add "More than two lines" to "Modify selection"
+   * Settings: Small helper window to calc gap in frames
+* IMPROVED:
+   * Update Bulgarian translation - thx KalinM
+   * Init no-break-after-list with language
+   * Make quick-char-list in "OCR Char" window dynamic
+   * Remember settings for "column paste"
+   * Make "Google translate" shortcut customizable - thx darnn
+* FIXED:
+   * Fix OCR window after minimize - thx Janusz
+   * Fix missing images in bdsup - thx Devin
+   * Fix for unstable duration in frame time mode - thx btsix
+   * Fix for loading Sami styles - thx Jamakmake
+   * Fix for compare ("..." vs "..") - thx GCRaistlin
+   * Make "Shift+F9" behave like the old "F9" from SE 3.5.14
+   * Fix crash in load of profile/continuation-style - thx xy
+   * Fix auto adjust start via wf for original - thx OmrSi
+
+
 3.5.15 (1st May 2020)
 * NEW:
    * Add "sentence continuation style" - thx Flitskikker
