@@ -264,6 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var videoError = new VideoError();
                 videoError.Initialize(fileName, exception);
                 videoError.ShowDialog();
+                SeLogger.Error(exception, "InitializeVideoPlayerAndContainer failed to load video player");
                 return false;
             }
         }

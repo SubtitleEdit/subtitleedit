@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Runtime.InteropServices;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -184,13 +184,13 @@ namespace Nikse.SubtitleEdit.Logic
         [DllImport("libc.so.6")]
         internal static extern IntPtr setlocale(int category, string locale);
 
-        [DllImport("libdl.so")]
+        [DllImport("libdl.so.2")]
         internal static extern IntPtr dlopen(string filename, int flags);
 
-        [DllImport("libdl.so")]
+        [DllImport("libdl.so.2")]
         internal static extern IntPtr dlclose(IntPtr handle);
 
-        [DllImport("libdl.so")]
+        [DllImport("libdl.so.2")]
         internal static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         #endregion
@@ -203,6 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 return LoadLibrary(fileName);
             }
+
             return dlopen(fileName, RTLD_NOW | RTLD_GLOBAL);
         }
 

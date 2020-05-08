@@ -436,13 +436,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                             NativeMethods.CrossFreeLibrary(lib);
                             return true;
                         }
+
                         return false;
                     }
+
                     string dllFile = GetMpvPath("mpv-1.dll");
                     return File.Exists(dllFile);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    SeLogger.Error(ex, "LibMpvDynamic.IsInstalled failed");
                     return false;
                 }
             }
