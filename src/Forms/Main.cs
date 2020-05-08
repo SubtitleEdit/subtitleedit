@@ -14806,11 +14806,6 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 buttonGoogleIt_Click(null, null);
             }
-            else if (_shortcuts.MainTranslateGoogleTranslate == e.KeyData)
-            {
-                e.SuppressKeyPress = true;
-                buttonGoogleTranslateIt_Click(null, null);
-            }
             else if (_shortcuts.MainTranslateCustomSearch1 == e.KeyData)
             {
                 e.SuppressKeyPress = true;
@@ -20060,6 +20055,8 @@ namespace Nikse.SubtitleEdit.Forms
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
             addWordToNameListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+
+            translateByGoogleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);

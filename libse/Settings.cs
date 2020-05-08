@@ -1785,6 +1785,7 @@ $HorzAlign          =   Center
             Waveform100MsRight = "Shift+Right";
             Waveform1000MsLeft = "Left";
             Waveform1000MsRight = "Right";
+            MainTranslateGoogleTranslate = "Control+Shift+G";
             MainAdjustExtendToNextSceneChange = string.Empty;
             MainAdjustExtendToPreviousSceneChange = string.Empty;
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
@@ -1978,6 +1979,12 @@ $HorzAlign          =   Center
                         {
                             settings.Shortcuts.MainVideoGoToStartCurrent = "Shift+F11";
                         }
+                    }
+                    else if (settings.Version.StartsWith("3.5.15", StringComparison.Ordinal) || 
+                             settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) || 
+                             settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
+                    {
+                        settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
                     }
                 }
                 catch (Exception exception)

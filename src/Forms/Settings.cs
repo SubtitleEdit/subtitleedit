@@ -1299,7 +1299,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var translateNode = new ShortcutNode(Configuration.Settings.Language.Main.VideoControls.Translate);
             AddNode(translateNode, Configuration.Settings.Language.Main.VideoControls.GoogleIt, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleIt));
-            AddNode(translateNode, Configuration.Settings.Language.Main.VideoControls.GoogleTranslate, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate));
+            AddNode(translateNode, Configuration.Settings.Language.Main.VideoControls.GoogleTranslate, nameof(Configuration.Settings.Shortcuts.MainTranslateGoogleTranslate), true);
             AddNode(translateNode, language.CustomSearch1, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
             AddNode(translateNode, language.CustomSearch2, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
             AddNode(translateNode, language.CustomSearch3, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
