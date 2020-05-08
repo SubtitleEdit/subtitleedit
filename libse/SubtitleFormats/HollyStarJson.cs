@@ -118,8 +118,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var hideTime = parser.GetAllTagsByNameAsStrings(item, "HideTime");
                 if (textLines.Count > 0 && showTime.Count == 1 && hideTime.Count == 1 && long.TryParse(showTime[0], out var startMs) && long.TryParse(hideTime[0], out var endMs))
                 {
-                    var p = new Paragraph(string.Join(Environment.NewLine, textLines), startMs, endMs);
+                    var text = new StringBuilder();
+                    foreach (var line in textLines)
+                    {
+                        text.AppendLine(Json.DecodeJsonText(line));
+                    }
 
+                    var p = new Paragraph(text.ToString().Trim(), startMs, endMs);
                     var className = parser.GetAllTagsByNameAsStrings(item, "ClassName");
                     if (className.Count == 1)
                     {
