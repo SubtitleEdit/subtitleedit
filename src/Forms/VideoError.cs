@@ -30,8 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
                 currentVideoPlayer = "DirectShow";
             }
 
-
-            if (currentVideoPlayer == "DirectShow")
+            if (Configuration.IsRunningOnLinux)
+            {
+                sb.AppendLine("Try installing latest version of libmpv and libvlc!");
+                sb.Append("Read more about Subtitle Edit on Linux here: https://nikse.dk/SubtitleEdit/Help#linux");
+            }
+            else if (currentVideoPlayer == "DirectShow")
             {
                 sb.AppendLine("Try installing/updating \"LAV Filters - DirectShow Media Splitter and Decoders\": https://github.com/Nevcairiel/LAVFilters/releases");
                 sb.Append("Note that Subtitle Edit is a " + IntPtr.Size * 8 + "-bit program, and hence requires " + IntPtr.Size * 8 + "-bit codecs!");
