@@ -138,7 +138,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return pages;
         }
 
-
         public Dictionary<int, Paragraph> GetTeletext(TeletextRunSettings teletextRunSettings, int pageNumber, int pageNumberBcd)
         {
             var timestamp = PresentationTimestamp.HasValue ? PresentationTimestamp.Value / 90 : 40;
@@ -175,6 +174,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
                 i += dataUnitLen;
             }
+
             if (teletextRunSettings.PageNumberAndParagraph.ContainsKey(pageNumber) && teletextRunSettings.PageNumberAndParagraph[pageNumber] != null)
             {
                 if (teletextPages.ContainsKey(pageNumber))
