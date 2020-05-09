@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemExport.Visible = true;
                 saveAllImagesWithHtmlIndexViewToolStripMenuItem.Visible = true;
-                saveSubtitleAsToolStripMenuItem.Visible = true;
+                saveSubtitleAsToolStripMenuItem.Visible = false;
             }
         }
 

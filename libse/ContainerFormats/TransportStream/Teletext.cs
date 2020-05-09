@@ -751,5 +751,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
         }
+
+        public static Dictionary<int, Paragraph> ProcessTelxPacketPendingLeftovers(TeletextRunSettings teletextRunSettings, int pageNumberDec)
+        {
+            // Now we have the beginning of page transmission; if there is page_buffer pending, process it
+            if (_pageBuffer.Tainted)
+            {
+                // this time we do not subtract any frames, there will be no more frames
+                _pageBuffer.HideTimestamp = teletextRunSettings.GetLastTimestamp(pageNumberDec);
+                ProcessPage(_pageBuffer, teletextRunSettings, pageNumberDec);
+                if (teletextRunSettings.PageNumberAndParagraph.Count > 0)
+                {
+                    return teletextRunSettings.PageNumberAndParagraph;
+                }
+            }
+            return new Dictionary<int, Paragraph>();
+        }
     }
 }

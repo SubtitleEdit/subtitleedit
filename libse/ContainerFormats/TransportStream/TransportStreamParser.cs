@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
@@ -174,29 +174,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     foreach (var pes in teletextPesList[packetId])
                     {
                         var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
-                        foreach (var dic in textDictionary)
-                        {
-                            if (!string.IsNullOrEmpty(dic.Value.Text))
-                            {
-                                if (TeletextSubtitlesLookup.ContainsKey(packetId))
-                                {
-                                    var innerDic = TeletextSubtitlesLookup[packetId];
-                                    if (innerDic.ContainsKey(dic.Key))
-                                    {
-                                        innerDic[dic.Key].Add(dic.Value);
-                                    }
-                                    else
-                                    {
-                                        innerDic.Add(dic.Key, new List<Paragraph> { dic.Value });
-                                    }
-                                }
-                                else
-                                {
-                                    TeletextSubtitlesLookup.Add(packetId, new SortedDictionary<int, List<Paragraph>> { { dic.Key, new List<Paragraph> { dic.Value } } });
-                                }
-                            }
-                        }
+                        AddToTeletextDictionary(textDictionary, page, packetId);
                     }
+
+                    var lastTextDictionary = Teletext.ProcessTelxPacketPendingLeftovers(teletextRunSettings, page);
+                    AddToTeletextDictionary(lastTextDictionary, page, packetId);
                 }
             }
 
@@ -305,6 +287,32 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
             SubtitlePacketIds.Sort();
+        }
+
+        private void AddToTeletextDictionary(Dictionary<int, Paragraph> textDictionary, int page, int packetId)
+        {
+            foreach (var dic in textDictionary)
+            {
+                if (!string.IsNullOrEmpty(dic.Value.Text))
+                {
+                    if (TeletextSubtitlesLookup.ContainsKey(packetId))
+                    {
+                        var innerDic = TeletextSubtitlesLookup[packetId];
+                        if (innerDic.ContainsKey(dic.Key))
+                        {
+                            innerDic[dic.Key].Add(dic.Value);
+                        }
+                        else
+                        {
+                            innerDic.Add(dic.Key, new List<Paragraph> { dic.Value });
+                        }
+                    }
+                    else
+                    {
+                        TeletextSubtitlesLookup.Add(packetId, new SortedDictionary<int, List<Paragraph>> { { dic.Key, new List<Paragraph> { dic.Value } } });
+                    }
+                }
+            }
         }
 
         private ulong? ProcessPackages(int packetId, Dictionary<int, List<int>> teletextPages, Dictionary<int, List<DvbSubPes>> teletextPesList, ulong? firstVideoMs)
