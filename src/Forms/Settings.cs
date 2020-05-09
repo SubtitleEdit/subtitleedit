@@ -389,6 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
+            buttonGapChoose.Left = numericUpDownMinGapMs.Left + numericUpDownMinGapMs.Width + 5;
             labelMaxLines.Text = language.MaximumLines;
             if (labelSubMaxLen.Left + labelSubMaxLen.Width > numericUpDownSubtitleLineMaximumLength.Left)
             {
