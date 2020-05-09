@@ -980,6 +980,9 @@ namespace Nikse.SubtitleEdit.Core
             return list;
         }
 
+        /// <summary>
+        /// Get first object or value
+        /// </summary>
         public string GetFirstObject(string content, string name)
         {
             Errors = new List<string>();
@@ -1119,6 +1122,13 @@ namespace Nikse.SubtitleEdit.Core
                                 return string.Empty;
                             }
                         }
+
+                        var objectValue = content.Substring(i, end - i).Trim();
+                        if (objectName == name)
+                        {
+                            return objectValue;
+                        }
+
                         i += end - i + 1;
                         state.Pop();
                         if (state.Count > 0)
@@ -1191,6 +1201,12 @@ namespace Nikse.SubtitleEdit.Core
                             sb.Append(content[i]);
                             i++;
                         }
+
+                        if (objectName == name)
+                        {
+                            return sb.ToString();
+                        }
+
                         state.Pop();
                         if (state.Count > 0)
                         {
