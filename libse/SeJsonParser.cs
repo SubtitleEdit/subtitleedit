@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core
     public class SeJsonParser
     {
         public enum SeJsonState
-        { 
+        {
             Object,
             Array,
             Value,
