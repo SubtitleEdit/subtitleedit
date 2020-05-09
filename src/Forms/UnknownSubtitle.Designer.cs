@@ -80,7 +80,7 @@
             this.buttonImportPlainText.Location = new System.Drawing.Point(260, 272);
             this.buttonImportPlainText.Name = "buttonImportPlainText";
             this.buttonImportPlainText.Size = new System.Drawing.Size(191, 27);
-            this.buttonImportPlainText.TabIndex = 42;
+            this.buttonImportPlainText.TabIndex = 4;
             this.buttonImportPlainText.Text = "Import plain text...";
             this.buttonImportPlainText.UseVisualStyleBackColor = true;
             this.buttonImportPlainText.Click += new System.EventHandler(this.buttonImportPlainText_Click);
@@ -105,7 +105,7 @@
             this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxPreview.Size = new System.Drawing.Size(539, 141);
-            this.textBoxPreview.TabIndex = 43;
+            this.textBoxPreview.TabIndex = 2;
             // 
             // UnknownSubtitle
             // 
@@ -127,6 +127,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Unknown subtitle";
+            this.Shown += new System.EventHandler(this.UnknownSubtitle_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormUnknownSubtitle_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
