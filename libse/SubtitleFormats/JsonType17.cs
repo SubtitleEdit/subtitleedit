@@ -67,7 +67,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
-            var startIndex = allText.IndexOf('{');
+            var indexOfSubtitles = allText.IndexOf("subtitles", StringComparison.Ordinal);
+            if (indexOfSubtitles <= 0)
+            {
+                return;
+            }
+
+            var startText = allText.Substring(0, indexOfSubtitles);
+            var startIndex = startText.LastIndexOf('{');
             if (startIndex < 0)
             {
                 return;
