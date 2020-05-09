@@ -37,6 +37,16 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            // resize window with if texts are too long
+            if (checkBoxUncheckInsertsAllCaps.Left + checkBoxUncheckInsertsAllCaps.Width > Width)
+            {
+                Width = checkBoxUncheckInsertsAllCaps.Left + checkBoxUncheckInsertsAllCaps.Width + 10;
+            }
+            if (checkBoxHideContinuationCandidatesWithoutName.Left + checkBoxHideContinuationCandidatesWithoutName.Width > Width)
+            {
+                Width = checkBoxHideContinuationCandidatesWithoutName.Left + checkBoxHideContinuationCandidatesWithoutName.Width + 10;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
