@@ -1271,6 +1271,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <AutoContinueInXSeconds>Авт. продължение след {0} секунди</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Все още се пише... авт. продължението е спряно</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Вмъкни суб. в позиция видео</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Вмъкни суб. в позиция видео (без фокус на текстовото поле)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Автоматично</Auto>
       <PlayFromJustBeforeText>Пусни малко преди текста</PlayFromJustBeforeText>
       <Pause>Пауза</Pause>
@@ -1920,6 +1921,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformColor>Цвят на сигнала</WaveformColor>
     <WaveformSelectedColor>Цвят на избран</WaveformSelectedColor>
     <WaveformBackgroundColor>Цвят на фона</WaveformBackgroundColor>
+    <WaveformCursorColor>Цвят на курсора</WaveformCursorColor>
     <WaveformTextColor>Цвят на текста</WaveformTextColor>
     <WaveformTextFontSize>Размер на шрифта за текст</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Изчисти папките 'Spectrograms' и 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
@@ -2014,6 +2016,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustStartXMsForward>Преместване на старта с {0} мс  НАПРЕД</AdjustStartXMsForward>
     <AdjustEndXMsBack>Преместване на края с {0} мс  НАЗАД</AdjustEndXMsBack>
     <AdjustEndXMsForward>Преместване на края с {0} мс  НАПРЕД</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Преместване на старта с 1 кадър НАЗАД</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Преместване на старта с 1 кадър НАПРЕД
+</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Преместване на края с 1 кадър НАЗАД</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Преместване на края с 1 кадър НАПРЕД</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>Преместване на старта с 1 кадър НАЗАД (задържане разликата до предишната, ако е близо)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>Преместване на старта с 1 кадър НАПРЕД (задържане разликата до предишната, ако е близо)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>Преместване на края с 1 кадър НАЗАД (задържане разликата до следващата, ако е близо)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Преместване на края с 1 кадър НАПРЕД (задържане разликата до следващата, ако е близо)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Задаване на начално време, запазване на времетраенето</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Задаване на край и начало на останалите</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Задаване на край и начало на останалите, и преминаване на следващите</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -2171,11 +2182,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveTimeCodes>Премахване на времеви кодове</RemoveTimeCodes>
     <EditFixContinuationStyleSettings>Промяна настр.за поправяне стила на продълж...</EditFixContinuationStyleSettings>
     <FixContinuationStyleSettings>Настройки за поправяне стила на продължаване</FixContinuationStyleSettings>
-    <UncheckInsertsAllCaps>Откр.и премахв.отметки на единич.заглавия на вс.гл.букви(пр.:НЕ Е ВХОД)</UncheckInsertsAllCaps>
-    <UncheckInsertsItalic>Откр.и премахв.отметки с курсив на отделни заглавия или текстове на песни</UncheckInsertsItalic>
-    <UncheckInsertsLowercase>Откр.и премахв.отметки на отделни заглавия или текстове с малки букви</UncheckInsertsLowercase>
+    <UncheckInsertsAllCaps>Откр. и премахв. отметки на единич. заглавия на вс. Гл.букви (напр.: НЕ Е ВХОД)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Откр. и премахв. отметки с курсив на отделни заглавия или текстове на песни</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Откр. и премахв. отметки на отделни заглавия или текстове с малки букви</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Скриване на вероятни изречения за продължаване</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Игнориране текстовете на песни между музикалните символи</IgnoreLyrics>
+    <MinFrameGap>Мин. разлика в кадрите</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} кадрите със скорост на кадър от {1} дава {2} милисекунди.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>Използване "{0}" милисекунди като нова минимална разлика?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
     <Title>Настройки за mpv</Title>
