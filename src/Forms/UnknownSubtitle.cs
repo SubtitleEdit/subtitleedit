@@ -65,5 +65,10 @@ namespace Nikse.SubtitleEdit.Forms
             ImportPlainText = true;
             DialogResult = DialogResult.OK;
         }
+
+        private void UnknownSubtitle_Shown(object sender, System.EventArgs e)
+        {
+            buttonOK.Focus();
+        }
     }
 }
