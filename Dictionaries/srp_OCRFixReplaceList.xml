@@ -2,25 +2,25 @@
 <!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
 <OCRFixReplaceList>
   <WholeWords>
-    <Word from="ču" to="ću" />
-    <Word from="češ" to="ćeš" />
     <Word from="če" to="će" />
-    <Word from="ćš" to="ćeš" />
-    <Word from="ćmo" to="ćemo" />
-    <Word from="ćte" to="ćete" />
     <Word from="čemo" to="ćemo" />
+    <Word from="češ" to="ćeš" />
     <Word from="čete" to="ćete" />
+    <Word from="ču" to="ću" />
+    <Word from="ćmo" to="ćemo" />
+    <Word from="ćš" to="ćeš" />
+    <Word from="ćte" to="ćete" />
     <Word from="djete" to="dijete" />
-    <Word from="Hey" to="Hej" />
     <Word from="hey" to="hej" />
+    <Word from="Hey" to="Hej" />
     <Word from="htjeo" to="htio" />
     <Word from="iči" to="ići" />
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
-    <Word from="Nebi" to="Ne bi" />
-    <Word from="Nebih" to="Ne bih" />
     <Word from="nebi" to="ne bi" />
+    <Word from="Nebi" to="Ne bi" />
     <Word from="nebih" to="ne bih" />
+    <Word from="Nebih" to="Ne bih" />
     <Word from="nedaj" to="ne daj" />
     <Word from="Nedaj" to="Ne daj" />
     <Word from="nedam" to="ne dam" />
@@ -39,10 +39,10 @@
     <Word from="samnom" to="sa mnom" />
     <Word from="Samnom" to="Sa mnom" />
     <Word from="smjeo" to="smio" />
-    <Word from="uopče" to="uopće" />
-    <Word from="Uopče" to="Uopće" />
     <Word from="umijesto" to="umjesto" />
     <Word from="Umijesto" to="Umjesto" />
+    <Word from="uopče" to="uopće" />
+    <Word from="Uopče" to="Uopće" />
     <Word from="uspiješan" to="uspješan" />
     <Word from="uvjek" to="uvijek" />
     <Word from="Uvjek" to="Uvijek" />

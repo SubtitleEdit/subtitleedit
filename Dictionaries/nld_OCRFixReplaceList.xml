@@ -11,8 +11,8 @@
     <Word from="benje" to="ben je" />
     <Word from="Brittannie" to="Brittannië" />
     <Word from="cliche" to="cliché" />
-    <Word from="Dankje" to="Dank je" />
     <Word from="dankje" to="dank je" />
+    <Word from="Dankje" to="Dank je" />
     <Word from="datnietkunnen" to="dat niet kunnen" />
     <Word from="definanciën" to="de financiën" />
     <Word from="Denkje" to="Denk je" />
@@ -107,8 +107,8 @@
     <Word from="Zii" to="Zij" />
     <Word from="Ziiheeft" to="Zij heeft" />
     <Word from="ziin" to="zijn" />
-    <Word from="Zonderjou" to="Zonder jou" />
     <Word from="zonderjou" to="zonder jou" />
+    <Word from="Zonderjou" to="Zonder jou" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>

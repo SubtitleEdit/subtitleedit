@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <OCRFixReplaceList>
   <WholeWords>
-    <Word from="varjeg" to="var jeg" />
-    <Word from="omjeg" to="om jeg" />
-    <Word from="menjeg" to="men jeg" />
-    <Word from="noejeg" to="noe jeg" />
-    <Word from="førjeg" to="før jeg" />
-    <Word from="harjobbet" to="har jobbet" />
-    <Word from="Kunnejeg" to="Kunne jeg" />
-    <Word from="haddejeg" to="hadde jeg" />
-    <Word from="påjorden" to="på jorden" />
-    <Word from="nårjeg" to="når jeg" />
-    <Word from="tenkerjeg" to="tenker jeg" />
-    <Word from="helejorden" to="hele jorden" />
-    <Word from="menjorden" to="men jorden" />
-    <Word from="rundtjorden" to="rundt jorden" />
-    <Word from="forjorden" to="for jorden" />
     <Word from="avjordens" to="av jordens" />
+    <Word from="forjorden" to="for jorden" />
+    <Word from="førjeg" to="før jeg" />
+    <Word from="haddejeg" to="hadde jeg" />
+    <Word from="harjobbet" to="har jobbet" />
+    <Word from="helejorden" to="hele jorden" />
+    <Word from="Kunnejeg" to="Kunne jeg" />
+    <Word from="menjeg" to="men jeg" />
+    <Word from="menjorden" to="men jorden" />
+    <Word from="noejeg" to="noe jeg" />
+    <Word from="nårjeg" to="når jeg" />
+    <Word from="omjeg" to="om jeg" />
+    <Word from="påjorden" to="på jorden" />
+    <Word from="rundtjorden" to="rundt jorden" />
+    <Word from="tenkerjeg" to="tenker jeg" />
+    <Word from="varjeg" to="var jeg" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
