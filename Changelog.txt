@@ -17,6 +17,7 @@
    * Remember settings for "column paste"
    * Make "Google translate" shortcut customizable - thx darnn
 * FIXED:
+   * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix OCR window after minimize - thx Janusz
    * Fix missing images in bdsup - thx Devin
    * Fix for unstable duration in frame time mode - thx btsix
