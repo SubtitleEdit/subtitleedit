@@ -42,10 +42,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine("\t\t],");
 
                 sb.AppendLine($"\t\t\"timestamp_begin\": {p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)}, ");
-                sb.AppendLine($"\t\t\"timestamp_end\": {p.EndTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)}");
+                sb.AppendLine($"\t\t\"timestamp_end\": {p.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture)}");
                 sb.AppendLine("\t}");
             }
 
+            sb.AppendLine("\t]");
             sb.Append("}");
             return sb.ToString().Trim();
         }
