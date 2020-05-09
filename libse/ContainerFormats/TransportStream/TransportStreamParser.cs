@@ -174,11 +174,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     foreach (var pes in teletextPesList[packetId])
                     {
                         var textDictionary = pes.GetTeletext(teletextRunSettings, page, pageBcd);
-                        AddToTeletextDictionary(textDictionary, page, packetId);
+                        AddToTeletextDictionary(textDictionary, packetId);
                     }
 
                     var lastTextDictionary = Teletext.ProcessTelxPacketPendingLeftovers(teletextRunSettings, page);
-                    AddToTeletextDictionary(lastTextDictionary, page, packetId);
+                    AddToTeletextDictionary(lastTextDictionary, packetId);
                 }
             }
 
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             SubtitlePacketIds.Sort();
         }
 
-        private void AddToTeletextDictionary(Dictionary<int, Paragraph> textDictionary, int page, int packetId)
+        private void AddToTeletextDictionary(Dictionary<int, Paragraph> textDictionary, int packetId)
         {
             foreach (var dic in textDictionary)
             {
