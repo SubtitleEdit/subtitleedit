@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class JsonType17 : SubtitleFormat
+    public class TwentyThreeJson : SubtitleFormat
     {
         public override string Extension => ".json";
 
-        public override string Name => "JSON Type 17";
+        public override string Name => "TwentyThree json";
 
         public override string ToText(Subtitle subtitle, string title)
         {
