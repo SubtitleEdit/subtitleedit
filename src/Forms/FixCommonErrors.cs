@@ -466,6 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
             labelNumberOfImportantLogMessages.Text = string.Empty;
+            labelLanguage2.Text = string.Empty;
             Encoding = Encoding.UTF8;
             _language = Configuration.Settings.Language.FixCommonErrors;
             _languageGeneral = Configuration.Settings.Language.General;
@@ -1872,6 +1873,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddFixActions(ci.Code.GetThreeLetterIsoLanguageName());
                 }
             }
+            labelLanguage2.Text = comboBoxLanguage.Text;
         }
 
         private void comboBoxLanguage_Enter(object sender, EventArgs e)
