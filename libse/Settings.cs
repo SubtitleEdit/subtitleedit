@@ -525,6 +525,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool WebVttUseXTimestampMap { get; set; }
         public long WebVttTimescale { get; set; }
 
+        public bool TeletextItalicFix { get; set; }
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
@@ -588,6 +590,8 @@ $HorzAlign          =   Center
 
             WebVttTimescale = 90000;
             WebVttUseXTimestampMap = true;
+
+            TeletextItalicFix = true;
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1980,8 +1984,8 @@ $HorzAlign          =   Center
                             settings.Shortcuts.MainVideoGoToStartCurrent = "Shift+F11";
                         }
                     }
-                    else if (settings.Version.StartsWith("3.5.15", StringComparison.Ordinal) || 
-                             settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) || 
+                    else if (settings.Version.StartsWith("3.5.15", StringComparison.Ordinal) ||
+                             settings.Version.StartsWith("3.5.14", StringComparison.Ordinal) ||
                              settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
                     {
                         settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
@@ -4467,6 +4471,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     settings.SubtitleSettings.WebVttTimescale = long.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode("TeletextItalicFix");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TeletextItalicFix = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
 
                 subNode = node.SelectSingleNode("WebVttUseXTimestampMap");
@@ -7275,6 +7285,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteElementString("WebVttTimescale", settings.SubtitleSettings.WebVttTimescale.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TeletextItalicFix", settings.SubtitleSettings.TeletextItalicFix.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WebVttUseXTimestampMap", settings.SubtitleSettings.WebVttUseXTimestampMap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 

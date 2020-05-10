@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName, GetSelectedLanguage());
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName, GetSelectedLanguage(), true);
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
                     exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, GetSelectedLanguage());
