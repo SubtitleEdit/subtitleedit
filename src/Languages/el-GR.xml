@@ -219,7 +219,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonErrorsErrorX>Διόρθωση κοινών σφαλμάτων: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Πολλαπλή αντικατάσταση: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Αυτόματη ισορροπία: {0}</AutoBalanceErrorX>
-    <OffsetTimeCodes>Ορισμός κωδικών χρόνου</OffsetTimeCodes>
+    <OffsetTimeCodes>Αντιστάθμιση κωδικών χρόνου</OffsetTimeCodes>
     <TransportStreamSettings>Μεταφορά ρυθμίσεων ροής</TransportStreamSettings>
     <TransportStreamOverrideXPosition>Παράκαμψη αρχικής θέσης Χ</TransportStreamOverrideXPosition>
     <TransportStreamOverrideYPosition>Παράκαμψη αρχικής θέσης Υ</TransportStreamOverrideYPosition>
@@ -653,7 +653,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpacesExample>Εσύ , εκεί. -&gt; Εσύ, εκεί.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Εσύ!. -&gt; Εσύ!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Έι.Εσύ. -&gt; Έι. Εσύ.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The Earth is fIat. -&gt; The Eart is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The Earth is fIat. -&gt; The Earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Κείμενο με αριθμό {0}: Ώρα έναρξης αργότερα από ώρα λήξης: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: Ώρα έναρξης αργότερα από ώρα λήξης: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -1084,7 +1084,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Άνοιγμα DVD...</OpenDvd>
         <ChooseAudioTrack>Επιλέξτε κομματιού ήχου</ChooseAudioTrack>
         <CloseVideo>Κλείσιμο βίντεο</CloseVideo>
-        <SetVideoOffset>Ορισμός έναρξης βίντεο...</SetVideoOffset>
+        <SetVideoOffset>Αντιστάθμιση έναρξης βίντεο...</SetVideoOffset>
         <SmptTimeMode>Χρονισμός SMPTE (ρήξη καρέ)</SmptTimeMode>
         <GenerateTextFromVideo>Δημιουργία κειμένου από βίντεο...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Δημιουργία/εισαγωγή αλλαγών σκηνών...</GenerateImportSceneChanges>
@@ -1276,7 +1276,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTimeAndGoToNext>Ο&amp;ρισμός λήξης &amp;&amp; μετάβαση</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Προσάρμοση μέσω χρόνου λήξης {0}</AdjustedViaEndTime>
       <SetEndTime>Ορισμός λή&amp;ξης</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ορισμός έναρξη&amp;ς και αντιστάθμιση</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Έναρ&amp;ξη και αντιστάθμιση</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Αναζήτηση κειμένου διαδικτυακά</SearchTextOnline>
       <GoogleTranslate>Μετάφραση Google</GoogleTranslate>
       <GoogleIt>Αναζήτηση στο Google</GoogleIt>
@@ -1485,10 +1485,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PointSynchronizationDone>Συγχρονισμός σημείων ολοκληρώθηκε</PointSynchronizationDone>
     <BeforeTimeCodeImport>Πριν από εισαγωγή κωδικών χρόνου</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Κωδικοί χρόνου εισήχθηκαν από {0}: {1}</TimeCodeImportedFromXY>
-    <BeforeInsertSubtitleAtVideoPosition>Πριν από εισαγωγή υπότιτλου στη θέση του βίντεο</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Πριν από ορισμό χρόνου έναρξης και αντιστάθμιση των υπολοίπων</BeforeSetStartTimeAndOffsetTheRest>
-    <BeforeSetEndTimeAndOffsetTheRest>Πριν από ορισμό χρόνου λήξης και αντιστάθμιση των υπολοίπων</BeforeSetEndTimeAndOffsetTheRest>
-    <BeforeSetEndAndVideoPosition>Πριν από ορισμό χρόνου λήξης στη θέση του βίντεο και αυτόματος υπολογισμός έναρξης</BeforeSetEndAndVideoPosition>
+    <BeforeInsertSubtitleAtVideoPosition>Πριν από εισαγωγή υπότιτλου στη θέση βίντεο</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>Πριν ορισμού χρόνου έναρξης και αντιστάθμιση</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Πριν ορισμού χρόνου λήξης και αντιστάθμιση</BeforeSetEndTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Πριν ορισμού χρόνου λήξης στη θέση βίντεο και αυτόματος υπολογισμός έναρξης</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Συνέχεια τρέχοντος ορθογραφικού ελέγχου;</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Χαρακτήρες/δευτ.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Λήψη ρυθμού καρέ από αρχείο βίντεο</GetFrameRateFromVideoFile>
@@ -1538,7 +1538,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 Συνέχιση;</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>Ο υπότιτλος περιέχει αρνητική διάρκεια σε γραμμή(ές): {0}</SubtitleContainsNegativeDurationsX>
     <SetPlayRateX>Ορισμός ρυθμού αναπαραγωγής σε {0}%</SetPlayRateX>
-    <ErrorLoadIdx>Αδυναμία ανάγωσης/επεξεργασίας αρχείων .idx. Τα αρχεία .idx είναι μέλη από τα ζεύγη idx/sub αρχείων (γνωστά και ως VobSub) και ο Subtitle Edit δεν μπορεί να ανοίξει αρχείο .sub.</ErrorLoadIdx>
+    <ErrorLoadIdx>Αδυναμία ανάγνωσης/επεξεργασίας αρχείων .idx. Τα αρχεία .idx είναι μέλη από τα ζεύγη idx/sub αρχείων (γνωστά και ως VobSub) και ο Subtitle Edit δεν μπορεί να ανοίξει αρχείο .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Πιθανό συμπιεσμένο αρχείο .rar. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadRar>
     <ErrorLoadZip>Πιθανό συμπιεσμένο αρχείο .zip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadZip>
     <ErrorLoad7Zip>Πιθανό συμπιεσμένο αρχείο 7-Zip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoad7Zip>
@@ -1601,8 +1601,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Επεξεργασία επιλογής</Title>
     <Rule>Κανόνας</Rule>
     <CaseSensitive>Διάκριση πεζών</CaseSensitive>
-    <DoWithMatches>Τι να κάνω με τις αντιστοιχίες</DoWithMatches>
-    <MakeNewSelection>Κάνε νέα επιλογή</MakeNewSelection>
+    <DoWithMatches>Ενέργεια με τις αντιστοιχίες</DoWithMatches>
+    <MakeNewSelection>Δημιουργία νέας επιλογής</MakeNewSelection>
     <AddToCurrentSelection>Προσθήκη στην τρέχουσα επιλογή</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Αφαίρεση από την τρέχουσα επιλογή</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Διασταύρωση με την τρέχουσα επιλογή</IntersectWithCurrentSelection>
@@ -2598,7 +2598,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowWaveformAndSpectrogram>Εμφάνιση κυματομορφής και φασματογράμματος</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Εμφάνιση μόνο κυματομορφής</ShowWaveformOnly>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
-    <AddSceneChange>Προσθήκη αλλαγή σκηνής</AddSceneChange>
+    <AddSceneChange>Προσθήκη αλλαγής σκηνής</AddSceneChange>
     <RemoveSceneChange>Αφαίρεση αλλαγής σκηνής</RemoveSceneChange>
     <GuessTimeCodes>Μάντεψε τους κώδικες χρόνου...</GuessTimeCodes>
     <SeekSilence>Αναζήτηση σιωπής...</SeekSilence>
