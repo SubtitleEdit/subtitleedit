@@ -565,6 +565,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     }
                 }
             }
+            Pause();
         }
 
         private void VideoLoadedTimer_Tick(object sender, EventArgs e)
