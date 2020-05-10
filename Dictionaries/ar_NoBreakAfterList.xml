@@ -1,5 +1,7 @@
 ﻿<NoBreakAfterList>
-  <Item RegEx="True">(أي(?:ًا|اً?</Item>
+  <Item>أي</Item>
+  <Item>أيًا</Item>
+  <Item>أياً</Item>
   <Item>في</Item>
   <Item>أن</Item>
   <Item>أو</Item>
