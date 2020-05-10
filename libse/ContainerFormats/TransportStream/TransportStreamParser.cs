@@ -303,18 +303,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 foreach (var inner in dic.Value)
                 {
-                    foreach (var p in inner.Value.Where(p => p.Text.Trim().StartsWith('<')))
+                    foreach (var p in inner.Value.Where(p => p.Text.Trim().Contains('<')))
                     {
                         var sb = new StringBuilder();
                         foreach (var line in p.Text.SplitToLines())
                         {
-                            var s = line.TrimStart();
+                            var s = line.Trim();
                             if (s.StartsWith("<font", StringComparison.Ordinal))
                             {
                                 var fontRemoved = HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagFont);
                                 if (!fontRemoved.StartsWith('<'))
                                 {
-                                    sb.AppendLine(line.Trim()); // no italic, only font tag
+                                    sb.AppendLine(s); // no italic, only font tag
                                     continue;
                                 }
 
@@ -331,7 +331,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                                 sb.AppendLine(line.Trim()); // no italic, only font tag
                                 continue;
                             }
-                            sb.AppendLine("<i>" + s.Remove(0, 1) + "</i>");
+
+                            if (s.StartsWith('<'))
+                            {
+                                sb.AppendLine("<i>" + s.Remove(0, 1) + "</i>");
+                            }
+                            else
+                            {
+                                sb.AppendLine(s);
+                            }
                         }
                         p.Text = sb.ToString().Trim();
                     }
