@@ -4,24 +4,22 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class JsonType17b : SubtitleFormat
+    public class TwentyThreeJsonEmbedWebSrt : SubtitleFormat
     {
         public override string Extension => ".json";
 
-        public override string Name => "JSON Type 17b";
+        public override string Name => "TwentyThree json embed srt";
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var data = new JsonType17().ToText(subtitle, title);
-
-            var encodedData = Json.EncodeJsonText(data
-                .Replace(Environment.NewLine, " ")
-                .Replace("\t", " ")
-                );
+            var data = new SubRip().ToText(subtitle, title);
+            data = data.Replace("\t", " ");
+            var encodedData = Json.EncodeJsonText(data);
+            encodedData = encodedData.Replace("<br />", "\\n");
 
             var sb = new StringBuilder();
             sb.AppendLine("{");
-            sb.AppendLine($"  \"data\": \"{encodedData}\"");
+            sb.AppendLine($"  \"data\": {{ \"websrt\" : \"{encodedData}\" }} ");
             sb.AppendLine("}");
             return sb.ToString().Trim();
         }
@@ -37,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allText = sb.ToString();
-            var indexOfMainTag = allText.IndexOf("\"timestamp_begin\"", StringComparison.Ordinal);
+            var indexOfMainTag = allText.IndexOf("\"websrt\"", StringComparison.Ordinal);
             if (indexOfMainTag < 0 && !allText.Contains("\"data\""))
             {
                 return;
@@ -51,15 +49,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var json = allText.Substring(startIndex);
             var parser = new SeJsonParser();
-            var subtitleData = parser.GetFirstObject(json, "data");
+            var subtitleData = parser.GetFirstObject(json, "websrt");
             if (string.IsNullOrEmpty(subtitleData))
             {
                 return;
             }
 
-            var jsonType17 = new JsonType17();
+            var format = new SubRip();
             var innerJson = Json.DecodeJsonText(subtitleData);
-            jsonType17.LoadSubtitle(subtitle, new List<string> { innerJson }, null);
+            format.LoadSubtitle(subtitle, innerJson.SplitToLines(), null);
         }
     }
 }
