@@ -921,8 +921,6 @@
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
     <Word from="nr" to="ne" />
-    <Word from="nwmaš" to="nemaš" />
-    <Word from="nwmš" to="nemaš" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
@@ -1687,6 +1685,7 @@
     <Word from="svjeta" to="svijeta" />
     <Word from="svetova" to="svjetova" />
     <Word from="svetove" to="svjetove" />
+    <Word from="svojoh" to="svojih" />
     <Word from="svugde" to="svugdje" />
     <Word from="svw" to="sve" />
     <Word from="šolja" to="šalica" />
@@ -3474,6 +3473,7 @@
     <RegEx find="[^e]seda(?!m|tiv)" replaceWith="sjeda" />
     <RegEx find="ii" replaceWith="i" />
     <RegEx find="đž" replaceWith="dž" />
+    <RegEx find="nw" replaceWith="ne" />
     <RegEx find="zž" replaceWith="ž" />
     <RegEx find="([mnrtzpsdfghjkcvb])ls" replaceWith="$1is" />
     <RegEx find="(?&lt;![Hh])abs" replaceWith="aps" />
