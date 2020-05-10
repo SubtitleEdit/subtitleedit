@@ -8757,7 +8757,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, string language)
+        internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, string language, bool skipMakeBinary = false)
         {
             SetButtonsStartOcr();
             progressBar1.Visible = false;
@@ -8786,6 +8786,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             groupBoxTransportStream.Top = groupBoxImagePalette.Top;
             groupBoxTransportStream.Visible = true;
             checkBoxTransportStreamGetColorAndSplit.Visible = subtitles.Count > 0 && subtitles[0].IsDvbSub;
+            _fromMenuItem = skipMakeBinary;
         }
 
         private void checkBoxTransportStreamGrayscale_CheckedChanged(object sender, EventArgs e)

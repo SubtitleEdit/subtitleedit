@@ -181,6 +181,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     AddToTeletextDictionary(lastTextDictionary, packetId);
                 }
             }
+            if (Configuration.Settings.SubtitleSettings.TeletextItalicFix)
+            {
+                FixTeletextItalics(TeletextSubtitlesLookup);
+            }
 
             if (IsM2TransportStream) // m2ts blu-ray images from PES packets
             {
@@ -287,6 +291,52 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
             SubtitlePacketIds.Sort();
+        }
+
+        /// <summary>
+        /// Converts a starting '<' char to italic style (can be preceeded by a font tag)
+        /// E.g. "<Hi there." to "<i>Hi there.</i>"
+        /// </summary>
+        private static void FixTeletextItalics(SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> dictionary)
+        {
+            foreach (var dic in dictionary)
+            {
+                foreach (var inner in dic.Value)
+                {
+                    foreach (var p in inner.Value.Where(p => p.Text.Trim().StartsWith('<')))
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var line in p.Text.SplitToLines())
+                        {
+                            var s = line.TrimStart();
+                            if (s.StartsWith("<font", StringComparison.Ordinal))
+                            {
+                                var fontRemoved = HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagFont);
+                                if (!fontRemoved.StartsWith('<'))
+                                {
+                                    sb.AppendLine(line.Trim()); // no italic, only font tag
+                                    continue;
+                                }
+
+                                // italic and font tag
+                                var indexOfEnd = s.IndexOf('>');
+                                if (indexOfEnd > 0 && s.Length > indexOfEnd + 2 && s[indexOfEnd + 1] == '<' &&
+                                    !s.Remove(0, indexOfEnd).StartsWith("<font", StringComparison.Ordinal))
+                                {
+                                    s = s.Remove(indexOfEnd + 1, 1);
+                                    sb.AppendLine("<i>" + s + "</i>"); // italic + font tag
+                                    continue;
+                                }
+
+                                sb.AppendLine(line.Trim()); // no italic, only font tag
+                                continue;
+                            }
+                            sb.AppendLine("<i>" + s.Remove(0, 1) + "</i>");
+                        }
+                        p.Text = sb.ToString().Trim();
+                    }
+                }
+            }
         }
 
         private void AddToTeletextDictionary(Dictionary<int, Paragraph> textDictionary, int packetId)
