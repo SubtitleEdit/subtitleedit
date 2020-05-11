@@ -186,9 +186,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 FixTeletextItalics(TeletextSubtitlesLookup);
             }
 
+            foreach (var id in TeletextSubtitlesLookup.Keys)
+            {
+                SubtitlePacketIds = SubtitlePacketIds.Where(p => p != id).ToList();
+                SubtitlesLookup.Remove(id);
+            }
+
+            DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
             if (IsM2TransportStream) // m2ts blu-ray images from PES packets
             {
-                DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
                 foreach (int pid in SubtitlesLookup.Keys)
                 {
                     var bdMs = new MemoryStream();
@@ -223,14 +229,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (subList.Count > 0)
                     {
                         DvbSubtitlesLookup.Add(pid, subList);
+                        SubtitlePacketIds = SubtitlePacketIds.Where(p => p != pid).ToList();
                     }
                 }
-                SubtitlePacketIds.Clear();
-                foreach (int key in DvbSubtitlesLookup.Keys)
-                {
-                    SubtitlePacketIds.Add(key);
-                }
-                return;
             }
 
             SubtitlePacketIds.Clear();
@@ -241,8 +242,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             SubtitlePacketIds.Sort();
 
             // Merge packets and set start/end time
-            DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
-            foreach (int pid in SubtitlePacketIds)
+            foreach (int pid in SubtitlePacketIds.Where(p=> !DvbSubtitlesLookup.ContainsKey(p)))
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
@@ -280,12 +280,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         subtitles.Add(sub);
                     }
                 }
-                DvbSubtitlesLookup.Add(pid, subtitles);
+                if (subtitles.Count > 0)
+                {
+                    DvbSubtitlesLookup.Add(pid, subtitles);
+                }
             }
+
             SubtitlePacketIds.Clear();
             foreach (int key in DvbSubtitlesLookup.Keys)
             {
-                if (DvbSubtitlesLookup[key].Count > 0)
+                if (DvbSubtitlesLookup[key].Count > 0 && !SubtitlePacketIds.Contains(key))
                 {
                     SubtitlePacketIds.Add(key);
                 }
