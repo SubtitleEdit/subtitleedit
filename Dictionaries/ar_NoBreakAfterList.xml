@@ -1,10 +1,9 @@
-﻿<NoBreakAfterList>
-  <Item>أي</Item>
-  <Item>أيًا</Item>
-  <Item>أياً</Item>
-  <Item>في</Item>
+<NoBreakAfterList>
   <Item>أن</Item>
   <Item>أو</Item>
+  <Item>أي</Item>
+  <Item>أياً</Item>
+  <Item>أيًا</Item>
   <Item>إلى</Item>
   <Item>إن</Item>
   <Item>التي</Item>
@@ -17,6 +16,7 @@
   <Item>عما</Item>
   <Item>عن</Item>
   <Item>عندما</Item>
+  <Item>في</Item>
   <Item>لأن</Item>
   <Item>لكن</Item>
   <Item>لم</Item>
@@ -24,4 +24,5 @@
   <Item>مثل</Item>
   <Item>من</Item>
   <Item>يا</Item>
+  <Item>مع</Item>
 </NoBreakAfterList>
