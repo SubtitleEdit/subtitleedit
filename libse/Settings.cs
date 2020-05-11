@@ -850,6 +850,7 @@ $HorzAlign          =   Center
         public string VlcLocationRelative { get; set; }
         public string MpvVideoOutput { get; set; }
         public string MpvVideoOutputLinux { get; set; }
+        public string MpvExtraOption { get; set; }
         public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
@@ -2959,6 +2960,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.MpvVideoOutputLinux = subNode.InnerText.Trim();
+            }
+
+            subNode = node.SelectSingleNode("MpvExtraOption");
+            if (subNode != null)
+            {
+                settings.General.MpvExtraOption = subNode.InnerText.Trim();
             }
 
             subNode = node.SelectSingleNode("MpvHandlesPreviewText");
@@ -7012,6 +7019,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutput", settings.General.MpvVideoOutput);
                 textWriter.WriteElementString("MpvVideoOutputLinux", settings.General.MpvVideoOutputLinux);
+                textWriter.WriteElementString("MpvExtraOption", settings.General.MpvExtraOption);
                 textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
