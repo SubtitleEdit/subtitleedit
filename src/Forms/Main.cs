@@ -12518,6 +12518,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
                 _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle);
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                 {
                     OpenVideo(fileName);
@@ -12545,6 +12546,7 @@ namespace Nikse.SubtitleEdit.Forms
                         new SubRip().LoadSubtitle(_subtitle, subChooser.Srt.SplitToLines(), null);
                         _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0);
                         if (!Configuration.Settings.General.DisableVideoAutoLoading)
                         {
                             OpenVideo(fileName);
