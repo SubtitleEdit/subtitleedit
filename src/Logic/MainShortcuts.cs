@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainTextBoxBreakAtCursorPositionAndGoToNext { get; set; }
         public Keys MainMergeDialog { get; set; }
         public Keys MainToggleFocus { get; set; }
+        public Keys MainWaveformAdd { get; set; }
         public Keys MainListViewToggleDashes { get; set; }
         public Keys MainListViewToggleMusicSymbols { get; set; }
         public Keys MainListViewAutoDuration { get; set; }
@@ -291,6 +292,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             MainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
             MainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
+            MainWaveformAdd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAdd);
             WaveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             WaveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
             WaveformZoomIn = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
