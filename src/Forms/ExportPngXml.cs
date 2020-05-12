@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool AlignRight { get; set; }
             public bool JustifyLeft { get; set; }
             public bool JustifyTop { get; set; }
+            public bool JustifyRight { get; set; }
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
@@ -385,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AlignRight = comboBoxHAlign.SelectedIndex == 2,
                 JustifyLeft = comboBoxHAlign.SelectedIndex == 3, // center, left justify
                 JustifyTop = comboBoxHAlign.SelectedIndex == 4, // center, top justify
+                JustifyRight = comboBoxHAlign.SelectedIndex == 5, // center, right justify
                 ScreenWidth = screenWidth,
                 ScreenHeight = screenHeight,
                 VideoResolution = comboBoxResolution.Text,
@@ -2222,6 +2224,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
             mbp.JustifyLeft = comboBoxHAlign.SelectedIndex == 3;
             mbp.JustifyTop = comboBoxHAlign.SelectedIndex == 4;
+            mbp.JustifyRight = comboBoxHAlign.SelectedIndex == 5;
             mbp.SimpleRendering = checkBoxSimpleRender.Checked;
             mbp.BorderWidth = _borderWidth;
             mbp.BorderColor = _borderColor;
@@ -2814,6 +2817,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
                 var lefts = new List<float>();
+                var widths = new List<float>();
                 if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase) || text.Contains("<b>", StringComparison.OrdinalIgnoreCase))
                 {
                     bool tempItalicOn = false;
@@ -2842,17 +2846,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             tempBoldOn = true;
                         }
 
+                        var w = CalcWidthViaDraw(tempLine, parameter);
+                        widths.Add(w);
                         if (parameter.AlignLeft)
                         {
                             lefts.Add(5);
                         }
                         else if (parameter.AlignRight)
                         {
-                            lefts.Add(bmp.Width - CalcWidthViaDraw(tempLine, parameter) - 15); // calculate via drawing+crop
+                            lefts.Add(bmp.Width - w - 15); // calculate via drawing+crop
                         }
                         else
                         {
-                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(tempLine, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
+                            lefts.Add((float)((bmp.Width - w + 5.0) / 2.0)); // calculate via drawing+crop
                         }
 
                         if (line.Contains("</i>"))
@@ -2870,6 +2876,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).SplitToLines())
                     {
+                        if (parameter.JustifyRight)
+                        {
+                            var w = TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold);
+                            widths.Add(w);
+                        }
+
                         if (parameter.AlignLeft)
                         {
                             lefts.Add(5);
@@ -2892,6 +2904,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     for (var index = 0; index < lefts.Count; index++)
                     {
                         lefts[index] = minX;
+                    }
+                }
+                else if (parameter.JustifyRight)
+                {
+                    // right justify centered lines
+                    var maxX = widths.Max(p => p);
+                    var minX = lefts.Min(p => p);
+                    for (var index = 0; index < lefts.Count; index++)
+                    {
+                        lefts[index] = minX + maxX - widths[index];
                     }
                 }
 
@@ -3825,6 +3847,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
             comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
+            comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterRightJustify);
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
             labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
