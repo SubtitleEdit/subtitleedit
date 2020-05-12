@@ -14589,6 +14589,14 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _shortcuts.MainWaveformAdd)
+            {
+                if (audioVisualizer.WavePeaks == null)
+                {
+                    AudioWaveform_Click(null, null);
+                }
+                e.SuppressKeyPress = true;
+            }
 
 
             //TABS: Create / adjust / translate
