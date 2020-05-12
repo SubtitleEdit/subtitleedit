@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new SonyDVDArchitectLineDurationLength(),
                     new SonyDVDArchitectTabs(),
                     new SonyDVDArchitectWithLineNumbers(),
+                    new Speechmatics(),
                     new Spruce(),
                     new SpruceWithSpace(),
                     new StructuredTitles(),
