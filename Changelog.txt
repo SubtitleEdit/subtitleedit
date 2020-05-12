@@ -6,12 +6,17 @@
    * New shortcuts to move start/end one frame
    * New shortcuts to move start/end with gap - thx matmaggi/Fhining/btsix
    * Add move shortcuts to waveform (arrow left/right) - thx Shaddy
+   * Add shortcut for "add waveform" - thx Bill
    * Add new subtitle format - thx Matmanamane
+   * Add new subtitle format "Speechmatics" - thx Rene
+   * Add new json sub formats - thx Steven
    * Add Bulgarian no-break-after-list - thx Eva
    * Add "More than two lines" to "Modify selection"
    * Settings: Small helper window to calc gap in frames
+   * Add "Center, right justify" to image export - thx waelmohammed5
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
+   * Update Greek translation - thx Lero91
    * Init no-break-after-list with language
    * Make quick-char-list in "OCR Char" window dynamic
    * Remember settings for "column paste"
