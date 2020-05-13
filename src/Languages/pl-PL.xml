@@ -2529,7 +2529,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Nordic>Nordycki</Nordic>
     <Spanish>Hiszpański</Spanish>
     <German>Niemiecki</German>
-    <AutoSubmitOnFirstChar>Autom. proponuj &amp;amp;pierwszy znak</AutoSubmitOnFirstChar>
+    <AutoSubmitOnFirstChar>&amp;Autom. proponuj pierwszy znak</AutoSubmitOnFirstChar>
     <EditLastX>Ostatnio edytowane: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
