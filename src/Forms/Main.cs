@@ -10737,6 +10737,26 @@ namespace Nikse.SubtitleEdit.Forms
                     _skipDurationChangedEvent = true;
                     numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
                     _skipDurationChangedEvent = false;
+
+                    int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                    if (currentParagraph != null)
+                    {
+                        UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+                        UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, currentParagraph);
+
+                        if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                        {
+                            var original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                                UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, original);
+                            }
+                        }
+
+                        StartUpdateListSyntaxColoring();
+                    }
                 }
             }
             else
