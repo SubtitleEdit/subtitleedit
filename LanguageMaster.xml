@@ -1386,7 +1386,6 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSwedishToDanishTranslation>Before Swedish to Danish translation</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Translation from Swedish to Danish complete</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Translation from Swedish to Danish failed</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Before undo</BeforeUndo>
     <UndoPerformed>Undo performed</UndoPerformed>
     <RedoPerformed>Redo performed</RedoPerformed>
     <NothingToUndo>Nothing to undo</NothingToUndo>
