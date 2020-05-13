@@ -1279,7 +1279,6 @@ namespace Nikse.SubtitleEdit.Core
                 BeforeSwedishToDanishTranslation = "Before Swedish to Danish translation",
                 TranslationFromSwedishToDanishComplete = "Translation from Swedish to Danish complete",
                 TranslationFromSwedishToDanishFailed = "Translation from Swedish to Danish failed",
-                BeforeUndo = "Before undo",
                 UndoPerformed = "Undo performed",
                 RedoPerformed = "Redo performed",
                 NothingToUndo = "Nothing to undo",

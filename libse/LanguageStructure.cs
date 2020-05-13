@@ -1141,7 +1141,6 @@
             public string BeforeSwedishToDanishTranslation { get; set; }
             public string TranslationFromSwedishToDanishComplete { get; set; }
             public string TranslationFromSwedishToDanishFailed { get; set; }
-            public string BeforeUndo { get; set; }
             public string UndoPerformed { get; set; }
             public string RedoPerformed { get; set; }
             public string NothingToUndo { get; set; }

@@ -2833,9 +2833,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/TranslationFromSwedishToDanishFailed":
                     language.Main.TranslationFromSwedishToDanishFailed = reader.Value;
                     break;
-                case "Main/BeforeUndo":
-                    language.Main.BeforeUndo = reader.Value;
-                    break;
                 case "Main/UndoPerformed":
                     language.Main.UndoPerformed = reader.Value;
                     break;
