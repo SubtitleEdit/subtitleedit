@@ -49,6 +49,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 index += 128;
             }
+
+            if (subtitle.Paragraphs.Count > 1)
+            {
+                if (string.IsNullOrWhiteSpace(subtitle.Paragraphs[0].Text))
+                {
+                    subtitle.Paragraphs.RemoveAt(0);
+                }
+
+                if (string.IsNullOrWhiteSpace(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text))
+                {
+                    subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
+                }
+            }
+
+            subtitle.Renumber();
         }
 
         private Queue<Paragraph> _timeCodeQueue = new Queue<Paragraph>();
@@ -104,6 +119,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //}
                 return p;
             }
+
             if (buffer[index] == 0x0a && _timeCodeQueue.Count > 0)
             {
                 // ?
@@ -114,17 +130,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else // time codes
             {
-                _timeCodeQueue = new Queue<Paragraph>();
+                var newTimeCodes = new List<Paragraph>();
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);
                     int totalFrameNumber = (buffer[start + 3] << 16) + (buffer[start + 5] << 8) + buffer[start + 4];
                     int durationInFrames = buffer[start + 6];
                     var p = new Paragraph(string.Empty, FramesToMilliseconds(totalFrameNumber), FramesToMilliseconds(totalFrameNumber + durationInFrames));
-                    _timeCodeQueue.Enqueue(p);
+                    newTimeCodes.Add(p);
+                }
+
+                if (_timeCodeQueue.Count != 15 || IsSequential(newTimeCodes))
+                {
+                    _timeCodeQueue = new Queue<Paragraph>(newTimeCodes);
                 }
             }
             return null;
+        }
+
+        private static bool IsSequential(List<Paragraph> newTimeCodes)
+        {
+            var lastMs = 0.0;
+            foreach (var p in newTimeCodes)
+            {
+                if (p.StartTime.TotalMilliseconds < lastMs)
+                {
+                    return false;
+                }
+                lastMs = p.StartTime.TotalMilliseconds;
+            }
+            return true;
         }
 
         private string GetText(byte[] buffer, int start, int end)
@@ -273,6 +308,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             return text;
         }
-
     }
 }
