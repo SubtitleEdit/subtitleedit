@@ -5113,7 +5113,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _fromMenuItem = false;
             _abort = false;
             _autoBreakLines = checkBoxAutoBreakLines.Checked;
-            listBoxUnknownWords.Items.Clear();
+
+            CleanLogsGreaterThanOrEqualTo(numericUpDownStartNumber.Value);
+
             int max = GetSubtitleCount();
 
             if ((_ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodIndex == _ocrMethodTesseract302) &&
@@ -5198,6 +5200,33 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _mainOcrRunning = true;
             subtitleListView1.MultiSelect = false;
             mainOcrTimer_Tick(null, null);
+        }
+
+        private void CleanLogsGreaterThanOrEqualTo(decimal value)
+        {
+            var start = (int)Math.Round(value);
+            CleanLogGreaterThanOrEqualTo(listBoxUnknownWords, start);
+            CleanLogGreaterThanOrEqualTo(listBoxLog, start);
+            CleanLogGreaterThanOrEqualTo(listBoxLogSuggestions, start);
+        }
+
+        private void CleanLogGreaterThanOrEqualTo(ListBox listBox, int start)
+        {
+            listBox.BeginUpdate();
+            for (int i = listBox.Items.Count-1; i> 0; i--)
+            {
+                var text = listBox.Items[i].ToString();
+                var idx = text.IndexOf(':');
+                if (idx > 0)
+                {
+                    var num = text.Substring(0, idx).TrimStart('#');
+                    if (int.TryParse(num, out var n) && n >= start)
+                    {
+                        listBox.Items.RemoveAt(i);
+                    }
+                }
+            }
+            listBox.EndUpdate();
         }
 
         private void InitializeTopAlign()
