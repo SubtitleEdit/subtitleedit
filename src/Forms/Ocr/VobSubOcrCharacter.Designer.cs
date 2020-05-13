@@ -45,8 +45,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.labelSubtitleImage = new System.Windows.Forms.Label();
+            this.buttonSkip = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
             this.textBoxCharacters = new System.Windows.Forms.TextBox();
@@ -81,18 +80,18 @@
             this.üToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ßToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.àToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.èToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.éToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.ìToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.òToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.ùToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.AeToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -175,6 +174,8 @@
             this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelItalicOn2 = new System.Windows.Forms.Label();
+            this.labelSubtitleImage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
@@ -194,26 +195,17 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
-            // buttonCancel
+            // buttonSkip
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(410, 373);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 3;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
-            // labelSubtitleImage
-            // 
-            this.labelSubtitleImage.AutoSize = true;
-            this.labelSubtitleImage.Location = new System.Drawing.Point(9, 8);
-            this.labelSubtitleImage.Name = "labelSubtitleImage";
-            this.labelSubtitleImage.Size = new System.Drawing.Size(74, 13);
-            this.labelSubtitleImage.TabIndex = 13;
-            this.labelSubtitleImage.Text = "Subtitle image";
+            this.buttonSkip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSkip.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonSkip.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonSkip.Location = new System.Drawing.Point(410, 373);
+            this.buttonSkip.Name = "buttonSkip";
+            this.buttonSkip.Size = new System.Drawing.Size(75, 23);
+            this.buttonSkip.TabIndex = 3;
+            this.buttonSkip.Text = "&Skip";
+            this.buttonSkip.UseVisualStyleBackColor = true;
             // 
             // pictureBoxSubtitleImage
             // 
@@ -232,9 +224,10 @@
             // 
             this.labelCharactersAsText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCharactersAsText.AutoSize = true;
+            this.labelCharactersAsText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCharactersAsText.Location = new System.Drawing.Point(9, 325);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
-            this.labelCharactersAsText.Size = new System.Drawing.Size(105, 13);
+            this.labelCharactersAsText.Size = new System.Drawing.Size(122, 13);
             this.labelCharactersAsText.TabIndex = 17;
             this.labelCharactersAsText.Text = "Character(s) as text";
             // 
@@ -486,77 +479,77 @@
             this.italianToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.italianToolStripMenuItem.Text = "Italian";
             // 
-            // àToolStripMenuItem5
-            // 
-            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
-            this.àToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
-            this.àToolStripMenuItem5.Text = "À";
-            // 
             // àToolStripMenuItem4
             // 
             this.àToolStripMenuItem4.Name = "àToolStripMenuItem4";
-            this.àToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.àToolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem4.Text = "à";
             // 
-            // èToolStripMenuItem3
+            // àToolStripMenuItem5
             // 
-            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
-            this.èToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.èToolStripMenuItem3.Text = "È";
+            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
+            this.àToolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
+            this.àToolStripMenuItem5.Text = "À";
             // 
             // èToolStripMenuItem2
             // 
             this.èToolStripMenuItem2.Name = "èToolStripMenuItem2";
-            this.èToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.èToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.èToolStripMenuItem2.Text = "è";
             // 
-            // éToolStripMenuItem7
+            // èToolStripMenuItem3
             // 
-            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
-            this.éToolStripMenuItem7.Size = new System.Drawing.Size(180, 22);
-            this.éToolStripMenuItem7.Text = "É";
+            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
+            this.èToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
+            this.èToolStripMenuItem3.Text = "È";
             // 
             // éToolStripMenuItem6
             // 
             this.éToolStripMenuItem6.Name = "éToolStripMenuItem6";
-            this.éToolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.éToolStripMenuItem6.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem6.Text = "é";
             // 
-            // ìToolStripMenuItem1
+            // éToolStripMenuItem7
             // 
-            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
-            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ìToolStripMenuItem1.Text = "Ì";
+            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
+            this.éToolStripMenuItem7.Size = new System.Drawing.Size(83, 22);
+            this.éToolStripMenuItem7.Text = "É";
             // 
             // ìToolStripMenuItem
             // 
             this.ìToolStripMenuItem.Name = "ìToolStripMenuItem";
-            this.ìToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ìToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ìToolStripMenuItem.Text = "ì";
             // 
-            // òToolStripMenuItem3
+            // ìToolStripMenuItem1
             // 
-            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
-            this.òToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.òToolStripMenuItem3.Text = "Ò";
+            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
+            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
+            this.ìToolStripMenuItem1.Text = "Ì";
             // 
             // òToolStripMenuItem2
             // 
             this.òToolStripMenuItem2.Name = "òToolStripMenuItem2";
-            this.òToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.òToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.òToolStripMenuItem2.Text = "ò";
             // 
-            // ùToolStripMenuItem1
+            // òToolStripMenuItem3
             // 
-            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
-            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ùToolStripMenuItem1.Text = "Ù";
+            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
+            this.òToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
+            this.òToolStripMenuItem3.Text = "Ò";
             // 
             // ùToolStripMenuItem
             // 
             this.ùToolStripMenuItem.Name = "ùToolStripMenuItem";
-            this.ùToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ùToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ùToolStripMenuItem.Text = "ù";
+            // 
+            // ùToolStripMenuItem1
+            // 
+            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
+            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
+            this.ùToolStripMenuItem1.Text = "Ù";
             // 
             // nordicToolStripMenuItem
             // 
@@ -955,9 +948,10 @@
             // 
             this.labelCharacters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCharacters.AutoSize = true;
+            this.labelCharacters.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCharacters.Location = new System.Drawing.Point(14, 250);
             this.labelCharacters.Name = "labelCharacters";
-            this.labelCharacters.Size = new System.Drawing.Size(68, 13);
+            this.labelCharacters.Size = new System.Drawing.Size(79, 13);
             this.labelCharacters.TabIndex = 19;
             this.labelCharacters.Text = "Character(s)";
             // 
@@ -972,14 +966,16 @@
             this.buttonAbort.TabIndex = 4;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
+            this.buttonAbort.Click += new System.EventHandler(this.buttonAbort_Click);
             // 
             // checkBoxItalic
             // 
             this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxItalic.Location = new System.Drawing.Point(243, 349);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(55, 17);
             this.checkBoxItalic.TabIndex = 1;
             this.checkBoxItalic.Text = "&Italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -1047,9 +1043,10 @@
             // 
             this.checkBoxAutoSubmitOfFirstChar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoSubmitOfFirstChar.AutoSize = true;
+            this.checkBoxAutoSubmitOfFirstChar.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(12, 380);
             this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
-            this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(144, 17);
+            this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(166, 17);
             this.checkBoxAutoSubmitOfFirstChar.TabIndex = 25;
             this.checkBoxAutoSubmitOfFirstChar.Text = "A&uto submit on first char";
             this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
@@ -1258,12 +1255,36 @@
             this.Column15.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Column15.Width = 25;
             // 
+            // labelItalicOn2
+            // 
+            this.labelItalicOn2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.labelItalicOn2.AutoSize = true;
+            this.labelItalicOn2.Font = new System.Drawing.Font("Tahoma", 24F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn2.ForeColor = System.Drawing.Color.Red;
+            this.labelItalicOn2.Location = new System.Drawing.Point(117, 271);
+            this.labelItalicOn2.Name = "labelItalicOn2";
+            this.labelItalicOn2.Size = new System.Drawing.Size(101, 39);
+            this.labelItalicOn2.TabIndex = 28;
+            this.labelItalicOn2.Text = "Italic";
+            // 
+            // labelSubtitleImage
+            // 
+            this.labelSubtitleImage.AutoSize = true;
+            this.labelSubtitleImage.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSubtitleImage.Location = new System.Drawing.Point(14, 12);
+            this.labelSubtitleImage.Name = "labelSubtitleImage";
+            this.labelSubtitleImage.Size = new System.Drawing.Size(88, 13);
+            this.labelSubtitleImage.TabIndex = 29;
+            this.labelSubtitleImage.Text = "subtitle image";
+            // 
             // VobSubOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(577, 404);
+            this.Controls.Add(this.labelSubtitleImage);
+            this.Controls.Add(this.labelItalicOn2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.checkBoxAutoSubmitOfFirstChar);
             this.Controls.Add(this.buttonLastEdit);
@@ -1277,8 +1298,7 @@
             this.Controls.Add(this.labelCharactersAsText);
             this.Controls.Add(this.textBoxCharacters);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.labelSubtitleImage);
+            this.Controls.Add(this.buttonSkip);
             this.Controls.Add(this.pictureBoxSubtitleImage);
             this.Controls.Add(this.pictureBoxLastEdit);
             this.Controls.Add(this.labelItalicOn);
@@ -1308,8 +1328,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label labelSubtitleImage;
+        private System.Windows.Forms.Button buttonSkip;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.Label labelCharactersAsText;
         private System.Windows.Forms.TextBox textBoxCharacters;
@@ -1438,5 +1457,7 @@
         private System.Windows.Forms.ToolStripMenuItem òToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem;
+        private System.Windows.Forms.Label labelItalicOn2;
+        private System.Windows.Forms.Label labelSubtitleImage;
     }
 }

@@ -4126,7 +4126,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_abort)
                 {
-                    return string.Empty;
+                    return MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
                 }
 
                 if (!expandSelection && !shrinkSelection)
