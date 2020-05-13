@@ -5261,7 +5261,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 {
-                    text = Utilities.UnbreakLine(text);
                     if (_dvbSubColor != Color.Transparent)
                     {
                         text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
@@ -5418,8 +5417,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
-            {
-                text = Utilities.UnbreakLine(text);
+            {               
                 if (_dvbSubColor != Color.Transparent)
                 {
                     text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
