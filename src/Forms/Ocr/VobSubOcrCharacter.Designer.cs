@@ -966,7 +966,6 @@
             this.buttonAbort.TabIndex = 4;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
-            this.buttonAbort.Click += new System.EventHandler(this.buttonAbort_Click);
             // 
             // checkBoxItalic
             // 

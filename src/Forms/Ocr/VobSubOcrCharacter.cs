@@ -303,10 +303,5 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             TaskbarList.StopBlink(_vobSubForm);
         }
-
-        private void buttonAbort_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
