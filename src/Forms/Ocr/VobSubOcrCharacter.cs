@@ -29,10 +29,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelCharactersAsText.Text = language.CharactersAsText;
             checkBoxItalic.Text = language.Italic;
             labelItalicOn.Text = language.Italic.RemoveChar('&');
+            labelItalicOn2.Text = language.Italic.RemoveChar('&');
             labelItalicOn.Visible = false;
+            labelItalicOn2.Visible = false;
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = language.Skip;
+            buttonSkip.Text = language.Skip;
             nordicToolStripMenuItem.Text = language.Nordic;
             spanishToolStripMenuItem.Text = language.Spanish;
             germanToolStripMenuItem.Text = language.German;
@@ -65,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            UiUtil.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonSkip);
         }
 
         public string ManualRecognizedCharacters => textBoxCharacters.Text;
@@ -109,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             pictureBoxSubtitleImage.Image = vobSubImage;
             pictureBoxCharacter.Image = character.NikseBitmap.GetBitmap();
+            labelItalicOn2.Left = Math.Max(40, pictureBoxCharacter.Left + pictureBoxCharacter.Width);
 
             if (_additions.Count > 0)
             {
@@ -178,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
                 dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size, FontStyle.Italic);
                 labelItalicOn.Visible = true;
+                labelItalicOn2.Visible = true;
                 checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size, FontStyle.Italic | FontStyle.Bold);
                 checkBoxItalic.ForeColor = Color.Red;
             }
@@ -187,6 +191,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
                 dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size);
                 labelItalicOn.Visible = false;
+                labelItalicOn2.Visible = false;
                 checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size);
                 checkBoxItalic.ForeColor = DefaultForeColor;
             }
@@ -297,6 +302,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcrCharacter_FormClosing(object sender, FormClosingEventArgs e)
         {
             TaskbarList.StopBlink(_vobSubForm);
+        }
+
+        private void buttonAbort_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
