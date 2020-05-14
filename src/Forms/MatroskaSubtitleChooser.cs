@@ -33,11 +33,8 @@ namespace Nikse.SubtitleEdit.Forms
             var format = Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ;
             foreach (var info in subtitleInfoList)
             {
-                var track = string.Format((!string.IsNullOrWhiteSpace(info.Name) ? "{0} - {1}" : "{0}"), info.TrackNumber, info.Name);
-                listBox1.Items.Add(string.Format(format, track, info.Language, info.CodecId));
                 AddListViewItem(info);
             }
-            listBox1.SelectedIndex = 0;
             listView1.Items[0].Selected = true;
             listView1.FocusedItem = listView1.Items[0];
         }
@@ -102,6 +99,27 @@ namespace Nikse.SubtitleEdit.Forms
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedIndex = listBox1.SelectedIndex;
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
     }
 }
