@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public bool IsVideo { get; set; }
         public bool IsAudio { get; set; }
         public bool IsSubtitle { get; set; }
+        public bool IsDefault { get; set; }
+        public bool IsForced { get; set; }
         public string CodecId { get; set; }
         internal byte[] CodecPrivateRaw { get; set; }
         public int DefaultDuration { get; set; }

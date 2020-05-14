@@ -15,6 +15,9 @@
         TrackEntry = 0xAE,
         TrackNumber = 0xD7,
         TrackType = 0x83,
+        FlagDefault = 0x88,
+        FlagForced = 0x55AA,
+
         DefaultDuration = 0x23E383,
         Name = 0x536E,
         Language = 0x22B59C,

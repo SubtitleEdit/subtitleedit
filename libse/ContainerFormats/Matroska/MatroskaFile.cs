@@ -174,6 +174,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             bool isVideo = false;
             bool isAudio = false;
             bool isSubtitle = false;
+            bool isDefault = true;
+            bool isForced = false;
             var trackNumber = 0;
             string name = string.Empty;
             string language = "eng"; // default value
@@ -238,6 +240,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                             ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType, ref contentEncodingScope);
                         }
                         break;
+                    case ElementId.FlagDefault:
+                        var defaultValue = (int)ReadUInt((int)element.DataSize);
+                        isDefault = defaultValue == 1;
+                        break;
+                    case ElementId.FlagForced:
+                        var forcedValue = (int)ReadUInt((int)element.DataSize);
+                        isForced = forcedValue == 1;
+                        break;
                 }
                 _stream.Seek(element.EndPosition, SeekOrigin.Begin);
             }
@@ -254,7 +264,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 Name = name,
                 ContentEncodingType = contentEncodingType,
                 ContentCompressionAlgorithm = contentCompressionAlgorithm,
-                ContentEncodingScope = contentEncodingScope
+                ContentEncodingScope = contentEncodingScope,
+                IsDefault = isDefault,
+                IsForced = isForced,
             });
 
             if (isVideo)
