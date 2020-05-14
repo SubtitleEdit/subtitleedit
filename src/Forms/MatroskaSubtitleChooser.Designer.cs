@@ -33,12 +33,12 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.labelChoose = new System.Windows.Forms.Label();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTrack = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderLanguage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderCodec = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderDefault = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderForced = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -75,6 +75,7 @@
             this.listBox1.Size = new System.Drawing.Size(554, 251);
             this.listBox1.TabIndex = 47;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.listBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox1_KeyDown);
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             // 
             // labelChoose
@@ -92,12 +93,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader6});
+            this.columnHeaderTrack,
+            this.columnHeaderName,
+            this.columnHeaderLanguage,
+            this.columnHeaderCodec,
+            this.columnHeaderDefault,
+            this.columnHeaderForced});
             this.listView1.FullRowSelect = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.HideSelection = false;
@@ -109,32 +110,34 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
+            this.listView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView1_KeyDown);
             // 
-            // columnHeader1
+            // columnHeaderTrack
             // 
-            this.columnHeader1.Text = "Track#";
+            this.columnHeaderTrack.Text = "Track#";
             // 
-            // columnHeader2
+            // columnHeaderName
             // 
-            this.columnHeader2.Text = "Name";
-            this.columnHeader2.Width = 180;
+            this.columnHeaderName.Text = "Name";
+            this.columnHeaderName.Width = 180;
             // 
-            // columnHeader3
+            // columnHeaderLanguage
             // 
-            this.columnHeader3.Text = "Language";
+            this.columnHeaderLanguage.Text = "Language";
             // 
-            // columnHeader4
+            // columnHeaderCodec
             // 
-            this.columnHeader4.Text = "Type";
-            this.columnHeader4.Width = 100;
+            this.columnHeaderCodec.Text = "Codec";
+            this.columnHeaderCodec.Width = 100;
             // 
-            // columnHeader5
+            // columnHeaderDefault
             // 
-            this.columnHeader5.Text = "Default";
+            this.columnHeaderDefault.Text = "Default";
             // 
-            // columnHeader6
+            // columnHeaderForced
             // 
-            this.columnHeader6.Text = "Forced";
+            this.columnHeaderForced.Text = "Forced";
             // 
             // MatroskaSubtitleChooser
             // 
@@ -169,11 +172,11 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label labelChoose;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeaderTrack;
+        private System.Windows.Forms.ColumnHeader columnHeaderName;
+        private System.Windows.Forms.ColumnHeader columnHeaderLanguage;
+        private System.Windows.Forms.ColumnHeader columnHeaderCodec;
+        private System.Windows.Forms.ColumnHeader columnHeaderDefault;
+        private System.Windows.Forms.ColumnHeader columnHeaderForced;
     }
 }
