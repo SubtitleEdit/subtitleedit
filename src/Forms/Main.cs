@@ -10755,6 +10755,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+                        SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph, _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1));
                         StartUpdateListSyntaxColoring();
                     }
                 }
