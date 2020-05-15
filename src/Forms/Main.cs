@@ -25439,6 +25439,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (tmp.Paragraphs.Count == 0)
             {
                 tmp = SubtitleFormat.LoadSubtitleFromLines(list, null);
+                if (tmp == null)
+                {
+                    tmp = new Subtitle();
+                }
             }
 
             if (SubtitleListview1.SelectedItems.Count == 1 && text.Length > 0)
