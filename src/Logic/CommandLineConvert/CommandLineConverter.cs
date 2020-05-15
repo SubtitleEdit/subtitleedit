@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     var tracks = matroska.GetTracks(true);
                                     if (tracks.Count > 0)
                                     {
-                                        foreach (var track in tracks)
+                                        foreach (var track in tracks.Where(p => !forcedOnly || p.IsForced))
                                         {
                                             if (trackNumbers.Count == 0 || trackNumbers.Contains(track.TrackNumber))
                                             {
