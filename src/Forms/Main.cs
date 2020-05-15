@@ -12912,6 +12912,9 @@ namespace Nikse.SubtitleEdit.Forms
                         ImportSubtitleFromMp4(fileName);
                         return;
                     }
+
+                    MessageBox.Show(_language.NoSubtitlesFound);
+                    return;
                 }
                 else if (ext == ".vob" || ext == ".ifo")
                 {
