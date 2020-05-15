@@ -600,23 +600,23 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvVobSub.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                        mkvVobSub.Add(MakeMkvTrackInfoString(track));
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvPgs.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                        mkvPgs.Add(MakeMkvTrackInfoString(track));
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvSrt.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                        mkvSrt.Add(MakeMkvTrackInfoString(track));
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvSsa.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                        mkvSsa.Add(MakeMkvTrackInfoString(track));
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvAss.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                        mkvAss.Add(MakeMkvTrackInfoString(track));
                                     }
                                 }
                             }
@@ -713,6 +713,11 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignored
             }
             UpdateNumberOfFiles();
+        }
+
+        private static string MakeMkvTrackInfoString(MatroskaTrackInfo track)
+        {
+            return (track.Language ?? "undefined") + (track.IsForced ? " (forced)" : string.Empty) + " #" + track.TrackNumber;
         }
 
         private string GetMkvLanguage(string languageCode)
