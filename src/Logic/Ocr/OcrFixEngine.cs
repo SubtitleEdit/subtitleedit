@@ -600,7 +600,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             text = FixCommonOcrLineErrors(sb.ToString(), lastLine);
-            text = FixUnknownWordsViaGuessOrPrompt(out _, text, index, null, true, false, logSuggestions, autoGuess);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
@@ -622,6 +621,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 text = Utilities.RemoveSpaceBetweenNumbers(text);
             }
+
+            // must be last - counts/logs unknown words
+            text = FixUnknownWordsViaGuessOrPrompt(out _, text, index, null, true, false, logSuggestions, autoGuess);
+            
             return text;
         }
 

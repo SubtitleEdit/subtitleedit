@@ -4237,7 +4237,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 _ocrFixEngine.AutoGuessesUsed.Clear();
 
-                // Log unkown words guess (found via spelling dictionaries)
+                // Log unknown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
                 ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
@@ -5213,7 +5213,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void CleanLogGreaterThanOrEqualTo(ListBox listBox, int start)
         {
             listBox.BeginUpdate();
-            for (int i = listBox.Items.Count-1; i> 0; i--)
+            for (int i = listBox.Items.Count - 1; i >= 0; i--)
             {
                 var text = listBox.Items[i].ToString();
                 var idx = text.IndexOf(':');
@@ -5446,7 +5446,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
-            {               
+            {
                 if (_dvbSubColor != Color.Transparent)
                 {
                     text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
