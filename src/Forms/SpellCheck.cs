@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Configuration.Settings.Tools.SpellCheckAutoChangeNames = checkBoxAutoChangeNames.Checked;
+            Configuration.Settings.Tools.SpellCheckAutoChangeNames = AutoFixNames;
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 DialogResult = DialogResult.Abort;
@@ -401,12 +401,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string s = char.ToUpper(textBoxWord.Text[0]) + textBoxWord.Text.Substring(1);
-            if (checkBoxAutoChangeNames.Checked && _suggestions != null && _suggestions.Contains(s))
-            {
-                ChangeWord = s;
-                DoAction(SpellCheckAction.ChangeAll);
-            }
+            DoAutoFixNames(textBoxWord.Text, _suggestions);
         }
 
         private void ListBoxSuggestionsMouseDoubleClick(object sender, MouseEventArgs e)
@@ -794,32 +789,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 suggestions.Insert(0, "I");
                             }
 
-                            if (AutoFixNames && _currentWord.Length > 3)
+                            if (DoAutoFixNames(_currentWord, suggestions))
                             {
-                                if (suggestions.Contains(_currentWord.ToUpperInvariant()))
-                                { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
-                                    ChangeWord = _currentWord.ToUpperInvariant();
-                                    DoAction(SpellCheckAction.ChangeAll);
-                                    return;
-                                }
-                                if (_spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
-                                {
-                                    ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
-                                    DoAction(SpellCheckAction.ChangeAll);
-                                    return;
-                                }
-                                if (_currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
-                                {
-                                    ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3);
-                                    DoAction(SpellCheckAction.ChangeAll);
-                                    return;
-                                }
-                                if (_spellCheckWordLists.HasName(_currentWord.ToUpperInvariant()))
-                                {
-                                    ChangeWord = _currentWord.ToUpperInvariant();
-                                    DoAction(SpellCheckAction.ChangeAll);
-                                    return;
-                                }
+                                return;
                             }
 
                             if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''", StringComparison.Ordinal))
@@ -855,6 +827,51 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private bool DoAutoFixNames(string word, List<string> suggestions)
+        {
+            if (AutoFixNames && word.Length > 3)
+            {
+                if (Configuration.Settings.Tools.SpellCheckAutoChangeNamesUseSuggestions)
+                {
+                    if (suggestions.Contains(word.ToUpperInvariant()))
+                    { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
+                        ChangeWord = word.ToUpperInvariant();
+                        DoAction(SpellCheckAction.ChangeAll);
+                        return true;
+                    }
+
+                    if (suggestions.Contains(char.ToUpperInvariant(word[0]) + word.Substring(1)))
+                    {
+                        ChangeWord = char.ToUpperInvariant(word[0]) + word.Substring(1);
+                        DoAction(SpellCheckAction.ChangeAll);
+                        return true;
+                    }
+                }
+
+                if (_spellCheckWordLists.HasName(char.ToUpper(word[0]) + word.Substring(1)))
+                {
+                    ChangeWord = char.ToUpper(word[0]) + word.Substring(1);
+                    DoAction(SpellCheckAction.ChangeAll);
+                    return true;
+                }
+
+                if (word.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(word[0]) + word.Substring(1, 1) + char.ToUpper(word[2]) + word.Remove(0, 3)))
+                {
+                    ChangeWord = char.ToUpper(word[0]) + word.Substring(1, 1) + char.ToUpper(word[2]) + word.Remove(0, 3);
+                    DoAction(SpellCheckAction.ChangeAll);
+                    return true;
+                }
+
+                if (_spellCheckWordLists.HasName(word.ToUpperInvariant()))
+                {
+                    ChangeWord = word.ToUpperInvariant();
+                    DoAction(SpellCheckAction.ChangeAll);
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);

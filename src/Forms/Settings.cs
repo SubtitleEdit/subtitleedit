@@ -689,6 +689,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFceSkipStep1.Text = language.FixCommonErrorsSkipStepOne;
             groupBoxSpellCheck.Text = language.SpellCheck;
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
+            checkBoxSpellCheckAutoChangeNamesViaSuggestions.Text = Configuration.Settings.Language.SpellCheck.AutoFixNamesViaSuggestions;
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
             checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
@@ -885,6 +886,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked = toolsSettings.FixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Checked = toolsSettings.FixCommonErrorsSkipStepOne;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
+            checkBoxSpellCheckAutoChangeNamesViaSuggestions.Checked = toolsSettings.SpellCheckAutoChangeNamesUseSuggestions;
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseAlwaysToFile.Checked = toolsSettings.RememberUseAlwaysList;
@@ -1780,6 +1782,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
+            toolsSettings.SpellCheckAutoChangeNamesUseSuggestions = checkBoxSpellCheckAutoChangeNamesViaSuggestions.Checked;
             toolsSettings.CheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
             toolsSettings.RememberUseAlwaysList = checkBoxUseAlwaysToFile.Checked;

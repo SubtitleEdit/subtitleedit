@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
+        public bool SpellCheckAutoChangeNamesUseSuggestions { get; set; }
         public bool CheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
         public bool RememberUseAlwaysList { get; set; }
@@ -316,6 +317,7 @@ namespace Nikse.SubtitleEdit.Core
                                  "#,*,¶"; // common music symbols
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
+            SpellCheckAutoChangeNamesUseSuggestions = false;
             OcrFixUseHardcodedRules = true;
             OcrBinaryImageCompareRgbThreshold = 200;
             OcrTesseract4RgbThreshold = 200;
@@ -3167,6 +3169,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("SpellCheckAutoChangeNamesUseSuggestions");
+            if (subNode != null)
+            {
+                settings.Tools.SpellCheckAutoChangeNamesUseSuggestions = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
@@ -7064,6 +7072,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
                 textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SpellCheckAutoChangeNamesUseSuggestions", settings.Tools.SpellCheckAutoChangeNamesUseSuggestions.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.CheckOneLetterWords.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString(CultureInfo.InvariantCulture));
