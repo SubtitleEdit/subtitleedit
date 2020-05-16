@@ -23,9 +23,9 @@
    * Make "Google translate" shortcut customizable - thx darnn
    * Make teletext lines start with '<' italic - thx borifix
    * Improve error msg when drop mp4 file without subs in main listview
-   * Add mkv "forced" flag to track chooser/batch convert - thx  kiwilad-nz
+   * Add mkv "forced" flag to track chooser/batch convert - thx kiwilad-nz
    * Clear logs from current line and forward when starting OCR
-   * Spell check "Auto change names" option to use suggestions
+   * Spell check "Auto fix names" option to use suggestions - thx Waldkoenig
 * FIXED:
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix for sometimes missing images in bdsup - thx Devin
