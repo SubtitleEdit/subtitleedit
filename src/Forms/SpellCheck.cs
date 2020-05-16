@@ -999,7 +999,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _languageName = LanguageAutoDetect.AutoDetectLanguageName(_languageName, subtitle);
                 if (_languageName != null && _languageName.Length > 3)
                 {
-                    string start = _languageName.Substring(0, 3);
+                    string start = _languageName.Substring(0, 2);
                     if (_languageName.StartsWith(start, StringComparison.Ordinal) && Configuration.Settings.General.SpellCheckLanguage != null &&
                         Configuration.Settings.General.SpellCheckLanguage.StartsWith(start, StringComparison.Ordinal) && _languageName != Configuration.Settings.General.SpellCheckLanguage)
                     {
