@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Core
                                  "#,*,¶"; // common music symbols
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
-            SpellCheckAutoChangeNamesUseSuggestions = false;
+            SpellCheckAutoChangeNamesUseSuggestions = true;
             OcrFixUseHardcodedRules = true;
             OcrBinaryImageCompareRgbThreshold = 200;
             OcrTesseract4RgbThreshold = 200;
