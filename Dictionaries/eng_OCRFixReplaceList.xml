@@ -2762,6 +2762,9 @@
     <Word from="wishyou" to="wish you" />
     <Word from="wouldnot" to="would not" />
     <Word from="yourpeople" to="your people" />
+    <Word from="AII's" to="All's" />
+    <Word from="FIog" to="Flog" />
+    <Word from="SIit" to="Slit" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
