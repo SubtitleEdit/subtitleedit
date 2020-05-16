@@ -40,6 +40,7 @@
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
             this.groupBoxGeneralRules = new System.Windows.Forms.GroupBox();
+            this.buttonGapChoose = new System.Windows.Forms.Button();
             this.comboBoxContinuationStyle = new System.Windows.Forms.ComboBox();
             this.labelContinuationStyle = new System.Windows.Forms.Label();
             this.labelDialogStyle = new System.Windows.Forms.Label();
@@ -384,7 +385,7 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonGapChoose = new System.Windows.Forms.Button();
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -651,6 +652,16 @@
             this.groupBoxGeneralRules.TabIndex = 0;
             this.groupBoxGeneralRules.TabStop = false;
             this.groupBoxGeneralRules.Text = "Rules";
+            // 
+            // buttonGapChoose
+            // 
+            this.buttonGapChoose.Location = new System.Drawing.Point(265, 213);
+            this.buttonGapChoose.Name = "buttonGapChoose";
+            this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
+            this.buttonGapChoose.TabIndex = 46;
+            this.buttonGapChoose.Text = "...";
+            this.buttonGapChoose.UseVisualStyleBackColor = true;
+            this.buttonGapChoose.Click += new System.EventHandler(this.buttonGapChoose_Click);
             // 
             // comboBoxContinuationStyle
             // 
@@ -3029,6 +3040,7 @@
             this.groupBoxSpellCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNamesViaSuggestions);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxUseAlwaysToFile);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
@@ -3043,30 +3055,30 @@
             // checkBoxUseAlwaysToFile
             // 
             this.checkBoxUseAlwaysToFile.AutoSize = true;
-            this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(15, 89);
+            this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(15, 118);
             this.checkBoxUseAlwaysToFile.Name = "checkBoxUseAlwaysToFile";
             this.checkBoxUseAlwaysToFile.Size = new System.Drawing.Size(192, 17);
-            this.checkBoxUseAlwaysToFile.TabIndex = 3;
+            this.checkBoxUseAlwaysToFile.TabIndex = 12;
             this.checkBoxUseAlwaysToFile.Text = "Remember \"Use always\" / \"Skip all\"";
             this.checkBoxUseAlwaysToFile.UseVisualStyleBackColor = true;
             // 
             // checkBoxTreatINQuoteAsING
             // 
             this.checkBoxTreatINQuoteAsING.AutoSize = true;
-            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(15, 66);
+            this.checkBoxTreatINQuoteAsING.Location = new System.Drawing.Point(15, 95);
             this.checkBoxTreatINQuoteAsING.Name = "checkBoxTreatINQuoteAsING";
             this.checkBoxTreatINQuoteAsING.Size = new System.Drawing.Size(253, 17);
-            this.checkBoxTreatINQuoteAsING.TabIndex = 2;
+            this.checkBoxTreatINQuoteAsING.TabIndex = 8;
             this.checkBoxTreatINQuoteAsING.Text = "Treat word ending \" in\' \" as \" ing \" (English only)";
             this.checkBoxTreatINQuoteAsING.UseVisualStyleBackColor = true;
             // 
             // checkBoxSpellCheckOneLetterWords
             // 
             this.checkBoxSpellCheckOneLetterWords.AutoSize = true;
-            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(15, 43);
+            this.checkBoxSpellCheckOneLetterWords.Location = new System.Drawing.Point(15, 72);
             this.checkBoxSpellCheckOneLetterWords.Name = "checkBoxSpellCheckOneLetterWords";
             this.checkBoxSpellCheckOneLetterWords.Size = new System.Drawing.Size(205, 17);
-            this.checkBoxSpellCheckOneLetterWords.TabIndex = 1;
+            this.checkBoxSpellCheckOneLetterWords.TabIndex = 4;
             this.checkBoxSpellCheckOneLetterWords.Text = "Prompt for unknown one letter words";
             this.checkBoxSpellCheckOneLetterWords.UseVisualStyleBackColor = true;
             // 
@@ -4661,15 +4673,15 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // buttonGapChoose
+            // checkBoxSpellCheckAutoChangeNamesViaSuggestions
             // 
-            this.buttonGapChoose.Location = new System.Drawing.Point(265, 213);
-            this.buttonGapChoose.Name = "buttonGapChoose";
-            this.buttonGapChoose.Size = new System.Drawing.Size(28, 23);
-            this.buttonGapChoose.TabIndex = 46;
-            this.buttonGapChoose.Text = "...";
-            this.buttonGapChoose.UseVisualStyleBackColor = true;
-            this.buttonGapChoose.Click += new System.EventHandler(this.buttonGapChoose_Click);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.AutoSize = true;
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 43);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Name = "checkBoxSpellCheckAutoChangeNamesViaSuggestions";
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.TabIndex = 1;
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Text = "Also use \'spell check suggestions\'";
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -5167,5 +5179,6 @@
         private System.Windows.Forms.Panel panelWaveformCursorColor;
         private System.Windows.Forms.Button buttonWaveformCursorColor;
         private System.Windows.Forms.Button buttonGapChoose;
+        private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNamesViaSuggestions;
     }
 }

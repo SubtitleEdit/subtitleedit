@@ -25,6 +25,7 @@
    * Improve error msg when drop mp4 file without subs in main listview
    * Add mkv "forced" flag to track chooser/batch convert - thx  kiwilad-nz
    * Clear logs from current line and forward when starting OCR
+   * Spell check "Auto change names" option to use suggestions
 * FIXED:
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix for sometimes missing images in bdsup - thx Devin
@@ -36,7 +37,6 @@
    * Fix crash in load of profile/continuation-style - thx xy
    * Fix auto adjust start via wf for original - thx OmrSi
    * Fix updating libmpv (requires SE restart) - thx Bill
-   * Fix crash in column paste - thx OmrSi
 
 
 3.5.15 (1st May 2020)

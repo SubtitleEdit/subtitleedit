@@ -2414,6 +2414,7 @@
             public string AddXToNames { get; set; }
             public string AddXToUserDictionary { get; set; }
             public string AutoFixNames { get; set; }
+            public string AutoFixNamesViaSuggestions { get; set; }
             public string CheckOneLetterWords { get; set; }
             public string TreatINQuoteAsING { get; set; }
             public string RememberUseAlwaysList { get; set; }

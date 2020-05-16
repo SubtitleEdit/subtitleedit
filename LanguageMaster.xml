@@ -2240,6 +2240,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <AddXToNames>Add '{0}' to name list</AddXToNames>
     <AddXToUserDictionary>Add '{0}' to user dictionary</AddXToUserDictionary>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Also fix names via 'spell check suggestions'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Remember "Use always" list</RememberUseAlwaysList>

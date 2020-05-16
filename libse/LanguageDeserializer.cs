@@ -6094,6 +6094,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/AutoFixNames":
                     language.SpellCheck.AutoFixNames = reader.Value;
                     break;
+                case "SpellCheck/AutoFixNamesViaSuggestions":
+                    language.SpellCheck.AutoFixNamesViaSuggestions = reader.Value;
+                    break;
                 case "SpellCheck/CheckOneLetterWords":
                     language.SpellCheck.CheckOneLetterWords = reader.Value;
                     break;
