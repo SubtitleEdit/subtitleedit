@@ -2004,10 +2004,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             int wordsNotFound = 0;
-            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split(SpellCheckWordLists.SplitChars.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split(" \r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
-                string word = words[i];
+                string word = words[i].Trim(SpellCheckWordLists.SplitChars.ToArray());
                 if (word.Length >= minLength)
                 {
                     if (!IsWordKnownOrNumber(word, line))

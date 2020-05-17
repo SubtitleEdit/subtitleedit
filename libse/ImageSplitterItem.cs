@@ -8,15 +8,15 @@
         public int Top { get; set; }
         public NikseBitmap NikseBitmap { get; set; }
         public string SpecialCharacter { get; set; }
-        public bool CouldBeSpace { get; set; }
+        public bool CouldBeSpaceBefore { get; set; }
 
-        public ImageSplitterItem(int x, int y, NikseBitmap bitmap, bool couldBeSpace = false)
+        public ImageSplitterItem(int x, int y, NikseBitmap bitmap, bool couldBeSpaceBefore = false)
         {
             X = x;
             Y = y;
             NikseBitmap = bitmap;
             SpecialCharacter = null;
-            CouldBeSpace = couldBeSpace;
+            CouldBeSpaceBefore = couldBeSpaceBefore;
         }
 
         public ImageSplitterItem(string specialCharacter)
