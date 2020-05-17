@@ -39,6 +39,7 @@
    * Fix auto adjust start via wf for original - thx OmrSi
    * Fix updating libmpv (requires SE restart) - thx Bill
    * Remember last spell check lang (also) if it was English GB - thx Legion
+   * Fix zoom combobox after waveform change - thx Meliox
 
 
 3.5.15 (1st May 2020)
