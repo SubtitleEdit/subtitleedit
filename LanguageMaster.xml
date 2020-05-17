@@ -2532,7 +2532,7 @@ Keep changes?</KeepChangesMessage>
     <EditImageDb>Edit image db</EditImageDb>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - Manual image to text</Title>
+    <Title>OCR - Manual image to text</Title>
     <ShrinkSelection>Shrink selection</ShrinkSelection>
     <ExpandSelection>Expand selection</ExpandSelection>
     <SubtitleImage>Subtitle image</SubtitleImage>

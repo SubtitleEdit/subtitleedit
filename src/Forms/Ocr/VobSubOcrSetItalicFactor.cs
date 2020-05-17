@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _bmp = bmp;
             _factor = factor;
-            numericUpDown1.Value = (decimal)factor;
+            numericUpDownItalicFactor.Value = (decimal)factor;
 
             Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Title;
             labelDescription.Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Description;
@@ -28,9 +28,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void numericUpDownItalicFactor_ValueChanged(object sender, EventArgs e)
         {
-            pictureBoxSubtitleImage.Image = VobSubOcr.UnItalic(_bmp, (double)numericUpDown1.Value);
+            pictureBoxSubtitleImage.Image = VobSubOcr.UnItalic(_bmp, (double)numericUpDownItalicFactor.Value);
         }
 
         internal double GetUnItalicFactor()
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            _factor = (double)numericUpDown1.Value;
+            _factor = (double)numericUpDownItalicFactor.Value;
             DialogResult = DialogResult.OK;
         }
 
@@ -101,5 +101,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private void VobSubOcrSetItalicFactor_Shown(object sender, EventArgs e)
+        {
+            numericUpDownItalicFactor_ValueChanged(null, null);
+        }
     }
 }

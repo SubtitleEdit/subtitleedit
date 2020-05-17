@@ -206,6 +206,7 @@
             this.buttonSkip.TabIndex = 3;
             this.buttonSkip.Text = "&Skip";
             this.buttonSkip.UseVisualStyleBackColor = true;
+            this.buttonSkip.Click += new System.EventHandler(this.buttonSkip_Click);
             // 
             // pictureBoxSubtitleImage
             // 

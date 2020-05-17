@@ -2869,7 +2869,7 @@ Keep changes?",
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
             {
-                Title = "VobSub - Manual image to text",
+                Title = "OCR - Manual image to text",
                 Abort = "&Abort",
                 Skip = "&Skip",
                 SubtitleImage = "Subtitle image",

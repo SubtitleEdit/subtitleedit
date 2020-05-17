@@ -80,10 +80,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool ShrinkSelection { get; private set; }
 
+        public bool SkipImage { get; private set; }
+
         internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm, bool allowExpand = true)
         {
             ShrinkSelection = false;
             ExpandSelection = false;
+            SkipImage = false;
 
             textBoxCharacters.Text = string.Empty;
             if (bestGuess != null)
@@ -292,6 +295,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxItalic.Checked = !checkBoxItalic.Checked;
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.S)
+            {
+                SkipImage = true;
+                DialogResult = DialogResult.Cancel;
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -302,6 +311,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubOcrCharacter_FormClosing(object sender, FormClosingEventArgs e)
         {
             TaskbarList.StopBlink(_vobSubForm);
+        }
+
+        private void buttonSkip_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

@@ -4031,9 +4031,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditions, this);
                     DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
                     _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
+                    if (result == DialogResult.Cancel && _vobSubOcrCharacter.SkipImage)
+                    {
+                        break;
+                    }
+                    
                     if (result == DialogResult.OK && _vobSubOcrCharacter.ShrinkSelection)
                     {
-                        shrinkSelection = true;
+                            shrinkSelection = true;
                         index--;
                         if (expandSelectionList.Count > 0)
                         {
@@ -4089,6 +4094,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this, allowExpand);
                         DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
+
+                        if (result == DialogResult.Cancel && _vobSubOcrCharacter.SkipImage)
+                        {
+                            break;
+                        }
+
                         if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
                         {
                             expandSelectionList.Add(item);
@@ -4171,7 +4182,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
 
                 // smaller space pixels for italic
-                if (correctWords > 0 && wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpace == true))
+                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal))
+                {
+                    AddItalicCouldBeSpace(matches, parentBitmap, _unItalicFactor);
+                }
+                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpace == true))
                 {
                     int j = 0;
                     while (j < matches.Count)
@@ -4196,7 +4211,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     int tempWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(tempLine, out var tempCorrectWords);
-                    if (tempWordsNotFound == 0 && tempCorrectWords > 0)
+                    //if (tempWordsNotFound == 0 && tempCorrectWords > 0)
+                    if (tempWordsNotFound < wordsNotFound && tempCorrectWords > 0)
                     {
                         wordsNotFound = tempWordsNotFound;
                         correctWords = tempCorrectWords;
@@ -4251,6 +4267,74 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return line;
+        }
+
+        private void AddItalicCouldBeSpace(List<CompareMatch> matches, NikseBitmap parentBitmap, double unItalicFactor)
+        {
+            for (int i = 0; i < matches.Count - 1; i++)
+            {
+                var match = matches[i];
+                var matchNext = matches[i + 1];
+                if (!match.Italic || !matchNext.Italic ||
+                    string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
+                    match.ImageSplitterItem == null || match.ImageSplitterItem.CouldBeSpace)
+                {
+                    continue;
+                }
+
+                int blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match, matchNext, unItalicFactor);
+                if (blankVerticalLines >= _numericUpDownPixelsIsSpace)
+                {
+                    matchNext.ImageSplitterItem.CouldBeSpace = true; // TODO: Rename to "could be space before"
+                }
+            }
+        }
+
+        private int IsVerticalAngledLineTransparent(NikseBitmap parentBitmap, CompareMatch match, CompareMatch next, double unItalicFactor)
+        {
+            int blanks = 0;
+            var min = match.ImageSplitterItem.X + match.ImageSplitterItem.NikseBitmap.Width;
+            var max = next.ImageSplitterItem.X + next.ImageSplitterItem.NikseBitmap.Width / 2;
+            bool abort = false;
+            for (int startX = min; startX < max; startX++)
+            {
+                var lineBlank = true;
+                for (int y = match.ImageSplitterItem.Y; y < match.ImageSplitterItem.Y + match.ImageSplitterItem.NikseBitmap.Height; y++)
+                {
+                    var x = startX - (y - match.ImageSplitterItem.Y) * unItalicFactor;
+                    if (x >= 0)
+                    {
+                        var color = parentBitmap.GetPixel((int)Math.Round(x), y);
+                        if (color.A == 0)
+                        {
+                            // parentBitmap.SetPixel((int)Math.Round(x), y, Color.LawnGreen);
+                        }
+                        else
+                        {
+                            // parentBitmap.SetPixel((int)Math.Round(x), y, Color.Red);
+                            lineBlank = false;
+                            if (blanks > 0)
+                            {
+                                abort = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (abort)
+                {
+                    break;
+                }
+
+                if (lineBlank)
+                {
+                    blanks++;
+                }
+            }
+
+            //parentBitmap.GetBitmap().Save(@"J:\Temp\" + DateTime.UtcNow.Ticks + "_" + match.Text + "_" + blanks + ".bmp");
+            return blanks;
         }
 
         private void SetBinOcrLowercaseUppercase(int height, string text)
@@ -6513,10 +6597,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            if (bmp != null)
-            {
-                bmp.Dispose();
-            }
+            bmp?.Dispose();
 
             if (mp.Text != null)
             {
@@ -7001,6 +7082,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 using (var form = new BinaryOcrTrain())
                 {
                     form.ShowDialog(this);
+                }
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
+            {
+                var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
+                if (bmp != null)
+                {
+                    var nBmp = new NikseBitmap(bmp);
+                    bmp.Dispose();
+                    var italicFactor = _unItalicFactor;
+
+                    for (var startX = 20.0; startX < nBmp.Width; startX += 20.0)
+                    {
+                        var x = startX;
+                        for (int y = 0; y < nBmp.Height; y++)
+                        {
+                            x = startX - y * italicFactor;
+                            if (x >= 0)
+                            {
+                                nBmp.SetPixel((int)Math.Round(x), y, Color.Red);
+                            }
+                        }
+                    }
+
+                    pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
                 }
             }
         }
