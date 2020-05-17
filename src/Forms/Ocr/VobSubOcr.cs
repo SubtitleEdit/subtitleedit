@@ -4184,7 +4184,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 // smaller space pixels for italic
                 if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal))
                 {
-                    AddItalicCouldBeSpace(matches, parentBitmap, _unItalicFactor);
+                    AddItalicCouldBeSpace(matches, parentBitmap, _unItalicFactor, _numericUpDownPixelsIsSpace);
                 }
                 if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
                 {
@@ -4272,28 +4272,37 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        private void AddItalicCouldBeSpace(List<CompareMatch> matches, NikseBitmap parentBitmap, double unItalicFactor)
+        private static void AddItalicCouldBeSpace(List<CompareMatch> matches, NikseBitmap parentBitmap, double unItalicFactor, int pixelsIsSpace)
         {
+            foreach (var match in matches)
+            {
+                if (match.ImageSplitterItem != null)
+                {
+                    match.ImageSplitterItem.CouldBeSpaceBefore = false;
+                }
+            }
+
             for (int i = 0; i < matches.Count - 1; i++)
             {
                 var match = matches[i];
                 var matchNext = matches[i + 1];
                 if (!match.Italic || !matchNext.Italic || match.Text == "," ||
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
-                    match.ImageSplitterItem == null || match.ImageSplitterItem.CouldBeSpaceBefore)
+                    match.ImageSplitterItem == null)
                 {
+                    
                     continue;
                 }
 
                 int blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match, matchNext, unItalicFactor);
-                if (blankVerticalLines >= _numericUpDownPixelsIsSpace)
+                if (blankVerticalLines >= pixelsIsSpace)
                 {
                     matchNext.ImageSplitterItem.CouldBeSpaceBefore = true;
                 }
             }
         }
 
-        private int IsVerticalAngledLineTransparent(NikseBitmap parentBitmap, CompareMatch match, CompareMatch next, double unItalicFactor)
+        private static int IsVerticalAngledLineTransparent(NikseBitmap parentBitmap, CompareMatch match, CompareMatch next, double unItalicFactor)
         {
             int blanks = 0;
             var min = match.ImageSplitterItem.X + match.ImageSplitterItem.NikseBitmap.Width;
