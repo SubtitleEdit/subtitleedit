@@ -112,6 +112,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonRemove.Text = l.Remove;
             buttonRemoveAll.Text = l.RemoveAll;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+            copyToolStripMenuItem.Text = l.Copy;
+            newToolStripMenuItem.Text = l.New;
+            removeToolStripMenuItem.Text = l.Remove;
+            removeAllToolStripMenuItem.Text = l.RemoveAll;
 
             if (_isSubStationAlpha)
             {
