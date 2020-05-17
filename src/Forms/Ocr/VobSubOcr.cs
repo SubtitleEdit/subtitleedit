@@ -4035,10 +4035,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         break;
                     }
-                    
+
                     if (result == DialogResult.OK && _vobSubOcrCharacter.ShrinkSelection)
                     {
-                            shrinkSelection = true;
+                        shrinkSelection = true;
                         index--;
                         if (expandSelectionList.Count > 0)
                         {
@@ -4186,15 +4186,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     AddItalicCouldBeSpace(matches, parentBitmap, _unItalicFactor);
                 }
-                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpace == true))
+                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
                 {
                     int j = 0;
                     while (j < matches.Count)
                     {
-                        if (matches[j]?.ImageSplitterItem?.CouldBeSpace == true)
+                        var match = matches[j];
+                        if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
                         {
-                            matches[j].ImageSplitterItem.CouldBeSpace = false;
-                            matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
+                            match.ImageSplitterItem.CouldBeSpaceBefore = false;
+                            if (match.Italic)
+                            {
+                                matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
+                            }
                         }
 
                         j++;
@@ -4211,8 +4215,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     int tempWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(tempLine, out var tempCorrectWords);
-                    //if (tempWordsNotFound == 0 && tempCorrectWords > 0)
-                    if (tempWordsNotFound < wordsNotFound && tempCorrectWords > 0)
+                    if (tempWordsNotFound <= wordsNotFound && tempCorrectWords > correctWords)
                     {
                         wordsNotFound = tempWordsNotFound;
                         correctWords = tempCorrectWords;
@@ -4275,9 +4278,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 var match = matches[i];
                 var matchNext = matches[i + 1];
-                if (!match.Italic || !matchNext.Italic ||
+                if (!match.Italic || !matchNext.Italic || match.Text == "," ||
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
-                    match.ImageSplitterItem == null || match.ImageSplitterItem.CouldBeSpace)
+                    match.ImageSplitterItem == null || match.ImageSplitterItem.CouldBeSpaceBefore)
                 {
                     continue;
                 }
@@ -4285,7 +4288,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 int blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match, matchNext, unItalicFactor);
                 if (blankVerticalLines >= _numericUpDownPixelsIsSpace)
                 {
-                    matchNext.ImageSplitterItem.CouldBeSpace = true; // TODO: Rename to "could be space before"
+                    matchNext.ImageSplitterItem.CouldBeSpaceBefore = true;
                 }
             }
         }
@@ -4295,7 +4298,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int blanks = 0;
             var min = match.ImageSplitterItem.X + match.ImageSplitterItem.NikseBitmap.Width;
             var max = next.ImageSplitterItem.X + next.ImageSplitterItem.NikseBitmap.Width / 2;
-            bool abort = false;
             for (int startX = min; startX < max; startX++)
             {
                 var lineBlank = true;
@@ -4305,26 +4307,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (x >= 0)
                     {
                         var color = parentBitmap.GetPixel((int)Math.Round(x), y);
-                        if (color.A == 0)
+                        if (color.A != 0)
                         {
-                            // parentBitmap.SetPixel((int)Math.Round(x), y, Color.LawnGreen);
-                        }
-                        else
-                        {
-                            // parentBitmap.SetPixel((int)Math.Round(x), y, Color.Red);
                             lineBlank = false;
                             if (blanks > 0)
                             {
-                                abort = true;
-                                break;
+                                return blanks;
                             }
                         }
                     }
-                }
-
-                if (abort)
-                {
-                    break;
                 }
 
                 if (lineBlank)
@@ -4333,7 +4324,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            //parentBitmap.GetBitmap().Save(@"J:\Temp\" + DateTime.UtcNow.Ticks + "_" + match.Text + "_" + blanks + ".bmp");
             return blanks;
         }
 
