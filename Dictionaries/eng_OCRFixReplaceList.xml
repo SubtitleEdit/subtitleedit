@@ -2765,6 +2765,16 @@
     <Word from="AII's" to="All's" />
     <Word from="FIog" to="Flog" />
     <Word from="SIit" to="Slit" />
+    <Word from="allsummer" to="all summer" />
+    <Word from="couldhave" to="could have" />
+    <Word from="flrst" to="first" />
+    <Word from="likeyou" to="like you" />
+    <Word from="makeyou" to="make you" />
+    <Word from="ofmysenioryear" to="of my senior year" />
+    <Word from="thatparty" to="that party" />
+    <Word from="thatpeople" to="that people" />
+    <Word from="thatperson" to="that person" />
+    <Word from="thoughyou" to="though you" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
