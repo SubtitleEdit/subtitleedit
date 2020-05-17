@@ -17951,10 +17951,12 @@ namespace Nikse.SubtitleEdit.Forms
                 string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
+                    audioVisualizer.ZoomFactor = 1.0;
+                    audioVisualizer.VerticalZoomFactor = 1.0;
+                    SelectZoomTextInComboBox();
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
                     audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(_videoFileName);
-                    toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
                 }
@@ -20873,6 +20875,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
+                        audioVisualizer.ZoomFactor = 1.0;
+                        audioVisualizer.VerticalZoomFactor = 1.0;
+                        SelectZoomTextInComboBox();
                         audioVisualizer.WavePeaks = addWaveform.Peaks;
                         audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
