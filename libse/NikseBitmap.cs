@@ -1236,6 +1236,8 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        private static readonly byte[] EmptyByteArray = new byte[10000];
+
         public void MakeVerticalLinePartTransparent(int xStart, int xEnd, int y)
         {
             if (xEnd > Width - 1)
@@ -1248,13 +1250,10 @@ namespace Nikse.SubtitleEdit.Core
                 xStart = 0;
             }
 
-            int i = (xStart * 4) + (y * _widthX4);
-            int end = (xEnd * 4) + (y * _widthX4) + 4;
-            while (i < end)
-            {
-                _bitmapData[i] = 0;
-                i++;
-            }
+            int startIndex = (xStart * 4) + (y * _widthX4);
+            int endIndex = (xEnd * 4) + (y * _widthX4) + 4;
+            int length = endIndex - startIndex;
+            Buffer.BlockCopy(EmptyByteArray, 0, _bitmapData, startIndex, length);
         }
 
         public void AddTransparentLineRight()
