@@ -253,8 +253,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private BinaryOcrDb _binaryOcrDb;
         private string _binaryOcrDbFileName;
-        private int _binOcrLastLowercaseHeight = -1;
-        private int _binOcrLastUppercaseHeight = -1;
+        private long _binOcrLowercaseHeightsTotal;
+        private int _binOcrLowercaseHeightsTotalCount;
+        private long _binOcrUppercaseHeightsTotal;
+        private int _binOcrUppercaseHeightsTotalCount;
+
         private bool _captureTopAlign;
         private int _captureTopAlignHeight = -1;
 
@@ -3357,14 +3360,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         int h = hit.Height;
                         if (text == "V" || text == "W" || text == "U" || text == "S" || text == "Z" || text == "O" || text == "X" || text == "Ø" || text == "C")
                         {
-                            if (_binOcrLastLowercaseHeight > 3 && h - _binOcrLastLowercaseHeight < 2)
+                            if (_binOcrLowercaseHeightsTotal > 10 && h - _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount < 2.0)
                             {
                                 text = text.ToLowerInvariant();
                             }
                         }
                         else if (text == "v" || text == "w" || text == "u" || text == "s" || text == "z" || text == "o" || text == "x" || text == "ø" || text == "c")
                         {
-                            if (_binOcrLastUppercaseHeight > 3 && _binOcrLastUppercaseHeight - h < 2)
+                            if (_binOcrUppercaseHeightsTotal > 10 && _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount - h < 2)
                             {
                                 text = text.ToUpperInvariant();
                             }
@@ -3398,9 +3401,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     if (hit != null)
                     {
-                        if (_binOcrLastLowercaseHeight < 0 && differencePercentage < 9 && (text == "e" || text == "d" || text == "a"))
+                        if (differencePercentage < 9 && (text == "e" || text == "d" || text == "a"))
                         {
-                            _binOcrLastLowercaseHeight = bob.Height;
+                            _binOcrLowercaseHeightsTotalCount++;
+                            _binOcrLowercaseHeightsTotal += bob.Height;
                         }
 
                         return new CompareMatch(text, hit.Italic, hit.ExpandCount, hit.Key);
@@ -3429,7 +3433,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
-                    if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ":"
+                    if (!nextBob.IsPeriodAtTop(GetLastBinOcrLowercaseHeight())) // avoid italic ":"
                     {
                         return new CompareMatch(".", false, 0, null);
                     }
@@ -3449,7 +3453,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
-                    if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ";"
+                    if (!nextBob.IsPeriodAtTop(GetLastBinOcrLowercaseHeight())) // avoid italic ";"
                     {
                         return new CompareMatch(",", false, 0, null);
                     }
@@ -3962,14 +3966,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var matches = new List<CompareMatch>();
             var parentBitmap = new NikseBitmap(bitmap);
-            int minLineHeight = _binOcrLastLowercaseHeight - 3;
+            int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
             if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
             {
                 minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
             }
 
             minLineHeight = Math.Max(minLineHeight, 6);
-            if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
+            if (_binOcrLowercaseHeightsTotalCount < 10 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
                 if (_bluRaySubtitles != null)
                 {
@@ -4290,7 +4294,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
                     match.ImageSplitterItem == null)
                 {
-                    
+
                     continue;
                 }
 
@@ -4338,22 +4342,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SetBinOcrLowercaseUppercase(int height, string text)
         {
-            if (text == "e" && (height < _binOcrLastLowercaseHeight || _binOcrLastLowercaseHeight < 0))
+            if (text == "e")
             {
-                _binOcrLastLowercaseHeight = height;
-            }
-            else if (_binOcrLastLowercaseHeight == -1 && text == "a" && (height < _binOcrLastLowercaseHeight || _binOcrLastLowercaseHeight < 0))
-            {
-                _binOcrLastLowercaseHeight = height;
+                _binOcrLowercaseHeightsTotalCount++;
+                _binOcrLowercaseHeightsTotal += height;
             }
 
-            if (text == "E" || text == "H" || text == "R" || text == "D" || text == "T" && height > _binOcrLastUppercaseHeight)
+            if (text == "E" || text == "H" || text == "R" || text == "D" || text == "T")
             {
-                _binOcrLastUppercaseHeight = height;
-            }
-            else if (_binOcrLastUppercaseHeight == -1 && text == "M")
-            {
-                _binOcrLastUppercaseHeight = height;
+                _binOcrUppercaseHeightsTotalCount++;
+                _binOcrUppercaseHeightsTotal += height;
             }
         }
 
@@ -4407,7 +4405,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 var matches = new List<CompareMatch>();
 
-                int minLineHeight = _binOcrLastLowercaseHeight - 3;
+                int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
                 if (minLineHeight < 5)
                 {
                     minLineHeight = _nocrLastLowercaseHeight - 3;
@@ -7941,7 +7939,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Cursor = Cursors.WaitCursor;
             var bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             var parentBitmap = new NikseBitmap(bitmap);
-            int minLineHeight = _binOcrLastLowercaseHeight - 3;
+
+            int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
             if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
             {
                 minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
@@ -9234,7 +9233,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return string.Empty;
                 }
                 var parentBitmap = new NikseBitmap(bitmap);
-                int minLineHeight = _binOcrLastLowercaseHeight - 3;
+                int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
                 if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
                 {
                     minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
@@ -9257,6 +9256,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
             return bestDbName;
+        }
+
+        private int GetLastBinOcrLowercaseHeight()
+        {
+            var lowercaseHeight = 25;
+            if (_binOcrLowercaseHeightsTotalCount > 10)
+            {
+                lowercaseHeight = (int)Math.Round((double)_binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount);
+            }
+
+            return lowercaseHeight;
         }
     }
 }
