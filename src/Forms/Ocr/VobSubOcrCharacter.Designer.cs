@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonSkip = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
@@ -176,6 +176,25 @@
             this.Column15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.labelItalicOn2 = new System.Windows.Forms.Label();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
+            this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ąToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ąToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ćToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ćToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ęToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ęToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.łToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.łToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ńToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ńToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.óToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.óToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.śToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.śToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.źToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.źToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.żToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.żToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
@@ -251,12 +270,13 @@
             this.germanToolStripMenuItem,
             this.italianToolStripMenuItem,
             this.nordicToolStripMenuItem,
+            this.polishToolStripMenuItem,
             this.portugueseToolStripMenuItem,
             this.spanishToolStripMenuItem,
             this.toolStripMenuItemMusicSymbol1,
             this.toolStripMenuItemMusicSymbol2});
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 180);
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 202);
             // 
             // latinToolStripMenuItem
             // 
@@ -282,7 +302,7 @@
             this.çToolStripMenuItem1,
             this.çToolStripMenuItem});
             this.latinToolStripMenuItem.Name = "latinToolStripMenuItem";
-            this.latinToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.latinToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.latinToolStripMenuItem.Text = "Catalan";
             // 
             // àToolStripMenuItem1
@@ -416,7 +436,7 @@
             this.üToolStripMenuItem1,
             this.ßToolStripMenuItem});
             this.germanToolStripMenuItem.Name = "germanToolStripMenuItem";
-            this.germanToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.germanToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.germanToolStripMenuItem.Text = "German";
             // 
             // äToolStripMenuItem2
@@ -477,7 +497,7 @@
             this.ùToolStripMenuItem,
             this.ùToolStripMenuItem1});
             this.italianToolStripMenuItem.Name = "italianToolStripMenuItem";
-            this.italianToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.italianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.italianToolStripMenuItem.Text = "Italian";
             // 
             // àToolStripMenuItem4
@@ -566,7 +586,7 @@
             this.öToolStripMenuItem,
             this.öToolStripMenuItem1});
             this.nordicToolStripMenuItem.Name = "nordicToolStripMenuItem";
-            this.nordicToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.nordicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nordicToolStripMenuItem.Text = "Nordic";
             // 
             // aeToolStripMenuItem1
@@ -657,7 +677,7 @@
             this.çToolStripMenuItem2,
             this.çToolStripMenuItem3});
             this.portugueseToolStripMenuItem.Name = "portugueseToolStripMenuItem";
-            this.portugueseToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.portugueseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.portugueseToolStripMenuItem.Text = "Portuguese";
             // 
             // ãToolStripMenuItem
@@ -824,7 +844,7 @@
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.spanishToolStripMenuItem.Text = "Spanish";
             // 
             // áToolStripMenuItem
@@ -926,13 +946,13 @@
             // toolStripMenuItemMusicSymbol1
             // 
             this.toolStripMenuItemMusicSymbol1.Name = "toolStripMenuItemMusicSymbol1";
-            this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(134, 22);
+            this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemMusicSymbol1.Text = "♪";
             // 
             // toolStripMenuItemMusicSymbol2
             // 
             this.toolStripMenuItemMusicSymbol2.Name = "toolStripMenuItemMusicSymbol2";
-            this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(134, 22);
+            this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemMusicSymbol2.Text = "♫";
             // 
             // pictureBoxCharacter
@@ -1107,8 +1127,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle16;
             this.Column1.HeaderText = "Column1";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -1117,8 +1137,8 @@
             // 
             // Column2
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle17;
             this.Column2.HeaderText = "Column2";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -1127,8 +1147,8 @@
             // 
             // Column3
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column3.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column3.DefaultCellStyle = dataGridViewCellStyle18;
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
@@ -1137,8 +1157,8 @@
             // 
             // Column4
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column4.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column4.DefaultCellStyle = dataGridViewCellStyle19;
             this.Column4.HeaderText = "Column4";
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
@@ -1147,8 +1167,8 @@
             // 
             // Column5
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column5.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column5.DefaultCellStyle = dataGridViewCellStyle20;
             this.Column5.HeaderText = "Column5";
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -1157,8 +1177,8 @@
             // 
             // Column6
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column6.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column6.DefaultCellStyle = dataGridViewCellStyle21;
             this.Column6.HeaderText = "Column6";
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
@@ -1167,8 +1187,8 @@
             // 
             // Column7
             // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column7.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column7.DefaultCellStyle = dataGridViewCellStyle22;
             this.Column7.HeaderText = "Column7";
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
@@ -1177,8 +1197,8 @@
             // 
             // Column8
             // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column8.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column8.DefaultCellStyle = dataGridViewCellStyle23;
             this.Column8.HeaderText = "Column8";
             this.Column8.Name = "Column8";
             this.Column8.ReadOnly = true;
@@ -1187,8 +1207,8 @@
             // 
             // Column9
             // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column9.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column9.DefaultCellStyle = dataGridViewCellStyle24;
             this.Column9.HeaderText = "Column9";
             this.Column9.Name = "Column9";
             this.Column9.ReadOnly = true;
@@ -1197,8 +1217,8 @@
             // 
             // Column10
             // 
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column10.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column10.DefaultCellStyle = dataGridViewCellStyle25;
             this.Column10.HeaderText = "Column10";
             this.Column10.Name = "Column10";
             this.Column10.ReadOnly = true;
@@ -1207,8 +1227,8 @@
             // 
             // Column11
             // 
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column11.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column11.DefaultCellStyle = dataGridViewCellStyle26;
             this.Column11.HeaderText = "Column11";
             this.Column11.Name = "Column11";
             this.Column11.ReadOnly = true;
@@ -1217,8 +1237,8 @@
             // 
             // Column12
             // 
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column12.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column12.DefaultCellStyle = dataGridViewCellStyle27;
             this.Column12.HeaderText = "Column12";
             this.Column12.Name = "Column12";
             this.Column12.ReadOnly = true;
@@ -1227,8 +1247,8 @@
             // 
             // Column13
             // 
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column13.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column13.DefaultCellStyle = dataGridViewCellStyle28;
             this.Column13.HeaderText = "Column13";
             this.Column13.Name = "Column13";
             this.Column13.ReadOnly = true;
@@ -1237,8 +1257,8 @@
             // 
             // Column14
             // 
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column14.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column14.DefaultCellStyle = dataGridViewCellStyle29;
             this.Column14.HeaderText = "Column14";
             this.Column14.Name = "Column14";
             this.Column14.ReadOnly = true;
@@ -1247,8 +1267,8 @@
             // 
             // Column15
             // 
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Column15.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Column15.DefaultCellStyle = dataGridViewCellStyle30;
             this.Column15.HeaderText = "Column15";
             this.Column15.Name = "Column15";
             this.Column15.ReadOnly = true;
@@ -1276,6 +1296,139 @@
             this.labelSubtitleImage.Size = new System.Drawing.Size(88, 13);
             this.labelSubtitleImage.TabIndex = 29;
             this.labelSubtitleImage.Text = "subtitle image";
+            // 
+            // polishToolStripMenuItem
+            // 
+            this.polishToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ąToolStripMenuItem,
+            this.ąToolStripMenuItem1,
+            this.ćToolStripMenuItem,
+            this.ćToolStripMenuItem1,
+            this.ęToolStripMenuItem,
+            this.ęToolStripMenuItem1,
+            this.łToolStripMenuItem,
+            this.łToolStripMenuItem1,
+            this.ńToolStripMenuItem,
+            this.ńToolStripMenuItem1,
+            this.óToolStripMenuItem4,
+            this.óToolStripMenuItem5,
+            this.śToolStripMenuItem,
+            this.śToolStripMenuItem1,
+            this.źToolStripMenuItem,
+            this.źToolStripMenuItem1,
+            this.żToolStripMenuItem,
+            this.żToolStripMenuItem1});
+            this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
+            this.polishToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.polishToolStripMenuItem.Text = "Polish";
+            // 
+            // ąToolStripMenuItem
+            // 
+            this.ąToolStripMenuItem.Name = "ąToolStripMenuItem";
+            this.ąToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ąToolStripMenuItem.Text = "ą";
+            // 
+            // ąToolStripMenuItem1
+            // 
+            this.ąToolStripMenuItem1.Name = "ąToolStripMenuItem1";
+            this.ąToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ąToolStripMenuItem1.Text = "Ą";
+            // 
+            // ćToolStripMenuItem
+            // 
+            this.ćToolStripMenuItem.Name = "ćToolStripMenuItem";
+            this.ćToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ćToolStripMenuItem.Text = "ć";
+            // 
+            // ćToolStripMenuItem1
+            // 
+            this.ćToolStripMenuItem1.Name = "ćToolStripMenuItem1";
+            this.ćToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ćToolStripMenuItem1.Text = "Ć";
+            // 
+            // ęToolStripMenuItem
+            // 
+            this.ęToolStripMenuItem.Name = "ęToolStripMenuItem";
+            this.ęToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ęToolStripMenuItem.Text = "ę";
+            // 
+            // ęToolStripMenuItem1
+            // 
+            this.ęToolStripMenuItem1.Name = "ęToolStripMenuItem1";
+            this.ęToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ęToolStripMenuItem1.Text = "Ę";
+            // 
+            // łToolStripMenuItem
+            // 
+            this.łToolStripMenuItem.Name = "łToolStripMenuItem";
+            this.łToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.łToolStripMenuItem.Text = "ł";
+            // 
+            // łToolStripMenuItem1
+            // 
+            this.łToolStripMenuItem1.Name = "łToolStripMenuItem1";
+            this.łToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.łToolStripMenuItem1.Text = "Ł";
+            // 
+            // ńToolStripMenuItem
+            // 
+            this.ńToolStripMenuItem.Name = "ńToolStripMenuItem";
+            this.ńToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ńToolStripMenuItem.Text = "ń";
+            // 
+            // ńToolStripMenuItem1
+            // 
+            this.ńToolStripMenuItem1.Name = "ńToolStripMenuItem1";
+            this.ńToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.ńToolStripMenuItem1.Text = "Ń";
+            // 
+            // óToolStripMenuItem4
+            // 
+            this.óToolStripMenuItem4.Name = "óToolStripMenuItem4";
+            this.óToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.óToolStripMenuItem4.Text = "ó";
+            // 
+            // óToolStripMenuItem5
+            // 
+            this.óToolStripMenuItem5.Name = "óToolStripMenuItem5";
+            this.óToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.óToolStripMenuItem5.Text = "Ó";
+            // 
+            // śToolStripMenuItem
+            // 
+            this.śToolStripMenuItem.Name = "śToolStripMenuItem";
+            this.śToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.śToolStripMenuItem.Text = "ś";
+            // 
+            // śToolStripMenuItem1
+            // 
+            this.śToolStripMenuItem1.Name = "śToolStripMenuItem1";
+            this.śToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.śToolStripMenuItem1.Text = "Ś";
+            // 
+            // źToolStripMenuItem
+            // 
+            this.źToolStripMenuItem.Name = "źToolStripMenuItem";
+            this.źToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.źToolStripMenuItem.Text = "ź";
+            // 
+            // źToolStripMenuItem1
+            // 
+            this.źToolStripMenuItem1.Name = "źToolStripMenuItem1";
+            this.źToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.źToolStripMenuItem1.Text = "Ź";
+            // 
+            // żToolStripMenuItem
+            // 
+            this.żToolStripMenuItem.Name = "żToolStripMenuItem";
+            this.żToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.żToolStripMenuItem.Text = "ż";
+            // 
+            // żToolStripMenuItem1
+            // 
+            this.żToolStripMenuItem1.Name = "żToolStripMenuItem1";
+            this.żToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.żToolStripMenuItem1.Text = "Ż";
             // 
             // VobSubOcrCharacter
             // 
@@ -1459,5 +1612,24 @@
         private System.Windows.Forms.ToolStripMenuItem ùToolStripMenuItem;
         private System.Windows.Forms.Label labelItalicOn2;
         private System.Windows.Forms.Label labelSubtitleImage;
+        private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ąToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ąToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ćToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ćToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ęToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ęToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem łToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem łToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ńToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ńToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem óToolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem śToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem śToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem źToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem źToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem żToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem żToolStripMenuItem1;
     }
 }
