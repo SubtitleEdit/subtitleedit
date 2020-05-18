@@ -380,9 +380,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString().Replace(" (italic)", string.Empty) == textBoxText.Text)
+            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString() == textBoxText.Text + (checkBoxItalic.Checked ? " (italic)" : string.Empty))
             {
-                // text not changed
+                // text (or italic) not changed
                 textBoxText.SelectAll();
                 textBoxText.Focus();
                 return;
