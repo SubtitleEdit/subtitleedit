@@ -7941,14 +7941,49 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Cursor = Cursors.WaitCursor;
             var bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             var parentBitmap = new NikseBitmap(bitmap);
-            var matches = new List<CompareMatch>();
             int minLineHeight = _binOcrLastLowercaseHeight - 3;
             if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
             {
                 minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
             }
             minLineHeight = Math.Max(minLineHeight, 6);
-            var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+
+            Cursor = Cursors.Default;
+            using (var inspect = new VobSubOcrCharacterInspect())
+            {
+                do
+                {
+                    var matches = new List<CompareMatch>();
+                    var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+                    var imageSources = CalcInspectMatches(sourceList, matches, parentBitmap);
+                    inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb, sourceList);
+                    var result = inspect.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        Cursor = Cursors.WaitCursor;
+                        if (_binaryOcrDb != null)
+                        {
+                            _binaryOcrDb.Save();
+                            Cursor = Cursors.Default;
+                        }
+                        else
+                        {
+                            _compareDoc = inspect.ImageCompareDocument;
+                            string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                            _compareDoc.Save(path + "Images.xml");
+                            LoadImageCompareBitmaps();
+                            Cursor = Cursors.Default;
+                        }
+                    }
+                } while (inspect.DeleteMultiMatch);
+            }
+
+            _binaryOcrDb?.LoadCompareImages();
+            Cursor = Cursors.Default;
+        }
+
+        private List<Bitmap> CalcInspectMatches(List<ImageSplitterItem> sourceList, List<CompareMatch> matches, NikseBitmap parentBitmap)
+        {
             int index = 0;
             var imageSources = new List<Bitmap>();
             while (index < sourceList.Count)
@@ -7997,30 +8032,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 index++;
             }
 
-            Cursor = Cursors.Default;
-            using (var inspect = new VobSubOcrCharacterInspect())
-            {
-                inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb, sourceList);
-                if (inspect.ShowDialog(this) == DialogResult.OK)
-                {
-                    Cursor = Cursors.WaitCursor;
-                    if (_binaryOcrDb != null)
-                    {
-                        _binaryOcrDb.Save();
-                        Cursor = Cursors.Default;
-                        return;
-                    }
-
-                    _compareDoc = inspect.ImageCompareDocument;
-                    string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-                    _compareDoc.Save(path + "Images.xml");
-                    LoadImageCompareBitmaps();
-                    Cursor = Cursors.Default;
-                }
-            }
-
-            _binaryOcrDb?.LoadCompareImages();
-            Cursor = Cursors.Default;
+            return imageSources;
         }
 
         private void inspectLastAdditionsToolStripMenuItem_Click(object sender, EventArgs e)

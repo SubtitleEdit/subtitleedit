@@ -71,18 +71,18 @@
             this.üToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ßToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.àToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.àToolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.èToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.èToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.éToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.ìToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ìToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.òToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.òToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.ùToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ùToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.AeToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -161,7 +161,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(644, 300);
+            this.buttonCancel.Location = new System.Drawing.Point(644, 342);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
@@ -185,7 +185,7 @@
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBoxCompareBitmap);
             this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(443, 12);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
-            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(276, 282);
+            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(276, 324);
             this.groupBoxCurrentCompareImage.TabIndex = 11;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
@@ -291,7 +291,7 @@
             this.toolStripMenuItemMusicSymbol1,
             this.toolStripMenuItemMusicSymbol2});
             this.contextMenuStripLetters.Name = "contextMenuStripLetters";
-            this.contextMenuStripLetters.Size = new System.Drawing.Size(181, 202);
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(135, 180);
             // 
             // latinToolStripMenuItem
             // 
@@ -317,7 +317,7 @@
             this.çToolStripMenuItem1,
             this.çToolStripMenuItem});
             this.latinToolStripMenuItem.Name = "latinToolStripMenuItem";
-            this.latinToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.latinToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.latinToolStripMenuItem.Text = "Catalan";
             // 
             // àToolStripMenuItem1
@@ -451,7 +451,7 @@
             this.üToolStripMenuItem1,
             this.ßToolStripMenuItem});
             this.germanToolStripMenuItem.Name = "germanToolStripMenuItem";
-            this.germanToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.germanToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.germanToolStripMenuItem.Text = "German";
             // 
             // äToolStripMenuItem2
@@ -512,80 +512,80 @@
             this.ùToolStripMenuItem,
             this.ùToolStripMenuItem1});
             this.italianToolStripMenuItem.Name = "italianToolStripMenuItem";
-            this.italianToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.italianToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.italianToolStripMenuItem.Text = "Italian";
-            // 
-            // àToolStripMenuItem5
-            // 
-            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
-            this.àToolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
-            this.àToolStripMenuItem5.Text = "À";
             // 
             // àToolStripMenuItem4
             // 
             this.àToolStripMenuItem4.Name = "àToolStripMenuItem4";
-            this.àToolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.àToolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
             this.àToolStripMenuItem4.Text = "à";
             // 
-            // èToolStripMenuItem3
+            // àToolStripMenuItem5
             // 
-            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
-            this.èToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.èToolStripMenuItem3.Text = "È";
+            this.àToolStripMenuItem5.Name = "àToolStripMenuItem5";
+            this.àToolStripMenuItem5.Size = new System.Drawing.Size(83, 22);
+            this.àToolStripMenuItem5.Text = "À";
             // 
             // èToolStripMenuItem2
             // 
             this.èToolStripMenuItem2.Name = "èToolStripMenuItem2";
-            this.èToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.èToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.èToolStripMenuItem2.Text = "è";
             // 
-            // éToolStripMenuItem7
+            // èToolStripMenuItem3
             // 
-            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
-            this.éToolStripMenuItem7.Size = new System.Drawing.Size(180, 22);
-            this.éToolStripMenuItem7.Text = "É";
+            this.èToolStripMenuItem3.Name = "èToolStripMenuItem3";
+            this.èToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
+            this.èToolStripMenuItem3.Text = "È";
             // 
             // éToolStripMenuItem6
             // 
             this.éToolStripMenuItem6.Name = "éToolStripMenuItem6";
-            this.éToolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.éToolStripMenuItem6.Size = new System.Drawing.Size(83, 22);
             this.éToolStripMenuItem6.Text = "é";
             // 
-            // ìToolStripMenuItem1
+            // éToolStripMenuItem7
             // 
-            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
-            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ìToolStripMenuItem1.Text = "Ì";
+            this.éToolStripMenuItem7.Name = "éToolStripMenuItem7";
+            this.éToolStripMenuItem7.Size = new System.Drawing.Size(83, 22);
+            this.éToolStripMenuItem7.Text = "É";
             // 
             // ìToolStripMenuItem
             // 
             this.ìToolStripMenuItem.Name = "ìToolStripMenuItem";
-            this.ìToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ìToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ìToolStripMenuItem.Text = "ì";
             // 
-            // òToolStripMenuItem3
+            // ìToolStripMenuItem1
             // 
-            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
-            this.òToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.òToolStripMenuItem3.Text = "Ò";
+            this.ìToolStripMenuItem1.Name = "ìToolStripMenuItem1";
+            this.ìToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
+            this.ìToolStripMenuItem1.Text = "Ì";
             // 
             // òToolStripMenuItem2
             // 
             this.òToolStripMenuItem2.Name = "òToolStripMenuItem2";
-            this.òToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.òToolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
             this.òToolStripMenuItem2.Text = "ò";
             // 
-            // ùToolStripMenuItem1
+            // òToolStripMenuItem3
             // 
-            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
-            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.ùToolStripMenuItem1.Text = "Ù";
+            this.òToolStripMenuItem3.Name = "òToolStripMenuItem3";
+            this.òToolStripMenuItem3.Size = new System.Drawing.Size(83, 22);
+            this.òToolStripMenuItem3.Text = "Ò";
             // 
             // ùToolStripMenuItem
             // 
             this.ùToolStripMenuItem.Name = "ùToolStripMenuItem";
-            this.ùToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ùToolStripMenuItem.Size = new System.Drawing.Size(83, 22);
             this.ùToolStripMenuItem.Text = "ù";
+            // 
+            // ùToolStripMenuItem1
+            // 
+            this.ùToolStripMenuItem1.Name = "ùToolStripMenuItem1";
+            this.ùToolStripMenuItem1.Size = new System.Drawing.Size(83, 22);
+            this.ùToolStripMenuItem1.Text = "Ù";
             // 
             // nordicToolStripMenuItem
             // 
@@ -601,7 +601,7 @@
             this.öToolStripMenuItem,
             this.öToolStripMenuItem1});
             this.nordicToolStripMenuItem.Name = "nordicToolStripMenuItem";
-            this.nordicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nordicToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.nordicToolStripMenuItem.Text = "Nordic";
             // 
             // aeToolStripMenuItem1
@@ -692,7 +692,7 @@
             this.çToolStripMenuItem2,
             this.çToolStripMenuItem3});
             this.portugueseToolStripMenuItem.Name = "portugueseToolStripMenuItem";
-            this.portugueseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.portugueseToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.portugueseToolStripMenuItem.Text = "Portuguese";
             // 
             // ãToolStripMenuItem
@@ -859,7 +859,7 @@
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
             this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.spanishToolStripMenuItem.Text = "Spanish";
             // 
             // áToolStripMenuItem
@@ -961,13 +961,13 @@
             // toolStripMenuItemMusicSymbol1
             // 
             this.toolStripMenuItemMusicSymbol1.Name = "toolStripMenuItemMusicSymbol1";
-            this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemMusicSymbol1.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol1.Text = "♪";
             // 
             // toolStripMenuItemMusicSymbol2
             // 
             this.toolStripMenuItemMusicSymbol2.Name = "toolStripMenuItemMusicSymbol2";
-            this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol2.Text = "♫";
             // 
             // pictureBoxCompareBitmap
@@ -984,7 +984,7 @@
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(563, 300);
+            this.buttonOK.Location = new System.Drawing.Point(563, 342);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 7;
@@ -993,12 +993,14 @@
             // 
             // listBoxInspectItems
             // 
+            this.listBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxInspectItems.ContextMenuStrip = this.contextMenuStripAddBetterMultiMatch;
             this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxInspectItems.FormattingEnabled = true;
             this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
             this.listBoxInspectItems.Name = "listBoxInspectItems";
-            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 251);
+            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 290);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
             // 
@@ -1026,7 +1028,7 @@
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInspectItems.Name = "groupBoxInspectItems";
-            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 282);
+            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 324);
             this.groupBoxInspectItems.TabIndex = 13;
             this.groupBoxInspectItems.TabStop = false;
             this.groupBoxInspectItems.Text = "Inspect items";
@@ -1052,8 +1054,9 @@
             // 
             // labelCount
             // 
+            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelCount.AutoSize = true;
-            this.labelCount.Location = new System.Drawing.Point(12, 297);
+            this.labelCount.Location = new System.Drawing.Point(12, 339);
             this.labelCount.Name = "labelCount";
             this.labelCount.Size = new System.Drawing.Size(57, 13);
             this.labelCount.TabIndex = 30;
@@ -1063,7 +1066,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 337);
+            this.ClientSize = new System.Drawing.Size(732, 379);
             this.Controls.Add(this.labelCount);
             this.Controls.Add(this.groupBoxInspectItems);
             this.Controls.Add(this.buttonCancel);

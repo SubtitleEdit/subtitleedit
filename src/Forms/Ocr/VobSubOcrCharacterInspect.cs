@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class VobSubOcrCharacterInspect : Form
     {
         public XmlDocument ImageCompareDocument { get; private set; }
+        public bool DeleteMultiMatch { get; private set; }
+        public int LastIndex { get; private set; }
         private List<VobSubOcr.CompareMatch> _matches;
         private List<Bitmap> _imageSources;
         private List<ImageSplitterItem> _splitterItems;
@@ -68,7 +70,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _matches = matches;
             _imageSources = imageSources;
             _splitterItems = splitterItems;
+            DeleteMultiMatch = false;
 
+            listBoxInspectItems.Items.Clear();
             if (_binOcrDb == null)
             {
                 ImageCompareDocument = new XmlDocument();
@@ -88,9 +92,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 listBoxInspectItems.Items.Add(_matches[i]);
             }
 
+            if (LastIndex > listBoxInspectItems.Items.Count)
+            {
+                LastIndex = listBoxInspectItems.Items.Count - 1;
+            }
+
             if (listBoxInspectItems.Items.Count > 0)
             {
-                listBoxInspectItems.SelectedIndex = 0;
+                listBoxInspectItems.SelectedIndex = LastIndex;
             }
 
             ShowCount();
@@ -362,8 +371,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _binOcrDb.CompareImages.Remove(_selectedCompareBinaryOcrBitmap);
                 }
 
+                DeleteMultiMatch = _selectedCompareBinaryOcrBitmap.ExpandCount > 0;
                 _selectedCompareBinaryOcrBitmap = null;
                 _binOcrDb.Save();
+                if (DeleteMultiMatch)
+                {
+                    LastIndex = listBoxInspectItems.SelectedIndex;
+                    DialogResult = DialogResult.OK;
+                    return;
+                }
             }
             else
             {
