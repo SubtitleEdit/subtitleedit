@@ -3122,7 +3122,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, nOcrDb.OcrCharactersExpanded);
             if (expandedResult != null)
             {
-                return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
+                return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult) { ImageSplitterItem = targetItem };
             }
 
             var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, out var italic, nOcrDb, deepSeek);
@@ -4399,11 +4399,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 line = _nocrThreadResults[listViewIndex];
             }
 
+            var matches = new List<CompareMatch>();
+            var nbmpInput = new NikseBitmap(bitmap);
+
             if (string.IsNullOrEmpty(line))
             {
-                var nbmpInput = new NikseBitmap(bitmap);
-
-                var matches = new List<CompareMatch>();
 
                 int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
                 if (minLineHeight < 5)
@@ -4512,7 +4512,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 //string name = SaveCompareItem(item.NikseBitmap, text, _vobSubOcrNOcrCharacter.IsItalic, 0);
                                 //var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrNOcrCharacter.IsItalic, listViewIndex);
                                 //_lastAdditions.Add(addition);
-                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null));
+                                matches.Add(new CompareMatch(text, _vobSubOcrNOcrCharacter.IsItalic, 0, null) { ImageSplitterItem = item });
                             }
                             else if (result == DialogResult.Abort)
                             {
@@ -4527,7 +4527,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else // found image match
                         {
-                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, null) { ImageSplitterItem = item });
                             if (match.ExpandCount > 0)
                             {
                                 index += match.ExpandCount - 1;
@@ -4553,6 +4553,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 line = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+
+
             }
 
             line = FixNocrHardcodedStuff(line);
@@ -4575,6 +4577,54 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 
+
+                // smaller space pixels for italic
+                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal))
+                {
+                    AddItalicCouldBeSpace(matches, nbmpInput, _unItalicFactor, _numericUpDownPixelsIsSpace);
+                }
+                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
+                {
+                    int j = 0;
+                    while (j < matches.Count)
+                    {
+                        var match = matches[j];
+                        if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
+                        {
+                            match.ImageSplitterItem.CouldBeSpaceBefore = false;
+                            if (match.Italic)
+                            {
+                                matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
+                            }
+                        }
+
+                        j++;
+                    }
+                    var tempLine = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+                    var oldAutoGuessesUsed = new List<LogItem>(_ocrFixEngine.AutoGuessesUsed);
+                    var oldUnknownWordsFound = new List<LogItem>(_ocrFixEngine.UnknownWordsFound);
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    if (checkBoxAutoFixCommonErrors.Checked)
+                    {
+                        tempLine = _ocrFixEngine.FixOcrErrors(tempLine, listViewIndex, _lastLine, true, GetAutoGuessLevel());
+                    }
+
+                    int tempWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(tempLine, out var tempCorrectWords);
+                    if (tempWordsNotFound <= wordsNotFound && tempCorrectWords > correctWords)
+                    {
+                        wordsNotFound = tempWordsNotFound;
+                        correctWords = tempCorrectWords;
+                        line = tempLine;
+                    }
+                    else
+                    {
+                        _ocrFixEngine.AutoGuessesUsed = oldAutoGuessesUsed;
+                        _ocrFixEngine.UnknownWordsFound = oldUnknownWordsFound;
+                    }
+                }
+
+
                 if (_ocrFixEngine.Abort)
                 {
                     ButtonStopClick(null, null);
@@ -4590,7 +4640,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 _ocrFixEngine.AutoGuessesUsed.Clear();
 
-                // Log unkown words guess (found via spelling dictionaries)
+                // Log unknown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
                 ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
@@ -4608,6 +4658,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string FixNocrHardcodedStuff(string input)
         {
+            if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            {
+                return input;
+            }
+
             var line = input;
 
             if (LanguageString.StartsWith("en", StringComparison.OrdinalIgnoreCase))
@@ -9176,6 +9231,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (subtitleListView1.SelectedItems.Count > 0 && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(null, null);
+            }
+            else if (subtitleListView1.SelectedItems.Count > 0 && _ocrMethodIndex == _ocrMethodNocr)
+            {
+                toolStripMenuItemInspectNOcrMatches_Click(null, null);
             }
         }
 
