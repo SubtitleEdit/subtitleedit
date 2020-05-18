@@ -40,15 +40,6 @@
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelImageInfo = new System.Windows.Forms.Label();
             this.textBoxText = new System.Windows.Forms.TextBox();
-            this.pictureBoxCompareBitmap = new System.Windows.Forms.PictureBox();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.listBoxInspectItems = new System.Windows.Forms.ListBox();
-            this.contextMenuStripAddBetterMultiMatch = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addBetterMultiMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
-            this.labelExpandCount = new System.Windows.Forms.Label();
-            this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
-            this.labelCount = new System.Windows.Forms.Label();
             this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.latinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.àToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,13 +157,23 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBoxCompareBitmap = new System.Windows.Forms.PictureBox();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.listBoxInspectItems = new System.Windows.Forms.ListBox();
+            this.contextMenuStripAddBetterMultiMatch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addBetterMultiMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
+            this.labelExpandCount = new System.Windows.Forms.Label();
+            this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
+            this.labelCount = new System.Windows.Forms.Label();
+            this.labelImageSize = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).BeginInit();
+            this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).BeginInit();
             this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
-            this.contextMenuStripLetters.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -297,98 +298,6 @@
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
-            // 
-            // pictureBoxCompareBitmap
-            // 
-            this.pictureBoxCompareBitmap.BackColor = System.Drawing.Color.Red;
-            this.pictureBoxCompareBitmap.Location = new System.Drawing.Point(17, 106);
-            this.pictureBoxCompareBitmap.Name = "pictureBoxCompareBitmap";
-            this.pictureBoxCompareBitmap.Size = new System.Drawing.Size(52, 52);
-            this.pictureBoxCompareBitmap.TabIndex = 22;
-            this.pictureBoxCompareBitmap.TabStop = false;
-            // 
-            // buttonOK
-            // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(563, 342);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 7;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            // 
-            // listBoxInspectItems
-            // 
-            this.listBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBoxInspectItems.ContextMenuStrip = this.contextMenuStripAddBetterMultiMatch;
-            this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBoxInspectItems.FormattingEnabled = true;
-            this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
-            this.listBoxInspectItems.Name = "listBoxInspectItems";
-            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 290);
-            this.listBoxInspectItems.TabIndex = 12;
-            this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
-            // 
-            // contextMenuStripAddBetterMultiMatch
-            // 
-            this.contextMenuStripAddBetterMultiMatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addBetterMultiMatchToolStripMenuItem});
-            this.contextMenuStripAddBetterMultiMatch.Name = "contextMenuStripAddBetterMultiMatch";
-            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 26);
-            this.contextMenuStripAddBetterMultiMatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAddBetterMultiMatch_Opening);
-            // 
-            // addBetterMultiMatchToolStripMenuItem
-            // 
-            this.addBetterMultiMatchToolStripMenuItem.Name = "addBetterMultiMatchToolStripMenuItem";
-            this.addBetterMultiMatchToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.addBetterMultiMatchToolStripMenuItem.Text = "Add better multi match";
-            this.addBetterMultiMatchToolStripMenuItem.Click += new System.EventHandler(this.addBetterMultiMatchToolStripMenuItem_Click);
-            // 
-            // groupBoxInspectItems
-            // 
-            this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxInspectItems.Controls.Add(this.labelExpandCount);
-            this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
-            this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
-            this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxInspectItems.Name = "groupBoxInspectItems";
-            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 324);
-            this.groupBoxInspectItems.TabIndex = 13;
-            this.groupBoxInspectItems.TabStop = false;
-            this.groupBoxInspectItems.Text = "Inspect items";
-            // 
-            // labelExpandCount
-            // 
-            this.labelExpandCount.AutoSize = true;
-            this.labelExpandCount.Location = new System.Drawing.Point(252, 98);
-            this.labelExpandCount.Name = "labelExpandCount";
-            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
-            this.labelExpandCount.TabIndex = 29;
-            this.labelExpandCount.Text = "labelExpandCount";
-            // 
-            // pictureBoxInspectItem
-            // 
-            this.pictureBoxInspectItem.BackColor = System.Drawing.Color.Red;
-            this.pictureBoxInspectItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxInspectItem.Location = new System.Drawing.Point(252, 114);
-            this.pictureBoxInspectItem.Name = "pictureBoxInspectItem";
-            this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);
-            this.pictureBoxInspectItem.TabIndex = 23;
-            this.pictureBoxInspectItem.TabStop = false;
-            // 
-            // labelCount
-            // 
-            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelCount.AutoSize = true;
-            this.labelCount.Location = new System.Drawing.Point(12, 339);
-            this.labelCount.Name = "labelCount";
-            this.labelCount.Size = new System.Drawing.Size(57, 13);
-            this.labelCount.TabIndex = 30;
-            this.labelCount.Text = "labelCount";
             // 
             // contextMenuStripLetters
             // 
@@ -1215,6 +1124,108 @@
             this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol2.Text = "♫";
             // 
+            // pictureBoxCompareBitmap
+            // 
+            this.pictureBoxCompareBitmap.BackColor = System.Drawing.Color.Red;
+            this.pictureBoxCompareBitmap.Location = new System.Drawing.Point(17, 106);
+            this.pictureBoxCompareBitmap.Name = "pictureBoxCompareBitmap";
+            this.pictureBoxCompareBitmap.Size = new System.Drawing.Size(52, 52);
+            this.pictureBoxCompareBitmap.TabIndex = 22;
+            this.pictureBoxCompareBitmap.TabStop = false;
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOK.Location = new System.Drawing.Point(563, 342);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 7;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            // 
+            // listBoxInspectItems
+            // 
+            this.listBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBoxInspectItems.ContextMenuStrip = this.contextMenuStripAddBetterMultiMatch;
+            this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxInspectItems.FormattingEnabled = true;
+            this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
+            this.listBoxInspectItems.Name = "listBoxInspectItems";
+            this.listBoxInspectItems.Size = new System.Drawing.Size(240, 290);
+            this.listBoxInspectItems.TabIndex = 12;
+            this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
+            // 
+            // contextMenuStripAddBetterMultiMatch
+            // 
+            this.contextMenuStripAddBetterMultiMatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addBetterMultiMatchToolStripMenuItem});
+            this.contextMenuStripAddBetterMultiMatch.Name = "contextMenuStripAddBetterMultiMatch";
+            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 26);
+            this.contextMenuStripAddBetterMultiMatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAddBetterMultiMatch_Opening);
+            // 
+            // addBetterMultiMatchToolStripMenuItem
+            // 
+            this.addBetterMultiMatchToolStripMenuItem.Name = "addBetterMultiMatchToolStripMenuItem";
+            this.addBetterMultiMatchToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.addBetterMultiMatchToolStripMenuItem.Text = "Add better multi match";
+            this.addBetterMultiMatchToolStripMenuItem.Click += new System.EventHandler(this.addBetterMultiMatchToolStripMenuItem_Click);
+            // 
+            // groupBoxInspectItems
+            // 
+            this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInspectItems.Controls.Add(this.labelImageSize);
+            this.groupBoxInspectItems.Controls.Add(this.labelExpandCount);
+            this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
+            this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
+            this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxInspectItems.Name = "groupBoxInspectItems";
+            this.groupBoxInspectItems.Size = new System.Drawing.Size(425, 324);
+            this.groupBoxInspectItems.TabIndex = 13;
+            this.groupBoxInspectItems.TabStop = false;
+            this.groupBoxInspectItems.Text = "Inspect items";
+            // 
+            // labelExpandCount
+            // 
+            this.labelExpandCount.AutoSize = true;
+            this.labelExpandCount.Location = new System.Drawing.Point(252, 98);
+            this.labelExpandCount.Name = "labelExpandCount";
+            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
+            this.labelExpandCount.TabIndex = 29;
+            this.labelExpandCount.Text = "labelExpandCount";
+            // 
+            // pictureBoxInspectItem
+            // 
+            this.pictureBoxInspectItem.BackColor = System.Drawing.Color.Red;
+            this.pictureBoxInspectItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxInspectItem.Location = new System.Drawing.Point(252, 114);
+            this.pictureBoxInspectItem.Name = "pictureBoxInspectItem";
+            this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);
+            this.pictureBoxInspectItem.TabIndex = 23;
+            this.pictureBoxInspectItem.TabStop = false;
+            // 
+            // labelCount
+            // 
+            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelCount.AutoSize = true;
+            this.labelCount.Location = new System.Drawing.Point(12, 339);
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(57, 13);
+            this.labelCount.TabIndex = 30;
+            this.labelCount.Text = "labelCount";
+            // 
+            // labelImageSize
+            // 
+            this.labelImageSize.AutoSize = true;
+            this.labelImageSize.Location = new System.Drawing.Point(252, 174);
+            this.labelImageSize.Name = "labelImageSize";
+            this.labelImageSize.Size = new System.Drawing.Size(35, 13);
+            this.labelImageSize.TabIndex = 30;
+            this.labelImageSize.Text = "label1";
+            // 
             // VobSubOcrCharacterInspect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1238,12 +1249,12 @@
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();
+            this.contextMenuStripLetters.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).EndInit();
             this.contextMenuStripAddBetterMultiMatch.ResumeLayout(false);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
-            this.contextMenuStripLetters.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1388,5 +1399,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
+        private System.Windows.Forms.Label labelImageSize;
     }
 }

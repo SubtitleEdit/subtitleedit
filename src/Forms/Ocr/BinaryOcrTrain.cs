@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -44,19 +43,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, List<string> charactersLearned, string s, bool bold, bool italic)
         {
-            Bitmap bmp = GenerateImageFromTextWithStyle(s, bold, italic);
+            Bitmap bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
             var nbmp = new NikseBitmap(bmp);
             nbmp.MakeTwoColor(280);
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
-            if (list.Count == 1)
+            if (list.Count == 3)
             {
-                var match = db.FindExactMatch(new BinaryOcrBitmap(list[0].NikseBitmap));
+                var item = list[2];
+                var bob = new BinaryOcrBitmap(item.NikseBitmap, italic, 0, s, item.X, item.Y);
+                var match = db.FindExactMatch(bob);
                 if (match < 0)
                 {
-                    pictureBox1.Image = list[0].NikseBitmap.GetBitmap();
                     labelInfo.Refresh();
                     Application.DoEvents();
-                    db.Add(new BinaryOcrBitmap(list[0].NikseBitmap, false, 0, s, 0, 0));
+                    db.Add(bob);
                     charactersLearned.Add(s);
                     numberOfCharactersLeaned++;
                     labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0}, {2} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 MessageBox.Show(exception.Message);
                 font = new Font(FontFamily.Families[0].Name, _subtitleFontSize);
             }
-            var bmp = new Bitmap(400, 200);
+            var bmp = new Bitmap(400, 300);
             var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
@@ -178,6 +178,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.DefaultExt = ".db";
+            saveFileDialog1.Filter = "*Binary Image Compare DB files|*.db";
+            if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
             var startFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
             var endFontSize = Convert.ToInt32(comboBoxFontSizeEnd.Items[comboBoxFontSizeEnd.SelectedIndex].ToString());
 
@@ -187,26 +194,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (!Directory.Exists(textBoxNOcrDb.Text))
-            {
-                MessageBox.Show($"Output folder '{textBoxNOcrDb.Text}' does not exist!");
-                return;
-            }
-
             if (listViewFonts.CheckedItems.Count == 1)
             {
                 MessageBox.Show("Please select at least one font!");
                 return;
             }
 
+            var bicDb = new BinaryOcrDb(saveFileDialog1.FileName);
+            int numberOfCharactersLeaned = 0;
+            int numberOfCharactersSkipped = 0;
             foreach (ListViewItem fontItem in listViewFonts.CheckedItems)
             {
                 _subtitleFontName = fontItem.Text;
                 for (_subtitleFontSize = startFontSize; _subtitleFontSize <= endFontSize; _subtitleFontSize++)
                 {
-                    int numberOfCharactersLeaned = 0;
-                    int numberOfCharactersSkipped = 0;
-                    var bicDb = new BinaryOcrDb(Path.Combine(textBoxNOcrDb.Text, $"{_subtitleFontName}_{_subtitleFontSize}.db"));
                     var lines = File.ReadAllLines(textBoxInputFile.Text).ToList();
                     var format = new SubRip();
                     var sub = new Subtitle();
@@ -231,10 +232,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                         }
                     }
-
-                    bicDb.Save();
                 }
             }
+            bicDb.Save();
+            labelInfo.Text = "Training completed and saved in " + saveFileDialog1.FileName;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -248,6 +249,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 textBoxInputFile.Text = openFileDialog1.FileName;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            listViewFonts.BeginUpdate();
+            foreach (ListViewItem fontItem in listViewFonts.Items)
+            {
+                fontItem.Checked = true;
+            }
+            listViewFonts.EndUpdate();
         }
     }
 }
