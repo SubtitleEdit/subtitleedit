@@ -338,55 +338,62 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return newText;
         }
 
-        private static string AddToGuessList(List<string> list, string word, int index, string letter, string replaceLetters)
+        private static void AddToGuessList(List<string> list, string guess)
         {
-            if (string.IsNullOrEmpty(word) || index < 0 || index + letter.Length - 1 >= word.Length)
+            if (string.IsNullOrEmpty(guess))
             {
-                return word;
+                return;
             }
 
-            string s = word.Remove(index, letter.Length);
-            if (index >= s.Length)
+            if (!list.Contains(guess))
             {
-                s += replaceLetters;
+                list.Add(guess);
             }
-            else
-            {
-                s = s.Insert(index, replaceLetters);
-            }
-
-            if (!list.Contains(s))
-            {
-                list.Add(s);
-            }
-
-            return s;
         }
 
         public IEnumerable<string> CreateGuessesFromLetters(string word)
         {
             var list = new List<string>();
+            var previousGuesses = new List<string>();
             foreach (string letter in _partialWordReplaceList.Keys)
             {
-                string s = word;
-                int i = 0;
-                while (s.Contains(letter) && i < 10)
+                var indexes = new List<int>();
+                for (int i = 1; i < word.Length - letter.Length; i++)
                 {
-                    int index = s.FastIndexOf(letter);
-                    s = AddToGuessList(list, s, index, letter, _partialWordReplaceList[letter]);
-                    AddToGuessList(list, word, index, letter, _partialWordReplaceList[letter]);
-                    i++;
+                    if (word.Substring(i).StartsWith(letter, StringComparison.Ordinal))
+                    {
+                        indexes.Add(i);
+                        var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                        AddToGuessList(list, guess);
+                    }
                 }
-                s = word;
-                i = 0;
-                while (s.Contains(letter) && i < 10)
+
+                if (indexes.Count > 1)
                 {
-                    int index = s.LastIndexOf(letter, StringComparison.Ordinal);
-                    s = AddToGuessList(list, s, index, letter, _partialWordReplaceList[letter]);
-                    AddToGuessList(list, word, index, letter, _partialWordReplaceList[letter]);
-                    i++;
+                    var multiGuess = word;
+                    for (int i = indexes.Count-1; i >= 0; i--)
+                    {
+                        var idx = indexes[i];
+                        multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
+                        AddToGuessList(list, multiGuess);
+                    }
                 }
+
+                foreach (var previousGuess in previousGuesses)
+                {
+                    for (int i = 1; i < previousGuess.Length - letter.Length; i++)
+                    {
+                        if (previousGuess.Substring(i).StartsWith(letter, StringComparison.Ordinal))
+                        {
+                            var guess = previousGuess.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            AddToGuessList(list, guess);
+                        }
+                    }
+                }
+
+                previousGuesses = new List<string>(list);
             }
+
             return list;
         }
 

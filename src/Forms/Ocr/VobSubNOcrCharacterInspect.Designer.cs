@@ -251,9 +251,11 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(840, 460);
             this.Name = "VobSubNOcrCharacterInspect";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSubNOcrCharacterInspect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrCharacterInspect_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
