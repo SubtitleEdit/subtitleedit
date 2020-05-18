@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             labelCount.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
+            labelImageSize.Text = string.Empty;
             Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Title;
             groupBoxInspectItems.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.InspectItems;
             labelImageInfo.Text = string.Empty;
@@ -109,6 +110,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             labelImageInfo.Text = string.Empty;
             labelExpandCount.Text = string.Empty;
+            labelImageSize.Text = string.Empty;
 
             if (listBoxInspectItems.SelectedIndex < 0)
             {
@@ -271,6 +273,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCompareBitmap.Image = bitmap;
             pictureBoxCompareBitmap.Width = bitmap.Width;
             pictureBoxCompareBitmap.Height = bitmap.Height;
+            labelImageSize.Top = pictureBoxCompareBitmap.Top + bitmap.Height + 17;
+            labelImageSize.Text = bitmap.Width + "x" + bitmap.Height;
             pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
             pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
             pictureBoxCompareBitmapDouble.Image = bitmap;
