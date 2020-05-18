@@ -4342,7 +4342,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SetBinOcrLowercaseUppercase(int height, string text)
         {
-            if (text == "e")
+            if (text == "e" || text == "a")
             {
                 _binOcrLowercaseHeightsTotalCount++;
                 _binOcrLowercaseHeightsTotal += height;
