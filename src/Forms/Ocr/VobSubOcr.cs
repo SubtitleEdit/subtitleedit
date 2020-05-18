@@ -4610,95 +4610,98 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var line = input;
 
-            // fix I/l
-            int start = line.IndexOf('I');
-            while (start > 0)
+            if (LanguageString.StartsWith("en", StringComparison.OrdinalIgnoreCase))
             {
-                if (start > 0 && char.IsLower(line[start - 1]))
+                // fix I/l
+                int start = line.IndexOf('I');
+                while (start > 0)
                 {
-                    line = line.Remove(start, 1).Insert(start, "l");
-                }
-                else if (start < line.Length - 1 && char.IsLower(line[start + 1]))
-                {
-                    line = line.Remove(start, 1).Insert(start, "l");
-                }
+                    if (start > 0 && char.IsLower(line[start - 1]))
+                    {
+                        line = line.Remove(start, 1).Insert(start, "l");
+                    }
+                    else if (start < line.Length - 1 && char.IsLower(line[start + 1]))
+                    {
+                        line = line.Remove(start, 1).Insert(start, "l");
+                    }
 
-                start++;
-                start = line.IndexOf('I', start);
-            }
-
-            start = line.IndexOf('l');
-            while (start > 0)
-            {
-                if (start < line.Length - 1 && char.IsUpper(line[start + 1]))
-                {
-                    line = line.Remove(start, 1).Insert(start, "I");
+                    start++;
+                    start = line.IndexOf('I', start);
                 }
 
-                start++;
-                start = line.IndexOf('l', start);
-            }
-
-            if (line.Contains('l'))
-            {
-                if (line.StartsWith('l'))
+                start = line.IndexOf('l');
+                while (start > 0)
                 {
-                    line = @"I" + line.Substring(1);
+                    if (start < line.Length - 1 && char.IsUpper(line[start + 1]))
+                    {
+                        line = line.Remove(start, 1).Insert(start, "I");
+                    }
+
+                    start++;
+                    start = line.IndexOf('l', start);
                 }
 
-                if (line.StartsWith("<i>l", StringComparison.Ordinal))
+                if (line.Contains('l'))
                 {
-                    line = line.Remove(3, 1).Insert(3, "I");
+                    if (line.StartsWith('l'))
+                    {
+                        line = @"I" + line.Substring(1);
+                    }
+
+                    if (line.StartsWith("<i>l", StringComparison.Ordinal))
+                    {
+                        line = line.Remove(3, 1).Insert(3, "I");
+                    }
+
+                    if (line.StartsWith("- l", StringComparison.Ordinal))
+                    {
+                        line = line.Remove(2, 1).Insert(2, "I");
+                    }
+
+                    if (line.StartsWith("-l", StringComparison.Ordinal))
+                    {
+                        line = line.Remove(1, 1).Insert(1, "I");
+                    }
+
+                    line = line.Replace(". l", ". I");
+                    line = line.Replace("? l", "? I");
+                    line = line.Replace("! l", "! I");
+                    line = line.Replace(": l", ": I");
+                    line = line.Replace("." + Environment.NewLine + "l", "." + Environment.NewLine + "I");
+                    line = line.Replace("?" + Environment.NewLine + "l", "?" + Environment.NewLine + "I");
+                    line = line.Replace("!" + Environment.NewLine + "l", "!" + Environment.NewLine + "I");
+                    line = line.Replace("." + Environment.NewLine + "- l", "." + Environment.NewLine + "- I");
+                    line = line.Replace("?" + Environment.NewLine + "- l", "?" + Environment.NewLine + "- I");
+                    line = line.Replace("!" + Environment.NewLine + "- l", "!" + Environment.NewLine + "- I");
+                    line = line.Replace("." + Environment.NewLine + "-l", "." + Environment.NewLine + "-I");
+                    line = line.Replace("?" + Environment.NewLine + "-l", "?" + Environment.NewLine + "-I");
+                    line = line.Replace("!" + Environment.NewLine + "-l", "!" + Environment.NewLine + "-I");
+                    line = line.Replace(" lq", " Iq");
+                    line = line.Replace(" lw", " Iw");
+                    line = line.Replace(" lr", " Ir");
+                    line = line.Replace(" lt", " It");
+                    line = line.Replace(" lp", " Ip");
+                    line = line.Replace(" ls", " Is");
+                    line = line.Replace(" ld", " Id");
+                    line = line.Replace(" lf", " If");
+                    line = line.Replace(" lg", " Ig");
+                    line = line.Replace(" lh", " Ih");
+                    line = line.Replace(" lj", " Ij");
+                    line = line.Replace(" lk", " Ik");
+                    line = line.Replace(" ll", " Il");
+                    line = line.Replace(" lz", " Iz");
+                    line = line.Replace(" lx", " Ix");
+                    line = line.Replace(" lc", " Ic");
+                    line = line.Replace(" lv", " Iv");
+                    line = line.Replace(" lb", " Ib");
+                    line = line.Replace(" ln", " In");
+                    line = line.Replace(" lm", " Im");
                 }
 
-                if (line.StartsWith("- l", StringComparison.Ordinal))
+                if (line.Contains('I'))
                 {
-                    line = line.Remove(2, 1).Insert(2, "I");
+                    line = line.Replace("II", "ll");
                 }
-
-                if (line.StartsWith("-l", StringComparison.Ordinal))
-                {
-                    line = line.Remove(1, 1).Insert(1, "I");
-                }
-
-                line = line.Replace(". l", ". I");
-                line = line.Replace("? l", "? I");
-                line = line.Replace("! l", "! I");
-                line = line.Replace(": l", ": I");
-                line = line.Replace("." + Environment.NewLine + "l", "." + Environment.NewLine + "I");
-                line = line.Replace("?" + Environment.NewLine + "l", "?" + Environment.NewLine + "I");
-                line = line.Replace("!" + Environment.NewLine + "l", "!" + Environment.NewLine + "I");
-                line = line.Replace("." + Environment.NewLine + "- l", "." + Environment.NewLine + "- I");
-                line = line.Replace("?" + Environment.NewLine + "- l", "?" + Environment.NewLine + "- I");
-                line = line.Replace("!" + Environment.NewLine + "- l", "!" + Environment.NewLine + "- I");
-                line = line.Replace("." + Environment.NewLine + "-l", "." + Environment.NewLine + "-I");
-                line = line.Replace("?" + Environment.NewLine + "-l", "?" + Environment.NewLine + "-I");
-                line = line.Replace("!" + Environment.NewLine + "-l", "!" + Environment.NewLine + "-I");
-                line = line.Replace(" lq", " Iq");
-                line = line.Replace(" lw", " Iw");
-                line = line.Replace(" lr", " Ir");
-                line = line.Replace(" lt", " It");
-                line = line.Replace(" lp", " Ip");
-                line = line.Replace(" ls", " Is");
-                line = line.Replace(" ld", " Id");
-                line = line.Replace(" lf", " If");
-                line = line.Replace(" lg", " Ig");
-                line = line.Replace(" lh", " Ih");
-                line = line.Replace(" lj", " Ij");
-                line = line.Replace(" lk", " Ik");
-                line = line.Replace(" ll", " Il");
-                line = line.Replace(" lz", " Iz");
-                line = line.Replace(" lx", " Ix");
-                line = line.Replace(" lc", " Ic");
-                line = line.Replace(" lv", " Iv");
-                line = line.Replace(" lb", " Ib");
-                line = line.Replace(" ln", " In");
-                line = line.Replace(" lm", " Im");
-            }
-
-            if (line.Contains('I'))
-            {
-                line = line.Replace("II", "ll");
             }
 
             // fix periods with space between
