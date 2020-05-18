@@ -74,6 +74,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImport.Visible = binOcrDb != null;
+
+            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+            {
+                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
+                {
+                    foreach (ToolStripItem item in i.DropDownItems)
+                    {
+                        item.Click += InsertLanguageCharacter;
+                    }
+                }
+                else
+                {
+                    toolStripItem.Click += InsertLanguageCharacter;
+                }
+            }
         }
 
         private void Refill(List<VobSubOcr.ImageCompareAddition> additions)
@@ -703,6 +718,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 form.ShowDialog(this);
                 DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
+                var start = textBoxText.SelectionStart;
+                textBoxText.SelectedText = toolStripMenuItem.Text;
+                textBoxText.SelectionLength = 0;
+                textBoxText.SelectionStart = start + toolStripMenuItem.Text.Length;
             }
         }
 
