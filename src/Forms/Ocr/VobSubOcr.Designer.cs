@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.nOcrTrainingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
+            this.captureTopAlignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setForecolorThresholdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,8 +136,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxTransportStreamGrayscale = new System.Windows.Forms.CheckBox();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripImage = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ToolStripMenuItemAutoTransparentBackground = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoTransparentBackgroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setItalicAngleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCaptureTopAlign = new System.Windows.Forms.ToolStripMenuItem();
+            this.imagePreprocessingToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,11 +206,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.nOcrTrainingToolStripMenuItem,
             this.toolStripSeparator4,
             this.toolStripMenuItemSetUnItalicFactor,
+            this.captureTopAlignmentToolStripMenuItem,
             this.setForecolorThresholdToolStripMenuItem,
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 364);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 386);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -350,8 +354,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.toolStripMenuItemSetUnItalicFactor.Name = "toolStripMenuItemSetUnItalicFactor";
             this.toolStripMenuItemSetUnItalicFactor.Size = new System.Drawing.Size(305, 22);
-            this.toolStripMenuItemSetUnItalicFactor.Text = "Set un-italic factor...";
+            this.toolStripMenuItemSetUnItalicFactor.Text = "Set italic angle...";
             this.toolStripMenuItemSetUnItalicFactor.Click += new System.EventHandler(this.toolStripMenuItemSetUnItalicFactor_Click);
+            // 
+            // captureTopAlignmentToolStripMenuItem
+            // 
+            this.captureTopAlignmentToolStripMenuItem.CheckOnClick = true;
+            this.captureTopAlignmentToolStripMenuItem.Name = "captureTopAlignmentToolStripMenuItem";
+            this.captureTopAlignmentToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.captureTopAlignmentToolStripMenuItem.Text = "Capture top alignment";
+            this.captureTopAlignmentToolStripMenuItem.Click += new System.EventHandler(this.captureTopAlignmentToolStripMenuItem_Click);
             // 
             // setForecolorThresholdToolStripMenuItem
             // 
@@ -1510,21 +1522,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // contextMenuStripImage
             // 
             this.contextMenuStripImage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ToolStripMenuItemAutoTransparentBackground,
+            this.autoTransparentBackgroundToolStripMenuItem,
+            this.setItalicAngleToolStripMenuItem,
             this.toolStripMenuItemCaptureTopAlign,
+            this.imagePreprocessingToolStripMenuItem1,
             this.toolStripSeparator5,
             this.toolStripMenuItemImageSaveAs,
             this.previewToolStripMenuItem});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 98);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 164);
             this.contextMenuStripImage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripImage_Opening);
             // 
-            // ToolStripMenuItemAutoTransparentBackground
+            // autoTransparentBackgroundToolStripMenuItem
             // 
-            this.ToolStripMenuItemAutoTransparentBackground.CheckOnClick = true;
-            this.ToolStripMenuItemAutoTransparentBackground.Name = "ToolStripMenuItemAutoTransparentBackground";
-            this.ToolStripMenuItemAutoTransparentBackground.Size = new System.Drawing.Size(230, 22);
-            this.ToolStripMenuItemAutoTransparentBackground.Text = "Auto transparent background";
+            this.autoTransparentBackgroundToolStripMenuItem.CheckOnClick = true;
+            this.autoTransparentBackgroundToolStripMenuItem.Name = "autoTransparentBackgroundToolStripMenuItem";
+            this.autoTransparentBackgroundToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.autoTransparentBackgroundToolStripMenuItem.Text = "Auto transparent background";
+            // 
+            // setItalicAngleToolStripMenuItem
+            // 
+            this.setItalicAngleToolStripMenuItem.Name = "setItalicAngleToolStripMenuItem";
+            this.setItalicAngleToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.setItalicAngleToolStripMenuItem.Text = "Set italic angle...";
+            this.setItalicAngleToolStripMenuItem.Click += new System.EventHandler(this.setItalicAngleToolStripMenuItem_Click);
             // 
             // toolStripMenuItemCaptureTopAlign
             // 
@@ -1532,6 +1553,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
             this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(230, 22);
             this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
+            this.toolStripMenuItemCaptureTopAlign.Click += new System.EventHandler(this.toolStripMenuItemCaptureTopAlign_Click);
+            // 
+            // imagePreprocessingToolStripMenuItem1
+            // 
+            this.imagePreprocessingToolStripMenuItem1.Name = "imagePreprocessingToolStripMenuItem1";
+            this.imagePreprocessingToolStripMenuItem1.Size = new System.Drawing.Size(230, 22);
+            this.imagePreprocessingToolStripMenuItem1.Text = "Image preprocessing...";
+            this.imagePreprocessingToolStripMenuItem1.Click += new System.EventHandler(this.imagePreprocessingToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
             // 
@@ -1854,8 +1883,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.CheckBox checkBoxTesseractFallback;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSubtitleAs;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAutoTransparentBackground;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCaptureTopAlign;
         private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem captureTopAlignmentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem imagePreprocessingToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem setItalicAngleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autoTransparentBackgroundToolStripMenuItem;
     }
 }
