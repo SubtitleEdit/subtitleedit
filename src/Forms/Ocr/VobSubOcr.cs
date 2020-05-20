@@ -1971,7 +1971,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 height = 0;
                 return;
             }
-            else
+
+            if (_vobSubMergedPackist != null)
             {
                 var item = _vobSubMergedPackist[index];
                 left = item.SubPicture.ImageDisplayArea.Left;
@@ -1983,10 +1984,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            left = -1;
-            top = -1;
+            left = 0;
+            top = 0;
             width = 0;
-            height = -1;
+            height = 0;
         }
 
         private void GetSubtitleScreenSize(int index, out int width, out int height)
