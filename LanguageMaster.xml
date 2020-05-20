@@ -2523,7 +2523,8 @@ Keep changes?</KeepChangesMessage>
     <CaptureTopAlign>Capture top align</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Inspect compare matches for current image...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edit last image compare additions...</EditLastAdditions>
-    <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
+    <SetItalicAngle>Set italic angle...</SetItalicAngle>
+    <ItalicAngle>Italic angle</ItalicAngle>
     <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
     <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
     <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
@@ -2557,10 +2558,10 @@ Keep changes?</KeepChangesMessage>
     <Title>New folder</Title>
     <Message>Name of new character database folder</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Set un-italic factor</Title>
+  <VobSubOcrSetItalicAngle>
+    <Title>Set italic angle</Title>
     <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
-  </VobSubOcrSetItalicFactor>
+  </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>OCR image preprocessing</Title>
     <Colors>Colors</Colors>

@@ -6853,8 +6853,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/EditLastAdditions":
                     language.VobSubOcr.EditLastAdditions = reader.Value;
                     break;
-                case "VobSubOcr/SetUnitalicFactor":
-                    language.VobSubOcr.SetUnitalicFactor = reader.Value;
+                case "VobSubOcr/SetItalicAngle":
+                    language.VobSubOcr.SetItalicAngle = reader.Value;
+                    break;
+                case "VobSubOcr/ItalicAngle":
+                    language.VobSubOcr.ItalicAngle = reader.Value;
                     break;
                 case "VobSubOcr/DiscardTitle":
                     language.VobSubOcr.DiscardTitle = reader.Value;
@@ -6934,11 +6937,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcrNewFolder/Message":
                     language.VobSubOcrNewFolder.Message = reader.Value;
                     break;
-                case "VobSubOcrSetItalicFactor/Title":
-                    language.VobSubOcrSetItalicFactor.Title = reader.Value;
+                case "VobSubOcrSetItalicAngle/Title":
+                    language.VobSubOcrSetItalicAngle.Title = reader.Value;
                     break;
-                case "VobSubOcrSetItalicFactor/Description":
-                    language.VobSubOcrSetItalicFactor.Description = reader.Value;
+                case "VobSubOcrSetItalicAngle/Description":
+                    language.VobSubOcrSetItalicAngle.Description = reader.Value;
                     break;
                 case "OcrPreprocessing/Title":
                     language.OcrPreprocessing.Title = reader.Value;

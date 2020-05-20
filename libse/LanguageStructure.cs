@@ -2725,7 +2725,8 @@
             public string CaptureTopAlign { get; set; }
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
-            public string SetUnitalicFactor { get; set; }
+            public string SetItalicAngle { get; set; }
+            public string ItalicAngle { get; set; }
             public string DiscardTitle { get; set; }
             public string DiscardText { get; set; }
             public string MinLineSplitHeight { get; set; }
@@ -2766,7 +2767,7 @@
             public string Message { get; set; }
         }
 
-        public class VobSubOcrSetItalicFactor
+        public class VobSubOcrSetItalicAngle
         {
             public string Title { get; set; }
             public string Description { get; set; }

@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.VobSubOcrCharacter VobSubOcrCharacter;
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
-        public LanguageStructure.VobSubOcrSetItalicFactor VobSubOcrSetItalicFactor;
+        public LanguageStructure.VobSubOcrSetItalicAngle VobSubOcrSetItalicAngle;
         public LanguageStructure.OcrPreprocessing OcrPreprocessing;
         public LanguageStructure.Watermark Watermark;
         public LanguageStructure.Waveform Waveform;
@@ -2858,7 +2858,8 @@ Keep changes?",
                 CaptureTopAlign = "Capture top align",
                 InspectCompareMatchesForCurrentImage = "Inspect compare matches for current image...",
                 EditLastAdditions = "Edit last image compare additions...",
-                SetUnitalicFactor = "Set un-italic factor...",
+                SetItalicAngle = "Set italic angle...",
+                ItalicAngle = "Italic angle",
                 DiscardTitle = "Discard changes made in OCR?",
                 DiscardText = "Do you want to discard changes made in current OCR session?",
                 MinLineSplitHeight = "Min. line height (split)",
@@ -2899,9 +2900,9 @@ Keep changes?",
                 Message = "Name of new character database folder",
             };
 
-            VobSubOcrSetItalicFactor = new LanguageStructure.VobSubOcrSetItalicFactor
+            VobSubOcrSetItalicAngle = new LanguageStructure.VobSubOcrSetItalicAngle
             {
-                Title = "Set un-italic factor",
+                Title = "Set italic angle",
                 Description = "Adjust value until text style is normal and not italic. Note that original image should be italic.",
             };
 

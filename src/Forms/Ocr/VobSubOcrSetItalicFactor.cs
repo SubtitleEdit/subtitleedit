@@ -21,8 +21,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _factor = factor;
             numericUpDownItalicFactor.Value = (decimal)factor;
 
-            Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Title;
-            labelDescription.Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Description;
+            Text = Configuration.Settings.Language.VobSubOcrSetItalicAngle.Title;
+            labelDescription.Text = Configuration.Settings.Language.VobSubOcrSetItalicAngle.Description;
             saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

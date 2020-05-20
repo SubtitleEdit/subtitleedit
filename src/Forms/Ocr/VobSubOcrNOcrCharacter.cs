@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class VobSubOcrNOcrCharacter : Form
     {
-        private NOcrChar _nocrChar;
         private bool _drawLineOn;
         private bool _startDone;
         private Point _start;
@@ -30,10 +29,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
+            checkBoxAutoSubmitOfFirstChar.Text = Configuration.Settings.Language.VobSubOcrCharacter.AutoSubmitOnFirstChar;
             labelItalicOn.Visible = false;
         }
 
-        public NOcrChar NOcrChar => _nocrChar;
+        public NOcrChar NOcrChar { get; private set; }
 
         public Point FormPosition => new Point(Left, Top);
 
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ExpandSelection = false;
 
             textBoxCharacters.Text = string.Empty;
-            _nocrChar = new NOcrChar { MarginTop = character.Y - character.ParentY };
+            NOcrChar = new NOcrChar { MarginTop = character.Y - character.ParentY };
             _imageWidth = character.NikseBitmap.Width;
             _imageHeight = character.NikseBitmap.Height;
             _drawLineOn = false;
@@ -89,9 +89,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _history = new List<NOcrChar>();
             _historyIndex = -1;
 
-            _nocrChar.Width = _imageWidth;
-            _nocrChar.Height = _imageHeight;
-            GenerateLineSegments(150, false, _nocrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+            NOcrChar.Width = _imageWidth;
+            NOcrChar.Height = _imageHeight;
+            GenerateLineSegments(150, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
             ShowOcrPoints();
             pictureBoxCharacter.Invalidate();
         }
@@ -111,9 +111,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool IsMatch()
         {
             NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
-            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            foreach (NOcrPoint op in NOcrChar.LinesForeground)
             {
-                foreach (Point point in op.ScaledGetPoints(_nocrChar, nbmp.Width, nbmp.Height))
+                foreach (Point point in op.ScaledGetPoints(NOcrChar, nbmp.Width, nbmp.Height))
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
-            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            foreach (NOcrPoint op in NOcrChar.LinesBackground)
             {
                 foreach (Point point in op.GetPoints())
                 {
@@ -168,8 +168,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 MessageBox.Show("Lines does not match image!");
                 return;
             }
-            _nocrChar.Text = textBoxCharacters.Text;
-            _nocrChar.Italic = checkBoxItalic.Checked;
+            NOcrChar.Text = textBoxCharacters.Text;
+            NOcrChar.Italic = checkBoxItalic.Checked;
             DialogResult = DialogResult.OK;
         }
 
@@ -191,10 +191,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var selPenB = new Pen(new SolidBrush(Color.Red), 3);
             if (pictureBoxCharacter.Image != null)
             {
-                foreach (NOcrPoint op in _nocrChar.LinesForeground)
+                foreach (NOcrPoint op in NOcrChar.LinesForeground)
                 {
-                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
-                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point start = op.GetScaledStart(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
                     if (start.X == end.X && start.Y == end.Y)
                     {
                         end.X++;
@@ -203,17 +203,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     e.Graphics.DrawLine(foreground, start, end);
                     if (op == selectedPoint)
                     {
-                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                        e.Graphics.DrawLine(selPenF, op.GetScaledStart(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                     }
                 }
-                foreach (NOcrPoint op in _nocrChar.LinesBackground)
+                foreach (NOcrPoint op in NOcrChar.LinesBackground)
                 {
-                    Point start = op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
-                    Point end = op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point start = op.GetScaledStart(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
+                    Point end = op.GetScaledEnd(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height);
                     e.Graphics.DrawLine(background, start, end);
                     if (op == selectedPoint)
                     {
-                        e.Graphics.DrawLine(selPenB, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                        e.Graphics.DrawLine(selPenB, op.GetScaledStart(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(NOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                     }
                 }
             }
@@ -266,12 +266,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ShowOcrPoints()
         {
             listBoxLinesForeground.Items.Clear();
-            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            foreach (NOcrPoint op in NOcrChar.LinesForeground)
             {
                 listBoxLinesForeground.Items.Add(op);
             }
             listBoxlinesBackground.Items.Clear();
-            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            foreach (NOcrPoint op in NOcrChar.LinesBackground)
             {
                 listBoxlinesBackground.Items.Add(op);
             }
@@ -285,21 +285,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_startDone)
                 {
                     _end = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
-                    _nocrChar.Width = pictureBoxCharacter.Image.Width;
-                    _nocrChar.Height = pictureBoxCharacter.Image.Height;
+                    NOcrChar.Width = pictureBoxCharacter.Image.Width;
+                    NOcrChar.Height = pictureBoxCharacter.Image.Height;
                     if (radioButtonHot.Checked)
                     {
-                        _nocrChar.LinesForeground.Add(new NOcrPoint(_start, _end));
+                        NOcrChar.LinesForeground.Add(new NOcrPoint(_start, _end));
                     }
                     else
                     {
-                        _nocrChar.LinesBackground.Add(new NOcrPoint(_start, _end));
+                        NOcrChar.LinesBackground.Add(new NOcrPoint(_start, _end));
                     }
 
                     _drawLineOn = false;
                     pictureBoxCharacter.Invalidate();
                     ShowOcrPoints();
-                    AddHistoryItem(_nocrChar);
+                    AddHistoryItem(NOcrChar);
 
                     if ((ModifierKeys & Keys.Control) == Keys.Control)
                     {
@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_history.Count > 0 && _historyIndex < _history.Count - 1)
             {
                 _historyIndex++;
-                _nocrChar = new NOcrChar(_history[_historyIndex]);
+                NOcrChar = new NOcrChar(_history[_historyIndex]);
                 ShowOcrPoints();
             }
         }
@@ -358,14 +358,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_history.Count > 0 && _historyIndex > 0)
             {
                 _historyIndex--;
-                _nocrChar = new NOcrChar(_history[_historyIndex]);
+                NOcrChar = new NOcrChar(_history[_historyIndex]);
             }
             else if (_historyIndex == 0)
             {
-                var c = new NOcrChar(_nocrChar);
+                var c = new NOcrChar(NOcrChar);
                 c.LinesForeground.Clear();
                 c.LinesBackground.Clear();
-                _nocrChar = c;
+                NOcrChar = c;
                 _historyIndex--;
             }
             ShowOcrPoints();
@@ -397,9 +397,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.A)
             {
-                _nocrChar.Width = _imageWidth;
-                _nocrChar.Height = _imageHeight;
-                GenerateLineSegments(150, false, _nocrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+                NOcrChar.Width = _imageWidth;
+                NOcrChar.Height = _imageHeight;
+                GenerateLineSegments(150, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
                 ShowOcrPoints();
                 pictureBoxCharacter.Invalidate();
                 Redo();
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxlinesBackground.SelectedItems.Count == 1)
             {
                 var op = listBoxlinesBackground.Items[listBoxlinesBackground.SelectedIndex] as NOcrPoint;
-                _nocrChar.LinesBackground.Remove(op);
+                NOcrChar.LinesBackground.Remove(op);
             }
             ShowOcrPoints();
         }
@@ -700,7 +700,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxLinesForeground.SelectedItems.Count == 1)
             {
                 var op = listBoxLinesForeground.Items[listBoxLinesForeground.SelectedIndex] as NOcrPoint;
-                _nocrChar.LinesForeground.Remove(op);
+                NOcrChar.LinesForeground.Remove(op);
             }
             ShowOcrPoints();
         }
