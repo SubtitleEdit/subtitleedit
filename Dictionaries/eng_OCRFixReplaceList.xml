@@ -2773,6 +2773,19 @@
     <Word from="thatpeople" to="that people" />
     <Word from="thatperson" to="that person" />
     <Word from="thoughyou" to="though you" />
+    <Word from="aduIt" to="adult" />
+    <Word from="aIive" to="alive" />
+    <Word from="alI" to="all" />
+    <Word from="Iaboratories" to="laboratories" />
+    <Word from="Iargest" to="largest" />
+    <Word from="Iifetime" to="lifetime" />
+    <Word from="Iiquid" to="liquid" />
+    <Word from="Iiving" to="living" />
+    <Word from="Iowest" to="lowest" />
+    <Word from="letterjackets" to="letter jackets" />
+    <Word from="snowbalI" to="snowball" />
+    <Word from="weII" to="well" />
+    <Word from="WelI" to="Well" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
