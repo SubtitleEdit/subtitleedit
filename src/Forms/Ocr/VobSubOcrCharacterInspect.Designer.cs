@@ -163,10 +163,11 @@
             this.contextMenuStripAddBetterMultiMatch = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addBetterMultiMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
+            this.buttonDetectFont = new System.Windows.Forms.Button();
+            this.labelImageSize = new System.Windows.Forms.Label();
             this.labelExpandCount = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
             this.labelCount = new System.Windows.Forms.Label();
-            this.labelImageSize = new System.Windows.Forms.Label();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
@@ -1177,6 +1178,7 @@
             // 
             this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInspectItems.Controls.Add(this.buttonDetectFont);
             this.groupBoxInspectItems.Controls.Add(this.labelImageSize);
             this.groupBoxInspectItems.Controls.Add(this.labelExpandCount);
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
@@ -1187,6 +1189,27 @@
             this.groupBoxInspectItems.TabIndex = 13;
             this.groupBoxInspectItems.TabStop = false;
             this.groupBoxInspectItems.Text = "Inspect items";
+            // 
+            // buttonDetectFont
+            // 
+            this.buttonDetectFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDetectFont.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonDetectFont.Location = new System.Drawing.Point(255, 286);
+            this.buttonDetectFont.Name = "buttonDetectFont";
+            this.buttonDetectFont.Size = new System.Drawing.Size(164, 23);
+            this.buttonDetectFont.TabIndex = 31;
+            this.buttonDetectFont.Text = "Detect font";
+            this.buttonDetectFont.UseVisualStyleBackColor = true;
+            this.buttonDetectFont.Click += new System.EventHandler(this.buttonDetectFont_Click);
+            // 
+            // labelImageSize
+            // 
+            this.labelImageSize.AutoSize = true;
+            this.labelImageSize.Location = new System.Drawing.Point(252, 174);
+            this.labelImageSize.Name = "labelImageSize";
+            this.labelImageSize.Size = new System.Drawing.Size(35, 13);
+            this.labelImageSize.TabIndex = 30;
+            this.labelImageSize.Text = "label1";
             // 
             // labelExpandCount
             // 
@@ -1216,15 +1239,6 @@
             this.labelCount.Size = new System.Drawing.Size(57, 13);
             this.labelCount.TabIndex = 30;
             this.labelCount.Text = "labelCount";
-            // 
-            // labelImageSize
-            // 
-            this.labelImageSize.AutoSize = true;
-            this.labelImageSize.Location = new System.Drawing.Point(252, 174);
-            this.labelImageSize.Name = "labelImageSize";
-            this.labelImageSize.Size = new System.Drawing.Size(35, 13);
-            this.labelImageSize.TabIndex = 30;
-            this.labelImageSize.Text = "label1";
             // 
             // VobSubOcrCharacterInspect
             // 
@@ -1400,5 +1414,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
         private System.Windows.Forms.Label labelImageSize;
+        private System.Windows.Forms.Button buttonDetectFont;
     }
 }

@@ -139,6 +139,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemCaptureTopAlign = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImageSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -1512,9 +1513,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.ToolStripMenuItemAutoTransparentBackground,
             this.toolStripMenuItemCaptureTopAlign,
             this.toolStripSeparator5,
-            this.toolStripMenuItemImageSaveAs});
+            this.toolStripMenuItemImageSaveAs,
+            this.previewToolStripMenuItem});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 76);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 98);
+            this.contextMenuStripImage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripImage_Opening);
             // 
             // ToolStripMenuItemAutoTransparentBackground
             // 
@@ -1541,6 +1544,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(230, 22);
             this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
             this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
+            // 
+            // previewToolStripMenuItem
+            // 
+            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.previewToolStripMenuItem.Text = "Preview...";
+            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // checkBoxShowOnlyForced
             // 
@@ -1846,5 +1856,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAutoTransparentBackground;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCaptureTopAlign;
+        private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
     }
 }

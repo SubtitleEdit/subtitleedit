@@ -757,5 +757,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxCharacters.SelectedText = (sender as ToolStripMenuItem).Text;
         }
 
+        private void textBoxCharacters_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (checkBoxAutoSubmitOfFirstChar.Checked && textBoxCharacters.Text.Length > 0)
+            {
+                buttonOK_Click(null, null);
+            }
+        }
     }
 }
