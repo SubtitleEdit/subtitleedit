@@ -59,21 +59,21 @@
             this.groupBoxOther.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDefaultMilliseconds)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(598, 389);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
-            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.Text = "&Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(517, 389);
@@ -83,10 +83,10 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            // 
+            //
             // groupBoxStartFrom
-            // 
-            this.groupBoxStartFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxStartFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxStartFrom.Controls.Add(this.radioButtonStartFromPos);
             this.groupBoxStartFrom.Controls.Add(this.radioButtonStartFromStart);
@@ -96,9 +96,9 @@
             this.groupBoxStartFrom.TabIndex = 5;
             this.groupBoxStartFrom.TabStop = false;
             this.groupBoxStartFrom.Text = "Start from";
-            // 
+            //
             // radioButtonStartFromPos
-            // 
+            //
             this.radioButtonStartFromPos.AutoSize = true;
             this.radioButtonStartFromPos.Checked = true;
             this.radioButtonStartFromPos.Location = new System.Drawing.Point(10, 24);
@@ -108,9 +108,9 @@
             this.radioButtonStartFromPos.TabStop = true;
             this.radioButtonStartFromPos.Text = "Current video position";
             this.radioButtonStartFromPos.UseVisualStyleBackColor = true;
-            // 
+            //
             // radioButtonStartFromStart
-            // 
+            //
             this.radioButtonStartFromStart.AutoSize = true;
             this.radioButtonStartFromStart.Location = new System.Drawing.Point(10, 47);
             this.radioButtonStartFromStart.Name = "radioButtonStartFromStart";
@@ -118,18 +118,18 @@
             this.radioButtonStartFromStart.TabIndex = 0;
             this.radioButtonStartFromStart.Text = "Start";
             this.radioButtonStartFromStart.UseVisualStyleBackColor = true;
-            // 
+            //
             // labelAbove1
-            // 
+            //
             this.labelAbove1.AutoSize = true;
             this.labelAbove1.Location = new System.Drawing.Point(6, 62);
             this.labelAbove1.Name = "labelAbove1";
             this.labelAbove1.Size = new System.Drawing.Size(186, 13);
             this.labelAbove1.TabIndex = 6;
             this.labelAbove1.Text = "Block average volume must be above";
-            // 
+            //
             // numericUpDownMinVol
-            // 
+            //
             this.numericUpDownMinVol.Location = new System.Drawing.Point(208, 60);
             this.numericUpDownMinVol.Minimum = new decimal(new int[] {
             1,
@@ -144,10 +144,10 @@
             0,
             0,
             0});
-            // 
+            //
             // groupBoxDeleteLines
-            // 
-            this.groupBoxDeleteLines.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxDeleteLines.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDeleteLines.Controls.Add(this.radioButtonDeleteNone);
             this.groupBoxDeleteLines.Controls.Add(this.radioButtonForward);
@@ -158,9 +158,9 @@
             this.groupBoxDeleteLines.TabIndex = 6;
             this.groupBoxDeleteLines.TabStop = false;
             this.groupBoxDeleteLines.Text = "Delete lines";
-            // 
+            //
             // radioButtonDeleteNone
-            // 
+            //
             this.radioButtonDeleteNone.AutoSize = true;
             this.radioButtonDeleteNone.Location = new System.Drawing.Point(10, 47);
             this.radioButtonDeleteNone.Name = "radioButtonDeleteNone";
@@ -168,9 +168,9 @@
             this.radioButtonDeleteNone.TabIndex = 2;
             this.radioButtonDeleteNone.Text = "None";
             this.radioButtonDeleteNone.UseVisualStyleBackColor = true;
-            // 
+            //
             // radioButtonForward
-            // 
+            //
             this.radioButtonForward.AutoSize = true;
             this.radioButtonForward.Checked = true;
             this.radioButtonForward.Location = new System.Drawing.Point(10, 70);
@@ -180,9 +180,9 @@
             this.radioButtonForward.TabStop = true;
             this.radioButtonForward.Text = "From current video position";
             this.radioButtonForward.UseVisualStyleBackColor = true;
-            // 
+            //
             // radioButtonDeleteAll
-            // 
+            //
             this.radioButtonDeleteAll.AutoSize = true;
             this.radioButtonDeleteAll.Location = new System.Drawing.Point(10, 24);
             this.radioButtonDeleteAll.Name = "radioButtonDeleteAll";
@@ -190,10 +190,10 @@
             this.radioButtonDeleteAll.TabIndex = 0;
             this.radioButtonDeleteAll.Text = "All";
             this.radioButtonDeleteAll.UseVisualStyleBackColor = true;
-            // 
+            //
             // groupBoxDetectOptions
-            // 
-            this.groupBoxDetectOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxDetectOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDetectOptions.Controls.Add(this.labelBelow2);
             this.groupBoxDetectOptions.Controls.Add(this.labelAbove2);
@@ -209,27 +209,27 @@
             this.groupBoxDetectOptions.TabIndex = 6;
             this.groupBoxDetectOptions.TabStop = false;
             this.groupBoxDetectOptions.Text = "Detect options";
-            // 
+            //
             // labelBelow2
-            // 
+            //
             this.labelBelow2.AutoSize = true;
             this.labelBelow2.Location = new System.Drawing.Point(265, 91);
             this.labelBelow2.Name = "labelBelow2";
             this.labelBelow2.Size = new System.Drawing.Size(109, 13);
             this.labelBelow2.TabIndex = 15;
             this.labelBelow2.Text = "% of total max volume";
-            // 
+            //
             // labelAbove2
-            // 
+            //
             this.labelAbove2.AutoSize = true;
             this.labelAbove2.Location = new System.Drawing.Point(265, 62);
             this.labelAbove2.Name = "labelAbove2";
             this.labelAbove2.Size = new System.Drawing.Size(129, 13);
             this.labelAbove2.TabIndex = 14;
             this.labelAbove2.Text = "% of total average volume";
-            // 
+            //
             // numericUpDownBlockSize
-            // 
+            //
             this.numericUpDownBlockSize.Location = new System.Drawing.Point(149, 24);
             this.numericUpDownBlockSize.Maximum = new decimal(new int[] {
             300,
@@ -249,27 +249,27 @@
             0,
             0,
             0});
-            // 
+            //
             // labelScanBlocksMs
-            // 
+            //
             this.labelScanBlocksMs.AutoSize = true;
             this.labelScanBlocksMs.Location = new System.Drawing.Point(6, 26);
             this.labelScanBlocksMs.Name = "labelScanBlocksMs";
             this.labelScanBlocksMs.Size = new System.Drawing.Size(137, 13);
             this.labelScanBlocksMs.TabIndex = 12;
             this.labelScanBlocksMs.Text = "Scan blocks of milliseconds";
-            // 
+            //
             // labelBelow1
-            // 
+            //
             this.labelBelow1.AutoSize = true;
             this.labelBelow1.Location = new System.Drawing.Point(7, 89);
             this.labelBelow1.Name = "labelBelow1";
             this.labelBelow1.Size = new System.Drawing.Size(184, 13);
             this.labelBelow1.TabIndex = 9;
             this.labelBelow1.Text = "Block average volume must be below";
-            // 
+            //
             // numericUpDownMaxVol
-            // 
+            //
             this.numericUpDownMaxVol.Location = new System.Drawing.Point(208, 89);
             this.numericUpDownMaxVol.Minimum = new decimal(new int[] {
             1,
@@ -284,10 +284,10 @@
             0,
             0,
             0});
-            // 
+            //
             // groupBoxOther
-            // 
-            this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOther.Controls.Add(this.labelSplit2);
             this.groupBoxOther.Controls.Add(this.labelSplit1);
@@ -298,27 +298,27 @@
             this.groupBoxOther.TabIndex = 7;
             this.groupBoxOther.TabStop = false;
             this.groupBoxOther.Text = "Other";
-            // 
+            //
             // labelSplit2
-            // 
+            //
             this.labelSplit2.AutoSize = true;
             this.labelSplit2.Location = new System.Drawing.Point(185, 28);
             this.labelSplit2.Name = "labelSplit2";
             this.labelSplit2.Size = new System.Drawing.Size(63, 13);
             this.labelSplit2.TabIndex = 13;
             this.labelSplit2.Text = "milliseconds";
-            // 
+            //
             // labelSplit1
-            // 
+            //
             this.labelSplit1.AutoSize = true;
             this.labelSplit1.Location = new System.Drawing.Point(6, 28);
             this.labelSplit1.Name = "labelSplit1";
             this.labelSplit1.Size = new System.Drawing.Size(103, 13);
             this.labelSplit1.TabIndex = 12;
             this.labelSplit1.Text = "Split long subtitles at";
-            // 
+            //
             // numericUpDownDefaultMilliseconds
-            // 
+            //
             this.numericUpDownDefaultMilliseconds.Location = new System.Drawing.Point(111, 26);
             this.numericUpDownDefaultMilliseconds.Maximum = new decimal(new int[] {
             99999,
@@ -338,9 +338,9 @@
             0,
             0,
             0});
-            // 
+            //
             // WaveformGenerateTimeCodes
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(685, 422);
