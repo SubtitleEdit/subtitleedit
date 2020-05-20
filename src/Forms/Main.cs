@@ -16486,34 +16486,36 @@ namespace Nikse.SubtitleEdit.Forms
                         int firstIndex = FirstSelectedIndex;
                         if (firstIndex >= 0)
                         {
+                            var idx = firstIndex;
                             MakeHistoryForUndo(_language.BeforeInsertLine);
                             _makeHistoryPaused = true;
 
                             DeleteSelectedLines();
+                            _subtitleListViewIndex = -1;
                             var selectedIndices = new List<int>();
                             foreach (var p in tmp.Paragraphs)
                             {
-                                _subtitle.Paragraphs.Insert(firstIndex, p);
-                                selectedIndices.Add(firstIndex);
+                                _subtitle.Paragraphs.Insert(idx, p);
+                                selectedIndices.Add(idx);
                                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                                 {
-                                    var original = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
+                                    var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
                                     if (original == null)
                                     {
                                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                                     }
                                 }
 
-                                firstIndex++;
+                                idx++;
                             }
 
+                            _subtitle.Renumber();
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
-                            foreach (var idx in selectedIndices)
+                            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                            foreach (var selectedIndex in selectedIndices)
                             {
-                                SubtitleListview1.Items[idx].Selected = true;
+                                SubtitleListview1.Items[selectedIndex].Selected = true;
                             }
-
                             RestartHistory();
                         }
                     }
