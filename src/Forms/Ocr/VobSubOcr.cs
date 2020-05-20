@@ -4261,14 +4261,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
                 {
-                    int j = 0;
+                    int j = 1;
                     while (j < matches.Count)
                     {
                         var match = matches[j];
+                        var prevMatch = matches[j - 1];
                         if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
                         {
                             match.ImageSplitterItem.CouldBeSpaceBefore = false;
-                            if (match.Italic)
+                            if (prevMatch.Italic)
                             {
                                 matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
                             }
@@ -4359,7 +4360,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 var match = matches[i];
                 var matchNext = matches[i + 1];
-                if (!match.Italic || !matchNext.Italic || match.Text == "," ||
+                if (!match.Italic || match.Text == "," ||
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
                     match.ImageSplitterItem == null)
                 {
@@ -4654,14 +4655,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
                 {
-                    int j = 0;
+                    int j = 1;
                     while (j < matches.Count)
                     {
                         var match = matches[j];
+                        var prevMatch = matches[j - 1];
                         if (match.ImageSplitterItem?.CouldBeSpaceBefore == true)
                         {
                             match.ImageSplitterItem.CouldBeSpaceBefore = false;
-                            if (match.Italic)
+                            if (prevMatch.Italic)
                             {
                                 matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
                             }
