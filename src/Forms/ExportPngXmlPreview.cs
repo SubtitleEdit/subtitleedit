@@ -92,22 +92,30 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
+                e.SuppressKeyPress = true;
+                DialogResult = DialogResult.OK;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P)
+            {
+                e.SuppressKeyPress = true;
                 DialogResult = DialogResult.OK;
             }
             else if (e.KeyCode == Keys.Add)
             {
+                e.SuppressKeyPress = true;
                 Zoom(10);
             }
             else if (e.KeyCode == Keys.Subtract)
             {
+                e.SuppressKeyPress = true;
                 Zoom(-10);
             }
             else if (e.KeyCode == Keys.Home)
             {
+                e.SuppressKeyPress = true;
                 _zoomFactor = 100;
                 Zoom(0);
             }
         }
-
     }
 }

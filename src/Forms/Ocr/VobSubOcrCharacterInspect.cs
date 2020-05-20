@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -63,6 +64,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            buttonDetectFont.Visible = Configuration.Settings.General.ShowBetaStuff;
         }
 
         internal void Initialize(string databaseFolderName, List<VobSubOcr.CompareMatch> matches, List<Bitmap> imageSources, BinaryOcrDb binOcrDb, List<ImageSplitterItem> splitterItems)
@@ -599,6 +602,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxText.SelectedText = toolStripMenuItem.Text;
                 textBoxText.SelectionLength = 0;
                 textBoxText.SelectionStart = start + toolStripMenuItem.Text.Length;
+            }
+        }
+
+        private void buttonDetectFont_Click(object sender, EventArgs e)
+        {
+            using (var form = new BinaryOcrTrain())
+            {
+                form.InitializeDetectFont(_selectedCompareBinaryOcrBitmap, textBoxText.Text);
+                form.ShowDialog(this);
+
+                if (form.AutoDetectedFonts.Count > 0)
+                {
+                    var sb = new StringBuilder();
+                    foreach (var font in form.AutoDetectedFonts)
+                    {
+                        sb.AppendLine(font);
+                    }
+                    MessageBox.Show(sb.ToString().Trim());
+                }
+                else
+                {
+                    MessageBox.Show("Font not found!");
+                }
             }
         }
     }

@@ -16,6 +16,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class BinaryOcrTrain : Form
     {
+        public readonly List<string> AutoDetectedFonts = new List<string>();
+        private BinaryOcrBitmap _autoDetectFontBob;
+        private string _autoDetectFontText;
+
         private readonly Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
@@ -54,12 +58,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var match = db.FindExactMatch(bob);
                 if (match < 0)
                 {
-                    labelInfo.Refresh();
-                    Application.DoEvents();
                     db.Add(bob);
                     charactersLearned.Add(s);
                     numberOfCharactersLeaned++;
-                    labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0}, {2} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else
@@ -163,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             if (sb.Length > 0)
             {
-                TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb, italic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             }
 
             sf.Dispose();
@@ -194,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (listViewFonts.CheckedItems.Count == 1)
+            if (listViewFonts.CheckedItems.Count == 0)
             {
                 MessageBox.Show("Please select at least one font!");
                 return;
@@ -215,6 +216,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var charactersLearned = new List<string>();
                     foreach (var p in sub.Paragraphs)
                     {
+                        labelInfo.Refresh();
+                        Application.DoEvents();
                         foreach (char ch in p.Text)
                         {
                             if (!char.IsWhiteSpace(ch))
@@ -229,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, true, false);
                                     }
                                 }
+                                labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0}", numberOfCharactersLeaned, _subtitleFontName);
                             }
                         }
                     }
@@ -251,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void SelectAll_Click(object sender, EventArgs e)
         {
             listViewFonts.BeginUpdate();
             foreach (ListViewItem fontItem in listViewFonts.Items)
@@ -259,6 +263,70 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 fontItem.Checked = true;
             }
             listViewFonts.EndUpdate();
+        }
+
+        public void InitializeDetectFont(BinaryOcrBitmap bob, string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            _autoDetectFontBob = bob;
+            _autoDetectFontText = text;
+        }
+
+        private void BinaryOcrTrain_Shown(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_autoDetectFontText))
+            {
+                return;
+            }
+
+            SelectAll_Click(null, null);
+            int numberOfCharactersLeaned = 0;
+            int numberOfCharactersSkipped = 0;
+            foreach (ListViewItem fontItem in listViewFonts.CheckedItems)
+            {
+                _subtitleFontName = fontItem.Text;
+                labelInfo.Text = $"Checking font '{_subtitleFontName}'... {AutoDetectedFonts.Count} hits";
+                labelInfo.Refresh();
+                Application.DoEvents();
+
+                for (_subtitleFontSize = 20; _subtitleFontSize <= 100; _subtitleFontSize++)
+                {
+                    var charactersLearned = new List<string>();
+                    if (!string.IsNullOrEmpty(_autoDetectFontText))
+                    {
+                        var s = _autoDetectFontText;
+                        var bicDb = new BinaryOcrDb(null);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, false);
+                        if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
+                        {
+                            AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize);
+                        }
+
+                        bicDb = new BinaryOcrDb(null);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, true);
+                        if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
+                        {
+                            AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " italic");
+                        }
+
+                        if (checkBoxBold.Checked)
+                        {
+                            bicDb = new BinaryOcrDb(null);
+                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, true, false);
+                            if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
+                            {
+                                AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " bold");
+                            }
+                        }
+                    }
+                }
+            }
+
+            DialogResult = DialogResult.OK;
         }
     }
 }

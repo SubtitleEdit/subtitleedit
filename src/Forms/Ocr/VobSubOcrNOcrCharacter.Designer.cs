@@ -144,6 +144,7 @@
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelItalicOn = new System.Windows.Forms.Label();
+            this.checkBoxAutoSubmitOfFirstChar = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
@@ -192,7 +193,7 @@
             // labelCharacters
             // 
             this.labelCharacters.AutoSize = true;
-            this.labelCharacters.Location = new System.Drawing.Point(185, 88);
+            this.labelCharacters.Location = new System.Drawing.Point(185, 127);
             this.labelCharacters.Name = "labelCharacters";
             this.labelCharacters.Size = new System.Drawing.Size(64, 13);
             this.labelCharacters.TabIndex = 30;
@@ -202,7 +203,7 @@
             // 
             this.pictureBoxCharacter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxCharacter.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 109);
+            this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 148);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);
             this.pictureBoxCharacter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -215,7 +216,7 @@
             // labelCharactersAsText
             // 
             this.labelCharactersAsText.AutoSize = true;
-            this.labelCharactersAsText.Location = new System.Drawing.Point(185, 26);
+            this.labelCharactersAsText.Location = new System.Drawing.Point(185, 37);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
             this.labelCharactersAsText.Size = new System.Drawing.Size(98, 13);
             this.labelCharactersAsText.TabIndex = 28;
@@ -224,11 +225,12 @@
             // textBoxCharacters
             // 
             this.textBoxCharacters.ContextMenuStrip = this.contextMenuStripLetters;
-            this.textBoxCharacters.Location = new System.Drawing.Point(188, 47);
+            this.textBoxCharacters.Location = new System.Drawing.Point(188, 58);
             this.textBoxCharacters.Name = "textBoxCharacters";
             this.textBoxCharacters.Size = new System.Drawing.Size(107, 20);
             this.textBoxCharacters.TabIndex = 22;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyDown);
+            this.textBoxCharacters.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyUp);
             // 
             // contextMenuStripLetters
             // 
@@ -957,9 +959,11 @@
             this.groupBoxNewInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNewInput.Controls.Add(this.checkBoxAutoSubmitOfFirstChar);
             this.groupBoxNewInput.Controls.Add(this.label1);
             this.groupBoxNewInput.Controls.Add(this.label4);
             this.groupBoxNewInput.Controls.Add(this.label3);
+            this.groupBoxNewInput.Controls.Add(this.labelItalicOn);
             this.groupBoxNewInput.Controls.Add(this.checkBoxItalic);
             this.groupBoxNewInput.Controls.Add(this.buttonZoomOut);
             this.groupBoxNewInput.Controls.Add(this.buttonZoomIn);
@@ -1009,7 +1013,7 @@
             // checkBoxItalic
             // 
             this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(301, 49);
+            this.checkBoxItalic.Location = new System.Drawing.Point(301, 60);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(48, 17);
             this.checkBoxItalic.TabIndex = 33;
@@ -1019,7 +1023,7 @@
             // 
             // buttonZoomOut
             // 
-            this.buttonZoomOut.Location = new System.Drawing.Point(255, 77);
+            this.buttonZoomOut.Location = new System.Drawing.Point(255, 116);
             this.buttonZoomOut.Name = "buttonZoomOut";
             this.buttonZoomOut.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomOut.TabIndex = 32;
@@ -1029,7 +1033,7 @@
             // 
             // buttonZoomIn
             // 
-            this.buttonZoomIn.Location = new System.Drawing.Point(286, 77);
+            this.buttonZoomIn.Location = new System.Drawing.Point(286, 116);
             this.buttonZoomIn.Name = "buttonZoomIn";
             this.buttonZoomIn.Size = new System.Drawing.Size(25, 23);
             this.buttonZoomIn.TabIndex = 31;
@@ -1138,22 +1142,32 @@
             // 
             // labelItalicOn
             // 
-            this.labelItalicOn.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.labelItalicOn.AutoSize = true;
-            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
-            this.labelItalicOn.Location = new System.Drawing.Point(211, 13);
+            this.labelItalicOn.Location = new System.Drawing.Point(185, 13);
             this.labelItalicOn.Name = "labelItalicOn";
-            this.labelItalicOn.Size = new System.Drawing.Size(36, 13);
+            this.labelItalicOn.Size = new System.Drawing.Size(51, 19);
             this.labelItalicOn.TabIndex = 34;
             this.labelItalicOn.Text = "Italic";
+            // 
+            // checkBoxAutoSubmitOfFirstChar
+            // 
+            this.checkBoxAutoSubmitOfFirstChar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxAutoSubmitOfFirstChar.AutoSize = true;
+            this.checkBoxAutoSubmitOfFirstChar.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(188, 84);
+            this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
+            this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(144, 17);
+            this.checkBoxAutoSubmitOfFirstChar.TabIndex = 37;
+            this.checkBoxAutoSubmitOfFirstChar.Text = "A&uto submit on first char";
+            this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
             // 
             // VobSubOcrNOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 642);
-            this.Controls.Add(this.labelItalicOn);
             this.Controls.Add(this.groupBoxNewInput);
             this.Controls.Add(this.buttonShrinkSelection);
             this.Controls.Add(this.buttonExpandSelection);
@@ -1163,6 +1177,7 @@
             this.Controls.Add(this.pictureBoxSubtitleImage);
             this.Controls.Add(this.labelSubtitleImage);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(660, 675);
             this.Name = "VobSubOcrNOcrCharacter";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -1299,6 +1314,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
-
+        private System.Windows.Forms.CheckBox checkBoxAutoSubmitOfFirstChar;
     }
 }

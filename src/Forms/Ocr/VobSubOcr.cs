@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -260,6 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private bool _captureTopAlign;
         private int _captureTopAlignHeight = -1;
+        private int _captureTopAlignHeightThird = -1;
 
         private Timer _mainOcrTimer;
         private int _mainOcrTimerMax;
@@ -512,6 +514,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
+            previewToolStripMenuItem.Text = Configuration.Settings.Language.General.Preview;
             saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = language.SaveAllSubtitleImagesWithHtml;
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
@@ -1363,7 +1366,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return false;
         }
 
-        public Bitmap GetSubtitleBitmap(int index)
+        public Bitmap GetSubtitleBitmap(int index, bool crop = true)
         {
             Bitmap returnBmp = null;
             Color background;
@@ -1657,7 +1660,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, crop);
                     if (ToolStripMenuItemAutoTransparentBackground.Checked)
                     {
                         returnBmp.MakeTransparent();
@@ -1892,72 +1895,135 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         /// <summary>
         /// Get top position of sub + sub height
         /// </summary>
-        private void GetSubtitleTopAndHeight(int index, out int top, out int height)
+        private void GetSubtitleTopAndHeight(int index, out int left, out int top, out int width, out int height)
         {
             if (_mp4List != null)
             {
+                left = 0;
                 top = 0;
+                width = 0;
                 height = 0;
                 return;
             }
-            else if (_spList != null)
+
+            if (_spList != null)
             {
                 var item = _spList[index];
+                left = item.Picture.ImageDisplayArea.Left;
                 top = item.Picture.ImageDisplayArea.Top;
+                width = item.Picture.ImageDisplayArea.Width;
                 height = item.Picture.ImageDisplayArea.Bottom;
                 return;
             }
-            else if (_bdnXmlSubtitle != null)
-            {
-                var item = _bdnXmlSubtitle.Paragraphs[index];
-                //TODO: item.
+
+            if (_bdnXmlSubtitle != null)
+            { //TODO: FIX 
+                left = 0;
+                top = 0;
+                width = 0;
+                height = 0;
+                return;
             }
-            else if (_bluRaySubtitlesOriginal != null)
+
+            if (_bluRaySubtitlesOriginal != null)
             {
                 var item = _bluRaySubtitles[index];
                 var bmp = item.GetBitmap();
                 height = bmp.Height;
+                width = bmp.Width;
                 bmp.Dispose();
+                left = item.PcsObjects.Min(p => p.Origin.X);
                 top = item.PcsObjects.Max(p => p.Origin.Y);
                 return;
             }
-            else if (_xSubList != null)
+
+            if (_xSubList != null)
             {
+                left = 0;
                 top = 0;
+                width = 0;
                 height = 0;
                 return;
             }
-            else if (_dvbSubtitles != null)
+
+            if (_dvbSubtitles != null)
             {
                 var item = _dvbSubtitles[index];
                 var pos = item.GetPosition();
                 var bmp = item.GetBitmap();
                 var nbmp = new NikseBitmap(bmp);
+                left = pos.Left;
                 top = pos.Top + nbmp.CropTopTransparent(0);
                 nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                width = nbmp.Width;
                 height = nbmp.Height;
                 bmp.Dispose();
                 return;
             }
-            else if (_dvbPesSubtitles != null)
+
+            if (_dvbPesSubtitles != null)
             {
                 var item = _subtitle.Paragraphs[index];
                 //TODO
+                left = 0;
                 top = 0;
+                width = 0;
                 height = 0;
                 return;
             }
             else
             {
                 var item = _vobSubMergedPackist[index];
+                left = item.SubPicture.ImageDisplayArea.Left;
                 top = item.SubPicture.ImageDisplayArea.Top;
                 var bmp = item.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                width = bmp.Width;
                 height = bmp.Height;
                 bmp.Dispose();
                 return;
             }
+
+            left = -1;
             top = -1;
+            width = 0;
             height = -1;
+        }
+
+        private void GetSubtitleScreenSize(int index, out int width, out int height)
+        {
+            width = 0;
+            height = 0;
+
+            if (_spList != null)
+            {
+                var item = _spList[index];
+                width = item.Picture.ImageDisplayArea.Width;
+                height = item.Picture.ImageDisplayArea.Bottom;
+                return;
+            }
+
+            if (_bluRaySubtitlesOriginal != null)
+            {
+                var item = _bluRaySubtitles[index];
+                height = item.Size.Height;
+                width = item.Size.Width;
+            }
+
+
+            if (_dvbSubtitles != null)
+            {
+                var bmp = _dvbPesSubtitles[index].GetImageFull();
+                width = bmp.Width;
+                height = bmp.Height;
+                bmp.Dispose();
+            }
+
+            if (_vobSubMergedPackist != null && index < _vobSubMergedPackist.Count)
+            {
+                var item = _vobSubMergedPackist[index];
+                width = item.SubPicture.ImageDisplayArea.Width + +item.SubPicture.ImageDisplayArea.Location.X + 1;
+                height = item.SubPicture.ImageDisplayArea.Height + item.SubPicture.ImageDisplayArea.Location.Y + 1;
+            }
         }
 
         private Bitmap ShowSubtitleImage(int index)
@@ -5377,13 +5443,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var idxList = new List<int> { 0, 1, _subtitle.Paragraphs.Count / 2, _subtitle.Paragraphs.Count - 1 };
                 foreach (var idx in idxList)
                 {
-                    GetSubtitleTopAndHeight(idx, out var top, out var height);
+                    GetSubtitleTopAndHeight(idx, out _, out var top, out _, out var height);
                     if (top + height > maxHeight)
                     {
                         maxHeight = top + height;
                     }
                 }
-                if (maxHeight > 320)
+
+                _captureTopAlignHeightThird = maxHeight / 3;
+
+                if (maxHeight >= 720)
+                {
+                    _captureTopAlignHeight = maxHeight / 2 - 10;
+                }
+                else if (maxHeight > 320)
                 {
                     _captureTopAlignHeight = maxHeight / 3;
                 }
@@ -5632,8 +5705,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_captureTopAlign && _captureTopAlignHeight > 0)
             {
-                GetSubtitleTopAndHeight(i, out var top, out var height);
-                if (top + height < _captureTopAlignHeight)
+                GetSubtitleTopAndHeight(i, out _, out var top, out _, out var height);
+                if (top + height < _captureTopAlignHeight && top < _captureTopAlignHeightThird)
                 {
                     text = "{\\an8}" + text;
                 }
@@ -7130,17 +7203,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.R)
             {
+                e.SuppressKeyPress = true;
                 SelectBestImageCompareDatabase();
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
+                e.SuppressKeyPress = true;
                 using (var form = new BinaryOcrTrain())
                 {
                     form.ShowDialog(this);
                 }
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P)
+            {
+                e.SuppressKeyPress = true;
+                previewToolStripMenuItem_Click(null, null);
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
+                e.SuppressKeyPress = true;
                 var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
                 if (bmp != null)
                 {
@@ -9329,6 +9410,66 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return lowercaseHeight;
+        }
+
+        private void contextMenuStripImage_Opening(object sender, CancelEventArgs e)
+        {
+            GetSubtitleScreenSize(_selectedIndex, out var width, out var height);
+            previewToolStripMenuItem.Visible = width > 0 && height > 0;
+        }
+
+        private void previewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSubtitleScreenSize(_selectedIndex, out var width, out var height);
+            if (width == 0 || height == 0)
+            {
+                return;
+            }
+
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                GetSubtitleTopAndHeight(_selectedIndex, out var left, out var top, out _, out _);
+                using (var bmp = new Bitmap(width, height))
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        var p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
+                        FillPreviewBackground(bmp, g, p);
+                        _fromMenuItem = true;
+                        var subBitmap = GetSubtitleBitmap(_selectedIndex, false);
+                        _fromMenuItem = false;
+                        g.DrawImageUnscaled(subBitmap, new Point(left, top));
+                    }
+
+                    using (var form = new ExportPngXmlPreview(bmp))
+                    {
+                        Cursor = Cursors.Default;
+                        form.ShowDialog(this);
+                    }
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+        }
+
+        private void FillPreviewBackground(Bitmap bmp, Graphics g, Paragraph p)
+        {
+            // Draw background with generated image
+            var rect = new Rectangle(0, 0, bmp.Width - 1, bmp.Height - 1);
+            using (var br = new LinearGradientBrush(rect, Color.Black, Color.Black, 0, false))
+            {
+                var cb = new ColorBlend
+                {
+                    Positions = new[] { 0, 1 / 6f, 2 / 6f, 3 / 6f, 4 / 6f, 5 / 6f, 1 },
+                    Colors = new[] { Color.Black, Color.Black, Color.White, Color.Black, Color.Black, Color.White, Color.Black }
+                };
+                br.InterpolationColors = cb;
+                br.RotateTransform(0);
+                g.FillRectangle(br, rect);
+            }
         }
     }
 }
