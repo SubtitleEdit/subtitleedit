@@ -4727,14 +4727,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string FixNocrHardcodedStuff(string input)
         {
-            if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules || string.IsNullOrEmpty(input))
             {
                 return input;
             }
 
             var line = input;
 
-            if (LanguageString.StartsWith("en", StringComparison.OrdinalIgnoreCase))
+            var l = LanguageString;
+            if (l != null && l.StartsWith("en", StringComparison.OrdinalIgnoreCase))
             {
                 // fix I/l
                 int start = line.IndexOf('I');
