@@ -350,6 +350,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly int _ocrMethodModi = -1;
         private readonly int _ocrMethodNocr = -1;
 
+        private FindReplaceDialogHelper _findHelper;
+
         public static void SetDoubleBuffered(Control c)
         {
             //Taxes: Remote Desktop Connection and painting http://blogs.msdn.com/oldnewthing/archive/2006/01/03/508694.aspx
@@ -7225,6 +7227,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
                 previewToolStripMenuItem_Click(null, null);
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F)
+            {
+                e.SuppressKeyPress = true;
+                Find();
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F3)
+            {
+                e.SuppressKeyPress = true;
+                FindNext();
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 e.SuppressKeyPress = true;
@@ -7250,6 +7262,38 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
                 }
+            }
+        }
+
+        private void Find()
+        {
+            using (var findDialog = new FindDialog(_subtitle))
+            {
+                var idx = _selectedIndex + 1;
+
+                findDialog.Initialize(string.Empty, _findHelper);
+                if (findDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    _findHelper = findDialog.GetFindDialogHelper(idx);
+                    if (_findHelper.Find(_subtitle, null, idx + 1))
+                    {
+                        subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
+                    }
+                }
+            }
+        }
+
+        private void FindNext()
+        {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
+            var idx = _selectedIndex + 1;
+            if (_findHelper.Find(_subtitle, null, idx + 1))
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
             }
         }
 
