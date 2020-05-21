@@ -1131,6 +1131,30 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
+        internal static int IsBitmapsAlike(Ocr.Binary.BinaryOcrBitmap bmp1, Ocr.Binary.BinaryOcrBitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
+            for (int y = 0; y < bmp1.Height; y++)
+            {
+                var pixel = y * bmp1.Width;
+                for (int x = 0; x < bmp1.Width; x++)
+                {
+                    if (bmp1.GetPixel(pixel) != bmp2.GetPixel(pixel))
+                    {
+                        different++;
+                    }
+
+                    pixel++;
+                }
+                if (different > maxDiff)
+                {
+                    return different + 10;
+                }
+            }
+            return different;
+        }
+
         internal static int IsBitmapsAlike(NikseBitmap bmp1, Ocr.Binary.BinaryOcrBitmap bmp2)
         {
             int different = 0;
