@@ -900,7 +900,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            textBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
+            comboBoxBoxBingTokenEndpoint.Text = Configuration.Settings.Tools.MicrosoftTranslatorTokenEndpoint;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
 
             buttonReset.Text = Configuration.Settings.Language.Settings.RestoreDefaultSettings;
@@ -1799,7 +1799,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
-            toolsSettings.MicrosoftTranslatorTokenEndpoint = textBoxBingTokenEndpoint.Text.Trim();
+            toolsSettings.MicrosoftTranslatorTokenEndpoint = comboBoxBoxBingTokenEndpoint.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;
