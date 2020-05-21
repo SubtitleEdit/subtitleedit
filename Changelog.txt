@@ -27,6 +27,7 @@
    * Add mkv "forced" flag to track chooser/batch convert - thx kiwilad-nz
    * Clear logs from current line and forward when starting OCR
    * Spell check "Auto fix names" option to use suggestions - thx Waldkoenig
+   * Add preview (Ctrl+P) for OCR window
 * FIXED:
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix for sometimes missing images in bdsup - thx Devin
@@ -40,6 +41,8 @@
    * Fix updating libmpv (requires SE restart) - thx Bill
    * Remember last spell check lang (also) if it was English GB - thx Legion
    * Fix zoom combobox after waveform change - thx Meliox
+   * Fix list view Ctrl+v/selection bug - thx gleaming
+   * Fixes for Bing translate token endpoint - thx obliver27
 
 
 3.5.15 (1st May 2020)
