@@ -324,6 +324,7 @@ namespace Nikse.SubtitleEdit.Core
             OcrAddLetterRow1 = "♪;á;é;í;ó;ö;ő;ú;ü;ű;ç;ñ;å;¿";
             OcrAddLetterRow2 = "♫;Á;É;Í;Ó;Ö;Ő;Ú;Ü;Ű;Ç;Ñ;Å;¡";
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
+            MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
             UseGooleApiPaidService = false;
@@ -1993,6 +1994,7 @@ $HorzAlign          =   Center
                              settings.Version.StartsWith("3.5.13", StringComparison.Ordinal))
                     {
                         settings.Shortcuts.MainTranslateGoogleTranslate = "Control+Shift+G";
+                        settings.Tools.MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
                     }
                 }
                 catch (Exception exception)

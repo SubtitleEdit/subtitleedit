@@ -216,8 +216,8 @@
             this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBoxBing = new System.Windows.Forms.GroupBox();
+            this.comboBoxBoxBingTokenEndpoint = new System.Windows.Forms.ComboBox();
             this.labelBingTokenEndpoint = new System.Windows.Forms.Label();
-            this.textBoxBingTokenEndpoint = new System.Windows.Forms.TextBox();
             this.labelBingApiKey = new System.Windows.Forms.Label();
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
@@ -234,6 +234,7 @@
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
             this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions = new System.Windows.Forms.CheckBox();
             this.checkBoxUseAlwaysToFile = new System.Windows.Forms.CheckBox();
             this.checkBoxTreatINQuoteAsING = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
@@ -385,7 +386,6 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2841,8 +2841,8 @@
             this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBing.Controls.Add(this.comboBoxBoxBingTokenEndpoint);
             this.groupBoxBing.Controls.Add(this.labelBingTokenEndpoint);
-            this.groupBoxBing.Controls.Add(this.textBoxBingTokenEndpoint);
             this.groupBoxBing.Controls.Add(this.labelBingApiKey);
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
@@ -2854,21 +2854,25 @@
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
             // 
+            // comboBoxBoxBingTokenEndpoint
+            // 
+            this.comboBoxBoxBingTokenEndpoint.FormattingEnabled = true;
+            this.comboBoxBoxBingTokenEndpoint.Items.AddRange(new object[] {
+            "https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            "https://<your-region>.api.cognitive.microsoft.com/sts/v1.0/issueToken"});
+            this.comboBoxBoxBingTokenEndpoint.Location = new System.Drawing.Point(9, 101);
+            this.comboBoxBoxBingTokenEndpoint.Name = "comboBoxBoxBingTokenEndpoint";
+            this.comboBoxBoxBingTokenEndpoint.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxBoxBingTokenEndpoint.TabIndex = 33;
+            // 
             // labelBingTokenEndpoint
             // 
             this.labelBingTokenEndpoint.AutoSize = true;
-            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 82);
+            this.labelBingTokenEndpoint.Location = new System.Drawing.Point(6, 83);
             this.labelBingTokenEndpoint.Name = "labelBingTokenEndpoint";
             this.labelBingTokenEndpoint.Size = new System.Drawing.Size(81, 13);
             this.labelBingTokenEndpoint.TabIndex = 32;
             this.labelBingTokenEndpoint.Text = "Token endpoint";
-            // 
-            // textBoxBingTokenEndpoint
-            // 
-            this.textBoxBingTokenEndpoint.Location = new System.Drawing.Point(10, 98);
-            this.textBoxBingTokenEndpoint.Name = "textBoxBingTokenEndpoint";
-            this.textBoxBingTokenEndpoint.Size = new System.Drawing.Size(374, 21);
-            this.textBoxBingTokenEndpoint.TabIndex = 31;
             // 
             // labelBingApiKey
             // 
@@ -3051,6 +3055,16 @@
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
+            // 
+            // checkBoxSpellCheckAutoChangeNamesViaSuggestions
+            // 
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.AutoSize = true;
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 43);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Name = "checkBoxSpellCheckAutoChangeNamesViaSuggestions";
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.TabIndex = 1;
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Text = "Also use \'spell check suggestions\'";
+            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.UseVisualStyleBackColor = true;
             // 
             // checkBoxUseAlwaysToFile
             // 
@@ -4673,16 +4687,6 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
-            // checkBoxSpellCheckAutoChangeNamesViaSuggestions
-            // 
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.AutoSize = true;
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Location = new System.Drawing.Point(30, 43);
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Name = "checkBoxSpellCheckAutoChangeNamesViaSuggestions";
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Size = new System.Drawing.Size(184, 17);
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.TabIndex = 1;
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.Text = "Also use \'spell check suggestions\'";
-            this.checkBoxSpellCheckAutoChangeNamesViaSuggestions.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5152,7 +5156,6 @@
         private System.Windows.Forms.Label labelRulesProfileName;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Label labelBingTokenEndpoint;
-        private System.Windows.Forms.TextBox textBoxBingTokenEndpoint;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyComma;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyDash;
         private System.Windows.Forms.CheckBox checkBoxToolsBreakEarlyLineEnding;
@@ -5180,5 +5183,6 @@
         private System.Windows.Forms.Button buttonWaveformCursorColor;
         private System.Windows.Forms.Button buttonGapChoose;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNamesViaSuggestions;
+        private System.Windows.Forms.ComboBox comboBoxBoxBingTokenEndpoint;
     }
 }
