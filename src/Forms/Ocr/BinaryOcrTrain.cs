@@ -305,6 +305,41 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize);
                         }
+                        else
+                        {
+                            // allow for error %
+                            var smallestDifference = int.MaxValue;
+                            BinaryOcrBitmap hit = null;
+                            foreach (var compareItem in bicDb.CompareImages)
+                            {
+                                if (compareItem.Width == _autoDetectFontBob.Width && compareItem.Height == _autoDetectFontBob.Height) // precise math in size
+                                {
+                                    if (Math.Abs(compareItem.NumberOfColoredPixels - _autoDetectFontBob.NumberOfColoredPixels) < 3)
+                                    {
+                                        int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, _autoDetectFontBob);
+                                        if (dif < smallestDifference)
+                                        {
+                                            if (!BinaryOcrDb.AllowEqual(compareItem, _autoDetectFontBob))
+                                            {
+                                                continue;
+                                            }
+
+                                            smallestDifference = dif;
+                                            hit = compareItem;
+                                            if (dif < 3)
+                                            {
+                                                break; // foreach ending
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (smallestDifference < 13)
+                            {
+                                AutoDetectedFonts.Add($"{_subtitleFontName} {_subtitleFontSize} - diff={smallestDifference}");
+                            }
+                        }
 
                         bicDb = new BinaryOcrDb(null);
                         TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, true);
