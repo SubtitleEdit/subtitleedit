@@ -655,12 +655,25 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentWord = _currentWord.TrimEnd('\'');
                                 correct = true;
                             }
+
                             if (!correct)
                             {
                                 string removeUnicode = _currentWord.Replace("\u200b", string.Empty); // zero width space
                                 removeUnicode = removeUnicode.Replace("\u2060", string.Empty); // word joiner
                                 removeUnicode = removeUnicode.Replace("\ufeff", string.Empty); // zero width no-break space
                                 correct = DoSpell(removeUnicode);
+                            }
+
+                            if (!correct && _wordsIndex > 1 && _words.Count > _wordsIndex &&
+                                _words[_wordsIndex - 1].Text.ToLowerInvariant() == "www" &&
+                                (_words[_wordsIndex + 1].Text.ToLowerInvariant() == "com" || 
+                                 _words[_wordsIndex + 1].Text.ToLowerInvariant() == "org" || 
+                                 _words[_wordsIndex + 1].Text.ToLowerInvariant() == "net") &&
+                                _currentParagraph.Text.IndexOf(_words[_wordsIndex - 1].Text + "." +
+                                                               _currentWord + "." +
+                                                               _words[_wordsIndex + 1].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                correct = true; // do not spell check urls
                             }
 
                             if (!correct && (_languageName.StartsWith("ar_", StringComparison.Ordinal) || _languageName == "ar"))
