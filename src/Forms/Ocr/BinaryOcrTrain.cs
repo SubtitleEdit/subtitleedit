@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private float _subtitleFontSize = 25.0f;
         private readonly Color _borderColor = Color.Black;
         private const float BorderWidth = 2.0f;
+        private bool _abort = false;
 
         public BinaryOcrTrain()
         {
@@ -179,6 +180,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
+            if (buttonTrain.Text == "Abort")
+            {
+                _abort = true;
+                return;
+            }
+
             saveFileDialog1.DefaultExt = ".db";
             saveFileDialog1.Filter = "*Binary Image Compare DB files|*.db";
             if (saveFileDialog1.ShowDialog(this) != DialogResult.OK)
@@ -186,6 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
+            buttonTrain.Text = "Abort";
             var startFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
             var endFontSize = Convert.ToInt32(comboBoxFontSizeEnd.Items[comboBoxFontSizeEnd.SelectedIndex].ToString());
 
@@ -235,11 +243,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0}", numberOfCharactersLeaned, _subtitleFontName);
                             }
                         }
+                        if (_abort)
+                        {
+                            break;
+                        }
                     }
+                    if (_abort)
+                    {
+                        break;
+                    }
+                }
+
+                if (_abort)
+                {
+                    break;
                 }
             }
             bicDb.Save();
-            labelInfo.Text = "Training completed and saved in " + saveFileDialog1.FileName;
+            if (_abort)
+            {
+                labelInfo.Text = "Partially (aborted) training completed and saved in " + saveFileDialog1.FileName;
+            }
+            else
+            {
+                labelInfo.Text = "Training completed and saved in " + saveFileDialog1.FileName;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

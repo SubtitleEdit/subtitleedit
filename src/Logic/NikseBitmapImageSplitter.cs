@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var list = new List<ImageSplitterItem>();
 
-            // split into seperate lines
+            // split into separate lines
             List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, minLineHeight, averageLineHeight);
 
             if (!topToBottom)
