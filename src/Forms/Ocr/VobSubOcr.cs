@@ -3614,7 +3614,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (maxDiff < 0.2 || target.Width < 3 || target.Height < 5)
+            var tWidth = target.Width;
+            var tHeight = target.Height;
+            if (maxDiff < 0.2 || tWidth < 3 || tHeight < 5)
             {
                 return;
             }
@@ -3624,7 +3626,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             foreach (var compareItem in binOcrDb.CompareImages)
             {
-                if (compareItem.Width == target.Width && compareItem.Height == target.Height) // precise math in size
+                if (compareItem.Width == tWidth && compareItem.Height == tHeight) // precise math in size
                 {
                     if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < 3)
                     {
@@ -3651,7 +3653,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (var compareItem in binOcrDb.CompareImages)
                 {
-                    if (compareItem.Width == target.Width && compareItem.Height == target.Height) // precise math in size
+                    if (compareItem.Width == tWidth && compareItem.Height == tHeight) // precise math in size
                     {
                         if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < 40)
                         {
@@ -3675,11 +3677,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            if (target.Width > 16 && target.Height > 16 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
+            if (tWidth > 16 && tHeight > 16 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
             {
                 foreach (var compareItem in binOcrDb.CompareImages)
                 {
-                    if (compareItem.Width == target.Width && compareItem.Height == target.Height - 1)
+                    if (compareItem.Width == tWidth && compareItem.Height == tHeight - 1)
                     {
                         if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                         {
@@ -3706,7 +3708,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width && compareItem.Height == target.Height + 1)
+                        if (compareItem.Width == tWidth && compareItem.Height == tHeight + 1)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3734,7 +3736,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width + 1 && compareItem.Height == target.Height + 1)
+                        if (compareItem.Width == tWidth + 1 && compareItem.Height == tHeight + 1)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3762,7 +3764,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width - 1 && compareItem.Height == target.Height - 1)
+                        if (compareItem.Width == tWidth - 1 && compareItem.Height == tHeight - 1)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3790,7 +3792,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width - 1 == target.Width && compareItem.Height == target.Height)
+                        if (compareItem.Width - 1 == tWidth && compareItem.Height == tHeight)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3814,11 +3816,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                if (smallestDifference > 9 && target.Width > 11)
+                if (smallestDifference > 9 && tWidth > 11)
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width - 2 && compareItem.Height == target.Height)
+                        if (compareItem.Width == tWidth - 2 && compareItem.Height == tHeight)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3842,11 +3844,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                if (smallestDifference > 9 && target.Width > 14)
+                if (smallestDifference > 9 && tWidth > 14)
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width - 3 && compareItem.Height == target.Height)
+                        if (compareItem.Width == tWidth - 3 && compareItem.Height == tHeight)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3870,11 +3872,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                if (smallestDifference > 9 && target.Width > 14)
+                if (smallestDifference > 9 && tWidth > 14)
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width == target.Width && compareItem.Height == target.Height - 3)
+                        if (compareItem.Width == tWidth && compareItem.Height == tHeight - 3)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
@@ -3898,11 +3900,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                if (smallestDifference > 9 && target.Width > 14)
+                if (smallestDifference > 9 && tWidth > 14)
                 {
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
-                        if (compareItem.Width - 2 == target.Width && compareItem.Height == target.Height)
+                        if (compareItem.Width - 2 == tWidth && compareItem.Height == tHeight)
                         {
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
