@@ -195,6 +195,7 @@ Source: ..\Dictionaries\mkd_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
 Source: ..\Dictionaries\nob_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
 Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
+Source: ..\Dictionaries\pol_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
 Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
 Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
 Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion uninsneveruninstall; Components: main
@@ -572,6 +573,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nld_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nob_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nor_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\pol_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\por_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\rus_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\spa_OCRFixReplaceList.xml'));
