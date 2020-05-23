@@ -573,6 +573,7 @@
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
             public string SaveDigitalCinemaInteropAs { get; set; }
+            public string SaveDigitalCinemaSmpte2014 { get; set; }
             public string SavePremiereEdlAs { get; set; }
             public string SaveFcpAs { get; set; }
             public string SaveDostAs { get; set; }

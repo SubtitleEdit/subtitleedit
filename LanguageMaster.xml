@@ -514,6 +514,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Choose Digital Cinema Interop file name</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Choose Digital Cinema SMPTE 2014 file name</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Choose Premiere EDL file name</SavePremiereEdlAs>
     <SaveFcpAs>Choose Final Cut Pro xml file name</SaveFcpAs>
     <SaveDostAs>Choose DoStudio dost file name</SaveDostAs>

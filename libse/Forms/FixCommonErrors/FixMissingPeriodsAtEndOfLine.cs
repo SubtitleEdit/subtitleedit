@@ -79,7 +79,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         bool isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
                                                                          nextText.StartsWith("I'", StringComparison.Ordinal));
 
-                        if (!isNextCloseAndStartsWithI)
+                        bool isNextCloseAndStartsWithTitle = isNextClose && (nextText.StartsWith("Mr. ", StringComparison.Ordinal) ||
+                                                                             nextText.StartsWith("Dr. ", StringComparison.Ordinal));
+
+                        if (!isNextCloseAndStartsWithI && !isNextCloseAndStartsWithTitle)
                         {
                             //test to see if the first word of the next line is a name
                             if (callbacks.AllowFix(p, fixAction))

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.listViewFonts = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label3 = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -73,10 +73,21 @@
             this.groupBox1.Controls.Add(this.labelSubtitleFont);
             this.groupBox1.Location = new System.Drawing.Point(12, 92);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(473, 371);
+            this.groupBox1.Size = new System.Drawing.Size(473, 387);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Training options";
+            // 
+            // checkBoxBold
+            // 
+            this.checkBoxBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxBold.AutoSize = true;
+            this.checkBoxBold.Location = new System.Drawing.Point(9, 364);
+            this.checkBoxBold.Name = "checkBoxBold";
+            this.checkBoxBold.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxBold.TabIndex = 17;
+            this.checkBoxBold.Text = "Also train bold";
+            this.checkBoxBold.UseVisualStyleBackColor = true;
             // 
             // listViewFonts
             // 
@@ -90,7 +101,7 @@
             this.listViewFonts.HideSelection = false;
             this.listViewFonts.Location = new System.Drawing.Point(9, 47);
             this.listViewFonts.Name = "listViewFonts";
-            this.listViewFonts.Size = new System.Drawing.Size(449, 198);
+            this.listViewFonts.Size = new System.Drawing.Size(449, 214);
             this.listViewFonts.TabIndex = 16;
             this.listViewFonts.UseCompatibleStateImageBehavior = false;
             this.listViewFonts.View = System.Windows.Forms.View.Details;
@@ -104,7 +115,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 320);
+            this.label3.Location = new System.Drawing.Point(6, 336);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(189, 13);
             this.label3.TabIndex = 16;
@@ -113,7 +124,7 @@
             // numericUpDownSegmentsPerCharacter
             // 
             this.numericUpDownSegmentsPerCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.numericUpDownSegmentsPerCharacter.Location = new System.Drawing.Point(210, 318);
+            this.numericUpDownSegmentsPerCharacter.Location = new System.Drawing.Point(264, 334);
             this.numericUpDownSegmentsPerCharacter.Maximum = new decimal(new int[] {
             250,
             0,
@@ -125,10 +136,10 @@
             0,
             0});
             this.numericUpDownSegmentsPerCharacter.Name = "numericUpDownSegmentsPerCharacter";
-            this.numericUpDownSegmentsPerCharacter.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownSegmentsPerCharacter.Size = new System.Drawing.Size(66, 20);
             this.numericUpDownSegmentsPerCharacter.TabIndex = 15;
             this.numericUpDownSegmentsPerCharacter.Value = new decimal(new int[] {
-            150,
+            100,
             0,
             0,
             0});
@@ -137,7 +148,7 @@
             // 
             this.checkBoxVeryAccurate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxVeryAccurate.AutoSize = true;
-            this.checkBoxVeryAccurate.Location = new System.Drawing.Point(9, 295);
+            this.checkBoxVeryAccurate.Location = new System.Drawing.Point(9, 311);
             this.checkBoxVeryAccurate.Name = "checkBoxVeryAccurate";
             this.checkBoxVeryAccurate.Size = new System.Drawing.Size(303, 17);
             this.checkBoxVeryAccurate.TabIndex = 14;
@@ -148,7 +159,7 @@
             // 
             this.labelSubtitleFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSubtitleFontSize.AutoSize = true;
-            this.labelSubtitleFontSize.Location = new System.Drawing.Point(5, 262);
+            this.labelSubtitleFontSize.Location = new System.Drawing.Point(5, 278);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
             this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
             this.labelSubtitleFontSize.TabIndex = 6;
@@ -251,7 +262,7 @@
             "130",
             "140",
             "150"});
-            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(110, 259);
+            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(110, 275);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSubtitleFontSize.TabIndex = 7;
@@ -280,7 +291,7 @@
             this.textBoxInputFile.Name = "textBoxInputFile";
             this.textBoxInputFile.Size = new System.Drawing.Size(418, 20);
             this.textBoxInputFile.TabIndex = 9;
-            this.textBoxInputFile.Text = "C:\\Data\\Train.srt";
+            this.textBoxInputFile.Text = "c:\\data\\SE-OCR\\train.srt";
             // 
             // buttonInputChoose
             // 
@@ -320,7 +331,7 @@
             this.groupBox3.Controls.Add(this.buttonNOcrDbChoose);
             this.groupBox3.Controls.Add(this.textBoxNOcrDb);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(12, 469);
+            this.groupBox3.Location = new System.Drawing.Point(12, 485);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(473, 73);
             this.groupBox3.TabIndex = 15;
@@ -343,7 +354,7 @@
             this.textBoxNOcrDb.Name = "textBoxNOcrDb";
             this.textBoxNOcrDb.Size = new System.Drawing.Size(408, 20);
             this.textBoxNOcrDb.TabIndex = 9;
-            this.textBoxNOcrDb.Text = "C:\\Data\\auto.nocr";
+            this.textBoxNOcrDb.Text = "c:\\data\\SE-OCR\\auto.nocr";
             // 
             // openFileDialog1
             // 
@@ -353,7 +364,7 @@
             // 
             this.buttonTrain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonTrain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTrain.Location = new System.Drawing.Point(276, 597);
+            this.buttonTrain.Location = new System.Drawing.Point(276, 602);
             this.buttonTrain.Name = "buttonTrain";
             this.buttonTrain.Size = new System.Drawing.Size(128, 23);
             this.buttonTrain.TabIndex = 16;
@@ -364,7 +375,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(410, 597);
+            this.buttonOK.Location = new System.Drawing.Point(410, 602);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 17;
@@ -375,7 +386,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.Location = new System.Drawing.Point(13, 549);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 565);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(159, 60);
             this.pictureBox1.TabIndex = 18;
@@ -385,28 +396,17 @@
             // 
             this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 612);
+            this.labelInfo.Location = new System.Drawing.Point(12, 628);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
             this.labelInfo.TabIndex = 19;
             this.labelInfo.Text = "labelInfo";
             // 
-            // checkBoxBold
-            // 
-            this.checkBoxBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxBold.AutoSize = true;
-            this.checkBoxBold.Location = new System.Drawing.Point(9, 348);
-            this.checkBoxBold.Name = "checkBoxBold";
-            this.checkBoxBold.Size = new System.Drawing.Size(92, 17);
-            this.checkBoxBold.TabIndex = 17;
-            this.checkBoxBold.Text = "Also train bold";
-            this.checkBoxBold.UseVisualStyleBackColor = true;
-            // 
             // VobSubNOcrTrain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(503, 633);
+            this.ClientSize = new System.Drawing.Size(503, 649);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonOK);

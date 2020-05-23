@@ -26421,6 +26421,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void dCinemaSMPTE2014ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.DCinemaInterop, _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+        }
+
         internal Subtitle UndoFromSpellCheck(Subtitle subtitle)
         {
             var idx = FirstSelectedIndex;

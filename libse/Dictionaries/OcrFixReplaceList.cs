@@ -358,7 +358,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             foreach (string letter in _partialWordReplaceList.Keys)
             {
                 var indexes = new List<int>();
-                for (int i = 1; i < word.Length - letter.Length; i++)
+                for (int i = 0; i < word.Length - letter.Length; i++)
                 {
                     if (word.Substring(i).StartsWith(letter, StringComparison.Ordinal))
                     {
@@ -381,7 +381,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
                 foreach (var previousGuess in previousGuesses)
                 {
-                    for (int i = 1; i < previousGuess.Length - letter.Length; i++)
+                    for (int i = 0; i < previousGuess.Length - letter.Length; i++)
                     {
                         if (previousGuess.Substring(i).StartsWith(letter, StringComparison.Ordinal))
                         {

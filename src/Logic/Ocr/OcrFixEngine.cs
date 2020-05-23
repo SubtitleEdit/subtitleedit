@@ -624,7 +624,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // must be last - counts/logs unknown words
             text = FixUnknownWordsViaGuessOrPrompt(out _, text, index, null, true, false, logSuggestions, autoGuess);
-            
+
             return text;
         }
 
@@ -1508,6 +1508,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             .All(w => w.Length > 2 && (DoSpell(w) || IsWordKnownOrNumber(word, line)));
                     }
 
+                    if (!correct && word.Length == 1 && i < words.Count - 1 && words[i + 1].Length == 1)
+                    {
+                        var abbreviation = word + "." + words[i + 1] + ".";
+                        if (_abbreviationList.Contains(abbreviation) && line.Contains(abbreviation, StringComparison.Ordinal))
+                        {
+                            correct = true;
+                            words[i + 1] = string.Empty;
+                        }
+                        else if (i < words.Count - 2 && words[i + 2].Length == 1)
+                        {
+                            abbreviation = word + "." + words[i + 1] + "." + words[i + 2] + ".";
+                            if (_abbreviationList.Contains(abbreviation) && line.Contains(abbreviation, StringComparison.Ordinal))
+                            {
+                                correct = true;
+                                words[i + 1] = string.Empty;
+                                words[i + 2] = string.Empty;
+                            }
+                        }
+                    }
+
                     if (word.Length == 0)
                     {
                         correct = true;
@@ -1627,7 +1647,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             foreach (string guess in guesses)
                             {
-                                if (!guess.StartsWith("f ", StringComparison.Ordinal) && IsWordOrWordsCorrect(guess))
+                                if (!(guess.Length == 2 && guess[1] == ' ') && IsWordOrWordsCorrect(guess))
                                 {
                                     string replacedLine = OcrFixReplaceList.ReplaceWord(line, word, guess);
                                     if (replacedLine != line)

@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     listViewFonts.Items.Add(item);
                 }
             }
-            comboBoxSubtitleFontSize.SelectedIndex = 10;
+            comboBoxSubtitleFontSize.SelectedIndex = 50;
         }
 
         internal void Initialize()
@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+            labelInfo.Text = "Training done";
             nOcrD.Save();
         }
 
@@ -128,9 +129,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (match == null)
                 {
                     pictureBox1.Image = list[0].NikseBitmap.GetBitmap();
-                    Refresh();
+                    labelInfo.Refresh();
+                    pictureBox1.Refresh();
                     Application.DoEvents();
-                    System.Threading.Thread.Sleep(100);
+//                    System.Threading.Thread.Sleep(100);
 
                     NOcrChar nOcrChar = new NOcrChar(s)
                     {

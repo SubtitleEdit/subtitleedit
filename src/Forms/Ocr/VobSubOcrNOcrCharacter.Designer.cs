@@ -126,9 +126,11 @@
             this.labelSubtitleImage = new System.Windows.Forms.Label();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.groupBoxNewInput = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoSubmitOfFirstChar = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.labelItalicOn = new System.Windows.Forms.Label();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
@@ -139,12 +141,15 @@
             this.listBoxlinesBackground = new System.Windows.Forms.ListBox();
             this.contextMenuStripLinesBackground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeBackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelLines = new System.Windows.Forms.Label();
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelItalicOn = new System.Windows.Forms.Label();
-            this.checkBoxAutoSubmitOfFirstChar = new System.Windows.Forms.CheckBox();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonGuessAgain = new System.Windows.Forms.Button();
+            this.labelLinestoDraw = new System.Windows.Forms.Label();
+            this.numericUpDownLinesToDraw = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
@@ -152,6 +157,7 @@
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
             this.contextMenuLinesForeground.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinesToDraw)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonShrinkSelection
@@ -959,6 +965,9 @@
             this.groupBoxNewInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNewInput.Controls.Add(this.numericUpDownLinesToDraw);
+            this.groupBoxNewInput.Controls.Add(this.labelLinestoDraw);
+            this.groupBoxNewInput.Controls.Add(this.buttonGuessAgain);
             this.groupBoxNewInput.Controls.Add(this.checkBoxAutoSubmitOfFirstChar);
             this.groupBoxNewInput.Controls.Add(this.label1);
             this.groupBoxNewInput.Controls.Add(this.label4);
@@ -981,6 +990,18 @@
             this.groupBoxNewInput.Size = new System.Drawing.Size(600, 360);
             this.groupBoxNewInput.TabIndex = 33;
             this.groupBoxNewInput.TabStop = false;
+            // 
+            // checkBoxAutoSubmitOfFirstChar
+            // 
+            this.checkBoxAutoSubmitOfFirstChar.AutoSize = true;
+            this.checkBoxAutoSubmitOfFirstChar.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(188, 84);
+            this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
+            this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(144, 17);
+            this.checkBoxAutoSubmitOfFirstChar.TabIndex = 37;
+            this.checkBoxAutoSubmitOfFirstChar.Text = "A&uto submit on first char";
+            this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
+            this.checkBoxAutoSubmitOfFirstChar.CheckedChanged += new System.EventHandler(this.checkBoxAutoSubmitOfFirstChar_CheckedChanged);
             // 
             // label1
             // 
@@ -1009,6 +1030,17 @@
             this.label3.Size = new System.Drawing.Size(151, 13);
             this.label3.TabIndex = 35;
             this.label3.Text = "Hold Ctrl down to continue line";
+            // 
+            // labelItalicOn
+            // 
+            this.labelItalicOn.AutoSize = true;
+            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
+            this.labelItalicOn.Location = new System.Drawing.Point(185, 13);
+            this.labelItalicOn.Name = "labelItalicOn";
+            this.labelItalicOn.Size = new System.Drawing.Size(51, 19);
+            this.labelItalicOn.TabIndex = 34;
+            this.labelItalicOn.Text = "Italic";
             // 
             // checkBoxItalic
             // 
@@ -1096,9 +1128,10 @@
             // contextMenuStripLinesBackground
             // 
             this.contextMenuStripLinesBackground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.removeBackToolStripMenuItem});
+            this.removeBackToolStripMenuItem,
+            this.clearToolStripMenuItem1});
             this.contextMenuStripLinesBackground.Name = "contextMenuStripLines";
-            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(118, 26);
+            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(118, 48);
             // 
             // removeBackToolStripMenuItem
             // 
@@ -1106,6 +1139,13 @@
             this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeBackToolStripMenuItem.Text = "Remove";
             this.removeBackToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem1
+            // 
+            this.clearToolStripMenuItem1.Name = "clearToolStripMenuItem1";
+            this.clearToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
+            this.clearToolStripMenuItem1.Text = "Clear";
+            this.clearToolStripMenuItem1.Click += new System.EventHandler(this.clearToolStripMenuItem1_Click);
             // 
             // labelLines
             // 
@@ -1129,9 +1169,10 @@
             // contextMenuLinesForeground
             // 
             this.contextMenuLinesForeground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.removeForegroundToolStripMenuItem});
+            this.removeForegroundToolStripMenuItem,
+            this.clearToolStripMenuItem});
             this.contextMenuLinesForeground.Name = "contextMenuStripLines";
-            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 26);
+            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 48);
             // 
             // removeForegroundToolStripMenuItem
             // 
@@ -1140,28 +1181,47 @@
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click_1);
             // 
-            // labelItalicOn
+            // clearToolStripMenuItem
             // 
-            this.labelItalicOn.AutoSize = true;
-            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
-            this.labelItalicOn.Location = new System.Drawing.Point(185, 13);
-            this.labelItalicOn.Name = "labelItalicOn";
-            this.labelItalicOn.Size = new System.Drawing.Size(51, 19);
-            this.labelItalicOn.TabIndex = 34;
-            this.labelItalicOn.Text = "Italic";
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
-            // checkBoxAutoSubmitOfFirstChar
+            // buttonGuessAgain
             // 
-            this.checkBoxAutoSubmitOfFirstChar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxAutoSubmitOfFirstChar.AutoSize = true;
-            this.checkBoxAutoSubmitOfFirstChar.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(188, 84);
-            this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
-            this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(144, 17);
-            this.checkBoxAutoSubmitOfFirstChar.TabIndex = 37;
-            this.checkBoxAutoSubmitOfFirstChar.Text = "A&uto submit on first char";
-            this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
+            this.buttonGuessAgain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGuessAgain.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGuessAgain.Location = new System.Drawing.Point(455, 135);
+            this.buttonGuessAgain.Name = "buttonGuessAgain";
+            this.buttonGuessAgain.Size = new System.Drawing.Size(139, 23);
+            this.buttonGuessAgain.TabIndex = 38;
+            this.buttonGuessAgain.Text = "&Guess again";
+            this.buttonGuessAgain.UseVisualStyleBackColor = true;
+            this.buttonGuessAgain.Click += new System.EventHandler(this.buttonGuessAgain_Click);
+            // 
+            // labelLinestoDraw
+            // 
+            this.labelLinestoDraw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelLinestoDraw.AutoSize = true;
+            this.labelLinestoDraw.Location = new System.Drawing.Point(452, 91);
+            this.labelLinestoDraw.Name = "labelLinestoDraw";
+            this.labelLinestoDraw.Size = new System.Drawing.Size(70, 13);
+            this.labelLinestoDraw.TabIndex = 39;
+            this.labelLinestoDraw.Text = "Lines to draw";
+            // 
+            // numericUpDownLinesToDraw
+            // 
+            this.numericUpDownLinesToDraw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLinesToDraw.Location = new System.Drawing.Point(455, 109);
+            this.numericUpDownLinesToDraw.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownLinesToDraw.Name = "numericUpDownLinesToDraw";
+            this.numericUpDownLinesToDraw.Size = new System.Drawing.Size(65, 20);
+            this.numericUpDownLinesToDraw.TabIndex = 40;
             // 
             // VobSubOcrNOcrCharacter
             // 
@@ -1182,6 +1242,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "VobSubOcrNOcrCharacter";
+            this.Load += new System.EventHandler(this.VobSubOcrNOcrCharacter_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrNOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.contextMenuStripLetters.ResumeLayout(false);
@@ -1192,6 +1253,7 @@
             this.groupBox2.PerformLayout();
             this.contextMenuStripLinesBackground.ResumeLayout(false);
             this.contextMenuLinesForeground.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLinesToDraw)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1315,5 +1377,10 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
         private System.Windows.Forms.CheckBox checkBoxAutoSubmitOfFirstChar;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem1;
+        private System.Windows.Forms.NumericUpDown numericUpDownLinesToDraw;
+        private System.Windows.Forms.Label labelLinestoDraw;
+        private System.Windows.Forms.Button buttonGuessAgain;
     }
 }
