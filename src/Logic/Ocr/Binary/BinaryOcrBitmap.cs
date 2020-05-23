@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             Height = height;
             _colors = new byte[Width * Height];
             Hash = MurMurHash3.Hash(_colors);
-            CalcuateNumberOfColoredPixels();
+            NumberOfColoredPixels = 0;
         }
 
         public BinaryOcrBitmap(Stream stream)
@@ -113,27 +113,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             Width = nbmp.Width;
             Height = nbmp.Height;
             _colors = new byte[Width * Height];
+            var numberOfColoredPixels = 0;
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    SetPixelViaAlpha(x, y, nbmp.GetAlpha(x, y));
+                    var alpha = nbmp.GetAlpha(x, y);
+                    if (alpha < 100)
+                    {
+                        _colors[Width * y + x] = 0;
+                    }
+                    else
+                    {
+                        _colors[Width * y + x] = 1;
+                        numberOfColoredPixels++;
+                    }
                 }
             }
+            NumberOfColoredPixels = numberOfColoredPixels;
             Hash = MurMurHash3.Hash(_colors);
-            CalcuateNumberOfColoredPixels();
-        }
-
-        private void CalcuateNumberOfColoredPixels()
-        {
-            NumberOfColoredPixels = 0;
-            for (int i = 0; i < _colors.Length; i++)
-            {
-                if (_colors[i] > 0)
-                {
-                    NumberOfColoredPixels++;
-                }
-            }
         }
 
         public bool AreColorsEqual(BinaryOcrBitmap other)
@@ -216,33 +214,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             return _colors[index];
         }
 
-        public void SetPixel(int x, int y, int c)
+        public void SetPixel(int x, int y)
         {
-            _colors[Width * y + x] = (byte)c;
-        }
-
-        public void SetPixel(int x, int y, Color c)
-        {
-            if (c.A < 100)
-            {
-                _colors[Width * y + x] = 0;
-            }
-            else
-            {
-                _colors[Width * y + x] = 1;
-            }
-        }
-
-        public void SetPixelViaAlpha(int x, int y, int alpha)
-        {
-            if (alpha < 100)
-            {
-                _colors[Width * y + x] = 0;
-            }
-            else
-            {
-                _colors[Width * y + x] = 1;
-            }
+            _colors[Width * y + x] = 1;
         }
 
         /// <summary>
@@ -322,13 +296,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                             int c = bob.GetPixel(x, y);
                             if (c > 0)
                             {
-                                nbmp.SetPixel(bob.X - minX + x, bob.Y - minY + y, 1);
+                                nbmp.SetPixel(bob.X - minX + x, bob.Y - minY + y);
                             }
                         }
                     }
                 }
 
-                return nbmp.ToOldBitmap(color); // Resursive
+                return nbmp.ToOldBitmap(color); // Recursive
             }
             else
             {

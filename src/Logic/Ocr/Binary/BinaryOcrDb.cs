@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {
@@ -135,10 +135,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
         public int FindExactMatch(BinaryOcrBitmap bob)
         {
+            var bobHash = bob.Hash;
             for (int i = 0; i < CompareImages.Count; i++)
             {
                 var b = CompareImages[i];
-                if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
+                if (bobHash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
                 {
                     if (AllowEqual(b, bob))
                     {
