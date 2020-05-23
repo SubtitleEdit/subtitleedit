@@ -38,7 +38,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             panelColorToRemove.BackColor = PreprocessingSettings.ColorToRemove;
             checkBoxCropTransparent.Checked = PreprocessingSettings.CropTransparentColors;
             checkBoxYellowToWhite.Checked = PreprocessingSettings.YellowToWhite;
+            trackBarThresshold.Minimum = (int)numericUpDownThreshold.Minimum;
+            trackBarThresshold.Maximum = (int)numericUpDownThreshold.Maximum;
             numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
+            trackBarThresshold.Value = PreprocessingSettings.BinaryImageCompareThreshold;
 
             Text = Configuration.Settings.Language.OcrPreprocessing.Title;
             groupBoxColors.Text = Configuration.Settings.Language.OcrPreprocessing.Colors;
@@ -57,11 +60,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             _loading = false;
-            RefreshImage();
-        }
-
-        private void numericUpDownThreshold_ValueChanged(object sender, EventArgs e)
-        {
             RefreshImage();
         }
 
@@ -125,12 +123,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void pictureBoxSubtitleImage_Click(object sender, EventArgs e)
         {
-            if (!(pictureBoxSubtitleImage.Image is Bitmap))
+            var p = pictureBoxSubtitleImage.PointToClient(MousePosition);
+            var bmp = pictureBoxSubtitleImage.Image as Bitmap;
+            if (bmp == null || p.X >= bmp.Width || p.Y>= bmp.Height)
             {
                 return;
             }
 
-            Text = MousePosition.X + ":" + MousePosition.Y;
+            var color = bmp.GetPixel(p.X, p.Y);
+            labelOriginalImage.Text = Configuration.Settings.Language.OcrPreprocessing.OriginalImage + 
+                                      $"  {p.X},{p.Y} ARGB({color.A}, {color.R},{color.G},{color.B})";
         }
 
         private void ColorToWhite(object sender, EventArgs e)
@@ -181,6 +183,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void checkBoxCropTransparent_CheckedChanged(object sender, EventArgs e)
         {
+            RefreshImage();
+        }
+
+        private void numericUpDownThreshold_ValueChanged(object sender, EventArgs e)
+        {
+            trackBarThresshold.ValueChanged -= trackBarThresshold_ValueChanged;
+            trackBarThresshold.Value = (int)numericUpDownThreshold.Value;
+            trackBarThresshold.ValueChanged += trackBarThresshold_ValueChanged;
+            RefreshImage();
+        }
+
+        private void trackBarThresshold_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDownThreshold.ValueChanged -= numericUpDownThreshold_ValueChanged;
+            numericUpDownThreshold.Value = trackBarThresshold.Value;
+            numericUpDownThreshold.ValueChanged += numericUpDownThreshold_ValueChanged;
             RefreshImage();
         }
     }

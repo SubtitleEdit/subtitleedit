@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             internal const string Fcp = "FCP";
             internal const string Dost = "DOSTIMAGE";
             internal const string DCinemaInterop = "DCINEMA_INTEROP";
+            internal const string DCinemaSmpte2014 = "DCINEMA_SMPTE_2014";
             internal const string BdnXml = "BDNXML";
             internal const string Edl = "EDL";
             internal const string EdlClipName = "EDL_CLIPNAME";
@@ -539,6 +540,13 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
+            else if (_exportType == ExportFormats.DCinemaSmpte2014)
+            {
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDigitalCinemaSmpte2014;
+                saveFileDialog1.DefaultExt = "*.xml";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "Xml files|*.xml";
+            }
             else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SavePremiereEdlAs;
@@ -557,6 +565,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == ExportFormats.Fcp && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == ExportFormats.Dost && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == ExportFormats.DCinemaInterop && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.DCinemaSmpte2014 && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == ExportFormats.EdlClipName && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == ExportFormats.Edl && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -797,6 +806,45 @@ namespace Nikse.SubtitleEdit.Forms
                                 "<Language>English</Language>" + Environment.NewLine +
                                 sb +
                                 "</DCSubtitle>");
+                    string fName = saveFileDialog1.FileName;
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        fName += ".xml";
+                    }
+
+                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+                    var text = string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName));
+                    MessageBoxShowWithFolderName(text, Path.GetDirectoryName(fName));
+                }
+                else if (_exportType == ExportFormats.DCinemaSmpte2014)
+                {
+                    var doc = new XmlDocument();
+                    string title = "unknown";
+                    if (!string.IsNullOrEmpty(_fileName))
+                    {
+                        title = Path.GetFileNameWithoutExtension(_fileName);
+                    }
+
+                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    string xml =
+                        "<dcst:SubtitleReel xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2014/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                        "  <dcst:Id>urn:uuid:" + guid + "</dcst:Id>" + Environment.NewLine +
+                        "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
+                        "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
+                        "  <dcst:IssueDate>2014-01-01T00:00:00.000-00:00</dcst:IssueDate>" + Environment.NewLine +
+                        "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
+                        "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
+                        "  <dcst:EditRate>25 1</dcst:EditRate>" + Environment.NewLine +
+                        "  <dcst:TimeCodeRate>25</dcst:TimeCodeRate>" + Environment.NewLine +
+                        "  <dcst:StartTime>00:00:00:00</dcst:StartTime> " + Environment.NewLine +
+                        "  <dcst:LoadFont ID=\"theFontId\">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</dcst:LoadFont>" + Environment.NewLine +
+                        "  <dcst:SubtitleList>" + Environment.NewLine +
+                           sb +
+                        "  </dcst:SubtitleList>" + Environment.NewLine +
+                        "</dcst:SubtitleReel>";
+
+
+                    doc.LoadXml(xml);
                     string fName = saveFileDialog1.FileName;
                     if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                     {
@@ -1510,6 +1558,77 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
                 else if (_exportType == ExportFormats.DCinemaInterop)
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = $"{i:0000}";
+                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), numberString + ".png");
+                        param.Bitmap.Save(fileName, ImageFormat.Png);
+                        imagesSavedCount++;
+                        param.Saved = true;
+
+                        string verticalAlignment = "bottom";
+                        string horizontalAlignment = "center";
+                        string vPos = "9.7";
+                        string hPos = "0";
+
+                        switch (param.Alignment)
+                        {
+                            case ContentAlignment.BottomLeft:
+                                verticalAlignment = "bottom";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.BottomRight:
+                                verticalAlignment = "bottom";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.MiddleCenter:
+                                verticalAlignment = "center";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.MiddleLeft:
+                                verticalAlignment = "center";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.MiddleRight:
+                                verticalAlignment = "center";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.TopCenter:
+                                verticalAlignment = "top";
+                                break;
+                            case ContentAlignment.TopLeft:
+                                verticalAlignment = "top";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.TopRight:
+                                verticalAlignment = "top";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                break;
+                        }
+
+                        sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCinemaInterop.ConvertToTimeString(param.P.EndTime) + "\" TimeIn=\"" + DCinemaInterop.ConvertToTimeString(param.P.StartTime) + "\" SpotNumber=\"" + param.P.Number + "\">");
+                        if (param.Depth3D == 0)
+                        {
+                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+                        }
+                        else
+                        {
+                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+                        }
+
+                        sb.AppendLine("</Subtitle>");
+                    }
+                }
+                else if (_exportType == ExportFormats.DCinemaSmpte2014)
                 {
                     if (!param.Saved)
                     {
@@ -3691,6 +3810,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Text = "DCinema interop/png";
             }
+            else if (exportType == ExportFormats.DCinemaSmpte2014)
+            {
+                Text = "DCinema SMPTE 2014/png";
+            }
             else if (exportType == ExportFormats.Spumux)
             {
                 Text = ExportFormats.Spumux;
@@ -4137,7 +4260,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;
             }
 
-            if (exportType == ExportFormats.DCinemaInterop)
+            if (exportType == ExportFormats.DCinemaInterop || exportType == ExportFormats.DCinemaSmpte2014)
             {
                 comboBox3D.Visible = false;
                 numericUpDownDepth3D.Enabled = true;
@@ -4180,7 +4303,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
-            bool shadowVisible = _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.Fcp || _exportType == ExportFormats.DCinemaInterop || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName;
+            bool shadowVisible = _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.Fcp || _exportType == ExportFormats.DCinemaInterop || exportType == ExportFormats.DCinemaSmpte2014 || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName;
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;

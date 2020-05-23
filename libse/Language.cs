@@ -702,6 +702,7 @@ namespace Nikse.SubtitleEdit.Core
                 SaveFabImageScriptAs = "Choose FAB image script file name",
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
                 SaveDigitalCinemaInteropAs = "Choose Digital Cinema Interop file name",
+                SaveDigitalCinemaSmpte2014 = "Choose Digital Cinema SMPTE 2014 file name",
                 SavePremiereEdlAs = "Choose Premiere EDL file name",
                 SaveFcpAs = "Choose Final Cut Pro xml file name",
                 SaveDostAs = "Choose DoStudio dost file name",

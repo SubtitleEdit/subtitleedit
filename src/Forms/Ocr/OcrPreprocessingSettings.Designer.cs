@@ -42,6 +42,7 @@
             this.buttonColorToRemove = new System.Windows.Forms.Button();
             this.panelColorToRemove = new System.Windows.Forms.Panel();
             this.groupBoxBinaryImageCompareThreshold = new System.Windows.Forms.GroupBox();
+            this.trackBarThresshold = new System.Windows.Forms.TrackBar();
             this.groupBoxCropping = new System.Windows.Forms.GroupBox();
             this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
@@ -51,6 +52,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxBinaryImageCompareThreshold.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThresshold)).BeginInit();
             this.groupBoxCropping.SuspendLayout();
             this.groupBoxColors.SuspendLayout();
             this.SuspendLayout();
@@ -58,7 +60,7 @@
             // labelThresholdDescription
             // 
             this.labelThresholdDescription.AutoSize = true;
-            this.labelThresholdDescription.Location = new System.Drawing.Point(17, 58);
+            this.labelThresholdDescription.Location = new System.Drawing.Point(17, 61);
             this.labelThresholdDescription.Name = "labelThresholdDescription";
             this.labelThresholdDescription.Size = new System.Drawing.Size(372, 13);
             this.labelThresholdDescription.TabIndex = 16;
@@ -128,6 +130,7 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.Color.DimGray;
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 412);
             this.pictureBox1.Name = "pictureBox1";
@@ -195,14 +198,26 @@
             // 
             this.groupBoxBinaryImageCompareThreshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.labelThresholdDescription);
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.trackBarThresshold);
+            this.groupBoxBinaryImageCompareThreshold.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxBinaryImageCompareThreshold.Location = new System.Drawing.Point(347, 12);
             this.groupBoxBinaryImageCompareThreshold.Name = "groupBoxBinaryImageCompareThreshold";
             this.groupBoxBinaryImageCompareThreshold.Size = new System.Drawing.Size(469, 216);
             this.groupBoxBinaryImageCompareThreshold.TabIndex = 29;
             this.groupBoxBinaryImageCompareThreshold.TabStop = false;
             this.groupBoxBinaryImageCompareThreshold.Text = "Binary image compare threshold";
+            // 
+            // trackBarThresshold
+            // 
+            this.trackBarThresshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarThresshold.Location = new System.Drawing.Point(83, 29);
+            this.trackBarThresshold.Name = "trackBarThresshold";
+            this.trackBarThresshold.Size = new System.Drawing.Size(380, 45);
+            this.trackBarThresshold.TabIndex = 17;
+            this.trackBarThresshold.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarThresshold.ValueChanged += new System.EventHandler(this.trackBarThresshold_ValueChanged);
             // 
             // groupBoxCropping
             // 
@@ -289,6 +304,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxBinaryImageCompareThreshold.ResumeLayout(false);
             this.groupBoxBinaryImageCompareThreshold.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarThresshold)).EndInit();
             this.groupBoxCropping.ResumeLayout(false);
             this.groupBoxCropping.PerformLayout();
             this.groupBoxColors.ResumeLayout(false);
@@ -319,5 +335,6 @@
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
         private System.Windows.Forms.CheckBox checkBoxCropTransparent;
         private System.Windows.Forms.CheckBox checkBoxYellowToWhite;
+        private System.Windows.Forms.TrackBar trackBarThresshold;
     }
 }

@@ -338,7 +338,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly Dictionary<string, int> _unknownWordsDictionary;
 
         // optimization vars
-        private int _numericUpDownPixelsIsSpace = 6;
+        private int _numericUpDownPixelsIsSpace = 12;
         private double _numericUpDownMaxErrorPct = 6;
         private int _ocrMethodIndex;
         private bool _autoBreakLines;
@@ -507,6 +507,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _unItalicFactor = Configuration.Settings.VobSubOcr.ItalicFactor;
             }
+
+            numericUpDownPixelsIsSpace.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
+            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
 
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
@@ -4157,7 +4160,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var match = GetCompareMatchNew(item, out var bestGuess, list, index, _binaryOcrDb);
                     if (match == null) // Try line OCR if no image compare match
                     {
-                        if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0 && _numericUpDownMaxErrorPct < 1)
+                        if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0 && _numericUpDownMaxErrorPct > 1)
                         {
                             match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true);
                         }
@@ -4653,11 +4656,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
 
                 // smaller space pixels for italic
-                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal))
+                if (wordsNotFound > 0 && !string.IsNullOrEmpty(line) && line.Contains("<i>", StringComparison.Ordinal))
                 {
                     AddItalicCouldBeSpace(matches, nbmpInput, _unItalicFactor, _numericUpDownPixelsIsSpace);
                 }
-                if (wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
+                if (wordsNotFound > 0 && !string.IsNullOrEmpty(line) && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpaceBefore == true))
                 {
                     int j = 1;
                     while (j < matches.Count)
@@ -7224,6 +7227,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     form.ShowDialog(this);
                 }
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T && _ocrMethodIndex == _ocrMethodNocr)
+            {
+                e.SuppressKeyPress = true;
+                using (var form = new VobSubNOcrTrain())
+                {
+                    form.Initialize();
+                    form.ShowDialog(this);
+                }
+            }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P)
             {
                 e.SuppressKeyPress = true;
@@ -8432,6 +8444,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
             Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
+            if (_ocrMethodIndex == _ocrMethodNocr)
+            {
+                Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value;
+            }
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
 
@@ -9270,7 +9286,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var form = new VobSubNOcrTrain())
             {
                 form.Initialize();
-                form.Show(this);
+                form.ShowDialog(this);
             }
         }
 

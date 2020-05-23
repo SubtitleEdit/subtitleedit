@@ -2835,6 +2835,7 @@
     <WordPart from="|" to="l" />
     <WordPart from="¤" to="o" />
     <WordPart from="vx/" to="w" />
+    <WordPart from="O" to="Q" />
   </PartialWords>
   <WholeLines>
     <!-- Whole lines - including -" etc -->

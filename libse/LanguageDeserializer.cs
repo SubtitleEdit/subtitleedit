@@ -1342,6 +1342,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ExportPngXml/SaveDigitalCinemaInteropAs":
                     language.ExportPngXml.SaveDigitalCinemaInteropAs = reader.Value;
                     break;
+                case "ExportPngXml/SaveDigitalCinemaSmpte2014":
+                    language.ExportPngXml.SaveDigitalCinemaSmpte2014 = reader.Value;
+                    break;
                 case "ExportPngXml/SavePremiereEdlAs":
                     language.ExportPngXml.SavePremiereEdlAs = reader.Value;
                     break;

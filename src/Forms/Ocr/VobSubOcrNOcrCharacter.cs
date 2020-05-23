@@ -91,9 +91,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             NOcrChar.Width = _imageWidth;
             NOcrChar.Height = _imageHeight;
-            GenerateLineSegments(150, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+            numericUpDownLinesToDraw.Value = Configuration.Settings.VobSubOcr.LineOcrLinesToAutoGuess;
+            GenerateLineSegments((int)numericUpDownLinesToDraw.Value, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
             ShowOcrPoints();
             pictureBoxCharacter.Invalidate();
+            numericUpDownLinesToDraw.ValueChanged += (sender, args) =>
+            {
+                Configuration.Settings.VobSubOcr.LineOcrLinesToAutoGuess = (int)numericUpDownLinesToDraw.Value;
+                buttonGuessAgain_Click(null, null);
+            };
         }
 
         private void buttonExpandSelection_Click(object sender, EventArgs e)
@@ -399,7 +405,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 NOcrChar.Width = _imageWidth;
                 NOcrChar.Height = _imageHeight;
-                GenerateLineSegments(150, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+                GenerateLineSegments((int)numericUpDownLinesToDraw.Value, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
                 ShowOcrPoints();
                 pictureBoxCharacter.Invalidate();
                 Redo();
@@ -561,19 +567,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return true;
         }
 
-        public static void GenerateLineSegments(int numberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap nbmp)
+        public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap nbmp)
         {
             const int giveUpCount = 10000;
             var r = new Random();
             int count = 0;
             int hits = 0;
             bool tempVeryPrecise = veryPrecise;
-            while (hits < numberOfLines && count < giveUpCount)
+            while (hits < maxNumberOfLines && count < giveUpCount)
             {
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 5 && count < 100) // a few large lines
+                if (hits < 10 && count < 1000) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
@@ -581,24 +587,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             break;
                         }
-                        else
+
+                        end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                    }
+                }
+                else if (hits < 30 && count < 2000) // some medium lines
+                {
+                    for (int k = 0; k < 500; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 15)
                         {
-                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
+                            break;
                         }
+
+                        end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                     }
                 }
                 else // and a lot of small lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
-                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 5)
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 15)
                         {
                             break;
                         }
-                        else
-                        {
-                            end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
-                        }
+
+                        end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                     }
                 }
 
@@ -627,12 +641,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             count = 0;
             hits = 0;
             tempVeryPrecise = veryPrecise;
-            while (hits < numberOfLines && count < giveUpCount)
+            while (hits < maxNumberOfLines && count < giveUpCount)
             {
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 5 && count < 100) // a few large lines
+                if (hits < 5 && count < 1000) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
@@ -644,6 +658,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                         }
+                    }
+                }
+                else if (hits < 30 && count < 2000) // some medium lines
+                {
+                    for (int k = 0; k < 500; k++)
+                    {
+                        if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 15)
+                        {
+                            break;
+                        }
+
+                        end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                     }
                 }
                 else // and a lot of small lines
@@ -763,6 +789,36 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 buttonOK_Click(null, null);
             }
+        }
+
+        private void checkBoxAutoSubmitOfFirstChar_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxCharacters.Focus();
+        }
+
+        private void VobSubOcrNOcrCharacter_Load(object sender, EventArgs e)
+        {
+            textBoxCharacters.Focus();
+        }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NOcrChar.LinesForeground.Clear();
+            ShowOcrPoints();
+        }
+
+        private void clearToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            NOcrChar.LinesBackground.Clear();
+            ShowOcrPoints();
+        }
+
+        private void buttonGuessAgain_Click(object sender, EventArgs e)
+        {
+            NOcrChar.LinesForeground.Clear();
+            NOcrChar.LinesBackground.Clear();
+            GenerateLineSegments((int)numericUpDownLinesToDraw.Value, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
+            ShowOcrPoints();
         }
     }
 }

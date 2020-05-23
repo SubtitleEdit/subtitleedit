@@ -967,8 +967,8 @@ $HorzAlign          =   Center
             AutoContinueOn = false;
             AutoContinueDelay = 2;
             SyncListViewWithVideoWhilePlaying = false;
-            AutoBackupSeconds = 60 * 15;
-            AutoBackupDeleteAfterMonths = 6;
+            AutoBackupSeconds = 60 * 5;
+            AutoBackupDeleteAfterMonths = 3;
             SpellChecker = "hunspell";
             AllowEditOfOriginalSubtitle = true;
             PromptDeleteLines = true;
@@ -1388,7 +1388,7 @@ $HorzAlign          =   Center
         public bool LineOcrAdvancedItalic { get; set; }
         public string LineOcrLastLanguages { get; set; }
         public string LineOcrLastSpellCheck { get; set; }
-        public int LineOcrXOrMorePixelsMakesSpace { get; set; }
+        public int LineOcrLinesToAutoGuess { get; set; }
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
@@ -1417,6 +1417,7 @@ $HorzAlign          =   Center
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
+            LineOcrLinesToAutoGuess = 100;
             BinaryAutoDetectBestDb = true;
             CaptureTopAlign = false;
         }
@@ -5238,10 +5239,10 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.LineOcrLastSpellCheck = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("LineOcrXOrMorePixelsMakesSpace");
+            subNode = node.SelectSingleNode("LineOcrLinesToAutoGuess");
             if (subNode != null)
             {
-                settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.VobSubOcr.LineOcrLinesToAutoGuess = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
             subNode = node.SelectSingleNode("LineOcrMinLineHeight");
@@ -7452,7 +7453,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
                 textWriter.WriteElementString("LineOcrLastSpellCheck", settings.VobSubOcr.LineOcrLastSpellCheck);
-                textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LineOcrLinesToAutoGuess", settings.VobSubOcr.LineOcrLinesToAutoGuess.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
