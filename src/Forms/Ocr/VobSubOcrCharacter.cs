@@ -258,7 +258,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (ActiveForm == null)
             {
-                TaskbarList.StartBlink(_vobSubForm, 5);
+                TaskbarList.StartBlink(
+                    _vobSubForm,
+                    Configuration.Settings.VobSubOcr.UnfocusedAttentionBlinkCount,
+                    Configuration.Settings.VobSubOcr.UnfocusedAttentionPlaySoundCount,
+                    Configuration.Settings.VobSubOcr.UnfocusedAttentionPlaySoundEvery);
             }
         }
 
