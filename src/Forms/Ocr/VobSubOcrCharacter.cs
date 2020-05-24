@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _vobSubForm,
                     Configuration.Settings.VobSubOcr.UnfocusedAttentionBlinkCount,
                     Configuration.Settings.VobSubOcr.UnfocusedAttentionPlaySoundCount,
-                    Configuration.Settings.VobSubOcr.UnfocusedAttentionPlaySoundEvery);
+                    2);
             }
         }
 
