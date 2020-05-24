@@ -1602,6 +1602,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     guesses.Add(word.Replace("$", "s"));
                                 }
 
+                                if (word.Contains('l') && word.RemoveChar('l').Length > 3)
+                                {
+                                    var lowerLToUpperI = word.Replace('l', 'I');
+                                    if (lowerLToUpperI == lowerLToUpperI.ToUpperInvariant())
+                                    {
+                                        guesses.Add(lowerLToUpperI);
+                                    }
+                                }
+
                                 string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLowerInvariant()))
                                 {

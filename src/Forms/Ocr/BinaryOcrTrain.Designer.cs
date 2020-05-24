@@ -72,9 +72,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.Size = new System.Drawing.Size(269, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Subtitle to train with";
+            this.label1.Text = "Subtitle to train with (must have spaces between letters)";
             // 
             // textBoxInputFile
             // 
@@ -442,6 +442,7 @@
             this.Controls.Add(this.buttonTrain);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
+            this.MinimumSize = new System.Drawing.Size(770, 600);
             this.Name = "BinaryOcrTrain";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
