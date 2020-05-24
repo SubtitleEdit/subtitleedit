@@ -519,6 +519,7 @@ namespace Nikse.SubtitleEdit.Core
         public string TimedText10TimeCodeFormat { get; set; }
         public string TimedText10TimeCodeFormatSource { get; set; }
         public bool TimedText10ShowStyleAndLanguage { get; set; }
+        public string TimedText10FileExtension { get; set; }
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -585,6 +586,7 @@ $HorzAlign          =   Center
 
             TimedText10TimeCodeFormat = "Source";
             TimedText10ShowStyleAndLanguage = true;
+            TimedText10FileExtension = ".xml";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -4402,6 +4404,12 @@ $HorzAlign          =   Center
                     settings.SubtitleSettings.TimedText10ShowStyleAndLanguage = Convert.ToBoolean(subNode.InnerText);
                 }
 
+                subNode = node.SelectSingleNode("TimedText10FileExtension");
+                if (subNode != null)
+                {
+                    settings.SubtitleSettings.TimedText10FileExtension = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                 {
@@ -7297,6 +7305,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SamiHtmlEncodeMode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
                 textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TimedText10FileExtension", settings.SubtitleSettings.TimedText10FileExtension);
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
                 textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
