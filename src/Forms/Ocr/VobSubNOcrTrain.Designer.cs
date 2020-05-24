@@ -82,6 +82,8 @@
             // 
             this.checkBoxBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxBold.AutoSize = true;
+            this.checkBoxBold.Checked = true;
+            this.checkBoxBold.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBold.Location = new System.Drawing.Point(9, 364);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(92, 17);
@@ -281,9 +283,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.Size = new System.Drawing.Size(272, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Subtitle to train with";
+            this.label1.Text = "Subtitle to train with  (must have spaces between letters)";
             // 
             // textBoxInputFile
             // 
@@ -415,7 +417,9 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(519, 600);
             this.Name = "VobSubNOcrTrain";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSubNOcrTrain";
