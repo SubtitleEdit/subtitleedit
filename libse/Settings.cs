@@ -1400,7 +1400,6 @@ $HorzAlign          =   Center
         public bool CaptureTopAlign { get; set; }
         public int UnfocusedAttentionBlinkCount { get; set; }
         public int UnfocusedAttentionPlaySoundCount { get; set; }
-        public int UnfocusedAttentionPlaySoundEvery { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -1426,8 +1425,7 @@ $HorzAlign          =   Center
             BinaryAutoDetectBestDb = true;
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
-            UnfocusedAttentionPlaySoundCount = 2;
-            UnfocusedAttentionPlaySoundEvery = 2;
+            UnfocusedAttentionPlaySoundCount = 1;
         }
     }
 
@@ -5313,12 +5311,6 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.UnfocusedAttentionPlaySoundCount = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
-            subNode = node.SelectSingleNode("UnfocusedAttentionPlaySoundEvery");
-            if (subNode != null)
-            {
-                settings.VobSubOcr.UnfocusedAttentionPlaySoundEvery = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
-            }
-
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
                 var group = new MultipleSearchAndReplaceGroup();
@@ -7496,7 +7488,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("CaptureTopAlign", settings.VobSubOcr.CaptureTopAlign.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionBlinkCount", settings.VobSubOcr.UnfocusedAttentionBlinkCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UnfocusedAttentionPlaySoundCount", settings.VobSubOcr.UnfocusedAttentionPlaySoundCount.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UnfocusedAttentionPlaySoundEvery", settings.VobSubOcr.UnfocusedAttentionPlaySoundEvery.ToString(CultureInfo.InvariantCulture));
 
                 textWriter.WriteEndElement();
 
