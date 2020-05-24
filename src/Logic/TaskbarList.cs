@@ -41,10 +41,12 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private static int _timerBlinkCount;
+        private static int _timerBlinkSoundCount;
         private static Timer _timerBlink;
-        public static void StartBlink(Form form, int beepAtEvery)
+        public static void StartBlink(Form form, int maxBlinkCount, int maxBeepCount, int beepAtEvery)
         {
             _timerBlinkCount = 0;
+            _timerBlinkSoundCount = 0;
             _timerBlink?.Dispose();
             _timerBlink = new Timer { Interval = 500 };
             _timerBlink.Tick += (o, args) =>
@@ -55,14 +57,15 @@ namespace Nikse.SubtitleEdit.Logic
                     handle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
                 }
 
-                if (_timerBlinkCount % beepAtEvery == 0)
+                if (_timerBlinkCount % beepAtEvery * 2 == 0 && _timerBlinkSoundCount < maxBeepCount)
                 {
                     SystemSounds.Beep.Play();
+                    _timerBlinkSoundCount++;
                 }
 
                 _timerBlink.Stop();
                 SetProgressValue(handle, _timerBlinkCount % 2 == 0 ? 0 : 100, 100);
-                if (_timerBlinkCount > 50 || Form.ActiveForm != null)
+                if (_timerBlinkCount > maxBlinkCount * 2 || Form.ActiveForm != null)
                 {
                     SetProgressValue(handle, 0, 100);
                     return;
