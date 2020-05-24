@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedText10 : SubtitleFormat
     {
-        public override string Extension => ".xml";
+        public override string Extension => Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
 
         public const string NameOfFormat = "Timed Text 1.0";
 

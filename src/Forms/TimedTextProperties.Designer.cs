@@ -51,13 +51,15 @@
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
+            this.comboBoxFileExtensions = new System.Windows.Forms.ComboBox();
+            this.labelFileExtension = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(335, 364);
+            this.buttonOK.Location = new System.Drawing.Point(335, 401);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 1;
@@ -69,7 +71,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(416, 364);
+            this.buttonCancel.Location = new System.Drawing.Point(416, 401);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 2;
@@ -82,6 +84,8 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOptions.Controls.Add(this.comboBoxFileExtensions);
+            this.groupBoxOptions.Controls.Add(this.labelFileExtension);
             this.groupBoxOptions.Controls.Add(this.comboBoxTimeCodeFormat);
             this.groupBoxOptions.Controls.Add(this.labelTimeCode);
             this.groupBoxOptions.Controls.Add(this.comboBoxFrameRateMultiplier);
@@ -104,7 +108,7 @@
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 12);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(479, 346);
+            this.groupBoxOptions.Size = new System.Drawing.Size(479, 383);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
             // 
@@ -304,11 +308,33 @@
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
             // 
+            // comboBoxFileExtensions
+            // 
+            this.comboBoxFileExtensions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFileExtensions.FormattingEnabled = true;
+            this.comboBoxFileExtensions.Items.AddRange(new object[] {
+            ".xml",
+            ".ttml",
+            ".dfxp"});
+            this.comboBoxFileExtensions.Location = new System.Drawing.Point(191, 346);
+            this.comboBoxFileExtensions.Name = "comboBoxFileExtensions";
+            this.comboBoxFileExtensions.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxFileExtensions.TabIndex = 21;
+            // 
+            // labelFileExtension
+            // 
+            this.labelFileExtension.AutoSize = true;
+            this.labelFileExtension.Location = new System.Drawing.Point(6, 349);
+            this.labelFileExtension.Name = "labelFileExtension";
+            this.labelFileExtension.Size = new System.Drawing.Size(71, 13);
+            this.labelFileExtension.TabIndex = 22;
+            this.labelFileExtension.Text = "File extension";
+            // 
             // TimedTextProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(503, 397);
+            this.ClientSize = new System.Drawing.Size(503, 434);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxOptions);
@@ -352,5 +378,7 @@
         private System.Windows.Forms.ComboBox comboBoxFrameRateMultiplier;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeFormat;
         private System.Windows.Forms.Label labelTimeCode;
+        private System.Windows.Forms.ComboBox comboBoxFileExtensions;
+        private System.Windows.Forms.Label labelFileExtension;
     }
 }

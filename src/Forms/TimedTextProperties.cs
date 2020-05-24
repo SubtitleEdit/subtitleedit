@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDefaultStyle.Items.Add(style);
                 node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
-                if (node != null && node.Attributes["style"] != null && style == node.Attributes["style"].Value)
+                if (node?.Attributes?["style"] != null && style == node.Attributes["style"].Value)
                 {
                     comboBoxDefaultStyle.SelectedIndex = comboBoxDefaultStyle.Items.Count - 1;
                 }
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDefaultRegion.Items.Add(region);
                 node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
-                if (node != null && node.Attributes["region"] != null && region == node.Attributes["region"].Value)
+                if (node?.Attributes?["region"] != null && region == node.Attributes["region"].Value)
                 {
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
                 }
@@ -120,7 +120,19 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.ToString().ToLowerInvariant() == timeCodeFormat)
                 {
                     comboBoxTimeCodeFormat.SelectedIndex = index;
-                    return;
+                    break;
+                }
+            }
+
+            var ext = Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
+            comboBoxFileExtensions.SelectedIndex = 0;
+            for (var index = 0; index < comboBoxFileExtensions.Items.Count; index++)
+            {
+                var item = comboBoxFileExtensions.Items[index];
+                if (item.ToString() == ext)
+                {
+                    comboBoxFileExtensions.SelectedIndex = index;
+                    break;
                 }
             }
         }
@@ -298,6 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Header = _xml.OuterXml;
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
+            Configuration.Settings.SubtitleSettings.TimedText10FileExtension= comboBoxFileExtensions.SelectedItem.ToString();
 
             DialogResult = DialogResult.OK;
         }
