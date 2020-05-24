@@ -815,10 +815,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonGuessAgain_Click(object sender, EventArgs e)
         {
+            listBoxLinesForeground.BeginUpdate();
+            listBoxlinesBackground.BeginUpdate();
             NOcrChar.LinesForeground.Clear();
             NOcrChar.LinesBackground.Clear();
             GenerateLineSegments((int)numericUpDownLinesToDraw.Value, false, NOcrChar, new NikseBitmap(pictureBoxCharacter.Image as Bitmap));
             ShowOcrPoints();
+            listBoxLinesForeground.EndUpdate();
+            listBoxlinesBackground.EndUpdate();
         }
     }
 }
