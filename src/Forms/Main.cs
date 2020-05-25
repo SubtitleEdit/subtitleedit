@@ -3779,18 +3779,26 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 bool containsNegativeTime = false;
+                var negativeTimeLines = new List<string>();
                 foreach (var p in sub.Paragraphs)
                 {
                     if (p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0)
                     {
                         containsNegativeTime = true;
-                        break;
+                        negativeTimeLines.Add(sub.Paragraphs.IndexOf(p).ToString(CultureInfo.InvariantCulture));
+                        if (negativeTimeLines.Count > 10)
+                        {
+                            negativeTimeLines[negativeTimeLines.Count - 1] = negativeTimeLines[negativeTimeLines.Count - 1] + "...";
+                            break;
+                        }
                     }
                 }
 
                 if (containsNegativeTime && !skipPrompts)
                 {
-                    if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                    if (MessageBox.Show(_language.NegativeTimeWarning + Environment.NewLine +
+                                        string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, string.Join(", ", negativeTimeLines)),
+                                        Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                     {
                         return DialogResult.No;
                     }
