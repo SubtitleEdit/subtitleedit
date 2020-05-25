@@ -581,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 5 && count < 200 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // vertical lines
+                if (hits < 5 && count < 200 && nOcrChar.Width > 4 && nOcrChar.Height > 4) // vertical lines
                 {
                     start = new Point(0, 0);
                     end = new Point(0, 0);
@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                     }
                 }
-                else if (hits < 10 && count < 400 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
+                else if (hits < 10 && count < 400 && nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
                 {
                     start = new Point(0, 0);
                     end = new Point(0, 0);
@@ -681,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 5 && count < 400 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
+                if (hits < 5 && count < 400 && nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
                 {
                     for (; horizontalLineY < nOcrChar.Height - 3; horizontalLineY += 1)
                     {
