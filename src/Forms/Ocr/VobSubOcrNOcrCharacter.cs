@@ -574,12 +574,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int count = 0;
             int hits = 0;
             bool tempVeryPrecise = veryPrecise;
+            int verticalLineX = 2;
+            int horizontalLineY = 2;
             while (hits < maxNumberOfLines && count < giveUpCount)
             {
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 10 && count < 1000) // a few large lines
+                if (hits < 5 && count < 200 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // vertical lines
+                {
+                    start = new Point(0, 0);
+                    end = new Point(0, 0);
+                    for (; verticalLineX < nOcrChar.Width - 3; verticalLineX += 1)
+                    {
+                        start = new Point(verticalLineX, 2);
+                        end = new Point(verticalLineX, nOcrChar.Height - 3);
+
+                        if (IsMatchPointForeGround(new NOcrPoint(start, end), true, nbmp, nOcrChar))
+                        {
+                            verticalLineX++;
+                            break;
+                        }
+                    }
+                }
+                else if (hits < 10 && count < 400 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
+                {
+                    start = new Point(0, 0);
+                    end = new Point(0, 0);
+                    for (; horizontalLineY < nOcrChar.Height - 3; horizontalLineY += 1)
+                    {
+                        start = new Point(2, horizontalLineY);
+                        end = new Point(nOcrChar.Width - 3, horizontalLineY);
+
+                        if (IsMatchPointForeGround(new NOcrPoint(start, end), true, nbmp, nOcrChar))
+                        {
+                            horizontalLineY++;
+                            break;
+                        }
+                    }
+                }
+                else if (hits < 20 && count < 1000) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
@@ -640,13 +674,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             count = 0;
             hits = 0;
+            horizontalLineY = 2;
             tempVeryPrecise = veryPrecise;
             while (hits < maxNumberOfLines && count < giveUpCount)
             {
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-                if (hits < 5 && count < 1000) // a few large lines
+                if (hits < 5 && count < 400 & nOcrChar.Width > 4 && nOcrChar.Height > 4) // horizontal lines
+                {
+                    for (; horizontalLineY < nOcrChar.Height - 3; horizontalLineY += 1)
+                    {
+                        start = new Point(2, horizontalLineY);
+                        end = new Point(nOcrChar.Width - 2, horizontalLineY);
+
+                        if (IsMatchPointBackGround(new NOcrPoint(start, end), true, nbmp, nOcrChar))
+                        {
+                            horizontalLineY++;
+                            break;
+                        }
+                    }
+                }
+                if (hits < 10 && count < 1000) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
