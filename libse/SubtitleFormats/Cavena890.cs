@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -17,6 +17,54 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int LanguageIdChineseTraditional = 0x90;
         public const int LanguageIdChineseSimplified = 0x91;
         public const int LanguageIdRomanian = 0x22;
+
+        private static readonly Dictionary<int, string> ArabicDictionary = new Dictionary<int, string>
+        {
+            { 0x58, "م" },
+            { 0x41, "ا" },
+            { 0x4e, "ص" },
+            { 0x42, "ب" },
+            { 0x46, "ح" },
+            { 0x57, "ل" },
+            { 0x47, "خ" },
+            { 0x5d, "ي" },
+            { 0x4a, "ر" },
+            { 0x2c, "،" },
+            { 0x59, "ن" },
+            { 0x5a, "و" },
+            { 0x43, "ت" },
+            { 0x1d, "-" },
+            { 0x49, "ذ" },
+            { 0x45, "ج" },
+            { 0x5b, "ه" },
+            { 0x56, "ك" },
+            { 0x21, "؟" },
+            { 0x4c, "س" },
+            { 0x52, "ع" },
+            { 0x5c, "ة" },
+            { 0x5e, "ى" },
+            { 0x61, "أ" },
+            { 0x48, "د" },
+            { 0x4d, "ش" },
+            { 0x60, "ء" },
+            { 0x68, "ﻷ" },
+            { 0x54, "ف" },
+            { 0x55, "ق" },
+            { 0x22, "!" },
+            { 0x67, "ﻻ" },
+            { 0x66, "ؤ" },
+            { 0x64, "آ" },
+            { 0x50, "ط" },
+            { 0x6a, "ﻵ" },
+            { 0x4f, "ض" },
+            { 0x6b, "ﺋ" },
+            { 0x44, "ث" },
+            { 0x51, "ظ" },
+            { 0x53, "غ" },
+            { 0x4b, "ز" },
+            { 0x23, "\"" },
+            { 0x6c, "ـ" },
+        };
 
         private static readonly List<int> HebrewCodes = new List<int>
         {
@@ -604,14 +652,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static void WriteText(Stream fs, string text, bool isLast, int languageIdLine, bool useBox)
         {
-            string line1 = string.Empty;
-            string line2 = string.Empty;
             var lines = text.SplitToLines();
             if (lines.Count > 2)
             {
                 lines = Utilities.AutoBreakLine(text).SplitToLines();
             }
 
+            string line1 = string.Empty;
+            string line2;
             if (lines.Count > 1)
             {
                 line1 = lines[0];
@@ -1372,6 +1420,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _languageIdLine2 = LanguageIdHebrew;
             }
 
+            // Arabic
+            if (_languageIdLine2 == LanguageIdArabic || fontNameLine1 == "ARABIC")
+            {
+                _languageIdLine1 = LanguageIdArabic;
+                _languageIdLine2 = LanguageIdArabic;
+            }
+
             // Russian
             else if (_languageIdLine1 == LanguageIdRussian || fontNameLine1.StartsWith("KYRIL", StringComparison.Ordinal) || fontNameLine2.StartsWith("KYRIL", StringComparison.Ordinal))
             {
@@ -1508,6 +1563,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = ReverseAnsi(text);
                 text = Utilities.ReverseStartAndEndingForRightToLeft(text);
+            }
+            else if (languageId == LanguageIdArabic)
+            {
+                var encoding = Encoding.GetEncoding(1252);
+                var sb = new StringBuilder();
+                for (int i = 0; i < textLength; i++)
+                {
+                    int b = buffer[start + i];
+                    if (ArabicDictionary.TryGetValue(b, out var v))
+                    {
+                        sb.Append(v);
+                    }
+                    else if (b != 0x7F) // filler (decimal 127)
+                    {
+                        sb.Append(encoding.GetString(buffer, start + i, 1));
+                    }
+                }
+
+                text = sb.ToString();
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = FixColors(text).Trim();
             }
             else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
             {
