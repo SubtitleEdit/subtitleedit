@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.nOcrTrainingToolStripMenuItem.Name = "nOcrTrainingToolStripMenuItem";
             this.nOcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.nOcrTrainingToolStripMenuItem.Text = "N-Ocr training..";
+            this.nOcrTrainingToolStripMenuItem.Text = "nOCR training..";
             this.nOcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.nOcrTrainingToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
@@ -439,10 +439,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -1530,7 +1530,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemImageSaveAs,
             this.previewToolStripMenuItem});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 164);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(231, 142);
             this.contextMenuStripImage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripImage_Opening);
             // 
             // autoTransparentBackgroundToolStripMenuItem

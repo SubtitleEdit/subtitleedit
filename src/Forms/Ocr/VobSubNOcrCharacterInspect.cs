@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            labelImageSize.Text = string.Empty;
         }
 
         private void VobSubNOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
@@ -84,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
+            labelImageSize.Text = string.Empty;
             if (listBoxInspectItems.SelectedIndex < 0)
             {
                 return;
@@ -94,6 +96,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 pictureBoxInspectItem.Width = img.NikseBitmap.Width;
                 pictureBoxInspectItem.Height = img.NikseBitmap.Height;
+                labelImageSize.Top = pictureBoxInspectItem.Top + img.NikseBitmap.Height + 17;
+                labelImageSize.Text = img.NikseBitmap.Width + "x" + img.NikseBitmap.Height;
                 var old = img.NikseBitmap.GetBitmap();
                 pictureBoxInspectItem.Image = old;
                 pictureBoxCharacter.Image = old;

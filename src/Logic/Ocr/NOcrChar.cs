@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return Text;
         }
 
-        public bool IsSensitive => Text == "." || Text == "," || Text == "'" || Text == "-" || Text == ":" || Text == "\"";
+        public bool IsSensitive => Text == "O" || Text == "o" || Text == "0" || Text == "'" || Text == "-" || Text == ":" || Text == "\"";
 
         public NOcrChar(Stream stream)
         {

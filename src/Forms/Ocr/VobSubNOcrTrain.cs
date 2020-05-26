@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -21,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private float _subtitleFontSize = 25.0f;
         private readonly Color _borderColor = Color.Black;
         private const float BorderWidth = 2.0f;
+        private bool _abort;
 
         public VobSubNOcrTrain()
         {
@@ -29,11 +31,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
 
             labelInfo.Text = string.Empty;
+            var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
             foreach (var x in FontFamily.Families)
             {
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
-                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14) };
+                    var chk = selectedFonts.Contains(x.Name);
+                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14), Checked = chk };
                     listViewFonts.Items.Add(item);
                 }
             }
@@ -52,14 +56,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void buttonNOcrDbChoose_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
-                textBoxNOcrDb.Text = openFileDialog1.FileName;
-            }
-        }
-
         private void buttonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -67,14 +63,24 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
+            if (buttonTrain.Text == "Abort")
+            {
+                _abort = true;
+                return;
+            }
+
             if (!File.Exists(textBoxInputFile.Text))
             {
                 return;
             }
 
+            _abort = false;
+            buttonTrain.Text = "Abort";
+            buttonOK.Enabled = false;
+
             int numberOfCharactersLeaned = 0;
             int numberOfCharactersSkipped = 0;
-            var nOcrD = new NOcrDb(textBoxNOcrDb.Text);
+            var nOcrD = new NOcrDb(null);
             var lines = new List<string>();
             foreach (string line in File.ReadAllLines(textBoxInputFile.Text))
             {
@@ -110,41 +116,68 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 }
                             }
                         }
+
+                        if (_abort)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (_abort)
+                    {
+                        break;
                     }
                 }
             }
-            labelInfo.Text = "Training done";
-            nOcrD.Save();
+
+            labelInfo.Text = "Saving...";
+            labelInfo.Refresh();
+            saveFileDialog1.Filter = "nOCR DB|*.nocr";
+            saveFileDialog1.InitialDirectory = Configuration.OcrDirectory;
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                labelInfo.Text = $"Saving to {saveFileDialog1.FileName}...";
+                nOcrD.FileName = saveFileDialog1.FileName;
+                nOcrD.Save();
+                labelInfo.Text = "Training done";
+            }
+            else
+            {
+                labelInfo.Text = "Saving aborted";
+            }
+
+            buttonOK.Enabled = true;
+            buttonTrain.Text = "Start training";
+            _abort = false;
         }
 
         private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold)
         {
-            Bitmap bmp = GenerateImageFromTextWithStyle(s, bold);
+            Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold);
             var nbmp = new NikseBitmap(bmp);
             nbmp.MakeTwoColor(280);
+            nbmp.CropTop(0, Color.FromArgb(0, 0, 0, 0));
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
-            if (list.Count == 1)
+            if (list.Count == 3)
             {
-                NOcrChar match = nOcrD.GetMatch(list[0].NikseBitmap);
-                if (match == null)
+                var item = list[2];
+                NOcrChar match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false);
+                if (match == null || match.Text != s)
                 {
-                    pictureBox1.Image = list[0].NikseBitmap.GetBitmap();
                     labelInfo.Refresh();
-                    pictureBox1.Refresh();
                     Application.DoEvents();
-//                    System.Threading.Thread.Sleep(100);
-
                     NOcrChar nOcrChar = new NOcrChar(s)
                     {
-                        Width = list[0].NikseBitmap.Width,
-                        Height = list[0].NikseBitmap.Height
+                        Width = item.NikseBitmap.Width,
+                        Height = item.NikseBitmap.Height,
+                        MarginTop = item.Top,
                     };
-                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, list[0].NikseBitmap);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
                     charactersLearned.Add(s);
                     numberOfCharactersLeaned++;
-                    labelInfo.Text = string.Format("Now training font '{1}', total characters leaned is {0}, {2} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                    labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,###}, {2:#,###,###} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else
@@ -261,5 +294,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return nbmp.GetBitmap();
         }
 
+        private void VobSubNOcrTrain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var sb = new StringBuilder();
+            foreach (ListViewItem item in listViewFonts.Items)
+            {
+                if (item.Checked)
+                {
+                    sb.Append(item.Text);
+                    sb.Append(";");
+                }
+            }
+
+            Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
+        }
     }
 }

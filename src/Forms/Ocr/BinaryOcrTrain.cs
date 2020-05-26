@@ -34,11 +34,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
 
             labelInfo.Text = string.Empty;
+            var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
             foreach (var x in FontFamily.Families)
             {
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
-                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14) };
+                    var chk = selectedFonts.Contains(x.Name);
+                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14), Checked = chk };
                     listViewFonts.Items.Add(item);
                 }
             }
@@ -390,6 +392,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             DialogResult = DialogResult.OK;
+        }
+
+        private void BinaryOcrTrain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var sb = new StringBuilder();
+            foreach (ListViewItem item in listViewFonts.Items)
+            {
+                if (item.Checked)
+                {
+                    sb.Append(item.Text);
+                    sb.Append(";");
+                }
+            }
+
+            Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
         }
     }
 }

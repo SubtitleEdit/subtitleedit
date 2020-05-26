@@ -45,6 +45,7 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
+            this.labelImageSize = new System.Windows.Forms.Label();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.groupBoxCurrentCompareImage.SuspendLayout();
@@ -79,6 +80,7 @@
             // 
             this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInspectItems.Controls.Add(this.labelImageSize);
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
@@ -241,6 +243,15 @@
             this.textBoxText.Size = new System.Drawing.Size(100, 22);
             this.textBoxText.TabIndex = 1;
             // 
+            // labelImageSize
+            // 
+            this.labelImageSize.AutoSize = true;
+            this.labelImageSize.Location = new System.Drawing.Point(252, 179);
+            this.labelImageSize.Name = "labelImageSize";
+            this.labelImageSize.Size = new System.Drawing.Size(49, 13);
+            this.labelImageSize.TabIndex = 31;
+            this.labelImageSize.Text = "labelSize";
+            // 
             // VobSubNOcrCharacterInspect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -259,6 +270,7 @@
             this.Text = "VobSubNOcrCharacterInspect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrCharacterInspect_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
+            this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
@@ -286,5 +298,6 @@
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.PictureBox pictureBoxCharacter;
         private System.Windows.Forms.Button buttonEditDB;
+        private System.Windows.Forms.Label labelImageSize;
     }
 }
