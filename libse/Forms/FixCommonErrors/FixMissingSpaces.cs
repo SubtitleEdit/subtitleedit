@@ -392,6 +392,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         skip = true;
                     }
+
+                    if (idx == 2 && idx >= 2 && text.Substring(idx - 2, 3) == "...")
+                    {
+                        skip = true;
+                    }
                 }
 
                 if (!skip && !" \r\n\":;()[]<>.؟!\u060C".Contains(text[idx + 1].ToString()))
