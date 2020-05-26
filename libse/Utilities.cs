@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
-                if (dialogHelper.IsDialog(noTagLines))
+                if (dialogHelper.IsDialog(noTagLines) && !(noTagLines.Count > Configuration.Settings.General.MaxNumberOfLines))
                 {
                     return text;
                 }

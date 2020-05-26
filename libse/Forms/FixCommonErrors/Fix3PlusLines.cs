@@ -1,5 +1,4 @@
-﻿using System;
-using Nikse.SubtitleEdit.Core.Interfaces;
+﻿using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -20,17 +19,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string oldText = p.Text;
                     try
                     {
-                        p.Text = Utilities.AutoBreakLine(p.Text);
+                        p.Text = Utilities.AutoBreakLine(p.Text, callbacks.Language);
                     }
                     finally
                     {
                         Configuration.Settings.General.MaxNumberOfLines = old;
                     }
+
                     if (oldText != p.Text)
                     {
                         iFixes++;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
-                   }
+                    }
                 }
             }
             callbacks.UpdateFixStatus(iFixes, language.Fix3PlusLines, language.X3PlusLinesFixed);
