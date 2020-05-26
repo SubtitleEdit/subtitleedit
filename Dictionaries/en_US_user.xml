@@ -1,6 +1,4 @@
 ﻿<words>
-  <word>'cause</word>
-  <word>'em</word>
   <word>50s</word>
   <word>9/11</word>
   <word>a.m.</word>
@@ -69,6 +67,7 @@
   <word>cardiothoracic</word>
   <word>catalogue</word>
   <word>catalogued</word>
+  <word>'cause</word>
   <word>centimetres</word>
   <word>cerium</word>
   <word>cesium</word>
@@ -111,6 +110,7 @@
   <word>dysesthesia</word>
   <word>dysprosium</word>
   <word>einsteinium</word>
+  <word>'em</word>
   <word>emoji</word>
   <word>endeth</word>
   <word>episiotomy</word>
@@ -217,8 +217,8 @@
   <word>manganese</word>
   <word>meds</word>
   <word>meitnerium</word>
-  <word>men's</word>
   <word>mendelevium</word>
+  <word>men's</word>
   <word>mercury</word>
   <word>mesenteric</word>
   <word>mesentery</word>
@@ -326,10 +326,10 @@
   <word>secret's</word>
   <word>selenium</word>
   <word>selfies</word>
-  <word>sensei</word>
   <word>señor</word>
   <word>señora</word>
   <word>señorita</word>
+  <word>sensei</word>
   <word>sharpshoot</word>
   <word>shithead's</word>
   <word>shithole</word>
@@ -382,8 +382,8 @@
   <word>there'd</word>
   <word>there'll</word>
   <word>there're</word>
-  <word>this'll</word>
   <word>this</word>
+  <word>this'll</word>
   <word>thoracotomy</word>
   <word>thorium</word>
   <word>thrombectomy</word>
