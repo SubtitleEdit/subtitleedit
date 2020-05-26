@@ -1207,9 +1207,9 @@
             this.labelImageSize.AutoSize = true;
             this.labelImageSize.Location = new System.Drawing.Point(252, 174);
             this.labelImageSize.Name = "labelImageSize";
-            this.labelImageSize.Size = new System.Drawing.Size(35, 13);
+            this.labelImageSize.Size = new System.Drawing.Size(49, 13);
             this.labelImageSize.TabIndex = 30;
-            this.labelImageSize.Text = "label1";
+            this.labelImageSize.Text = "labelSize";
             // 
             // labelExpandCount
             // 
