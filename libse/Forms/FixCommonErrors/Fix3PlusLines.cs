@@ -7,23 +7,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.Fix3PlusLine;
+            var fixAction = language.Fix3PlusLine;
             int iFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 if (Utilities.GetNumberOfLines(p.Text) > 2 && callbacks.AllowFix(p, fixAction))
                 {
-                    var old = Configuration.Settings.General.MaxNumberOfLines;
+                    var savedMaxNumberOfLines = Configuration.Settings.General.MaxNumberOfLines;
                     Configuration.Settings.General.MaxNumberOfLines = 2;
-                    string oldText = p.Text;
+                    var oldText = p.Text;
                     try
                     {
                         p.Text = Utilities.AutoBreakLine(p.Text, callbacks.Language);
                     }
                     finally
                     {
-                        Configuration.Settings.General.MaxNumberOfLines = old;
+                        Configuration.Settings.General.MaxNumberOfLines = savedMaxNumberOfLines;
                     }
 
                     if (oldText != p.Text)
