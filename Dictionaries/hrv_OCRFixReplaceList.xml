@@ -83,6 +83,7 @@
     <Word from="blede" to="blijede" />
     <Word from="blizankinja" to="blizanka" />
     <Word from="blizankinje" to="blizanke" />
+    <Word from="boki" to="boli" />
     <Word from="boksujem" to="boksam" />
     <Word from="Boksujem" to="Boksam" />
     <Word from="boksuješ" to="boksaš" />
@@ -630,6 +631,7 @@
     <Word from="krstovima" to="križevima" />
     <Word from="Krstovima" to="Križevima" />
     <Word from="križom" to="križem" />
+    <Word from="ksd" to="kad" />
     <Word from="ksko" to="kako" />
     <Word from="kuča" to="kuća" />
     <Word from="kuče" to="kuće" />
@@ -921,6 +923,7 @@
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
     <Word from="nr" to="ne" />
+    <Word from="nrgo" to="nego" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
@@ -1293,6 +1296,8 @@
     <Word from="Proje" to="Prije" />
     <Word from="projekat" to="projekt" />
     <Word from="Projekat" to="Projekt" />
+    <Word from="proliv" to="proljev" />
+    <Word from="proliva" to="proljeva" />
     <Word from="promijena" to="promjena" />
     <Word from="promovisao" to="promovirao" />
     <Word from="prosledili" to="proslijedili" />
@@ -1407,6 +1412,7 @@
     <Word from="Samnom" to="Sa mnom" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
+    <Word from="sbo" to="svo" />
     <Word from="sce" to="sve" />
     <Word from="Sci" to="Svi" />
     <Word from="secka" to="sjecka" />
@@ -3203,6 +3209,7 @@
     <RegEx find="aputni" replaceWith="uputni" />
     <RegEx find="([sS])ara([dđ])" replaceWith="$1ura$2" />
     <RegEx find="([sS])atan" replaceWith="$1oton" />
+    <RegEx find="sbo" replaceWith="sno" />
     <RegEx find="učesni" replaceWith="sudioni" />
     <RegEx find="Učesni" replaceWith="Sudioni" />
     <RegEx find="([sS])avi?j?e([sš])" replaceWith="$1avje$2" />
@@ -3818,6 +3825,7 @@
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
     <RegEx find="vršić" replaceWith="vršit ć" />
+    <RegEx find="vsn" replaceWith="van" />
     <RegEx find="zankin" replaceWith="zank" />
     <RegEx find="zbat" replaceWith="znat" />
     <RegEx find="zleči" replaceWith="zliječi" />
