@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -482,11 +481,17 @@ namespace Nikse.SubtitleEdit.Core
             return AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.General.MergeLinesShorterThan, language);
         }
 
-        public static string AutoBreakLinePrivate(string text, int maximumLength, int mergeLinesShorterThan, string language, bool autoBreakLineEndingEarly)
+        public static string AutoBreakLinePrivate(string input, int maximumLength, int mergeLinesShorterThan, string language, bool autoBreakLineEndingEarly)
         {
-            if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
+            if (string.IsNullOrEmpty(input) || input.Length < 3)
             {
-                return text;
+                return input;
+            }
+
+            var text = input.Replace('\u00a0', ' '); // replace non-break-space (160 decimal) ascii char with normal space
+            if (!(text.Contains(' ') || text.Contains('\n')))
+            {
+                return input;
             }
 
             // do not auto break dialogs or music symbol
@@ -500,34 +505,34 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
                         {
-                            return text;
+                            return input;
                         }
                     }
                     else
                     {
                         if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
                         {
-                            return text;
+                            return input;
                         }
                     }
                     if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
                     {
-                        return text;
+                        return input;
                     }
                     if (noTagLines[0].StartsWith('[') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
                     {
-                        return text;
+                        return input;
                     }
                     if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
                     {
-                        return text;
+                        return input;
                     }
                 }
 
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
                 if (dialogHelper.IsDialog(noTagLines) && noTagLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
                 {
-                    return text;
+                    return input;
                 }
             }
 
@@ -548,13 +553,13 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     string tagString = s.Substring(six);
                     tagFound = tagString.StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                               || tagString.StartsWith("</i", StringComparison.OrdinalIgnoreCase);
+                            || tagString.StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                            || tagString.StartsWith("</i", StringComparison.OrdinalIgnoreCase);
                 }
                 else if (letter == '{' && s.Substring(six).StartsWith("{\\"))
                 {
@@ -991,7 +996,7 @@ namespace Nikse.SubtitleEdit.Core
             get
             {
                 var assembly = Assembly.GetEntryAssembly();
-                if (Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
+                if (assembly != null && Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
                 {
                     var descriptionAttribute = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
                     if (descriptionAttribute != null)
