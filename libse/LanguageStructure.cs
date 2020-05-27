@@ -683,6 +683,7 @@
             public string CommonOcrErrorsFixed { get; set; }
             public string RemoveSpaceBetweenNumber { get; set; }
             public string FixDialogsOnOneLine { get; set; }
+            public string NormalizeStrings { get; set; }
             public string RemoveSpaceBetweenNumbersFixed { get; set; }
             public string FixTurkishAnsi { get; set; }
             public string FixDanishLetterI { get; set; }

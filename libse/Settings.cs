@@ -689,6 +689,7 @@ $HorzAlign          =   Center
         public bool FixMusicNotationTicked { get; set; }
         public bool FixContinuationStyleTicked { get; set; }
         public bool FixUnnecessaryLeadingDotsTicked { get; set; }
+        public bool NormalizeStringsTicked { get; set; }
 
         public FixCommonErrorsSettings()
         {
@@ -725,6 +726,7 @@ $HorzAlign          =   Center
             FixMusicNotationTicked = true;
             FixContinuationStyleTicked = false;
             FixUnnecessaryLeadingDotsTicked = true;
+            NormalizeStringsTicked = false;
         }
 
     }
@@ -4842,6 +4844,12 @@ $HorzAlign          =   Center
                 settings.CommonErrors.FixUnnecessaryLeadingDotsTicked = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("NormalizeStringsTicked");
+            if (subNode != null)
+            {
+                settings.CommonErrors.NormalizeStringsTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             // Video Controls
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
             subNode = node.SelectSingleNode("CustomSearchText1");
@@ -7411,6 +7419,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixContinuationStyleTicked", settings.CommonErrors.FixContinuationStyleTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixUnnecessaryLeadingDotsTicked", settings.CommonErrors.FixUnnecessaryLeadingDotsTicked.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("NormalizeStringsTicked", settings.CommonErrors.NormalizeStringsTicked.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VideoControls", string.Empty);

@@ -1612,6 +1612,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/FixDialogsOnOneLine":
                     language.FixCommonErrors.FixDialogsOnOneLine = reader.Value;
                     break;
+                case "FixCommonErrors/NormalizeStrings":
+                    language.FixCommonErrors.NormalizeStrings = reader.Value;
+                    break;
                 case "FixCommonErrors/RemoveSpaceBetweenNumbersFixed":
                     language.FixCommonErrors.RemoveSpaceBetweenNumbersFixed = reader.Value;
                     break;
