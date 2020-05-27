@@ -18,6 +18,7 @@
    * Improve italic-space-detection in "Binary image comp" - thx tormento
    * Update Bulgarian translation - thx KalinM
    * Update Greek translation - thx Lero91
+   * Update Basque translation - thx Xabier
    * Init no-break-after-list with language
    * Make quick-char-list in "OCR Char" window dynamic
    * Remember settings for "column paste"
@@ -28,7 +29,10 @@
    * Clear logs from current line and forward when starting OCR
    * Spell check "Auto fix names" option to use suggestions - thx Waldkoenig
    * Add preview (Ctrl+P) for OCR window
+   * Read 890 Arabic - thx Sima
+   * Make ttml 1.0 extension custimizable - thx Tony
 * FIXED:
+   * Fix spell check dictionary download - thx bluesea1401/ksoll4
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix for sometimes missing images in bdsup - thx Devin
    * Fix OCR window after minimize - thx Janusz
@@ -43,6 +47,7 @@
    * Fix zoom combobox after waveform change - thx Meliox
    * Fix list view Ctrl+v/selection bug - thx gleaming
    * Fixes for Bing translate token endpoint - thx obliver27
+   * Fix auto br for 3+ lines dialog - thx thejester77
 
 
 3.5.15 (1st May 2020)
