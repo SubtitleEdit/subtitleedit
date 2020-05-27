@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonEditDB_Click(object sender, EventArgs e)
         {
-            var form = new VobSubNOcrEdit(_nocrChars, pictureBoxInspectItem.Image as Bitmap);
+            var form = new VobSubNOcrEdit(_nocrChars, pictureBoxInspectItem.Image as Bitmap, null);
             form.ShowDialog(this);
         }
     }

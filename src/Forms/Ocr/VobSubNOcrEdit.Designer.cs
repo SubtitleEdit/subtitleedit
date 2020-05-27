@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class VobSubNOcrEdit
+    sealed partial class VobSubNOcrEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -91,7 +91,7 @@
             this.listBoxFileNames.FormattingEnabled = true;
             this.listBoxFileNames.Location = new System.Drawing.Point(12, 72);
             this.listBoxFileNames.Name = "listBoxFileNames";
-            this.listBoxFileNames.Size = new System.Drawing.Size(240, 355);
+            this.listBoxFileNames.Size = new System.Drawing.Size(240, 342);
             this.listBoxFileNames.TabIndex = 7;
             this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.listBoxFileNames_SelectedIndexChanged);
             // 
@@ -126,7 +126,7 @@
             this.groupBoxCurrentCompareImage.Controls.Add(this.textBoxText);
             this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(258, 12);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
-            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(442, 415);
+            this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(442, 434);
             this.groupBoxCurrentCompareImage.TabIndex = 15;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
@@ -324,7 +324,7 @@
             // 
             this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 446);
+            this.labelInfo.Location = new System.Drawing.Point(12, 465);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
             this.labelInfo.TabIndex = 16;
@@ -333,7 +333,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(543, 437);
+            this.buttonOK.Location = new System.Drawing.Point(543, 456);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 17;
@@ -345,7 +345,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(625, 437);
+            this.buttonCancel.Location = new System.Drawing.Point(625, 456);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 18;
@@ -356,7 +356,7 @@
             // buttonImport
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonImport.Location = new System.Drawing.Point(146, 433);
+            this.buttonImport.Location = new System.Drawing.Point(146, 423);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(106, 23);
             this.buttonImport.TabIndex = 19;
@@ -372,7 +372,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 468);
+            this.ClientSize = new System.Drawing.Size(712, 487);
             this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);

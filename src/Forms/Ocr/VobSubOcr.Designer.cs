@@ -51,18 +51,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
-            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
-            this.checkBoxTesseractFallback = new System.Windows.Forms.CheckBox();
-            this.labelTesseractEngineMode = new System.Windows.Forms.Label();
-            this.comboBoxTesseractEngineMode = new System.Windows.Forms.ComboBox();
-            this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
-            this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
-            this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
-            this.labelTesseractLanguage = new System.Windows.Forms.Label();
-            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
-            this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
             this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
             this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
             this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
@@ -85,6 +73,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxCharacterDatabase = new System.Windows.Forms.ComboBox();
             this.labelImageDatabase = new System.Windows.Forms.Label();
             this.buttonNewCharacterDatabase = new System.Windows.Forms.Button();
+            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
+            this.checkBoxTesseractFallback = new System.Windows.Forms.CheckBox();
+            this.labelTesseractEngineMode = new System.Windows.Forms.Label();
+            this.comboBoxTesseractEngineMode = new System.Windows.Forms.ComboBox();
+            this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
+            this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
+            this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
+            this.labelTesseractLanguage = new System.Windows.Forms.Label();
+            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
+            this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
@@ -153,13 +153,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.GroupBoxTesseractMethod.SuspendLayout();
-            this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
             this.groupBoxImageCompareMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).BeginInit();
+            this.GroupBoxTesseractMethod.SuspendLayout();
+            this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxOCRControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             this.groupBoxOcrAutoFix.SuspendLayout();
@@ -439,10 +439,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -465,140 +465,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
             this.comboBoxOcrMethod.TabIndex = 0;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
-            // 
-            // GroupBoxTesseractMethod
-            // 
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
-            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
-            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
-            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
-            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
-            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
-            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
-            this.GroupBoxTesseractMethod.TabIndex = 1;
-            this.GroupBoxTesseractMethod.TabStop = false;
-            this.GroupBoxTesseractMethod.Text = "Tesseract";
-            // 
-            // checkBoxTesseractFallback
-            // 
-            this.checkBoxTesseractFallback.AutoSize = true;
-            this.checkBoxTesseractFallback.Location = new System.Drawing.Point(21, 104);
-            this.checkBoxTesseractFallback.Name = "checkBoxTesseractFallback";
-            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(152, 17);
-            this.checkBoxTesseractFallback.TabIndex = 7;
-            this.checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
-            this.checkBoxTesseractFallback.UseVisualStyleBackColor = true;
-            // 
-            // labelTesseractEngineMode
-            // 
-            this.labelTesseractEngineMode.AutoSize = true;
-            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 50);
-            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
-            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
-            this.labelTesseractEngineMode.TabIndex = 6;
-            this.labelTesseractEngineMode.Text = "Engine mode";
-            // 
-            // comboBoxTesseractEngineMode
-            // 
-            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
-            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
-            "Original Tesseract only (can detect italic)",
-            "Neural nets LSTM only",
-            "Tesseract + LSTM",
-            "Default, based on what is available"});
-            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);
-            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
-            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractEngineMode.TabIndex = 5;
-            this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
-            // 
-            // buttonGetTesseractDictionaries
-            // 
-            this.buttonGetTesseractDictionaries.Location = new System.Drawing.Point(300, 18);
-            this.buttonGetTesseractDictionaries.Name = "buttonGetTesseractDictionaries";
-            this.buttonGetTesseractDictionaries.Size = new System.Drawing.Size(29, 23);
-            this.buttonGetTesseractDictionaries.TabIndex = 2;
-            this.buttonGetTesseractDictionaries.Text = "...";
-            this.buttonGetTesseractDictionaries.UseVisualStyleBackColor = true;
-            this.buttonGetTesseractDictionaries.Click += new System.EventHandler(this.buttonGetTesseractDictionaries_Click);
-            // 
-            // checkBoxTesseractMusicOn
-            // 
-            this.checkBoxTesseractMusicOn.AutoSize = true;
-            this.checkBoxTesseractMusicOn.Checked = true;
-            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(81, 77);
-            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
-            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxTesseractMusicOn.TabIndex = 4;
-            this.checkBoxTesseractMusicOn.Text = "Music symbols";
-            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxTesseractItalicsOn
-            // 
-            this.checkBoxTesseractItalicsOn.AutoSize = true;
-            this.checkBoxTesseractItalicsOn.Checked = true;
-            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(21, 77);
-            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
-            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
-            this.checkBoxTesseractItalicsOn.TabIndex = 3;
-            this.checkBoxTesseractItalicsOn.Text = "Italics";
-            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
-            // 
-            // labelTesseractLanguage
-            // 
-            this.labelTesseractLanguage.AutoSize = true;
-            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 22);
-            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
-            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
-            this.labelTesseractLanguage.TabIndex = 0;
-            this.labelTesseractLanguage.Text = "Language";
-            // 
-            // comboBoxTesseractLanguages
-            // 
-            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractLanguages.FormattingEnabled = true;
-            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(98, 20);
-            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
-            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractLanguages.TabIndex = 1;
-            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
-            // 
-            // groupBoxModiMethod
-            // 
-            this.groupBoxModiMethod.Controls.Add(this.label1);
-            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
-            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
-            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
-            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxModiMethod.TabIndex = 3;
-            this.groupBoxModiMethod.TabStop = false;
-            this.groupBoxModiMethod.Text = "MODI";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 33;
-            this.label1.Text = "Language";
-            // 
-            // comboBoxModiLanguage
-            // 
-            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxModiLanguage.FormattingEnabled = true;
-            this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
-            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
-            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxModiLanguage.TabIndex = 0;
-            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
             // 
             // groupBoxNOCR
             // 
@@ -940,6 +806,140 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.buttonNewCharacterDatabase.Text = "New";
             this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
             this.buttonNewCharacterDatabase.Click += new System.EventHandler(this.ButtonNewCharacterDatabaseClick);
+            // 
+            // GroupBoxTesseractMethod
+            // 
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractFallback);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractEngineMode);
+            this.GroupBoxTesseractMethod.Controls.Add(this.buttonGetTesseractDictionaries);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractMusicOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.checkBoxTesseractItalicsOn);
+            this.GroupBoxTesseractMethod.Controls.Add(this.labelTesseractLanguage);
+            this.GroupBoxTesseractMethod.Controls.Add(this.comboBoxTesseractLanguages);
+            this.GroupBoxTesseractMethod.Location = new System.Drawing.Point(13, 31);
+            this.GroupBoxTesseractMethod.Name = "GroupBoxTesseractMethod";
+            this.GroupBoxTesseractMethod.Size = new System.Drawing.Size(366, 131);
+            this.GroupBoxTesseractMethod.TabIndex = 1;
+            this.GroupBoxTesseractMethod.TabStop = false;
+            this.GroupBoxTesseractMethod.Text = "Tesseract";
+            // 
+            // checkBoxTesseractFallback
+            // 
+            this.checkBoxTesseractFallback.AutoSize = true;
+            this.checkBoxTesseractFallback.Location = new System.Drawing.Point(21, 104);
+            this.checkBoxTesseractFallback.Name = "checkBoxTesseractFallback";
+            this.checkBoxTesseractFallback.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxTesseractFallback.TabIndex = 7;
+            this.checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
+            this.checkBoxTesseractFallback.UseVisualStyleBackColor = true;
+            // 
+            // labelTesseractEngineMode
+            // 
+            this.labelTesseractEngineMode.AutoSize = true;
+            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 50);
+            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
+            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
+            this.labelTesseractEngineMode.TabIndex = 6;
+            this.labelTesseractEngineMode.Text = "Engine mode";
+            // 
+            // comboBoxTesseractEngineMode
+            // 
+            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
+            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
+            "Original Tesseract only (can detect italic)",
+            "Neural nets LSTM only",
+            "Tesseract + LSTM",
+            "Default, based on what is available"});
+            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 47);
+            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
+            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractEngineMode.TabIndex = 5;
+            this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
+            // 
+            // buttonGetTesseractDictionaries
+            // 
+            this.buttonGetTesseractDictionaries.Location = new System.Drawing.Point(300, 18);
+            this.buttonGetTesseractDictionaries.Name = "buttonGetTesseractDictionaries";
+            this.buttonGetTesseractDictionaries.Size = new System.Drawing.Size(29, 23);
+            this.buttonGetTesseractDictionaries.TabIndex = 2;
+            this.buttonGetTesseractDictionaries.Text = "...";
+            this.buttonGetTesseractDictionaries.UseVisualStyleBackColor = true;
+            this.buttonGetTesseractDictionaries.Click += new System.EventHandler(this.buttonGetTesseractDictionaries_Click);
+            // 
+            // checkBoxTesseractMusicOn
+            // 
+            this.checkBoxTesseractMusicOn.AutoSize = true;
+            this.checkBoxTesseractMusicOn.Checked = true;
+            this.checkBoxTesseractMusicOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractMusicOn.Location = new System.Drawing.Point(81, 77);
+            this.checkBoxTesseractMusicOn.Name = "checkBoxTesseractMusicOn";
+            this.checkBoxTesseractMusicOn.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxTesseractMusicOn.TabIndex = 4;
+            this.checkBoxTesseractMusicOn.Text = "Music symbols";
+            this.checkBoxTesseractMusicOn.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTesseractItalicsOn
+            // 
+            this.checkBoxTesseractItalicsOn.AutoSize = true;
+            this.checkBoxTesseractItalicsOn.Checked = true;
+            this.checkBoxTesseractItalicsOn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTesseractItalicsOn.Location = new System.Drawing.Point(21, 77);
+            this.checkBoxTesseractItalicsOn.Name = "checkBoxTesseractItalicsOn";
+            this.checkBoxTesseractItalicsOn.Size = new System.Drawing.Size(54, 17);
+            this.checkBoxTesseractItalicsOn.TabIndex = 3;
+            this.checkBoxTesseractItalicsOn.Text = "Italics";
+            this.checkBoxTesseractItalicsOn.UseVisualStyleBackColor = true;
+            // 
+            // labelTesseractLanguage
+            // 
+            this.labelTesseractLanguage.AutoSize = true;
+            this.labelTesseractLanguage.Location = new System.Drawing.Point(18, 22);
+            this.labelTesseractLanguage.Name = "labelTesseractLanguage";
+            this.labelTesseractLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelTesseractLanguage.TabIndex = 0;
+            this.labelTesseractLanguage.Text = "Language";
+            // 
+            // comboBoxTesseractLanguages
+            // 
+            this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractLanguages.FormattingEnabled = true;
+            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(98, 20);
+            this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
+            this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractLanguages.TabIndex = 1;
+            this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
+            // 
+            // groupBoxModiMethod
+            // 
+            this.groupBoxModiMethod.Controls.Add(this.label1);
+            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
+            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
+            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
+            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxModiMethod.TabIndex = 3;
+            this.groupBoxModiMethod.TabStop = false;
+            this.groupBoxModiMethod.Text = "MODI";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 58);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 33;
+            this.label1.Text = "Language";
+            // 
+            // comboBoxModiLanguage
+            // 
+            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModiLanguage.FormattingEnabled = true;
+            this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
+            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
+            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxModiLanguage.TabIndex = 0;
+            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
             // 
             // groupBoxOCRControls
             // 
@@ -1708,10 +1708,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.PerformLayout();
-            this.groupBoxModiMethod.ResumeLayout(false);
-            this.groupBoxModiMethod.PerformLayout();
             this.groupBoxNOCR.ResumeLayout(false);
             this.groupBoxNOCR.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).EndInit();
@@ -1719,6 +1715,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxImageCompareMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).EndInit();
+            this.GroupBoxTesseractMethod.ResumeLayout(false);
+            this.GroupBoxTesseractMethod.PerformLayout();
+            this.groupBoxModiMethod.ResumeLayout(false);
+            this.groupBoxModiMethod.PerformLayout();
             this.groupBoxOCRControls.ResumeLayout(false);
             this.groupBoxOCRControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).EndInit();

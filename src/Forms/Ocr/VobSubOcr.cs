@@ -8638,11 +8638,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 LoadNOcrWithCurrentLanguage();
             }
 
-            using (var form = new VobSubNOcrEdit(_nOcrDb.OcrCharacters, null))
+            using (var form = new VobSubNOcrEdit(_nOcrDb.OcrCharacters, null, _nOcrDb.FileName))
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
+                if (form.ShowDialog(this) == DialogResult.OK && form.Changed)
                 {
-                    SaveNOcrWithCurrentLanguage();
+                    Cursor = Cursors.WaitCursor;
+                    try
+                    {
+                        SaveNOcrWithCurrentLanguage();
+                    }
+                    finally
+                    {
+                        Cursor = Cursors.Default;
+                    }
                 }
                 else
                 {

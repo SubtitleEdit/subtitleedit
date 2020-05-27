@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class VobSubNOcrEdit : Form
+    public sealed partial class VobSubNOcrEdit : Form
     {
         private readonly List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar;
@@ -22,8 +22,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly Bitmap _bitmap;
         private List<NOcrChar> _history = new List<NOcrChar>();
         private int _historyIndex = -1;
+        public bool Changed { get; private set; }
 
-        public VobSubNOcrEdit(List<NOcrChar> nocrChars, Bitmap bitmap)
+        public VobSubNOcrEdit(List<NOcrChar> nocrChars, Bitmap bitmap, string fileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -40,8 +41,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SizePictureBox();
             }
 
-            labelInfo.Text = $"{nocrChars.Count} elements in database";
+            labelInfo.Text = $"{nocrChars.Count:#,###,##0} elements in database";
             labelNOcrCharInfo.Text = string.Empty;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                Text = "nOCR DB - " + fileName;
+            }
+
+            if (comboBoxTexts.Items.Count > 0)
+            {
+                comboBoxTexts.SelectedIndex = 0;
+            }
         }
 
         private void FillComboBox()
@@ -315,11 +325,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
+            var oldComboBoxIndex = comboBoxTexts.SelectedIndex;
+            var oldListBoxIndex = listBoxFileNames.SelectedIndex;
+
             _nocrChars.Remove(_nocrChar);
+            Changed = true;
+
             FillComboBox();
-            if (comboBoxTexts.Items.Count > 0)
+            if (comboBoxTexts.Items.Count > oldComboBoxIndex)
             {
-                comboBoxTexts.SelectedIndex = 0;
+                comboBoxTexts.SelectedIndex = oldComboBoxIndex;
+                if (listBoxFileNames.Items.Count > oldListBoxIndex)
+                {
+                    listBoxFileNames.SelectedIndex = oldListBoxIndex;
+                }
+                else if (listBoxFileNames.Items.Count > 0)
+                {
+                    listBoxFileNames.SelectedIndex = listBoxFileNames.Items.Count - 1;
+                }
+
+                listBoxFileNames.Focus();
             }
         }
 
@@ -384,6 +409,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_startDone)
                 {
+                    Changed = true;
                     _end = new Point((int)Math.Round(e.Location.X / _zoomFactor), (int)Math.Round(e.Location.Y / _zoomFactor));
                     _nocrChar.Width = pictureBoxCharacter.Image.Width;
                     _nocrChar.Height = pictureBoxCharacter.Image.Height;
@@ -539,6 +565,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         notImportedCount++;
                     }
                 }
+
+                if (importedCount > 0)
+                {
+                    Changed = true;
+                }
+
                 MessageBox.Show($"Number of characters imported: {importedCount}\r\nNumber of characters not imported (already present): {notImportedCount}");
             }
         }
