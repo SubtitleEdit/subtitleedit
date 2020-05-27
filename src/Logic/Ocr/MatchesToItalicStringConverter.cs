@@ -12,6 +12,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public static string GetStringWithItalicTags(List<VobSubOcr.CompareMatch> matches)
         {
+            if (matches == null)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
             foreach (var lineMatches in SplitMatchesToLines(matches))
             {

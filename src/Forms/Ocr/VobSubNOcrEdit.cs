@@ -211,9 +211,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nbmp.Fill(Color.White);
                     pictureBoxCharacter.Image = nbmp.GetBitmap();
                     SizePictureBox();
-                    ShowOcrPoints();
                     bitmap.Dispose();
                 }
+                ShowOcrPoints();
             }
         }
 

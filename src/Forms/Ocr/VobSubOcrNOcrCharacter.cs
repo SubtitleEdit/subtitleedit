@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ExpandSelection = false;
 
             textBoxCharacters.Text = string.Empty;
-            NOcrChar = new NOcrChar { MarginTop = character.Y - character.ParentY };
+            NOcrChar = new NOcrChar { MarginTop = character.Top };
             _imageWidth = character.NikseBitmap.Width;
             _imageHeight = character.NikseBitmap.Height;
             _drawLineOn = false;
@@ -872,6 +872,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ShowOcrPoints();
             listBoxLinesForeground.EndUpdate();
             listBoxlinesBackground.EndUpdate();
+        }
+
+        private void buttonAbort_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Abort;
         }
     }
 }

@@ -2739,10 +2739,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return null;
         }
 
-        private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, int topMargin, out bool italic, NOcrDb nOcrDb, bool deepSeek)
+        private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, int topMargin, bool italic, NOcrDb nOcrDb, bool deepSeek, double italicAngle)
         {
-            italic = false;
-            return nOcrDb?.GetMatch(targetItem.NikseBitmap, targetItem.Top, deepSeek);
+            return nOcrDb?.GetMatch(targetItem.NikseBitmap, targetItem.Top, deepSeek, italic, italicAngle);
         }
 
         private static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
@@ -2774,7 +2773,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
             }
 
-            var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, out var italic, nOcrDb, deepSeek);
+            var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, tryItalicScaling, nOcrDb, deepSeek, _unItalicFactor);
             if (result == null)
             {
                 if (checkBoxNOcrCorrect.Checked)
@@ -2786,11 +2785,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             FixUppercaseLowercaseIssues(targetItem, result);
-
-            if (italic)
-            {
-                return new CompareMatch(result.Text, true, 0, null, result);
-            }
 
             return new CompareMatch(result.Text, result.Italic, 0, null, result);
         }
@@ -2841,7 +2835,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult) { ImageSplitterItem = targetItem };
             }
 
-            var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, out var italic, nOcrDb, deepSeek);
+            var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, tryItalicScaling, nOcrDb, deepSeek, _unItalicFactor);
             if (result == null)
             {
                 if (checkBoxNOcrCorrect.Checked)
@@ -2853,11 +2847,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             FixUppercaseLowercaseIssues(targetItem, result);
-
-            if (italic)
-            {
-                return new CompareMatch(result.Text, true, 0, null, result) { Y = targetItem.Y };
-            }
 
             return new CompareMatch(result.Text, result.Italic, 0, null, result) { Y = targetItem.Y };
         }
@@ -4209,7 +4198,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     if (_abort)
                     {
-                        return string.Empty;
+                        return MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
                     }
 
                     if (!expandSelection && !shrinkSelection)
