@@ -811,6 +811,7 @@ namespace Nikse.SubtitleEdit.Core
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
                 FixDialogsOnOneLine = "Fix dialogs on one line",
                 RemoveSpaceBetweenNumbersFixed = "Remove space between numbers fixed: {0}",
+                NormalizeStrings = "Normalize strings",
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",
                 FixTurkishAnsi = "Fix Turkish ANSI (Icelandic) letters to Unicode",
                 FixDanishLetterI = "Fix Danish letter 'i'",

@@ -51,7 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexUppercaseIInsideLowercaseWord = 28;
         private const int IndexRemoveSpaceBetweenNumbers = 29;
         private const int IndexDialogsOnOneLine = 30;
-        private const int IndexFixEllipsesStart = 31;
+        private const int IndexNormalizeStrings = 31;
+        private const int IndexFixEllipsesStart = 32;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -403,7 +404,8 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, () => new FixUppercaseIInsideWords().Fix(Subtitle, this), ce.UppercaseIInsideLowercaseWordTicked),
                 new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, () => new RemoveSpaceBetweenNumbers().Fix(Subtitle, this), ce.RemoveSpaceBetweenNumberTicked),
-                new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked)
+                new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, () => new FixDialogsOnOneLine().Fix(Subtitle, this), ce.FixDialogsOnOneLineTicked),
+                new FixItem(_language.NormalizeStrings, string.Empty, () => new NormalizeStrings().Fix(Subtitle, this), ce.NormalizeStringsTicked),
             };
 
             if (Configuration.Settings.General.ContinuationStyle == ContinuationStyle.None)
@@ -1099,6 +1101,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
+            ce.NormalizeStringsTicked = listView1.Items[IndexNormalizeStrings].Checked;
             if (_danishLetterIIndex >= 0)
             {
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
