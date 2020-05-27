@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
             comboBoxSubtitleFontSize.SelectedIndex = 50;
+            textBoxInputFile.Text = Configuration.Settings.Tools.OcrTrainSrtFile;
         }
 
         internal void Initialize()
@@ -161,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (list.Count == 3)
             {
                 var item = list[2];
-                NOcrChar match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false);
+                NOcrChar match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false, false, 0);
                 if (match == null || match.Text != s)
                 {
                     labelInfo.Refresh();
@@ -307,6 +308,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
+            Configuration.Settings.Tools.OcrTrainSrtFile = textBoxInputFile.Text;
         }
     }
 }

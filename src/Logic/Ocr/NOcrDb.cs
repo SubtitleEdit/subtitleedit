@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Forms.Ocr;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek)
+        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, bool italic, double italicAngle)
         {
             // only very very accurate matches
             foreach (var oc in OcrCharacters)
@@ -146,10 +147,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-
             foreach (var oc in OcrCharacters)
             {
-                if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
+                if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 30 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
                 {
                     if (IsMatch(bitmap, oc, 10))
                     {
@@ -158,11 +158,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
+            if (italic)
+            {
+                foreach (var oc in OcrCharacters)
+                {
+                    if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
+                    {
+                        var italicOc = MakeItalicNOcrChar(oc, 0, italicAngle);
+                        if (IsMatch(bitmap, italicOc, 25))
+                        {
+                            return italicOc;
+                        }
+                    }
+                }
+            }
+
             if (deepSeek)
             {
                 foreach (var oc in OcrCharacters)
                 {
-                    if (Math.Abs(widthPercent - oc.WidthPercent) < 25 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
+                    if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
                     {
                         if (IsMatch(bitmap, oc, 25))
                         {
@@ -173,6 +188,32 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return null;
+        }
+
+        public static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
+        {
+            var c = new NOcrChar();
+            foreach (NOcrPoint op in oldChar.LinesForeground)
+            {
+                c.LinesForeground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
+            }
+
+            foreach (NOcrPoint op in oldChar.LinesBackground)
+            {
+                c.LinesBackground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
+            }
+
+            c.Text = oldChar.Text;
+            c.Width = oldChar.Width;
+            c.Height = oldChar.Height;
+            c.MarginTop = oldChar.MarginTop;
+            c.Italic = true;
+            return c;
+        }
+
+        private static Point MakePointItalic(Point p, int height, int moveLeftPixels, double italicAngle)
+        {
+            return new Point((int)Math.Round(p.X + (height - p.Y) * italicAngle - moveLeftPixels), p.Y);
         }
 
         public static bool IsMatch(NikseBitmap bitmap, NOcrChar oc, int errorsAllowed)

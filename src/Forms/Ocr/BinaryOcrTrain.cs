@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             comboBoxSubtitleFontSize.SelectedIndex = 5;
             comboBoxFontSizeEnd.SelectedIndex = 15;
+            textBoxInputFile.Text = Configuration.Settings.Tools.OcrTrainSrtFile;
         }
 
         private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, List<string> charactersLearned, string s, bool bold, bool italic)
@@ -407,6 +408,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
+            Configuration.Settings.Tools.OcrTrainSrtFile = textBoxInputFile.Text;
         }
     }
 }

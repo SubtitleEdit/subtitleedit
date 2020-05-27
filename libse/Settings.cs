@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Core
         public string OcrAddLetterRow1 { get; set; }
         public string OcrAddLetterRow2 { get; set; }
         public string OcrTrainFonts { get; set; }
+        public string OcrTrainSrtFile { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
@@ -1424,7 +1425,7 @@ $HorzAlign          =   Center
             PromptForUnknownWords = true;
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
-            ItalicFactor = 0.2;
+            ItalicFactor = 0.2f;
             LineOcrLinesToAutoGuess = 100;
             BinaryAutoDetectBestDb = true;
             CaptureTopAlign = false;
@@ -3248,6 +3249,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OcrTrainFonts = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OcrTrainSrtFile");
+            if (subNode != null)
+            {
+                settings.Tools.OcrTrainSrtFile = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("Interjections");
@@ -7126,6 +7133,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OcrAddLetterRow1", settings.Tools.OcrAddLetterRow1);
                 textWriter.WriteElementString("OcrAddLetterRow2", settings.Tools.OcrAddLetterRow2);
                 textWriter.WriteElementString("OcrTrainFonts", settings.Tools.OcrTrainFonts);
+                textWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);

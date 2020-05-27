@@ -195,6 +195,7 @@
             this.buttonAbort.TabIndex = 25;
             this.buttonAbort.Text = "&Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
+            this.buttonAbort.Click += new System.EventHandler(this.buttonAbort_Click);
             // 
             // labelCharacters
             // 
@@ -937,7 +938,7 @@
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 24;
-            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.Text = "&Skip";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
             // labelSubtitleImage
@@ -1241,7 +1242,7 @@
             this.Name = "VobSubOcrNOcrCharacter";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "VobSubOcrNOcrCharacter";
+            this.Text = "nOCR character";
             this.Load += new System.EventHandler(this.VobSubOcrNOcrCharacter_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrNOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
