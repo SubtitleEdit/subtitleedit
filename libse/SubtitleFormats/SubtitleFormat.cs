@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new AvidDvd(),
                     new AwsTranscribeJson(),
                     new BelleNuitSubtitler(),
+                    new Bilibili(),
                     new Cappella(),
                     new CaptionAssistant(),
                     new Captionate(),
