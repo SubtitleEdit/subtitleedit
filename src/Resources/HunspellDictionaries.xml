@@ -216,6 +216,12 @@
     <Description>Malay Spell Checker v0.1 - 07/10/04</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Malayalam</EnglishName>
+    <NativeName>Malayalam</NativeName>
+    <DownloadLink>https://ayera.dl.sourceforge.net/project/aoo-extensions/2741/3/ml_in_dict-1-1.oxt</DownloadLink>
+    <Description>Malayalam Spellchecker 1.1.0</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Macedonian</EnglishName>
     <NativeName>Macedonian</NativeName>
     <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/3403/0/dict-mk.oxt</DownloadLink>
