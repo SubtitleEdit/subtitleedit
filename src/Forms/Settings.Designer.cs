@@ -2319,7 +2319,7 @@
             // 
             this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(274, 17);
             this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
-            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(136, 21);
+            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(136, 23);
             this.buttonDownloadFfmpeg.TabIndex = 2;
             this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
             this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
@@ -2480,7 +2480,7 @@
             // panelWaveformCursorColor
             // 
             this.panelWaveformCursorColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformCursorColor.Location = new System.Drawing.Point(138, 136);
+            this.panelWaveformCursorColor.Location = new System.Drawing.Point(138, 142);
             this.panelWaveformCursorColor.Name = "panelWaveformCursorColor";
             this.panelWaveformCursorColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformCursorColor.TabIndex = 34;
@@ -2488,9 +2488,9 @@
             // 
             // buttonWaveformCursorColor
             // 
-            this.buttonWaveformCursorColor.Location = new System.Drawing.Point(16, 135);
+            this.buttonWaveformCursorColor.Location = new System.Drawing.Point(14, 141);
             this.buttonWaveformCursorColor.Name = "buttonWaveformCursorColor";
-            this.buttonWaveformCursorColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformCursorColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformCursorColor.TabIndex = 4;
             this.buttonWaveformCursorColor.Text = "Cursor color";
             this.buttonWaveformCursorColor.UseVisualStyleBackColor = true;
@@ -2519,7 +2519,7 @@
             // checkBoxWaveformShowWpm
             // 
             this.checkBoxWaveformShowWpm.AutoSize = true;
-            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 248);
+            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 256);
             this.checkBoxWaveformShowWpm.Name = "checkBoxWaveformShowWpm";
             this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(104, 17);
             this.checkBoxWaveformShowWpm.TabIndex = 8;
@@ -2529,7 +2529,7 @@
             // checkBoxWaveformShowCps
             // 
             this.checkBoxWaveformShowCps.AutoSize = true;
-            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 225);
+            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 233);
             this.checkBoxWaveformShowCps.Name = "checkBoxWaveformShowCps";
             this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(96, 17);
             this.checkBoxWaveformShowCps.TabIndex = 7;
@@ -2668,7 +2668,7 @@
             // panelWaveformTextColor
             // 
             this.panelWaveformTextColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformTextColor.Location = new System.Drawing.Point(138, 109);
+            this.panelWaveformTextColor.Location = new System.Drawing.Point(138, 113);
             this.panelWaveformTextColor.Name = "panelWaveformTextColor";
             this.panelWaveformTextColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformTextColor.TabIndex = 7;
@@ -2676,9 +2676,9 @@
             // 
             // buttonWaveformTextColor
             // 
-            this.buttonWaveformTextColor.Location = new System.Drawing.Point(16, 108);
+            this.buttonWaveformTextColor.Location = new System.Drawing.Point(14, 112);
             this.buttonWaveformTextColor.Name = "buttonWaveformTextColor";
-            this.buttonWaveformTextColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformTextColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformTextColor.TabIndex = 3;
             this.buttonWaveformTextColor.Text = "Text color";
             this.buttonWaveformTextColor.UseVisualStyleBackColor = true;
@@ -2687,7 +2687,7 @@
             // panelWaveformGridColor
             // 
             this.panelWaveformGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformGridColor.Location = new System.Drawing.Point(138, 163);
+            this.panelWaveformGridColor.Location = new System.Drawing.Point(138, 171);
             this.panelWaveformGridColor.Name = "panelWaveformGridColor";
             this.panelWaveformGridColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformGridColor.TabIndex = 9;
@@ -2695,9 +2695,9 @@
             // 
             // buttonWaveformGridColor
             // 
-            this.buttonWaveformGridColor.Location = new System.Drawing.Point(16, 162);
+            this.buttonWaveformGridColor.Location = new System.Drawing.Point(14, 170);
             this.buttonWaveformGridColor.Name = "buttonWaveformGridColor";
-            this.buttonWaveformGridColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformGridColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformGridColor.TabIndex = 5;
             this.buttonWaveformGridColor.Text = "Grid color";
             this.buttonWaveformGridColor.UseVisualStyleBackColor = true;
@@ -2706,7 +2706,7 @@
             // panelWaveformBackgroundColor
             // 
             this.panelWaveformBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformBackgroundColor.Location = new System.Drawing.Point(138, 82);
+            this.panelWaveformBackgroundColor.Location = new System.Drawing.Point(138, 84);
             this.panelWaveformBackgroundColor.Name = "panelWaveformBackgroundColor";
             this.panelWaveformBackgroundColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformBackgroundColor.TabIndex = 5;
@@ -2714,9 +2714,9 @@
             // 
             // buttonWaveformBackgroundColor
             // 
-            this.buttonWaveformBackgroundColor.Location = new System.Drawing.Point(16, 81);
+            this.buttonWaveformBackgroundColor.Location = new System.Drawing.Point(14, 83);
             this.buttonWaveformBackgroundColor.Name = "buttonWaveformBackgroundColor";
-            this.buttonWaveformBackgroundColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformBackgroundColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformBackgroundColor.TabIndex = 2;
             this.buttonWaveformBackgroundColor.Text = "Back color";
             this.buttonWaveformBackgroundColor.UseVisualStyleBackColor = true;
@@ -2733,9 +2733,9 @@
             // 
             // buttonWaveformColor
             // 
-            this.buttonWaveformColor.Location = new System.Drawing.Point(16, 54);
+            this.buttonWaveformColor.Location = new System.Drawing.Point(14, 54);
             this.buttonWaveformColor.Name = "buttonWaveformColor";
-            this.buttonWaveformColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformColor.TabIndex = 1;
             this.buttonWaveformColor.Text = "Color";
             this.buttonWaveformColor.UseVisualStyleBackColor = true;
@@ -2744,7 +2744,7 @@
             // panelWaveformSelectedColor
             // 
             this.panelWaveformSelectedColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWaveformSelectedColor.Location = new System.Drawing.Point(138, 27);
+            this.panelWaveformSelectedColor.Location = new System.Drawing.Point(138, 26);
             this.panelWaveformSelectedColor.Name = "panelWaveformSelectedColor";
             this.panelWaveformSelectedColor.Size = new System.Drawing.Size(21, 20);
             this.panelWaveformSelectedColor.TabIndex = 1;
@@ -2752,9 +2752,9 @@
             // 
             // buttonWaveformSelectedColor
             // 
-            this.buttonWaveformSelectedColor.Location = new System.Drawing.Point(16, 27);
+            this.buttonWaveformSelectedColor.Location = new System.Drawing.Point(14, 25);
             this.buttonWaveformSelectedColor.Name = "buttonWaveformSelectedColor";
-            this.buttonWaveformSelectedColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonWaveformSelectedColor.Size = new System.Drawing.Size(112, 23);
             this.buttonWaveformSelectedColor.TabIndex = 0;
             this.buttonWaveformSelectedColor.Text = "Selected color";
             this.buttonWaveformSelectedColor.UseVisualStyleBackColor = true;
@@ -2763,7 +2763,7 @@
             // checkBoxWaveformShowGrid
             // 
             this.checkBoxWaveformShowGrid.AutoSize = true;
-            this.checkBoxWaveformShowGrid.Location = new System.Drawing.Point(16, 192);
+            this.checkBoxWaveformShowGrid.Location = new System.Drawing.Point(16, 201);
             this.checkBoxWaveformShowGrid.Name = "checkBoxWaveformShowGrid";
             this.checkBoxWaveformShowGrid.Size = new System.Drawing.Size(73, 17);
             this.checkBoxWaveformShowGrid.TabIndex = 6;

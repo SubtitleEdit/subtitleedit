@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private List<VobSubOcr.CompareMatch> _matchList;
         private List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar;
+        private NOcrDb _nocrDb;
         private VobSubOcr _vobSubOcr;
         private Bitmap _bitmap;
         private Bitmap _bitmap2;
@@ -25,6 +26,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
             labelImageSize.Text = string.Empty;
+
+            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+            {
+                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
+                {
+                    foreach (ToolStripItem item in i.DropDownItems)
+                    {
+                        item.Click += InsertLanguageCharacter;
+                    }
+                }
+                else
+                {
+                    toolStripItem.Click += InsertLanguageCharacter;
+                }
+            }
+        }
+
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
+                var start = textBoxText.SelectionStart;
+                textBoxText.SelectedText = toolStripMenuItem.Text;
+                textBoxText.SelectionLength = 0;
+                textBoxText.SelectionStart = start + toolStripMenuItem.Text.Length;
+            }
         }
 
         private void VobSubNOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
@@ -43,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bitmap = nbmp.GetBitmap();
             _bitmap2 = bitmap;
             _nocrChars = nOcrDb.OcrCharacters;
+            _nocrDb = nOcrDb;
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
 
@@ -309,8 +337,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonEditDB_Click(object sender, EventArgs e)
         {
-            var form = new VobSubNOcrEdit(_nocrChars, pictureBoxInspectItem.Image as Bitmap, null);
+            var form = new VobSubNOcrEdit(_nocrDb, pictureBoxInspectItem.Image as Bitmap, null);
             form.ShowDialog(this);
+        }
+
+        private void addBetterMultiMatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new AddBetterMultiMatchNOcr())
+            {
+                // form.Initialize(listBoxInspectItems.SelectedIndex, _matches, _splitterItems);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    //_binOcrDb.Add(form.ExpandedMatch);
+                    DialogResult = DialogResult.OK;
+                }
+            }
         }
     }
 }

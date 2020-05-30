@@ -87,7 +87,118 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
         }
 
-        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, bool italic, double italicAngle)
+        public NOcrChar GetMatchExpanded(NikseBitmap nikseBitmap, ImageSplitterItem targetItem)
+        {
+            int w = targetItem.NikseBitmap.Width;
+            foreach (NOcrChar oc in OcrCharactersExpanded)
+            {
+                if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
+                {
+                    bool ok = true;
+                    var index = 0;
+                    while (index < oc.LinesForeground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesForeground[index];
+                        foreach (Point point in op.GetPoints())
+                        {
+                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            {
+                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
+                                if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        index++;
+                    }
+
+                    index = 0;
+                    while (index < oc.LinesBackground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesBackground[index];
+                        foreach (Point point in op.GetPoints())
+                        {
+                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            {
+                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
+                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        index++;
+                    }
+
+                    if (ok)
+                    {
+                        return oc;
+                    }
+
+                    ok = true;
+                    index = 0;
+                    while (index < oc.LinesForeground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesForeground[index];
+                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                        {
+                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            {
+                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
+                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                {
+                                }
+                                else
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        index++;
+                    }
+
+                    index = 0;
+                    while (index < oc.LinesBackground.Count && ok)
+                    {
+                        NOcrPoint op = oc.LinesBackground[index];
+                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                        {
+                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            {
+                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
+                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        index++;
+                    }
+
+                    if (ok)
+                    {
+                        return oc;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, bool italic, double italicAngle, int maxWrongPixels)
         {
             // only very very accurate matches
             foreach (var oc in OcrCharacters)
@@ -114,46 +225,58 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            foreach (var oc in OcrCharacters)
+            if (maxWrongPixels >= 1)
             {
-                if (Math.Abs(bitmap.Width - oc.Width) < 8 && Math.Abs(bitmap.Height - oc.Height) < 8 && Math.Abs(oc.MarginTop - topMargin) < 8)
+                foreach (var oc in OcrCharacters)
                 {
-                    if (IsMatch(bitmap, oc, 1))
+                    if (Math.Abs(bitmap.Width - oc.Width) < 8 && Math.Abs(bitmap.Height - oc.Height) < 8 && Math.Abs(oc.MarginTop - topMargin) < 8)
                     {
-                        return oc;
+                        if (IsMatch(bitmap, oc, 1))
+                        {
+                            return oc;
+                        }
                     }
                 }
             }
 
-            foreach (var oc in OcrCharacters)
+            if (maxWrongPixels >= 2)
             {
-                if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15)
+                foreach (var oc in OcrCharacters)
                 {
-                    if (IsMatch(bitmap, oc, 2))
+                    if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15)
                     {
-                        return oc;
+                        if (IsMatch(bitmap, oc, 2))
+                        {
+                            return oc;
+                        }
                     }
                 }
             }
 
-            foreach (var oc in OcrCharacters)
+            if (maxWrongPixels >= 20)
             {
-                if (!oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
+                foreach (var oc in OcrCharacters)
                 {
-                    if (IsMatch(bitmap, oc, 20))
+                    if (!oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
                     {
-                        return oc;
+                        if (IsMatch(bitmap, oc, 20))
+                        {
+                            return oc;
+                        }
                     }
                 }
             }
 
-            foreach (var oc in OcrCharacters)
+            if (maxWrongPixels >= 10)
             {
-                if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 30 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
+                foreach (var oc in OcrCharacters)
                 {
-                    if (IsMatch(bitmap, oc, 10))
+                    if (oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 30 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
                     {
-                        return oc;
+                        if (IsMatch(bitmap, oc, 10))
+                        {
+                            return oc;
+                        }
                     }
                 }
             }
@@ -179,7 +302,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
                     {
-                        if (IsMatch(bitmap, oc, 25))
+                        if (IsMatch(bitmap, oc, maxWrongPixels))
                         {
                             return oc;
                         }

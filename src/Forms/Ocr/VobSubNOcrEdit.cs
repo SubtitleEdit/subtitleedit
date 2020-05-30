@@ -24,13 +24,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _historyIndex = -1;
         public bool Changed { get; private set; }
 
-        public VobSubNOcrEdit(List<NOcrChar> nocrChars, Bitmap bitmap, string fileName)
+        public VobSubNOcrEdit(NOcrDb nOcrDb, Bitmap bitmap, string fileName)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            _nocrChars = nocrChars;
+            _nocrChars = nOcrDb.OcrCharacters;
             _bitmap = bitmap;
 
             FillComboBox();
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SizePictureBox();
             }
 
-            labelInfo.Text = $"{nocrChars.Count:#,###,##0} elements in database";
+            labelInfo.Text = $"{_nocrChars.Count:#,###,##0} elements in database";
             labelNOcrCharInfo.Text = string.Empty;
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -575,5 +575,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private void listBoxLinesForeground_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                e.SuppressKeyPress = true;
+                removeForegroundToolStripMenuItem_Click(null, null);
+            }
+        }
+
+        private void listBoxlinesBackground_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                e.SuppressKeyPress = true;
+                removeBackToolStripMenuItem_Click(null, null);
+            }
+        }
     }
 }
