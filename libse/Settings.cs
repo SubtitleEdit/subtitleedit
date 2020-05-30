@@ -1398,6 +1398,7 @@ $HorzAlign          =   Center
         public int LineOcrLinesToAutoGuess { get; set; }
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
+        public int LineOcrMaxErrorPixels { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
         public string LastBinaryImageSpellCheck { get; set; }
         public bool BinaryAutoDetectBestDb { get; set; }
@@ -1427,6 +1428,7 @@ $HorzAlign          =   Center
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2f;
             LineOcrLinesToAutoGuess = 100;
+            LineOcrMaxErrorPixels = 45;
             BinaryAutoDetectBestDb = true;
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
@@ -5292,6 +5294,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
 
+            subNode = node.SelectSingleNode("LineOcrMaxErrorPixels");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.LineOcrMaxErrorPixels = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+            
             subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
             if (subNode != null)
             {
@@ -7507,6 +7515,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LineOcrLinesToAutoGuess", settings.VobSubOcr.LineOcrLinesToAutoGuess.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LineOcrMaxErrorPixels", settings.VobSubOcr.LineOcrMaxErrorPixels.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
                 textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
                 textWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));

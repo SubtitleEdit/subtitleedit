@@ -31,6 +31,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixLargeFonts(this, buttonCancel);
             checkBoxAutoSubmitOfFirstChar.Text = Configuration.Settings.Language.VobSubOcrCharacter.AutoSubmitOnFirstChar;
             labelItalicOn.Visible = false;
+
+            foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
+            {
+                if (toolStripItem is ToolStripDropDownItem i && i.HasDropDownItems)
+                {
+                    foreach (ToolStripItem item in i.DropDownItems)
+                    {
+                        item.Click += InsertLanguageCharacter;
+                    }
+                }
+                else
+                {
+                    toolStripItem.Click += InsertLanguageCharacter;
+                }
+            }
+        }
+
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
+                var start = textBoxCharacters.SelectionStart;
+                textBoxCharacters.SelectedText = toolStripMenuItem.Text;
+                textBoxCharacters.SelectionLength = 0;
+                textBoxCharacters.SelectionStart = start + toolStripMenuItem.Text.Length;
+            }
         }
 
         public NOcrChar NOcrChar { get; private set; }
@@ -760,7 +786,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
+        private void removeBackgroundLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listBoxlinesBackground.SelectedItems.Count == 1)
             {
@@ -770,7 +796,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ShowOcrPoints();
         }
 
-        private void removeForegroundToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listBoxLinesForeground.SelectedItems.Count == 1)
             {
@@ -877,6 +903,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void buttonAbort_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Abort;
+        }
+
+        private void listBoxLinesForeground_KeyPress(object sender, KeyPressEventArgs e)
+        {
+        }
+
+        private void listBoxLinesForeground_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                removeForegroundToolStripMenuItem_Click(null, null);
+            }
+        }
+
+        private void listBoxLinesBackground_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                removeBackgroundLineToolStripMenuItem_Click(null, null);
+            }
         }
     }
 }

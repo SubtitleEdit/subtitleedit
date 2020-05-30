@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            if (buttonTrain.Text == "Abort")
+            if (buttonTrain.Text == Configuration.Settings.Language.SpellCheck.Abort)
             {
                 _abort = true;
                 return;
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _abort = false;
-            buttonTrain.Text = "Abort";
+            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
             buttonOK.Enabled = false;
 
             int numberOfCharactersLeaned = 0;
@@ -155,14 +155,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold)
         {
             Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold);
-            var nbmp = new NikseBitmap(bmp);
-            nbmp.MakeTwoColor(280);
-            nbmp.CropTop(0, Color.FromArgb(0, 0, 0, 0));
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
+            var nikseBitmap = new NikseBitmap(bmp);
+            nikseBitmap.MakeTwoColor(280);
+            nikseBitmap.CropTop(0, Color.FromArgb(0, 0, 0, 0));
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, 10, false, false, 25);
             if (list.Count == 3)
             {
                 var item = list[2];
-                NOcrChar match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false, false, 0);
+                var match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false, false, 0, 25);
                 if (match == null || match.Text != s)
                 {
                     labelInfo.Refresh();
@@ -185,6 +185,57 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     numberOfCharactersSkipped++;
                 }
+            }
+            else
+            {
+
+                if (list.Count == 4)
+                {
+                    // e.g. quote (")
+                    var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3] });
+                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem);
+                    if (match != null && match.Text == s)
+                    {
+                        numberOfCharactersSkipped++;
+                        return;
+                    }
+
+                    var nOcrChar = new NOcrChar(s)
+                    {
+                        Width = expandItem.NikseBitmap.Width,
+                        Height = expandItem.NikseBitmap.Height,
+                        MarginTop = expandItem.Top,
+                        ExpandCount = 2,
+                    };
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 5, checkBoxVeryAccurate.Checked, nOcrChar, expandItem.NikseBitmap);
+                    nOcrD.Add(nOcrChar);
+                    return;
+                }
+
+                if (list.Count == 5)
+                {
+                    // e.g. "%" 
+                    var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3], list[4] });
+                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem);
+                    if (match != null && match.Text == s)
+                    {
+                        numberOfCharactersSkipped++;
+                        return;
+                    }
+
+                    var nOcrChar = new NOcrChar(s)
+                    {
+                        Width = expandItem.NikseBitmap.Width,
+                        Height = expandItem.NikseBitmap.Height,
+                        MarginTop = expandItem.Top,
+                        ExpandCount = 3,
+                    };
+                    nOcrD.Add(nOcrChar);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 10, checkBoxVeryAccurate.Checked, nOcrChar, expandItem.NikseBitmap);
+                    return;
+                }
+
+                numberOfCharactersSkipped++;
             }
         }
 

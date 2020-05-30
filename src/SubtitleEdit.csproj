@@ -236,6 +236,12 @@
     <Compile Include="Forms\Ocr\AddBeterMultiMatch.Designer.cs">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ocr\AddBetterMultiMatchNOcr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\AddBetterMultiMatchNOcr.Designer.cs">
+      <DependentUpon>AddBetterMultiMatchNOcr.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\AddToOcrReplaceList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -511,6 +517,12 @@
     </Compile>
     <Compile Include="Forms\GetDictionaries.Designer.cs">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\BinaryOcrChooseEditDb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\BinaryOcrChooseEditDb.Designer.cs">
+      <DependentUpon>BinaryOcrChooseEditDb.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\BinaryOcrTrain.cs">
       <SubType>Form</SubType>
@@ -1191,6 +1203,9 @@
     <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\AddBetterMultiMatchNOcr.resx">
+      <DependentUpon>AddBetterMultiMatchNOcr.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddToOcrReplaceList.resx">
       <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
     </EmbeddedResource>
@@ -1326,6 +1341,9 @@
     <EmbeddedResource Include="Forms\GetDictionaries.resx">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\BinaryOcrChooseEditDb.resx">
+      <DependentUpon>BinaryOcrChooseEditDb.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\BinaryOcrTrain.resx">
       <DependentUpon>BinaryOcrTrain.cs</DependentUpon>

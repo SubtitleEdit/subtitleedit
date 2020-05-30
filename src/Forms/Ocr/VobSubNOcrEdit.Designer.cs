@@ -191,6 +191,7 @@
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 40;
             this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
+            this.listBoxlinesBackground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxlinesBackground_KeyDown);
             // 
             // contextMenuStripLinesBackground
             // 
@@ -224,6 +225,7 @@
             this.listBoxLinesForeground.Size = new System.Drawing.Size(151, 95);
             this.listBoxLinesForeground.TabIndex = 38;
             this.listBoxLinesForeground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesForeground_SelectedIndexChanged);
+            this.listBoxLinesForeground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxLinesForeground_KeyDown);
             // 
             // contextMenuLinesForeground
             // 
@@ -387,7 +389,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "VobSubNOcrEdit";
+            this.Text = "nOCR DB";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubNOcrEdit_KeyDown);
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();

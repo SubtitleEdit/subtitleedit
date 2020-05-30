@@ -4,23 +4,17 @@ using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubEditCharacters : Form
     {
-        private readonly XmlDocument _compareDoc = new XmlDocument();
-        private readonly string _directoryPath;
         private List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; }
         private readonly BinaryOcrDb _binOcrDb;
 
-        public XmlDocument ImageCompareDocument => _compareDoc;
-
-        internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
+        internal VobSubEditCharacters(List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -47,17 +41,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             labelImageInfo.Text = string.Empty;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
-
-            _directoryPath = Configuration.VobSubCompareDirectory + databaseFolderName + Path.DirectorySeparatorChar;
-            if (!File.Exists(_directoryPath + "Images.xml"))
-            {
-                _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
-            }
-            else
-            {
-                _compareDoc.Load(_directoryPath + "Images.xml");
-            }
-
             Refill(Additions);
 
             Text = Configuration.Settings.Language.VobSubEditCharacters.Title;
@@ -137,25 +120,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
-            else
-            {
-                foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
-                {
-                    if (node.Attributes["Text"] != null)
-                    {
-                        string text = node.Attributes["Text"].InnerText;
-                        string name = node.InnerText;
-                        foreach (VobSubOcr.ImageCompareAddition a in additions)
-                        {
-                            if (name == a.Name)
-                            {
-                                listBoxFileNames.Items.Add("[" + text + "] " + node.InnerText);
-                                _italics.Add(node.Attributes["Italic"] != null);
-                            }
-                        }
-                    }
-                }
-            }
 
             if (listBoxFileNames.Items.Count > 0)
             {
@@ -191,22 +155,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     count++;
                 }
             }
-            else
-            {
-                foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("Item"))
-                {
-                    if (node.Attributes.Count >= 1)
-                    {
-                        string text = node.Attributes["Text"].InnerText;
-                        if (!texts.Contains(text))
-                        {
-                            texts.Add(text);
-                        }
-
-                        count++;
-                    }
-                }
-            }
+           
             texts.Sort();
             labelCount.Text = $"{count:#,##0}";
 
@@ -247,21 +196,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         listBoxFileNames.Items.Add(bob);
                         _italics.Add(bob.Italic);
-                    }
-                }
-            }
-            else
-            {
-                foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
-                {
-                    if (node.Attributes["Text"] != null)
-                    {
-                        string text = node.Attributes["Text"].InnerText;
-                        if (text == target)
-                        {
-                            listBoxFileNames.Items.Add(node.InnerText);
-                            _italics.Add(node.Attributes["Italic"] != null);
-                        }
                     }
                 }
             }
@@ -308,8 +242,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ListBoxFileNamesSelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxItalic.Checked = _italics[listBoxFileNames.SelectedIndex];
-            string name = listBoxFileNames.Items[listBoxFileNames.SelectedIndex].ToString();
-            string databaseName = _directoryPath + "Images.db";
             Bitmap bmp = null;
             labelExpandCount.Text = string.Empty;
             labelImageInfo.Text = string.Empty;
@@ -324,19 +256,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         labelExpandCount.Text = $"Expand count: {bob.ExpandCount}";
                     }
-                }
-            }
-            else if (File.Exists(databaseName))
-            {
-                using (var f = new FileStream(databaseName, FileMode.Open))
-                {
-                    if (name.Contains(']'))
-                    {
-                        name = name.Substring(name.IndexOf(']') + 1).Trim();
-                    }
-
-                    f.Position = Convert.ToInt64(name);
-                    bmp = new ManagedBitmap(f).ToOldBitmap();
                 }
             }
 
@@ -402,7 +321,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            string target = GetSelectedFileName();
             string newText = textBoxText.Text;
             int oldTextItem = comboBoxTexts.SelectedIndex;
             int oldListBoxFileNamesIndex = listBoxFileNames.SelectedIndex;
@@ -472,74 +390,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
                 listBoxFileNames.Focus();
-                return;
-            }
-
-            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
-            if (node != null)
-            {
-                node.Attributes["Text"].InnerText = newText;
-
-                if (Additions != null && Additions.Count > 0)
-                {
-                    foreach (var a in Additions)
-                    {
-                        if (target.StartsWith(a.Name, StringComparison.Ordinal))
-                        {
-                            a.Text = newText;
-                            a.Italic = checkBoxItalic.Checked;
-                            break;
-                        }
-                    }
-                }
-
-                if (checkBoxItalic.Checked)
-                {
-                    if (node.Attributes["Italic"] == null)
-                    {
-                        XmlAttribute italic = node.OwnerDocument.CreateAttribute("Italic");
-                        italic.InnerText = "true";
-                        node.Attributes.Append(italic);
-                    }
-                }
-                else
-                {
-                    if (node.Attributes["Italic"] != null)
-                    {
-                        node.Attributes.RemoveNamedItem("Italic");
-                    }
-                }
-
-                Refill(Additions);
-                if (Additions == null || Additions.Count == 0)
-                {
-                    for (int i = 0; i < comboBoxTexts.Items.Count; i++)
-                    {
-                        if (comboBoxTexts.Items[i].ToString() == newText)
-                        {
-                            comboBoxTexts.SelectedIndex = i;
-                            for (int j = 0; j < listBoxFileNames.Items.Count; j++)
-                            {
-                                if (GetFileName(j).StartsWith(target, StringComparison.Ordinal))
-                                {
-                                    listBoxFileNames.SelectedIndex = j;
-                                }
-                            }
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < listBoxFileNames.Items.Count; i++)
-                    {
-                        if (listBoxFileNames.Items[i].ToString().Contains(target))
-                        {
-                            listBoxFileNames.SelectedIndex = i;
-                            return;
-                        }
-                    }
-                }
             }
         }
 
@@ -551,7 +401,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             int oldComboBoxIndex = comboBoxTexts.SelectedIndex;
-            string target = GetSelectedFileName();
 
             if (_binOcrDb != null)
             {
@@ -584,35 +433,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (oldComboBoxIndex >= 0 && oldComboBoxIndex < comboBoxTexts.Items.Count)
                 {
                     comboBoxTexts.SelectedIndex = oldComboBoxIndex;
-                }
-
-                return;
-            }
-
-            XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("Item[.='" + target + "']");
-            if (node != null)
-            {
-                _compareDoc.DocumentElement.RemoveChild(node);
-                if (Additions != null && Additions.Count > 0)
-                {
-                    for (int i = Additions.Count - 1; i >= 0; i--)
-                    {
-                        if (Additions[i].Name == target)
-                        {
-                            Additions.RemoveAt(i);
-                            Refill(Additions);
-                            break;
-                        }
-                    }
-                }
-
-                Refill(Additions);
-                if (Additions == null || Additions.Count == 0)
-                {
-                    if (oldComboBoxIndex < comboBoxTexts.Items.Count)
-                    {
-                        comboBoxTexts.SelectedIndex = oldComboBoxIndex;
-                    }
                 }
             }
         }
