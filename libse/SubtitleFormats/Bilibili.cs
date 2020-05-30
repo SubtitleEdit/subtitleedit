@@ -69,8 +69,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var texts = parser.GetAllTagsByNameAsStrings(element, "content");
                 if (texts.Count == 1 && !string.IsNullOrEmpty(startTimeObject) && !string.IsNullOrEmpty(endTimeObject))
                 {
-                    var startTime = GetTimeCode(parser, startTimeObject);
-                    var endTime = GetTimeCode(parser, endTimeObject);
+                    var startTime = GetTimeCode(startTimeObject);
+                    var endTime = GetTimeCode(endTimeObject);
                     if (Math.Abs(startTime - double.MinValue) < 0.01 || Math.Abs(endTime - double.MinValue) < 0.01)
                     {
                         _errorCount++;
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static double GetTimeCode(SeJsonParser parser, string timeObject)
+        private static double GetTimeCode(string timeObject)
         {
             if (double.TryParse(timeObject, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds))
             {
