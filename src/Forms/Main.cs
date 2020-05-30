@@ -803,7 +803,29 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph), true);
+                    var index = _subtitle.GetIndex(e.Paragraph);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(index);
+                        if (p != null)
+                        {
+                            string tc = p.StartTime + " --> " + p.EndTime;
+                            int start = textBoxSource.Text.IndexOf(p.Number + Environment.NewLine + tc, StringComparison.Ordinal);
+                            if (start < 0)
+                            {
+                                start = 0;
+                            }
+
+                            start = textBoxSource.Text.IndexOf(tc, start, StringComparison.Ordinal);
+                            if (start > 0)
+                            {
+                                textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
+                                textBoxSource.SelectionLength = 0;
+                                textBoxSource.ScrollToCaret();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -849,6 +871,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             audioVisualizer.Invalidate();
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                ShowSource();
+            }
         }
 
         private void AudioWaveform_OnPause(object sender, EventArgs e)
@@ -1160,6 +1186,11 @@ namespace Nikse.SubtitleEdit.Forms
                  e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End))
             {
                 mediaPlayer.CurrentPosition = e.Seconds;
+            }
+
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                ShowSource();
             }
         }
 
@@ -11394,6 +11425,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     sub.Paragraphs[0].StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds &&
                                     sub.Paragraphs[0].EndTime.TotalMilliseconds == p.EndTime.TotalMilliseconds)
                                 {
+                                    _subtitleListViewIndex = -1;
                                     var index = _subtitle.Paragraphs.IndexOf(p);
                                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                                     break;
