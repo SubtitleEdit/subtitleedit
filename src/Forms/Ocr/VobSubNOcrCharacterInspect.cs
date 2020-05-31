@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
             labelImageSize.Text = string.Empty;
+            labelStatus.Text = string.Empty;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
@@ -95,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, false, false);
+                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, false, false, index, _imageList);
                     if (match == null)
                     {
                         _indexLookup.Add(listBoxInspectItems.Items.Count, index);
@@ -267,9 +268,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _nocrChar.Text = textBoxText.Text;
                 _nocrChar.Italic = checkBoxItalic.Checked;
-                _vobSubOcr.SaveNOcrWithCurrentLanguage();
-                MessageBox.Show("nOCR saved!");
+                ShowStatus("Character updated");
             }
+        }
+
+        private void ShowStatus(string text)
+        {
+            labelStatus.Text = text;
+            labelStatus.Refresh();
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1500), () =>
+            {
+                if (!IsDisposed)
+                {
+                    labelStatus.Text = string.Empty;
+                    labelStatus.Refresh();
+                }
+            });
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -277,8 +291,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_nocrChar != null)
             {
                 _nocrChars.Remove(_nocrChar);
-                _vobSubOcr.SaveNOcrWithCurrentLanguage();
-                MessageBox.Show("nOCR saved!");
+                ShowStatus("Character deleted");
             }
         }
 
@@ -352,7 +365,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
 
                     _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
-                    _vobSubOcr.SaveNOcrWithCurrentLanguage();
                     DialogResult = DialogResult.OK;
                 }
             }

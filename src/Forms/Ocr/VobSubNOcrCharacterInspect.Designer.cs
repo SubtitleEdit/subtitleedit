@@ -166,6 +166,7 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
@@ -1215,11 +1216,22 @@
             this.toolStripMenuItemMusicSymbol2.Size = new System.Drawing.Size(134, 22);
             this.toolStripMenuItemMusicSymbol2.Text = "♫";
             // 
+            // labelStatus
+            // 
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(15, 424);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(59, 13);
+            this.labelStatus.TabIndex = 38;
+            this.labelStatus.Text = "labelStatus";
+            // 
             // VobSubNOcrCharacterInspect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(826, 446);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.groupBoxInspectItems);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.buttonOK);
@@ -1241,6 +1253,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.contextMenuStripLetters.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -1383,5 +1396,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
+        private System.Windows.Forms.Label labelStatus;
     }
 }

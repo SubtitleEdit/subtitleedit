@@ -2711,35 +2711,65 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (result.Text == "V" || result.Text == "W" || result.Text == "U" || result.Text == "S" ||
-                result.Text == "Z" || result.Text == "Ź" || result.Text == "Ż" || result.Text == "O" || result.Text == "Ó" ||
-                result.Text == "X" || result.Text == "Ø" || result.Text == "C" || result.Text == "Ć")
+                result.Text == "Z" || result.Text == "O" ||
+                result.Text == "X" || result.Text == "Ø" || result.Text == "C")
             {
+                var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
+                var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
                 if (_binOcrLowercaseHeightsTotalCount > 2 &&
                     _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(_binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount - targetItem.NikseBitmap.Height) <
-                    Math.Abs(_binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount - targetItem.NikseBitmap.Height))
+                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) <
+                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
                 {
                     result.Text = result.Text.ToLowerInvariant();
                 }
             }
             else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" ||
-                     result.Text == "z" || result.Text == "ź" || result.Text == "ż" || result.Text == "ó" ||
-                     result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c" || result.Text == "ć")
+                     result.Text == "z" ||
+                     result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
+                var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
+                var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
                 if (_binOcrLowercaseHeightsTotalCount > 2 &&
                     _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(_binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount - targetItem.NikseBitmap.Height) >
-                    Math.Abs(_binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount - targetItem.NikseBitmap.Height))
+                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) >
+                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                {
+                    result.Text = result.Text.ToUpperInvariant();
+                }
+            }
+
+            // Polish
+            else if (result.Text == "Ć" || result.Text == "Ź" || result.Text == "Ż" || result.Text == "Ą" || result.Text == "Ó" || result.Text == "Ś")
+            {
+                var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
+                var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
+                if (_binOcrLowercaseHeightsTotalCount > 2 &&
+                    _binOcrUppercaseHeightsTotalCount > 2 &&
+                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) <
+                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                {
+                    result.Text = result.Text.ToLowerInvariant();
+                }
+            }
+            else if (result.Text == "ć" || result.Text == "ź" || result.Text == "ż" || result.Text == "ą" || result.Text == "ó" || result.Text == "ś")
+            {
+                var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
+                var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
+                if (_binOcrLowercaseHeightsTotalCount > 2 &&
+                    _binOcrUppercaseHeightsTotalCount > 2 &&
+                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) >
+                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
                 {
                     result.Text = result.Text.ToUpperInvariant();
                 }
             }
         }
 
-        internal CompareMatch GetNOcrCompareMatchNew(ImageSplitterItem targetItem, NikseBitmap parentBitmap, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek)
+        internal CompareMatch GetNOcrCompareMatchNew(ImageSplitterItem targetItem, NikseBitmap parentBitmap, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek, int index, List<ImageSplitterItem> list)
         {
             deepSeek = true;
-            var expandedResult = nOcrDb.GetMatchExpanded(parentBitmap, targetItem);
+            var expandedResult = nOcrDb.GetMatchExpanded(parentBitmap, targetItem, index, list);
             if (expandedResult != null)
             {
                 return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult) { ImageSplitterItem = targetItem };
@@ -3608,7 +3638,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0)
                         {
-                            match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true);
+                            match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true, index, list);
                         }
                     }
 
@@ -3904,7 +3934,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
                     nbmp.ReplaceTransparentWith(Color.Black);
-                    GetNOcrCompareMatchNew(item, nikseBitmap, _nOcrDb, false, false);
+                    GetNOcrCompareMatchNew(item, nikseBitmap, _nOcrDb, false, false, list.IndexOf(item), list);
                 }
             }
         }
@@ -3930,7 +3960,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-                foreach (ImageSplitterItem item in list)
+                foreach (var item in list)
                 {
                     item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
                 }
@@ -4005,7 +4035,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     else
                     {
-                        var match = GetNOcrCompareMatchNew(item, nbmpInput, _nOcrDb, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked);
+                        var match = GetNOcrCompareMatchNew(item, nbmpInput, _nOcrDb, checkBoxNOcrItalic.Checked, !checkBoxNOcrCorrect.Checked, index, list);
                         if (match == null)
                         {
                             _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, string.Empty);
@@ -8251,6 +8281,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     Cursor = Cursors.WaitCursor;
                     SaveNOcrWithCurrentLanguage();
+                    _nOcrDb.LoadOcrCharacters();
+                    Cursor = Cursors.Default;
+                }
+                else
+                {
+                    Cursor = Cursors.WaitCursor;
+                    _nOcrDb.LoadOcrCharacters();
                     Cursor = Cursors.Default;
                 }
 
