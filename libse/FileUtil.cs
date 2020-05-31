@@ -558,5 +558,11 @@ namespace Nikse.SubtitleEdit.Core
                 File.WriteAllText(fileName, contents, encoding.Encoding);
             }
         }
+
+        public static bool IsMatroskaFile(string fileName)
+        {
+            var validator = new MatroskaFile(fileName);
+            return validator.IsValid;
+        }
     }
 }

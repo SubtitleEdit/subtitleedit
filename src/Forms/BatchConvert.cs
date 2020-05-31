@@ -2,9 +2,13 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.Forms.Ocr;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var fi = new FileInfo(fileName);
-                var ext = fi.Extension;
+                var ext = fi.Extension.ToLowerInvariant();
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 var isMkv = false;
@@ -545,7 +545,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var sub = new Subtitle();
                 if (fi.Length < ConvertMaxFileSize)
                 {
-                    if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
+                    if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName) &&
+                        !((ext == ".mkv" || ext == ".mks") && FileUtil.IsMatroskaFile(fileName)))
                     {
                         format = sub.LoadSubtitle(fileName, out _, null);
 
@@ -589,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         item.SubItems.Add("VobSub");
                     }
-                    else if (ext.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mks", StringComparison.OrdinalIgnoreCase))
+                    else if (ext == ".mkv" || ext == ".mks")
                     {
                         isMkv = true;
                         using (var matroska = new MatroskaFile(fileName))
@@ -626,7 +627,7 @@ namespace Nikse.SubtitleEdit.Forms
                             item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                         }
                     }
-                    else if ((ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                    else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts") &&
                              (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
                     {
                         isTs = true;
