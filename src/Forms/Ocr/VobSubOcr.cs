@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             numericUpDownPixelsIsSpace.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
-            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
+            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace;
 
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
@@ -533,6 +533,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             checkBoxNOcrCorrect.Checked = Configuration.Settings.VobSubOcr.LineOcrDraw;
             checkBoxNOcrItalic.Checked = Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic;
+            numericUpDownNOcrMaxWrongPixels.Value = Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
             buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
@@ -4027,7 +4028,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             expandSelectionList.Add(list[index]);
                         }
 
-                        item = GetExpandedSelection(nbmpInput, expandSelectionList, checkBoxRightToLeft.Checked);
+                        item = GetExpandedSelectionNew(nbmpInput, expandSelectionList);
                         item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
 
                         _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1);
@@ -4486,54 +4487,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        internal static ImageSplitterItem GetExpandedSelection(NikseBitmap bitmap, List<ImageSplitterItem> expandSelectionList, bool rightToLeft)
-        {
-            if (rightToLeft)
-            {
-                int minimumX = expandSelectionList[expandSelectionList.Count - 1].X - expandSelectionList[expandSelectionList.Count - 1].NikseBitmap.Width;
-                int maximumX = expandSelectionList[0].X;
-                int minimumY = expandSelectionList[0].Y;
-                int maximumY = expandSelectionList[0].Y + expandSelectionList[0].NikseBitmap.Height;
-                foreach (ImageSplitterItem item in expandSelectionList)
-                {
-                    if (item.Y < minimumY)
-                    {
-                        minimumY = item.Y;
-                    }
-
-                    if (item.Y + item.NikseBitmap.Height > maximumY)
-                    {
-                        maximumY = item.Y + item.NikseBitmap.Height;
-                    }
-                }
-
-                var part = bitmap.CopyRectangle(new Rectangle(minimumX, minimumY, maximumX - minimumX, maximumY - minimumY));
-                return new ImageSplitterItem(minimumX, minimumY, part);
-            }
-            else
-            {
-                int minimumX = expandSelectionList[0].X;
-                int maximumX = expandSelectionList[expandSelectionList.Count - 1].X + expandSelectionList[expandSelectionList.Count - 1].NikseBitmap.Width;
-                int minimumY = expandSelectionList[0].Y;
-                int maximumY = expandSelectionList[0].Y + expandSelectionList[0].NikseBitmap.Height;
-                foreach (ImageSplitterItem item in expandSelectionList)
-                {
-                    if (item.Y < minimumY)
-                    {
-                        minimumY = item.Y;
-                    }
-
-                    if (item.Y + item.NikseBitmap.Height > maximumY)
-                    {
-                        maximumY = item.Y + item.NikseBitmap.Height;
-                    }
-                }
-
-                var part = bitmap.CopyRectangle(new Rectangle(minimumX, minimumY, maximumX - minimumX, maximumY - minimumY));
-                return new ImageSplitterItem(minimumX, minimumY, part);
-            }
-        }
-
         internal static ImageSplitterItem GetExpandedSelectionNew(NikseBitmap bitmap, List<ImageSplitterItem> expandSelectionList)
         {
             int minimumX = expandSelectionList[0].X;
@@ -4547,8 +4500,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     for (int x = 0; x < item.NikseBitmap.Width; x++)
                     {
-                        int a = item.NikseBitmap.GetAlpha(x, y);
-                        if (a > 100)
+                        var c = item.NikseBitmap.GetPixel(x, y);
+                        if (c.A > 100 && c.R + c.G + c.B > 100)
                         {
                             nbmp.SetPixel(item.X + x, item.Y + y, Color.White);
                         }
@@ -7930,7 +7883,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value;
             }
-            Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels = (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value;
+            Configuration.Settings.VobSubOcr.LineOcrMaxErrorPixels = (int)numericUpDownNOcrMaxWrongPixels.Value;
             Configuration.Settings.VobSubOcr.UseTesseractFallback = checkBoxTesseractFallback.Checked;
             Configuration.Settings.VobSubOcr.CaptureTopAlign = toolStripMenuItemCaptureTopAlign.Checked;
 

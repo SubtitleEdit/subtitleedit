@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -19,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelImageDatabase.Text = Configuration.Settings.Language.VobSubOcr.ImageDatabase;
+            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
             Text = Configuration.Settings.Language.VobSubOcr.ImageDatabase;
 
             var imageCompareDbName = string.Empty;
@@ -131,6 +133,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     binaryOcrDb.Save();
                 }
             }
+        }
+
+        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string dictionaryFolder = Configuration.OcrDirectory;
+            if (!Directory.Exists(dictionaryFolder))
+            {
+                Directory.CreateDirectory(dictionaryFolder);
+            }
+
+            UiUtil.OpenFolder(dictionaryFolder);
         }
     }
 }

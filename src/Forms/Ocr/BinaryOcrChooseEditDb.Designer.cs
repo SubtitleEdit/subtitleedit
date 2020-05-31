@@ -36,6 +36,7 @@
             this.labelImageDatabase = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // buttonEditCharacterDatabase
@@ -118,11 +119,23 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // linkLabelOpenDictionaryFolder
+            // 
+            this.linkLabelOpenDictionaryFolder.AutoSize = true;
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(18, 181);
+            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
+            this.linkLabelOpenDictionaryFolder.TabIndex = 42;
+            this.linkLabelOpenDictionaryFolder.TabStop = true;
+            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
+            // 
             // BinaryOcrChooseEditDb
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(407, 206);
+            this.Controls.Add(this.linkLabelOpenDictionaryFolder);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.comboBoxCharacterDatabase);
@@ -156,5 +169,6 @@
         private System.Windows.Forms.Label labelImageDatabase;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
     }
 }

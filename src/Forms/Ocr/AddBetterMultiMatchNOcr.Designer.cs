@@ -120,6 +120,7 @@
             0,
             0,
             0});
+            this.numericUpDownExpandCount.ValueChanged += new System.EventHandler(this.NumericUpDownExpandCountValueChanged);
             // 
             // labelImageInfo
             // 
@@ -163,6 +164,7 @@
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOK
             // 
@@ -175,6 +177,7 @@
             this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // AddBetterMultiMatchNOcr
             // 
@@ -192,6 +195,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AddBetterMultiMatchNOcr";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBetterMultiMatch_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExpandCount)).EndInit();
