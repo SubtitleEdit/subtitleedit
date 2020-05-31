@@ -2714,54 +2714,54 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 result.Text == "Z" || result.Text == "O" ||
                 result.Text == "X" || result.Text == "Ø" || result.Text == "C")
             {
-                var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
-                var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
-                if (_binOcrLowercaseHeightsTotalCount > 2 &&
-                    _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) <
-                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
-                    result.Text = result.Text.ToLowerInvariant();
+                    var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
+                    var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
+                    if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) < Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                    {
+                        result.Text = result.Text.ToLowerInvariant();
+                    }
                 }
             }
             else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" ||
                      result.Text == "z" ||
                      result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
-                var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
-                var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
-                if (_binOcrLowercaseHeightsTotalCount > 2 &&
-                    _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) >
-                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
-                    result.Text = result.Text.ToUpperInvariant();
+                    var averageLowercase = _binOcrLowercaseHeightsTotal / _binOcrLowercaseHeightsTotalCount;
+                    var averageUppercase = _binOcrUppercaseHeightsTotal / _binOcrUppercaseHeightsTotalCount;
+                    if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) > Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                    {
+                        result.Text = result.Text.ToUpperInvariant();
+                    }
                 }
             }
 
             // Polish
             else if (result.Text == "Ć" || result.Text == "Ź" || result.Text == "Ż" || result.Text == "Ą" || result.Text == "Ó" || result.Text == "Ś")
             {
-                var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
-                var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
-                if (_binOcrLowercaseHeightsTotalCount > 2 &&
-                    _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) <
-                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
-                    result.Text = result.Text.ToLowerInvariant();
+                    var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
+                    var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
+                    if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) < Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                    {
+                        result.Text = result.Text.ToLowerInvariant();
+                    }
                 }
             }
             else if (result.Text == "ć" || result.Text == "ź" || result.Text == "ż" || result.Text == "ą" || result.Text == "ó" || result.Text == "ś")
             {
-                var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
-                var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
-                if (_binOcrLowercaseHeightsTotalCount > 2 &&
-                    _binOcrUppercaseHeightsTotalCount > 2 &&
-                    Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) >
-                    Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
-                    result.Text = result.Text.ToUpperInvariant();
+                    var averageLowercase = _binOcrLowercaseHeightsTotal / (double)_binOcrLowercaseHeightsTotalCount * 1.5;
+                    var averageUppercase = _binOcrUppercaseHeightsTotal / (double)_binOcrUppercaseHeightsTotalCount * 1.3;
+                    if (Math.Abs(averageLowercase - targetItem.NikseBitmap.Height) > Math.Abs(averageUppercase - targetItem.NikseBitmap.Height))
+                    {
+                        result.Text = result.Text.ToUpperInvariant();
+                    }
                 }
             }
         }
