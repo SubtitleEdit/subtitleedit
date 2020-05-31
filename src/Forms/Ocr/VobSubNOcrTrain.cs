@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     // e.g. quote (")
                     var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3] });
-                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem);
+                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem, 2, list);
                     if (match != null && match.Text == s)
                     {
                         numberOfCharactersSkipped++;
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     // e.g. "%" 
                     var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3], list[4] });
-                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem);
+                    var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem, 2, list);
                     if (match != null && match.Text == s)
                     {
                         numberOfCharactersSkipped++;

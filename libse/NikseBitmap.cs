@@ -958,22 +958,13 @@ namespace Nikse.SubtitleEdit.Core
             _bitmapData[_pixelAddress + 3] = color.A;
         }
 
-        public void SetPixelNext(Color color)
-        {
-            _pixelAddress += 4;
-            _bitmapData[_pixelAddress] = color.B;
-            _bitmapData[_pixelAddress + 1] = color.G;
-            _bitmapData[_pixelAddress + 2] = color.R;
-            _bitmapData[_pixelAddress + 3] = color.A;
-        }
-
         public Bitmap GetBitmap()
         {
             var bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-            var bitmapdata = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            var destination = bitmapdata.Scan0;
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            var destination = bitmapData.Scan0;
             Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
-            bitmap.UnlockBits(bitmapdata);
+            bitmap.UnlockBits(bitmapData);
             return bitmap;
         }
 
