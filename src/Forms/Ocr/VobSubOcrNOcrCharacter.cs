@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool IsItalic => checkBoxItalic.Checked;
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, string text)
         {
             listBoxLinesForeground.Items.Clear();
             listBoxlinesBackground.Items.Clear();
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ShrinkSelection = false;
             ExpandSelection = false;
 
-            textBoxCharacters.Text = string.Empty;
+            textBoxCharacters.Text = text;
             NOcrChar = new NOcrChar { MarginTop = character.Top };
             _imageWidth = character.NikseBitmap.Width;
             _imageHeight = character.NikseBitmap.Height;

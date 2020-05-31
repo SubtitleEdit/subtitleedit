@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
-                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), false, expandSelectionList.Count > 1);
+                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, string.Empty);
                 DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
                 bool expandSelection = false;
                 bool shrinkSelection = false;
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         img = VobSubOcr.GetExpandedSelectionNew(new NikseBitmap(_bitmap), expandSelectionList); // true
                     }
 
-                    vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1);
+                    vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, string.Empty);
                     result = vobSubOcrNOcrCharacter.ShowDialog(this);
 
                     if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ShrinkSelection)
@@ -345,10 +345,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new AddBetterMultiMatchNOcr())
             {
-                form.Initialize(listBoxInspectItems.SelectedIndex, _matchList, _imageList);
+                form.Initialize(_bitmap, listBoxInspectItems.SelectedIndex, _matchList, _imageList);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    //_binOcrDb.Add(form.ExpandedMatch);
+                    _nocrDb.Add(form.NOcrChar);
                     DialogResult = DialogResult.OK;
                 }
             }
