@@ -3,16 +3,19 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class AddBetterMultiMatchNOcr : Form
     {
-        public NOcrChar ExpandedMatch { get; set; }
-
+        public NOcrChar NOcrChar { get; set; }
+        
+        private NikseBitmap _wholeImage;
         private List<VobSubOcr.CompareMatch> _matches;
         private List<ImageSplitterItem> _splitterItems;
+        private ImageSplitterItem _expandItem;
         private int _startIndex;
         int _extraCount;
 
@@ -29,8 +32,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(int selectedIndex, List<VobSubOcr.CompareMatch> matches, List<ImageSplitterItem> splitterItems)
+        internal void Initialize(System.Drawing.Bitmap bitmap, int selectedIndex, List<VobSubOcr.CompareMatch> matches, List<ImageSplitterItem> splitterItems)
         {
+            _wholeImage = new NikseBitmap(bitmap);
             _startIndex = selectedIndex;
             for (int i = 0; i < selectedIndex; i++)
             {
@@ -78,48 +82,48 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void MakeExpandImage()
         {
-            var splitterItem = _splitterItems[_startIndex + _extraCount];
+            var splitterItem = _splitterItems[_startIndex];
             if (splitterItem.NikseBitmap == null)
             {
                 return;
             }
 
-            //ExpandedMatch = new BinaryOcrBitmap(new NikseBitmap(splitterItem.NikseBitmap), false, (int)numericUpDownExpandCount.Value, string.Empty, splitterItem.X, splitterItem.Y) { ExpandedList = new List<BinaryOcrBitmap>() };
-            //for (int i = 1; i < listBoxInspectItems.Items.Count; i++)
-            //{
-            //    if (i < numericUpDownExpandCount.Value)
-            //    {
-            //        splitterItem = _splitterItems[_startIndex + i + _extraCount];
-            //        if (splitterItem.NikseBitmap == null)
-            //        {
-            //            break;
-            //        }
+            var expandList = new List<ImageSplitterItem> { splitterItem };
+            for (int i = 1; i < listBoxInspectItems.Items.Count; i++)
+            {
+                if (i < numericUpDownExpandCount.Value)
+                {
+                    splitterItem = _splitterItems[_startIndex + i + _extraCount];
+                    if (splitterItem.NikseBitmap == null)
+                    {
+                        break;
+                    }
 
-            //        ExpandedMatch.ExpandedList.Add(new BinaryOcrBitmap(splitterItem.NikseBitmap, false, 0, null, splitterItem.X, splitterItem.Y));
-            //    }
-            //}
+                    expandList.Add(splitterItem);
+                }
+            }
 
-            //var newBmp = ExpandedMatch.ToOldBitmap();
-            //pictureBoxInspectItem.Image = newBmp;
-            //pictureBoxInspectItem.Width = newBmp.Width;
-            //pictureBoxInspectItem.Height = newBmp.Height;
+            _expandItem = VobSubOcr.GetExpandedSelectionNew(_wholeImage,expandList);
+            var newBmp = _expandItem.NikseBitmap.GetBitmap();
+            pictureBoxInspectItem.Image = newBmp;
+            pictureBoxInspectItem.Width = newBmp.Width;
+            pictureBoxInspectItem.Height = newBmp.Height;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBoxText.Text))
+            using (var form = new VobSubOcrNOcrCharacter())
             {
-                return;
+                form.Initialize(_expandItem.NikseBitmap.GetBitmap(), _expandItem, new Point(0, 0), checkBoxItalic.Checked, false, textBoxText.Text);
+                var result = form.ShowDialog(this);
+                NOcrChar = form.NOcrChar;
+                NOcrChar.ExpandCount = (int)numericUpDownExpandCount.Value;
+                DialogResult = result;
             }
-
-            ExpandedMatch.Italic = checkBoxItalic.Checked;
-            ExpandedMatch.Text = textBoxText.Text;
-            DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            ExpandedMatch = null;
             DialogResult = DialogResult.Cancel;
         }
 

@@ -90,8 +90,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public NOcrChar GetMatchExpanded(NikseBitmap nikseBitmap, ImageSplitterItem targetItem)
         {
             int w = targetItem.NikseBitmap.Width;
-            foreach (NOcrChar oc in OcrCharactersExpanded)
+            for (var i = 0; i < OcrCharactersExpanded.Count; i++)
             {
+                var oc = OcrCharactersExpanded[i];
                 if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
                 {
                     bool ok = true;
