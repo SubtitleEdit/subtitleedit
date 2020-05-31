@@ -13950,6 +13950,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
+                    if (_shortcuts.VideoPlayPauseToggle == Keys.Space &&
+                        (textBoxListViewText.Focused || textBoxListViewTextAlternate.Focused || textBoxSearchWord.Focused))
+                    {
+                        return;
+                    }
+
                     _endSeconds = -1;
                     e.SuppressKeyPress = true;
                     e.Handled = true;
