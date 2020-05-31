@@ -97,101 +97,128 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     bool ok = true;
                     var index = 0;
-                    while (index < oc.LinesForeground.Count && ok)
+
+                    if (true)
                     {
-                        NOcrPoint op = oc.LinesForeground[index];
-                        foreach (Point point in op.GetPoints())
+
+                        while (index < oc.LinesForeground.Count && ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            var op = oc.LinesForeground[index];
+                            foreach (var point in op.GetPoints())
                             {
-                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                                {
+                                    var c = nikseBitmap.GetPixel(p.X, p.Y);
+                                    if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                else if (p.X >= 0 && p.Y >= 0)
                                 {
                                     ok = false;
                                     break;
                                 }
                             }
+
+                            index++;
                         }
 
-                        index++;
-                    }
-
-                    index = 0;
-                    while (index < oc.LinesBackground.Count && ok)
-                    {
-                        NOcrPoint op = oc.LinesBackground[index];
-                        foreach (Point point in op.GetPoints())
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            var op = oc.LinesBackground[index];
+                            foreach (var point in op.GetPoints())
                             {
-                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                                {
+                                    var c = nikseBitmap.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                else if (p.X >= 0 && p.Y >= 0)
                                 {
                                     ok = false;
                                     break;
                                 }
                             }
+
+                            index++;
                         }
 
-                        index++;
-                    }
-
-                    if (ok)
-                    {
-                        return oc;
-                    }
-
-                    ok = true;
-                    index = 0;
-                    while (index < oc.LinesForeground.Count && ok)
-                    {
-                        NOcrPoint op = oc.LinesForeground[index];
-                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                        if (ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            return oc;
+                        }
+                    }
+
+
+                   // double widthPercent = targetItem.NikseBitmap.Height * 100.0 / targetItem.NikseBitmap.Width;
+                    if (true) //Math.Abs(oc.WidthPercent - widthPercent) < 15)
+                    {
+                        ok = true;
+                        index = 0;
+                        while (index < oc.LinesForeground.Count && ok)
+                        {
+                            var op = oc.LinesForeground[index];
+                            foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
                             {
-                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                                 {
+                                    var c = nikseBitmap.GetPixel(p.X, p.Y);
+                                    if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
                                 }
-                                else
+                                else if (p.X >= 0 && p.Y >= 0)
                                 {
                                     ok = false;
                                     break;
                                 }
                             }
+
+                            index++;
                         }
 
-                        index++;
-                    }
-
-                    index = 0;
-                    while (index < oc.LinesBackground.Count && ok)
-                    {
-                        NOcrPoint op = oc.LinesBackground[index];
-                        foreach (Point point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
+                        index = 0;
+                        while (index < oc.LinesBackground.Count && ok)
                         {
-                            Point p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
-                            if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                            var op = oc.LinesBackground[index];
+                            foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
                             {
-                                Color c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                                if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                                {
+                                    var c = nikseBitmap.GetPixel(p.X, p.Y);
+                                    if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                    {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                else if (p.X >= 0 && p.Y >= 0)
                                 {
                                     ok = false;
                                     break;
                                 }
                             }
+
+                            index++;
                         }
 
-                        index++;
-                    }
-
-                    if (ok)
-                    {
-                        return oc;
+                        if (ok)
+                        {
+                            return oc;
+                        }
                     }
                 }
             }

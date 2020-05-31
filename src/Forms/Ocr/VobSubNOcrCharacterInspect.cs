@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private Bitmap _bitmap;
         private Bitmap _bitmap2;
         private double _zoomFactor = 3.0;
+        private Dictionary<int, int> _indexLookup;
 
         public VobSubNOcrCharacterInspect()
         {
@@ -76,35 +77,40 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             const int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            foreach (ImageSplitterItem item in _imageList)
+            {
+                item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
+            }
 
             int index = 0;
+            _indexLookup = new Dictionary<int, int>();
             while (index < _imageList.Count)
             {
-                ImageSplitterItem item = _imageList[index];
+                var item = _imageList[index];
                 if (item.NikseBitmap == null)
                 {
+                    _indexLookup.Add(listBoxInspectItems.Items.Count, index);
                     listBoxInspectItems.Items.Add(item.SpecialCharacter);
                     _matchList.Add(null);
                 }
                 else
                 {
-                    nbmp = item.NikseBitmap;
-                    nbmp.ReplaceNonWhiteWithTransparent();
-                    item.Y += nbmp.CropTopTransparent(0);
-                    nbmp.CropTransparentSidesAndBottom(0, true);
-                    nbmp.ReplaceTransparentWith(Color.Black);
-
-                    //get nocr matches
                     var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, false, false);
                     if (match == null)
                     {
+                        _indexLookup.Add(listBoxInspectItems.Items.Count, index);
                         listBoxInspectItems.Items.Add("?");
                         _matchList.Add(null);
                     }
                     else
                     {
+                        _indexLookup.Add(listBoxInspectItems.Items.Count, index);
                         listBoxInspectItems.Items.Add(match.Text);
                         _matchList.Add(match);
+                        if (match.ExpandCount > 0)
+                        {
+                            index += match.ExpandCount - 1;
+                        }
                     }
                 }
                 index++;
@@ -119,16 +125,39 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            var img = _imageList[listBoxInspectItems.SelectedIndex];
+            var idx = _indexLookup[listBoxInspectItems.SelectedIndex];
+            var img = _imageList[idx];
+            var match = _matchList[listBoxInspectItems.SelectedIndex];
+
             if (img.NikseBitmap != null)
             {
                 pictureBoxInspectItem.Width = img.NikseBitmap.Width;
                 pictureBoxInspectItem.Height = img.NikseBitmap.Height;
                 labelImageSize.Top = pictureBoxInspectItem.Top + img.NikseBitmap.Height + 17;
                 labelImageSize.Text = img.NikseBitmap.Width + "x" + img.NikseBitmap.Height;
-                var old = img.NikseBitmap.GetBitmap();
-                pictureBoxInspectItem.Image = old;
-                pictureBoxCharacter.Image = old;
+                if (match != null && match.ExpandCount > 1)
+                {
+                    var expandList = new List<ImageSplitterItem>();
+                    for (int i = idx; i < idx + match.ExpandCount; i++)
+                    {
+                        expandList.Add(_imageList[i]);
+                    }
+
+                    var expandItem = VobSubOcr.GetExpandedSelectionNew(new NikseBitmap(_bitmap), expandList);
+                    var old = expandItem.NikseBitmap.GetBitmap();
+                    pictureBoxInspectItem.Image = old;
+                    pictureBoxCharacter.Image = old;
+                    pictureBoxInspectItem.Width = old.Width;
+                    pictureBoxInspectItem.Height = old.Height;
+
+                }
+                else
+                {
+                    var old = img.NikseBitmap.GetBitmap();
+                    pictureBoxInspectItem.Image = old;
+                    pictureBoxCharacter.Image = old;
+                }
+
                 SizePictureBox();
             }
             else
@@ -137,7 +166,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxCharacter.Image = null;
             }
 
-            var match = _matchList[listBoxInspectItems.SelectedIndex];
             if (match == null)
             { // spaces+new lines
                 _nocrChar = null;
@@ -262,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            int index = listBoxInspectItems.SelectedIndex;
+            int index = _indexLookup[listBoxInspectItems.SelectedIndex];
             var img = _imageList[index];
             if (img.NikseBitmap == null)
             {
@@ -345,7 +373,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new AddBetterMultiMatchNOcr())
             {
-                form.Initialize(_bitmap, listBoxInspectItems.SelectedIndex, _matchList, _imageList);
+                var idx = _indexLookup[listBoxInspectItems.SelectedIndex];
+                form.Initialize(_bitmap, idx, _matchList, _imageList);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     _nocrDb.Add(form.NOcrChar);
