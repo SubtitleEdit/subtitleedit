@@ -595,7 +595,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap nbmp)
         {
-            const int giveUpCount = 10000;
+            const int giveUpCount = 15000;
             var r = new Random();
             int count = 0;
             int hits = 0;
@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                     }
                 }
-                else if (hits < 20 && count < 1000) // a few large lines
+                else if (hits < 20 && count < 2000) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
@@ -651,7 +651,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                     }
                 }
-                else if (hits < 30 && count < 2000) // some medium lines
+                else if (hits < 30 && count < 3000) // some medium lines
                 {
                     for (int k = 0; k < 500; k++)
                     {
@@ -686,6 +686,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         ok = false;
                     }
                 }
+
+                if (end.X == start.X && end.Y == start.Y)
+                {
+                    ok = false;
+                }
+
                 if (ok && IsMatchPointForeGround(op, !tempVeryPrecise, nbmp, nOcrChar))
                 {
                     nOcrChar.LinesForeground.Add(op);

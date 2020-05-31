@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             index++;
                             expandSelectionList.Add(_imageList[index]);
                         }
-                        img = VobSubOcr.GetExpandedSelection(new NikseBitmap(_bitmap), expandSelectionList, false); // true
+                        img = VobSubOcr.GetExpandedSelectionNew(new NikseBitmap(_bitmap), expandSelectionList); // true
                     }
 
                     vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1);
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new AddBetterMultiMatchNOcr())
             {
-                // form.Initialize(listBoxInspectItems.SelectedIndex, _matches, _splitterItems);
+                form.Initialize(listBoxInspectItems.SelectedIndex, _matchList, _imageList);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     //_binOcrDb.Add(form.ExpandedMatch);
