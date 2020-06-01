@@ -2798,6 +2798,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     result = NOcrFindBestMatchNew(unItalicTargetItem, false, nOcrDb, deepSeek, _unItalicFactor, (int)numericUpDownNOcrMaxWrongPixels.Value);
                     if (result != null)
                     {
+                        result.Italic = true;
                         _italicFixes++;
                     }
                 }
