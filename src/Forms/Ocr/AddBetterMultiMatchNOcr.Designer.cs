@@ -60,7 +60,7 @@
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInspectItems.Name = "groupBoxInspectItems";
             this.groupBoxInspectItems.Size = new System.Drawing.Size(569, 381);
-            this.groupBoxInspectItems.TabIndex = 4;
+            this.groupBoxInspectItems.TabIndex = 0;
             this.groupBoxInspectItems.TabStop = false;
             // 
             // label1
@@ -78,7 +78,7 @@
             this.checkBoxItalic.Location = new System.Drawing.Point(253, 130);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
-            this.checkBoxItalic.TabIndex = 4;
+            this.checkBoxItalic.TabIndex = 3;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
             // 
@@ -97,7 +97,7 @@
             this.textBoxText.Location = new System.Drawing.Point(252, 102);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 23);
-            this.textBoxText.TabIndex = 3;
+            this.textBoxText.TabIndex = 2;
             // 
             // numericUpDownExpandCount
             // 
@@ -114,7 +114,7 @@
             0});
             this.numericUpDownExpandCount.Name = "numericUpDownExpandCount";
             this.numericUpDownExpandCount.Size = new System.Drawing.Size(63, 20);
-            this.numericUpDownExpandCount.TabIndex = 2;
+            this.numericUpDownExpandCount.TabIndex = 1;
             this.numericUpDownExpandCount.Value = new decimal(new int[] {
             2,
             0,
@@ -128,7 +128,7 @@
             this.labelImageInfo.Location = new System.Drawing.Point(253, 168);
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(45, 13);
-            this.labelImageInfo.TabIndex = 5;
+            this.labelImageInfo.TabIndex = 4;
             this.labelImageInfo.Text = "Preview";
             // 
             // pictureBoxInspectItem
@@ -161,7 +161,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(506, 399);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 3;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -174,7 +174,7 @@
             this.buttonOK.Location = new System.Drawing.Point(425, 399);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 5;
+            this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);

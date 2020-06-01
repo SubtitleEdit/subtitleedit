@@ -272,6 +272,7 @@
             // 
             // pictureBoxCharacter
             // 
+            this.pictureBoxCharacter.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxCharacter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxCharacter.Location = new System.Drawing.Point(197, 142);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
