@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(System.Drawing.Bitmap bitmap, int selectedIndex, List<VobSubOcr.CompareMatch> matches, List<ImageSplitterItem> splitterItems)
+        internal void Initialize(Bitmap bitmap, int selectedIndex, List<VobSubOcr.CompareMatch> matches, List<ImageSplitterItem> splitterItems)
         {
             _wholeImage = new NikseBitmap(bitmap);
             _startIndex = selectedIndex;
