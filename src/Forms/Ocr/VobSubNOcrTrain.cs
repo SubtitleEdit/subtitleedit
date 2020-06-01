@@ -110,10 +110,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, false);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true, false, false);
+                                    }
+                                    if (checkBoxItalic.Checked)
+                                    {
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, true, false);
                                     }
                                 }
                             }
@@ -131,10 +135,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
                             {
-                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, true);
+                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, false, true);
                                 if (checkBoxBold.Checked)
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, true,true);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, true, false, true);
+                                }
+                                if (checkBoxBold.Checked)
+                                {
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, true, true);
                                 }
                             }
                         }
@@ -168,9 +176,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _abort = false;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold, bool doubleLetter)
+        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold, bool italic, bool doubleLetter)
         {
-            Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold);
+            Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold, italic);
             var nikseBitmap = new NikseBitmap(bmp);
             nikseBitmap.MakeTwoColor(280);
             nikseBitmap.CropTop(0, Color.FromArgb(0, 0, 0, 0));
@@ -255,19 +263,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private Bitmap GenerateImageFromTextWithStyle(string text, bool bold)
+        private Bitmap GenerateImageFromTextWithStyle(string text, bool bold, bool italic)
         {
-            bool subtitleFontBold = bold;
-
             text = HtmlUtil.RemoveHtmlTags(text);
-
             Font font;
             try
             {
                 var fontStyle = FontStyle.Regular;
-                if (subtitleFontBold)
+                if (bold)
                 {
                     fontStyle = FontStyle.Bold;
+                }
+                else if (italic)
+                {
+                    fontStyle = FontStyle.Italic;
                 }
 
                 font = new Font(_subtitleFontName, _subtitleFontSize, fontStyle);
@@ -328,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 char ch = text[i];
                 if (ch == '\n' || ch == '\r')
                 {
-                    TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb, italic, bold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
@@ -349,7 +358,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             if (sb.Length > 0)
             {
-                TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb, italic, bold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             }
 
             sf.Dispose();
