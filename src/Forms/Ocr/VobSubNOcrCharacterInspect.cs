@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
                 var text = string.Empty;
-                if (_nocrChar.Text != textBoxText.Text)
+                if (_nocrChar != null && _nocrChar.Text != textBoxText.Text)
                 {
                     text = textBoxText.Text;
                 }

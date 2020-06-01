@@ -73,8 +73,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             listBoxLinesForeground.Items.Clear();
             listBoxlinesBackground.Items.Clear();
-            NikseBitmap nbmp = new NikseBitmap(vobSubImage);
-            //nbmp.ReplaceTransparentWith(Color.Black);
+            var nbmp = new NikseBitmap(vobSubImage);
             vobSubImage = nbmp.GetBitmap();
 
             radioButtonHot.Checked = true;

@@ -3961,7 +3961,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nbmp.ReplaceNonWhiteWithTransparent();
                     item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
-                    //nbmp.ReplaceTransparentWith(Color.Black);
                     GetNOcrCompareMatchNew(item, nikseBitmap, _nOcrDb, false, false, list.IndexOf(item), list);
                 }
             }
