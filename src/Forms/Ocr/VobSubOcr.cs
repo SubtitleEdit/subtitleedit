@@ -8757,7 +8757,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                if (Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb.Contains("+"))
+                if (Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb != null &&
+                    Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb.Contains("+"))
                 {
                     s += "+" + Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb.Split('+')[1];
                 }

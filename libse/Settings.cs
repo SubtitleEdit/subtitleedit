@@ -1431,6 +1431,7 @@ $HorzAlign          =   Center
             ItalicFactor = 0.2f;
             LineOcrLinesToAutoGuess = 100;
             LineOcrMaxErrorPixels = 45;
+            LastBinaryImageCompareDb = "Latin+Latin";
             BinaryAutoDetectBestDb = true;
             CaptureTopAlign = false;
             UnfocusedAttentionBlinkCount = 50;
