@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -461,6 +462,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return true;
+        }
+
+        public static List<string> GetDatabases()
+        {
+            return Directory
+                .GetFiles(Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar), "*.nocr")
+                .Select(Path.GetFileNameWithoutExtension)
+                .OrderBy(p => p)
+                .ToList();
         }
     }
 }
