@@ -2779,18 +2779,44 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var result = NOcrFindBestMatchNew(targetItem, tryItalicScaling, nOcrDb, deepSeek, _unItalicFactor, (int)numericUpDownNOcrMaxWrongPixels.Value);
             if (result == null)
             {
-                if (checkBoxNOcrCorrect.Checked)
+
+                // try to make letter normal via un-italic angle
+                if (tryItalicScaling && targetItem.NikseBitmap != null)
                 {
-                    return null;
+                    var unItalicNikseBitmap = new NikseBitmap(targetItem.NikseBitmap);
+                    unItalicNikseBitmap.ReplaceColor(255, 0, 0, 0, 0, 0, 0, 0);
+                    unItalicNikseBitmap.MakeTwoColor(200);
+                    var oldBmp = unItalicNikseBitmap.GetBitmap();
+                    var unItalicImage = UnItalic(oldBmp, _unItalicFactor); //TODO: make unitalic in NikseBitmap
+                    unItalicNikseBitmap = new NikseBitmap(unItalicImage);
+                    unItalicNikseBitmap.CropTransparentSidesAndBottom(0, false);
+                    oldBmp.Dispose();
+                    unItalicImage.Dispose();
+                    var unItalicTargetItem = new ImageSplitterItem(targetItem.X, targetItem.Y, unItalicNikseBitmap) { Top = targetItem.Top };
+                    result = NOcrFindBestMatchNew(unItalicTargetItem, false, nOcrDb, deepSeek, _unItalicFactor, (int)numericUpDownNOcrMaxWrongPixels.Value);
+                    if (result != null)
+                    {
+                        _italicFixes++;
+                    }
                 }
 
-                return new CompareMatch("*", false, 0, null);
+                if (result == null)
+                {
+                    if (checkBoxNOcrCorrect.Checked)
+                    {
+                        return null;
+                    }
+
+                    return new CompareMatch("*", false, 0, null);
+                }
             }
 
             FixUppercaseLowercaseIssues(targetItem, result);
 
             return new CompareMatch(result.Text, result.Italic, 0, null, result) { Y = targetItem.Y };
         }
+
+        public static int _italicFixes = 0;
 
         private CompareMatch GetCompareMatchNew(ImageSplitterItem targetItem, out CompareMatch secondBestGuess, List<ImageSplitterItem> list, int listIndex, BinaryOcrDb binaryOcrDb)
         {
@@ -6786,9 +6812,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 comboBoxNOcrLanguage.Items.Clear();
                 int index = 0;
                 int selIndex = 0;
-                foreach (string fileName in Directory.GetFiles(Configuration.OcrDirectory, "*.nocr"))
+                foreach (var s in NOcrDb.GetDatabases())
                 {
-                    string s = Path.GetFileNameWithoutExtension(fileName);
                     if (s == Configuration.Settings.VobSubOcr.LineOcrLastLanguages)
                     {
                         selIndex = index;

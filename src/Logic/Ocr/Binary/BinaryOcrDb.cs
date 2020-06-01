@@ -243,14 +243,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
         public static List<string> GetDatabases()
         {
-            var list = new List<string>();
-            foreach (string dir in Directory.GetFiles(Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar), "*.db"))
-            {
-                string s = Path.GetFileNameWithoutExtension(dir);
-                list.Add(s);
-            }
-            return list.OrderBy(p => p).ToList();
+            return Directory
+                .GetFiles(Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar), "*.db")
+                .Select(Path.GetFileNameWithoutExtension)
+                .OrderBy(p => p)
+                .ToList();
         }
-
     }
 }

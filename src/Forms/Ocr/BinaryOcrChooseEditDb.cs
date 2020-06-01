@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -41,9 +42,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             comboBoxNOcrLanguage.Items.Clear();
             comboBoxNOcrLanguage.Items.Add(string.Empty);
-            foreach (string fileName in Directory.GetFiles(Configuration.OcrDirectory, "*.nocr"))
+            foreach (string s in NOcrDb.GetDatabases())
             {
-                string s = Path.GetFileNameWithoutExtension(fileName);
                 comboBoxNOcrLanguage.Items.Add(s);
                 if (s == nOcrDbName)
                 {
