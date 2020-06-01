@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Core
         public string OcrAddLetterRow1 { get; set; }
         public string OcrAddLetterRow2 { get; set; }
         public string OcrTrainFonts { get; set; }
+        public string OcrTrainMergedLetters { get; set; }
         public string OcrTrainSrtFile { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
@@ -326,6 +327,7 @@ namespace Nikse.SubtitleEdit.Core
             OcrAddLetterRow1 = "♪;á;é;í;ó;ö;ő;ú;ü;ű;ç;ñ;å;¿";
             OcrAddLetterRow2 = "♫;Á;É;Í;Ó;Ö;Ő;Ú;Ü;Ű;Ç;Ñ;Å;¡";
             OcrTrainFonts = "Arial;Calibri;Corbel;Futura Std Book;Futura Bis;Helvetica Neue;Lucida Console;Tahoma;Trebuchet MS;Verdana";
+            OcrTrainMergedLetters = "ff ft fi fj fy fl rf rt rv rw ry rt ryt tt TV tw yt yw";
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             GoogleApiV2KeyInfoShow = true;
@@ -3251,6 +3253,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.OcrTrainFonts = subNode.InnerText;
+            }
+
+            subNode = node.SelectSingleNode("OcrTrainMergedLetters");
+            if (subNode != null)
+            {
+                settings.Tools.OcrTrainMergedLetters = subNode.InnerText;
             }
 
             subNode = node.SelectSingleNode("OcrTrainSrtFile");
@@ -7141,6 +7149,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("OcrAddLetterRow1", settings.Tools.OcrAddLetterRow1);
                 textWriter.WriteElementString("OcrAddLetterRow2", settings.Tools.OcrAddLetterRow2);
                 textWriter.WriteElementString("OcrTrainFonts", settings.Tools.OcrTrainFonts);
+                textWriter.WriteElementString("OcrTrainMergedLetters", settings.Tools.OcrTrainMergedLetters);
                 textWriter.WriteElementString("OcrTrainSrtFile", settings.Tools.OcrTrainSrtFile);
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);

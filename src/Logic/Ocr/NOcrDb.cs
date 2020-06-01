@@ -355,21 +355,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            if (italic)
-            {
-                foreach (var oc in OcrCharacters)
-                {
-                    if (Math.Abs(widthPercent - oc.WidthPercent) < 60 && Math.Abs(oc.MarginTop - topMargin) < 17 && oc.LinesForeground.Count + oc.LinesBackground.Count > 50)
-                    {
-                        var italicOc = MakeItalicNOcrChar(oc, 0, italicAngle);
-                        if (IsMatch(bitmap, italicOc, 25))
-                        {
-                            return italicOc;
-                        }
-                    }
-                }
-            }
-
             if (deepSeek)
             {
                 foreach (var oc in OcrCharacters)

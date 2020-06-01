@@ -2688,6 +2688,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         /// </summary>
         private void FixUppercaseLowercaseIssues(ImageSplitterItem targetItem, NOcrChar result)
         {
+            var uppercaseWithAccent = "ÉČĘĖŠŽÜÅÄÖĄŚŻŚ";
+            var lowercaseWithAccent = "éčęėšžüåäöąśżś";
 
             if (result.Text == "e" || result.Text == "a" || result.Text == "d" || result.Text == "t")
             {
@@ -2740,8 +2742,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            // Polish
-            else if (result.Text == "Ć" || result.Text == "Ź" || result.Text == "Ż" || result.Text == "Ą" || result.Text == "Ó" || result.Text == "Ś")
+            // Letters with accents
+            else if (uppercaseWithAccent.Contains(result.Text))
             {
                 if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
@@ -2753,7 +2755,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
-            else if (result.Text == "ć" || result.Text == "ź" || result.Text == "ż" || result.Text == "ą" || result.Text == "ó" || result.Text == "ś")
+            else if (lowercaseWithAccent.Contains(result.Text))
             {
                 if (_binOcrLowercaseHeightsTotalCount > 2 && _binOcrUppercaseHeightsTotalCount > 2)
                 {
@@ -2787,7 +2789,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     unItalicNikseBitmap.ReplaceColor(255, 0, 0, 0, 0, 0, 0, 0);
                     unItalicNikseBitmap.MakeTwoColor(200);
                     var oldBmp = unItalicNikseBitmap.GetBitmap();
-                    var unItalicImage = UnItalic(oldBmp, _unItalicFactor); //TODO: make unitalic in NikseBitmap
+                    var unItalicImage = UnItalic(oldBmp, _unItalicFactor); //TODO: make un-italic in NikseBitmap
                     unItalicNikseBitmap = new NikseBitmap(unItalicImage);
                     unItalicNikseBitmap.CropTransparentSidesAndBottom(0, false);
                     oldBmp.Dispose();
@@ -3979,7 +3981,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (string.IsNullOrEmpty(line))
             {
-
                 int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
                 if (minLineHeight < 5)
                 {
