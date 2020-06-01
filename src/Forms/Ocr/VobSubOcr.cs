@@ -4012,7 +4012,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         item = GetExpandedSelectionNew(nbmpInput, expandSelectionList);
-                       // item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
+                        // item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
 
                         _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, string.Empty);
                         var result = _vobSubOcrNOcrCharacter.ShowDialog(this);
@@ -8301,7 +8301,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Cursor = Cursors.Default;
             using (var inspect = new VobSubNOcrCharacterInspect())
             {
-                inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
+                inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this, checkBoxNOcrItalic.Checked);
                 if (inspect.ShowDialog(this) == DialogResult.OK)
                 {
                     Cursor = Cursors.WaitCursor;

@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr)
+        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr, bool italic)
         {
             _bitmap = bitmap;
             var nbmp = new NikseBitmap(bitmap);
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, false, false, index, _imageList);
+                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, italic, false, index, _imageList);
                     if (match == null)
                     {
                         _indexLookup.Add(listBoxInspectItems.Items.Count, index);
