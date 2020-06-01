@@ -5308,7 +5308,7 @@ $HorzAlign          =   Center
             {
                 settings.VobSubOcr.LineOcrMaxErrorPixels = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
             }
-            
+
             subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
             if (subNode != null)
             {
