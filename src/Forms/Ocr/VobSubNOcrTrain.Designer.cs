@@ -42,13 +42,13 @@
             this.textBoxInputFile = new System.Windows.Forms.TextBox();
             this.buttonInputChoose = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBoxMerged = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxMerged = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -70,7 +70,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 153);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(493, 443);
-            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Training options";
             // 
@@ -83,7 +83,7 @@
             this.checkBoxBold.Location = new System.Drawing.Point(9, 420);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(92, 17);
-            this.checkBoxBold.TabIndex = 17;
+            this.checkBoxBold.TabIndex = 7;
             this.checkBoxBold.Text = "Also train bold";
             this.checkBoxBold.UseVisualStyleBackColor = true;
             // 
@@ -100,7 +100,7 @@
             this.listViewFonts.Location = new System.Drawing.Point(9, 47);
             this.listViewFonts.Name = "listViewFonts";
             this.listViewFonts.Size = new System.Drawing.Size(469, 270);
-            this.listViewFonts.TabIndex = 16;
+            this.listViewFonts.TabIndex = 1;
             this.listViewFonts.UseCompatibleStateImageBehavior = false;
             this.listViewFonts.View = System.Windows.Forms.View.Details;
             // 
@@ -116,7 +116,7 @@
             this.label3.Location = new System.Drawing.Point(6, 392);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(189, 13);
-            this.label3.TabIndex = 16;
+            this.label3.TabIndex = 5;
             this.label3.Text = "Number of line segments per character";
             // 
             // numericUpDownSegmentsPerCharacter
@@ -135,7 +135,7 @@
             0});
             this.numericUpDownSegmentsPerCharacter.Name = "numericUpDownSegmentsPerCharacter";
             this.numericUpDownSegmentsPerCharacter.Size = new System.Drawing.Size(66, 20);
-            this.numericUpDownSegmentsPerCharacter.TabIndex = 15;
+            this.numericUpDownSegmentsPerCharacter.TabIndex = 6;
             this.numericUpDownSegmentsPerCharacter.Value = new decimal(new int[] {
             100,
             0,
@@ -149,7 +149,7 @@
             this.checkBoxVeryAccurate.Location = new System.Drawing.Point(9, 367);
             this.checkBoxVeryAccurate.Name = "checkBoxVeryAccurate";
             this.checkBoxVeryAccurate.Size = new System.Drawing.Size(303, 17);
-            this.checkBoxVeryAccurate.TabIndex = 14;
+            this.checkBoxVeryAccurate.TabIndex = 4;
             this.checkBoxVeryAccurate.Text = "Very accurate (be less general), require more line segments";
             this.checkBoxVeryAccurate.UseVisualStyleBackColor = true;
             // 
@@ -160,7 +160,7 @@
             this.labelSubtitleFontSize.Location = new System.Drawing.Point(5, 334);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
             this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
-            this.labelSubtitleFontSize.TabIndex = 6;
+            this.labelSubtitleFontSize.TabIndex = 2;
             this.labelSubtitleFontSize.Text = "Subtitle font size";
             // 
             // comboBoxSubtitleFontSize
@@ -263,7 +263,7 @@
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(110, 331);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFontSize.TabIndex = 7;
+            this.comboBoxSubtitleFontSize.TabIndex = 3;
             // 
             // labelSubtitleFont
             // 
@@ -271,7 +271,7 @@
             this.labelSubtitleFont.Location = new System.Drawing.Point(6, 31);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
-            this.labelSubtitleFont.TabIndex = 4;
+            this.labelSubtitleFont.TabIndex = 0;
             this.labelSubtitleFont.Text = "Subtitle font";
             // 
             // label1
@@ -280,7 +280,7 @@
             this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(272, 13);
-            this.label1.TabIndex = 8;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Subtitle to train with  (must have spaces between letters)";
             // 
             // textBoxInputFile
@@ -288,7 +288,7 @@
             this.textBoxInputFile.Location = new System.Drawing.Point(8, 40);
             this.textBoxInputFile.Name = "textBoxInputFile";
             this.textBoxInputFile.Size = new System.Drawing.Size(438, 20);
-            this.textBoxInputFile.TabIndex = 9;
+            this.textBoxInputFile.TabIndex = 1;
             this.textBoxInputFile.Text = "c:\\data\\SE-OCR\\train.srt";
             // 
             // buttonInputChoose
@@ -296,7 +296,7 @@
             this.buttonInputChoose.Location = new System.Drawing.Point(452, 37);
             this.buttonInputChoose.Name = "buttonInputChoose";
             this.buttonInputChoose.Size = new System.Drawing.Size(26, 23);
-            this.buttonInputChoose.TabIndex = 10;
+            this.buttonInputChoose.TabIndex = 2;
             this.buttonInputChoose.Text = "...";
             this.buttonInputChoose.UseVisualStyleBackColor = true;
             this.buttonInputChoose.Click += new System.EventHandler(this.buttonInputChoose_Click);
@@ -311,9 +311,26 @@
             this.groupBox2.Location = new System.Drawing.Point(12, 13);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(493, 134);
-            this.groupBox2.TabIndex = 14;
+            this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Input file";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 82);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(201, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Letter combinations that might be merged";
+            // 
+            // textBoxMerged
+            // 
+            this.textBoxMerged.Location = new System.Drawing.Point(9, 98);
+            this.textBoxMerged.Name = "textBoxMerged";
+            this.textBoxMerged.Size = new System.Drawing.Size(469, 20);
+            this.textBoxMerged.TabIndex = 4;
+            this.textBoxMerged.Text = "ff ft fi fj fy fl rf rt rv rw ry rt ryt tt TV tw yt yw";
             // 
             // openFileDialog1
             // 
@@ -326,7 +343,7 @@
             this.buttonTrain.Location = new System.Drawing.Point(296, 602);
             this.buttonTrain.Name = "buttonTrain";
             this.buttonTrain.Size = new System.Drawing.Size(128, 23);
-            this.buttonTrain.TabIndex = 16;
+            this.buttonTrain.TabIndex = 2;
             this.buttonTrain.Text = "Start training";
             this.buttonTrain.UseVisualStyleBackColor = true;
             this.buttonTrain.Click += new System.EventHandler(this.buttonTrain_Click);
@@ -337,7 +354,7 @@
             this.buttonOK.Location = new System.Drawing.Point(430, 602);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 17;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -349,25 +366,8 @@
             this.labelInfo.Location = new System.Drawing.Point(12, 628);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
-            this.labelInfo.TabIndex = 19;
+            this.labelInfo.TabIndex = 4;
             this.labelInfo.Text = "labelInfo";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 82);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(201, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Letter combinations that might be merged";
-            // 
-            // textBoxMerged
-            // 
-            this.textBoxMerged.Location = new System.Drawing.Point(9, 98);
-            this.textBoxMerged.Name = "textBoxMerged";
-            this.textBoxMerged.Size = new System.Drawing.Size(469, 20);
-            this.textBoxMerged.TabIndex = 12;
-            this.textBoxMerged.Text = "ff ft fi fj fy fl rf rt rv rw ry rt ryt tt TV tw yt yw";
             // 
             // VobSubNOcrTrain
             // 

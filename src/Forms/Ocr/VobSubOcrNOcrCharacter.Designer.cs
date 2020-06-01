@@ -240,6 +240,7 @@
             // 
             // pictureBoxCharacter
             // 
+            this.pictureBoxCharacter.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxCharacter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxCharacter.Cursor = System.Windows.Forms.Cursors.Cross;
             this.pictureBoxCharacter.Location = new System.Drawing.Point(183, 148);
@@ -1133,6 +1134,7 @@
             // 
             this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxSubtitleImage.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 36);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(604, 205);

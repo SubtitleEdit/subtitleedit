@@ -465,10 +465,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _ocrMethodModi = comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             }
-            if (Configuration.Settings.General.ShowBetaStuff)
-            {
-                _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-            }
+
+            _ocrMethodNocr = comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
 
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
@@ -3963,7 +3961,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nbmp.ReplaceNonWhiteWithTransparent();
                     item.Y += nbmp.CropTopTransparent(0);
                     nbmp.CropTransparentSidesAndBottom(0, true);
-                    nbmp.ReplaceTransparentWith(Color.Black);
+                    //nbmp.ReplaceTransparentWith(Color.Black);
                     GetNOcrCompareMatchNew(item, nikseBitmap, _nOcrDb, false, false, list.IndexOf(item), list);
                 }
             }
@@ -3989,10 +3987,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-                foreach (var item in list)
-                {
-                    item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
-                }
+                //foreach (var item in list)
+                //{
+                //    item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
+                //}
 
                 int index = 0;
                 bool expandSelection = false;
@@ -4015,7 +4013,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         item = GetExpandedSelectionNew(nbmpInput, expandSelectionList);
-                        item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
+                       // item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
 
                         _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, string.Empty);
                         var result = _vobSubOcrNOcrCharacter.ShowDialog(this);

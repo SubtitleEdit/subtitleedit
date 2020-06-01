@@ -78,10 +78,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             const int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-            foreach (ImageSplitterItem item in _imageList)
-            {
-                item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
-            }
 
             int index = 0;
             _indexLookup = new Dictionary<int, int>();
@@ -312,7 +308,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
-                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, string.Empty);
+                var text = string.Empty;
+                if (_nocrChar.Text != textBoxText.Text)
+                {
+                    text = textBoxText.Text;
+                }
+
+                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, text);
                 DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
                 bool expandSelection = false;
                 bool shrinkSelection = false;
@@ -385,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new AddBetterMultiMatchNOcr())
             {
-                var tempImageList  = new  List<ImageSplitterItem>();
+                var tempImageList = new List<ImageSplitterItem>();
                 var idx = _indexLookup[listBoxInspectItems.SelectedIndex];
                 for (int i = idx; i < _imageList.Count; i++)
                 {

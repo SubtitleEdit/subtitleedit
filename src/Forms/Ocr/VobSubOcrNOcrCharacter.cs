@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listBoxLinesForeground.Items.Clear();
             listBoxlinesBackground.Items.Clear();
             NikseBitmap nbmp = new NikseBitmap(vobSubImage);
-            nbmp.ReplaceTransparentWith(Color.Black);
+            //nbmp.ReplaceTransparentWith(Color.Black);
             vobSubImage = nbmp.GetBitmap();
 
             radioButtonHot.Checked = true;
@@ -126,6 +126,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LineOcrLinesToAutoGuess = (int)numericUpDownLinesToDraw.Value;
                 buttonGuessAgain_Click(null, null);
             };
+
+            textBoxCharacters.Focus();
         }
 
         private void buttonExpandSelection_Click(object sender, EventArgs e)
@@ -142,15 +144,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private bool IsMatch()
         {
-            NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
-            foreach (NOcrPoint op in NOcrChar.LinesForeground)
+            var nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
+            foreach (var op in NOcrChar.LinesForeground)
             {
-                foreach (Point point in op.ScaledGetPoints(NOcrChar, nbmp.Width, nbmp.Height))
+                foreach (var point in op.ScaledGetPoints(NOcrChar, nbmp.Width, nbmp.Height))
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
-                        Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                        var c = nbmp.GetPixel(point.X, point.Y);
+                        if (c.A > 150) 
                         {
                         }
                         else
@@ -160,14 +162,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
-            foreach (NOcrPoint op in NOcrChar.LinesBackground)
+            foreach (var op in NOcrChar.LinesBackground)
             {
-                foreach (Point point in op.GetPoints())
+                foreach (var point in op.GetPoints())
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {
-                        Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                        var c = nbmp.GetPixel(point.X, point.Y);
+                        if (c.A > 150)
                         {
                             return false;
                         }
@@ -475,7 +477,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                 {
                     Color c = nbmp.GetPixel(point.X, point.Y);
-                    if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                    if (c.A > 150)
                     {
                     }
                     else
@@ -488,7 +490,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
                         {
                             c = nbmp.GetPixel(point.X + 1, point.Y);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                             }
                             else
@@ -500,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Width > 10 && point.X >= 1)
                         {
                             c = nbmp.GetPixel(point.X - 1, point.Y);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                             }
                             else
@@ -512,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
                         {
                             c = nbmp.GetPixel(point.X, point.Y + 1);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                             }
                             else
@@ -524,7 +526,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Height > 10 && point.Y >= 1)
                         {
                             c = nbmp.GetPixel(point.X, point.Y - 1);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                             }
                             else
@@ -545,7 +547,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                 {
                     Color c = nbmp.GetPixel(point.X, point.Y);
-                    if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                    if (c.A > 150)
                     {
                         return false;
                     }
@@ -553,7 +555,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
                     {
                         c = nbmp.GetPixel(point.X + 1, point.Y);
-                        if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                        if (c.A > 150)
                         {
                             return false;
                         }
@@ -564,7 +566,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Width > 10 && point.X >= 1)
                         {
                             c = nbmp.GetPixel(point.X - 1, point.Y);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                                 return false;
                             }
@@ -573,7 +575,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
                         {
                             c = nbmp.GetPixel(point.X, point.Y + 1);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                                 return false;
                             }
@@ -582,7 +584,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (nbmp.Height > 10 && point.Y >= 1)
                         {
                             c = nbmp.GetPixel(point.X, point.Y - 1);
-                            if (c.A > 150 && c.R + 100 + c.G + c.B > VobSubOcr.NocrMinColor)
+                            if (c.A > 150)
                             {
                                 return false;
                             }

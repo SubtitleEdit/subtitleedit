@@ -322,6 +322,7 @@
             // 
             // pictureBoxCharacter
             // 
+            this.pictureBoxCharacter.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxCharacter.Location = new System.Drawing.Point(17, 206);
             this.pictureBoxCharacter.Name = "pictureBoxCharacter";
             this.pictureBoxCharacter.Size = new System.Drawing.Size(99, 47);

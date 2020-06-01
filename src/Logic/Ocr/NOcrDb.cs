@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
-                                var c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                                if (a <= 150)
                                 {
                                     ok = false;
                                     break;
@@ -132,8 +132,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
-                                var c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                                if (a > 150)
                                 {
                                     ok = false;
                                     break;
@@ -175,8 +175,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
-                                var c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                                if (a <= 150)
                                 {
                                     ok = false;
                                     break;
@@ -201,8 +201,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
-                                var c = nikseBitmap.GetPixel(p.X, p.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                                var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                                if (a > 150)
                                 {
                                     ok = false;
                                     break;
@@ -409,8 +409,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < bitmap.Width && point.Y < bitmap.Height)
                     {
-                        var c = bitmap.GetPixel(point.X, point.Y);
-                        if (c.A <= 150 || c.R + c.G + c.B <= VobSubOcr.NocrMinColor)
+                        var a = bitmap.GetAlpha(point.X, point.Y);
+                        if (a <= 150)
                         {
                             errors++;
                             if (errors > errorsAllowed)
@@ -432,8 +432,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < bitmap.Width && point.Y < bitmap.Height)
                     {
-                        var c = bitmap.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                        var a = bitmap.GetAlpha(point.X, point.Y);
+                        if (a > 150)
                         {
                             errors++;
                             if (errors > errorsAllowed)
