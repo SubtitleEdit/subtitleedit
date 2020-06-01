@@ -49,6 +49,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -59,6 +60,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxItalic);
             this.groupBox1.Controls.Add(this.checkBoxBold);
             this.groupBox1.Controls.Add(this.listViewFonts);
             this.groupBox1.Controls.Add(this.label3);
@@ -369,6 +371,17 @@
             this.labelInfo.TabIndex = 4;
             this.labelInfo.Text = "labelInfo";
             // 
+            // checkBoxItalic
+            // 
+            this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Location = new System.Drawing.Point(116, 420);
+            this.checkBoxItalic.Name = "checkBoxItalic";
+            this.checkBoxItalic.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxItalic.TabIndex = 8;
+            this.checkBoxItalic.Text = "Also train italic";
+            this.checkBoxItalic.UseVisualStyleBackColor = true;
+            // 
             // VobSubNOcrTrain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -420,5 +433,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxMerged;
+        private System.Windows.Forms.CheckBox checkBoxItalic;
     }
 }
