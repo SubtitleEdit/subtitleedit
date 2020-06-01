@@ -701,7 +701,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
 
@@ -722,7 +722,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
 
@@ -749,7 +749,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
             groupBoxImagePalette.Visible = false;
@@ -930,7 +930,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
 
@@ -950,63 +950,65 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             autoTransparentBackgroundToolStripMenuItem.Visible = false;
         }
 
-        private void LoadImageCompareCharacterDatabaseList()
+        private void LoadImageCompareCharacterDatabaseList(string db)
         {
+            if (_ocrMethodIndex != _ocrMethodBinaryImageCompare)
+            {
+                return;
+            }
+
             try
             {
-                if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
+                string characterDatabasePath = Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar);
+                if (!Directory.Exists(characterDatabasePath))
                 {
-                    string characterDatabasePath = Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar);
-                    if (!Directory.Exists(characterDatabasePath))
-                    {
-                        Directory.CreateDirectory(characterDatabasePath);
-                    }
+                    Directory.CreateDirectory(characterDatabasePath);
+                }
 
-                    comboBoxCharacterDatabase.Items.Clear();
-                    var binaryOcrDbs = BinaryOcrDb.GetDatabases();
-                    var imageCompareDbName = string.Empty;
-                    if (!string.IsNullOrEmpty(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb))
+                comboBoxCharacterDatabase.Items.Clear();
+                var binaryOcrDbs = BinaryOcrDb.GetDatabases();
+                var imageCompareDbName = string.Empty;
+                if (!string.IsNullOrEmpty(db))
+                {
+                    var parts = db.Split('+');
+                    if (parts.Length > 0 && binaryOcrDbs.Contains(parts[0]))
                     {
-                        var parts = Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb.Split('+');
-                        if (parts.Length > 0 && binaryOcrDbs.Contains(parts[0]))
+                        imageCompareDbName = parts[0];
+                        if (parts.Length > 1)
                         {
-                            imageCompareDbName = parts[0];
-                            if (parts.Length > 1)
-                            {
-                                imageCompareDbName = Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb;
-                                var nOcrDbName = parts[1];
-                                _nOcrDb = new NOcrDb(Path.Combine(Configuration.OcrDirectory, nOcrDbName + ".nocr"));
-                                binaryOcrDbs.Insert(0, Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
-                            }
+                            imageCompareDbName = db;
+                            var nOcrDbName = parts[1];
+                            _nOcrDb = new NOcrDb(Path.Combine(Configuration.OcrDirectory, nOcrDbName + ".nocr"));
+                            binaryOcrDbs.Insert(0, db);
                         }
                     }
+                }
 
-                    foreach (string s in binaryOcrDbs)
+                foreach (string s in binaryOcrDbs)
+                {
+                    comboBoxCharacterDatabase.Items.Add(s);
+                    if (s == imageCompareDbName)
                     {
-                        comboBoxCharacterDatabase.Items.Add(s);
-                        if (s == imageCompareDbName)
-                        {
-                            comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
-                        }
+                        comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
                     }
+                }
 
-                    if (comboBoxCharacterDatabase.Items.Count == 0)
-                    {
-                        comboBoxCharacterDatabase.Items.Add("Latin"); // if no database, create an empty one called "Latin"
-                    }
+                if (comboBoxCharacterDatabase.Items.Count == 0)
+                {
+                    comboBoxCharacterDatabase.Items.Add("Latin"); // if no database, create an empty one called "Latin"
+                }
 
-                    if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
-                    {
-                        comboBoxCharacterDatabase.SelectedIndex = 0;
-                    }
+                if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
+                {
+                    comboBoxCharacterDatabase.SelectedIndex = 0;
+                }
 
-                    for (int i = 0; i < comboBoxDictionaries.Items.Count; i++)
+                for (int i = 0; i < comboBoxDictionaries.Items.Count; i++)
+                {
+                    if (comboBoxDictionaries.Items[i].ToString() == Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck)
                     {
-                        if (comboBoxDictionaries.Items[i].ToString() == Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck)
-                        {
-                            comboBoxDictionaries.SelectedIndex = i;
-                            break;
-                        }
+                        comboBoxDictionaries.SelectedIndex = i;
+                        break;
                     }
                 }
             }
@@ -1031,7 +1033,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var imageCompareDbName = parts[0];
                     if (parts.Length > 1)
                     {
-                        imageCompareDbName = Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb;
                         var nOcrDbName = parts[1];
                         _nOcrDb = new NOcrDb(Path.Combine(Configuration.OcrDirectory, nOcrDbName + ".nocr"));
                     }
@@ -4761,7 +4762,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _binaryOcrDb = new BinaryOcrDb(Configuration.OcrDirectory + "Latin.db", true);
                 }
 
-                checkBoxNOcrCorrect.Checked = false;
+                checkBoxNOcrCorrect.Checked = true;
                 _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
             }
 
@@ -6807,7 +6808,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BinaryImageCompare";
                 numericUpDownMaxErrorPct.Minimum = 0;
-                LoadImageCompareCharacterDatabaseList();
+                LoadImageCompareCharacterDatabaseList(comboBoxCharacterDatabase.SelectedItem.ToString());
             }
             else if (_ocrMethodIndex == _ocrMethodModi)
             {
@@ -7247,7 +7248,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
 
@@ -7578,7 +7579,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             _palette = palette;
 
@@ -7638,7 +7639,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             if (_palette == null)
             {
@@ -7672,7 +7673,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _vobSubOcrSettings = vobSubOcrSettings;
 
             InitializeTesseract();
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             checkBoxCustomFourColors.Enabled = true;
             checkBoxCustomFourColors.Checked = true;
@@ -8427,7 +8428,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             InitializeTesseract(language);
             SetTesseractLanguageFromLanguageString(language);
-            LoadImageCompareCharacterDatabaseList();
+            LoadImageCompareCharacterDatabaseList(Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb);
 
             SetOcrMethod();
 
@@ -8898,8 +8899,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = form.ImageCompareDatabaseName;
-                LoadImageCompareCharacterDatabaseList();
+                LoadImageCompareCharacterDatabaseList(form.ImageCompareDatabaseName);
             }
         }
     }
