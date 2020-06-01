@@ -488,6 +488,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var idx = listBoxLinesForeground.SelectedIndex;
                 var op = listBoxLinesForeground.Items[idx] as NOcrPoint;
                 _nocrChar.LinesForeground.Remove(op);
+                ShowOcrPoints();
                 if (idx < listBoxLinesForeground.Items.Count)
                 {
                     listBoxLinesForeground.SelectedIndex = idx;
@@ -497,7 +498,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     listBoxLinesForeground.SelectedIndex = listBoxLinesForeground.Items.Count - 1;
                 }
             }
-            ShowOcrPoints();
         }
 
         private void removeBackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -507,6 +507,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var idx = listBoxlinesBackground.SelectedIndex;
                 var op = listBoxlinesBackground.Items[idx] as NOcrPoint;
                 _nocrChar.LinesBackground.Remove(op);
+                ShowOcrPoints();
                 if (idx < listBoxlinesBackground.Items.Count)
                 {
                     listBoxlinesBackground.SelectedIndex = idx;
@@ -516,7 +517,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     listBoxlinesBackground.SelectedIndex = listBoxlinesBackground.Items.Count -1;
                 }
             }
-            ShowOcrPoints();
         }
 
         private void buttonImport_Click(object sender, EventArgs e)

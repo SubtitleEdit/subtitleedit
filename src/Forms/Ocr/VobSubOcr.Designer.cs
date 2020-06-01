@@ -152,6 +152,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxNOcrLineSplitMinHeight = new System.Windows.Forms.ComboBox();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxNOCR.SuspendLayout();
@@ -470,6 +472,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // groupBoxNOCR
             // 
+            this.groupBoxNOCR.Controls.Add(this.label3);
+            this.groupBoxNOCR.Controls.Add(this.comboBoxNOcrLineSplitMinHeight);
             this.groupBoxNOCR.Controls.Add(this.numericUpDownNOcrMaxWrongPixels);
             this.groupBoxNOCR.Controls.Add(this.labelNOcrMaxWrongPixels);
             this.groupBoxNOCR.Controls.Add(this.buttonLineOcrEditLanguage);
@@ -516,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // buttonLineOcrEditLanguage
             // 
-            this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 97);
+            this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 100);
             this.buttonLineOcrEditLanguage.Name = "buttonLineOcrEditLanguage";
             this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 23);
             this.buttonLineOcrEditLanguage.TabIndex = 41;
@@ -526,7 +530,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // buttonLineOcrNewLanguage
             // 
-            this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 97);
+            this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 100);
             this.buttonLineOcrNewLanguage.Name = "buttonLineOcrNewLanguage";
             this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 23);
             this.buttonLineOcrNewLanguage.TabIndex = 40;
@@ -537,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 101);
+            this.label2.Location = new System.Drawing.Point(11, 104);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 13);
             this.label2.TabIndex = 35;
@@ -547,7 +551,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.comboBoxNOcrLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxNOcrLanguage.FormattingEnabled = true;
-            this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 97);
+            this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 100);
             this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
             this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
             this.comboBoxNOcrLanguage.TabIndex = 34;
@@ -556,7 +560,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // checkBoxNOcrItalic
             // 
             this.checkBoxNOcrItalic.AutoSize = true;
-            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(12, 67);
+            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(12, 69);
             this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
             this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
             this.checkBoxNOcrItalic.TabIndex = 8;
@@ -1701,6 +1705,97 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(137, 77);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(104, 13);
+            this.label3.TabIndex = 49;
+            this.label3.Text = "Line split min. height";
+            this.label3.Visible = false;
+            // 
+            // comboBoxNOcrLineSplitMinHeight
+            // 
+            this.comboBoxNOcrLineSplitMinHeight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNOcrLineSplitMinHeight.FormattingEnabled = true;
+            this.comboBoxNOcrLineSplitMinHeight.Items.AddRange(new object[] {
+            "Auto",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "65",
+            "70",
+            "75",
+            "80",
+            "85",
+            "90",
+            "95",
+            "100",
+            "110",
+            "120",
+            "130",
+            "140",
+            "150"});
+            this.comboBoxNOcrLineSplitMinHeight.Location = new System.Drawing.Point(247, 74);
+            this.comboBoxNOcrLineSplitMinHeight.Name = "comboBoxNOcrLineSplitMinHeight";
+            this.comboBoxNOcrLineSplitMinHeight.Size = new System.Drawing.Size(103, 21);
+            this.comboBoxNOcrLineSplitMinHeight.TabIndex = 48;
+            this.comboBoxNOcrLineSplitMinHeight.Visible = false;
+            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1910,5 +2005,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.NumericUpDown numericUpDownNOcrMaxWrongPixels;
         private System.Windows.Forms.Label labelNOcrMaxWrongPixels;
         private System.Windows.Forms.Button buttonChooseEditBinaryImageCompareDb;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBoxNOcrLineSplitMinHeight;
     }
 }

@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
 
             labelInfo.Text = string.Empty;
+            textBoxMerged.Text = Configuration.Settings.Tools.OcrTrainMergedLetters;
             var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
             foreach (var x in FontFamily.Families)
             {
@@ -109,10 +110,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true, false);
                                     }
                                 }
                             }
@@ -121,6 +122,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (_abort)
                         {
                             break;
+                        }
+                    }
+
+                    foreach (var text in textBoxMerged.Text.Split(' '))
+                    {
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
+                            {
+                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, true);
+                                if (checkBoxBold.Checked)
+                                {
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, true,true);
+                                }
+                            }
                         }
                     }
 
@@ -152,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _abort = false;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold)
+        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold, bool doubleLetter)
         {
             Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold);
             var nikseBitmap = new NikseBitmap(bmp);
@@ -186,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     numberOfCharactersSkipped++;
                 }
             }
-            else
+            else if (!doubleLetter)
             {
 
                 if (list.Count == 4)
@@ -360,6 +376,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             Configuration.Settings.Tools.OcrTrainFonts = sb.ToString().Trim(';');
             Configuration.Settings.Tools.OcrTrainSrtFile = textBoxInputFile.Text;
+            Configuration.Settings.Tools.OcrTrainMergedLetters = textBoxMerged.Text;
         }
     }
 }
