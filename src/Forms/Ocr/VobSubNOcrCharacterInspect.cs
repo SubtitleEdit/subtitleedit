@@ -385,8 +385,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new AddBetterMultiMatchNOcr())
             {
+                var tempImageList  = new  List<ImageSplitterItem>();
                 var idx = _indexLookup[listBoxInspectItems.SelectedIndex];
-                form.Initialize(_bitmap, idx, _matchList, _imageList);
+                for (int i = idx; i < _imageList.Count; i++)
+                {
+                    tempImageList.Add(_imageList[i]);
+                }
+
+                var tempMatchList = new List<VobSubOcr.CompareMatch>();
+                idx = listBoxInspectItems.SelectedIndex;
+                for (int i = idx; i < _matchList.Count; i++)
+                {
+                    tempMatchList.Add(_matchList[i]);
+                }
+
+                form.Initialize(_bitmap, 0, tempMatchList, tempImageList);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     _nocrDb.Add(form.NOcrChar);

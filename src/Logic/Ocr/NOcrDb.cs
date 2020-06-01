@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static Point GetTotalSize(int listIndex, List<ImageSplitterItem> items, int count)
         {
-            if (listIndex + count >= items.Count)
+            if (listIndex + count > items.Count)
             {
                 return new Point(-100, -100);
             }
