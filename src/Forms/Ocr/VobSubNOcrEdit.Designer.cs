@@ -59,6 +59,8 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
@@ -191,14 +193,15 @@
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 40;
             this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesBackground_SelectedIndexChanged);
-            this.listBoxlinesBackground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxlinesBackground_KeyDown);
+            this.listBoxlinesBackground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxLinesBackground_KeyDown);
             // 
             // contextMenuStripLinesBackground
             // 
             this.contextMenuStripLinesBackground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.removeBackToolStripMenuItem});
+            this.removeBackToolStripMenuItem,
+            this.clearToolStripMenuItem1});
             this.contextMenuStripLinesBackground.Name = "contextMenuStripLines";
-            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(118, 26);
+            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(181, 70);
             // 
             // removeBackToolStripMenuItem
             // 
@@ -230,14 +233,15 @@
             // contextMenuLinesForeground
             // 
             this.contextMenuLinesForeground.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.removeForegroundToolStripMenuItem});
+            this.removeForegroundToolStripMenuItem,
+            this.clearToolStripMenuItem});
             this.contextMenuLinesForeground.Name = "contextMenuStripLines";
-            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 26);
+            this.contextMenuLinesForeground.Size = new System.Drawing.Size(118, 48);
             // 
             // removeForegroundToolStripMenuItem
             // 
             this.removeForegroundToolStripMenuItem.Name = "removeForegroundToolStripMenuItem";
-            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
             // 
@@ -371,6 +375,20 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem1
+            // 
+            this.clearToolStripMenuItem1.Name = "clearToolStripMenuItem1";
+            this.clearToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.clearToolStripMenuItem1.Text = "Clear";
+            this.clearToolStripMenuItem1.Click += new System.EventHandler(this.clearToolStripMenuItem1_Click);
+            // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -436,5 +454,7 @@
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelNOcrCharInfo;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem1;
     }
 }
