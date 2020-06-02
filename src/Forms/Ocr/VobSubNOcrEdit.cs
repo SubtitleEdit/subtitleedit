@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -11,8 +12,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class VobSubNOcrEdit : Form
     {
         private NOcrDb _nOcrDb;
-        private readonly List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar;
+        private List<NOcrChar> _nocrChars;
         private double _zoomFactor = 5.0;
         private bool _drawLineOn;
         private bool _startDone;
@@ -32,7 +33,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
 
             _nOcrDb = nOcrDb;
-            _nocrChars = nOcrDb.OcrCharacters;
             _bitmap = bitmap;
 
             FillComboBox();
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 SizePictureBox();
             }
 
-            labelInfo.Text = $"{_nocrChars.Count:#,###,##0} elements in database";
+            labelInfo.Text = $"{(_nOcrDb.OcrCharacters.Count + _nOcrDb.OcrCharactersExpanded.Count):#,###,##0} elements in database";
             labelNOcrCharInfo.Text = string.Empty;
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -58,8 +58,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void FillComboBox()
         {
-            List<string> list = new List<string>();
-            foreach (NOcrChar c in _nocrChars)
+            _nocrChars = new List<NOcrChar>();
+            _nocrChars.AddRange(_nOcrDb.OcrCharacters);
+            _nocrChars.AddRange(_nOcrDb.OcrCharactersExpanded);
+            var list = new List<string>();
+            foreach (var c in _nocrChars)
             {
                 if (!list.Contains(c.Text))
                 {
@@ -68,10 +71,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             list.Sort();
             comboBoxTexts.Items.Clear();
-            foreach (string s in list)
-            {
-                comboBoxTexts.Items.Add(s);
-            }
+            comboBoxTexts.Items.AddRange(list.ToArray<object>());
         }
 
         private void VobSubNOcrEdit_KeyDown(object sender, KeyEventArgs e)
@@ -128,12 +128,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void ShowOcrPoints()
         {
             listBoxLinesForeground.Items.Clear();
-            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            foreach (var op in _nocrChar.LinesForeground)
             {
                 listBoxLinesForeground.Items.Add(op);
             }
             listBoxlinesBackground.Items.Clear();
-            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            foreach (var op in _nocrChar.LinesBackground)
             {
                 listBoxlinesBackground.Items.Add(op);
             }
@@ -142,32 +142,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private bool IsMatch()
         {
-            NikseBitmap nbmp = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
-            foreach (NOcrPoint op in _nocrChar.LinesForeground)
+            var nikseBitmap = new NikseBitmap(pictureBoxCharacter.Image as Bitmap);
+            foreach (var op in _nocrChar.LinesForeground)
             {
-                foreach (Point point in op.ScaledGetPoints(_nocrChar, nbmp.Width, nbmp.Height))
+                foreach (var point in op.ScaledGetPoints(_nocrChar, nikseBitmap.Width, nikseBitmap.Height))
                 {
-                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                    if (point.X >= 0 && point.Y >= 0 && point.X < nikseBitmap.Width && point.Y < nikseBitmap.Height)
                     {
-                        Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
-                        {
-                        }
-                        else
+                        var a = nikseBitmap.GetAlpha(point.X, point.Y);
+                        if (a <= 150)
                         {
                             return false;
                         }
                     }
                 }
             }
-            foreach (NOcrPoint op in _nocrChar.LinesBackground)
+            foreach (var op in _nocrChar.LinesBackground)
             {
-                foreach (Point point in op.ScaledGetPoints(_nocrChar, nbmp.Width, nbmp.Height))
+                foreach (var point in op.ScaledGetPoints(_nocrChar, nikseBitmap.Width, nikseBitmap.Height))
                 {
-                    if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+                    if (point.X >= 0 && point.Y >= 0 && point.X < nikseBitmap.Width && point.Y < nikseBitmap.Height)
                     {
-                        Color c = nbmp.GetPixel(point.X, point.Y);
-                        if (c.A > 150 && c.R + c.G + c.B > VobSubOcr.NocrMinColor)
+                        var a = nikseBitmap.GetAlpha(point.X, point.Y);
+                        if (a > 150)
                         {
                             return false;
                         }
@@ -533,11 +530,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             openFileDialog1.Title = "Import existing nOCR database into current";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                NOcrDb newDb = new NOcrDb(openFileDialog1.FileName);
-                foreach (NOcrChar newChar in newDb.OcrCharacters)
+                var newDb = new NOcrDb(openFileDialog1.FileName);
+                foreach (var newChar in newDb.OcrCharacters)
                 {
                     bool found = false;
-                    foreach (NOcrChar oldChar in _nocrChars)
+                    foreach (var oldChar in _nocrChars)
                     {
                         if (oldChar.Text == newChar.Text &&
                             oldChar.Width == newChar.Width &&
@@ -599,12 +596,32 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void listBoxlinesBackground_KeyDown(object sender, KeyEventArgs e)
+        private void listBoxLinesBackground_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
                 e.SuppressKeyPress = true;
                 removeBackToolStripMenuItem_Click(null, null);
+            }
+        }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listBoxLinesForeground.SelectedItems.Count == 1)
+            {
+                var idx = listBoxLinesForeground.SelectedIndex;
+                _nocrChar.LinesForeground.Clear();
+                ShowOcrPoints();
+            }
+        }
+
+        private void clearToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (listBoxlinesBackground.SelectedItems.Count == 1)
+            {
+                var idx = listBoxlinesBackground.SelectedIndex;
+                _nocrChar.LinesBackground.Clear();
+                ShowOcrPoints();
             }
         }
     }
