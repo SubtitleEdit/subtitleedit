@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nOcrD.Add(nOcrChar);
 
                     numberOfCharactersLeaned++;
-                    labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,###}, {2:#,###,###} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                    labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,##0}, {2:#,###,##0} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else
@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
-            var lineHeight = (textSize.Height * 0.64f);
+            var lineHeight = textSize.Height * 0.64f;
 
             textSize = g.MeasureString(HtmlUtil.RemoveHtmlTags(text), font);
             g.Dispose();
