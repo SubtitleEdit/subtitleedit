@@ -386,10 +386,10 @@
             // textBoxText
             // 
             this.textBoxText.ContextMenuStrip = this.contextMenuStripLetters;
-            this.textBoxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 22);
+            this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
             // 
             // contextMenuStripLetters

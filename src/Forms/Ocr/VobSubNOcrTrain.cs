@@ -196,6 +196,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         Width = item.NikseBitmap.Width,
                         Height = item.NikseBitmap.Height,
                         MarginTop = item.Top,
+                        Italic = italic,
                     };
                     VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
@@ -229,6 +230,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         Width = expandItem.NikseBitmap.Width,
                         Height = expandItem.NikseBitmap.Height,
                         MarginTop = expandItem.Top,
+                        Italic = italic,
                         ExpandCount = 2,
                     };
                     VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 5, checkBoxVeryAccurate.Checked, nOcrChar, expandItem.NikseBitmap);
@@ -252,6 +254,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         Width = expandItem.NikseBitmap.Width,
                         Height = expandItem.NikseBitmap.Height,
                         MarginTop = expandItem.Top,
+                        Italic = italic,
                         ExpandCount = 3,
                     };
                     nOcrD.Add(nOcrChar);

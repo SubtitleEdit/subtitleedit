@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -790,6 +791,54 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     tempVeryPrecise = true;
                 }
+            }
+
+            RemoveDuplicates(nOcrChar.LinesForeground);
+            RemoveDuplicates(nOcrChar.LinesBackground);
+        }
+
+        private static void RemoveDuplicates(List<NOcrPoint> lines)
+        {
+            var indicesToDelete = new List<int>();
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var outerPoint = lines[index];
+                for (var innerIndex = 0; innerIndex < lines.Count; innerIndex++)
+                {
+                    var innerPoint = lines[innerIndex];
+                    if (innerPoint != outerPoint)
+                    {
+                        if (innerPoint.Start.X == innerPoint.End.X && outerPoint.Start.X == outerPoint.End.X && innerPoint.Start.X == outerPoint.Start.X)
+                        {
+                            // same y
+                            if (Math.Max(innerPoint.Start.Y, innerPoint.End.Y) <= Math.Max(outerPoint.Start.Y, outerPoint.End.Y) &&
+                                Math.Min(innerPoint.Start.Y, innerPoint.End.Y) >= Math.Min(outerPoint.Start.Y, outerPoint.End.Y))
+                            {
+                                if (!indicesToDelete.Contains(innerIndex))
+                                {
+                                    indicesToDelete.Add(innerIndex);
+                                }
+                            }
+                        }
+                        else if (innerPoint.Start.Y == innerPoint.End.Y && outerPoint.Start.Y == outerPoint.End.Y && innerPoint.Start.Y == outerPoint.Start.Y)
+                        {
+                            // same x
+                            if (Math.Max(innerPoint.Start.X, innerPoint.End.X) <= Math.Max(outerPoint.Start.X, outerPoint.End.X) &&
+                                Math.Min(innerPoint.Start.X, innerPoint.End.X) >= Math.Min(outerPoint.Start.X, outerPoint.End.X))
+                            {
+                                if (!indicesToDelete.Contains(innerIndex))
+                                {
+                                    indicesToDelete.Add(innerIndex);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var i in indicesToDelete.OrderByDescending(p=>p))
+            {
+                lines.RemoveAt(i);
             }
         }
 

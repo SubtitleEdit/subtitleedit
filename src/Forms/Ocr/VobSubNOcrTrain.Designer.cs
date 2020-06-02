@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.listViewFonts = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +50,6 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -76,12 +76,21 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Training options";
             // 
+            // checkBoxItalic
+            // 
+            this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Location = new System.Drawing.Point(116, 420);
+            this.checkBoxItalic.Name = "checkBoxItalic";
+            this.checkBoxItalic.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxItalic.TabIndex = 8;
+            this.checkBoxItalic.Text = "Also train italic";
+            this.checkBoxItalic.UseVisualStyleBackColor = true;
+            // 
             // checkBoxBold
             // 
             this.checkBoxBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxBold.AutoSize = true;
-            this.checkBoxBold.Checked = true;
-            this.checkBoxBold.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBold.Location = new System.Drawing.Point(9, 420);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(92, 17);
@@ -370,17 +379,6 @@
             this.labelInfo.Size = new System.Drawing.Size(47, 13);
             this.labelInfo.TabIndex = 4;
             this.labelInfo.Text = "labelInfo";
-            // 
-            // checkBoxItalic
-            // 
-            this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(116, 420);
-            this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxItalic.TabIndex = 8;
-            this.checkBoxItalic.Text = "Also train italic";
-            this.checkBoxItalic.UseVisualStyleBackColor = true;
             // 
             // VobSubNOcrTrain
             // 
