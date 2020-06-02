@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubNOcrEdit : Form
     {
+        private NOcrDb _nOcrDb;
         private readonly List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar;
         private double _zoomFactor = 5.0;
@@ -30,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            _nOcrDb = nOcrDb;
             _nocrChars = nOcrDb.OcrCharacters;
             _bitmap = bitmap;
 
@@ -321,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var oldComboBoxIndex = comboBoxTexts.SelectedIndex;
             var oldListBoxIndex = listBoxFileNames.SelectedIndex;
 
-            _nocrChars.Remove(_nocrChar);
+            _nOcrDb.Remove(_nocrChar);
             Changed = true;
 
             FillComboBox();
@@ -516,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else if (listBoxlinesBackground.Items.Count > 0)
                 {
-                    listBoxlinesBackground.SelectedIndex = listBoxlinesBackground.Items.Count -1;
+                    listBoxlinesBackground.SelectedIndex = listBoxlinesBackground.Items.Count - 1;
                 }
             }
         }

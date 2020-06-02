@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_nocrChar != null)
             {
-                _nocrChars.Remove(_nocrChar);
+                _nocrDb.Remove(_nocrChar);
                 ShowStatus("Character deleted");
             }
         }

@@ -4005,8 +4005,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         item = GetExpandedSelectionNew(nbmpInput, expandSelectionList);
-                        // item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
-
                         _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, string.Empty);
                         var result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
