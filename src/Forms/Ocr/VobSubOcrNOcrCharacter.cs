@@ -846,20 +846,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (listBoxlinesBackground.SelectedItems.Count == 1)
             {
-                var op = listBoxlinesBackground.Items[listBoxlinesBackground.SelectedIndex] as NOcrPoint;
+                var idx = listBoxlinesBackground.SelectedIndex;
+                var op = listBoxlinesBackground.Items[idx] as NOcrPoint;
                 NOcrChar.LinesBackground.Remove(op);
+                ShowOcrPoints();
+                if (idx < listBoxlinesBackground.Items.Count)
+                {
+                    listBoxlinesBackground.SelectedIndex = idx;
+                }
+                else if (listBoxlinesBackground.Items.Count > 0)
+                {
+                    listBoxlinesBackground.SelectedIndex = listBoxlinesBackground.Items.Count - 1;
+                }
             }
-            ShowOcrPoints();
+            else
+            {
+                ShowOcrPoints();
+            }
         }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listBoxLinesForeground.SelectedItems.Count == 1)
             {
-                var op = listBoxLinesForeground.Items[listBoxLinesForeground.SelectedIndex] as NOcrPoint;
+                var idx = listBoxLinesForeground.SelectedIndex;
+                var op = listBoxLinesForeground.Items[idx] as NOcrPoint;
                 NOcrChar.LinesForeground.Remove(op);
+                ShowOcrPoints();
+                if (idx < listBoxLinesForeground.Items.Count)
+                {
+                    listBoxLinesForeground.SelectedIndex = idx;
+                }
+                else if (listBoxLinesForeground.Items.Count > 0)
+                {
+                    listBoxLinesForeground.SelectedIndex = listBoxLinesForeground.Items.Count - 1;
+                }
             }
-            ShowOcrPoints();
+            else
+            {
+                ShowOcrPoints();
+            }
         }
 
         private void textBoxCharacters_KeyDown(object sender, KeyEventArgs e)

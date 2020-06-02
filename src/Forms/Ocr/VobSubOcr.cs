@@ -3983,10 +3983,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-                //foreach (var item in list)
-                //{
-                //    item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
-                //}
 
                 int index = 0;
                 bool expandSelection = false;
