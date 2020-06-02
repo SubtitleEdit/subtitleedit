@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _subtitleFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
                     var charactersLearned = new List<string>();
 
-                    foreach (Paragraph p in sub.Paragraphs)
+                    foreach (var p in sub.Paragraphs)
                     {
                         foreach (char ch in p.Text)
                         {
@@ -110,14 +110,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, false, false);
+                                    charactersLearned.Add(s);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, false, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true, false, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, true, false, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false, true, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, false, true, false);
                                     }
                                 }
                             }
@@ -135,14 +136,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
                             {
-                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, false, true);
+                                charactersLearned.Add(text);
+                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, false, false, true);
                                 if (checkBoxBold.Checked)
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, true, false, true);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, true, false, true);
                                 }
                                 if (checkBoxBold.Checked)
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, text, false, true, true);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, false, true, true);
                                 }
                             }
                         }
@@ -176,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _abort = false;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, List<string> charactersLearned, string s, bool bold, bool italic, bool doubleLetter)
+        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, string s, bool bold, bool italic, bool doubleLetter)
         {
             Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold, italic);
             var nikseBitmap = new NikseBitmap(bmp);
@@ -201,7 +203,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
-                    charactersLearned.Add(s);
                     numberOfCharactersLeaned++;
                     labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,###}, {2:#,###,###} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();

@@ -194,7 +194,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "AddBetterMultiMatchNOcr";
+            this.Text = "Add better multi-match";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBetterMultiMatch_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();

@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Forms.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -85,6 +84,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             else
             {
                 OcrCharacters.Insert(0, ocrChar);
+            }
+        }
+
+        public void Remove(NOcrChar ocrChar)
+        {
+            if (ocrChar.ExpandCount > 0)
+            {
+                OcrCharactersExpanded.Remove(ocrChar);
+            }
+            else
+            {
+                OcrCharacters.Remove(ocrChar);
             }
         }
 
@@ -315,11 +326,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (maxWrongPixels >= 2)
             {
+                var errorsAllowed = Math.Min(3, maxWrongPixels);
                 foreach (var oc in OcrCharacters)
                 {
                     if (Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15)
                     {
-                        if (IsMatch(bitmap, oc, 2))
+                        if (IsMatch(bitmap, oc, errorsAllowed))
                         {
                             return oc;
                         }
@@ -327,13 +339,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            if (maxWrongPixels >= 20)
+            if (maxWrongPixels >= 10)
             {
+                var errorsAllowed = Math.Min(20, maxWrongPixels);
                 foreach (var oc in OcrCharacters)
                 {
                     if (!oc.IsSensitive && Math.Abs(widthPercent - oc.WidthPercent) < 20 && Math.Abs(oc.MarginTop - topMargin) < 15 && oc.LinesForeground.Count + oc.LinesBackground.Count > 40)
                     {
-                        if (IsMatch(bitmap, oc, 20))
+                        if (IsMatch(bitmap, oc, errorsAllowed))
                         {
                             return oc;
                         }
