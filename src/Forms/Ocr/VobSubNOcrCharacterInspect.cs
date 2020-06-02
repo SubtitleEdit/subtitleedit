@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr, bool italic)
+        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr, bool italic, int minLineHeight)
         {
             _bitmap = bitmap;
             var nbmp = new NikseBitmap(bitmap);
@@ -76,7 +76,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
 
-            const int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
 
             int index = 0;

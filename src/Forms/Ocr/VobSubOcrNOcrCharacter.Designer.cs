@@ -265,9 +265,10 @@
             // textBoxCharacters
             // 
             this.textBoxCharacters.ContextMenuStrip = this.contextMenuStripLetters;
+            this.textBoxCharacters.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCharacters.Location = new System.Drawing.Point(188, 58);
             this.textBoxCharacters.Name = "textBoxCharacters";
-            this.textBoxCharacters.Size = new System.Drawing.Size(107, 20);
+            this.textBoxCharacters.Size = new System.Drawing.Size(107, 21);
             this.textBoxCharacters.TabIndex = 22;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyDown);
             this.textBoxCharacters.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyUp);
