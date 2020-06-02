@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCharacter.Invalidate();
         }
 
-        private void listBoxlinesBackground_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxLinesBackground_SelectedIndexChanged(object sender, EventArgs e)
         {
             pictureBoxCharacter.Invalidate();
         }
@@ -470,6 +470,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_nocrChar != null)
             {
                 _nocrChar.Italic = checkBoxItalic.Checked;
+                Changed = true;
             }
         }
 
@@ -478,6 +479,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_nocrChar != null)
             {
                 _nocrChar.Text = textBoxText.Text;
+                Changed = true;
             }
         }
 

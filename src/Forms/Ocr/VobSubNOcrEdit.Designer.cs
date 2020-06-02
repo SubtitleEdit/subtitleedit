@@ -190,7 +190,7 @@
             this.listBoxlinesBackground.Name = "listBoxlinesBackground";
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 40;
-            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
+            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesBackground_SelectedIndexChanged);
             this.listBoxlinesBackground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxlinesBackground_KeyDown);
             // 
             // contextMenuStripLinesBackground
