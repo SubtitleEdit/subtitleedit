@@ -505,14 +505,20 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
                         {
-                            return input;
+                            if (Configuration.Settings.Tools.AutoBreakDashEarly)
+                            {
+                                return input;
+                            }
                         }
                     }
                     else
                     {
                         if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–') || arr0 == "- _" || arr0 == "-_"))
                         {
-                            return input;
+                            if (Configuration.Settings.Tools.AutoBreakDashEarly)
+                            {
+                                return input;
+                            }
                         }
                     }
                     if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
@@ -525,12 +531,16 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     if (noTagLines[0].StartsWith('-') && noTagLines[0].Length > 1 && (".?!)]♪؟".Contains(arr0[arr0.Length - 1]) && (noTagLines[1].StartsWith('-') || noTagLines[1].StartsWith('['))))
                     {
-                        return input;
+                        if (Configuration.Settings.Tools.AutoBreakDashEarly)
+                        {
+                            return input;
+                        }
                     }
                 }
 
                 var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = language };
-                if (dialogHelper.IsDialog(noTagLines) && noTagLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
+                if (Configuration.Settings.Tools.AutoBreakDashEarly &&
+                    dialogHelper.IsDialog(noTagLines) && noTagLines.Count <= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     return input;
                 }
