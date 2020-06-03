@@ -233,7 +233,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
                         var size = GetTotalSize(listIndex, list, oc.ExpandCount);
                         var widthPercent = size.Y * 100.0 / size.X;
-                        if (Math.Abs(widthPercent - oc.WidthPercent) < 15)
+                        if (Math.Abs(widthPercent - oc.WidthPercent) < 15 &&
+                            Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
                         {
                             return oc;
                         }

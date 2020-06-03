@@ -1430,6 +1430,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "nOCR character";
             this.Load += new System.EventHandler(this.VobSubOcrNOcrCharacter_Load);
+            this.Shown += new System.EventHandler(this.VobSubOcrNOcrCharacter_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrNOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
             this.contextMenuStripLetters.ResumeLayout(false);
