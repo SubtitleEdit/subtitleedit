@@ -260,6 +260,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (var idx = listIndex; idx < listIndex + count; idx++)
             {
                 var item = items[idx];
+                if (item.NikseBitmap == null)
+                {
+                    return new Point(-100, -100);
+                }
+
                 if (item.Y < minimumY)
                 {
                     minimumY = item.Y;
