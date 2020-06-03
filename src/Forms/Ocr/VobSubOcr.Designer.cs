@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemInspectNOcrMatches = new System.Windows.Forms.ToolStripMenuItem();
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EditLastAdditionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nOcrTrainingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OcrTrainingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetUnItalicFactor = new System.Windows.Forms.ToolStripMenuItem();
             this.captureTopAlignmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemInspectNOcrMatches,
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem,
             this.EditLastAdditionsToolStripMenuItem,
-            this.nOcrTrainingToolStripMenuItem,
+            this.OcrTrainingToolStripMenuItem,
             this.toolStripSeparator4,
             this.toolStripMenuItemSetUnItalicFactor,
             this.captureTopAlignmentToolStripMenuItem,
@@ -344,10 +344,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             // nOcrTrainingToolStripMenuItem
             // 
-            this.nOcrTrainingToolStripMenuItem.Name = "nOcrTrainingToolStripMenuItem";
-            this.nOcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.nOcrTrainingToolStripMenuItem.Text = "nOCR training..";
-            this.nOcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.nOcrTrainingToolStripMenuItem_Click);
+            this.OcrTrainingToolStripMenuItem.Name = "OcrTrainingToolStripMenuItem";
+            this.OcrTrainingToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.OcrTrainingToolStripMenuItem.Text = "nOCR training..";
+            this.OcrTrainingToolStripMenuItem.Click += new System.EventHandler(this.OcrTrainingToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -1986,7 +1986,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.Label labelMinAlpha;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripImage;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImageSaveAs;
-        private System.Windows.Forms.ToolStripMenuItem nOcrTrainingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem OcrTrainingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importNewTimeCodesToolStripMenuItem;
         private System.Windows.Forms.Label labelMinLineSplitHeight;
         private System.Windows.Forms.ComboBox comboBoxLineSplitMinLineHeight;
