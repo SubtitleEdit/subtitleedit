@@ -6538,18 +6538,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
                 SelectBestImageCompareDatabase();
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T)
             {
                 e.SuppressKeyPress = true;
-                using (var form = new BinaryOcrTrain())
-                {
-                    form.ShowDialog(this);
-                }
-            }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.T && _ocrMethodIndex == _ocrMethodNocr)
-            {
-                e.SuppressKeyPress = true;
-                nOcrTrainingToolStripMenuItem_Click(null, null);
+                OcrTrainingToolStripMenuItem_Click(null, null);
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P)
             {
@@ -6891,7 +6883,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // Use N-OCR compare. (Only available in Beta mode).
             bool useNocrCompare = _ocrMethodIndex == _ocrMethodNocr;
             toolStripMenuItemInspectNOcrMatches.Visible = useNocrCompare;
-            nOcrTrainingToolStripMenuItem.Visible = useNocrCompare;
+            OcrTrainingToolStripMenuItem.Visible = useNocrCompare || enableIfImageCompare;
 
             toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
         }
@@ -8607,13 +8599,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SaveImageAsToolStripMenuItemClick(sender, e);
         }
 
-        private void nOcrTrainingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OcrTrainingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new VobSubNOcrTrain())
+            if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
-                form.Initialize();
-                form.ShowDialog(this);
-                ComboBoxOcrMethodSelectedIndexChanged(null, null);
+                using (var form = new BinaryOcrTrain())
+                {
+                    form.ShowDialog(this);
+                }
+            }
+            else if (_ocrMethodIndex == _ocrMethodNocr)
+            {
+                using (var form = new VobSubNOcrTrain())
+                {
+                    form.Initialize();
+                    form.ShowDialog(this);
+                    ComboBoxOcrMethodSelectedIndexChanged(null, null);
+                }
             }
         }
 
