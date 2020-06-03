@@ -303,6 +303,7 @@
             this.pictureBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxText.BackColor = System.Drawing.Color.DimGray;
             this.pictureBoxText.Location = new System.Drawing.Point(6, 18);
             this.pictureBoxText.Name = "pictureBoxText";
             this.pictureBoxText.Size = new System.Drawing.Size(685, 116);

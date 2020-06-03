@@ -1006,5 +1006,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 removeBackgroundLineToolStripMenuItem_Click(null, null);
             }
         }
+
+        private void VobSubOcrNOcrCharacter_Shown(object sender, EventArgs e)
+        {
+            textBoxCharacters.Focus();
+        }
     }
 }
