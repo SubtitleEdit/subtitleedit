@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (startTop > 9)
             {
-                startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
+                startTop -= 5; // if top space > 9, then always leave blank 5 pixels on top (so . is not confused with ').
             }
 
             topCropping = startTop;
@@ -169,70 +169,7 @@ namespace Nikse.SubtitleEdit.Logic
             return bmp;
         }
 
-        public static List<ImageSplitterItem> SplitVertical(Bitmap bmp)
-        {
-            return SplitVertical(new NikseBitmap(bmp));
-        }
-
-        public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp)
-        { // split into lines
-            int startY = 0;
-            int size = 0;
-            var parts = new List<ImageSplitterItem>();
-            for (int y = 0; y < bmp.Height; y++)
-            {
-                bool allTransparent = true;
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    int a = bmp.GetAlpha(x, y);
-                    if (a != 0)
-                    {
-                        allTransparent = false;
-                        break;
-                    }
-                }
-                if (allTransparent)
-                {
-                    if (size > 2 && size < 6)
-                    {
-                        size++; // at least 5 pixels, like top of 'i'
-                    }
-                    else
-                    {
-                        if (size > 2)
-                        {
-                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
-                            parts.Add(new ImageSplitterItem(0, startY, part));
-                        }
-                        size = 0;
-                        startY = y;
-                    }
-                }
-                else
-                {
-                    size++;
-                }
-            }
-            if (size > 2)
-            {
-                if (size == bmp.Height)
-                {
-                    if (size > 100)
-                    {
-                        return SplitVerticalTransparentOrBlack(bmp);
-                    }
-
-                    parts.Add(new ImageSplitterItem(0, startY, bmp));
-                }
-                else
-                {
-                    parts.Add(new ImageSplitterItem(0, startY, bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1))));
-                }
-            }
-            return parts;
-        }
-
-        public static List<ImageSplitterItem> SplitVerticalTransparentOrBlack(NikseBitmap bmp)
+        public static List<ImageSplitterItem> SplitToLinesTransparentOrBlack(NikseBitmap bmp)
         {
             int startY = 0;
             int size = 0;
@@ -242,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allTransparent = true;
                 for (int x = 0; x < bmp.Width; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
+                    var c = bmp.GetPixel(x, y);
                     if (c.A > 20 && c.R + c.G + c.B > 20)
                     {
                         allTransparent = false;
@@ -259,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (size > 8)
                         {
-                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
+                            var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
                             parts.Add(new ImageSplitterItem(0, startY, part));
                         }
                         size = 0;
@@ -281,7 +218,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// split into lines
         /// </summary>
-        public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp, int minLineHeight, double averageLineHeight = -1)
+        public static List<ImageSplitterItem> SplitToLines(NikseBitmap bmp, int minLineHeight, double averageLineHeight = -1)
         {
             int startY = 0;
             int size = 0;
@@ -339,7 +276,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (size > 100)
                     {
-                        return SplitVerticalTransparentOrBlack(bmp);
+                        return SplitToLinesTransparentOrBlack(bmp);
                     }
 
                     parts.Add(new ImageSplitterItem(0, startY, bmp));
@@ -351,12 +288,12 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (parts.Count == 1 && averageLineHeight > 5 && bmp.Height > averageLineHeight * 3)
             {
-                return SplitVerticalAggresive(bmp, minLineHeight, averageLineHeight);
+                return SplitToLinesAggressive(bmp, minLineHeight, averageLineHeight);
             }
             return parts;
         }
 
-        private static List<ImageSplitterItem> SplitVerticalAggresive(NikseBitmap bmp, int minLineHeight, double averageLineHeight)
+        private static List<ImageSplitterItem> SplitToLinesAggressive(NikseBitmap bmp, int minLineHeight, double averageLineHeight)
         {
             int startY = 0;
             int size = 0;
@@ -447,7 +384,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (size > 100)
                     {
-                        return SplitVerticalTransparentOrBlack(bmp);
+                        return SplitToLinesTransparentOrBlack(bmp);
                     }
 
                     parts.Add(new ImageSplitterItem(0, startY, bmp));
@@ -486,303 +423,22 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
-        private static List<ImageSplitterItem> SplitHorizontal(ImageSplitterItem verticalItem, int xOrMorePixelsMakesSpace)
-        { // split line into letters
-            NikseBitmap bmp = verticalItem.NikseBitmap;
-            var parts = new List<ImageSplitterItem>();
-            int size = 0;
-            int startX = 0;
-            int lastEndX = 0;
-            bool spaceJustAdded = false;
-
-            for (int x = 0; x < bmp.Width - 1; x++)
-            {
-                int y;
-                bool allTransparent = IsVerticalLineTransparent(bmp, out y, x);
-
-                // check if line is transparent and cursive
-                bool cursiveOk = false;
-                if (allTransparent == false &&
-                    size > 5 &&
-                    y > 3 &&
-                    x < bmp.Width - 2 &&
-                    !IsVerticalLineTransparent(bmp, out _, x + 1))
-                {
-                    //Add space?
-                    if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
-                    {
-                        int cleanCount = 0;
-                        for (int j = lastEndX; j < startX; j++)
-                        {
-                            if (IsVerticalLineTransparentAlphaOnly(bmp, j))
-                            {
-                                cleanCount++;
-                            }
-                        }
-                        if (cleanCount > 0 && !spaceJustAdded)
-                        {
-                            parts.Add(new ImageSplitterItem(" "));
-                            spaceJustAdded = true;
-                        }
-                    }
-
-                    var cursivePoints = new List<Point>();
-
-                    cursiveOk = IsCursiveVerticalLineTransparent(bmp, size, y, x, cursivePoints);
-
-                    if (cursiveOk)
-                    {
-                        // make letter image
-                        int end = x + 1 - startX;
-                        if (startX > 0)
-                        {
-                            startX--;
-                            end++;
-                        }
-                        NikseBitmap b1 = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
-                        //                         b1.Save(@"d:\temp\cursive.bmp"); // just for debugging
-
-                        // make non-black/transparent stuff from other letter transparent
-                        foreach (Point p in cursivePoints)
-                        {
-                            for (int fixY = p.Y; fixY < bmp.Height; fixY++)
-                            {
-                                b1.SetPixel(p.X - startX, fixY, Color.Transparent);
-                            }
-                        }
-
-                        RemoveBlackBarRight(b1);
-                        //                                                b1.Save(@"d:\temp\cursive-cleaned.bmp"); // just for debugging
-
-                        // crop and save image
-                        int addY;
-                        b1 = CropTopAndBottom(b1, out addY);
-                        parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, b1));
-                        spaceJustAdded = false;
-                        size = 0;
-                        startX = x + 1;
-                        lastEndX = x;
-                    }
-                }
-
-                if (!cursiveOk)
-                {
-                    if (allTransparent)
-                    {
-                        if (size > 0)
-                        {
-                            if (size > 1)
-                            {
-                                //Add space?
-                                if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
-                                {
-                                    int cleanCount = 0;
-                                    for (int j = lastEndX; j < startX; j++)
-                                    {
-                                        if (IsVerticalLineTransparentAlphaOnly(bmp, j))
-                                        {
-                                            cleanCount++;
-                                        }
-                                    }
-                                    if (cleanCount > 2 && !spaceJustAdded)
-                                    {
-                                        parts.Add(new ImageSplitterItem(" "));
-                                    }
-                                }
-
-                                if (startX > 0)
-                                {
-                                    startX--;
-                                }
-
-                                lastEndX = x;
-                                int end = x + 1 - startX;
-                                NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
-                                RemoveBlackBarRight(part);
-                                int addY;
-                                //                            part.Save("c:\\before" + startX.ToString() + ".bmp"); // just for debugging
-                                part = CropTopAndBottom(part, out addY);
-                                //                            part.Save("c:\\after" + startX.ToString() + ".bmp"); // just for debugging
-                                parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
-                                spaceJustAdded = false;
-                                //                                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
-                            }
-                            size = 0;
-                        }
-                        startX = x + 1;
-                    }
-                    else
-                    {
-                        size++;
-                    }
-                }
-            }
-
-            if (size > 0)
-            {
-                if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX && !spaceJustAdded)
-                {
-                    parts.Add(new ImageSplitterItem(" "));
-                }
-
-                if (startX > 0)
-                {
-                    startX--;
-                }
-
-                lastEndX = bmp.Width - 1;
-                int end = lastEndX + 1 - startX;
-                NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height - 1));
-                int addY;
-                part = CropTopAndBottom(part, out addY);
-                parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
-                //part.Save(@"d:\temp\cursive.bmp"); // just for debugging
-            }
-            return parts;
-        }
-
-        private static void RemoveBlackBarRight(NikseBitmap bmp)
-        {
-            int xRemoveBlackBar = bmp.Width - 1;
-            for (int yRemoveBlackBar = 0; yRemoveBlackBar < bmp.Height; yRemoveBlackBar++)
-            {
-                byte[] c = bmp.GetPixelColors(xRemoveBlackBar, yRemoveBlackBar);
-                if (c[0] == 0 || IsColorClose(c[0], c[1], c[2], c[3], Color.Black, 280))
-                {
-                    if (bmp.GetAlpha(xRemoveBlackBar - 1, yRemoveBlackBar) == 0)
-                    {
-                        bmp.SetPixel(xRemoveBlackBar, yRemoveBlackBar, Color.Transparent);
-                    }
-                }
-            }
-        }
-
-        private static bool IsCursiveVerticalLineTransparent(NikseBitmap bmp, int size, int y, int x, List<Point> cursivePoints)
-        {
-            bool cursiveOk = true;
-            int newY = y;
-            int newX = x;
-            while (cursiveOk && newY < bmp.Height - 1)
-            {
-                Color c0 = bmp.GetPixel(newX, newY);
-                if (c0.A == 0 || IsColorClose(c0, Color.Black, 280))
-                {
-                    newY++;
-                }
-                else
-                {
-                    byte[] c1 = bmp.GetPixelColors(newX - 1, newY - 1);
-                    byte[] c2 = bmp.GetPixelColors(newX - 1, newY);
-                    if ((c1[0] == 0 || IsColorClose(c1[0], c1[1], c1[2], c1[3], Color.Black, 280)) && // still dark color...
-                        (c2[0] == 0 || IsColorClose(c2[0], c2[1], c2[2], c2[3], Color.Black, 280)))
-                    {
-                        cursivePoints.Add(new Point(newX, newY));
-                        if (newX > 1)
-                        {
-                            newX--;
-                        }
-                        else
-                        {
-                            cursiveOk = false;
-                        }
-
-                        newY++;
-                    }
-                    else
-                    {
-                        cursiveOk = false;
-                    }
-                }
-
-                if (newX < x - size)
-                {
-                    cursiveOk = false;
-                }
-            }
-            return cursiveOk;
-        }
-
-        private static bool IsVerticalLineTransparent(NikseBitmap bmp, out int y, int x)
-        {
-            for (y = 0; y < bmp.Height - 1; y++)
-            {
-                var argb = bmp.GetPixelColors(x, y);
-                if (argb[0] >= 10 && !IsColorClose(argb[0], argb[1], argb[2], argb[3], Color.Black, 280))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static bool IsVerticalLineTransparentAlphaOnly(NikseBitmap bmp, int x)
-        {
-            for (int y = 0; y < bmp.Height - 1; y++)
-            {
-                int a = bmp.GetAlpha(x, y);
-                if (a != 0) // not a dark color
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public static List<ImageSplitterItem> SplitBitmapToLetters(NikseBitmap bmp, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
-        {
-            var list = new List<ImageSplitterItem>();
-
-            // split into seperate lines
-            List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, xOrMorePixelsMakesSpace);
-
-            if (!topToBottom)
-            {
-                verticalBitmaps.Reverse();
-            }
-
-            // split into letters
-            int lineCount = 0;
-            foreach (ImageSplitterItem b in verticalBitmaps)
-            {
-                if (lineCount > 0)
-                {
-                    list.Add(new ImageSplitterItem(Environment.NewLine));
-                }
-
-                var line = new List<ImageSplitterItem>();
-                foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
-                {
-                    item.ParentY = item.Y;
-                    line.Add(item);
-                }
-                if (rightToLeft)
-                {
-                    line.Reverse();
-                }
-
-                list.AddRange(line);
-                lineCount++;
-            }
-
-            return list;
-        }
-
         public static List<ImageSplitterItem> SplitBitmapToLettersNew(NikseBitmap bmp, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom, int minLineHeight, double averageLineHeight = -1)
         {
             var list = new List<ImageSplitterItem>();
 
             // split into separate lines
-            List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, minLineHeight, averageLineHeight);
+            var lineBitmaps = SplitToLines(bmp, minLineHeight, averageLineHeight);
 
             if (!topToBottom)
             {
-                verticalBitmaps.Reverse();
+                lineBitmaps.Reverse();
             }
 
             // split into letters
-            for (int index = 0; index < verticalBitmaps.Count; index++)
+            for (int index = 0; index < lineBitmaps.Count; index++)
             {
-                var b = verticalBitmaps[index];
+                var b = lineBitmaps[index];
                 if (index > 0)
                 {
                     list.Add(new ImageSplitterItem(Environment.NewLine));
@@ -1014,41 +670,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return points;
-        }
-
-        public static List<ImageSplitterItem> SplitBitmapToLetters(List<ImageSplitterItem> verticalBitmaps, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
-        {
-            var list = new List<ImageSplitterItem>();
-            if (!topToBottom)
-            {
-                verticalBitmaps.Reverse();
-            }
-
-            // split into letters
-            int lineCount = 0;
-            foreach (ImageSplitterItem b in verticalBitmaps)
-            {
-                if (lineCount > 0)
-                {
-                    list.Add(new ImageSplitterItem(Environment.NewLine));
-                }
-
-                var line = new List<ImageSplitterItem>();
-                foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
-                {
-                    item.ParentY = item.Y;
-                    line.Add(item);
-                }
-                if (rightToLeft)
-                {
-                    line.Reverse();
-                }
-
-                list.AddRange(line);
-                lineCount++;
-            }
-
-            return list;
         }
 
         internal static int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)

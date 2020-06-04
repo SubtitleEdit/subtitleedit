@@ -3948,9 +3948,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void NOCRIntialize(Bitmap bitmap)
         {
             var nikseBitmap = new NikseBitmap(bitmap);
-            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(nikseBitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
-
-            foreach (ImageSplitterItem item in list)
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 12);
+            foreach (var item in list)
             {
                 if (item.NikseBitmap != null)
                 {
@@ -6369,6 +6368,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _selectedIndex = -1;
                 textBoxCurrentText.Text = string.Empty;
             }
+
+            MakeHorizontalSplit();
         }
 
         private void SelectedIndexChangedAction()
@@ -6558,7 +6559,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
                 FindNext();
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I && _ocrMethodIndex == _ocrMethodBinaryImageCompare)
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
             {
                 e.SuppressKeyPress = true;
                 var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
@@ -6584,6 +6585,310 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
                 }
             }
+            else if (e.Modifiers == (Keys.Control) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
+            {
+                e.SuppressKeyPress = true;
+                MakeHorizontalSplit();
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
+            {
+                e.SuppressKeyPress = true;
+                var random = new Random();
+                var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
+                if (bmp != null)
+                {
+                    var nBmp = new NikseBitmap(bmp);
+                    bmp.Dispose();
+                    bool started = false;
+                    for (int y = 12; y < nBmp.Height - 15; y++)
+                    {
+                        var points = new List<Point>();
+                        var yChange = 0;
+                        var c = Color.FromArgb(255, random.Next(200) + 55, random.Next(200) + 55, random.Next(200) + 55);
+                        var completed = false;
+
+                        int x = nBmp.Width - 1;
+                        while (x > 0)
+                        {
+                            var a1 = nBmp.GetAlpha(x, y + yChange);
+                            var a2 = nBmp.GetAlpha(x, y + 1 + yChange);
+                            if (a1 > 150 || a2 > 150)
+                            {
+                                if (x > 1 && yChange < 8 &&
+                                    nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                    nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
+                                    nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
+                                    nBmp.GetAlpha(x, y + 2 + yChange) < 150 && nBmp.GetAlpha(x, y + 3 + yChange) < 150)
+                                {
+                                    yChange += 2;
+                                }
+                                else if (x > 1 && yChange < 8 &&
+                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x, y + 3 + yChange) < 150 && nBmp.GetAlpha(x, y + 4 + yChange) < 150)
+                                {
+                                    yChange += 3;
+                                }
+                                else if (x > 1 && yChange < 7 &&
+                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 5 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x, y + 4 + yChange) < 150 && nBmp.GetAlpha(x, y + 5 + yChange) < 150)
+                                {
+                                    yChange += 4;
+                                }
+
+
+                                else if (x > 1 && yChange < 8 &&
+                                    nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                    nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
+                                    nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
+                                    nBmp.GetAlpha(x, y - 2 + yChange) < 150 && nBmp.GetAlpha(x, y - 3 + yChange) < 150)
+                                {
+                                    yChange -= 2;
+                                }
+                                else if (x > 1 && yChange < 8 &&
+                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x, y - 3 + yChange) < 150 && nBmp.GetAlpha(x, y - 4 + yChange) < 150)
+                                {
+                                    yChange -= 3;
+                                }
+                                else if (x > 1 && yChange < 7 &&
+                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 5 + yChange) < 150 &&
+                                         nBmp.GetAlpha(x, y - 4 + yChange) < 150 && nBmp.GetAlpha(x, y - 5 + yChange) < 150)
+                                {
+                                    yChange -= 4;
+                                }
+
+                                else
+                                {
+                                    started = true;
+                                    break;
+                                }
+                            }
+
+                            if (started)
+                            {
+                                points.Add(new Point(x, y + yChange));
+                            }
+
+                            completed = x <= 1;
+                            x--;
+                        }
+
+                        if (completed)
+                        {
+                            foreach (var point in points)
+                            {
+                                nBmp.SetPixel(point.X, point.Y, c);
+                            }
+                        }
+
+                    }
+
+                    pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
+                }
+            }
+        }
+
+        private void MakeHorizontalSplit()
+        {
+            var random = new Random();
+            var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
+            if (bmp != null)
+            {
+                var nBmp = new NikseBitmap(bmp);
+                bmp.Dispose();
+                bool started = false;
+                Dictionary<int, List<Point>> splitLines = new Dictionary<int, List<Point>>();
+                for (int y = 12; y < nBmp.Height - 15; y++)
+                {
+                    var points = new List<Point>();
+                    var yChange = 0;
+                    var completed = false;
+                    var backJump = 0;
+                    int x = 0;
+                    while (x < nBmp.Width)
+                    {
+                        var a1 = nBmp.GetAlpha(x, y + yChange);
+                        var a2 = nBmp.GetAlpha(x, y + 1 + yChange);
+                        if (a1 > 150 || a2 > 150)
+                        {
+                            if (x > 1 && yChange < 8 &&
+                                nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                nBmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
+                                nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&
+                                nBmp.GetAlpha(x, y + 2 + yChange) < 150 && nBmp.GetAlpha(x, y + 3 + yChange) < 150)
+                            {
+                                yChange += 2;
+                            }
+
+                            else if (x > 1 && yChange < 8 &&
+                                     nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 4 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x, y + 3 + yChange) < 150 && nBmp.GetAlpha(x, y + 4 + yChange) < 150)
+                            {
+                                yChange += 3;
+                            }
+
+                            else if (x > 1 && yChange < 7 &&
+                                     nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 3 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 4 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y + 4 + yChange) < 150 && nBmp.GetAlpha(x - 1, y + 5 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x, y + 4 + yChange) < 150 && nBmp.GetAlpha(x, y + 5 + yChange) < 150)
+                            {
+                                yChange += 4;
+                            }
+
+                            else if (x > 1 && yChange > -7 &&
+                                     nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 3 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x, y - 2 + yChange) < 150 && nBmp.GetAlpha(x, y - 3 + yChange) < 150)
+                            {
+                                yChange -= 2;
+                            }
+
+                            else if (x > 1 && yChange > -7 &&
+                                     nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 3 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 4 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x, y - 3 + yChange) < 150 && nBmp.GetAlpha(x, y - 4 + yChange) < 150)
+                            {
+                                yChange -= 3;
+                            }
+
+                            else if (x > 1 && yChange > -7 &&
+                                     nBmp.GetAlpha(x - 1, y + yChange) < 150 && nBmp.GetAlpha(x - 1, y + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 3 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 4 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x - 1, y - 4 + yChange) < 150 && nBmp.GetAlpha(x - 1, y - 5 + yChange) < 150 &&
+                                     nBmp.GetAlpha(x, y - 4 + yChange) < 150 && nBmp.GetAlpha(x, y - 5 + yChange) < 150)
+                            {
+                                yChange -= 4;
+                            }
+
+                            else if (x > 10 && backJump < 3 && x > 5 && yChange > -7) // back 5 pixels and up
+                            {
+                                var done = false;
+                                for (int i = 1; i < 15; i++)
+                                {
+                                    for (int k = 1; k < 9; k++)
+                                    {
+                                        if (CanGoUpAndRight(nBmp, i, 12, x - k, y + yChange))
+                                        {
+                                            backJump++;
+                                            x -= k;
+                                            points.RemoveAll(p => p.X > x);
+                                            done = true;
+                                            yChange -= (i + 1);
+                                            break;
+                                        }
+                                    }
+
+                                    if (done)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                if (!done)
+                                {
+                                    started = true;
+                                    break;
+                                }
+                            }
+
+                            else
+                            {
+                                started = true;
+                                break;
+                            }
+                        }
+
+                        if (started)
+                        {
+                            points.Add(new Point(x, y + yChange));
+                        }
+
+                        completed = x == nBmp.Width - 1;
+                        x++;
+                    }
+
+                    if (completed)
+                    {
+                        splitLines.Add(y, points);
+                    }
+
+                }
+
+                var straightLines = 0;
+                foreach (var splitLine in splitLines)
+                {
+                    var c = Color.FromArgb(255, random.Next(200) + 55, random.Next(200) + 55, random.Next(200) + 55);
+                    foreach (var point in splitLine.Value)
+                    {
+                        nBmp.SetPixel(point.X, point.Y, c);
+                    }
+
+                    if (splitLine.Value.Count > 0 && splitLine.Value.All(p => p.Y == splitLine.Value.First().Y))
+                    {
+                        straightLines++;
+                    }
+                }
+
+                textBoxCurrentText.Text = $"{straightLines} straight horizontal lines";
+
+                pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
+            }
+        }
+
+        private bool CanGoUpAndRight(NikseBitmap nBmp, int up, int right, int x, int y)
+        {
+            if (y - up < 0 || x + right >= nBmp.Width)
+            {
+                return false;
+            }
+
+            for (int myY = y; myY > y - up && myY > 1; myY--)
+            {
+                var a = nBmp.GetAlpha(x, myY);
+                if (a > 150)
+                {
+                    //var temp = new NikseBitmap(nBmp);
+                    //temp.SetPixel(x, myY, Color.Red);
+                    //temp.GetBitmap().Save(@"j:\temp\split-1.bmp");
+                    return false;
+                }
+            }
+
+            for (int myX = x; x < x + right && myX < nBmp.Width; myX++)
+            {
+                var a = nBmp.GetAlpha(myX, y - up);
+                if (a > 150)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void Find()
