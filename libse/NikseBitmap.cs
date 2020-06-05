@@ -1363,7 +1363,7 @@ namespace Nikse.SubtitleEdit.Core
             for (int y = 0; y < Height; y++)
             {
                 var isLineTransparent = IsLineTransparent(y);
-                if (startY == y && !isLineTransparent)
+                if (startY == y && isLineTransparent)
                 {
                     startY++;
                     continue;
@@ -1379,7 +1379,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            return startY - transparentBottomPixels;
+            return Height - startY - transparentBottomPixels;
         }
 
 
