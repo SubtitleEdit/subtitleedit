@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (bmp.Height - startY > minLineHeight)
+            if (bmp.Height - startY > 1)
             {
                 var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, bmp.Height - startY));
                 if (!part.IsImageOnlyTransparent())
@@ -722,7 +722,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (bmp.Height - startY > minLineHeight && parts.Count > 0)
+            if (bmp.Height - startY > 1 && parts.Count > 0)
             {
                 var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, bmp.Height - startY));
                 if (!part.IsImageOnlyTransparent())
