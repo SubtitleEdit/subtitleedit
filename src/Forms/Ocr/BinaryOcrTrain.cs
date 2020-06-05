@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxInputFile.Text = Configuration.Settings.Tools.OcrTrainSrtFile;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, string s, bool bold, bool italic)
+        private void TrainLetter(ref int numberOfCharactersLearned, ref int numberOfCharactersSkipped, BinaryOcrDb db, string s, bool bold, bool italic)
         {
             var bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
             var nbmp = new NikseBitmap(bmp);
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (match < 0)
                 {
                     db.Add(bob);
-                    numberOfCharactersLeaned++;
+                    numberOfCharactersLearned++;
                     bmp.Dispose();
                 }
                 else
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var bicDb = new BinaryOcrDb(saveFileDialog1.FileName);
-            int numberOfCharactersLeaned = 0;
+            int numberOfCharactersLearned = 0;
             int numberOfCharactersSkipped = 0;
             foreach (ListViewItem fontItem in listViewFonts.CheckedItems)
             {
@@ -251,17 +251,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (!charactersLearned.Contains(s))
                                 {
                                     charactersLearned.Add(s);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false);
+                                    TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, true, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                                     }
                                 }
-                                labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                                labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
                             }
                         }
 
@@ -272,14 +272,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
                                 {
                                     charactersLearned.Add(text);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, false);
+                                    TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, text, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, true, false);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, text, true, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, true);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, text, false, true);
                                     }
                                 }
                             }
@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             SelectAll_Click(null, null);
-            int numberOfCharactersLeaned = 0;
+            int numberOfCharactersLearned = 0;
             int numberOfCharactersSkipped = 0;
             foreach (ListViewItem fontItem in listViewFonts.CheckedItems)
             {
@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         var s = _autoDetectFontText;
                         var bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false);
+                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, false, false);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize);
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true);
+                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " italic");
@@ -421,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (checkBoxBold.Checked)
                         {
                             bicDb = new BinaryOcrDb(null);
-                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false);
+                            TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, bicDb, s, true, false);
                             if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                             {
                                 AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " bold");

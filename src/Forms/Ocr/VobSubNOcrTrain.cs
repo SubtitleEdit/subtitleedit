@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
             buttonOK.Enabled = false;
 
-            int numberOfCharactersLeaned = 0;
+            int numberOfCharactersLearned = 0;
             int numberOfCharactersSkipped = 0;
             var nOcrD = new NOcrDb(null);
             var lines = new List<string>();
@@ -124,14 +124,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (!charactersLearned.Contains(s))
                                 {
                                     charactersLearned.Add(s);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, false, false, false);
+                                    TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, s, false, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, true, false, false);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, s, true, false, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, s, false, true, false);
+                                        TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, s, false, true, false);
                                     }
                                 }
                             }
@@ -150,14 +150,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
                             {
                                 charactersLearned.Add(text);
-                                TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, false, false, true);
+                                TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, text, false, false, true);
                                 if (checkBoxBold.Checked)
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, true, false, true);
+                                    TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, text, true, false, true);
                                 }
                                 if (checkBoxItalic.Checked)
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, false, true, true);
+                                    TrainLetter(ref numberOfCharactersLearned, ref numberOfCharactersSkipped, nOcrD, text, false, true, true);
                                 }
                             }
                         }
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _abort = false;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, string s, bool bold, bool italic, bool doubleLetter)
+        private void TrainLetter(ref int numberOfCharactersLearned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, string s, bool bold, bool italic, bool doubleLetter)
         {
             Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold, italic);
             var nikseBitmap = new NikseBitmap(bmp);
@@ -216,8 +216,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + (doubleLetter ? 20 : 0), false, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
-                    numberOfCharactersLeaned++;
-                    labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                    numberOfCharactersLearned++;
+                    labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLearned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 if (list.Count == 5 && list[2].NikseBitmap != null && list[3].NikseBitmap != null && list[4].NikseBitmap != null)
                 {
-                    // e.g. "%" 
+                    // e.g. "%"
                     var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3], list[4] });
                     var match = nOcrD.GetMatchExpanded(nikseBitmap, expandItem, 2, list);
                     if (match != null && match.Text == s)
