@@ -42,7 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxInputFile = new System.Windows.Forms.TextBox();
             this.buttonInputChoose = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxMerged = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -52,7 +52,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -312,19 +312,19 @@
             this.buttonInputChoose.UseVisualStyleBackColor = true;
             this.buttonInputChoose.Click += new System.EventHandler(this.buttonInputChoose_Click);
             // 
-            // groupBox2
+            // groupBoxInput
             // 
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.textBoxMerged);
-            this.groupBox2.Controls.Add(this.buttonInputChoose);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.textBoxInputFile);
-            this.groupBox2.Location = new System.Drawing.Point(12, 13);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(493, 134);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Input file";
+            this.groupBoxInput.Controls.Add(this.label2);
+            this.groupBoxInput.Controls.Add(this.textBoxMerged);
+            this.groupBoxInput.Controls.Add(this.buttonInputChoose);
+            this.groupBoxInput.Controls.Add(this.label1);
+            this.groupBoxInput.Controls.Add(this.textBoxInputFile);
+            this.groupBoxInput.Location = new System.Drawing.Point(12, 13);
+            this.groupBoxInput.Name = "groupBoxInput";
+            this.groupBoxInput.Size = new System.Drawing.Size(493, 134);
+            this.groupBoxInput.TabIndex = 0;
+            this.groupBoxInput.TabStop = false;
+            this.groupBoxInput.Text = "Input file";
             // 
             // label2
             // 
@@ -388,7 +388,7 @@
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonTrain);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBoxInput);
             this.Controls.Add(this.groupBox1);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(519, 600);
@@ -401,8 +401,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSegmentsPerCharacter)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.groupBoxInput.ResumeLayout(false);
+            this.groupBoxInput.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -421,7 +421,7 @@
         private System.Windows.Forms.ListView listViewFonts;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numericUpDownSegmentsPerCharacter;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBoxInput;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonTrain;
         private System.Windows.Forms.Button buttonOK;

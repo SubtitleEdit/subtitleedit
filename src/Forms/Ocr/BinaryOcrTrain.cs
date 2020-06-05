@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private float _subtitleFontSize = 25.0f;
         private readonly Color _borderColor = Color.Black;
         private const float BorderWidth = 2.0f;
-        private bool _abort = false;
+        private bool _abort;
 
         public BinaryOcrTrain()
         {
@@ -49,9 +49,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxInputFile.Text = Configuration.Settings.Tools.OcrTrainSrtFile;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, List<string> charactersLearned, string s, bool bold, bool italic)
+        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, string s, bool bold, bool italic, bool doubleLetter)
         {
-            Bitmap bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
+            var bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
             var nbmp = new NikseBitmap(bmp);
             nbmp.MakeTwoColor(280);
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
@@ -63,7 +63,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (match < 0)
                 {
                     db.Add(bob);
-                    charactersLearned.Add(s);
                     numberOfCharactersLeaned++;
                     bmp.Dispose();
                 }
@@ -183,11 +182,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            if (buttonTrain.Text == "Abort")
+            if (buttonTrain.Text == Configuration.Settings.Language.SpellCheck.Abort)
             {
                 _abort = true;
                 return;
             }
+
+            _abort = false;
+            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
+            buttonOK.Enabled = false;
 
             saveFileDialog1.DefaultExt = ".db";
             saveFileDialog1.Filter = "*Binary Image Compare DB files|*.db";
@@ -196,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            buttonTrain.Text = "Abort";
+            buttonTrain.Text = Configuration.Settings.Language.SpellCheck.Abort;
             var startFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
             var endFontSize = Convert.ToInt32(comboBoxFontSizeEnd.Items[comboBoxFontSizeEnd.SelectedIndex].ToString());
 
@@ -236,16 +239,41 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
                                 {
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, false);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, true);
+                                    charactersLearned.Add(s);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, true, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false, false);
+                                    }
+                                    if (checkBoxItalic.Checked)
+                                    {
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true, false);
                                     }
                                 }
-                                labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0}", numberOfCharactersLeaned, _subtitleFontName);
+                                labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,##0}, {2:#,###,##0} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                             }
                         }
+
+                        foreach (var text in textBoxMerged.Text.Split(' '))
+                        {
+                            if (!string.IsNullOrWhiteSpace(text))
+                            {
+                                if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
+                                {
+                                    charactersLearned.Add(text);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, false, true);
+                                    if (checkBoxBold.Checked)
+                                    {
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, true, false, true);
+                                    }
+                                    if (checkBoxItalic.Checked)
+                                    {
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, true, true);
+                                    }
+                                }
+                            }
+                        }
+
                         if (_abort)
                         {
                             break;
@@ -271,6 +299,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 labelInfo.Text = "Training completed and saved in " + saveFileDialog1.FileName;
             }
+            buttonOK.Enabled = true;
+            buttonTrain.Text = "Start training";
+            _abort = false;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -326,12 +357,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 for (_subtitleFontSize = 20; _subtitleFontSize <= 100; _subtitleFontSize++)
                 {
-                    var charactersLearned = new List<string>();
                     if (!string.IsNullOrEmpty(_autoDetectFontText))
                     {
                         var s = _autoDetectFontText;
                         var bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, false);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false, false);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize);
@@ -356,7 +386,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                             }
 
                                             smallestDifference = dif;
-                                            hit = compareItem;
                                             if (dif < 3)
                                             {
                                                 break; // foreach ending
@@ -373,7 +402,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, false, true);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true, false);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " italic");
@@ -382,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (checkBoxBold.Checked)
                         {
                             bicDb = new BinaryOcrDb(null);
-                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, charactersLearned, s, true, false);
+                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false, false);
                             if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                             {
                                 AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " bold");

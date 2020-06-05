@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 {
                                     TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, true, false, true);
                                 }
-                                if (checkBoxBold.Checked)
+                                if (checkBoxItalic.Checked)
                                 {
                                     TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, text, false, true, true);
                                 }
