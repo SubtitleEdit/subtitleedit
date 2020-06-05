@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var list = new List<string>();
             foreach (var c in _nOcrChars)
             {
-                if (!list.Contains(c.Text))
+                if (!list.Contains(c.Text) && c.Text != null)
                 {
                     list.Add(c.Text);
                 }
@@ -531,52 +531,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var newDb = new NOcrDb(openFileDialog1.FileName);
-                foreach (var newChar in newDb.OcrCharacters)
-                {
-                    bool found = false;
-                    foreach (var oldChar in _nOcrChars)
-                    {
-                        if (oldChar.Text == newChar.Text &&
-                            oldChar.Width == newChar.Width &&
-                            oldChar.Height == newChar.Height &&
-                            oldChar.MarginTop == newChar.MarginTop &&
-                            oldChar.ExpandCount == newChar.ExpandCount &&
-                            oldChar.LinesForeground.Count == newChar.LinesForeground.Count &&
-                            oldChar.LinesBackground.Count == newChar.LinesBackground.Count)
-                        {
-                            found = true;
-                            for (int i = 0; i < oldChar.LinesForeground.Count; i++)
-                            {
-                                if (oldChar.LinesForeground[i].Start.X != newChar.LinesForeground[i].Start.X ||
-                                    oldChar.LinesForeground[i].Start.Y != newChar.LinesForeground[i].Start.Y ||
-                                    oldChar.LinesForeground[i].End.X != newChar.LinesForeground[i].End.X ||
-                                    oldChar.LinesForeground[i].End.Y != newChar.LinesForeground[i].End.Y)
-                                {
-                                    found = false;
-                                }
-                            }
-                            for (int i = 0; i < oldChar.LinesBackground.Count; i++)
-                            {
-                                if (oldChar.LinesBackground[i].Start.X != newChar.LinesBackground[i].Start.X ||
-                                    oldChar.LinesBackground[i].Start.Y != newChar.LinesBackground[i].Start.Y ||
-                                    oldChar.LinesBackground[i].End.X != newChar.LinesBackground[i].End.X ||
-                                    oldChar.LinesBackground[i].End.Y != newChar.LinesBackground[i].End.Y)
-                                {
-                                    found = false;
-                                }
-                            }
-                        }
-                    }
-                    if (!found)
-                    {
-                        _nOcrDb.Add(newChar);
-                        importedCount++;
-                    }
-                    else
-                    {
-                        notImportedCount++;
-                    }
-                }
+                importedCount = ImportCharacters(importedCount, ref notImportedCount, newDb.OcrCharacters);
+                importedCount += ImportCharacters(importedCount, ref notImportedCount, newDb.OcrCharactersExpanded);
 
                 if (importedCount > 0)
                 {
@@ -585,6 +541,65 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 MessageBox.Show($"Number of characters imported: {importedCount}\r\nNumber of characters not imported (already present): {notImportedCount}");
             }
+        }
+
+        private int ImportCharacters(int importedCount, ref int notImportedCount, List<NOcrChar> newChars)
+        {
+            var oldChars = new List<NOcrChar>();
+            oldChars.AddRange(_nOcrDb.OcrCharacters);
+            oldChars.AddRange(_nOcrDb.OcrCharactersExpanded);
+
+            foreach (var newChar in newChars)
+            {
+                bool found = false;
+                
+                foreach (var oldChar in oldChars)
+                {
+                    if (oldChar.Text == newChar.Text &&
+                        oldChar.Width == newChar.Width &&
+                        oldChar.Height == newChar.Height &&
+                        oldChar.MarginTop == newChar.MarginTop &&
+                        oldChar.ExpandCount == newChar.ExpandCount &&
+                        oldChar.LinesForeground.Count == newChar.LinesForeground.Count &&
+                        oldChar.LinesBackground.Count == newChar.LinesBackground.Count)
+                    {
+                        found = true;
+                        for (int i = 0; i < oldChar.LinesForeground.Count; i++)
+                        {
+                            if (oldChar.LinesForeground[i].Start.X != newChar.LinesForeground[i].Start.X ||
+                                oldChar.LinesForeground[i].Start.Y != newChar.LinesForeground[i].Start.Y ||
+                                oldChar.LinesForeground[i].End.X != newChar.LinesForeground[i].End.X ||
+                                oldChar.LinesForeground[i].End.Y != newChar.LinesForeground[i].End.Y)
+                            {
+                                found = false;
+                            }
+                        }
+
+                        for (int i = 0; i < oldChar.LinesBackground.Count; i++)
+                        {
+                            if (oldChar.LinesBackground[i].Start.X != newChar.LinesBackground[i].Start.X ||
+                                oldChar.LinesBackground[i].Start.Y != newChar.LinesBackground[i].Start.Y ||
+                                oldChar.LinesBackground[i].End.X != newChar.LinesBackground[i].End.X ||
+                                oldChar.LinesBackground[i].End.Y != newChar.LinesBackground[i].End.Y)
+                            {
+                                found = false;
+                            }
+                        }
+                    }
+                }
+
+                if (!found)
+                {
+                    _nOcrDb.Add(newChar);
+                    importedCount++;
+                }
+                else
+                {
+                    notImportedCount++;
+                }
+            }
+
+            return importedCount;
         }
 
         private void listBoxLinesForeground_KeyDown(object sender, KeyEventArgs e)
