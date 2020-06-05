@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     if (!found)
                     {
-                        _nOcrChars.Add(newChar);
+                        _nOcrDb.Add(newChar);
                         importedCount++;
                     }
                     else
