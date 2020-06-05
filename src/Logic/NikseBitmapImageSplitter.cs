@@ -506,12 +506,12 @@ namespace Nikse.SubtitleEdit.Logic
                     if (keysInSequence > 2 && lastTransparentY - startY > minLineHeight)
                     {
                         var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, lastTransparentY - startY - 1));
-                        if (!part.IsImageOnlyTransparent())
+                        if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() >= minLineHeight)
                         {
                             var croppedTop = part.CropTopTransparent(0);
                             parts.Add(new ImageSplitterItem(0, startY + croppedTop, part));
+                            startY = lastTransparentY + 1;
                         }
-                        startY = lastTransparentY + 1;
                     }
                     lastTransparentY = y;
                 }
@@ -679,12 +679,11 @@ namespace Nikse.SubtitleEdit.Logic
 
             }
 
-            var lastKey = -10;
             var transparentColor = Color.FromArgb(0, 0, 0, 0);
             foreach (var line in splitLines)
             {
                 var key = line.Key;
-                if (key - startY > minLineHeight)
+                if (key - startY > minLineHeight && line.Value.Count > 0)
                 {
                     var maxY = line.Value.Max(p => p.Y);
                     var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, maxY - startY));
@@ -699,10 +698,10 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
 
-                    if (!part.IsImageOnlyTransparent())
+                    if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() >= minLineHeight)
                     {
                         var minY = line.Value.Min(p => p.Y);
-                       // bmp.GetBitmap().Save(@"j:\temp\main_" + parts.Count + "_before.bmp");
+                        // bmp.GetBitmap().Save(@"j:\temp\main_" + parts.Count + "_before.bmp");
                         foreach (var point in line.Value)
                         {
                             // delete up
@@ -716,11 +715,11 @@ namespace Nikse.SubtitleEdit.Logic
                         //    part.GetBitmap().Save(@"j:\temp\split_" + parts.Count + "_after.bmp");
                         var croppedTop = part.CropTopTransparent(0);
                         parts.Add(new ImageSplitterItem(0, startY + croppedTop, part));
+
+                        startY = key + 1;
                     }
 
-                    startY = key + 1;
                 }
-                lastKey = key;
             }
 
             if (bmp.Height - startY > minLineHeight && parts.Count > 0)
