@@ -1356,6 +1356,33 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public int GetNonTransparentHeight()
+        {
+            var startY = 0;
+            int transparentBottomPixels = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                var isLineTransparent = IsLineTransparent(y);
+                if (startY == y && !isLineTransparent)
+                {
+                    startY++;
+                    continue;
+                }
+
+                if (isLineTransparent)
+                {
+                    transparentBottomPixels++;
+                }
+                else
+                {
+                    transparentBottomPixels = 0;
+                }
+            }
+
+            return startY - transparentBottomPixels;
+        }
+
+
         public void EnsureEvenLines(Color fillColor)
         {
             if (Width % 2 == 0 && Height % 2 == 0)
