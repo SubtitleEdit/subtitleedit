@@ -1344,6 +1344,18 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public bool IsImageOnlyTransparent()
+        {
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i] != 0) // check alpha
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void EnsureEvenLines(Color fillColor)
         {
             if (Width % 2 == 0 && Height % 2 == 0)

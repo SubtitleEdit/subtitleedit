@@ -6368,8 +6368,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _selectedIndex = -1;
                 textBoxCurrentText.Text = string.Empty;
             }
-
-            MakeHorizontalSplit();
         }
 
         private void SelectedIndexChangedAction()
@@ -6590,116 +6588,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 e.SuppressKeyPress = true;
                 MakeHorizontalSplit();
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
-            {
-                e.SuppressKeyPress = true;
-                var random = new Random();
-                var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
-                if (bmp != null)
-                {
-                    var nBmp = new NikseBitmap(bmp);
-                    bmp.Dispose();
-                    bool started = false;
-                    for (int y = 12; y < nBmp.Height - 15; y++)
-                    {
-                        var points = new List<Point>();
-                        var yChange = 0;
-                        var c = Color.FromArgb(255, random.Next(200) + 55, random.Next(200) + 55, random.Next(200) + 55);
-                        var completed = false;
-
-                        int x = nBmp.Width - 1;
-                        while (x > 0)
-                        {
-                            var a1 = nBmp.GetAlpha(x, y + yChange);
-                            var a2 = nBmp.GetAlpha(x, y + 1 + yChange);
-                            if (a1 > 150 || a2 > 150)
-                            {
-                                if (x > 1 && yChange < 8 &&
-                                    nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                    nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
-                                    nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
-                                    nBmp.GetAlpha(x, y + 2 + yChange) < 150 && nBmp.GetAlpha(x, y + 3 + yChange) < 150)
-                                {
-                                    yChange += 2;
-                                }
-                                else if (x > 1 && yChange < 8 &&
-                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x, y + 3 + yChange) < 150 && nBmp.GetAlpha(x, y + 4 + yChange) < 150)
-                                {
-                                    yChange += 3;
-                                }
-                                else if (x > 1 && yChange < 7 &&
-                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y + 4 + yChange) < 150 && nBmp.GetAlpha(x + 1, y + 5 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x, y + 4 + yChange) < 150 && nBmp.GetAlpha(x, y + 5 + yChange) < 150)
-                                {
-                                    yChange += 4;
-                                }
-
-
-                                else if (x > 1 && yChange < 8 &&
-                                    nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                    nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
-                                    nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
-                                    nBmp.GetAlpha(x, y - 2 + yChange) < 150 && nBmp.GetAlpha(x, y - 3 + yChange) < 150)
-                                {
-                                    yChange -= 2;
-                                }
-                                else if (x > 1 && yChange < 8 &&
-                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x, y - 3 + yChange) < 150 && nBmp.GetAlpha(x, y - 4 + yChange) < 150)
-                                {
-                                    yChange -= 3;
-                                }
-                                else if (x > 1 && yChange < 7 &&
-                                         nBmp.GetAlpha(x + 1, y + yChange) < 150 && nBmp.GetAlpha(x + 1, y + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 1 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 2 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 3 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x + 1, y - 4 + yChange) < 150 && nBmp.GetAlpha(x + 1, y - 5 + yChange) < 150 &&
-                                         nBmp.GetAlpha(x, y - 4 + yChange) < 150 && nBmp.GetAlpha(x, y - 5 + yChange) < 150)
-                                {
-                                    yChange -= 4;
-                                }
-
-                                else
-                                {
-                                    started = true;
-                                    break;
-                                }
-                            }
-
-                            if (started)
-                            {
-                                points.Add(new Point(x, y + yChange));
-                            }
-
-                            completed = x <= 1;
-                            x--;
-                        }
-
-                        if (completed)
-                        {
-                            foreach (var point in points)
-                            {
-                                nBmp.SetPixel(point.X, point.Y, c);
-                            }
-                        }
-
-                    }
-
-                    pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
-                }
-            }
         }
 
         private void MakeHorizontalSplit()
@@ -6711,7 +6599,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var nBmp = new NikseBitmap(bmp);
                 bmp.Dispose();
                 bool started = false;
-                Dictionary<int, List<Point>> splitLines = new Dictionary<int, List<Point>>();
+                var splitLines = new Dictionary<int, List<Point>>();
                 for (int y = 12; y < nBmp.Height - 15; y++)
                 {
                     var points = new List<Point>();
@@ -6854,7 +6742,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
-                textBoxCurrentText.Text = $"{straightLines} straight horizontal lines";
+                Text = $"{straightLines} straight horizontal lines";
 
                 pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
             }
