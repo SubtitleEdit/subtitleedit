@@ -4817,7 +4817,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             };
                             bw.DoWork += NOcrThreadDoWork;
                             bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                            //bw.RunWorkerAsync(p); TODO: performance?
+                            bw.RunWorkerAsync(p);
                             Application.DoEvents();
                         }
                     }
@@ -5115,10 +5115,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 j++;
             }
 
-            //if (i % 5 == 0) -- TODO: performance?
-            //{
-            subtitleListView1.Items[j].EnsureVisible();
-            //}
+            if (i % 3 == 0)
+            {
+                subtitleListView1.Items[j].EnsureVisible();
+            }
 
             string text = string.Empty;
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
