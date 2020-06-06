@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
             this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
-            this.checkBoxNOcrCorrect = new System.Windows.Forms.CheckBox();
+            this.checkBoxNOcrDrawUnknownLetters = new System.Windows.Forms.CheckBox();
             this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
             this.numericUpDownNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.NumericUpDown();
             this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
@@ -443,10 +443,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxNOCR.Controls.Add(this.label2);
             this.groupBoxNOCR.Controls.Add(this.comboBoxNOcrLanguage);
             this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrItalic);
-            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrCorrect);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrDrawUnknownLetters);
             this.groupBoxNOCR.Controls.Add(this.checkBoxRightToLeftNOCR);
             this.groupBoxNOCR.Controls.Add(this.numericUpDownNumberOfPixelsIsSpaceNOCR);
             this.groupBoxNOCR.Controls.Add(this.labelNumberOfPixelsIsSpaceNOCR);
@@ -656,15 +656,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.checkBoxNOcrItalic.Text = "Contains italic";
             this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
             // 
-            // checkBoxNOcrCorrect
+            // checkBoxNOcrDrawUnknownLetters
             // 
-            this.checkBoxNOcrCorrect.AutoSize = true;
-            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(235, 17);
-            this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
-            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
-            this.checkBoxNOcrCorrect.TabIndex = 7;
-            this.checkBoxNOcrCorrect.Text = "Draw missing texts";
-            this.checkBoxNOcrCorrect.UseVisualStyleBackColor = true;
+            this.checkBoxNOcrDrawUnknownLetters.AutoSize = true;
+            this.checkBoxNOcrDrawUnknownLetters.Location = new System.Drawing.Point(235, 17);
+            this.checkBoxNOcrDrawUnknownLetters.Name = "checkBoxNOcrDrawUnknownLetters";
+            this.checkBoxNOcrDrawUnknownLetters.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxNOcrDrawUnknownLetters.TabIndex = 7;
+            this.checkBoxNOcrDrawUnknownLetters.Text = "Draw missing texts";
+            this.checkBoxNOcrDrawUnknownLetters.UseVisualStyleBackColor = true;
             // 
             // checkBoxRightToLeftNOCR
             // 
@@ -697,6 +697,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             0,
             0,
             0});
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.ValueChanged += new System.EventHandler(this.numericUpDownNumberOfPixelsIsSpaceNOCR_ValueChanged);
             // 
             // labelNumberOfPixelsIsSpaceNOCR
             // 
@@ -1964,7 +1965,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.CheckBox checkBoxRightToLeftNOCR;
         private System.Windows.Forms.NumericUpDown numericUpDownNumberOfPixelsIsSpaceNOCR;
         private System.Windows.Forms.Label labelNumberOfPixelsIsSpaceNOCR;
-        private System.Windows.Forms.CheckBox checkBoxNOcrCorrect;
+        private System.Windows.Forms.CheckBox checkBoxNOcrDrawUnknownLetters;
         private System.Windows.Forms.CheckBox checkBoxNOcrItalic;
         private System.Windows.Forms.Button buttonGetTesseractDictionaries;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInspectNOcrMatches;

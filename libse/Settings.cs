@@ -1394,6 +1394,7 @@ $HorzAlign          =   Center
         public double ItalicFactor { get; set; }
 
         public bool LineOcrDraw { get; set; }
+        public int LineOcrMinHeightSplit { get; set; }
         public bool LineOcrAdvancedItalic { get; set; }
         public string LineOcrLastLanguages { get; set; }
         public string LineOcrLastSpellCheck { get; set; }
@@ -5267,6 +5268,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.LineOcrDraw = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("LineOcrMinHeightSplit");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.LineOcrMinHeightSplit = Convert.ToInt32(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LineOcrAdvancedItalic");
             if (subNode != null)
             {
@@ -7519,6 +7526,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AutoBreakSubtitleIfMoreThanTwoLines", settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ItalicFactor", settings.VobSubOcr.ItalicFactor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LineOcrMinHeightSplit", settings.VobSubOcr.LineOcrMinHeightSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
                 textWriter.WriteElementString("LineOcrLastSpellCheck", settings.VobSubOcr.LineOcrLastSpellCheck);

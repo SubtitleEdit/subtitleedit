@@ -438,6 +438,11 @@ namespace Nikse.SubtitleEdit.Logic
             
             var lineBitmaps = splitOld.Count > splitBlankLines.Count ? splitOld : splitBlankLines;
 
+            if (lineBitmaps.Count == 1 && lineBitmaps[0].NikseBitmap?.Height > minLineHeight * 2.2)
+            {
+                lineBitmaps = SplitToLinesNew(lineBitmaps[0], minLineHeight, averageLineHeight); // more advanced split (allows for up/down)
+            }
+
             //foreach (var bitmap in tempBitmaps)
             //{
             //    //                var height = bitmap.NikseBitmap.GetNonTransparentHeight();
