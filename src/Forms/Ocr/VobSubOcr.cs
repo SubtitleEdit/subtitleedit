@@ -328,9 +328,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private NOcrDb _nOcrDb;
         private readonly VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
-        public const int NocrMinColor = 300;
+        public const int NOcrMinColor = 300;
         private NOcrDb _nOcrDbThread;
-        private NOcrThreadResult[] _nocrThreadResults;
+        private NOcrThreadResult[] _nOcrThreadResults;
         private bool _ocrThreadStop;
         private int _nOcrMinLineHeight = -1;
 
@@ -725,7 +725,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return InitializeSubIdx(vobSubFileName, batchMode);
         }
 
-        internal void Initialize(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
+        internal void Initialize(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
         {
             SetButtonsStartOcr();
             progressBar1.Visible = false;
@@ -740,7 +740,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             SetOcrMethod();
 
-            _vobSubMergedPackList = vobSubMergedPackist;
+            _vobSubMergedPackList = vobSubMergedPackList;
             _palette = palette;
 
             if (_palette == null)
@@ -800,29 +800,38 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null)
+        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
             _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
-            if (string.IsNullOrEmpty(language))
+
+            if (ocrEngine?.ToLowerInvariant() == "nocr")
             {
-                language = Configuration.Settings.VobSubOcr.TesseractLastLanguage;
+                InitializeNOcrForBatch(language);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = Configuration.Settings.VobSubOcr.TesseractLastLanguage;
+                }
+
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = "en";
+                }
+
+                InitializeTesseract(language);
+                SetTesseractLanguageFromLanguageString(language);
             }
 
-            if (string.IsNullOrEmpty(language))
-            {
-                language = "en";
-            }
-
-            InitializeTesseract(language);
-            SetTesseractLanguageFromLanguageString(language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             DoBatch();
         }
 
-        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language)
+        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language)
         {
-            Initialize(vobSubMergedPackist, palette, vobSubOcrSettings, language);
+            Initialize(vobSubMergedPackList, palette, vobSubOcrSettings, language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             DoBatch();
         }
@@ -840,10 +849,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (_ocrMethodIndex != _ocrMethodTesseract4 && _ocrMethodIndex != _ocrMethodTesseract302)
+            if (_ocrMethodIndex != _ocrMethodTesseract4 && _ocrMethodIndex != _ocrMethodTesseract302 && _ocrMethodIndex != _ocrMethodNocr)
             {
                 _ocrMethodIndex = _ocrMethodTesseract302;
             }
+
             if (_ocrMethodIndex == _ocrMethodTesseract4 && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
@@ -869,7 +879,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
-                string text = OcrViaTesseract(GetSubtitleBitmap(i), i);
+                string text;
+                if (_ocrMethodIndex == _ocrMethodNocr)
+                {
+                    text = OcrViaNOCR(GetSubtitleBitmap(i), i);
+                }
+                else
+                {
+                    text = OcrViaTesseract(GetSubtitleBitmap(i), i);
+                }
 
                 _lastLine = text;
 
@@ -1683,9 +1701,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
-                if (index >= 0 && index < _bluRaySubtitles.Count)
+                if (_bluRaySubtitles != null)
                 {
-                    returnBmp = _bluRaySubtitles[index].GetBitmap();
+                    if (index >= 0 && index < _bluRaySubtitles.Count)
+                    {
+                        returnBmp = _bluRaySubtitles[index].GetBitmap();
+                    }
+                }
+                else
+                {
+                    if (index >= 0 && index < _bluRaySubtitlesOriginal.Count)
+                    {
+                        returnBmp = _bluRaySubtitlesOriginal[index].GetBitmap();
+                    }
                 }
             }
             else if (index >= 0 && index < _vobSubMergedPackList.Count)
@@ -1913,7 +1941,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_bluRaySubtitlesOriginal != null)
             {
-                return _bluRaySubtitles.Count;
+                return _bluRaySubtitles?.Count ?? _bluRaySubtitlesOriginal.Count;
             }
 
             if (_xSubList != null)
@@ -2152,7 +2180,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                 {
                                 }
                                 else
@@ -2164,7 +2192,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     }
 
                                     c = nbmp.GetPixel(p.X, p.Y);
-                                    if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                     }
                                     else
@@ -2188,7 +2216,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                 {
                                     Point p = new Point(point.X, point.Y);
                                     if (oc.Width > 19 && point.X > 0)
@@ -2197,7 +2225,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     }
 
                                     c = nbmp.GetPixel(p.X, p.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -2231,7 +2259,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                 {
                                 }
                                 else
@@ -2254,7 +2282,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                 {
                                     ok = false;
                                     break;
@@ -2290,7 +2318,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                     }
                                     else
@@ -2313,7 +2341,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -2348,7 +2376,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                     }
                                     else
@@ -2367,7 +2395,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -2395,7 +2423,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                     }
                                     else
@@ -2414,7 +2442,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -2442,7 +2470,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y + 4 >= 0 && point.X < nbmp.Width && point.Y + 4 < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y + 4);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                     }
                                     else
@@ -2461,7 +2489,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (point.X >= 0 && point.Y + 4 >= 0 && point.X < nbmp.Width && point.Y + 4 < nbmp.Height)
                                 {
                                     Color c = nbmp.GetPixel(point.X, point.Y + 4);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -2508,7 +2536,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                         }
                                         else
@@ -2531,7 +2559,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                             ok = false;
                                             break;
@@ -2568,7 +2596,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                         }
                                         else
@@ -2591,7 +2619,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                             ok = false;
                                             break;
@@ -2628,7 +2656,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 2 && p.Y >= 2 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                         }
                                         else
@@ -2651,7 +2679,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     if (p.X >= 0 && p.Y >= 0 && p.X < nbmp.Width && p.Y < nbmp.Height)
                                     {
                                         Color c = nbmp.GetPixel(p.X, p.Y);
-                                        if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                        if (c.A > 150 && c.R + c.G + c.B > NOcrMinColor)
                                         {
                                             ok = false;
                                             break;
@@ -3994,10 +4022,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var matches = new List<CompareMatch>();
             var nbmpInput = new NikseBitmap(bitmap);
 
-            if (_nocrThreadResults != null && _nocrThreadResults.Length >= listViewIndex && _nocrThreadResults[listViewIndex] != null)
+            if (_nOcrThreadResults != null && _nOcrThreadResults.Length > listViewIndex && _nOcrThreadResults[listViewIndex] != null)
             {
-                line = _nocrThreadResults[listViewIndex].ResultText;
-                matches = _nocrThreadResults[listViewIndex].ResultMatches;
+                line = _nOcrThreadResults[listViewIndex].ResultText;
+                matches = _nOcrThreadResults[listViewIndex].ResultMatches;
             }
 
             if (string.IsNullOrEmpty(line))
@@ -4011,7 +4039,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     minLineHeight = 5;
                 }
-                
+
                 var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
 
                 int index = 0;
@@ -4783,54 +4811,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                if (_nOcrDbThread == null || _nocrThreadResults == null ||
-                    _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
-                    _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
-                    _subtitle.Paragraphs.Count != _nocrThreadResults.Length)
-                {
-                    _nOcrDbThread = new NOcrDb(_nOcrDb, null);
-                    _nocrThreadResults = new NOcrThreadResult[_subtitle.Paragraphs.Count];
-                }
-
-                int noOfThreads = Environment.ProcessorCount - 1;
-                if (noOfThreads >= max)
-                {
-                    noOfThreads = max - 1;
-                }
-
-                _ocrThreadStop = false;
-                int start = (int)numericUpDownStartNumber.Value + 5;
-                if (noOfThreads >= 1 && max > 5)
-                {
-                    // find letter size (uppercase/lowercase)
-                    int testIndex = 0;
-                    while (testIndex < 6 && (_binOcrLowercaseHeightsTotalCount < 5 || _binOcrUppercaseHeightsTotalCount < 5))
-                    {
-                        NOCRIntialize(GetSubtitleBitmap(testIndex));
-                        testIndex++;
-                    }
-
-                    for (int i = 0; i < noOfThreads; i++)
-                    {
-                        if (start + i < max)
-                        {
-                            var bw = new BackgroundWorker();
-                            var p = new NOcrThreadParameter(null, start + i, _nOcrDb, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked)
-                            {
-                                NOcrLastLowercaseHeight = GetLastBinOcrLowercaseHeight(),
-                                NOcrLastUppercaseHeight = GetLastBinOcrUppercaseHeight(),
-                            };
-                            bw.DoWork += NOcrThreadDoWork;
-                            bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                            bw.RunWorkerAsync(p);
-                            Application.DoEvents();
-                        }
-                    }
-                }
+                InitializeNOcrThreads(max);
 
                 if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
                 {
-                    _nOcrMinLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+                    _nOcrMinLineHeight = int.Parse(comboBoxNOcrLineSplitMinHeight.Text);
                 }
                 else
                 {
@@ -4863,14 +4848,62 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             mainOcrTimer_Tick(null, null);
         }
 
+        private void InitializeNOcrThreads(int max)
+        {
+            if (_nOcrDbThread == null || _nOcrThreadResults == null ||
+                _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
+                _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
+                _subtitle.Paragraphs.Count != _nOcrThreadResults.Length)
+            {
+                _nOcrDbThread = new NOcrDb(_nOcrDb, null);
+                _nOcrThreadResults = new NOcrThreadResult[max];
+            }
+
+            int noOfThreads = Environment.ProcessorCount - 1;
+            if (noOfThreads >= max)
+            {
+                noOfThreads = max - 1;
+            }
+
+            _ocrThreadStop = false;
+            int start = (int)numericUpDownStartNumber.Value + 5;
+            if (noOfThreads >= 1 && max > 5)
+            {
+                // find letter size (uppercase/lowercase)
+                int testIndex = 0;
+                while (testIndex < 6 && (_binOcrLowercaseHeightsTotalCount < 5 || _binOcrUppercaseHeightsTotalCount < 5))
+                {
+                    NOCRIntialize(GetSubtitleBitmap(testIndex));
+                    testIndex++;
+                }
+
+                for (int i = 0; i < noOfThreads; i++)
+                {
+                    if (start + i < max)
+                    {
+                        var bw = new BackgroundWorker();
+                        var p = new NOcrThreadParameter(null, start + i, _nOcrDb, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked)
+                        {
+                            NOcrLastLowercaseHeight = GetLastBinOcrLowercaseHeight(),
+                            NOcrLastUppercaseHeight = GetLastBinOcrUppercaseHeight(),
+                        };
+                        bw.DoWork += NOcrThreadDoWork;
+                        bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
+                        bw.RunWorkerAsync(p);
+                        Application.DoEvents();
+                    }
+                }
+            }
+        }
+
         private void NOcrThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var p = (NOcrThreadParameter)e.Result;
             if (!_ocrThreadStop)
             {
-                if (_nocrThreadResults != null && p.Index < _nocrThreadResults.Length)
+                if (_nOcrThreadResults != null && p.Index < _nOcrThreadResults.Length)
                 {
-                    _nocrThreadResults[p.Index] = new NOcrThreadResult(p);
+                    _nOcrThreadResults[p.Index] = new NOcrThreadResult(p);
                 }
 
                 p.Index += p.Increment;
@@ -6327,6 +6360,38 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _modiEnabled = false;
             }
+        }
+
+        private void InitializeNOcrForBatch(string db)
+        {
+            _ocrMethodIndex = _ocrMethodNocr;
+            checkBoxNOcrCorrect.Checked = false;
+            var fileName = string.Empty;
+            if (!string.IsNullOrEmpty(db))
+            {
+                fileName = Path.Combine(Configuration.OcrDirectory, db);
+                if (!fileName.EndsWith(".nocr", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileName += ".nocr";
+                }
+
+                if (!File.Exists(fileName))
+                {
+                    fileName = string.Empty;
+                }
+            }
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    fileName = Path.Combine(Configuration.OcrDirectory, Configuration.Settings.VobSubOcr.LineOcrLastLanguages + ".nocr");
+                }
+            }
+
+            _nOcrDb = new NOcrDb(fileName);
+            InitializeNOcrThreads(GetSubtitleCount());
         }
 
         private void InitializeTesseract(string chosenLanguage = null)
