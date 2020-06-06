@@ -549,6 +549,11 @@ namespace Nikse.SubtitleEdit.Core
             string s = RemoveLineBreaks(text);
             if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
             {
+                if (Configuration.Settings.Tools.AutoBreakDashEarly)
+                {
+                    return Forms.FixCommonErrors.Helper.FixDialogsOnOneLine(s, language);
+                }
+
                 return s;
             }
 
