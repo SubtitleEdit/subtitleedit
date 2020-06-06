@@ -140,7 +140,7 @@
             0,
             0});
             this.numericUpDownSegmentsPerCharacter.Minimum = new decimal(new int[] {
-            75,
+            50,
             0,
             0,
             0});
