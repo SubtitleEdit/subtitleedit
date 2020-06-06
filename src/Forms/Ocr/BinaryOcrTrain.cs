@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxInputFile.Text = Configuration.Settings.Tools.OcrTrainSrtFile;
         }
 
-        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, string s, bool bold, bool italic, bool doubleLetter)
+        private void TrainLetter(ref int numberOfCharactersLeaned, ref int numberOfCharactersSkipped, BinaryOcrDb db, string s, bool bold, bool italic)
         {
             var bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
             var nbmp = new NikseBitmap(bmp);
@@ -240,14 +240,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (!charactersLearned.Contains(s))
                                 {
                                     charactersLearned.Add(s);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false, false);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true, false);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                                     }
                                 }
                                 labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,##0}, {2:#,###,##0} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
@@ -261,14 +261,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (!charactersLearned.Contains(text) && text.Length > 1 && text.Length <= 3)
                                 {
                                     charactersLearned.Add(text);
-                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, false, true);
+                                    TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, false);
                                     if (checkBoxBold.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, true, false, true);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, true, false);
                                     }
                                     if (checkBoxItalic.Checked)
                                     {
-                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, true, true);
+                                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, text, false, true);
                                     }
                                 }
                             }
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         var s = _autoDetectFontText;
                         var bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false, false);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, false);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize);
@@ -370,7 +370,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             // allow for error %
                             var smallestDifference = int.MaxValue;
-                            BinaryOcrBitmap hit = null;
                             foreach (var compareItem in bicDb.CompareImages)
                             {
                                 if (compareItem.Width == _autoDetectFontBob.Width && compareItem.Height == _autoDetectFontBob.Height) // precise math in size
@@ -402,7 +401,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         bicDb = new BinaryOcrDb(null);
-                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true, false);
+                        TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                         if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                         {
                             AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " italic");
@@ -411,7 +410,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (checkBoxBold.Checked)
                         {
                             bicDb = new BinaryOcrDb(null);
-                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false, false);
+                            TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, true, false);
                             if (bicDb.FindExactMatch(_autoDetectFontBob) >= 0)
                             {
                                 AutoDetectedFonts.Add(_subtitleFontName + " " + _subtitleFontSize + " bold");
