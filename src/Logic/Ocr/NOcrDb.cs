@@ -20,6 +20,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             LoadOcrCharacters();
         }
 
+        public NOcrDb(NOcrDb db, string fileName)
+        {
+            FileName = fileName;
+            
+            OcrCharacters = new List<NOcrChar>(db.OcrCharacters);
+            OcrCharactersExpanded = new List<NOcrChar>(db.OcrCharactersExpanded);
+        }
+
         public void Save()
         {
             using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
