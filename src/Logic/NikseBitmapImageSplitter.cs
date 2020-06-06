@@ -634,7 +634,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 for (int k = 1; k < 9; k++)
                                 {
-                                    if (CanGoUpAndRight(bmp, i, 12, x - k, y + yChange))
+                                    if (CanGoUpAndRight(bmp, i, 12, x - k, y + yChange, minLineHeight))
                                     {
                                         backJump++;
                                         x -= k;
@@ -744,9 +744,9 @@ namespace Nikse.SubtitleEdit.Logic
             return parts;
         }
 
-        private static bool CanGoUpAndRight(NikseBitmap bmp, int up, int right, int x, int y)
+        private static bool CanGoUpAndRight(NikseBitmap bmp, int up, int right, int x, int y, int minLineHeight)
         {
-            if (y - up < 0 || x + right >= bmp.Width)
+            if (y - up < 0 || x + right >= bmp.Width || y + minLineHeight > bmp.Height)
             {
                 return false;
             }

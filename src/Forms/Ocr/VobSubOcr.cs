@@ -70,9 +70,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public Bitmap Picture { get; set; }
             public int Index { get; set; }
             public int Increment { get; set; }
-            public string Result { get; set; }
+            public string ResultText { get; set; }
+            public List<CompareMatch> ResultMatches { get; set; }
             public NOcrDb NOcrDb { get; set; }
-            public NOcrChar[] NOcrChars { get; set; }
             public BackgroundWorker Self { get; set; }
             public double UnItalicFactor { get; set; }
             public bool AdvancedItalicDetection { get; set; }
@@ -86,7 +86,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Self = self;
                 Picture = picture;
                 Index = index;
-                NOcrChars = nOcrDb.OcrCharacters.ToArray();
                 NOcrDb = nOcrDb;
                 Increment = increment;
                 UnItalicFactor = unItalicFactor;
@@ -95,6 +94,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 NOcrLastUppercaseHeight = -1;
                 NumberOfPixelsIsSpace = numberOfPixelsIsSpace;
                 RightToLeft = rightToLeft;
+                ResultMatches = new List<CompareMatch>();
+            }
+        }
+
+        internal class NOcrThreadResult
+        {
+            public string ResultText { get; set; }
+            public List<CompareMatch> ResultMatches { get; set; }
+
+            public NOcrThreadResult(NOcrThreadParameter p)
+            {
+                ResultMatches = p.ResultMatches;
+                ResultText = p.ResultText;
             }
         }
 
@@ -317,6 +329,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrDb _nOcrDb;
         private readonly VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
         public const int NocrMinColor = 300;
+        private NOcrDb _nOcrDbThread;
+        private NOcrThreadResult[] _nocrThreadResults;
+        private bool _ocrThreadStop;
 
         private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
@@ -3978,6 +3993,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var matches = new List<CompareMatch>();
             var nbmpInput = new NikseBitmap(bitmap);
 
+            if (_nocrThreadResults != null && _nocrThreadResults.Length >= listViewIndex && _nocrThreadResults[listViewIndex] != null)
+            {
+                line = _nocrThreadResults[listViewIndex].ResultText;
+                matches = _nocrThreadResults[listViewIndex].ResultMatches;
+            }
+
             if (string.IsNullOrEmpty(line))
             {
                 int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
@@ -4757,12 +4778,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
+                if (_nOcrDbThread == null || _nocrThreadResults == null ||
+                    _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
+                    _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
+                    _subtitle.Paragraphs.Count != _nocrThreadResults.Length)
+                {
+                    _nOcrDbThread = new NOcrDb(_nOcrDb, null);
+                    _nocrThreadResults = new NOcrThreadResult[_subtitle.Paragraphs.Count];
+                }
+
                 int noOfThreads = Environment.ProcessorCount - 1;
                 if (noOfThreads >= max)
                 {
                     noOfThreads = max - 1;
                 }
 
+                _ocrThreadStop = false;
                 int start = (int)numericUpDownStartNumber.Value + 5;
                 if (noOfThreads >= 1 && max > 5)
                 {
@@ -4772,6 +4803,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         NOCRIntialize(GetSubtitleBitmap(testIndex));
                         testIndex++;
+                    }
+
+                    for (int i = 0; i < noOfThreads; i++)
+                    {
+                        if (start + i < max)
+                        {
+                            var bw = new BackgroundWorker();
+                            var p = new NOcrThreadParameter(null, start + i, _nOcrDb, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked)
+                            {
+                                NOcrLastLowercaseHeight = GetLastBinOcrLowercaseHeight(),
+                                NOcrLastUppercaseHeight = GetLastBinOcrUppercaseHeight(),
+                            };
+                            bw.DoWork += NOcrThreadDoWork;
+                            bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
+                            //bw.RunWorkerAsync(p); TODO: performance?
+                            Application.DoEvents();
+                        }
                     }
                 }
             }
@@ -4798,6 +4846,69 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _mainOcrRunning = true;
             subtitleListView1.MultiSelect = false;
             mainOcrTimer_Tick(null, null);
+        }
+
+        private void NOcrThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            var p = (NOcrThreadParameter)e.Result;
+            if (!_ocrThreadStop)
+            {
+                if (_nocrThreadResults != null && p.Index < _nocrThreadResults.Length)
+                {
+                    _nocrThreadResults[p.Index] = new NOcrThreadResult(p);
+                }
+
+                p.Index += p.Increment;
+                if (p.Index < _subtitle.Paragraphs.Count)
+                {
+                    p.ResultMatches = new List<CompareMatch>();
+                    p.ResultText = string.Empty;
+                    p.Self.RunWorkerAsync(p);
+                }
+            }
+        }
+
+        private void NOcrThreadDoWork(object sender, DoWorkEventArgs e)
+        {
+            var p = (NOcrThreadParameter)e.Argument;
+            e.Result = p;
+            p.Picture = GetSubtitleBitmap(p.Index);
+            var parentBitmap = new NikseBitmap(p.Picture);
+            parentBitmap.ReplaceNonWhiteWithTransparent();
+            var minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
+            if (minLineHeight < 5)
+            {
+                minLineHeight = 5;
+            }
+
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            int index = 0;
+            while (index < list.Count)
+            {
+                var item = list[index];
+                if (item.NikseBitmap == null)
+                {
+                    p.ResultMatches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
+                }
+                else
+                {
+                    var match = GetNOcrCompareMatchNew(item, parentBitmap, p.NOcrDb, true, true, p.Index, list);
+                    if (match == null)
+                    {
+                        p.ResultText = string.Empty;
+                        return;
+                    }
+
+                    p.ResultMatches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                    if (match.ExpandCount > 0)
+                    {
+                        index += match.ExpandCount - 1;
+                    }
+                }
+                index++;
+            }
+            p.ResultText = MatchesToItalicStringConverter.GetStringWithItalicTags(p.ResultMatches);
+            p.Picture.Dispose();
         }
 
         private void CleanLogsGreaterThanOrEqualTo(decimal value)
@@ -5003,7 +5114,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 j++;
             }
+
+            //if (i % 5 == 0) -- TODO: performance?
+            //{
             subtitleListView1.Items[j].EnsureVisible();
+            //}
 
             string text = string.Empty;
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
@@ -7917,6 +8032,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
+            _ocrThreadStop = true;
             _abort = true;
             _mainOcrTimer?.Stop();
 
