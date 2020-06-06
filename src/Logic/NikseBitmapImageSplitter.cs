@@ -431,12 +431,13 @@ namespace Nikse.SubtitleEdit.Logic
             // split into separate lines
             var lineBitmaps = new List<ImageSplitterItem>();
 
-            //OLD: lineBitmaps = SplitToLines(bmp, minLineHeight, averageLineHeight);
+            //            var oldLineBitmaps = SplitToLines(bmp, minLineHeight, averageLineHeight);
 
             // fast 3-x-blank-horizontal-lines split
             var tempBitmaps = SplitToLinesByMinTransparentHorizontalLines(bmp, minLineHeight, 3);
             foreach (var bitmap in tempBitmaps)
             {
+                //                var height = bitmap.NikseBitmap.GetNonTransparentHeight();
                 var bitmaps = SplitToLinesNew(bitmap, minLineHeight, averageLineHeight); // more advanced split (allows for up/down)
                 lineBitmaps.AddRange(bitmaps);
             }
@@ -541,7 +542,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         public static List<ImageSplitterItem> SplitToLinesNew(ImageSplitterItem item, int minLineHeight, double averageLineHeight = -1)
         {
-            var bmp = item.NikseBitmap;
+            var bmp = new NikseBitmap(item.NikseBitmap);
             var parts = new List<ImageSplitterItem>();
             bool started = false;
             var splitLines = new Dictionary<int, List<Point>>();
@@ -559,6 +560,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var completed = false;
                 var backJump = 0;
                 int x = 0;
+                var maxUp = Math.Min(10, minLineHeight / 2);
                 while (x < bmp.Width)
                 {
                     var a1 = bmp.GetAlpha(x, y + yChange);
@@ -628,7 +630,7 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (x > 10 && backJump < 3 && x > 5 && yChange > -7) // go left + up + check 12 pixels right
                         {
                             var done = false;
-                            for (int i = 1; i < 15; i++)
+                            for (int i = 1; i < maxUp; i++)
                             {
                                 for (int k = 1; k < 9; k++)
                                 {
@@ -697,6 +699,7 @@ namespace Nikse.SubtitleEdit.Logic
                             part.SetPixel(point.X, y - startY, transparentColor);
                         }
                     }
+                    //part.GetBitmap().Save(@"j:\temp\split_" + parts.Count + "_after.bmp");
 
                     if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() >= minLineHeight)
                     {
@@ -714,7 +717,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                         //    part.GetBitmap().Save(@"j:\temp\split_" + parts.Count + "_after.bmp");
                         var croppedTop = part.CropTopTransparent(0);
-                        parts.Add(new ImageSplitterItem(0, startY + croppedTop, part));
+                        parts.Add(new ImageSplitterItem(0 + item.X, startY + croppedTop + item.Y, part));
 
                         startY = key + 1;
                     }
@@ -729,11 +732,11 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     //part.GetBitmap().Save(@"j:\temp\split_" + parts.Count + ".bmp");
                     var croppedTop = part.CropTopTransparent(0);
-                    parts.Add(new ImageSplitterItem(0, startY + croppedTop, part));
+                    parts.Add(new ImageSplitterItem(0 + item.X, startY + croppedTop + item.Y, part));
                 }
             }
 
-            if (parts.Count == 0)
+            if (parts.Count <= 1)
             {
                 return new List<ImageSplitterItem> { item };
             }

@@ -267,14 +267,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private Bitmap _mainOcrBitmap;
 
         private Type _modiType;
-        private Object _modiDoc;
+        private object _modiDoc;
         private bool _modiEnabled;
 
         private bool _fromMenuItem;
 
         // DVD rip/vobsub
-        private List<VobSubMergedPack> _vobSubMergedPackistOriginal;
-        private List<VobSubMergedPack> _vobSubMergedPackist;
+        private List<VobSubMergedPack> _vobSubMergedPackListOriginal;
+        private List<VobSubMergedPack> _vobSubMergedPackList;
         private List<Color> _palette;
 
         // Blu-ray sup
@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             SetOcrMethod();
 
-            _vobSubMergedPackist = vobSubMergedPackist;
+            _vobSubMergedPackList = vobSubMergedPackist;
             _palette = palette;
 
             if (_palette == null)
@@ -769,7 +769,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
-            _vobSubMergedPackist = vobSubMergedPackist;
+            _vobSubMergedPackList = vobSubMergedPackist;
             _palette = palette;
 
             if (_palette == null)
@@ -1050,12 +1050,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var vobSubParser = new VobSubParser(true);
             string idxFileName = Path.ChangeExtension(vobSubFileName, ".idx");
             vobSubParser.OpenSubIdx(vobSubFileName, idxFileName);
-            _vobSubMergedPackist = vobSubParser.MergeVobSubPacks();
+            _vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
             _palette = vobSubParser.IdxPalette;
             vobSubParser.VobSubPacks.Clear();
 
             var languageStreamIds = new List<int>();
-            foreach (var pack in _vobSubMergedPackist)
+            foreach (var pack in _vobSubMergedPackList)
             {
                 if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
                 {
@@ -1074,12 +1074,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         chooseLanguage.ShowIcon = true;
                     }
 
-                    chooseLanguage.Initialize(_vobSubMergedPackist, _palette, vobSubParser.IdxLanguages, string.Empty);
+                    chooseLanguage.Initialize(_vobSubMergedPackList, _palette, vobSubParser.IdxLanguages, string.Empty);
                     var form = _main ?? (Form)this;
                     if (batchMode)
                     {
                         chooseLanguage.SelectActive();
-                        _vobSubMergedPackist = chooseLanguage.SelectedVobSubMergedPacks;
+                        _vobSubMergedPackList = chooseLanguage.SelectedVobSubMergedPacks;
                         SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
                         _importLanguageString = chooseLanguage.SelectedLanguageString;
                         return true;
@@ -1088,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     chooseLanguage.Activate();
                     if (chooseLanguage.ShowDialog(form) == DialogResult.OK)
                     {
-                        _vobSubMergedPackist = chooseLanguage.SelectedVobSubMergedPacks;
+                        _vobSubMergedPackList = chooseLanguage.SelectedVobSubMergedPacks;
                         SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
                         _importLanguageString = chooseLanguage.SelectedLanguageString;
                         return true;
@@ -1282,15 +1282,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void LoadVobRip()
         {
             _subtitle = new Subtitle();
-            _vobSubMergedPackist = new List<VobSubMergedPack>();
-            int max = _vobSubMergedPackistOriginal.Count;
+            _vobSubMergedPackList = new List<VobSubMergedPack>();
+            int max = _vobSubMergedPackListOriginal.Count;
             for (int i = 0; i < max; i++)
             {
-                var x = _vobSubMergedPackistOriginal[i];
+                var x = _vobSubMergedPackListOriginal[i];
                 if (checkBoxShowOnlyForced.Checked && x.SubPicture.Forced ||
                     checkBoxShowOnlyForced.Checked == false)
                 {
-                    _vobSubMergedPackist.Add(x);
+                    _vobSubMergedPackList.Add(x);
                     Paragraph p = new Paragraph(string.Empty, x.StartTime.TotalMilliseconds, x.EndTime.TotalMilliseconds);
                     if (checkBoxUseTimeCodesFromIdx.Checked && x.IdxLine != null)
                     {
@@ -1379,14 +1379,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return _bluRaySubtitles[index].IsForced;
             }
 
-            if (_vobSubMergedPackist != null && checkBoxCustomFourColors.Checked)
+            if (_vobSubMergedPackList != null && checkBoxCustomFourColors.Checked)
             {
-                return _vobSubMergedPackist[index].SubPicture.Forced;
+                return _vobSubMergedPackList[index].SubPicture.Forced;
             }
 
-            if (_vobSubMergedPackist != null && index < _vobSubMergedPackist.Count)
+            if (_vobSubMergedPackList != null && index < _vobSubMergedPackList.Count)
             {
-                return _vobSubMergedPackist[index].SubPicture.Forced;
+                return _vobSubMergedPackList[index].SubPicture.Forced;
             }
 
             return false;
@@ -1672,13 +1672,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     returnBmp = _bluRaySubtitles[index].GetBitmap();
                 }
             }
-            else if (index >= 0 && index < _vobSubMergedPackist.Count)
+            else if (index >= 0 && index < _vobSubMergedPackList.Count)
             {
                 if (checkBoxCustomFourColors.Checked)
                 {
                     GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                    returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
                     if (autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, crop);
+                    returnBmp = _vobSubMergedPackList[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false, crop);
                     if (autoTransparentBackgroundToolStripMenuItem.Checked)
                     {
                         returnBmp.MakeTransparent();
@@ -1872,7 +1872,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                var item = _vobSubMergedPackist[index];
+                var item = _vobSubMergedPackList[index];
                 start = new TimeCode(item.StartTime.TotalMilliseconds);
                 end = new TimeCode(item.EndTime.TotalMilliseconds);
             }
@@ -1915,7 +1915,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return _dvbPesSubtitles.Count;
             }
 
-            return _vobSubMergedPackist.Count;
+            return _vobSubMergedPackList.Count;
         }
 
         /// <summary>
@@ -1998,9 +1998,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (_vobSubMergedPackist != null)
+            if (_vobSubMergedPackList != null)
             {
-                var item = _vobSubMergedPackist[index];
+                var item = _vobSubMergedPackList[index];
                 left = item.SubPicture.ImageDisplayArea.Left;
                 top = item.SubPicture.ImageDisplayArea.Top;
                 var bmp = item.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
@@ -2036,7 +2036,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 width = item.Size.Width;
             }
 
-
             if (_dvbSubtitles != null)
             {
                 var bmp = _dvbPesSubtitles[index].GetImageFull();
@@ -2045,9 +2044,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 bmp.Dispose();
             }
 
-            if (_vobSubMergedPackist != null && index < _vobSubMergedPackist.Count)
+            if (_vobSubMergedPackList != null && index < _vobSubMergedPackList.Count)
             {
-                var item = _vobSubMergedPackist[index];
+                var item = _vobSubMergedPackList[index];
                 width = item.SubPicture.ImageDisplayArea.Width + +item.SubPicture.ImageDisplayArea.Location.X + 1;
                 height = item.SubPicture.ImageDisplayArea.Height + item.SubPicture.ImageDisplayArea.Location.Y + 1;
             }
@@ -3870,7 +3869,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var matchNext = matches[i + 1];
                 if (!match.Italic || match.Text == "," ||
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
-                    match.ImageSplitterItem == null)
+                    match.ImageSplitterItem == null || matchNext.ImageSplitterItem == null)
                 {
 
                     continue;
@@ -4610,17 +4609,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public Subtitle ReadyVobSubRip()
         {
-            _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
+            _vobSubMergedPackListOriginal = new List<VobSubMergedPack>();
             bool hasIdxTimeCodes = false;
             _hasForcedSubtitles = false;
-            if (_vobSubMergedPackist == null)
+            if (_vobSubMergedPackList == null)
             {
                 return null;
             }
 
-            foreach (var x in _vobSubMergedPackist)
+            foreach (var x in _vobSubMergedPackList)
             {
-                _vobSubMergedPackistOriginal.Add(x);
+                _vobSubMergedPackListOriginal.Add(x);
                 if (x.IdxLine != null)
                 {
                     hasIdxTimeCodes = true;
@@ -5955,7 +5954,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 LogOcrFix(index, textWithOutFixes, line);
             }
 
-            if (_vobSubMergedPackist != null)
+            if (_vobSubMergedPackList != null)
             {
                 bitmap.Dispose();
             }
@@ -8115,21 +8114,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 foreach (int idx in indices)
                 {
-                    var x1 = _vobSubMergedPackist[idx];
+                    var x1 = _vobSubMergedPackList[idx];
                     int i = 0;
-                    while (i < _vobSubMergedPackistOriginal.Count)
+                    while (i < _vobSubMergedPackListOriginal.Count)
                     {
-                        var x2 = _vobSubMergedPackistOriginal[i];
+                        var x2 = _vobSubMergedPackListOriginal[i];
                         if (Math.Abs(x2.StartTime.TotalMilliseconds - x1.StartTime.TotalMilliseconds) < 0.01)
                         {
-                            _vobSubMergedPackistOriginal.Remove(x2);
+                            _vobSubMergedPackListOriginal.Remove(x2);
                             break;
                         }
 
                         i++;
                     }
 
-                    _vobSubMergedPackist.RemoveAt(idx);
+                    _vobSubMergedPackList.RemoveAt(idx);
                 }
             }
 
