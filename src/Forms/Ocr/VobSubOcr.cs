@@ -2036,12 +2036,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 width = item.Size.Width;
             }
 
-            if (_dvbSubtitles != null)
+            if (_dvbPesSubtitles != null)
             {
                 var bmp = _dvbPesSubtitles[index].GetImageFull();
                 width = bmp.Width;
                 height = bmp.Height;
                 bmp.Dispose();
+            }
+
+            if (_dvbSubtitles != null)
+            {
+                width = 720;
+                height = 576;
             }
 
             if (_vobSubMergedPackList != null && index < _vobSubMergedPackList.Count)
