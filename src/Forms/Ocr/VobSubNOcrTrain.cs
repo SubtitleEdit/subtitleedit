@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         MarginTop = item.Top,
                         Italic = italic,
                     };
-                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + (doubleLetter ? 20 : 0), checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
                     numberOfCharactersLeaned++;
