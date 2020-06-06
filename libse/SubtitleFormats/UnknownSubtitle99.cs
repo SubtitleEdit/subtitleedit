@@ -5,21 +5,21 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle98 : SubtitleFormat
+    public class UnknownSubtitle99 : SubtitleFormat
     {
-        //07:00:01:27AM
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d\t", RegexOptions.Compiled);
+        //07:00:01:27
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
 
         public override string Extension => ".rtf";
 
-        public override string Name => "Unknown 98";
+        public override string Name => "Unknown 99";
 
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}\t{p.Text.Replace(Environment.NewLine, " ")}");
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}{Environment.NewLine}{p.Text}{Environment.NewLine}");
             }
             return sb.ToString().Trim().ToRtf();
         }
@@ -45,6 +45,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             lines = rtf.FromRtf().SplitToLines();
             _errorCount = 0;
+            var p = new Paragraph { StartTime = { TotalMilliseconds = -1 } };
+            var text = new StringBuilder();
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -52,15 +54,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var arr = s.Substring(0, 11).Split(':');
+                        if (p.StartTime.TotalMilliseconds >= 0 && text.Length > 0)
+                        {
+                            p.Text = text.ToString().Trim();
+                            subtitle.Paragraphs.Add(p);
+                        }
+
+                        text = new StringBuilder();
+                        var arr = s.Split(':');
                         if (arr.Length == 4)
                         {
-                            var p = new Paragraph
-                            {
-                                StartTime = DecodeTimeCodeFramesFourParts(arr),
-                                Text = s.Remove(0, 11).Trim()
-                            };
-                            subtitle.Paragraphs.Add(p);
+                            p = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(arr) };
+                        }
+                        else
+                        {
+                            _errorCount++;
+                            p = new Paragraph { StartTime = { TotalMilliseconds = -1 } };
                         }
                     }
                     catch
@@ -70,8 +79,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (s.Length > 0)
                 {
-                    _errorCount++;
+                    text.AppendLine(s);
+                    if (text.Length > 2000)
+                    {
+                        _errorCount++;
+                        return;
+                    }
                 }
+            }
+            if (p.StartTime.TotalMilliseconds >= 0 && text.Length > 0)
+            {
+                p.Text = text.ToString().Trim();
+                subtitle.Paragraphs.Add(p);
             }
 
             int index = 1;
