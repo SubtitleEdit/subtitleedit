@@ -429,18 +429,21 @@ namespace Nikse.SubtitleEdit.Logic
             var list = new List<ImageSplitterItem>();
 
             // split into separate lines
-            var lineBitmaps = new List<ImageSplitterItem>();
+            var splitOld = SplitToLines(bmp, minLineHeight, averageLineHeight);
 
-            //            var oldLineBitmaps = SplitToLines(bmp, minLineHeight, averageLineHeight);
+            // fast horizontal split by x number of whole lines (3-4)
+            var splitThreeBlankLines = SplitToLinesByMinTransparentHorizontalLines(bmp, minLineHeight, 3);
+            var splitFourBlankLines = SplitToLinesByMinTransparentHorizontalLines(bmp, minLineHeight, 4);
+            var splitBlankLines = splitThreeBlankLines.Count == splitFourBlankLines.Count ? splitFourBlankLines : splitThreeBlankLines;
+            
+            var lineBitmaps = splitOld.Count > splitBlankLines.Count ? splitOld : splitBlankLines;
 
-            // fast 3-x-blank-horizontal-lines split
-            var tempBitmaps = SplitToLinesByMinTransparentHorizontalLines(bmp, minLineHeight, 3);
-            foreach (var bitmap in tempBitmaps)
-            {
-                //                var height = bitmap.NikseBitmap.GetNonTransparentHeight();
-                var bitmaps = SplitToLinesNew(bitmap, minLineHeight, averageLineHeight); // more advanced split (allows for up/down)
-                lineBitmaps.AddRange(bitmaps);
-            }
+            //foreach (var bitmap in tempBitmaps)
+            //{
+            //    //                var height = bitmap.NikseBitmap.GetNonTransparentHeight();
+            //    var bitmaps = SplitToLinesNew(bitmap, minLineHeight, averageLineHeight); // more advanced split (allows for up/down)
+            //    lineBitmaps.AddRange(bitmaps);
+            //}
 
             if (!topToBottom)
             {
