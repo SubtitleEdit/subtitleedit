@@ -332,6 +332,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private NOcrDb _nOcrDbThread;
         private NOcrThreadResult[] _nocrThreadResults;
         private bool _ocrThreadStop;
+        private int _nOcrMinLineHeight = -1;
 
         private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
@@ -4002,11 +4003,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (string.IsNullOrEmpty(line))
             {
                 int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
-                if (minLineHeight < 5)
+                if (_nOcrMinLineHeight > 0)
+                {
+                    minLineHeight = _nOcrMinLineHeight;
+                }
+                else if (minLineHeight < 5)
                 {
                     minLineHeight = 5;
                 }
-
+                
                 var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
 
                 int index = 0;
@@ -4822,6 +4827,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                     }
                 }
+
+                if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
+                {
+                    _nOcrMinLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+                }
+                else
+                {
+                    _nOcrMinLineHeight = -1;
+                }
+
             }
             else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
@@ -4876,7 +4891,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var parentBitmap = new NikseBitmap(p.Picture);
             parentBitmap.ReplaceNonWhiteWithTransparent();
             var minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
-            if (minLineHeight < 5)
+            if (_nOcrMinLineHeight > 0)
+            {
+                minLineHeight = _nOcrMinLineHeight;
+            }
+            else if (minLineHeight < 5)
             {
                 minLineHeight = 5;
             }
