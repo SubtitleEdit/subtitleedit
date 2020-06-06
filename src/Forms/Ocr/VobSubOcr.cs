@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic.Ocr.Tesseract;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -6793,7 +6794,49 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (e.Modifiers == (Keys.Control) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
             {
                 e.SuppressKeyPress = true;
-                MakeHorizontalSplit();
+
+                int minLineHeight = GetLastBinOcrLowercaseHeight() - 3;
+                if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
+                {
+                    minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+                }
+                else if (_nOcrMinLineHeight > 0)
+                {
+                    minLineHeight = _nOcrMinLineHeight;
+                }
+                else if (minLineHeight < 5)
+                {
+                    minLineHeight = 5;
+                }
+
+
+
+                var bitmap = GetSubtitleBitmap(_selectedIndex);
+                var nikseBitmap = new NikseBitmap(bitmap);
+                var list = NikseBitmapImageSplitter.SplitBitmapToLines(nikseBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+
+                var aa = new NikseBitmap(nikseBitmap.Width+ 10, nikseBitmap.Height + list.Count * 10 + 10);
+                aa.Fill(Color.Red);
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var imageSplitterItem = list[index];
+                    if (imageSplitterItem.NikseBitmap != null)
+                    {
+                        for (int y = 0; y < imageSplitterItem.NikseBitmap.Height; y++)
+                        {
+                            for (int x = 0; x < imageSplitterItem.NikseBitmap.Width; x++)
+                            {
+                                aa.SetPixel(x, y + imageSplitterItem.Y + index * 2, imageSplitterItem.NikseBitmap.GetPixel(x, y));
+                            }
+                        }
+                    }
+                }
+
+                var tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".bmp");
+                var bmp = aa.GetBitmap();
+                bmp.Save(tempFileName);
+                Process.Start(tempFileName);
+                //MakeHorizontalSplit();
             }
         }
 
