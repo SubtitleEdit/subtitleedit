@@ -2805,7 +2805,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (UppercaseWithAccent.Contains(result.Text))
             {
                 var averageUppercase = _ocrUppercaseHeightsTotal / (double)_ocrUppercaseHeightsTotalCount;
-                if (targetItem.NikseBitmap.Height + 4 < averageUppercase)
+                if (targetItem.NikseBitmap.Height < averageUppercase + 3)
                 {
                     result.Text = result.Text.ToLowerInvariant();
                 }
