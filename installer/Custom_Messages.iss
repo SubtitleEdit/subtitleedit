@@ -416,20 +416,20 @@ ptBR.types_default=Instalação padrão
 
 
 ; Romanian
-ro.comp_translations=Translations
-ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 4.0?
-ro.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare?%n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
-ro.msg_OptimizingPerformance=Optimizing performance...
-ro.run_VisitWebsite=Vizitaţi pagina Web a programului Subtitle Edit
+ro.comp_translations=Traduceri
+ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.0. Te rog să descarci şi să instalezi .NET Framework şi apoi să reiei instalarea.%n%nVrei să descarci acum .NET Framework 4.0?
+ro.msg_DeleteSettings=Vrei să ştergi de asemenea setările şi personalizările făcute în dicţionare?%n%nDacă ai de gând să reinstalezi Subtitle Edit, nu este nevoie să le ştergi.
+ro.msg_OptimizingPerformance=Optimizare în desfășurare...
+ro.run_VisitWebsite=Vizitează pagina Web a programului Subtitle Edit
 ro.sm_com_Changelog=Jurnalul modificărilor în programul Subtitle Edit
 ro.tsk_AllUsers=Pentru toţi utilizatorii
 ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
-ro.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-ro.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
-ro.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
-ro.types_custom=Custom installation
-ro.types_default=Default installation
+ro.tsk_ResetDictionaries=Resetează Dicționarele și șterge toate numele personalizate
+ro.tsk_ResetSettings=Resetează configurarea programului Subtitle Edit
+ro.tsk_SetFileTypes=Asociezi fișierele SubRip Text (.srt) cu Subtitle Edit
+ro.types_custom=Instalare personalizată
+ro.types_default=Instalare predefinită
 
 
 ; Russian
