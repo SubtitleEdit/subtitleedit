@@ -1494,6 +1494,7 @@ $HorzAlign          =   Center
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string GeneralGoToPreviousSubtitleAndFocusVideo { get; set; }
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
+        public string GeneralGoToNextSubtitleAndPlay { get; set; }
         public string GeneralExtendCurrentSubtitle { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
@@ -5525,6 +5526,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndPlay");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.GeneralGoToNextSubtitleAndPlay = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToPreviousSubtitleAndFocusVideo");
                 if (subNode != null)
                 {
@@ -7587,6 +7594,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
                 textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
+                textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
                 textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
                 textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);

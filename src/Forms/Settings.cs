@@ -943,6 +943,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(guessPath))
                 {
                     textBoxFFmpegPath.Text = guessPath;
+                    checkBoxUseFFmpeg.Checked = true;
                 }
             }
 
@@ -1109,6 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
+            AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
             AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
@@ -3306,6 +3308,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (result == DialogResult.Yes)
             {
                 Configuration.Settings.Reset();
+                Configuration.Settings.General.VideoPlayer = "MPV";
                 Init();
             }
         }

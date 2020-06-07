@@ -13754,6 +13754,22 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData)
+            {
+                int newIndex = _subtitleListViewIndex + 1;
+                if (newIndex < _subtitle.Paragraphs.Count)
+                {
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisibleFaster(newIndex);
+                    _subtitleListViewIndex = newIndex;
+                    textBoxListViewText.Focus();
+                    textBoxListViewText.SelectAll();
+                    GotoSubtitleIndex(newIndex);
+                    ShowSubtitle();
+                    mediaPlayer?.Play();
+                    e.SuppressKeyPress = true;
+                }
+            }
             else if (_shortcuts.MainUnbreakNoSpace == e.KeyData)
             {
                 Unbreak(true);
