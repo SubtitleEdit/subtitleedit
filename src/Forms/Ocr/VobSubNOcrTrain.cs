@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         MarginTop = item.Top,
                         Italic = italic,
                     };
-                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + (doubleLetter ? 20 : 0), checkBoxVeryAccurate.Checked, nOcrChar, item.NikseBitmap);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + (doubleLetter ? 20 : 0), false, nOcrChar, item.NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
                     numberOfCharactersLeaned++;
@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         Italic = italic,
                         ExpandCount = 2,
                     };
-                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 5, checkBoxVeryAccurate.Checked, nOcrChar, expandItem.NikseBitmap);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 5, false, nOcrChar, expandItem.NikseBitmap);
                     nOcrD.Add(nOcrChar);
                     return;
                 }
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         ExpandCount = 3,
                     };
                     nOcrD.Add(nOcrChar);
-                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 10, checkBoxVeryAccurate.Checked, nOcrChar, expandItem.NikseBitmap);
+                    VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value + 10, false, nOcrChar, expandItem.NikseBitmap);
                     return;
                 }
 

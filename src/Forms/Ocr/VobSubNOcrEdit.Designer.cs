@@ -42,10 +42,12 @@
             this.listBoxlinesBackground = new System.Windows.Forms.ListBox();
             this.contextMenuStripLinesBackground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeBackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelLines = new System.Windows.Forms.Label();
             this.listBoxLinesForeground = new System.Windows.Forms.ListBox();
             this.contextMenuLinesForeground = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeForegroundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.labelCharacters = new System.Windows.Forms.Label();
@@ -59,8 +61,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.contextMenuStripLinesBackground.SuspendLayout();
@@ -201,7 +201,7 @@
             this.removeBackToolStripMenuItem,
             this.clearToolStripMenuItem1});
             this.contextMenuStripLinesBackground.Name = "contextMenuStripLines";
-            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStripLinesBackground.Size = new System.Drawing.Size(118, 48);
             // 
             // removeBackToolStripMenuItem
             // 
@@ -209,6 +209,13 @@
             this.removeBackToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeBackToolStripMenuItem.Text = "Remove";
             this.removeBackToolStripMenuItem.Click += new System.EventHandler(this.removeBackToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem1
+            // 
+            this.clearToolStripMenuItem1.Name = "clearToolStripMenuItem1";
+            this.clearToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
+            this.clearToolStripMenuItem1.Text = "Clear";
+            this.clearToolStripMenuItem1.Click += new System.EventHandler(this.clearToolStripMenuItem1_Click);
             // 
             // labelLines
             // 
@@ -241,9 +248,16 @@
             // removeForegroundToolStripMenuItem
             // 
             this.removeForegroundToolStripMenuItem.Name = "removeForegroundToolStripMenuItem";
-            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeForegroundToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.removeForegroundToolStripMenuItem.Text = "Remove";
             this.removeForegroundToolStripMenuItem.Click += new System.EventHandler(this.removeForegroundToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // buttonZoomOut
             // 
@@ -375,20 +389,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // clearToolStripMenuItem1
-            // 
-            this.clearToolStripMenuItem1.Name = "clearToolStripMenuItem1";
-            this.clearToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.clearToolStripMenuItem1.Text = "Clear";
-            this.clearToolStripMenuItem1.Click += new System.EventHandler(this.clearToolStripMenuItem1_Click);
-            // 
             // VobSubNOcrEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -404,6 +404,7 @@
             this.Controls.Add(this.listBoxFileNames);
             this.Controls.Add(this.comboBoxTexts);
             this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(720, 520);
             this.Name = "VobSubNOcrEdit";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
