@@ -2,6 +2,7 @@
 
 3.5.16 (xth July 2020) BETA
 * NEW:
+   * OCR method "nOCR" (vector based with auto training) - thx Janusz
    * Enable custom color for waveform cursor
    * New shortcuts to move start/end one frame
    * New shortcuts to move start/end with gap - thx matmaggi/Fhining/btsix
@@ -10,15 +11,20 @@
    * Add new subtitle format - thx Matmanamane
    * Add new subtitle format "Speechmatics" - thx Rene
    * Add new json sub formats - thx Steven
+   * Add new sub format - thx Luke
+   * Add new formats - thx Hai-Lag 
    * Add Bulgarian no-break-after-list - thx Eva
    * Add "More than two lines" to "Modify selection"
    * Settings: Small helper window to calc gap in frames
    * Add "Center, right justify" to image export - thx waelmohammed5
+   * Add Malayalam spell check diactionary download
 * IMPROVED:
    * Improve italic-space-detection in "Binary image comp" - thx tormento
+   * Many minor improvements to OCR (find/new shortcuts/preview and more)
    * Update Bulgarian translation - thx KalinM
    * Update Greek translation - thx Lero91
    * Update Basque translation - thx Xabier
+   * Update Romanian translation - thx Mircea
    * Init no-break-after-list with language
    * Make quick-char-list in "OCR Char" window dynamic
    * Remember settings for "column paste"
@@ -31,6 +37,8 @@
    * Add preview (Ctrl+P) for OCR window
    * Read 890 Arabic - thx Sima
    * Make ttml 1.0 extension custimizable - thx Tony
+   * Allow space for video play/pause toggle shortcut - thx Mike
+   * Speedup small mkv files in "Batch convert" - thx lambdan
 * FIXED:
    * Fix spell check dictionary download - thx bluesea1401/ksoll4
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
@@ -48,6 +56,7 @@
    * Fix list view Ctrl+v/selection bug - thx gleaming
    * Fixes for Bing translate token endpoint - thx obliver27
    * Fix auto br for 3+ lines dialog - thx thejester77
+   * Fix auto-br issue with dialog - thx Kevin
 
 
 3.5.15 (1st May 2020)
