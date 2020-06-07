@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool IsItalic => checkBoxItalic.Checked;
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, string text)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showExpand, bool showShrink, string text)
         {
             listBoxLinesForeground.Items.Clear();
             listBoxlinesBackground.Items.Clear();
@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _drawLineOn = false;
             _warningNoNotForegroundLinesShown = false;
 
+            buttonExpandSelection.Visible = showExpand;
             buttonShrinkSelection.Visible = showShrink;
 
             if (position.X != -1 && position.Y != -1)
