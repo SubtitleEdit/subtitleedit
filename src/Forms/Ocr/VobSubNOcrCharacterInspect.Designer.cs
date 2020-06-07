@@ -167,6 +167,7 @@
             this.toolStripMenuItemMusicSymbol1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol2 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.labelExpandCount = new System.Windows.Forms.Label();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
@@ -203,6 +204,7 @@
             // 
             this.groupBoxInspectItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInspectItems.Controls.Add(this.labelExpandCount);
             this.groupBoxInspectItems.Controls.Add(this.labelImageSize);
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
@@ -1227,6 +1229,15 @@
             this.labelStatus.TabIndex = 38;
             this.labelStatus.Text = "labelStatus";
             // 
+            // labelExpandCount
+            // 
+            this.labelExpandCount.AutoSize = true;
+            this.labelExpandCount.Location = new System.Drawing.Point(252, 96);
+            this.labelExpandCount.Name = "labelExpandCount";
+            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
+            this.labelExpandCount.TabIndex = 32;
+            this.labelExpandCount.Text = "labelExpandCount";
+            // 
             // VobSubNOcrCharacterInspect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1398,5 +1409,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelExpandCount;
     }
 }

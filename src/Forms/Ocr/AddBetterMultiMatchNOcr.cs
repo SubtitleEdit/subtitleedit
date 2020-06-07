@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new VobSubOcrNOcrCharacter())
             {
-                form.Initialize(_expandItem.NikseBitmap.GetBitmap(), _expandItem, new Point(0, 0), checkBoxItalic.Checked, false, textBoxText.Text);
+                form.Initialize(_expandItem.NikseBitmap.GetBitmap(), _expandItem, new Point(0, 0), checkBoxItalic.Checked, false, false, textBoxText.Text);
                 var result = form.ShowDialog(this);
                 NOcrChar = form.NOcrChar;
                 NOcrChar.ExpandCount = (int)numericUpDownExpandCount.Value;

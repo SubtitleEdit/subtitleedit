@@ -4029,7 +4029,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
 
                         item = GetExpandedSelectionNew(nbmpInput, expandSelectionList);
-                        _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, string.Empty);
+                        _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, true, expandSelectionList.Count > 1, string.Empty);
                         var result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
                         if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ShrinkSelection)
@@ -4079,7 +4079,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         var match = GetNOcrCompareMatchNew(item, nbmpInput, _nOcrDb, checkBoxNOcrItalic.Checked, !checkBoxNOcrDrawUnknownLetters.Checked, index, list);
                         if (match == null)
                         {
-                            _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, string.Empty);
+                            _vobSubOcrNOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, true, false, string.Empty);
                             var result = _vobSubOcrNOcrCharacter.ShowDialog(this);
                             _manualOcrDialogPosition = _vobSubOcrNOcrCharacter.FormPosition;
                             if (result == DialogResult.OK && _vobSubOcrNOcrCharacter.ExpandSelection)

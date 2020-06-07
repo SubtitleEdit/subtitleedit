@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
             labelImageSize.Text = string.Empty;
             labelStatus.Text = string.Empty;
+            labelExpandCount.Text = string.Empty;
 
             foreach (ToolStripItem toolStripItem in contextMenuStripLetters.Items)
             {
@@ -116,6 +117,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             labelImageSize.Text = string.Empty;
+            labelExpandCount.Text = string.Empty;
             if (listBoxInspectItems.SelectedIndex < 0)
             {
                 return;
@@ -129,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 pictureBoxInspectItem.Width = img.NikseBitmap.Width;
                 pictureBoxInspectItem.Height = img.NikseBitmap.Height;
-                labelImageSize.Top = pictureBoxInspectItem.Top + img.NikseBitmap.Height + 17;
+                labelImageSize.Top = pictureBoxInspectItem.Top + img.NikseBitmap.Height + 7;
                 labelImageSize.Text = img.NikseBitmap.Width + "x" + img.NikseBitmap.Height;
                 if (match != null && match.ExpandCount > 1)
                 {
@@ -145,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     pictureBoxCharacter.Image = old;
                     pictureBoxInspectItem.Width = old.Width;
                     pictureBoxInspectItem.Height = old.Height;
-
+                    labelExpandCount.Text = $"Expand count: {match.ExpandCount}";
                 }
                 else
                 {
@@ -313,14 +315,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     text = textBoxText.Text;
                 }
 
-                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, text);
+                vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, true, expandSelectionList.Count > 1, text);
                 DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
                 bool expandSelection = false;
                 bool shrinkSelection = false;
                 if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
                 {
                     expandSelection = true;
-                    expandSelectionList.Add(img);
+                    if (img.NikseBitmap != null)
+                    {
+                        expandSelectionList.Add(img);
+                    }
                 }
                 while (result == DialogResult.OK && (vobSubOcrNOcrCharacter.ShrinkSelection || vobSubOcrNOcrCharacter.ExpandSelection))
                 {
@@ -339,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         img = VobSubOcr.GetExpandedSelectionNew(new NikseBitmap(_bitmap), expandSelectionList); // true
                     }
 
-                    vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), checkBoxItalic.Checked, expandSelectionList.Count > 1, string.Empty);
+                    vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), checkBoxItalic.Checked, true,expandSelectionList.Count > 1, string.Empty);
                     result = vobSubOcrNOcrCharacter.ShowDialog(this);
 
                     if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ShrinkSelection)
@@ -354,8 +359,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
                     {
                         expandSelection = true;
-                        index++;
-                        expandSelectionList.Add(_imageList[index]);
+                        if (_imageList[index+1].NikseBitmap != null)
+                        {
+                            index++;
+                            expandSelectionList.Add(_imageList[index]);
+                        }
                     }
                 }
                 if (result == DialogResult.OK)
