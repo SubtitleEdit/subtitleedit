@@ -1213,7 +1213,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var newNextText = RemoveAllPrefixes(nextInput, profile);
                 var newText = RemoveSuffix(input, profile, StartsWithConjunction(newNextText, language));
-                return new Tuple<string, string>(newText, newNextText);
+
+                input = newText;
+                nextInput = newNextText;
             }
 
             // Convert back for Arabic
