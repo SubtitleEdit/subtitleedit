@@ -1494,6 +1494,7 @@ $HorzAlign          =   Center
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string GeneralGoToPreviousSubtitleAndFocusVideo { get; set; }
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
+        public string GeneralGoToPrevSubtitleAndPlay { get; set; }
         public string GeneralGoToNextSubtitleAndPlay { get; set; }
         public string GeneralExtendCurrentSubtitle { get; set; }
         public string GeneralAutoCalcCurrentDuration { get; set; }
@@ -5526,6 +5527,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("GeneralGoToPrevSubtitleAndPlay");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndPlay");
                 if (subNode != null)
                 {
@@ -7594,6 +7601,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
                 textWriter.WriteElementString("GeneralGoToPreviousSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
+                textWriter.WriteElementString("GeneralGoToPrevSubtitleAndPlay", settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay);
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndPlay", settings.Shortcuts.GeneralGoToNextSubtitleAndPlay);
                 textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
                 textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
