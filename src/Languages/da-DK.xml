@@ -503,6 +503,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Center>Centrer</Center>
     <CenterLeftJustify>Center, venstrestillet</CenterLeftJustify>
     <CenterTopJustify>center, top</CenterTopJustify>
+    <CenterRightJustify>Centrer, højrestillet</CenterRightJustify>
     <BottomMargin>Bundmargen</BottomMargin>
     <LeftRightMargin>Venstre/højre margen</LeftRightMargin>
     <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
@@ -510,6 +511,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SaveFabImageScriptAs>Vælg FAB image script filnavn</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Vælg Digital Cinema Interop filnavn</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Vælg Digital Cinema SMPTE 2014 filnavn</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Vælg Premiere EDL filnavn</SavePremiereEdlAs>
     <SaveFcpAs>Vælg Final Cut Pro xml filnavn</SaveFcpAs>
     <SaveDostAs>Vælg DoStudio dost filnavn</SaveDostAs>
@@ -610,6 +612,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
+    <NormalizeStrings>Normaliser strenge</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Fjern mellemrum mellem tallene rettet: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ret fejl vedr. det dansk bogstav »i«</FixDanishLetterI>
@@ -1264,6 +1267,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
       <AutoContinueInXSeconds>Auto fortsæt om {0} sekunder</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Stadig skriver... auto fortsæt stoppet</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Indsæt tekst v. video pos</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Indsæt ny undertekst ved videopos (ikke fokus på tekstboks)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spil fra lige før &amp;tekst</PlayFromJustBeforeText>
       <Pause>Pause</Pause>
@@ -1380,7 +1384,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeSwedishToDanishTranslation>Før svensk til dansk oversættelse</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Oversættelse fra svensk til dansk komplet</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Oversættelse fra svensk til dansk mislykkedes</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Før fortryd</BeforeUndo>
     <UndoPerformed>Fortryd udført</UndoPerformed>
     <RedoPerformed>Redo udført</RedoPerformed>
     <NothingToUndo>Intet at fortryde</NothingToUndo>
@@ -1616,6 +1619,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <EqualLines>Lige linjer</EqualLines>
     <DurationLessThan>Varighed mindre end</DurationLessThan>
     <DurationGreaterThan>Varighed større end</DurationGreaterThan>
+    <MoreThanTwoLines>Mere end to linjer</MoreThanTwoLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -1907,6 +1911,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformColor>Farve</WaveformColor>
     <WaveformSelectedColor>Valgte farve</WaveformSelectedColor>
     <WaveformBackgroundColor>Baggrundsfarve</WaveformBackgroundColor>
+    <WaveformCursorColor>Markørfarve</WaveformCursorColor>
     <WaveformTextColor>Tekstfarve</WaveformTextColor>
     <WaveformTextFontSize>Tekst skriftstørrelse</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Tøm 'Spectrograms' og 'Waveforms' mapper</WaveformAndSpectrogramsFolderEmpty>
@@ -2000,6 +2005,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustStartXMsForward>Flyt start {0} ms fremad</AdjustStartXMsForward>
     <AdjustEndXMsBack>Flyt slut {0} ms tilbage</AdjustEndXMsBack>
     <AdjustEndXMsForward>Flyt slut {0} ms frem</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Flyt start 1 frame tilbage</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Flyt start 1 frame fremad</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Flyt ende 1 frame tilbage</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Flyt ende 1 frame fremad</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>Flyt start 1 frame tilbage (hold afstand til forrige hvis den er tæt)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>Flyt start 1 frame fremad (hold afstand til forrige hvis den er tæt)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>Flyt ende 1 frame tilbage (hold afstand til næste hvis tæt)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Flyt ende 1 frame fremad (hold afstand til næste, hvis tæt)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -2017,6 +2030,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Gå til foregående linje og indstil video position</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndPlay>Gå til næste linje og start video</GoToNextSubtitleAndPlay>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
@@ -2161,6 +2175,9 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <UncheckInsertsLowercase>Registrer og fjern markeringen af ​​enkelt titler eller tekster med små bogstaver</UncheckInsertsLowercase>
     <HideContinuationCandidatesWithoutName>Skjul usandsynlige fortsættelsessætninger</HideContinuationCandidatesWithoutName>
     <IgnoreLyrics>Ignorer tekster mellem musiksymboler</IgnoreLyrics>
+    <MinFrameGap>Min.  gap i frames</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} rammer med en billedhastighed på {1} giver {2} millisekunder.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>Brug "{0}" millisekunder som nyt minimumskløft?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
@@ -2221,6 +2238,7 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <AddXToNames>Tilføj '{0}' til navne mv. liste</AddXToNames>
     <AddXToUserDictionary>Tilføj '0' ' til brugerordbog</AddXToUserDictionary>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Fix også navne via "Stavekontrol forslag"</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Husk "Brug altid" listen</RememberUseAlwaysList>
@@ -2501,13 +2519,23 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <CaptureTopAlign>Gem topjustering</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
-    <SetUnitalicFactor>Juster de-kursiv faktor...</SetUnitalicFactor>
+    <SetItalicAngle>Indstil kursiv vinkel...</SetItalicAngle>
+    <ItalicAngle>Kursiv vinkel</ItalicAngle>
     <DiscardTitle>Kassér ændringer i OCR?</DiscardTitle>
     <DiscardText>Ønsker du at kassere ændringer i nuværende OCR-session?</DiscardText>
     <MinLineSplitHeight>Min. linje højde (split)</MinLineSplitHeight>
     <FallbackToX>Falder tilbage til {0}</FallbackToX>
     <ImagePreProcessing>Billede pre-processering...</ImagePreProcessing>
     <EditImageDb>Rediger billede db</EditImageDb>
+    <OcrTraining>OCR-træning...</OcrTraining>
+    <SubtitleTrainingFile>Undertekstfil til træning</SubtitleTrainingFile>
+    <LetterCombinations>Bogstavkombinationer, der kan opdeles som et billede</LetterCombinations>
+    <TrainingOptions>Træningsmuligheder</TrainingOptions>
+    <NumberOfSegments>Antal segmenter pr. Bogstav</NumberOfSegments>
+    <AlsoTrainItalic>Træne også kursiv</AlsoTrainItalic>
+    <AlsoTrainBold>Træne også fed</AlsoTrainBold>
+    <StartTraining>Start træning</StartTraining>
+    <NowTraining>Træner nu font '{1}'. Bogstaver trænet: {0:#,###,##0}, {2:#,###,##0} kendte</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
@@ -2535,10 +2563,10 @@ Fortsæt?</RestoreDefaultSettingsMsg>
     <Title>Ny mappe</Title>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Juster de-kursiv faktor</Title>
-    <Description>Juster værdi indtil tekst stil er normalt og ikke kursiv. Bemærk, at det oprindelige billede skal være kursiv.</Description>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicAngle>
+    <Title>Indstil kursiv vinkel</Title>
+    <Description>Juster værdien, indtil tekststilen er normal og ikke kursiv.  Bemærk, at det originale billede skal være kursiv.</Description>
+  </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>OCR-billedforbehandling</Title>
     <Colors>Farver</Colors>
