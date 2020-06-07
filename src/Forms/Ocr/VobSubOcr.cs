@@ -4892,7 +4892,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         };
                         bw.DoWork += NOcrThreadDoWork;
                         bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                        bw.RunWorkerAsync(p);
+                        //   bw.RunWorkerAsync(p);
                         Application.DoEvents();
                     }
                 }
@@ -7438,6 +7438,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ResetTesseractThread()
         {
+            _ocrThreadStop = true;
             _tesseractThreadRunner?.Cancel();
             if (_tesseractAsyncStrings != null)
             {

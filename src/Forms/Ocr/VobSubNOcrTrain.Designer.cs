@@ -35,7 +35,6 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label3 = new System.Windows.Forms.Label();
             this.numericUpDownSegmentsPerCharacter = new System.Windows.Forms.NumericUpDown();
-            this.checkBoxVeryAccurate = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
@@ -65,7 +64,6 @@
             this.groupBox1.Controls.Add(this.listViewFonts);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.numericUpDownSegmentsPerCharacter);
-            this.groupBox1.Controls.Add(this.checkBoxVeryAccurate);
             this.groupBox1.Controls.Add(this.labelSubtitleFontSize);
             this.groupBox1.Controls.Add(this.comboBoxSubtitleFontSize);
             this.groupBox1.Controls.Add(this.labelSubtitleFont);
@@ -152,17 +150,6 @@
             0,
             0,
             0});
-            // 
-            // checkBoxVeryAccurate
-            // 
-            this.checkBoxVeryAccurate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxVeryAccurate.AutoSize = true;
-            this.checkBoxVeryAccurate.Location = new System.Drawing.Point(9, 367);
-            this.checkBoxVeryAccurate.Name = "checkBoxVeryAccurate";
-            this.checkBoxVeryAccurate.Size = new System.Drawing.Size(303, 17);
-            this.checkBoxVeryAccurate.TabIndex = 4;
-            this.checkBoxVeryAccurate.Text = "Very accurate (be less general), require more line segments";
-            this.checkBoxVeryAccurate.UseVisualStyleBackColor = true;
             // 
             // labelSubtitleFontSize
             // 
@@ -290,9 +277,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(272, 13);
+            this.label1.Size = new System.Drawing.Size(102, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Subtitle to train with  (must have spaces between letters)";
+            this.label1.Text = "Subtitle to train with ";
             // 
             // textBoxInputFile
             // 
@@ -331,9 +318,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(7, 82);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(201, 13);
+            this.label2.Size = new System.Drawing.Size(250, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Letter combinations that might be merged";
+            this.label2.Text = "Letter combinations that might be split as one image";
             // 
             // textBoxMerged
             // 
@@ -411,7 +398,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkBoxVeryAccurate;
         private System.Windows.Forms.Button buttonInputChoose;
         private System.Windows.Forms.TextBox textBoxInputFile;
         private System.Windows.Forms.Label label1;

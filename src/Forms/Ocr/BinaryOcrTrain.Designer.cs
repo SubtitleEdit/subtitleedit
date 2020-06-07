@@ -42,15 +42,15 @@
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonTrain = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBoxFontSizeEnd = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxMerged = new System.Windows.Forms.TextBox();
-            this.checkBoxItalic = new System.Windows.Forms.CheckBox();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
@@ -75,9 +75,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(269, 13);
+            this.label1.Size = new System.Drawing.Size(99, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Subtitle to train with (must have spaces between letters)";
+            this.label1.Text = "Subtitle to train with";
             // 
             // textBoxInputFile
             // 
@@ -299,6 +299,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Training options";
             // 
+            // checkBoxItalic
+            // 
+            this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxItalic.AutoSize = true;
+            this.checkBoxItalic.Location = new System.Drawing.Point(114, 466);
+            this.checkBoxItalic.Name = "checkBoxItalic";
+            this.checkBoxItalic.Size = new System.Drawing.Size(93, 17);
+            this.checkBoxItalic.TabIndex = 28;
+            this.checkBoxItalic.Text = "Also train italic";
+            this.checkBoxItalic.UseVisualStyleBackColor = true;
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -443,9 +454,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(5, 82);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(201, 13);
+            this.label2.Size = new System.Drawing.Size(250, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Letter combinations that might be merged";
+            this.label2.Text = "Letter combinations that might be split as one image";
             // 
             // textBoxMerged
             // 
@@ -454,17 +465,6 @@
             this.textBoxMerged.Size = new System.Drawing.Size(469, 20);
             this.textBoxMerged.TabIndex = 12;
             this.textBoxMerged.Text = "ff ft fi fj fy fl rf rt rv rw ry rt ryt tt TV tw yt yw";
-            // 
-            // checkBoxItalic
-            // 
-            this.checkBoxItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(114, 466);
-            this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxItalic.TabIndex = 28;
-            this.checkBoxItalic.Text = "Also train italic";
-            this.checkBoxItalic.UseVisualStyleBackColor = true;
             // 
             // BinaryOcrTrain
             // 
