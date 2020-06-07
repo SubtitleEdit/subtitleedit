@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (!doubleLetter)
             {
 
-                if (list.Count == 4)
+                if (list.Count == 4 && list[2].NikseBitmap != null && list[3].NikseBitmap != null)
                 {
                     // e.g. quote (")
                     var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3] });
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                if (list.Count == 5)
+                if (list.Count == 5 && list[2].NikseBitmap != null && list[3].NikseBitmap != null && list[4].NikseBitmap != null)
                 {
                     // e.g. "%" 
                     var expandItem = VobSubOcr.GetExpandedSelectionNew(nikseBitmap, new List<ImageSplitterItem> { list[2], list[3], list[4] });
