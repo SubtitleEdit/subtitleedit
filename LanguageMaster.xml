@@ -2035,6 +2035,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Go to previous line and set video position</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Go to previous line and play</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Go to next line and play</GoToNextSubtitleAndPlay>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>

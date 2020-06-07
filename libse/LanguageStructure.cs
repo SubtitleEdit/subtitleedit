@@ -2200,6 +2200,7 @@
             public string GoToCurrentSubtitleEnd { get; set; }
             public string GoToPreviousSubtitleAndFocusVideo { get; set; }
             public string GoToNextSubtitleAndFocusVideo { get; set; }
+            public string GoToPrevSubtitleAndPlay { get; set; }
             public string GoToNextSubtitleAndPlay { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }

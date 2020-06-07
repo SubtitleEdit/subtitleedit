@@ -13754,7 +13754,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData)
+            else if (_shortcuts.MainGoToNextSubtitleAndPlay == e.KeyData && mediaPlayer != null)
             {
                 int newIndex = _subtitleListViewIndex + 1;
                 if (newIndex < _subtitle.Paragraphs.Count)
@@ -13765,8 +13765,38 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Focus();
                     textBoxListViewText.SelectAll();
                     GotoSubtitleIndex(newIndex);
-                    ShowSubtitle();
-                    mediaPlayer?.Play();
+                    var p = _subtitle.GetParagraphOrDefault(newIndex);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        ShowSubtitle();
+                        mediaPlayer.Play();
+                        _endSeconds = p.EndTime.TotalSeconds;
+                    }
+
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (_shortcuts.MainGoToPrevSubtitleAndPlay == e.KeyData && mediaPlayer != null)
+            {
+                int newIndex = _subtitleListViewIndex - 1;
+                if (newIndex > 0)
+                {
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisibleFaster(newIndex);
+                    _subtitleListViewIndex = newIndex;
+                    textBoxListViewText.Focus();
+                    textBoxListViewText.SelectAll();
+                    GotoSubtitleIndex(newIndex);
+                    var p = _subtitle.GetParagraphOrDefault(newIndex);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        ShowSubtitle();
+                        mediaPlayer.Play();
+                        _endSeconds = p.EndTime.TotalSeconds;
+                    }
+
                     e.SuppressKeyPress = true;
                 }
             }

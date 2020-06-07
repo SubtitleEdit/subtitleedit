@@ -1110,6 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
+            AddNode(generalNode, language.GoToPrevSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitleAndPlay));
             AddNode(generalNode, language.GoToNextSubtitleAndPlay, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndPlay));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
