@@ -33,6 +33,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             InitializeComponent();
             UiUtil.FixFonts(this);
 
+            var language = Configuration.Settings.Language.VobSubOcr;
+            Text = language.OcrTraining;
+            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
+            labelSubtitleForTraining.Text = language.SubtitleTrainingFile;
+            labelLetterCombi.Text = language.LetterCombinations;
+            groupBoxTrainingOptions.Text = language.TrainingOptions;
+            labelSubtitleFont.Text = Configuration.Settings.Language.Settings.SubtitleFont;
+            labelSubtitleFontSize.Text = Configuration.Settings.Language.Settings.SubtitleFontSize;
+            buttonTrain.Text = language.StartTraining;
+            comboBoxSubtitleFontSize.Left = labelSubtitleFontSize.Left + labelSubtitleFontSize.Width + 5;
+
             labelInfo.Text = string.Empty;
             var selectedFonts = Configuration.Settings.Tools.OcrTrainFonts.Split(';');
             foreach (var x in FontFamily.Families)
@@ -250,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, bicDb, s, false, true);
                                     }
                                 }
-                                labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,##0}, {2:#,###,##0} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                                labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                             }
                         }
 

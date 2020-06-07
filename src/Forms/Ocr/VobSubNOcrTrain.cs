@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class VobSubNOcrTrain : Form
+    public sealed partial class VobSubNOcrTrain : Form
     {
 
         private readonly Color _subtitleColor = Color.White;
@@ -29,6 +29,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+
+            var language = Configuration.Settings.Language.VobSubOcr;
+            Text = language.OcrTraining;
+            groupBoxInput.Text = Configuration.Settings.Language.BatchConvert.Input;
+            labelSubtitleForTraining.Text = language.SubtitleTrainingFile;
+            labelLetterCombi.Text = language.LetterCombinations;
+            groupBoxTrainingOptions.Text = language.TrainingOptions;
+            labelSubtitleFont.Text = Configuration.Settings.Language.Settings.SubtitleFont;
+            labelSubtitleFontSize.Text = Configuration.Settings.Language.Settings.SubtitleFontSize;
+            buttonTrain.Text = language.StartTraining;
+            labelLineSegments.Text = language.NumberOfSegments;
+            comboBoxSubtitleFontSize.Left = labelSubtitleFontSize.Left + labelSubtitleFontSize.Width + 5;
+            numericUpDownSegmentsPerCharacter.Left = labelLineSegments.Left + labelLineSegments.Width + 5;
 
             labelInfo.Text = string.Empty;
             textBoxMerged.Text = Configuration.Settings.Tools.OcrTrainMergedLetters;
@@ -204,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     nOcrD.Add(nOcrChar);
 
                     numberOfCharactersLeaned++;
-                    labelInfo.Text = string.Format("Now training font '{1}', total characters learned is {0:#,###,##0}, {2:#,###,##0} skipped", numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
+                    labelInfo.Text = string.Format(Configuration.Settings.Language.VobSubOcr.NowTraining, numberOfCharactersLeaned, _subtitleFontName, numberOfCharactersSkipped);
                     bmp.Dispose();
                 }
                 else
