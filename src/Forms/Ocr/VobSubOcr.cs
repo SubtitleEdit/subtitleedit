@@ -463,6 +463,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelMinLineSplitHeight.Text = language.MinLineSplitHeight;
             groupBoxOCRControls.Text = string.Empty;
 
+            OcrTrainingToolStripMenuItem.Text = language.OcrTraining;
+            toolStripMenuItemSetUnItalicFactor.Text = language.SetItalicAngle;
+
             FillSpellCheckDictionaries();
 
             InitializeModi();

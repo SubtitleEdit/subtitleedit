@@ -6883,6 +6883,33 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/EditImageDb":
                     language.VobSubOcr.EditImageDb = reader.Value;
                     break;
+                case "VobSubOcr/OcrTraining":
+                    language.VobSubOcr.OcrTraining = reader.Value;
+                    break;
+                case "VobSubOcr/SubtitleTrainingFile":
+                    language.VobSubOcr.SubtitleTrainingFile = reader.Value;
+                    break;
+                case "VobSubOcr/LetterCombinations":
+                    language.VobSubOcr.LetterCombinations = reader.Value;
+                    break;
+                case "VobSubOcr/TrainingOptions":
+                    language.VobSubOcr.TrainingOptions = reader.Value;
+                    break;
+                case "VobSubOcr/NumberOfSegments":
+                    language.VobSubOcr.NumberOfSegments = reader.Value;
+                    break;
+                case "VobSubOcr/AlsoTrainItalic":
+                    language.VobSubOcr.AlsoTrainItalic = reader.Value;
+                    break;
+                case "VobSubOcr/AlsoTrainBold":
+                    language.VobSubOcr.AlsoTrainBold = reader.Value;
+                    break;
+                case "VobSubOcr/StartTraining":
+                    language.VobSubOcr.StartTraining = reader.Value;
+                    break;
+                case "VobSubOcr/NowTraining":
+                    language.VobSubOcr.NowTraining = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;

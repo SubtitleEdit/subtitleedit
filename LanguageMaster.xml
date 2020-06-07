@@ -2533,6 +2533,15 @@ Keep changes?</KeepChangesMessage>
     <FallbackToX>Fallback to {0}</FallbackToX>
     <ImagePreProcessing>Image pre-processing...</ImagePreProcessing>
     <EditImageDb>Edit image db</EditImageDb>
+    <OcrTraining>OCR training...</OcrTraining>
+    <SubtitleTrainingFile>Subtitle file for training</SubtitleTrainingFile>
+    <LetterCombinations>Letter combinations that might be split as one image</LetterCombinations>
+    <TrainingOptions>Training options</TrainingOptions>
+    <NumberOfSegments>Number of segments per letter</NumberOfSegments>
+    <AlsoTrainItalic>Also train italic</AlsoTrainItalic>
+    <AlsoTrainBold>Also train bold</AlsoTrainBold>
+    <StartTraining>Start training</StartTraining>
+    <NowTraining>Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>OCR - Manual image to text</Title>

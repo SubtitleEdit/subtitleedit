@@ -2735,6 +2735,15 @@
             public string FallbackToX { get; set; }
             public string ImagePreProcessing { get; set; }
             public string EditImageDb { get; set; }
+            public string OcrTraining { get; set; }
+            public string SubtitleTrainingFile { get; set; }
+            public string LetterCombinations { get; set; }
+            public string TrainingOptions { get; set; }
+            public string NumberOfSegments { get; set; }
+            public string AlsoTrainItalic { get; set; }
+            public string AlsoTrainBold { get; set; }
+            public string StartTraining { get; set; }
+            public string NowTraining { get; set; }
         }
 
         public class VobSubOcrCharacter

@@ -30,7 +30,7 @@
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonInputChoose = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelSubtitleForTraining = new System.Windows.Forms.Label();
             this.textBoxInputFile = new System.Windows.Forms.TextBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.listViewFonts = new System.Windows.Forms.ListView();
@@ -41,17 +41,17 @@
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelInfo = new System.Windows.Forms.Label();
             this.buttonTrain = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxTrainingOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBoxFontSizeEnd = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelLetterCombi = new System.Windows.Forms.Label();
             this.textBoxMerged = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxTrainingOptions.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,14 +70,14 @@
             this.buttonInputChoose.UseVisualStyleBackColor = true;
             this.buttonInputChoose.Click += new System.EventHandler(this.buttonInputChoose_Click);
             // 
-            // label1
+            // labelSubtitleForTraining
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Subtitle to train with";
+            this.labelSubtitleForTraining.AutoSize = true;
+            this.labelSubtitleForTraining.Location = new System.Drawing.Point(6, 24);
+            this.labelSubtitleForTraining.Name = "labelSubtitleForTraining";
+            this.labelSubtitleForTraining.Size = new System.Drawing.Size(99, 13);
+            this.labelSubtitleForTraining.TabIndex = 8;
+            this.labelSubtitleForTraining.Text = "Subtitle to train with";
             // 
             // textBoxInputFile
             // 
@@ -278,26 +278,26 @@
             this.buttonTrain.UseVisualStyleBackColor = true;
             this.buttonTrain.Click += new System.EventHandler(this.buttonTrain_Click);
             // 
-            // groupBox1
+            // groupBoxTrainingOptions
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.groupBoxTrainingOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.checkBoxItalic);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.comboBoxFontSizeEnd);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.checkBoxBold);
-            this.groupBox1.Controls.Add(this.listViewFonts);
-            this.groupBox1.Controls.Add(this.labelSubtitleFontSize);
-            this.groupBox1.Controls.Add(this.comboBoxSubtitleFontSize);
-            this.groupBox1.Controls.Add(this.labelSubtitleFont);
-            this.groupBox1.Location = new System.Drawing.Point(12, 149);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(735, 489);
-            this.groupBox1.TabIndex = 20;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Training options";
+            this.groupBoxTrainingOptions.Controls.Add(this.checkBoxItalic);
+            this.groupBoxTrainingOptions.Controls.Add(this.button1);
+            this.groupBoxTrainingOptions.Controls.Add(this.comboBoxFontSizeEnd);
+            this.groupBoxTrainingOptions.Controls.Add(this.label4);
+            this.groupBoxTrainingOptions.Controls.Add(this.checkBoxBold);
+            this.groupBoxTrainingOptions.Controls.Add(this.listViewFonts);
+            this.groupBoxTrainingOptions.Controls.Add(this.labelSubtitleFontSize);
+            this.groupBoxTrainingOptions.Controls.Add(this.comboBoxSubtitleFontSize);
+            this.groupBoxTrainingOptions.Controls.Add(this.labelSubtitleFont);
+            this.groupBoxTrainingOptions.Location = new System.Drawing.Point(12, 149);
+            this.groupBoxTrainingOptions.Name = "groupBoxTrainingOptions";
+            this.groupBoxTrainingOptions.Size = new System.Drawing.Size(735, 489);
+            this.groupBoxTrainingOptions.TabIndex = 20;
+            this.groupBoxTrainingOptions.TabStop = false;
+            this.groupBoxTrainingOptions.Text = "Training options";
             // 
             // checkBoxItalic
             // 
@@ -437,10 +437,10 @@
             // 
             this.groupBoxInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxInput.Controls.Add(this.label2);
+            this.groupBoxInput.Controls.Add(this.labelLetterCombi);
             this.groupBoxInput.Controls.Add(this.textBoxMerged);
             this.groupBoxInput.Controls.Add(this.buttonInputChoose);
-            this.groupBoxInput.Controls.Add(this.label1);
+            this.groupBoxInput.Controls.Add(this.labelSubtitleForTraining);
             this.groupBoxInput.Controls.Add(this.textBoxInputFile);
             this.groupBoxInput.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInput.Name = "groupBoxInput";
@@ -449,14 +449,14 @@
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input file";
             // 
-            // label2
+            // labelLetterCombi
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 82);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(250, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Letter combinations that might be split as one image";
+            this.labelLetterCombi.AutoSize = true;
+            this.labelLetterCombi.Location = new System.Drawing.Point(5, 82);
+            this.labelLetterCombi.Name = "labelLetterCombi";
+            this.labelLetterCombi.Size = new System.Drawing.Size(250, 13);
+            this.labelLetterCombi.TabIndex = 11;
+            this.labelLetterCombi.Text = "Letter combinations that might be split as one image";
             // 
             // textBoxMerged
             // 
@@ -474,7 +474,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelInfo);
             this.Controls.Add(this.buttonTrain);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxTrainingOptions);
             this.Controls.Add(this.groupBoxInput);
             this.MinimumSize = new System.Drawing.Size(770, 600);
             this.Name = "BinaryOcrTrain";
@@ -484,8 +484,8 @@
             this.Text = "Binary image compare - train";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BinaryOcrTrain_FormClosing);
             this.Shown += new System.EventHandler(this.BinaryOcrTrain_Shown);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxTrainingOptions.ResumeLayout(false);
+            this.groupBoxTrainingOptions.PerformLayout();
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.ResumeLayout(false);
@@ -497,7 +497,7 @@
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonInputChoose;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelSubtitleForTraining;
         private System.Windows.Forms.TextBox textBoxInputFile;
         private System.Windows.Forms.CheckBox checkBoxBold;
         private System.Windows.Forms.ListView listViewFonts;
@@ -508,14 +508,14 @@
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Button buttonTrain;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxTrainingOptions;
         private System.Windows.Forms.GroupBox groupBoxInput;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ComboBox comboBoxFontSizeEnd;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelLetterCombi;
         private System.Windows.Forms.TextBox textBoxMerged;
         private System.Windows.Forms.CheckBox checkBoxItalic;
     }

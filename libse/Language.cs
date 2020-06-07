@@ -2867,7 +2867,16 @@ Keep changes?",
                 MinLineSplitHeight = "Min. line height (split)",
                 FallbackToX = "Fallback to {0}",
                 ImagePreProcessing = "Image pre-processing...",
-                EditImageDb = "Edit image db"
+                EditImageDb = "Edit image db",
+                OcrTraining = "OCR training...",
+                SubtitleTrainingFile = "Subtitle file for training",
+                LetterCombinations = "Letter combinations that might be split as one image",
+                TrainingOptions = "Training options",
+                NumberOfSegments = "Number of segments per letter",
+                AlsoTrainItalic = "Also train italic",
+                AlsoTrainBold = "Also train bold",
+                StartTraining = "Start training",
+                NowTraining = "Now training font '{1}'. Total chars trained: {0:#,###,##0}, {2:#,###,##0} known",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
