@@ -12,12 +12,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     {
         private List<ImageSplitterItem> _imageList;
         private List<VobSubOcr.CompareMatch> _matchList;
-        private List<NOcrChar> _nocrChars;
-        private NOcrChar _nocrChar;
-        private NOcrDb _nocrDb;
-        private VobSubOcr _vobSubOcr;
+        private List<NOcrChar> _nOcrChars;
+        private NOcrChar _nOcrChar;
+        private NOcrDb _nOcrDb;
         private Bitmap _bitmap;
-        private Bitmap _bitmap2;
         private double _zoomFactor = 3.0;
         private Dictionary<int, int> _indexLookup;
 
@@ -68,16 +66,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr, bool italic, int minLineHeight)
         {
             _bitmap = bitmap;
-            var nbmp = new NikseBitmap(bitmap);
-            nbmp.ReplaceNonWhiteWithTransparent();
-            bitmap = nbmp.GetBitmap();
-            _bitmap2 = bitmap;
-            _nocrChars = nOcrDb.OcrCharacters;
-            _nocrDb = nOcrDb;
+            var nikseBitmap = new NikseBitmap(bitmap);
+            nikseBitmap.ReplaceNonWhiteWithTransparent();
+            _nOcrChars = nOcrDb.OcrCharacters;
+            _nOcrDb = nOcrDb;
             _matchList = new List<VobSubOcr.CompareMatch>();
-            _vobSubOcr = vobSubOcr;
 
-            _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
 
             int index = 0;
             _indexLookup = new Dictionary<int, int>();
@@ -92,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, italic, false, index, _imageList);
+                    var match = vobSubOcr.GetNOcrCompareMatchNew(item, nikseBitmap, nOcrDb, italic, false, index, _imageList);
                     if (match == null)
                     {
                         _indexLookup.Add(listBoxInspectItems.Items.Count, index);
@@ -166,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (match == null)
             { // spaces+new lines
-                _nocrChar = null;
+                _nOcrChar = null;
                 pictureBoxCharacter.Invalidate();
 
                 buttonUpdate.Enabled = false;
@@ -184,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 buttonDelete.Enabled = false;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Checked = match.Italic;
-                _nocrChar = null;
+                _nOcrChar = null;
                 pictureBoxCharacter.Invalidate();
 
                 buttonEditDB.Enabled = true;
@@ -198,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 buttonDelete.Enabled = true;
                 textBoxText.Text = match.Text;
                 checkBoxItalic.Checked = match.Italic;
-                _nocrChar = match.NOcrCharacter;
+                _nOcrChar = match.NOcrCharacter;
                 pictureBoxCharacter.Invalidate();
 
                 buttonEditDB.Enabled = true;
@@ -210,7 +205,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
         {
-            if (_nocrChar == null)
+            if (_nOcrChar == null)
             {
                 return;
             }
@@ -219,13 +214,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var background = new Pen(new SolidBrush(Color.Red));
             if (pictureBoxCharacter.Image != null)
             {
-                foreach (NOcrPoint op in _nocrChar.LinesForeground)
+                foreach (NOcrPoint op in _nOcrChar.LinesForeground)
                 {
-                    e.Graphics.DrawLine(foreground, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    e.Graphics.DrawLine(foreground, op.GetScaledStart(_nOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
-                foreach (NOcrPoint op in _nocrChar.LinesBackground)
+                foreach (NOcrPoint op in _nOcrChar.LinesBackground)
                 {
-                    e.Graphics.DrawLine(background, op.GetScaledStart(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nocrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
+                    e.Graphics.DrawLine(background, op.GetScaledStart(_nOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height), op.GetScaledEnd(_nOcrChar, pictureBoxCharacter.Width, pictureBoxCharacter.Height));
                 }
             }
         }
@@ -261,10 +256,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
-            if (_nocrChar != null)
+            if (_nOcrChar != null)
             {
-                _nocrChar.Text = textBoxText.Text;
-                _nocrChar.Italic = checkBoxItalic.Checked;
+                _nOcrChar.Text = textBoxText.Text;
+                _nOcrChar.Italic = checkBoxItalic.Checked;
                 ShowStatus("Character updated");
             }
         }
@@ -285,9 +280,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            if (_nocrChar != null)
+            if (_nOcrChar != null)
             {
-                _nocrDb.Remove(_nocrChar);
+                _nOcrDb.Remove(_nOcrChar);
                 ShowStatus("Character deleted");
             }
         }
@@ -310,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
                 var text = string.Empty;
-                if (_nocrChar != null && _nocrChar.Text != textBoxText.Text)
+                if (_nOcrChar != null && _nOcrChar.Text != textBoxText.Text)
                 {
                     text = textBoxText.Text;
                 }
@@ -344,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         img = VobSubOcr.GetExpandedSelectionNew(new NikseBitmap(_bitmap), expandSelectionList); // true
                     }
 
-                    vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), checkBoxItalic.Checked, true,expandSelectionList.Count > 1, string.Empty);
+                    vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), checkBoxItalic.Checked, true, expandSelectionList.Count > 1, string.Empty);
                     result = vobSubOcrNOcrCharacter.ShowDialog(this);
 
                     if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ShrinkSelection)
@@ -359,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     else if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
                     {
                         expandSelection = true;
-                        if (_imageList[index+1].NikseBitmap != null)
+                        if (_imageList[index + 1].NikseBitmap != null)
                         {
                             index++;
                             expandSelectionList.Add(_imageList[index]);
@@ -373,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         vobSubOcrNOcrCharacter.NOcrChar.ExpandCount = expandSelectionList.Count;
                     }
 
-                    _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
+                    _nOcrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
                     DialogResult = DialogResult.OK;
                 }
             }
@@ -386,7 +381,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonEditDB_Click(object sender, EventArgs e)
         {
-            var form = new VobSubNOcrEdit(_nocrDb, pictureBoxInspectItem.Image as Bitmap, null);
+            var form = new VobSubNOcrEdit(_nOcrDb, pictureBoxInspectItem.Image as Bitmap, null);
             form.ShowDialog(this);
         }
 
@@ -411,9 +406,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 form.Initialize(_bitmap, 0, tempMatchList, tempImageList);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    _nocrDb.Add(form.NOcrChar);
-                    DialogResult = DialogResult.OK;
+                    using (var charForm = new VobSubOcrNOcrCharacter())
+                    {
+                        charForm.Initialize(_bitmap, form.ExpandItem, new Point(0, 0), form.ExpandItalic, false, false, form.ExpandText);
+                        if (charForm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            charForm.NOcrChar.ExpandCount = form.ExpandCount;
+                            _nOcrDb.Add(charForm.NOcrChar);
+                            DialogResult = DialogResult.OK;
+                            return;
+                        }
+                    }
                 }
+
+                DialogResult = DialogResult.Cancel;
             }
         }
     }

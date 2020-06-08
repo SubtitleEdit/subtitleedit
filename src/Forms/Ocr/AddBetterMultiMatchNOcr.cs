@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,14 +9,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class AddBetterMultiMatchNOcr : Form
     {
-        public NOcrChar NOcrChar { get; set; }
-        
+        public ImageSplitterItem ExpandItem { get; set; }
+        public int ExpandCount { get; set; }
+        public bool ExpandItalic { get; set; }
+        public string ExpandText { get; set; }
+
         private NikseBitmap _wholeImage;
         private List<VobSubOcr.CompareMatch> _matches;
         private List<ImageSplitterItem> _splitterItems;
-        private ImageSplitterItem _expandItem;
         private int _startIndex;
-        int _extraCount;
+        private int _extraCount;
 
         public AddBetterMultiMatchNOcr()
         {
@@ -103,8 +104,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            _expandItem = VobSubOcr.GetExpandedSelectionNew(_wholeImage,expandList);
-            var newBmp = _expandItem.NikseBitmap.GetBitmap();
+            ExpandItem = VobSubOcr.GetExpandedSelectionNew(_wholeImage, expandList);
+            var newBmp = ExpandItem.NikseBitmap.GetBitmap();
             pictureBoxInspectItem.Image = newBmp;
             pictureBoxInspectItem.Width = newBmp.Width;
             pictureBoxInspectItem.Height = newBmp.Height;
@@ -112,14 +113,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            using (var form = new VobSubOcrNOcrCharacter())
-            {
-                form.Initialize(_expandItem.NikseBitmap.GetBitmap(), _expandItem, new Point(0, 0), checkBoxItalic.Checked, false, false, textBoxText.Text);
-                var result = form.ShowDialog(this);
-                NOcrChar = form.NOcrChar;
-                NOcrChar.ExpandCount = (int)numericUpDownExpandCount.Value;
-                DialogResult = result;
-            }
+            ExpandCount = (int)numericUpDownExpandCount.Value;
+            ExpandItalic = checkBoxItalic.Checked;
+            ExpandText = textBoxText.Text;
+            DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
