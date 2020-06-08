@@ -1107,13 +1107,19 @@ namespace Nikse.SubtitleEdit.Forms
                             sb.AppendLine("    <tr>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[1]) + ">" + GetHtmlText(itemLeft, itemLeft.StartTime.ToShortDisplayString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[2]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToShortDisplayString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[4]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
+                            if (subtitleListView1.ColumnIndexEnd >= 0)
+                            {
+                                sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToShortDisplayString()) + "</td>");
+                            }
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
                             sb.AppendLine("      <td>&nbsp;</td>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[0]) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
                             sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[1]) + ">" + GetHtmlText(itemRight, itemRight.StartTime.ToShortDisplayString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[2]) + ">" + GetHtmlText(itemRight, itemRight.EndTime.ToShortDisplayString()) + "</td>");
-                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[4]) + ">" + GetHtmlText(itemRight, itemRight.Text) + "</td>");
+                            if (subtitleListView2.ColumnIndexEnd >= 0)
+                            {
+                                sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexEnd]) + ">" + GetHtmlText(itemRight, itemRight.EndTime.ToShortDisplayString()) + "</td>");
+                            }
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[subtitleListView1.ColumnIndexText]) + ">" + GetHtmlText(itemRight, itemRight.Text) + "</td>");
                             sb.AppendLine("    </tr>");
                         }
                     }
