@@ -4856,14 +4856,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void InitializeNOcrThreads(int max)
         {
-            if (_nOcrDbThread == null || _nOcrThreadResults == null ||
-                _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
-                _nOcrDb.OcrCharacters.Count != _nOcrDbThread.OcrCharacters.Count ||
-                _subtitle.Paragraphs.Count != _nOcrThreadResults.Length)
-            {
-                _nOcrDbThread = new NOcrDb(_nOcrDb, null);
-                _nOcrThreadResults = new NOcrThreadResult[max];
-            }
+            _nOcrDbThread = new NOcrDb(_nOcrDb, null);
+            _nOcrThreadResults = new NOcrThreadResult[max];
 
             int noOfThreads = Environment.ProcessorCount - 1;
             if (noOfThreads >= max)
@@ -4895,7 +4889,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         };
                         bw.DoWork += NOcrThreadDoWork;
                         bw.RunWorkerCompleted += NOcrThreadRunWorkerCompleted;
-                        //   bw.RunWorkerAsync(p);
+                        bw.RunWorkerAsync(p);
                         Application.DoEvents();
                     }
                 }
@@ -6503,6 +6497,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _mainOcrTimer?.Stop();
             _abort = true;
+            _ocrThreadStop = true;
             _tesseractThreadRunner?.Cancel();
             buttonStop.Enabled = false;
             progressBar1.Visible = false;
