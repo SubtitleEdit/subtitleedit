@@ -567,6 +567,7 @@
     <Word from="kidnapere" to="otmičare" />
     <Word from="kidnapovan" to="otet" />
     <Word from="Kidnapovan" to="Otet" />
+    <Word from="kidnapovana" to="oteta" />
     <Word from="kidnapuje" to="otima" />
     <Word from="kijanje" to="kihanje" />
     <Word from="kiji" to="koji" />
@@ -788,6 +789,8 @@
     <Word from="mje" to="moje" />
     <Word from="mleo" to="mljeo" />
     <Word from="moč" to="moć" />
+    <Word from="motiviši" to="motiviraj" />
+    <Word from="Motiviši" to="Motiviraj" />
     <Word from="mođe" to="može" />
     <Word from="mofu" to="mogu" />
     <Word from="momenat" to="trenutak" />
@@ -1298,6 +1301,7 @@
     <Word from="Projekat" to="Projekt" />
     <Word from="proliv" to="proljev" />
     <Word from="proliva" to="proljeva" />
+    <Word from="proljećna" to="proljetna" />
     <Word from="promijena" to="promjena" />
     <Word from="promovisao" to="promovirao" />
     <Word from="prosledili" to="proslijedili" />
@@ -2375,6 +2379,7 @@
     <Word from="Vitni" to="Whitney" />
     <Word from="Volta" to="Walta" />
     <Word from="Volte" to="Walte" />
+    <Word from="Volš" to="Walsh" />
     <Word from="Voren" to="Warren" />
     <Word from="Vrajt" to="Wright" />
     <Word from="Vud" to="Wood" />
@@ -3603,6 +3608,7 @@
     <RegEx find="koriš[čć]a" replaceWith="korišta" />
     <!-- doktorica / profesorica -->
     <RegEx find="(kt|s)ork" replaceWith="$1oric" />
+    <RegEx find="kpr" replaceWith="kor" />
     <RegEx find="ktovanj" replaceWith="ktiranj" />
     <RegEx find="ktuj" replaceWith="ktiraj" />
     <RegEx find="(?&lt;![Oo]b)([nl])izuj[eu]" replaceWith="$1izira" />
