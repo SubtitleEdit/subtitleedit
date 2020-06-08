@@ -549,9 +549,10 @@ namespace Nikse.SubtitleEdit.Core
             string s = RemoveLineBreaks(text);
             if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
             {
-                if (Configuration.Settings.Tools.AutoBreakDashEarly)
+                var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
+                if (Configuration.Settings.Tools.AutoBreakDashEarly && lastIndexOfDash > 4 && s.Substring(0, lastIndexOfDash).HasSentenceEnding(language))
                 {
-                    return Forms.FixCommonErrors.Helper.FixDialogsOnOneLine(s, language);
+                    s = s.Remove(lastIndexOfDash, 1).Insert(lastIndexOfDash, Environment.NewLine);
                 }
 
                 return s;
