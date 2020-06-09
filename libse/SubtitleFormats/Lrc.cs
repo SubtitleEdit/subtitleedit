@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Paragraphs.Count > 4)
             {
                 bool allStartWithNumber = true;
-                foreach (Paragraph p in subtitle.Paragraphs)
+                foreach (var p in subtitle.Paragraphs)
                 {
                     if (p.Text.Length > 1 && !Utilities.IsInteger(p.Text.Substring(0, 2)))
                     {
@@ -51,7 +51,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (subtitle.Paragraphs.Count > _errorCount)
             {
-                if (new UnknownSubtitle33().IsMine(lines, fileName) || new UnknownSubtitle36().IsMine(lines, fileName) || new TMPlayer().IsMine(lines, fileName))
+                if (new UnknownSubtitle33().IsMine(lines, fileName) || 
+                    new UnknownSubtitle36().IsMine(lines, fileName) || 
+                    new TMPlayer().IsMine(lines, fileName))
                 {
                     return false;
                 }
@@ -76,8 +78,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                var p = subtitle.Paragraphs[i];
+                var next = subtitle.GetParagraphOrDefault(i + 1);
 
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " ");
@@ -203,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int max = subtitle.Paragraphs.Count;
             for (int i = 0; i < max; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 while (RegexTimeCodes.Match(p.Text).Success)
                 {
                     string s = p.Text.Substring(1, 8);

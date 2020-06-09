@@ -658,15 +658,16 @@ namespace Nikse.SubtitleEdit.Core
             s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(" " + Environment.NewLine + " ", " ");
+            s = s.Replace(Environment.NewLine + " ", " ");
+            s = s.Replace(" " + Environment.NewLine + " ", " ");
             s = s.Replace(Environment.NewLine, " ");
             s = s.Replace(" </i>", "</i> ");
             s = s.Replace(" </b>", "</b> ");
             s = s.Replace(" </u>", "</u> ");
             s = s.Replace(" </font>", "</font> ");
-            s = s.FixExtraSpaces();
             return s.Trim();
         }
-
 
         /// <summary>
         /// Note: Requires a space before the NewLine
