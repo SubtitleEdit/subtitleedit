@@ -446,10 +446,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -1646,20 +1646,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripMenuItemImageSaveAs,
             this.previewToolStripMenuItem});
             this.contextMenuStripImage.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripImage.Size = new System.Drawing.Size(267, 164);
+            this.contextMenuStripImage.Size = new System.Drawing.Size(267, 142);
             this.contextMenuStripImage.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripImage_Opening);
             // 
             // autoTransparentBackgroundToolStripMenuItem
             // 
             this.autoTransparentBackgroundToolStripMenuItem.CheckOnClick = true;
             this.autoTransparentBackgroundToolStripMenuItem.Name = "autoTransparentBackgroundToolStripMenuItem";
-            this.autoTransparentBackgroundToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.autoTransparentBackgroundToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.autoTransparentBackgroundToolStripMenuItem.Text = "Auto transparent background";
             // 
             // setItalicAngleToolStripMenuItem
             // 
             this.setItalicAngleToolStripMenuItem.Name = "setItalicAngleToolStripMenuItem";
-            this.setItalicAngleToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.setItalicAngleToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.setItalicAngleToolStripMenuItem.Text = "Set italic angle...";
             this.setItalicAngleToolStripMenuItem.Click += new System.EventHandler(this.setItalicAngleToolStripMenuItem_Click);
             // 
@@ -1667,7 +1667,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.toolStripMenuItemCaptureTopAlign.CheckOnClick = true;
             this.toolStripMenuItemCaptureTopAlign.Name = "toolStripMenuItemCaptureTopAlign";
-            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(230, 22);
+            this.toolStripMenuItemCaptureTopAlign.Size = new System.Drawing.Size(266, 22);
             this.toolStripMenuItemCaptureTopAlign.Text = "Capture top alignment";
             this.toolStripMenuItemCaptureTopAlign.Click += new System.EventHandler(this.toolStripMenuItemCaptureTopAlign_Click);
             // 
@@ -1683,12 +1683,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(227, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(263, 6);
             // 
             // toolStripMenuItemImageSaveAs
             // 
             this.toolStripMenuItemImageSaveAs.Name = "toolStripMenuItemImageSaveAs";
-            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(230, 22);
+            this.toolStripMenuItemImageSaveAs.Size = new System.Drawing.Size(266, 22);
             this.toolStripMenuItemImageSaveAs.Text = "Save image as...";
             this.toolStripMenuItemImageSaveAs.Click += new System.EventHandler(this.toolStripMenuItemImageSaveAs_Click);
             // 
@@ -1696,7 +1696,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
             this.previewToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.previewToolStripMenuItem.Text = "Preview...";
             this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 

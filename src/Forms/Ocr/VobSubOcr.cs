@@ -4260,7 +4260,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrLetterHeightsTotalCount > 20)
             {
                 var averageLineHeight = _ocrLetterHeightsTotal / _ocrLetterHeightsTotalCount;
-                return (int)Math.Round(averageLineHeight * 0.6);
+                return (int)Math.Round(averageLineHeight * 0.9);
             }
 
             return _bluRaySubtitlesOriginal != null ? 25 : 12;
