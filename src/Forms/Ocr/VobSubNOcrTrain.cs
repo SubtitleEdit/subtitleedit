@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubNOcrTrain : Form
     {
-
         private readonly Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
