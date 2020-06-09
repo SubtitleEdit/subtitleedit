@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -13,6 +14,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public string FileName { get; set; }
         public List<NOcrChar> OcrCharacters = new List<NOcrChar>();
         public List<NOcrChar> OcrCharactersExpanded = new List<NOcrChar>();
+
+        private const string Version = "V2";
 
         public NOcrDb(string fileName)
         {
@@ -32,6 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
+                var versionBuffer = Encoding.ASCII.GetBytes(Version);
+                gz.Write(versionBuffer, 0, versionBuffer.Length);
+
                 foreach (var ocrChar in OcrCharacters)
                 {
                     ocrChar.Save(gz);
@@ -56,12 +62,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return;
             }
 
+            bool isVersion2;
+            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+            {
+                var versionBuffer = new byte[Version.Length];
+                gz.Read(versionBuffer, 0, versionBuffer.Length);
+                isVersion2 = Encoding.ASCII.GetString(versionBuffer) == Version;
+            }
+
             using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
             {
                 bool done = false;
+                if (isVersion2)
+                {
+                    var versionBuffer = new byte[Version.Length];
+                    gz.Read(versionBuffer, 0, versionBuffer.Length);
+                }
                 while (!done)
                 {
-                    var ocrChar = new NOcrChar(gz);
+                    var ocrChar = new NOcrChar(gz, isVersion2);
                     if (ocrChar.LoadedOk)
                     {
                         if (ocrChar.ExpandCount > 0)

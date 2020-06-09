@@ -1179,7 +1179,7 @@
             this.numericUpDownLinesToDraw.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownLinesToDraw.Location = new System.Drawing.Point(455, 99);
             this.numericUpDownLinesToDraw.Maximum = new decimal(new int[] {
-            1000,
+            255,
             0,
             0,
             0});

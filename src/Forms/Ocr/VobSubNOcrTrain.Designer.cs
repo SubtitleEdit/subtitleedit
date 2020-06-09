@@ -133,7 +133,7 @@
             this.numericUpDownSegmentsPerCharacter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.numericUpDownSegmentsPerCharacter.Location = new System.Drawing.Point(264, 390);
             this.numericUpDownSegmentsPerCharacter.Maximum = new decimal(new int[] {
-            250,
+            255,
             0,
             0,
             0});
