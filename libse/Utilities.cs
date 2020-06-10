@@ -651,21 +651,37 @@ namespace Nikse.SubtitleEdit.Core
         public static string RemoveLineBreaks(string input)
         {
             var s = HtmlUtil.FixUpperTags(input);
+
+            s = s.Replace("</i> " + Environment.NewLine + "<i>", Environment.NewLine);
+            s = s.Replace("</i>" + Environment.NewLine + " <i>", Environment.NewLine);
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+
+            s = s.Replace(Environment.NewLine + " </i>", "</i>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " </b>", "</b>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " </u>", "</u>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " </font>", "</font>" + Environment.NewLine);
+
+            s = s.Replace(" " + Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            s = s.Replace(" " + Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            s = s.Replace(" " + Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            s = s.Replace(" " + Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+
             s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(" " + Environment.NewLine + " ", " ");
-            s = s.Replace(Environment.NewLine + " ", " ");
-            s = s.Replace(" " + Environment.NewLine + " ", " ");
+
+            while (s.Contains(" " + Environment.NewLine))
+            {
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            }
+
+            while (s.Contains(Environment.NewLine + " "))
+            {
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            }
+
             s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace(" </i>", "</i> ");
-            s = s.Replace(" </b>", "</b> ");
-            s = s.Replace(" </u>", "</u> ");
-            s = s.Replace(" </font>", "</font> ");
             return s.Trim();
         }
 

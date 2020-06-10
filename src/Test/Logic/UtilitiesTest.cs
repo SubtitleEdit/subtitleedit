@@ -228,7 +228,7 @@ namespace Test.Logic
             var old = Configuration.Settings.General.MaxNumberOfLines;
             Configuration.Settings.General.MaxNumberOfLines = 3;
             Configuration.Settings.Tools.AutoBreakUsePixelWidth = false;
-            const string s1 = "Follow him.    Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
+            const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
             string s2 = Utilities.AutoBreakLine(s1);
             Configuration.Settings.General.MaxNumberOfLines = old;
             Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes <b>again<b>!", s2);
@@ -680,35 +680,35 @@ namespace Test.Logic
         public void RemoveLineBreaks1()
         {
             string result = Utilities.RemoveLineBreaks("Hey" + Environment.NewLine + "you!");
-            Assert.AreEqual(result, "Hey you!");
+            Assert.AreEqual("Hey you!", result);
         }
 
         [TestMethod]
         public void RemoveLineBreaks2()
         {
             string result = Utilities.RemoveLineBreaks("<i>Foobar " + Environment.NewLine + "</i> foobar.");
-            Assert.AreEqual(result, "<i>Foobar</i> foobar.");
+            Assert.AreEqual("<i>Foobar</i> foobar.", result);
         }
 
         [TestMethod]
         public void RemoveLineBreaks3()
         {
             string result = Utilities.RemoveLineBreaks("<i>Foobar " + Environment.NewLine + "</i>foobar.");
-            Assert.AreEqual(result, "<i>Foobar</i> foobar.");
+            Assert.AreEqual("<i>Foobar</i> foobar.", result);
         }
 
         [TestMethod]
         public void RemoveLineBreaks4()
         {
             string result = Utilities.RemoveLineBreaks("<i>Hey</i>" + Environment.NewLine + "<i>you!</i>");
-            Assert.AreEqual(result, "<i>Hey you!</i>");
+            Assert.AreEqual("<i>Hey you!</i>", result);
         }
 
         [TestMethod]
         public void RemoveLineBreaks5()
         {
             string result = Utilities.RemoveLineBreaks("<i>Foobar" + Environment.NewLine + "</i>");
-            Assert.AreEqual(result, "<i>Foobar</i>");
+            Assert.AreEqual( "<i>Foobar</i>", result);
         }
 
         [TestMethod]
