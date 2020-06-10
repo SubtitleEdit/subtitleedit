@@ -38,9 +38,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.TimeCode timeCode7 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode8 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode9 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -126,6 +126,7 @@
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCheetahCap = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportDcinemaInterop = new System.Windows.Forms.ToolStripMenuItem();
+            this.dCinemaSMPTE2014ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
             this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -519,7 +520,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.dCinemaSMPTE2014ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1371,6 +1371,13 @@
             this.toolStripMenuItemExportDcinemaInterop.Size = new System.Drawing.Size(255, 22);
             this.toolStripMenuItemExportDcinemaInterop.Text = "D-Cinema interop/png...";
             this.toolStripMenuItemExportDcinemaInterop.Click += new System.EventHandler(this.toolStripMenuItemExportDcinemaInteropClick);
+            // 
+            // dCinemaSMPTE2014ToolStripMenuItem
+            // 
+            this.dCinemaSMPTE2014ToolStripMenuItem.Name = "dCinemaSMPTE2014ToolStripMenuItem";
+            this.dCinemaSMPTE2014ToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.dCinemaSMPTE2014ToolStripMenuItem.Text = "D-Cinema SMPTE 2014";
+            this.dCinemaSMPTE2014ToolStripMenuItem.Click += new System.EventHandler(this.dCinemaSMPTE2014ToolStripMenuItem_Click);
             // 
             // toolStripMenuItemDost
             // 
@@ -2449,7 +2456,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 942);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 964);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -3434,14 +3441,14 @@
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode7.Hours = 0;
-            timeCode7.Milliseconds = 0;
-            timeCode7.Minutes = 0;
-            timeCode7.Seconds = 0;
-            timeCode7.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode7.TotalMilliseconds = 0D;
-            timeCode7.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode7;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode1;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -3674,14 +3681,14 @@
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode8.Hours = 0;
-            timeCode8.Milliseconds = 0;
-            timeCode8.Minutes = 0;
-            timeCode8.Seconds = 0;
-            timeCode8.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode8.TotalMilliseconds = 0D;
-            timeCode8.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode8;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // buttonAdjustSetEndTime
@@ -4842,14 +4849,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(111, 27);
             this.timeUpDownStartTime.TabIndex = 0;
-            timeCode9.Hours = 0;
-            timeCode9.Milliseconds = 0;
-            timeCode9.Minutes = 0;
-            timeCode9.Seconds = 0;
-            timeCode9.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode9.TotalMilliseconds = 0D;
-            timeCode9.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode9;
+            timeCode3.Hours = 0;
+            timeCode3.Milliseconds = 0;
+            timeCode3.Minutes = 0;
+            timeCode3.Seconds = 0;
+            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode3.TotalMilliseconds = 0D;
+            timeCode3.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode3;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5046,13 +5053,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // dCinemaSMPTE2014ToolStripMenuItem
-            // 
-            this.dCinemaSMPTE2014ToolStripMenuItem.Name = "dCinemaSMPTE2014ToolStripMenuItem";
-            this.dCinemaSMPTE2014ToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.dCinemaSMPTE2014ToolStripMenuItem.Text = "D-Cinema SMPTE 2014";
-            this.dCinemaSMPTE2014ToolStripMenuItem.Click += new System.EventHandler(this.dCinemaSMPTE2014ToolStripMenuItem_Click);
             // 
             // Main
             // 

@@ -20149,6 +20149,7 @@ namespace Nikse.SubtitleEdit.Forms
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
             underlineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
+            splitLineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSplit);
             toolStripMenuItemSurroundWithMusicSymbols.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
             copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
