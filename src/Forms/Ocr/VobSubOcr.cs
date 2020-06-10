@@ -67,7 +67,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal class NOcrThreadParameter
         {
-            public Bitmap Picture { get; set; }
             public int Index { get; set; }
             public int Increment { get; set; }
             public string ResultText { get; set; }
@@ -81,10 +80,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public int NumberOfPixelsIsSpace;
             public bool RightToLeft;
 
-            public NOcrThreadParameter(Bitmap picture, int index, NOcrDb nOcrDb, BackgroundWorker self, int increment, double unItalicFactor, bool advancedItalicDetection, int numberOfPixelsIsSpace, bool rightToLeft)
+            public NOcrThreadParameter(int index, NOcrDb nOcrDb, BackgroundWorker self, int increment, double unItalicFactor, bool advancedItalicDetection, int numberOfPixelsIsSpace, bool rightToLeft)
             {
                 Self = self;
-                Picture = picture;
                 Index = index;
                 NOcrDb = nOcrDb;
                 Increment = increment;
@@ -105,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             public NOcrThreadResult(NOcrThreadParameter p)
             {
-                ResultMatches = p.ResultMatches;
+                ResultMatches = new List<CompareMatch>(p.ResultMatches);
                 ResultText = p.ResultText;
             }
         }
@@ -4881,7 +4879,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (start + i < max)
                     {
                         var bw = new BackgroundWorker();
-                        var p = new NOcrThreadParameter(null, start + i, _nOcrDbThread, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked)
+                        var p = new NOcrThreadParameter(start + i, _nOcrDbThread, bw, noOfThreads, _unItalicFactor, checkBoxNOcrItalic.Checked, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked)
                         {
                             NOcrLastLowercaseHeight = GetLastBinOcrLowercaseHeight(),
                             NOcrLastUppercaseHeight = GetLastBinOcrUppercaseHeight(),
@@ -4911,8 +4909,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             p.Index += p.Increment;
             if (p.Index < _subtitle.Paragraphs.Count)
             {
-                p.ResultMatches = new List<CompareMatch>();
-                p.ResultText = string.Empty;
                 p.Self.RunWorkerAsync(p);
             }
         }
@@ -4921,12 +4917,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var p = (NOcrThreadParameter)e.Argument;
             e.Result = p;
-            p.Picture = GetSubtitleBitmap(p.Index);
-            var parentBitmap = new NikseBitmap(p.Picture);
+            var bmp = GetSubtitleBitmap(p.Index);
+            var parentBitmap = new NikseBitmap(bmp);
+            bmp.Dispose();
             parentBitmap.ReplaceNonWhiteWithTransparent();
             var minLineHeight = GetMinLineHeight();
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
             UpdateLineHeights(list);
+            p.ResultMatches = new List<CompareMatch>();
             int index = 0;
             while (index < list.Count)
             {
@@ -4953,7 +4951,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 index++;
             }
             p.ResultText = MatchesToItalicStringConverter.GetStringWithItalicTags(p.ResultMatches);
-            p.Picture.Dispose();
         }
 
         private void CleanLogsGreaterThanOrEqualTo(decimal value)
