@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                    IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesForeground);
         }
 
-        private bool IsAllPointByteValues(List<NOcrPoint> lines)
+        private static bool IsAllPointByteValues(List<NOcrPoint> lines)
         {
             for (var index = 0; index < lines.Count; index++)
             {
