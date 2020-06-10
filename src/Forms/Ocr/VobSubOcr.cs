@@ -6783,6 +6783,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
                 }
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
+            {
+                e.SuppressKeyPress = true;
+                var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
+                if (bmp != null)
+                {
+                    var nBmp = new NikseBitmap(bmp);
+                    bmp.Dispose();
+                    for (var startY = 20; startY < nBmp.Height; startY += 20)
+                    {
+                        for (int x = 0; x < nBmp.Width; x++)
+                        {
+                            nBmp.SetPixel(x, startY, Color.Red);
+                        }
+                    }
+
+                    pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
+                }
+            }
             else if (e.Modifiers == (Keys.Control) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
             {
                 e.SuppressKeyPress = true;
@@ -6809,6 +6828,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
 
+                lineSplitImage.ReplaceTransparentWith(Color.Black);
                 var bmp = lineSplitImage.GetBitmap();
                 using (var form = new ExportPngXmlPreview(bmp))
                 {
