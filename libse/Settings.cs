@@ -1590,6 +1590,7 @@ $HorzAlign          =   Center
         public string MainListViewItalic { get; set; }
         public string MainListViewBold { get; set; }
         public string MainListViewUnderline { get; set; }
+        public string MainListViewSplit { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewToggleMusicSymbols { get; set; }
         public string MainListViewAlignment { get; set; }
@@ -6097,6 +6098,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainListViewUnderline = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewSplit");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainListViewSplit = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewToggleDashes");
                 if (subNode != null)
                 {
@@ -7695,6 +7702,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
                 textWriter.WriteElementString("MainListViewBold", settings.Shortcuts.MainListViewBold);
                 textWriter.WriteElementString("MainListViewUnderline", settings.Shortcuts.MainListViewUnderline);
+                textWriter.WriteElementString("MainListViewSplit", settings.Shortcuts.MainListViewSplit);
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
                 textWriter.WriteElementString("MainListViewToggleMusicSymbols", settings.Shortcuts.MainListViewToggleMusicSymbols);
                 textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
