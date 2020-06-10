@@ -14972,7 +14972,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
 
-                if (_subtitleAlternate != null)
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
                     var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
                     if (original != null)
