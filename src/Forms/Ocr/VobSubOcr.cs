@@ -4826,10 +4826,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 checkBoxNOcrDrawUnknownLetters.Checked = true;
                 _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
-                _autoLineHeight = comboBoxNOcrLineSplitMinHeight.SelectedIndex == 0;
-                if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
+                _autoLineHeight = comboBoxLineSplitMinLineHeight.SelectedIndex == 0;
+                if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
                 {
-                    _ocrMinLineHeight = int.Parse(comboBoxNOcrLineSplitMinHeight.Text);
+                    _ocrMinLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
                 }
                 else
                 {
