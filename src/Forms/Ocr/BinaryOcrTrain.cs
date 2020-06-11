@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bmp = GenerateImageFromTextWithStyle("H  " + s, bold, italic);
             var nbmp = new NikseBitmap(bmp);
             nbmp.MakeTwoColor(280);
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25, false);
             if (list.Count == 3)
             {
                 var item = list[2];

@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var nikseBitmap = new NikseBitmap(bmp);
             nikseBitmap.MakeTwoColor(280);
             nikseBitmap.CropTop(0, Color.FromArgb(0, 0, 0, 0));
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, 10, false, false, 25);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, 10, false, false, 25, false);
             if (list.Count == 3)
             {
                 var item = list[2];
