@@ -1619,7 +1619,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                             {
-                                if (word[0] == 'L')
+                                if (word.Length > 2 && word[0] == 'L')
                                 {
                                     guesses.Add("I" + word.Substring(1));
                                 }
