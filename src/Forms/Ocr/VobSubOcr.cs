@@ -348,6 +348,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         // optimization vars
         private int _numericUpDownPixelsIsSpace = 12;
+        private bool _autoLineHeight = true;
         private double _numericUpDownMaxErrorPct = 6;
         private int _ocrMethodIndex;
         private bool _autoBreakLines;
@@ -3605,7 +3606,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var matches = new List<CompareMatch>();
             var parentBitmap = new NikseBitmap(bitmap);
             int minLineHeight = GetMinLineHeight();
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
             UpdateLineHeights(list);
             int index = 0;
             bool expandSelection = false;
@@ -3968,7 +3969,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void NOCRIntialize(Bitmap bitmap)
         {
             var nikseBitmap = new NikseBitmap(bitmap);
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 12);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 12, _autoLineHeight);
             UpdateLineHeights(list);
             foreach (var item in list)
             {
@@ -4002,7 +4003,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (string.IsNullOrEmpty(line))
             {
-                var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, GetMinLineHeight());
+                var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmpInput, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, GetMinLineHeight(), _autoLineHeight);
                 UpdateLineHeights(list);
 
                 int index = 0;
@@ -4806,7 +4807,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 InitializeNOcrThreads(max);
-
+                _autoLineHeight = comboBoxNOcrLineSplitMinHeight.SelectedIndex == 0;
                 if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
                 {
                     _ocrMinLineHeight = int.Parse(comboBoxNOcrLineSplitMinHeight.Text);
@@ -4815,7 +4816,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrMinLineHeight = -1;
                 }
-
             }
             else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
@@ -4826,7 +4826,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 checkBoxNOcrDrawUnknownLetters.Checked = true;
                 _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
-
+                _autoLineHeight = comboBoxNOcrLineSplitMinHeight.SelectedIndex == 0;
                 if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
                 {
                     _ocrMinLineHeight = int.Parse(comboBoxNOcrLineSplitMinHeight.Text);
@@ -4922,7 +4922,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bmp.Dispose();
             parentBitmap.ReplaceNonWhiteWithTransparent();
             var minLineHeight = GetMinLineHeight();
-            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
             UpdateLineHeights(list);
             p.ResultMatches = new List<CompareMatch>();
             int index = 0;
@@ -6802,14 +6802,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     pictureBoxSubtitleImage.Image = nBmp.GetBitmap();
                 }
             }
-            else if (e.Modifiers == (Keys.Control) && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.H && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodNocr))
             {
                 e.SuppressKeyPress = true;
+
+                if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
+                {
+                    _ocrMinLineHeight = int.Parse(comboBoxNOcrLineSplitMinHeight.Text);
+                }
+                else if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
+                {
+                    _ocrMinLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+                }
+                else
+                {
+                    _ocrMinLineHeight = -1;
+                }
 
                 int minLineHeight = GetMinLineHeight();
                 var bitmap = GetSubtitleBitmap(_selectedIndex);
                 var nikseBitmap = new NikseBitmap(bitmap);
-                var list = NikseBitmapImageSplitter.SplitBitmapToLines(nikseBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+                nikseBitmap.MakeTwoColor(200);
+                var list = NikseBitmapImageSplitter.SplitBitmapToLines(nikseBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
 
                 var lineSplitImage = new NikseBitmap(nikseBitmap.Width + 10, nikseBitmap.Height + list.Count * 10 + 10);
                 lineSplitImage.Fill(Color.Red);
@@ -7709,7 +7723,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 do
                 {
                     var matches = new List<CompareMatch>();
-                    var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+                    var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
                     var imageSources = CalcInspectMatches(sourceList, matches, parentBitmap);
                     inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb, sourceList);
                     var result = inspect.ShowDialog(this);
@@ -9026,7 +9040,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 var parentBitmap = new NikseBitmap(bitmap);
                 int minLineHeight = GetMinLineHeight();
-                var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+                var sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
                 int index = 0;
                 int hits = 0;
                 foreach (var item in sourceList)

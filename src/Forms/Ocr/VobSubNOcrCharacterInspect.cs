@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _nOcrDb = nOcrDb;
             _matchList = new List<VobSubOcr.CompareMatch>();
 
-            _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nikseBitmap, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, false);
 
             int index = 0;
             _indexLookup = new Dictionary<int, int>();
