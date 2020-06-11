@@ -8,6 +8,7 @@
    * New shortcuts to move start/end with gap - thx matmaggi/Fhining/btsix
    * Add move shortcuts to waveform (arrow left/right) - thx Shaddy
    * Add shortcut for "add waveform" - thx Bill
+   * Add shortcuts for "go to prev/next sub and play"
    * Add new subtitle format - thx Matmanamane
    * Add new subtitle format "Speechmatics" - thx Rene
    * Add new json sub formats - thx Steven
@@ -25,6 +26,8 @@
    * Update Greek translation - thx Lero91
    * Update Basque translation - thx Xabier
    * Update Romanian translation - thx Mircea
+   * Update Chinese translation - thx LeonCheung
+   * Update Polish translation - thx admas
    * Init no-break-after-list with language
    * Make quick-char-list in "OCR Char" window dynamic
    * Remember settings for "column paste"
@@ -57,6 +60,8 @@
    * Fixes for Bing translate token endpoint - thx obliver27
    * Fix auto br for 3+ lines dialog - thx thejester77
    * Fix auto-br issue with dialog - thx Kevin
+   * Don't remove spaces in auto-br - thx thehulk
+   * Fix crash in compare report - thx Janusz
 
 
 3.5.15 (1st May 2020)
