@@ -141,10 +141,9 @@ namespace Nikse.SubtitleEdit.Core
         public string GoogleApiV2Key { get; set; }
         public bool GoogleApiV2KeyInfoShow { get; set; }
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
-        public bool UseGooleApiPaidService { get; set; }
         public int GoogleApiV1ChunkSize { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
-        public bool TranslateAutoSplit { get; set; }
+        public bool TranslateAllowSplit { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -332,10 +331,9 @@ namespace Nikse.SubtitleEdit.Core
             MicrosoftTranslatorTokenEndpoint = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
-            UseGooleApiPaidService = false;
             GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
-            TranslateAutoSplit = true;
+            TranslateAllowSplit = true;
             CheckOneLetterWords = true;
             SpellCheckEnglishAllowInQuoteAsIng = false;
             SpellCheckShowCompletedMessage = true;
@@ -3320,12 +3318,6 @@ $HorzAlign          =   Center
                 settings.Tools.GoogleApiV2KeyInfoShow = Convert.ToBoolean(subNode.InnerText);
             }
 
-            subNode = node.SelectSingleNode("UseGooleApiPaidService");
-            if (subNode != null)
-            {
-                settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
-            }
-
             subNode = node.SelectSingleNode("GoogleApiV1ChunkSize");
             if (subNode != null)
             {
@@ -3338,10 +3330,10 @@ $HorzAlign          =   Center
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
             }
 
-            subNode = node.SelectSingleNode("TranslateAutoSplit");
+            subNode = node.SelectSingleNode("TranslateAllowSplit");
             if (subNode != null)
             {
-                settings.Tools.TranslateAutoSplit = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.TranslateAllowSplit = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
@@ -7188,10 +7180,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
                 textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
-                textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("TranslateAllowSplit", settings.Tools.TranslateAllowSplit.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString(CultureInfo.InvariantCulture));

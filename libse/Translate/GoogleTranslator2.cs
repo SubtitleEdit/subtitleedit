@@ -153,18 +153,37 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var baseUrl = "https://translation.googleapis.com/language/translate/v2";
             var format = "text";
             var input = new StringBuilder();
-            var formattings = new Formatting[paragraphs.Count];
+            var formatList = new List<Formatting>();
+            bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
                 var p = paragraphs[index];
                 var f = new Formatting();
-                formattings[index] = f;
+                formatList.Add(f);
                 if (input.Length > 0)
                 {
                     input.Append("&");
                 }
 
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                var nextText = string.Empty;
+                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                {
+                    nextText = paragraphs[index + 1].Text;
+                }
+
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
+                skipNext = f.SkipNext;
+                if (!skipNext)
+                {
+                    text = f.UnBreak(text, p.Text);
+                }
+
                 input.Append("q=" + Utilities.UrlEncode(text));
             }
 
@@ -198,14 +217,25 @@ namespace Nikse.SubtitleEdit.Core.Translate
                                     {
                                         if (v2[innerKey2] is string translatedText)
                                         {
+                                            string nextText = null;
                                             translatedText = Regex.Unescape(translatedText);
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
-                                            if (resultList.Count < formattings.Length)
+                                            if (resultList.Count < formatList.Count)
                                             {
-                                                translatedText = formattings[resultList.Count].ReAddFormatting(translatedText);
+                                                translatedText = formatList[resultList.Count].ReAddFormatting(translatedText, out nextText);
+                                                if (nextText == null)
+                                                {
+                                                    translatedText = formatList[resultList.Count].ReBreak(translatedText, targetLanguage);
+                                                }
                                             }
+
                                             resultList.Add(translatedText);
+
+                                            if (nextText != null)
+                                            {
+                                                resultList.Add(nextText);
+                                            }
                                         }
                                     }
                                 }

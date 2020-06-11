@@ -368,57 +368,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string SetFormattingTypeAndSplitting(int i, string text, bool skipSplit)
-        {
-            text = text.Trim();
-            if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 2)
-            {
-                _formattingTypes[i] = FormattingType.ItalicTwoLines;
-                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
-            }
-            else if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1)
-            {
-                _formattingTypes[i] = FormattingType.Italic;
-                text = text.Substring(3, text.Length - 7);
-            }
-            else
-            {
-                _formattingTypes[i] = FormattingType.None;
-            }
-
-            if (skipSplit)
-            {
-                return text;
-            }
-
-            var lines = text.SplitToLines();
-            if (Configuration.Settings.Tools.TranslateAutoSplit && lines.Count == 2 && !string.IsNullOrEmpty(lines[0]) && (Utilities.AllLettersAndNumbers + ",").Contains(lines[0].Substring(lines[0].Length - 1)))
-            {
-                _autoSplit[i] = true;
-                text = Utilities.RemoveLineBreaks(text);
-            }
-
-            return text;
-        }
-
-        private void FillTranslatedText(string translatedText, int start, int end)
-        {
-            int index = start;
-            foreach (string s in SplitToLines(translatedText))
-            {
-                if (index < TranslatedSubtitle.Paragraphs.Count)
-                {
-                    var cleanText = CleanText(s, index);
-                    TranslatedSubtitle.Paragraphs[index].Text = cleanText;
-                }
-                index++;
-            }
-            subtitleListViewTo.BeginUpdate();
-            subtitleListViewTo.Fill(TranslatedSubtitle);
-            subtitleListViewTo.SelectIndexAndEnsureVisible(end);
-            subtitleListViewTo.EndUpdate();
-        }
-
         private string CleanText(string s, int index)
         {
             string cleanText = s.Replace("</p>", string.Empty).Trim();
@@ -483,19 +432,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return cleanText;
-        }
-
-        private List<string> SplitToLines(string translatedText)
-        {
-            if (!_googleTranslate)
-            {
-                translatedText = translatedText.Replace("+- +", "+-+");
-                translatedText = translatedText.Replace("+ -+", "+-+");
-                translatedText = translatedText.Replace("+ - +", "+-+");
-                translatedText = translatedText.Replace("+ +", "+-+");
-                translatedText = translatedText.Replace("+-+", "\0");
-            }
-            return translatedText.Split('\0').ToList();
         }
 
         public void FillComboWithLanguages(ComboBox comboBox)

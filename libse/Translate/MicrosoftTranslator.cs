@@ -106,9 +106,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[");
             bool isFirst = true;
-            var formatList = new Formatting[paragraphs.Count];
+            bool skipNext = false;
+            var formatList = new List<Formatting>();
             for (var index = 0; index < paragraphs.Count; index++)
             {
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
                 var p = paragraphs[index];
                 if (!isFirst)
                 {
@@ -119,10 +126,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     isFirst = false;
                 }
 
+                var nextText = string.Empty;
+                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                {
+                    nextText = paragraphs[index + 1].Text;
+                }
+
                 var f = new Formatting();
-                formatList[index] = f;
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
-                text = f.UnBreak(text, p.Text);
+                formatList.Add(f);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage, nextText);
+                skipNext = f.SkipNext;
+                if (!skipNext)
+                {
+                    text = f.UnBreak(text, p.Text);
+                }
 
                 jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
             }
@@ -153,15 +170,25 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         var textDics = (Dictionary<string, object>)o;
                         var res = (string)textDics["text"];
 
-                        if (formatList.Length > results.Count)
+                        string nextText = null;
+                        if (formatList.Count > results.Count)
                         {
-                            res = formatList[results.Count].ReAddFormatting(res);
-                            res = formatList[results.Count].ReBreak(res, targetLanguage);
+                            res = formatList[results.Count].ReAddFormatting(res, out nextText);
+
+                            if (nextText == null)
+                            {
+                                res = formatList[results.Count].ReBreak(res, targetLanguage);
+                            }
                         }
 
                         res = TranslationHelper.PostTranslate(res, targetLanguage);
 
                         results.Add(res);
+
+                        if (nextText != null)
+                        {
+                            results.Add(nextText);
+                        }
                     }
                 }
             }
