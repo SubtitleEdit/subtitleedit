@@ -6,6 +6,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public class Formatting
     {
+        private static readonly List<string> LanguagesAllowingLineMerging = new List<string>
+        {
+            "en", "da", "nl", "de", "sv", "nb", "fr", "it", "tr", "es", "pt", "sr", "ru", "lv", "lt", "et", "ro", "pl", "ar", "he", "no"
+        };
+
         private bool Italic { get; set; }
         private string Font { get; set; }
         private bool ItalicTwoLines { get; set; }
@@ -14,8 +19,20 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
 
-        public string SetTagsAndReturnTrimmed(string input, string source)
+        private int BreakNumberOfLines { get; set; }
+        private bool BreakSplitAtLineEnding { get; set; }
+        private bool BreakIsDialog { get; set; }
+
+        public bool SkipNext { get; set; }
+
+
+        public string SetTagsAndReturnTrimmed(string input, string sourceLanguage, string inputNext)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
             var text = input.Trim();
 
             // SSA/ASS tags
@@ -51,20 +68,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 text = text.Remove(text.Length - "</font>".Length);
             }
 
-            // Un-break line
-            var allowedLanguages = new List<string> { "en", "da", "nl", "de", "sv", "nb", "fr", "it" };
-            if (allowedLanguages.Contains(source))
-            {
-                var lines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                if (lines.Count == 2 && !string.IsNullOrEmpty(lines[0]) && !string.IsNullOrEmpty(lines[1]) &&
-                    char.IsLetterOrDigit(lines[0][lines[0].Length - 1]) &&
-                    char.IsLower(lines[1][0]))
-                {
-                    text = Utilities.UnbreakLine(text);
-                    AutoBreak = true;
-                }
-            }
-
             // Square brackets
             if (text.StartsWith("[", StringComparison.Ordinal) && text.EndsWith("]", StringComparison.Ordinal) &&
                 Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "[") == 1 &&
@@ -82,17 +85,67 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 text = text.Replace("[", string.Empty).Replace("]", string.Empty);
             }
 
+            // Un-break line
+            if (LanguagesAllowingLineMerging.Contains(sourceLanguage))
+            {
+                var lines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                if (lines.Count == 2 && !string.IsNullOrEmpty(lines[0]) && !string.IsNullOrEmpty(lines[1]) &&
+                    char.IsLetterOrDigit(lines[0][lines[0].Length - 1]) &&
+                    char.IsLower(lines[1][0]))
+                {
+                    text = Utilities.UnbreakLine(text);
+                    AutoBreak = true;
+                }
+
+                if (Configuration.Settings.Tools.TranslateAllowSplit &&
+                    !string.IsNullOrEmpty(inputNext) && !string.IsNullOrEmpty(text) &&
+                    (char.IsLetterOrDigit(text[text.Length - 1]) || text[text.Length - 1] == ',' || sourceLanguage == "ar" && text[text.Length - 1] == '\u060C') &&
+                    char.IsLower(inputNext[0]) &&
+                    !text.Contains('-') && !inputNext.Contains('-') && !Italic && !SquareBrackets && string.IsNullOrEmpty(Font))
+                {
+                    text = Utilities.UnbreakLine(text);
+                    text = text + " " + Utilities.UnbreakLine(inputNext);
+                    SkipNext = true;
+                }
+            }
+
             return text.Trim();
         }
 
-        public string ReAddFormatting(string input)
+        public string ReAddFormatting(string input, out string nextText)
         {
             var text = input.Trim();
+            nextText = null;
 
             // Auto-break line
             if (AutoBreak)
             {
                 text = Utilities.AutoBreakLine(text);
+            }
+
+            if (SkipNext)
+            {
+                var lines = Utilities.AutoBreakLine(text).SplitToLines();
+                if (lines.Count == 1)
+                {
+                    nextText = string.Empty;
+                }
+                else if (lines.Count == 2)
+                {
+                    text = Utilities.AutoBreakLine(lines[0]);
+                    nextText = Utilities.AutoBreakLine(lines[1]);
+                }
+                else
+                {
+                    text = Utilities.AutoBreakLine(lines[0] + " " + lines[1]);
+                    var sb = new StringBuilder();
+                    for (int i = 2; i < lines.Count; i++)
+                    {
+                        sb.Append(lines[i]);
+                        sb.Append(" ");
+                    }
+                    nextText = Utilities.AutoBreakLine(sb.ToString().TrimEnd());
+                }
             }
 
             // Square brackets
@@ -131,11 +184,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             return text;
         }
-
-
-        private int BreakNumberOfLines { get; set; }
-        private bool BreakSplitAtLineEnding { get; set; }
-        private bool BreakIsDialog { get; set; }
 
         public string UnBreak(string text, string source)
         {

@@ -34,18 +34,37 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             string result;
             var input = new StringBuilder();
-            var formatList = new Formatting[paragraphs.Count];
+            var formatList = new List<Formatting>();
+            bool skipNext = false;
             for (var index = 0; index < paragraphs.Count; index++)
             {
+                if (skipNext)
+                {
+                    skipNext = false;
+                    continue;
+                }
+
                 var p = paragraphs[index];
                 var f = new Formatting();
-                formatList[index] = f;
+                formatList.Add(f);
                 if (input.Length > 0)
                 {
                     input.Append(" " + SplitChar + " ");
                 }
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
-                text = f.UnBreak(text, p.Text);
+
+                var nextText = string.Empty;
+                if (index < paragraphs.Count - 1 && paragraphs[index + 1].StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 200)
+                {
+                    nextText = paragraphs[index + 1].Text;
+                }
+
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage, nextText);
+                skipNext = f.SkipNext;
+                if (!skipNext)
+                {
+                    text = f.UnBreak(text, p.Text);
+                }
+
                 input.Append(text);
             }
 
@@ -114,13 +133,22 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                if (formatList.Length > index)
+                string nextText = null;
+                if (formatList.Count > index)
                 {
-                    s = formatList[index].ReAddFormatting(s);
-                    s = formatList[index].ReBreak(s, targetLanguage);
+                    s = formatList[index].ReAddFormatting(s, out nextText);
+                    if (nextText == null)
+                    {
+                        s = formatList[index].ReBreak(s, targetLanguage);
+                    }
                 }
 
                 resultList.Add(s);
+
+                if (nextText != null)
+                {
+                    resultList.Add(nextText);
+                }
             }
 
             if (resultList.Count > paragraphs.Count)
