@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var response = request.GetResponse();
             var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
             string content = reader.ReadToEnd();
-
+            var skipCount = 0;
             var resultList = new List<string>();
             var parser = new JsonParser();
             var x = (Dictionary<string, object>)parser.Parse(content);
@@ -221,12 +221,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
                                             translatedText = Regex.Unescape(translatedText);
                                             translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
                                             translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
-                                            if (resultList.Count < formatList.Count)
+                                            if (resultList.Count - skipCount < formatList.Count)
                                             {
-                                                translatedText = formatList[resultList.Count].ReAddFormatting(translatedText, out nextText);
+                                                translatedText = formatList[resultList.Count - skipCount].ReAddFormatting(translatedText, out nextText);
                                                 if (nextText == null)
                                                 {
-                                                    translatedText = formatList[resultList.Count].ReBreak(translatedText, targetLanguage);
+                                                    translatedText = formatList[resultList.Count - skipCount].ReBreak(translatedText, targetLanguage);
                                                 }
                                             }
 
@@ -235,6 +235,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                                             if (nextText != null)
                                             {
                                                 resultList.Add(nextText);
+                                                skipCount++;
                                             }
                                         }
                                     }

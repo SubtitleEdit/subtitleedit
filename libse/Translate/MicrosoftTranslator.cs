@@ -155,6 +155,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var results = new List<string>();
             var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            var skipCount = 0;
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
             {
                 var result = streamReader.ReadToEnd();
@@ -171,13 +172,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         var res = (string)textDics["text"];
 
                         string nextText = null;
-                        if (formatList.Count > results.Count)
+                        if (formatList.Count > results.Count - skipCount)
                         {
-                            res = formatList[results.Count].ReAddFormatting(res, out nextText);
+                            res = formatList[results.Count - skipCount].ReAddFormatting(res, out nextText);
 
                             if (nextText == null)
                             {
-                                res = formatList[results.Count].ReBreak(res, targetLanguage);
+                                res = formatList[results.Count - skipCount].ReBreak(res, targetLanguage);
                             }
                         }
 
@@ -188,6 +189,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         if (nextText != null)
                         {
                             results.Add(nextText);
+                            skipCount++;
                         }
                     }
                 }
