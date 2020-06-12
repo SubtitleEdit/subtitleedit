@@ -305,7 +305,7 @@
             // checkBoxItalic
             // 
             this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
+            this.checkBoxItalic.Location = new System.Drawing.Point(15, 62);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
             this.checkBoxItalic.TabIndex = 2;
@@ -335,9 +335,10 @@
             // 
             // textBoxText
             // 
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(87, 20);
+            this.textBoxText.Size = new System.Drawing.Size(87, 23);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.TextChanged += new System.EventHandler(this.textBoxText_TextChanged);
             // 

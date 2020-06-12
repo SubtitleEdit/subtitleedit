@@ -32,6 +32,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
+            this.labelExpandCount = new System.Windows.Forms.Label();
             this.labelImageSize = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
@@ -167,7 +168,6 @@
             this.toolStripMenuItemMusicSymbol1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMusicSymbol2 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.labelExpandCount = new System.Windows.Forms.Label();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
@@ -214,6 +214,15 @@
             this.groupBoxInspectItems.TabIndex = 15;
             this.groupBoxInspectItems.TabStop = false;
             this.groupBoxInspectItems.Text = "Inspect items";
+            // 
+            // labelExpandCount
+            // 
+            this.labelExpandCount.AutoSize = true;
+            this.labelExpandCount.Location = new System.Drawing.Point(252, 96);
+            this.labelExpandCount.Name = "labelExpandCount";
+            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
+            this.labelExpandCount.TabIndex = 32;
+            this.labelExpandCount.Text = "labelExpandCount";
             // 
             // labelImageSize
             // 
@@ -353,6 +362,7 @@
             this.checkBoxItalic.TabIndex = 2;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
+            this.checkBoxItalic.CheckedChanged += new System.EventHandler(this.checkBoxItalic_CheckedChanged);
             // 
             // labelTextAssociatedWithImage
             // 
@@ -388,7 +398,7 @@
             // textBoxText
             // 
             this.textBoxText.ContextMenuStrip = this.contextMenuStripLetters;
-            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 23);
@@ -1228,15 +1238,6 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 38;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // labelExpandCount
-            // 
-            this.labelExpandCount.AutoSize = true;
-            this.labelExpandCount.Location = new System.Drawing.Point(252, 96);
-            this.labelExpandCount.Name = "labelExpandCount";
-            this.labelExpandCount.Size = new System.Drawing.Size(93, 13);
-            this.labelExpandCount.TabIndex = 32;
-            this.labelExpandCount.Text = "labelExpandCount";
             // 
             // VobSubNOcrCharacterInspect
             // 

@@ -905,13 +905,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (checkBoxItalic.Checked)
             {
                 labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
-                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic | FontStyle.Bold);
                 labelItalicOn.Visible = true;
             }
             else
             {
                 labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
-                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Bold);
                 labelItalicOn.Visible = false;
             }
         }
@@ -921,7 +921,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCharacter.Invalidate();
         }
 
-        private void listBoxlinesBackground_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxLinesBackground_SelectedIndexChanged(object sender, EventArgs e)
         {
             pictureBoxCharacter.Invalidate();
         }
