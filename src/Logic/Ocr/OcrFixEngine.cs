@@ -1204,7 +1204,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
                 var st = new StrippableText(text);
-                if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
+                if (lastLine == null || !lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
                         !st.Pre.Contains("...", StringComparison.Ordinal) &&
@@ -1213,7 +1213,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         if (!HtmlUtil.StartsWithUrl(st.StrippedText))
                         {
                             var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
-                            if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
+                            if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && (st.StrippedText[1] == ' ' || char.IsLower(st.StrippedText[1])))
+                            {
+                                uppercaseLetter = 'I';
+                            }
+                            if (st.StrippedText.Length == 1 && uppercaseLetter == 'L')
                             {
                                 uppercaseLetter = 'I';
                             }

@@ -471,6 +471,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _nOcrChar.Italic = checkBoxItalic.Checked;
                 Changed = true;
             }
+
+            if (checkBoxItalic.Checked)
+            {
+                labelTextAssociatedWithImage.Font = new Font(labelTextAssociatedWithImage.Font.FontFamily, labelTextAssociatedWithImage.Font.Size, FontStyle.Italic);
+                textBoxText.Font = new Font(textBoxText.Font.FontFamily, textBoxText.Font.Size, FontStyle.Italic | FontStyle.Bold);
+            }
+            else
+            {
+                labelTextAssociatedWithImage.Font = new Font(labelTextAssociatedWithImage.Font.FontFamily, labelTextAssociatedWithImage.Font.Size);
+                textBoxText.Font = new Font(textBoxText.Font.FontFamily, textBoxText.Font.Size, FontStyle.Bold);
+            }
         }
 
         private void textBoxText_TextChanged(object sender, EventArgs e)

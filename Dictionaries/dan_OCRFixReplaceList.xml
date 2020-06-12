@@ -635,7 +635,15 @@
     <WordPart from="í" to="i" />
   </PartialWords>
   <WholeLines />
-  <PartialLinesAlways />
+  <PartialLinesAlways>
+    <LinePart from="Apollo 1 3" to="Apollo 13" />
+    <LinePart from=",.," to="..." />
+    <LinePart from=" l " to=" I " />
+    <LinePart from=" l." to=" I." />
+    <LinePart from=" l?" to=" I?" />
+    <LinePart from=" l!" to=" I!" />
+    <LinePart from=" . " to=". " />
+  </PartialLinesAlways>
   <PartialLines />
   <BeginLines>
     <Beginning from="-] " to="- I " />
@@ -643,7 +651,12 @@
     <Beginning from="] " to="I " />
     <Beginning from="-| " to="- I " />
     <Beginning from="- | " to="- I " />
+    <Beginning from="l " to="I " />
+    <Beginning from="- l " to="- I " />
   </BeginLines>
   <EndLines />
-  <RegularExpressions />
+  <RegularExpressions>
+    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="\b\l\b" replaceWith="I" />
+  </RegularExpressions>
 </OCRFixReplaceList>

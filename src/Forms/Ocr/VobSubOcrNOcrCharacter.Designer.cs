@@ -265,10 +265,10 @@
             // textBoxCharacters
             // 
             this.textBoxCharacters.ContextMenuStrip = this.contextMenuStripLetters;
-            this.textBoxCharacters.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxCharacters.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxCharacters.Location = new System.Drawing.Point(188, 58);
             this.textBoxCharacters.Name = "textBoxCharacters";
-            this.textBoxCharacters.Size = new System.Drawing.Size(107, 21);
+            this.textBoxCharacters.Size = new System.Drawing.Size(107, 23);
             this.textBoxCharacters.TabIndex = 22;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyDown);
             this.textBoxCharacters.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxCharacters_KeyUp);
@@ -1213,7 +1213,7 @@
             // 
             this.checkBoxAutoSubmitOfFirstChar.AutoSize = true;
             this.checkBoxAutoSubmitOfFirstChar.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(188, 84);
+            this.checkBoxAutoSubmitOfFirstChar.Location = new System.Drawing.Point(188, 87);
             this.checkBoxAutoSubmitOfFirstChar.Name = "checkBoxAutoSubmitOfFirstChar";
             this.checkBoxAutoSubmitOfFirstChar.Size = new System.Drawing.Size(144, 17);
             this.checkBoxAutoSubmitOfFirstChar.TabIndex = 37;
@@ -1341,7 +1341,7 @@
             this.listBoxlinesBackground.Name = "listBoxlinesBackground";
             this.listBoxlinesBackground.Size = new System.Drawing.Size(151, 95);
             this.listBoxlinesBackground.TabIndex = 19;
-            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxlinesBackground_SelectedIndexChanged);
+            this.listBoxlinesBackground.SelectedIndexChanged += new System.EventHandler(this.listBoxLinesBackground_SelectedIndexChanged);
             this.listBoxlinesBackground.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxLinesBackground_KeyDown);
             // 
             // contextMenuStripLinesBackground
