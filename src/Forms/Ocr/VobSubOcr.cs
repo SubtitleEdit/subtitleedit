@@ -8537,12 +8537,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             Cursor = Cursors.WaitCursor;
-            Bitmap bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
-            bool oldPrompt = checkBoxPromptForUnknownWords.Checked;
-            bool oldCorrect = checkBoxNOcrDrawUnknownLetters.Checked;
-            checkBoxNOcrDrawUnknownLetters.Checked = false;
-            string result = OcrViaNOCR(bitmap, subtitleListView1.SelectedItems[0].Index);
-            checkBoxPromptForUnknownWords.Checked = oldPrompt;
+            var bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             Cursor = Cursors.Default;
             using (var inspect = new VobSubNOcrCharacterInspect())
             {
@@ -8561,8 +8556,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _nOcrDb.LoadOcrCharacters();
                     Cursor = Cursors.Default;
                 }
-
-                checkBoxNOcrDrawUnknownLetters.Checked = oldCorrect;
             }
         }
 

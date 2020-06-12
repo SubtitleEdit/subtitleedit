@@ -399,12 +399,22 @@
     <Word from="sätterpå" to="sätter på" />
     <Word from="stårpå" to="står på" />
     <Word from="tillhörpå" to="tillhör på" />
+    <Word from="AIIa" to="Alla" />
+    <Word from="AIIt" to="Allt" />
+    <Word from="SIuta" to="Sluta" />
+    <Word from="ÖIen" to="Ölen" />
+    <Word from="BIått" to="Blått" />
+    <Word from="GIöm" to="Glöm" />
+    <Word from="SIäpp" to="Släpp" />
+    <Word from="BIås" to="Blås" />
+    <Word from="BIi" to="Bli" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
     <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
     <WordPart from="¤" to="o" />
+    <WordPart from="I" to="l" />
     <WordPart from="ﬁ" to="fi" />
     <WordPart from="â" to="ä" />
     <WordPart from="/" to="l" />
@@ -441,12 +451,23 @@
     <WordPart from="ärp" to="är p" />
   </PartialWords>
   <WholeLines />
-  <PartialLinesAlways />
+ <PartialLinesAlways>
+    <LinePart from="Apollo 1 3" to="Apollo 13" />
+    <LinePart from=",.," to="..." />
+    <LinePart from=" l " to=" I " />
+    <LinePart from=" l." to=" I." />
+    <LinePart from=" l?" to=" I?" />
+    <LinePart from=" l!" to=" I!" />
+    <LinePart from=" . " to=". " />
+  </PartialLinesAlways>
   <PartialLines />
   <BeginLines>
     <Beginning from="Ln " to="In " />
     <Beginning from="U ppfattat" to="Uppfattat" />
   </BeginLines>
   <EndLines />
-  <RegularExpressions />
+ <RegularExpressions>
+    <RegEx find="\b\|\b" replaceWith="I" />
+    <RegEx find="\b\l\b" replaceWith="I" />
+  </RegularExpressions>
 </OCRFixReplaceList>
