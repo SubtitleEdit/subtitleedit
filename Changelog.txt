@@ -44,6 +44,7 @@
    * Speedup small mkv files in "Batch convert" - thx lambdan
 * FIXED:
    * Fix spell check dictionary download - thx bluesea1401/ksoll4
+   * Fix freeze after using Win key
    * Fix for sometimes missing last sub in teletext - thx borifax/xylographe
    * Fix for sometimes missing images in bdsup - thx Devin
    * Fix OCR window after minimize - thx Janusz
@@ -62,6 +63,7 @@
    * Fix auto-br issue with dialog - thx Kevin
    * Don't remove spaces in auto-br - thx thehulk
    * Fix crash in compare report - thx Janusz
+   * Fix "Extend to previous/next" shortcuts w original - thx OmrSi
 
 
 3.5.15 (1st May 2020)
