@@ -4921,7 +4921,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bmp = GetSubtitleBitmap(p.Index);
             var parentBitmap = new NikseBitmap(bmp);
             bmp.Dispose();
-            parentBitmap.ReplaceNonWhiteWithTransparent();
             var minLineHeight = GetMinLineHeight();
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
             UpdateLineHeights(list);
@@ -4936,7 +4935,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    var match = GetNOcrCompareMatchNew(item, parentBitmap, p.NOcrDb, true, true, p.Index, list);
+                    var match = GetNOcrCompareMatchNew(item, parentBitmap, p.NOcrDb, true, true, index, list);
                     if (match == null)
                     {
                         p.ResultText = string.Empty;
