@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void TrainLetter(ref int numberOfCharactersLearned, ref int numberOfCharactersSkipped, NOcrDb nOcrD, string s, bool bold, bool italic, bool doubleLetter)
         {
-            Bitmap bmp = GenerateImageFromTextWithStyle("H   " + s, bold, italic);
+            var bmp = GenerateImageFromTextWithStyle("H   " + s, bold, italic);
             var nikseBitmap = new NikseBitmap(bmp);
             nikseBitmap.MakeTwoColor(280);
             nikseBitmap.CropTop(0, Color.FromArgb(0, 0, 0, 0));
@@ -200,12 +200,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (list.Count == 3)
             {
                 var item = list[2];
-                var match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false, false, 0, 25);
+                var match = nOcrD.GetMatch(item.NikseBitmap, item.Top, false, 25);
                 if (match == null || match.Text != s)
                 {
                     labelInfo.Refresh();
                     Application.DoEvents();
-                    NOcrChar nOcrChar = new NOcrChar(s)
+                    var nOcrChar = new NOcrChar(s)
                     {
                         Width = item.NikseBitmap.Width,
                         Height = item.NikseBitmap.Height,

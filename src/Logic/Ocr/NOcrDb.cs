@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return new Point(maximumX - minimumX, maximumY - minimumY);
         }
 
-        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, bool italic, double italicAngle, int maxWrongPixels)
+        public NOcrChar GetMatch(NikseBitmap bitmap, int topMargin, bool deepSeek, int maxWrongPixels)
         {
             // only very very accurate matches
             foreach (var oc in OcrCharacters)
@@ -339,6 +339,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (IsMatch(bitmap, oc, 0))
                     {
                         return oc;
+                    }
+                }
+            }
+
+            if (maxWrongPixels >= 1)
+            {
+                foreach (var oc in OcrCharacters)
+                {
+                    if (Math.Abs(bitmap.Width - oc.Width) < 4 && Math.Abs(bitmap.Height - oc.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 8)
+                    {
+                        if (IsMatch(bitmap, oc, 1))
+                        {
+                            return oc;
+                        }
                     }
                 }
             }
@@ -421,12 +435,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
         {
             var c = new NOcrChar();
-            foreach (NOcrPoint op in oldChar.LinesForeground)
+            foreach (var op in oldChar.LinesForeground)
             {
                 c.LinesForeground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
             }
 
-            foreach (NOcrPoint op in oldChar.LinesBackground)
+            foreach (var op in oldChar.LinesBackground)
             {
                 c.LinesBackground.Add(new NOcrPoint(MakePointItalic(op.Start, oldChar.Height, movePixelsLeft, unItalicFactor), MakePointItalic(op.End, oldChar.Height, movePixelsLeft, unItalicFactor)));
             }

@@ -103,7 +103,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             public NOcrThreadResult(NOcrThreadParameter p)
             {
-                ResultMatches = new List<CompareMatch>(p.ResultMatches);
+                ResultMatches = new List<CompareMatch>();
+                ResultMatches.AddRange(p.ResultMatches);
                 ResultText = p.ResultText;
             }
         }
@@ -2711,9 +2712,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return null;
         }
 
-        private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, bool italic, NOcrDb nOcrDb, bool deepSeek, double italicAngle, int maxWrongPixels)
+        private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, NOcrDb nOcrDb, bool deepSeek, int maxWrongPixels)
         {
-            return nOcrDb?.GetMatch(targetItem.NikseBitmap, targetItem.Top, deepSeek, italic, italicAngle, maxWrongPixels);
+            return nOcrDb?.GetMatch(targetItem.NikseBitmap, targetItem.Top, deepSeek, maxWrongPixels);
         }
 
         private static NOcrChar MakeItalicNOcrChar(NOcrChar oldChar, int movePixelsLeft, double unItalicFactor)
@@ -2830,7 +2831,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult) { ImageSplitterItem = targetItem };
             }
 
-            var result = NOcrFindBestMatchNew(targetItem, tryItalicScaling, nOcrDb, deepSeek, _unItalicFactor, (int)numericUpDownNOcrMaxWrongPixels.Value);
+            var result = NOcrFindBestMatchNew(targetItem, nOcrDb, deepSeek, (int)numericUpDownNOcrMaxWrongPixels.Value);
             if (result == null)
             {
 
@@ -2847,7 +2848,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     oldBmp.Dispose();
                     unItalicImage.Dispose();
                     var unItalicTargetItem = new ImageSplitterItem(targetItem.X, targetItem.Y, unItalicNikseBitmap) { Top = targetItem.Top };
-                    result = NOcrFindBestMatchNew(unItalicTargetItem, false, nOcrDb, deepSeek, _unItalicFactor, (int)numericUpDownNOcrMaxWrongPixels.Value);
+                    result = NOcrFindBestMatchNew(unItalicTargetItem, nOcrDb, deepSeek, (int)numericUpDownNOcrMaxWrongPixels.Value);
                     if (result != null)
                     {
                         result.Italic = true;
@@ -3998,7 +3999,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_nOcrThreadResults != null && _nOcrThreadResults.Length > listViewIndex && _nOcrThreadResults[listViewIndex] != null)
             {
                 line = _nOcrThreadResults[listViewIndex].ResultText;
-                matches = _nOcrThreadResults[listViewIndex].ResultMatches;
+                matches.AddRange(_nOcrThreadResults[listViewIndex].ResultMatches);
             }
 
             if (string.IsNullOrEmpty(line))
@@ -8542,7 +8543,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var inspect = new VobSubNOcrCharacterInspect())
             {
                 int minLineHeight = GetMinLineHeight();
-                inspect.Initialize(bitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, _nOcrDb, this, checkBoxNOcrItalic.Checked, minLineHeight);
+                inspect.Initialize(bitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked, _nOcrDb, this, checkBoxNOcrItalic.Checked, minLineHeight, !checkBoxNOcrDrawUnknownLetters.Checked);
                 if (inspect.ShowDialog(this) == DialogResult.OK)
                 {
                     Cursor = Cursors.WaitCursor;
