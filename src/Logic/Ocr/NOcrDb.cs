@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var op = oc.LinesForeground[index];
                         foreach (var point in op.GetPoints())
                         {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
                                 var a = nikseBitmap.GetAlpha(p.X, p.Y);
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var op = oc.LinesBackground[index];
                         foreach (var point in op.GetPoints())
                         {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
                                 var a = nikseBitmap.GetAlpha(p.X, p.Y);
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var op = oc.LinesForeground[index];
                         foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
                         {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
                                 var a = nikseBitmap.GetAlpha(p.X, p.Y);
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         var op = oc.LinesBackground[index];
                         foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
                         {
-                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y);
+                            var p = new Point(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
                             if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
                             {
                                 var a = nikseBitmap.GetAlpha(p.X, p.Y);

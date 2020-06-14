@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -412,6 +413,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (charForm.ShowDialog(this) == DialogResult.OK)
                         {
                             charForm.NOcrChar.ExpandCount = form.ExpandCount;
+                            var expandList = tempImageList.Take(form.ExpandCount).ToList();
+                            charForm.NOcrChar.MarginTop = expandList.First().Top - expandList.Min(p => p.Top);
                             _nOcrDb.Add(charForm.NOcrChar);
                             DialogResult = DialogResult.OK;
                             return;
