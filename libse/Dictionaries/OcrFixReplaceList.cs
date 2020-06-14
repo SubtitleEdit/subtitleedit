@@ -358,13 +358,22 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             foreach (string letter in _partialWordReplaceList.Keys)
             {
                 var indexes = new List<int>();
-                for (int i = 0; i < word.Length - letter.Length; i++)
+                for (int i = 0; i <= word.Length - letter.Length; i++)
                 {
                     if (word.Substring(i).StartsWith(letter, StringComparison.Ordinal))
                     {
-                        indexes.Add(i);
-                        var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
-                        AddToGuessList(list, guess);
+
+                        if (i == word.Length - letter.Length && !_partialWordReplaceList[letter].Contains(" "))
+                        {
+                            var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            AddToGuessList(list, guess);
+                        }
+                        else 
+                        {
+                            indexes.Add(i);
+                            var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
+                            AddToGuessList(list, guess);
+                        }
                     }
                 }
 
