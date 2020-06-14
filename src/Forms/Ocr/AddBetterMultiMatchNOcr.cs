@@ -55,10 +55,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     break;
                 }
 
-                var m = _matches[i];
-                if (m == null || m.Extra?.Count > 0)
+                var item = _splitterItems[i];
+                if (item.SpecialCharacter != null)
                 {
                     break;
+                }
+
+                var m = _matches[i];
+                if (m != null && m.Extra?.Count > 0)
+                {
+                    break;
+                }
+
+                if (m == null)
+                {
+                    m = new VobSubOcr.CompareMatch(string.Empty, false, 0, null);
                 }
 
                 count++;

@@ -196,7 +196,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxItalic.Checked = _nOcrChar.Italic;
                 pictureBoxCharacter.Invalidate();
                 groupBoxCurrentCompareImage.Enabled = true;
-                labelNOcrCharInfo.Text = string.Format("Size: {0}x{1}, margin top: {2} ", _nOcrChar.Width, _nOcrChar.Height, _nOcrChar.MarginTop);
+                if (_nOcrChar.ExpandCount > 0)
+                {
+                    labelNOcrCharInfo.Text = string.Format("Size: {0}x{1}, margin top: {2}, expand count: {3}", _nOcrChar.Width, _nOcrChar.Height, _nOcrChar.MarginTop, _nOcrChar.ExpandCount);
+                }
+                else
+                {
+                    labelNOcrCharInfo.Text = string.Format("Size: {0}x{1}, margin top: {2} ", _nOcrChar.Width, _nOcrChar.Height, _nOcrChar.MarginTop);
+                }
 
                 if (pictureBoxCharacter.Image != null)
                 {
