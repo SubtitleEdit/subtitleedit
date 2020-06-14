@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     if (word.Substring(i).StartsWith(letter, StringComparison.Ordinal))
                     {
 
-                        if (i == word.Length - letter.Length && !_partialWordReplaceList[letter].Contains(" "))
+                        if (i == word.Length - letter.Length && !_partialWordReplaceList[letter].Contains(' '))
                         {
                             var guess = word.Remove(i, letter.Length).Insert(i, _partialWordReplaceList[letter]);
                             AddToGuessList(list, guess);
@@ -379,13 +379,22 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
                 if (indexes.Count > 1)
                 {
-                    var multiGuess = word;
-                    for (int i = indexes.Count - 1; i >= 0; i--)
+                    if (!_partialWordReplaceList[letter].Contains(' '))
                     {
-                        var idx = indexes[i];
-                        multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
-                        AddToGuessList(list, multiGuess);
+                        var multiGuess = word;
+                        for (int i = indexes.Count - 1; i >= 0; i--)
+                        {
+                            var idx = indexes[i];
+                            multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
+                            AddToGuessList(list, multiGuess);
+                        }
+
+                        AddToGuessList(list, word.Replace(letter, _partialWordReplaceList[letter]));
                     }
+                }
+                else if (indexes.Count > 0)
+                {
+                    AddToGuessList(list, word.Replace(letter, _partialWordReplaceList[letter]));
                 }
 
                 if (indexes.Count > 0)

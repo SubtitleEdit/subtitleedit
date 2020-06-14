@@ -4,7 +4,7 @@
   <PartialWordsAlways />
   <PartialWords>
     <!-- Will be used to check words not in dictionary.
-         If new word(s) and longer than 5 chars and exists
+         If new word(s) and longer than 4 chars and exists
          in spelling dictionary, it is (or they are) accepted -->
     <!-- "f " will be two words -->
     <WordPart from="f" to="f " />
