@@ -3,9 +3,8 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.15</Version>
-    <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος
-Σχόλια για τη μετάφραση στο: mailto:akis_manolopoulos@hotmail.com
-Διορθώσεις και προσθήκες από: Παναγιώτης Μητσάκης</TranslatedBy>
+    <TranslatedBy>Μετάφραση: Κλεάνθης Μανωλόπουλος
+Διορθώσεις και προσθήκες: Παναγιώτης Μητσάκης</TranslatedBy>
     <CultureName>el-GR</CultureName>
     <HelpFile />
     <Ok>&amp;Εντάξει</Ok>
@@ -22,7 +21,7 @@
     <OpenVideoFile>Άνοιγμα αρχείου βίντεο...</OpenVideoFile>
     <OpenVideoFileTitle>Άνοιγμα αρχείου βίντεο...</OpenVideoFileTitle>
     <NoVideoLoaded>Δεν έχει επιλεγεί βίντεο</NoVideoLoaded>
-    <VideoInformation>Πληροφορίες για το βίντεο</VideoInformation>
+    <VideoInformation>Πληροφορίες βίντεο</VideoInformation>
     <StartTime>Ώρα έναρξης</StartTime>
     <EndTime>Ώρα λήξης</EndTime>
     <Duration>Διάρκεια</Duration>
@@ -509,6 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Center>Κέντρο</Center>
     <CenterLeftJustify>Κέντρο, στοίχιση αριστερά</CenterLeftJustify>
     <CenterTopJustify>Κέντρο, άνω στοίχιση</CenterTopJustify>
+    <CenterRightJustify>Κέντρο, δεξιά στοίχιση</CenterRightJustify>
     <BottomMargin>Κάτω περιθώριο</BottomMargin>
     <LeftRightMargin>Αριστερό/δεξί περιθώριο</LeftRightMargin>
     <SaveBluRraySupAs>Επιλογή ονόματος αρχείου Blu-ray sup</SaveBluRraySupAs>
@@ -516,6 +516,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Επιλογή ονόματος αρχείου Blu-ray sup</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Επιλογή ονόματος αρχείου DVD Studio Pro STL</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Επιλογή ονόματος αρχείου Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Επιλογή ονόματος αρχείου Digital SMPTE 2014</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Επιλογή ονόματος αρχείου Premiere EDL</SavePremiereEdlAs>
     <SaveFcpAs>Επιλογή ονόματος αρχείου Final Cut Pro xml</SaveFcpAs>
     <SaveDostAs>Επιλογή ονόματος αρχείου DoStudio dost</SaveDostAs>
@@ -615,6 +616,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CommonOcrErrorsFixed>Κοινά σφάλματα OCR επιδιορθώθηκαν (χρησιμοποιήθηκε το αρχείο OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Αφαίρεση διαστήματος μεταξύ αριθμών</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Επιδιόρθωση διαλόγων σε μια γραμμή</FixDialogsOnOneLine>
+    <NormalizeStrings>Κανονικοποίηση συμβολοσειρών</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Αφαιρέσεις διαστήματος μεταξύ αριθμών που επιδιορθώθηκαν: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Επιδιόρθωση Τουρκικών ANSI (Ισλανδικών) γραμμάτων σε Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Επιδιόρθωση δανικού γράμματος 'i'</FixDanishLetterI>
@@ -1381,7 +1383,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSwedishToDanishTranslation>Πριν από μετάφραση Σουηδικών σε Δανικά</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Μετάφραση Σουηδικών σε Δανικά ολοκληρώθηκε</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Μετάφραση Σουηδικών σε Δανικά απέτυχε</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Πριν από αναίρεση</BeforeUndo>
     <UndoPerformed>Αναίρεση εκτελέστηκε</UndoPerformed>
     <RedoPerformed>Επανάληψη εκτελέστηκε</RedoPerformed>
     <NothingToUndo>Τίποτα για αναίρεση</NothingToUndo>
@@ -1758,7 +1759,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Forward>Εμπρός</Forward>
     <Back>Πίσω</Back>
     <LengthInSeconds>Ελάχιστη σιωπή (δευτερόλεπτα)</LengthInSeconds>
-    <MaxVolume>Ο ήχος πρέπει να είναι κάτω από</MaxVolume>
+    <MaxVolume>Ένταση ήχου κάτω από</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Ορισμός ελάχιστου κενού μεταξύ υπότίτλων</Title>
@@ -1766,7 +1767,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyModifiedLines>Εμφάνιση μόνο τροποποιημένων γραμμών</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Ελάχιστα χιλ. δευτερολέπτου μεταξύ γραμμών</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Πληροφορίες ρυθμού καρέ</FrameInfo>
-    <OneFrameXisYMilliseconds>Ένα καρέ στο {0:0.00} fps είναι {1} χιλιοστά δευτερολέπτου</OneFrameXisYMilliseconds>
+    <OneFrameXisYMilliseconds>Ένα καρέ στο {0:0.00} καρέ είναι {1} χιλιοστά δευτερολέπτου</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ορισμός σημείου συγχρονισμού για τη γραμμή {0}</Title>
@@ -1848,11 +1849,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewNothing>Τίποτα</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Μετάβαση σε θέση βίντεο και παύση</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Μετάβαση σε θέση βίντεο και αναπαραγωγή</MainListViewVideoGoToPositionAndPlay>
-    <MainListViewEditText>Μετάβαση στη πλαίσιο επεξεργασίας κειμένου</MainListViewEditText>
+    <MainListViewEditText>Μετάβαση στο πλαίσιο επεξεργασίας κειμένου</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Πήγαινε στη θέση βίντεο - 1 δευτ. και παύση</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Πήγαινε στη θέση βίντεο - 0.5 δευτ. και παύση</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Πήγαινε στη θέση βίντεο - 1 δευτ. και αναπαραγωγή</MainListViewVideoGoToPositionMinus1SecAndPlay>
-    <MainListViewEditTextAndPause>Πηγαίνετε να επεξεργαστείτε το πλαίσιο κειμένου, και παύση στη θέση βίντεο</MainListViewEditTextAndPause>
+    <MainListViewEditTextAndPause>Μετάβαση σε επεξαργασία πλαίσιου κειμένου και παύση στη θέση</MainListViewEditTextAndPause>
     <VideoFileName>Όνομα αρχείου βίντεο</VideoFileName>
     <ExistingFileName>Υπάρχον όνομα</ExistingFileName>
     <AutoBackup>Aντίγραφα ασφαλείας</AutoBackup>
@@ -2021,12 +2022,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RecalculateDurationOfCurrentSubtitle>Επαναϋπολογισμός διάρκειας υπότιτλου</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
     <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
-    <GoToNext>Μετάβαση στην επόμενη γραμμή</GoToNext>
-    <GoToPrevious>Μετάβαση στην προηγούμενη γραμμή</GoToPrevious>
+    <GoToNext>Μετάβαση σε επόμενη γραμμή</GoToNext>
+    <GoToPrevious>Μετάβαση σε προηγούμενη γραμμή</GoToPrevious>
     <GoToCurrentSubtitleStart>Μετάβαση στην αρχή της τρέχουσας γραμμής</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Μετάβαση στο τέλος της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
-    <GoToPreviousSubtitleAndFocusVideo>Μετάβαση στην προηγούμενη γραμμή και ορισμός θέσης βίντεο</GoToPreviousSubtitleAndFocusVideo>
-    <GoToNextSubtitleAndFocusVideo>Μετάβαση στην επόμενη γραμμή και ορισμός θέσης βίντεο</GoToNextSubtitleAndFocusVideo>
+    <GoToPreviousSubtitleAndFocusVideo>Μετάβαση σε προηγούμενη γραμμή και ορισμός θέσης βίντεο</GoToPreviousSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>Μετάβαση σε επόμενη γραμμή και ορισμός θέσης βίντεο</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Μετάβαση σε προηγούμενη γραμμή και αναπαραγωγή</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Μετάβαση σε επόμενη γραμμή και αναπαραγωγή</GoToNextSubtitleAndPlay>
     <ToggleFocus>Εναλλαγή εστίασης υποτίτλου μεταξύ προβολής λίστας και πλαισίου κειμένου</ToggleFocus>
     <ToggleDialogDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogDashes>
     <ToggleMusicSymbols>Εναλλαγή μουσικών συμβόλων</ToggleMusicSymbols>
@@ -2143,7 +2146,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxUnbreak>Συνένωση κειμένου</MainTextBoxUnbreak>
     <MainFileSaveAll>Αποθήκευση όλων</MainFileSaveAll>
     <Miscellaneous>Διάφορα</Miscellaneous>
-    <CpsIncludesSpace>Συμπερίληψη κενών στους χαρ/δευτ</CpsIncludesSpace>
+    <CpsIncludesSpace>Συμπερίληψη κενών στους χαρακτήρες/δευτερόλεπτο</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Χρήση της λίστας μη διάσπασης μετά από</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Διάσπαση σε σημεία στίξης</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Διάσπαση βάσει εύρους εικονοστοιχείων</BreakByPixelWidth>
@@ -2231,6 +2234,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddXToNames>Προσθήκη '{0}' στη λίστα ονομάτων</AddXToNames>
     <AddXToUserDictionary>Προσθήκη {0} στο λεξικό χρήστη</AddXToUserDictionary>
     <AutoFixNames>Αυτόματη επιδιόρθωση ονομάτων μόνο για διαφορά πεζών-κεφαλαίων</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Διόρθωση ονομάτων μέσω 'προτάσεων ορθογραφικού ελέγχου'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Ερώτηση για άγνωστες λέξεις ένός γράμματος</CheckOneLetterWords>
     <TreatINQuoteAsING>Αντιμετώπιση κατάληξης " in' " ως " ing " (Μόνο Αγγλικά)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Απομνημόνευση λίστας "Χρήση πάντα"</RememberUseAlwaysList>
@@ -2512,16 +2516,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaptureTopAlign>Λήψη άνω στοίχισης</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Έλεγχος αντιστοιχιών σύγκρισης για την τρέχουσα εικόνα...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Επεξεργασία προσθηκών της τελευταίας σύγκρισης εικόνας...</EditLastAdditions>
-    <SetUnitalicFactor>Ορισμός παράγοντα μη πλαγιαστών</SetUnitalicFactor>
+    <SetItalicAngle>Ορισμός κλίσης πλαγιαστών...</SetItalicAngle>
+    <ItalicAngle>Κλίση πλαγιαστών</ItalicAngle>
     <DiscardTitle>Απόρριψη αλλαγών του OCR;</DiscardTitle>
     <DiscardText>Απόρριψη αλλαγών του OCR στην τρέχουσα συνεδρία;</DiscardText>
     <MinLineSplitHeight>Ελάχιστο ύψος γραμμής (διαχωρισμός)</MinLineSplitHeight>
     <FallbackToX>Επαναφορά σε {0}</FallbackToX>
     <ImagePreProcessing>Προ-επεξεργασία εικόνας...</ImagePreProcessing>
     <EditImageDb>Επεξεργασία βάσης δεδομένων εικόνας</EditImageDb>
+    <OcrTraining>Εκμάθηση OCR...</OcrTraining>
+    <SubtitleTrainingFile>Εκμάθηση με αρχείο υπότιτλου</SubtitleTrainingFile>
+    <LetterCombinations>Συνδυασμοί γράμματος που είναι χωρισμένο ως μία εικόνα</LetterCombinations>
+    <TrainingOptions>Επιλογές εκμάθησης</TrainingOptions>
+    <NumberOfSegments>Αριθμός τμημάτων ανά γράμμα</NumberOfSegments>
+    <AlsoTrainItalic>Εκμάθηση πλαγιαστών</AlsoTrainItalic>
+    <AlsoTrainBold>Εκμάθηση έντονων</AlsoTrainBold>
+    <StartTraining>Έναρξη εκμάθησης</StartTraining>
+    <NowTraining>Εκμάθηση γραμματοσειράς '{1}. Σύνολο χαρακτήρων που μαθεύτηκαν: {0:#,###,##0}, {2:#,###,##0} γνωστά</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - Εικόνα σε κείμενο χειροκίνητα</Title>
+    <Title>OCR - Εικόνα σε κείμενο χειροκίνητα</Title>
     <ShrinkSelection>Σμίκρυνση επιλογής</ShrinkSelection>
     <ExpandSelection>Επέκταση επιλογής</ExpandSelection>
     <SubtitleImage>Εικόνα υπότιτλου</SubtitleImage>
@@ -2546,10 +2560,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Νέος φάκελος</Title>
     <Message>Όνομα νέου φακέλου βάσης δεδομένων χαρακτήρων</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Ορισμός παράγοντα μη πλαγιαστών</Title>
-    <Description>Προσαρμογή τιμής μέχρι το στυλ κειμένου να είναι κανονικό. Η αρχική εικόνα πρέπει να είναι σε πλαγιαστά.</Description>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicAngle>
+    <Title>Ορισμός κλίσης πλαγιαστών</Title>
+    <Description>Προσαρμογή τιμής μέχρι το στυλ κειμένου να είναι κανονικό. Το αρχικό κείμενο έχει πλαγιαστό στυλ.</Description>
+  </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>Προ-επεξεργασία εικόνας με OCR</Title>
     <Colors>Χρώματα</Colors>
