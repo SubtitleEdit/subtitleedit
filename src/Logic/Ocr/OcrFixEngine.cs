@@ -1592,7 +1592,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 guesses.Add(wordWithVerticalLine);
                             }
 
-                            if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
+                            if (word.Length > 4 && autoGuess == AutoGuessLevel.Aggressive)
                             {
                                 guesses.AddRange((List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word));
 
