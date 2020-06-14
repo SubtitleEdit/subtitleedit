@@ -2077,7 +2077,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Miscellaneous>Otros</Miscellaneous>
     <CpsIncludesSpace>Caracteres/s (CPS) incluye espacios</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista»
-	(para salto automático)</UseDoNotBreakAfterList>
+    (para salto automático)</UseDoNotBreakAfterList>
     <BreakEarlyForLineEnding>Separar antes del final de la oración (.!?)</BreakEarlyForLineEnding>
     <BreakByPixelWidth>Separar por ancho de píxel</BreakByPixelWidth>
     <BreakPreferBottomHeavy>Prefiero la parte inferior más grande</BreakPreferBottomHeavy>
@@ -2106,8 +2106,8 @@ de subtítulo con información de fuente incorporada como "Advanced Sub Station 
   </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Ajustar desplazamiendo del video</Title>
-    <Description>Ajustar desplazamiento del video (los subtítulos no deben seguir el tiempo real 
-	                                   del video, pero por ejemplo, +10 horas).</Description>
+    <Description>Ajustar desplazamiento del video (los subtítulos no deben seguir el tiempo real
+                                       del video, pero por ejemplo, +10 horas).</Description>
     <RelativeToCurrentVideoPosition>Relativa a la posición actual del video.</RelativeToCurrentVideoPosition>
     <KeepTimeCodes>Mantener los códigos de tiempo existente (no añadir desplazamiento de video).</KeepTimeCodes>
     <Reset>Restablecer</Reset>

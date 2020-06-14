@@ -2325,9 +2325,9 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <FindText>Rechercher texte</FindText>
     <GoToSubPosition>Aller sous-position</GoToSubPosition>
     <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
-    <KeepChangesMessage>Les sous-titres ont été changés 
-	
-	dans 'Synchro visuelle'.</KeepChangesMessage>
+    <KeepChangesMessage>Les sous-titres ont été changés
+
+    dans 'Synchro visuelle'.</KeepChangesMessage>
     <SynchronizationDone>Synchronisation terminée !</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>La scène de début doit venir avant la scène finale !</StartSceneMustComeBeforeEndScene>
     <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de 100 ms</Tip>

@@ -89,7 +89,7 @@
 
 C# изворниот код е достапен на https://github.com/SubtitleEdit/subtitleedit
 
-За најновата верзија посетете ја страницата https://www.nikse.dk 
+За најновата верзија посетете ја страницата https://www.nikse.dk
 
 Сите предлози се добредојдени.
 
@@ -2084,7 +2084,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MicrosoftTranslateApiKey>Клуч</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Token endpoint</MicrosoftTranslateTokenEndpoint>
     <FontNote>Забелешка: Овие поставки за фонт важат само за Subtitle Edit UI.
-Поставките за фонт обично се прават во видео репродуцирач, но исто така може да се направат користејќи формат 
+Поставките за фонт обично се прават во видео репродуцирач, но исто така може да се направат користејќи формат
 за титл со вградени информации за фонт како што е "Advanced Sub Station Alpha" или преку експортирање на формати базирани на слика.</FontNote>
   </Settings>
   <SettingsMpv>

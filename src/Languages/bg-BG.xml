@@ -131,7 +131,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 
 Конзолна команда: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} не можа да извлече Wav форма на зв. сигнал от аудио файла!
-    
+
 Конзолна команда: {1} {2} Забележка: Проверете за свободно дисково пространство</WaveFileMalformed>
     <LowDiskSpace>НЕДОСТАТЪЧНО ДИСКОВО ПРОСТРАНСТВО!</LowDiskSpace>
     <FreeDiskSpace>Свободно: {0}</FreeDiskSpace>
