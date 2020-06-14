@@ -4155,13 +4155,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
-                {
-                    _ocrFixEngine.AutoGuessesUsed.Clear();
-                    _ocrFixEngine.UnknownWordsFound.Clear();
-                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
-                }
-
 
                 // smaller space pixels for italic
                 if (wordsNotFound > 0 && !string.IsNullOrEmpty(line) && line.Contains("<i>", StringComparison.Ordinal))
@@ -4208,6 +4201,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         _ocrFixEngine.AutoGuessesUsed = oldAutoGuessesUsed;
                         _ocrFixEngine.UnknownWordsFound = oldUnknownWordsFound;
                     }
+                }
+
+                // prompt for user input for unknown words
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
+                {
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 
                 if (_ocrFixEngine.Abort)
