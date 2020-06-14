@@ -3890,7 +3890,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 var match = matches[i];
                 var matchNext = matches[i + 1];
-                if (!match.Italic || match.Text == "," ||
+                if (!match.Italic || matchNext.Text == "," ||
                     string.IsNullOrWhiteSpace(match.Text) || string.IsNullOrWhiteSpace(matchNext.Text) ||
                     match.ImageSplitterItem == null || matchNext.ImageSplitterItem == null)
                 {
@@ -3899,6 +3899,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
 
                 int blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match, matchNext, unItalicFactor);
+                if (match.Text == "f" || match.Text == "," || matchNext.Text.StartsWith('y') || matchNext.Text.StartsWith('j'))
+                {
+                    blankVerticalLines++;
+                }
+
                 if (blankVerticalLines >= pixelsIsSpace)
                 {
                     matchNext.ImageSplitterItem.CouldBeSpaceBefore = true;
@@ -4807,7 +4812,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
                 }
 
-                InitializeNOcrThreads(max);
                 _autoLineHeight = comboBoxNOcrLineSplitMinHeight.SelectedIndex == 0;
                 if (comboBoxNOcrLineSplitMinHeight.Visible && comboBoxNOcrLineSplitMinHeight.SelectedIndex > 0)
                 {
@@ -4817,6 +4821,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrMinLineHeight = -1;
                 }
+
+                InitializeNOcrThreads(max);
             }
             else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
@@ -4910,6 +4916,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             p.Index += p.Increment;
             if (p.Index < _subtitle.Paragraphs.Count)
             {
+                p = new NOcrThreadParameter(p.Index, _nOcrDbThread, p.Self, p.Increment, _unItalicFactor, checkBoxNOcrItalic.Checked, _numericUpDownPixelsIsSpace, checkBoxRightToLeftNOCR.Checked);
                 p.Self.RunWorkerAsync(p);
             }
         }
@@ -4923,7 +4930,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bmp.Dispose();
             var minLineHeight = GetMinLineHeight();
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _autoLineHeight);
-            UpdateLineHeights(list);
             p.ResultMatches = new List<CompareMatch>();
             int index = 0;
             while (index < list.Count)
@@ -4935,14 +4941,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    var match = GetNOcrCompareMatchNew(item, parentBitmap, p.NOcrDb, true, true, index, list);
+                    var match = GetNOcrCompareMatchNew(item, parentBitmap, p.NOcrDb, p.AdvancedItalicDetection, true, index, list);
                     if (match == null)
                     {
                         p.ResultText = string.Empty;
                         return;
                     }
 
-                    p.ResultMatches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                    p.ResultMatches.Add(new CompareMatch(match.Text, match.Italic, 0, null) { ImageSplitterItem = item });
                     if (match.ExpandCount > 0)
                     {
                         index += match.ExpandCount - 1;
