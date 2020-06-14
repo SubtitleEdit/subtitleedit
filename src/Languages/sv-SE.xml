@@ -2067,7 +2067,7 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <HowToSignUp>Hur du registrerar dig</HowToSignUp>
     <MicrosoftTranslateApiKey>Nyckel</MicrosoftTranslateApiKey>
     <FontNote>Observera: Dessa teckensnittsinställningar är endast till för Subtitle Edits användargränssnitt.
-Ställa in ett teckensnitt för en undertext görs normalt i videospelaren, men kan också göras när ett textningstyp med inbyggd typsnitt används som 
+Ställa in ett teckensnitt för en undertext görs normalt i videospelaren, men kan också göras när ett textningstyp med inbyggd typsnitt används som
 "Avancerad Sub Station Alpha" eller via export till bildbaserade format.</FontNote>
   </Settings>
   <SettingsMpv>

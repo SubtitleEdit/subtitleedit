@@ -1225,10 +1225,10 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <SavedOriginalSubtitleX>{0} Orijinal altyazı kaydedildi</SavedOriginalSubtitleX>
     <FileOnDiskModified>Diskteki dosya değiştirilmiş</FileOnDiskModified>
     <OverwriteModifiedFile>Dosyanın üzerine {0} değişiklik {1} {2}{3}  diskten yüklenen geçerli dosya ile {4} {5} değiltirilsim mi?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Kaydedilemez {0} 
-	
+    <FileXIsReadOnly>Kaydedilemez {0}
+
 Dosya salt okunur!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Altyazı dosyası kaydedilemez {0} 
+    <UnableToSaveSubtitleX>Altyazı dosyası kaydedilemez {0}
 Altyazı boş görünüyor - Eğer geçerli bir altyazı üzerinde çalışıyorsanız yeniden kaydetmeyi deneyin!</UnableToSaveSubtitleX>
     <BeforeNew>Yeniden önce</BeforeNew>
     <New>Yeni</New>

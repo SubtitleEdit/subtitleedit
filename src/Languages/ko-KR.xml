@@ -1533,7 +1533,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ParsingTransportStream>전송 스트림을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStream>
     <XPercentCompleted>{0}% 완료</XPercentCompleted>
     <NextX>다음: {0}</NextX>
-    <PromptInsertSubtitleOverlap>파형 위치에 자막을 삽입하면 오버랩이 발생합니다! 
+    <PromptInsertSubtitleOverlap>파형 위치에 자막을 삽입하면 오버랩이 발생합니다!
 
 그래도 계속하겠습니까?</PromptInsertSubtitleOverlap>
     <SubtitleContainsNegativeDurationsX>자막에 표시시간이 음수인 줄이 있습니다: {0} </SubtitleContainsNegativeDurationsX>
@@ -2148,7 +2148,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>토큰 끝점</MicrosoftTranslateTokenEndpoint>
     <FontNote>※ 참고 : 이 글꼴 설정은 오직 Subtitle Edit UI에만 적용됩니다.
-자막의 글꼴 설정은 일반적으로 비디오 플레이어에서 이루어지나, "Advanced Sub Station Alpha" 또는 이미지 기반 형식으로 내보내기 처럼 
+자막의 글꼴 설정은 일반적으로 비디오 플레이어에서 이루어지나, "Advanced Sub Station Alpha" 또는 이미지 기반 형식으로 내보내기 처럼
 글꼴 정보가 내장된 자막 형식을 사용할 때도 가능합니다.</FontNote>
     <RestoreDefaultSettings>설정 초기화</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>모든 설정이 기본값으로 초기화 됩니다.

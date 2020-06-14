@@ -2061,7 +2061,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <HowToSignUp>Regisztráció módja</HowToSignUp>
     <MicrosoftTranslateApiKey>Kulcs</MicrosoftTranslateApiKey>
     <FontNote>Megjegyzés: Ezek a betűtípus beállítások csak a Subtitle Edit felhasználói felületére vonatkoznak.
-A feliratozáshoz használt betűtípust általában a videólejátszóban választjuk ki, de ezt akkor is megtehetjük, ha olyan feliratformátumot használ, amely beépített betűinformációkkal rendelkezik, például az 
+A feliratozáshoz használt betűtípust általában a videólejátszóban választjuk ki, de ezt akkor is megtehetjük, ha olyan feliratformátumot használ, amely beépített betűinformációkkal rendelkezik, például az
 "Advanced Sub Station Alpha" vagy a képalapú formátumba való exportálás.</FontNote>
   </Settings>
   <SettingsMpv>

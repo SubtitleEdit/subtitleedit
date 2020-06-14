@@ -2089,7 +2089,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
     <MicrosoftTranslateTokenEndpoint>Token de acceso</MicrosoftTranslateTokenEndpoint>
     <FontNote>Nota: Estos ajustes de fuente son solo para la interfaz de edición de los subtítulos.
-La configuración de una fuente para un subtítulo se realiza normalmente en el reproductor de video, pero también se puede realizar cuando se utiliza un formato de subtítulo con información de fuente incorporada como 
+La configuración de una fuente para un subtítulo se realiza normalmente en el reproductor de video, pero también se puede realizar cuando se utiliza un formato de subtítulo con información de fuente incorporada como
 "Advanced Sub Station Alpha" o a través de la exportación a formatos basados en imágenes.</FontNote>
   </Settings>
   <SettingsMpv>
