@@ -376,7 +376,7 @@ pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
 pl.tsk_Other=Inne:
 pl.tsk_ResetDictionaries=Resetuj słowniki i usuń wszelkie niestandardowe nazwy
 pl.tsk_ResetSettings=Resetuj ustawienia Subtitle Edit
-pl.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+pl.tsk_SetFileTypes=Skojarz z Subtitle Edit pliki w formacie SubRip Text (.srt)
 pl.types_custom=Instalacja użytkownika
 pl.types_default=Instalacja domyślna
 
