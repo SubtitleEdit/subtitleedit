@@ -2788,6 +2788,18 @@
     <Word from="snowbalI" to="snowball" />
     <Word from="weII" to="well" />
     <Word from="WelI" to="Well" />
+    <Word from="CIub" to="Club" />
+    <Word from="couId" to="could" />
+    <Word from="footbaII" to="football" />
+    <Word from="hoId" to="hold" />
+    <Word from="knowyou'll" to="know you'll" />
+    <Word from="LSDjust" to="LSD just" />
+    <Word from="lt'sjust" to="It's just" />
+    <Word from="schooI" to="school" />
+    <Word from="sIeep" to="sleep" />
+    <Word from="whiIe" to="while" />
+    <Word from="aII" to="all" />
+    <Word from="aIl" to="all" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2824,6 +2836,8 @@
     <WordPart from="ii" to="ll" />
     <!-- "f " will be two words -->
     <WordPart from="f" to="f " />
+    <WordPart from="j" to=" j" />
+    <WordPart from="y" to=" y" />
     <WordPart from="c" to="e" />
     <WordPart from="I" to="t" />
     <WordPart from="n" to="o" />

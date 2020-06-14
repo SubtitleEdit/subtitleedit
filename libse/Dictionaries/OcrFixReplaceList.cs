@@ -371,11 +371,24 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 if (indexes.Count > 1)
                 {
                     var multiGuess = word;
-                    for (int i = indexes.Count-1; i >= 0; i--)
+                    for (int i = indexes.Count - 1; i >= 0; i--)
                     {
                         var idx = indexes[i];
                         multiGuess = multiGuess.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
                         AddToGuessList(list, multiGuess);
+                    }
+                }
+
+                if (indexes.Count > 0)
+                {
+                    for (int i = indexes.Count - 1; i >= 0; i--)
+                    {
+                        var idx = indexes[i];
+                        if (idx > 1 && idx < word.Length - 2)
+                        {
+                            var guess = word.Remove(idx, letter.Length).Insert(idx, _partialWordReplaceList[letter]);
+                            AddToGuessList(list, guess);
+                        }
                     }
                 }
 
