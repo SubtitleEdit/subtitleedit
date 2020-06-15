@@ -4,13 +4,19 @@
   <Item>decr.</Item>
   <Item>Dr</Item>
   <Item>Dr.</Item>
+  <Item>DR.</Item>
   <Item>dr.ª</Item>
   <Item>Dr.ª</Item>
   <Item>Dra.</Item>
+  <Item>DRA.</Item>
+  <Item>eng.</Item>
+  <Item>Eng.</Item>
   <Item>exmo.</Item>
   <Item>Exmo.</Item>
   <Item>frei</Item>
   <Item>Frei</Item>
+  <Item>gov.</Item>
+  <Item>Gov.</Item>
   <Item>gram.</Item>
   <Item>jr.</Item>
   <Item>Jr.</Item>
@@ -20,7 +26,9 @@
   <Item>mno.</Item>
   <Item>Mno.</Item>
   <Item>mr.</Item>
+  <Item>Mr.</Item>
   <Item>mrs.</Item>
+  <Item>Mrs.</Item>
   <Item>P.</Item>
   <Item>pe.</Item>
   <Item>Pe.</Item>
