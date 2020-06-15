@@ -54,16 +54,11 @@
     <WordPart from="¤" to="o" />
     <WordPart from="vx/" to="w" />
   </PartialWords>
-  <WholeLines>
-  </WholeLines>
-  <PartialLinesAlways>
-  </PartialLinesAlways>
-  <PartialLines>
-  </PartialLines>
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
+  <WholeLines />
+  <PartialLinesAlways />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
   <RegularExpressions>
     <RegEx find="\b\|\b" replaceWith="I" />
   </RegularExpressions>
