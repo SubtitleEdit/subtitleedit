@@ -319,17 +319,17 @@ namespace Nikse.SubtitleEdit.Core
             }
             var newEndTimeInMs = p.EndTime.TotalMilliseconds + ms;
 
-            // handle overlap with next
-            if (newEndTimeInMs > nextStartTimeInMs)
-            {
-                newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-            }
-
             // fix too short duration
             var minDur = Math.Max(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, 100);
             if (p.StartTime.TotalMilliseconds + minDur > newEndTimeInMs)
             {
                 newEndTimeInMs = p.StartTime.TotalMilliseconds + minDur;
+            }
+
+            // handle overlap with next
+            if (newEndTimeInMs > nextStartTimeInMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+            {
+                newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
 
             if (ms > 0 && newEndTimeInMs < p.EndTime.TotalMilliseconds || ms < 0 && newEndTimeInMs > p.EndTime.TotalMilliseconds)
