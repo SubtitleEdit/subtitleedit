@@ -1152,7 +1152,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
                                     listViewInputFiles.Refresh();
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false);
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, "Tesseract");
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }

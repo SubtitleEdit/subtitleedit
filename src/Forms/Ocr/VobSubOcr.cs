@@ -615,12 +615,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
         }
 
-        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string language = null)
+        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly, string ocrEngine, string language = null)
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             FormVobSubOcr_Shown(null, null);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             checkBoxPromptForUnknownWords.Checked = false;
+
+            if (ocrEngine?.ToLowerInvariant() == "nocr")
+            {
+                var oldNOcrDrawText = checkBoxNOcrDrawUnknownLetters.Checked;
+                InitializeNOcrForBatch(language);
+                checkBoxShowOnlyForced.Checked = forcedOnly;
+                DoBatch();
+                checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
+                return;
+            }
 
             _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
             if (language == null)
@@ -6383,6 +6393,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (string.IsNullOrEmpty(fileName))
             {
                 fileName = Configuration.Settings.VobSubOcr.LineOcrLastLanguages;
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    fileName = "Latin";
+                }
+
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     fileName = Path.Combine(Configuration.OcrDirectory, Configuration.Settings.VobSubOcr.LineOcrLastLanguages + ".nocr");
