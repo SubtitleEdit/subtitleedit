@@ -508,6 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Center>Центрирано</Center>
     <CenterLeftJustify>Центрирано, ляво подравнено</CenterLeftJustify>
     <CenterTopJustify>Центрирано, отгоре подравнено</CenterTopJustify>
+    <CenterRightJustify>Центрирано, дясно подравнено</CenterRightJustify>
     <BottomMargin>Долно поле</BottomMargin>
     <LeftRightMargin>Ляво/Дясно поле</LeftRightMargin>
     <SaveBluRraySupAs>Запиши като Blu-ray sup файлово име</SaveBluRraySupAs>
@@ -515,6 +516,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveFabImageScriptAs>Запиши като  файлово име</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Запиши като DVD Studio Pro STL файлово име</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Изберете Digital Cinema Interop файлово име</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Изберете Digital Cinema SMPTE 2014 файлово име</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Изберете Premiere EDL файлово име</SavePremiereEdlAs>
     <SaveFcpAs>Изберете Final Cut Pro xml файлово име</SaveFcpAs>
     <SaveDostAs>Изберете DoStudio dost файлово име</SaveDostAs>
@@ -597,8 +599,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLongDisplayTimes>Поправяне на дълги времена на показване</FixLongDisplayTimes>
     <FixShortGaps>Поправяне на кратки интервали</FixShortGaps>
     <FixInvalidItalicTags>Поправяне на невалидни курсив тагове</FixInvalidItalicTags>
-    <RemoveUnneededSpaces>Изтриване на ненужни интервали</RemoveUnneededSpaces>
-    <RemoveUnneededPeriods>Изтриване на ненужни точки</RemoveUnneededPeriods>
+    <RemoveUnneededSpaces>Премахване на ненужни интервали</RemoveUnneededSpaces>
+    <RemoveUnneededPeriods>Премахване на ненужни точки</RemoveUnneededPeriods>
     <FixCommas>Добавяне на запетаи</FixCommas>
     <FixMissingSpaces>Добавяне на липсващи интервали</FixMissingSpaces>
     <BreakLongLines>Прекъсване на дълги редове</BreakLongLines>
@@ -615,6 +617,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CommonOcrErrorsFixed>Поправени са OCR грешки (използван е OCR файла със списък за замяна): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Изтриване на интервал между цифри</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Разделяне на диалози, които са на един ред</FixDialogsOnOneLine>
+    <NormalizeStrings>Нормализиране на низовете</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Премахнати интервали между цифри: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Поправяне на турски ANSI (Исландски) букви в Unicod</FixTurkishAnsi>
     <FixDanishLetterI>Поправяне на датската буква »i«</FixDanishLetterI>
@@ -1049,7 +1052,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SubtitlesBridgeGaps>Преодоляване на различия във времетраенето...</SubtitlesBridgeGaps>
         <FixCommonErrors>Поправяне на грешки...</FixCommonErrors>
         <StartNumberingFrom>Начално номериране...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Изтриване на текст за увредени със слуха...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Премахване на текст за увредени със слуха...</RemoveTextForHearingImpaired>
         <ChangeCasing>Промяна големината на буквите...</ChangeCasing>
         <ChangeFrameRate>Промяна честотата на кадрите...</ChangeFrameRate>
         <ChangeSpeedInPercent>Промяна на скоростта (в проценти)...</ChangeSpeedInPercent>
@@ -1149,7 +1152,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Търсене</Find>
         <Replace>Замяна</Replace>
         <FixCommonErrors>Поправяне на намерените грешки</FixCommonErrors>
-        <RemoveTextForHi>Премахване на текст за увреден слух</RemoveTextForHi>
+        <RemoveTextForHi>Премахване на текст за хора с увреден слух</RemoveTextForHi>
         <VisualSync>Визуална синхронизация</VisualSync>
         <SpellCheck>Проверка на правопис</SpellCheck>
         <NetflixQualityCheck>Проверка на качеството Netflix</NetflixQualityCheck>
@@ -1391,7 +1394,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSwedishToDanishTranslation>Преди превода от шведски към датски</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Преводът от шведски към датски е готов</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Преводът от шведски към датски е неуспешен</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Преди отмяната</BeforeUndo>
     <UndoPerformed>Отмяната е изпълнена</UndoPerformed>
     <RedoPerformed>Повторението е изпълнено</RedoPerformed>
     <NothingToUndo>Няма нищо за отмяна</NothingToUndo>
@@ -1729,9 +1731,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NotInCharacterGroup>Не в група символи ([^test])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Изтриване на текст за увредени със слуха</Title>
+    <Title>Премахване на текст за хора с увреден слух</Title>
     <RemoveTextConditions>Условия за премахване на текст</RemoveTextConditions>
-    <RemoveTextBetween>Изтриване на текст между</RemoveTextBetween>
+    <RemoveTextBetween>Премахване на текст между</RemoveTextBetween>
     <SquareBrackets>'[' и ']'</SquareBrackets>
     <Brackets>'{' и '}'</Brackets>
     <Parentheses>'(' и ')'</Parentheses>
@@ -1741,9 +1743,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyIfTextIsUppercase>Само, ако текстът е с ГОЛЕМИ БУКВИ</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Само, ако е на отделен ред</OnlyIfInSeparateLine>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
-    <RemoveTextIfContains>Изтриване на текст, ако съдържа:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>Премахване на ред ако е С ГЛАВНИ БУКВИ</RemoveTextIfAllUppercase>
-    <RemoveInterjections>Изтриване на възклицания</RemoveInterjections>
+    <RemoveTextIfContains>Премахване на текст, ако съдържа:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Премахване на ред, ако е С ГЛАВНИ БУКВИ</RemoveTextIfAllUppercase>
+    <RemoveInterjections>Премахване на възклицания</RemoveInterjections>
     <EditInterjections>Редактиране...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
@@ -1816,9 +1818,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleBookmarks>Превключване на отметки</ToggleBookmarks>
     <ToggleBookmarksWithComment>Превключване на отметки - добавяне на коментар</ToggleBookmarksWithComment>
     <ClearBookmarks>Изчистване на отметките</ClearBookmarks>
-    <GoToBookmark>Отидете на отметка</GoToBookmark>
-    <GoToPreviousBookmark>Отидете на предишната отметка</GoToPreviousBookmark>
-    <GoToNextBookmark>Отидете до следващата отметка</GoToNextBookmark>
+    <GoToBookmark>Преминаване на отметка</GoToBookmark>
+    <GoToPreviousBookmark>Преминаване на предишната отметка</GoToPreviousBookmark>
+    <GoToNextBookmark>Преминаване до следващата отметка</GoToNextBookmark>
     <ChooseProfile>Избор на профил</ChooseProfile>
     <DuplicateLine>Дублиран ред</DuplicateLine>
     <FontInUi>Шрифт на потребителския интерфейс</FontInUi>
@@ -1971,7 +1973,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FirstPlusX>Първи + {0}</FirstPlusX>
     <LastMinusX>Последен - {0}</LastMinusX>
     <FixCommonerrors>Попр. на грешки</FixCommonerrors>
-    <RemoveTextForHi>Премахване на текста
+    <RemoveTextForHi>Премахване на текст
 за хора с увреден слух</RemoveTextForHi>
     <MergeLinesShorterThan>Обедин.редове по-малки от(бр.симв)</MergeLinesShorterThan>
     <DialogStyle>Диалогов стил</DialogStyle>
@@ -2042,6 +2044,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoToCurrentSubtitleEnd>Позициониране в края на текущия ред</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Преминаване на предишния ред и задаване позиция на видеото</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Преминаване на следващия ред и задаване позиция на видеото</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Преминаване на предишния ред и възпроизвеждане</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Преминаване на следващия ред и възпроизвеждане</GoToNextSubtitleAndPlay>
     <ToggleFocus>Превключване фокуса между изглед на списъка и реда за писане</ToggleFocus>
     <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <ToggleMusicSymbols>Превключване на музикални символи</ToggleMusicSymbols>
@@ -2070,7 +2074,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformPlayNewSelectionEnd>Възпроизвеждане края на избраното</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Възпроизвеждане на първия избран субтитър</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокусиране върху изгледа на списъка</WaveformFocusListView>
-    <WaveformGoToPreviousSceneChange>Преминете към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
+    <WaveformGoToPreviousSceneChange>Преминаване към предишната промяна на сцената</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Преминаване към следващата промяна на сцена</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Превключване промяна на сцените</WaveformToggleSceneChange>
     <WaveformGuessStart>Авт. настройване на старта чрез промяна силата на звука/сцената</WaveformGuessStart>
@@ -2250,6 +2254,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddXToNames>Добави "{0}" към списъка с думи</AddXToNames>
     <AddXToUserDictionary>Добави '{0}' към потреб. речник</AddXToUserDictionary>
     <AutoFixNames>Поправяне на думи с различна големина на буквите</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Корекция на имената чрез „предложение за проверка на правописа“</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред.член на думи,завършващи на "in"като"ing"(Само за англ.)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Запомняне на списъка „Използване винаги“</RememberUseAlwaysList>
@@ -2529,15 +2534,25 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoMatch>&lt;Няма съответствие&gt;</NoMatch>
     <AutoTransparentBackground>Автоматичен прозрачен фон</AutoTransparentBackground>
     <CaptureTopAlign>Заснемане отгоре подравняване</CaptureTopAlign>
-    <InspectCompareMatchesForCurrentImage>Проверка за съответствия за текущото изображение...</InspectCompareMatchesForCurrentImage>
+    <InspectCompareMatchesForCurrentImage>Проверка за съответствие на текущото изображение...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Редактиране на последното изображение сравнено с допълнителните...</EditLastAdditions>
-    <SetUnitalicFactor>Задаване на НЕ наклонен фактор</SetUnitalicFactor>
+    <SetItalicAngle>Задаване наклон на ъгъла...</SetItalicAngle>
+    <ItalicAngle>Наклон на ъгъла</ItalicAngle>
     <DiscardTitle>Отказ от промените извършени в OCR?</DiscardTitle>
     <DiscardText>Искате ли да се откажете от промените направени в текущата OCR сесия?</DiscardText>
     <MinLineSplitHeight>Мин. височина на ред (разделител)</MinLineSplitHeight>
     <FallbackToX>Резервен вариант {0}</FallbackToX>
     <ImagePreProcessing>Предварителна обработка на изображения...</ImagePreProcessing>
     <EditImageDb>Редактиране на изображение db</EditImageDb>
+    <OcrTraining>OCR обучение...</OcrTraining>
+    <SubtitleTrainingFile>Файл със субтитри за обучение</SubtitleTrainingFile>
+    <LetterCombinations>Комбинации от букви, които могат да бъдат разделени като едно изображение</LetterCombinations>
+    <TrainingOptions>Опции за обучение</TrainingOptions>
+    <NumberOfSegments>Брой сегменти на буква</NumberOfSegments>
+    <AlsoTrainItalic>Също така тренирайте наклонен</AlsoTrainItalic>
+    <AlsoTrainBold>Също така тренирайте удебелен</AlsoTrainBold>
+    <StartTraining>Започнете да тренирате</StartTraining>
+    <NowTraining>Шрифт за обучение '{1}'. Общо обучени символи: {0:#,###,##0}, {2:#,###,##0} известни</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub – Ръчно изображение към текст</Title>
@@ -2565,11 +2580,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Нова папка</Title>
     <Message>Име на папката с база данните със символи</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Нормализиране на курсивен текст(НЕ-наклонен)</Title>
-    <Description>Настройте стойността, докато стила на текста не стане нормален, не курсив(НЕ-наклонен).
-Обърнете внимание, че оригиналното изображение трябва да бъде изцяло в курсив(наклонен)</Description>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicAngle>
+    <Title>Задаване наклон на ъгъла</Title>
+    <Description>Регулирайте стойността, докато стилът на текста е нормален и не е наклонен.  Обърнете внимание, че оригиналното изображение трябва да е с наклонен.</Description>
+  </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>Предварителна обработка на OCR изображение</Title>
     <Colors>Цветове</Colors>
