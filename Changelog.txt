@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.16 (xth July 2020) BETA
+3.5.16 (16th July 2020)
 * NEW:
    * OCR method "nOCR" (vector based with auto training) - thx Janusz
    * Enable custom color for waveform cursor
