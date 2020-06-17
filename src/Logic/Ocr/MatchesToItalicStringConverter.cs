@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms.Ocr;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         sbWord = new StringBuilder();
                         italicCount = 0;
                     }
-                    else if (m.Text != " ")
+                    else
                     {
                         sbWord.Append(m.Text);
                         if (m.Italic)
@@ -81,7 +81,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 sb.Append("</i>");
             }
             var text = sb.ToString().Trim();
-            text = text.Replace("<i>-</i>", "-")
+            text = text
+                .Replace("<i>-</i>", "-")
+                .Replace("</i>-<i>", "-")
                 .Replace("<i>s</i>", "s")
                 .Replace("</i>s<i>", "s")
                 .Replace("<i>!</i>", "!")
@@ -89,9 +91,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 .Replace("<i>?</i>", "?")
                 .Replace("</i>?<i>", "?")
                 .Replace("<i>'</i>", "'")
-                .Replace("<i>''</i>", "'")
                 .Replace("</i>'<i>", "'")
-                .Replace("</i>''<i>", "'")
+                .Replace("<i>''</i>", "''")
+                .Replace("</i>''<i>", "''")
+                .Replace("<i>\"</i>", "\"")
+                .Replace("</i>\"<i>", "\"")
                 .Replace("<i>:</i>", ":")
                 .Replace("</i>:<i>", ":")
                 .Replace("<i>.</i>", ".")
