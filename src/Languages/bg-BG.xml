@@ -592,7 +592,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemovedEmptyLineAtTop>Премахнат празен ред отгоре</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Премахнат празен ред отдолу</RemovedEmptyLineAtBottom>
     <RemovedEmptyLineInMiddle>Премахнат празен ред в средата</RemovedEmptyLineInMiddle>
-    <RemovedEmptyLinesUnsedLineBreaks>Изтриване на празни редове (ненужни прекъсвания на редовете)</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnsedLineBreaks>Премахване на празни редове (ненужни прекъсвания на редовете)</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Премахнати празни редове: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Поправяне на застъпващи се времена на показване</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Поправяне на кратки времена на показване</FixShortDisplayTimes>
@@ -615,7 +615,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLowercaseIToUppercaseI>Поправяне на единична малка буква "i" към "I" за подобряване на шрифта (на англ.)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Поправяне на OCR грешки (използвайки OCR списъка за замяна)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Поправени са OCR грешки (използван е OCR файла със списък за замяна): {0}</CommonOcrErrorsFixed>
-    <RemoveSpaceBetweenNumber>Изтриване на интервал между цифри</RemoveSpaceBetweenNumber>
+    <RemoveSpaceBetweenNumber>Премахване на интервал между цифри</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Разделяне на диалози, които са на един ред</FixDialogsOnOneLine>
     <NormalizeStrings>Нормализиране на низовете</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Премахнати интервали между цифри: {0}</RemoveSpaceBetweenNumbersFixed>
@@ -684,7 +684,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoBreak>Прекъсни ред</AutoBreak>
     <Unbreak>Обедини редове</Unbreak>
     <FixDoubleDash>Поправяне символ тире (--) -&gt;на многоточие (...)</FixDoubleDash>
-    <FixDoubleGreaterThan>Изтриване символите &gt;&gt; в началото на реда</FixDoubleGreaterThan>
+    <FixDoubleGreaterThan>Премахване символите &gt;&gt; в началото на реда</FixDoubleGreaterThan>
     <FixEllipsesStart>Изтриване на многоточие (...) в началото на реда</FixEllipsesStart>
     <FixMissingOpenBracket>Поправяне на липсваща скоба [ в ред</FixMissingOpenBracket>
     <FixMusicNotation>Замяна на музикални символи (напр. âTª) с избрания в Настройки/Инструменти символ</FixMusicNotation>
@@ -795,8 +795,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineBreak>Разделител на редове</LineBreak>
     <SplitAtBlankLines>Раздели в празни редове</SplitAtBlankLines>
     <MergeShortLines>Обединяване на кратки редове с продължение</MergeShortLines>
-    <RemoveEmptyLines>Изтриване на празни редове</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Изтриване на редове без букви</RemoveLinesWithoutLetters>
+    <RemoveEmptyLines>Премахване на празни редове</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>Премахване на редове без букви</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Генериране на тайм кодове</GenerateTimeCodes>
     <TakeTimeFromFileName>Отделете времето от името на файла</TakeTimeFromFileName>
     <GapBetweenSubtitles>Интервал между субтитрите (милисек.)</GapBetweenSubtitles>
@@ -1739,7 +1739,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Parentheses>'(' и ')'</Parentheses>
     <QuestionMarks>'?' и '?'</QuestionMarks>
     <And>и</And>
-    <RemoveTextBeforeColon>Изтриване на текст преди двоеточие («:»)</RemoveTextBeforeColon>
+    <RemoveTextBeforeColon>Премахване на текст преди двоеточие («:»)</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Само, ако текстът е с ГОЛЕМИ БУКВИ</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Само, ако е на отделен ред</OnlyIfInSeparateLine>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
@@ -1855,7 +1855,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RememberSelectedLine>Запомняне на избрания ред</RememberSelectedLine>
     <RememberPositionAndSize>Запомняне позицията и размера на главния прозорец</RememberPositionAndSize>
     <StartInSourceView>Стартиране в «Изглед оригинал»</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Изтриване на празните редове при отваряне на субтитри</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLinesWhenOpening>Премахване на празните редове при отваряне на субтитри</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Показване прекъсвания на ред в «Изглед на списъка», като</ShowLineBreaksAs>
     <SaveAsFileNameFrom>"Запазване като..." използване името на файла от:</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Двойно щракване на ред в главния прозорец в «Изглед на списъка» ще:</MainListViewDoubleClickAction>
@@ -2582,7 +2582,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicAngle>
     <Title>Задаване наклон на ъгъла</Title>
-    <Description>Регулирайте стойността, докато стилът на текста е нормален и не е наклонен.  Обърнете внимание, че оригиналното изображение трябва да е с наклонен.</Description>
+    <Description>Регулирайте стойността, докато стилът на текста стане нормален и не е в курсив (НЕ-наклонен).
+Обърнете внимание, че оригиналното изображение трябва да е изцяло в курсив (наклонен).</Description>
   </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
     <Title>Предварителна обработка на OCR изображение</Title>
