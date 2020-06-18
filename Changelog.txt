@@ -18,7 +18,7 @@
    * Add "More than two lines" to "Modify selection"
    * Settings: Small helper window to calc gap in frames
    * Add "Center, right justify" to image export - thx waelmohammed5
-   * Add Malayalam spell check diactionary download
+   * Add Malayalam spell check dictionary download
 * IMPROVED:
    * Improve italic-space-detection in "Binary image comp" - thx tormento
    * Many minor improvements to OCR (find/new shortcuts/preview and more)
