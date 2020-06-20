@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core
 
             public override string ToString()
             {
-                return "(" + Alpha + ", " + Red + ", " + Green + ", " + Blue + ")";
+                return $"({Alpha}, {Red}, {Green}, {Blue})";
             }
         }
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core
         private readonly Bitmap _workingBitmap;
         private int _width;
         private BitmapData _bitmapData;
-        private Byte* _pBase = null;
+        private byte* _pBase = null;
 
         public FastBitmap(Bitmap inputBitmap)
         {
