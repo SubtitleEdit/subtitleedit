@@ -48,8 +48,8 @@ namespace Nikse.SubtitleEdit.Core
             public override bool Equals(string path1, string path2)
             {
                 return ReferenceEquals(path1, path2) ||
-                       (!(ReferenceEquals(path1, null) || ReferenceEquals(path2, null)) &&
-                        string.Equals(path1.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar), path2.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar), StringComparison.Ordinal));
+                       !(ReferenceEquals(path1, null) || ReferenceEquals(path2, null)) &&
+                       string.Equals(path1.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar), path2.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar), StringComparison.Ordinal);
             }
 
             public override int GetHashCode(string path)
