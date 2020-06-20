@@ -1927,11 +1927,11 @@
   </ItemGroup>
   <ItemGroup />
   <Target Name="BeforeCompile">
-    <XmlPeek XmlInputPath="$(SolutionDir)\packages.config" Query="//package[@id='NHunspell']/@version">
+    <XmlPeek XmlInputPath="$(SolutionDir)packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
     </XmlPeek>
     <PropertyGroup>
-      <HunspellDir>$(SolutionDir)\packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
+      <HunspellDir>$(SolutionDir)packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
     </PropertyGroup>
     <Copy SourceFiles="@(HunspellAssemblies -> '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
