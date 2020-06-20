@@ -708,6 +708,17 @@ namespace Test.FixCommonErrors
         }
 
         [TestMethod]
+        public void FixMissingSpacesAfterThreeDotsBeforeDollarSign()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Give me...$20!");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual("Give me... $20!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSwedish()
         {
             using (var target = GetFixCommonErrorsLib())

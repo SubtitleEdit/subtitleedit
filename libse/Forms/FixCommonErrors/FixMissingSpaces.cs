@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         if (newText.Length > index + 4 && index >= 1)
                         {
-                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3]) &&
+                            if ((Utilities.AllLettersAndNumbers + "$").Contains(newText[index + 3]) &&
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
                             {
                                 newText = newText.Insert(index + 3, " ");
