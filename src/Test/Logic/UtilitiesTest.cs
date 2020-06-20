@@ -438,6 +438,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void FixInvalidItalicTagsBadStartTag()
+        {
+            var s1 = "<i<Hallo!<i/>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual( "<i>Hallo!</i>", s2);
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";

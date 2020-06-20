@@ -563,6 +563,8 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("< I >", beginTag);
             text = text.Replace("< I>", beginTag);
             text = text.Replace("<I >", beginTag);
+            text = text.Replace("<i<", beginTag);
+            text = text.Replace("<I<", beginTag);
 
             text = text.Replace("< / i >", endTag);
             text = text.Replace("< /i>", endTag);
@@ -579,6 +581,8 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("</I >", endTag);
             text = text.Replace("</ I >", endTag);
             text = text.Replace("< / I>", endTag);
+            text = text.Replace("</i<", beginTag);
+            text = text.Replace("</I<", beginTag);
 
             text = text.Replace("<I>", beginTag);
             text = text.Replace("</I>", endTag);
