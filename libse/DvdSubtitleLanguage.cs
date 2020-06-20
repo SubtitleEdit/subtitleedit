@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
-                return "Unknown (" + code + ")";
+                return $"Unknown ({code})";
             }
         }
 
