@@ -327,9 +327,16 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // handle overlap with next
-            if (newEndTimeInMs > nextStartTimeInMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+            if (newEndTimeInMs > nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
             {
                 newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            }
+
+            // max duration
+            var dur = newEndTimeInMs - p.StartTime.TotalMilliseconds;
+            if (dur > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            {
+                newEndTimeInMs = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }
 
             if (ms > 0 && newEndTimeInMs < p.EndTime.TotalMilliseconds || ms < 0 && newEndTimeInMs > p.EndTime.TotalMilliseconds)
