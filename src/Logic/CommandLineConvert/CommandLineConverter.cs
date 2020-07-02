@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 _stdOutWriter.WriteLine("        /forcedonly");
                 _stdOutWriter.WriteLine("        /multiplereplace:<comma separated file name list> ('.' represents the default replace rules)");
                 _stdOutWriter.WriteLine("        /multiplereplace (equivalent to /multiplereplace:.)");
+                _stdOutWriter.WriteLine("        /ebuimportfile:<file name>");
                 //_stdOutWriter.WriteLine("        /ocrengine:<ocr engine> (\"tesseract\"/\"nOCR\")");
                 //_stdOutWriter.WriteLine("        /ocrdb:<ocr db/dictionary> (e.g. \"eng\" or \"latin\")");
                 _stdOutWriter.WriteLine("      The following operations are applied in command line order");
@@ -421,6 +422,22 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     foreach (var fn in Directory.EnumerateFiles(folderName, fileName))
                     {
                         files.Add(fn); // silently ignore duplicates
+                    }
+                }
+
+                var ebuImportFile = string.Empty;
+                {
+                    var ebuImportFileTemp = GetArgument(unconsumedArguments, "ebuimportfile:");
+                    if (ebuImportFileTemp.Length > 0)
+                    {
+                        if (File.Exists(ebuImportFileTemp))
+                        {
+                            ebuImportFile = ebuImportFileTemp;
+                        }
+                        else
+                        {
+                            throw new Exception($"The /ebuimportfile '{ebuImportFileTemp}' does not exist.");
+                        }
                     }
                 }
 
@@ -730,7 +747,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
+                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, ebuImportFile: ebuImportFile);
                         }
                     }
                     else
@@ -1090,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
         internal static bool BatchConvertSave(string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
                                               IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, IList<IBinaryParagraph> binaryParagraphs, bool overwrite, int pacCodePage,
                                               double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions = null,
-                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null)
+                                              Point? resolution = null, bool autoDetectLanguage = false, BatchConvertProgress progressCallback = null, string ebuImportFile = null)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             try
@@ -1316,6 +1333,13 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             var ebuOriginal = new Ebu();
                             var temp = new Subtitle();
                             ebuOriginal.LoadSubtitle(temp, null, fileName);
+                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
+                        }
+                        else if (!string.IsNullOrEmpty(ebuImportFile))
+                        {
+                            var ebuOriginal = new Ebu();
+                            var temp = new Subtitle();
+                            ebuOriginal.LoadSubtitle(temp, null, ebuImportFile);
                             ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
                         }
                         else
