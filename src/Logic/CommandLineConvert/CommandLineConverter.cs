@@ -432,7 +432,15 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     {
                         if (File.Exists(ebuImportFileTemp))
                         {
-                            ebuImportFile = ebuImportFileTemp;
+                            var ebu = new Ebu();
+                            if (ebu.IsMine(null, ebuImportFileTemp))
+                            {
+                                ebuImportFile = ebuImportFileTemp;
+                            }
+                            else
+                            {
+                                throw new Exception($"The /ebuimportfile '{ebuImportFileTemp}' is not a EBU STL file.");
+                            }
                         }
                         else
                         {
