@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
         private static int Help(string[] arguments)
         {
-            var secondArgument = (arguments.Length > 2) ? arguments[2].Trim().ToLowerInvariant() : null;
+            var secondArgument = arguments.Length > 2 ? arguments[2].Trim().ToLowerInvariant() : null;
             if (secondArgument == "formats" || secondArgument == "/formats" || secondArgument == "-formats" || secondArgument == "/list" || secondArgument == "-list")
             {
                 _stdOutWriter.WriteLine("- Supported formats (input/output):");
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     targetFormat = NetflixTimedText.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
-                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray" || targetFormat == "bluraysup" || targetFormat == "bluray-sup")
+                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray" || targetFormat == "bluraysup" || targetFormat == "bluray-sup" || targetFormat == "bdsup")
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
                 }
@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     throw new Exception(string.Empty);
                 }
 
-                var formats = SubtitleFormat.AllSubtitleFormats;
+                var formats = SubtitleFormat.AllSubtitleFormats.ToList();
                 foreach (var fileName in files)
                 {
                     count++;
@@ -851,7 +851,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             }
         }
 
-        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions)
+        private static void ConvertImageListSubtitle(string fileName, Subtitle subtitle, string targetFormat, TimeSpan offset, TextEncoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, bool overwrite, int pacCodePage, double? targetFrameRate, ICollection<string> multipleReplaceImportFiles, IEnumerable<BatchAction> actions)
         {
             var format = Utilities.GetSubtitleFormatByFriendlyName(targetFormat) ?? new SubRip();
 
@@ -1264,7 +1264,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                                     file.Write(sub.ToText(sf));
                                 } // save and close it
                             }
-                            else if (Equals(targetEncoding, Encoding.UTF8) && format != null && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                            else if (targetEncoding.IsUtf8 && format != null && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                             {
                                 var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                                 using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
