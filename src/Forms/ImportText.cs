@@ -1241,6 +1241,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+
+            var workingArea = Screen.FromControl(this).WorkingArea;
+            if (workingArea.Height < Height && workingArea.Height >= MinimumSize.Height)
+            {
+                Height = workingArea.Height;
+            }
         }
 
         private void startNumberingFromToolStripMenuItem_Click(object sender, EventArgs e)
