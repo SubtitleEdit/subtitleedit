@@ -1243,9 +1243,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var workingArea = Screen.FromControl(this).WorkingArea;
-            if (workingArea.Height < Height && workingArea.Height >= MinimumSize.Height)
+            if (workingArea.Height < Height)
             {
-                Height = workingArea.Height;
+                Height = Math.Max(workingArea.Height, MinimumSize.Height);
             }
         }
 
