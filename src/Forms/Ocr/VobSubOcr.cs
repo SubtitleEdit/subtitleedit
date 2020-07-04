@@ -873,6 +873,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
             var oldNOcrDrawText = checkBoxNOcrDrawUnknownLetters.Checked;
 
+            InitializeOcrEngineBatch(language, ocrEngine);
+
+            checkBoxShowOnlyForced.Checked = forcedOnly;
+            DoBatch();
+            checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
+        }
+
+        private void InitializeOcrEngineBatch(string language, string ocrEngine)
+        {
             if (ocrEngine?.ToLowerInvariant() == "nocr")
             {
                 InitializeNOcrForBatch(language);
@@ -892,22 +901,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 InitializeTesseract(language);
                 SetTesseractLanguageFromLanguageString(language);
             }
-
-            checkBoxShowOnlyForced.Checked = forcedOnly;
-            DoBatch();
-            checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
         }
 
-        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language)
+        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackList, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language, string ocrEngine)
         {
             Initialize(vobSubMergedPackList, palette, vobSubOcrSettings, language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
+            InitializeOcrEngineBatch(language, ocrEngine);
             DoBatch();
         }
 
-        internal void InitializeBatch(List<SubPicturesWithSeparateTimeCodes> list, string fileName)
+        internal void InitializeBatch(List<SubPicturesWithSeparateTimeCodes> list, string fileName, string language, string ocrEngine)
         {
             Initialize(list, Configuration.Settings.VobSubOcr, fileName);
+            InitializeOcrEngineBatch(language, ocrEngine);
             DoBatch();
         }
 
@@ -1002,7 +1009,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
         }
 
-        internal void InitializeBatch(Subtitle imageListSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
+        internal void InitializeBatch(Subtitle imageListSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon, string language, string ocrEngine)
         {
             Initialize(imageListSubtitle, vobSubOcrSettings, isSon);
             _bdnXmlOriginal = imageListSubtitle;
@@ -1017,6 +1024,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxEmphasis2.BackColor = Color.White;
             }
 
+            InitializeOcrEngineBatch(language, ocrEngine);
             DoBatch();
         }
 
