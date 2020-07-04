@@ -14060,9 +14060,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D2)
             {
@@ -14072,9 +14072,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D3)
             {
@@ -14086,9 +14086,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D4)
             {
@@ -14100,9 +14100,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoToggleStartEndCurrent == e.KeyData)
             {
@@ -14120,10 +14120,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         }
-
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoPlayCurrent == e.KeyData)
             {
@@ -14136,9 +14135,9 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSubtitle();
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
-                        e.SuppressKeyPress = true;
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideoGoToStartCurrent == e.KeyData)
             {
@@ -14146,6 +14145,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     GotoSubPositionAndPause();
                 }
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainVideo3000MsLeft == e.KeyData)
             {
@@ -14153,6 +14153,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     GoBackSeconds(3);
                 }
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
             {
@@ -14181,6 +14182,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
                 RefreshTimeCodeMode();
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralSwitchTranslationAndOriginal == e.KeyData) // switch original/current
             {
@@ -14221,6 +14223,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileDateTime = new DateTime();
                 }
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainGeneralMergeTranslationAndOriginal == e.KeyData) // Merge translation and original
             {
@@ -14271,6 +14274,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     UndockVideoControlsToolStripMenuItemClick(null, null);
                 }
+                e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
             {
@@ -14366,6 +14370,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
                 beamer.ShowDialog(this);
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _shortcuts.MainVideoFullscreen) // fullscreen
             {
@@ -14795,14 +14800,17 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainAdjustMoveStartOneFrameForward == e.KeyData)
             {
                 MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate), false);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameBack == e.KeyData)
             {
                 MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), false);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameForward == e.KeyData)
             {
                 MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate), false);
+                e.SuppressKeyPress = true;
             }
 
             else if (_shortcuts.MainAdjustMoveStartOneFrameBackKeepGapPrev == e.KeyData)
@@ -14813,14 +14821,17 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainAdjustMoveStartOneFrameForwardKeepGapPrev == e.KeyData)
             {
                 MoveStartCurrent((int)Math.Round(1000.0 / CurrentFrameRate), true);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameBackKeepGapNext == e.KeyData)
             {
                 MoveEndCurrent(-(int)Math.Round(1000.0 / CurrentFrameRate), true);
+                e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAdjustMoveEndOneFrameForwardKeepGapNext == e.KeyData)
             {
                 MoveEndCurrent((int)Math.Round(1000.0 / CurrentFrameRate), true);
+                e.SuppressKeyPress = true;
             }
 
             else if (mediaPlayer.VideoPlayer != null && (_shortcuts.MainAdjustSetStartAndOffsetTheRest == e.KeyData || _shortcuts.MainAdjustSetStartAndOffsetTheRest2 == e.KeyData))
