@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
-    public class TransportStreamSubtitle
+    public class TransportStreamSubtitle : IBinaryParagraph
     {
         public ulong StartMilliseconds { get; set; }
 

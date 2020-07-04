@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetCurrentFormat(string formatName)
         {
-            SetCurrentFormat(SubtitleFormat.FromName(formatName));
+            SetCurrentFormat(SubtitleFormat.FromName(formatName, new SubRip()));
         }
 
         private void SetCurrentFormat(SubtitleFormat format)
@@ -1741,7 +1741,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetFormatTo(string formatName)
         {
-            SetFormatTo(SubtitleFormat.FromName(formatName));
+            SetFormatTo(SubtitleFormat.FromName(formatName, new SubRip()));
         }
 
         private void SetFormatTo(SubtitleFormat subtitleFormat)

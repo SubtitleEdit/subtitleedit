@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _count;
         private int _converted;
         private int _errors;
-        private readonly IList<SubtitleFormat> _allFormats;
+        private readonly List<SubtitleFormat> _allFormats;
         private bool _searching;
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
