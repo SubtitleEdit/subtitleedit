@@ -3,9 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.16</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [17-03-2020]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [27-06-2020]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
-    <HelpFile />
+     <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>Peruuta</Cancel>
     <Apply>Käytä</Apply>
@@ -82,6 +82,8 @@
     <Width>Leveys</Width>
     <Height>Korkeus</Height>
     <Collapse>Laajenna</Collapse>
+    <ShortcutX>Pikavalinta: {0}</ShortcutX>
+    <ExampleX>Esimerkki: {0}</ExampleX>
   </General>
   <About>
     <Title>Tietoja</Title>
@@ -126,6 +128,7 @@ Komentorivi: {1} {2}
 HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <LowDiskSpace>LEVYTILA VÄHISSÄ!</LowDiskSpace>
     <FreeDiskSpace>{0} vapaana</FreeDiskSpace>
+    <NoAudioTracksFoundGenerateEmptyWaveform>Ääniraitoja ei havaittu. Luodaanko tyhjä aaltomuoto?</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Aaltomuototietojen tuottaminen eräajona</Title>
@@ -197,7 +200,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <AutoBalance>Tasoita rivit automaattisesti</AutoBalance>
     <ScanFolder>Tutki kansio</ScanFolder>
     <Recursive>Sisällytä alikansiot</Recursive>
-    <SetMinMsBetweenSubtitles>Määritä pienin tekstityksien aikaväli</SetMinMsBetweenSubtitles>
     <BridgeGaps>Yhdistä välit</BridgeGaps>
     <PlainText>Pelkkä teksti</PlainText>
     <Ocr>Tekstintunnistus</Ocr>
@@ -219,6 +221,11 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <TransportStreamSettingsButton>Striimaus-asetukset...</TransportStreamSettingsButton>
     <RemoveLineBreaks>Poista rivinvaihdot</RemoveLineBreaks>
     <TryToUseSourceEncoding>Käytä lähteen koodausta jos mahdollista</TryToUseSourceEncoding>
+    <MkvLanguageInOutputFileName>Luotavan tiedoston "Kieli"-nimi: {0}</MkvLanguageInOutputFileName>
+    <MkvLanguageInOutputFileNameX>Luotavan Matroska (.mkv) -tiedoston "Kieli"-nimi: {0}</MkvLanguageInOutputFileNameX>
+    <MkvLanguageStyleTwoLetter>Kaksikirjaiminen kielikoodi</MkvLanguageStyleTwoLetter>
+    <MkvLanguageStyleThreeLetter>Kolmikirjaiminen kielikoodi</MkvLanguageStyleThreeLetter>
+    <MkvLanguageStyleEmpty>Ei kielikoodia</MkvLanguageStyleEmpty>
   </BatchConvert>
   <Beamer>
     <Title>Videotykki</Title>
@@ -494,6 +501,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Center>Keski</Center>
     <CenterLeftJustify>Keski, kohdistus vasempaan</CenterLeftJustify>
     <CenterTopJustify>Keski, kohdistus ylös</CenterTopJustify>
+    <CenterRightJustify>Keski, kohdistus oikealle
+</CenterRightJustify>
     <BottomMargin>Alareunus</BottomMargin>
     <LeftRightMargin>Sivureunukset</LeftRightMargin>
     <SaveBluRraySupAs>Valitse Blu-ray sup -tiedostonimi</SaveBluRraySupAs>
@@ -501,6 +510,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SaveFabImageScriptAs>Valitse Blu-ray sup -tiedostonimi</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Valitse DVD Studio Pro STL -tiedostonimi</SaveDvdStudioProStlAs>
     <SaveDigitalCinemaInteropAs>Valitse Digital Cinema Interop -tiedostonimi</SaveDigitalCinemaInteropAs>
+    <SaveDigitalCinemaSmpte2014>Valitse Digital Cinema SMPTE 2014 -tiedostonimi</SaveDigitalCinemaSmpte2014>
     <SavePremiereEdlAs>Valitse Premiere EDL -tiedostonimi</SavePremiereEdlAs>
     <SaveFcpAs>Valitse Final Cut Pro xm -tiedostonimi</SaveFcpAs>
     <SaveDostAs>Valitse DoStudio dost -tiedostonimi</SaveDostAs>
@@ -585,6 +595,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixInvalidItalicTags>Korjaa virheelliset kursivoinnit</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Poista tarpeettomat välilyönnit</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Poista tarpeettomat pisteet</RemoveUnneededPeriods>
+    <FixCommas>Korjaa pilkut</FixCommas>
     <FixMissingSpaces>Korjaa puuttuvat välilyönnit</FixMissingSpaces>
     <BreakLongLines>Katkaise pitkät rivit</BreakLongLines>
     <RemoveLineBreaks>Poista rivinvaihdot lyhyistä teksteistä, joissa on vain yksi lause</RemoveLineBreaks>
@@ -600,6 +611,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <CommonOcrErrorsFixed>Yleisiä tekstintunnistusvirheitä korjattu (käytetty korvausluettelotiedostoa): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Poista välilyönti numeroiden välistä</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Korjaa yhden rivin vuoropuhelut</FixDialogsOnOneLine>
+    <NormalizeStrings>Normalisoi merkkijonot</NormalizeStrings>
     <RemoveSpaceBetweenNumbersFixed>Välien poisto numeroista korjattu: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Korjaa turkkilaiset ja islantilaiset ANSI-kirjaimet Unicode-muotoon</FixTurkishAnsi>
     <FixDanishLetterI>Korjaa tanskan kirjain 'i'</FixDanishLetterI>
@@ -686,6 +698,10 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hei, Jussi! - Hei, Iida! -&gt; Hei, Jussi!&lt;br /&gt;- Hei, Iida!</FixDialogsOneLineExample>
     <SelectDefault>Valitse oletus</SelectDefault>
+    <FixContinuationStyleX>Korjaa jatkumistyyli: {0}</FixContinuationStyleX>
+    <XFixContinuationStyle>Korjattu{0} jatkumistyyliä</XFixContinuationStyle>
+    <FixUnnecessaryLeadingDots>Poista alusta tarpeettomat pisteet</FixUnnecessaryLeadingDots>
+    <XFixUnnecessaryLeadingDots>Poistettu  alusta {0} tarpeetonta pistettä</XFixUnnecessaryLeadingDots>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
@@ -1175,6 +1191,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Yhdistä valitut rivit vuoropuheluna</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Yhdistä edelliseen riviin</MergeWithLineBefore>
         <MergeWithLineAfter>Yhdistä seuraavaan riviin</MergeWithLineAfter>
+        <ExtendToLineBefore>Laajenna edelliselle riville</ExtendToLineBefore>
+        <ExtendToLineAfter>Laajenna seuraavalle riville</ExtendToLineAfter>
         <RemoveFormatting>Poista muotoilu</RemoveFormatting>
         <RemoveFormattingAll>Poista kaikki muotoilut</RemoveFormattingAll>
         <RemoveFormattingBold>Poista lihavointi</RemoveFormattingBold>
@@ -1245,6 +1263,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
       <AutoContinueInXSeconds>Automaattinen jatkaminen {0} sekunnin jälkeen</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Kirjoitetaan vielä... automaattinen  jatkaminen pysäytetty</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Lisää uusi tekstitys videokohtaan</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPositionNoTextBoxFocus>Lisää uusi tekstitys videokohtaan (ilman tekstilaatikkoa)</InsertNewSubtitleAtVideoPositionNoTextBoxFocus>
       <Auto>Autom.</Auto>
       <PlayFromJustBeforeText>Toista juuri ennen tekstiä</PlayFromJustBeforeText>
       <Pause>Tauko</Pause>
@@ -1354,7 +1373,6 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <BeforeSwedishToDanishTranslation>Ennen käännöstä ruotsista tanskaksi</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Käännös ruotsista tanskaksi valmis</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Käännös ruotsista tanskaksi epäonnistui</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Ennen kumoamista</BeforeUndo>
     <UndoPerformed>Kumottu</UndoPerformed>
     <RedoPerformed>Uudelleen suoritettu</RedoPerformed>
     <NothingToUndo>Mitään kumottavaa ei ole</NothingToUndo>
@@ -1589,6 +1607,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <EqualLines>Samanlaiset rivit</EqualLines>
     <DurationLessThan>Kesto alle</DurationLessThan>
     <DurationGreaterThan>Kesto yli</DurationGreaterThan>
+    <MoreThanTwoLines>Enemmän kuin kaksi riviä</MoreThanTwoLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Korvaa monta</Title>
@@ -1840,6 +1859,10 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <TimeCodeMode>Aikaleimamuoto</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <SplitBehavior>Katkaisu</SplitBehavior>
+    <SplitBehaviorPrevious>Lisää väli katkaisukohdan vasemmalle puolelle</SplitBehaviorPrevious>
+    <SplitBehaviorHalf>Lisää väli katkaisukohdan keskelle</SplitBehaviorHalf>
+    <SplitBehaviorNext>Lisää väli katkaisukohdan oikealle puolelle</SplitBehaviorNext>
     <VideoEngine>Videomoottori</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll Kansiossa 'System32'</DirectShowDescription>
@@ -1867,11 +1890,14 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformSetVideoPosMoveStartEnd>Aseta videosijainti  siirrettäessä alkua/loppua</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Valitse hiirellä</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Valitse luettelosta hiirellä</WaveformListViewFocusMouseEnter>
+    <WaveformSingleClickSelect>Yksi napsautus tekstityksen valitsemiseksi</WaveformSingleClickSelect>
+    <WaveformSnapToSceneChanges>Tahdista kohtausten vaihtoihin (Pidä Vaihtonäppäin painettuna korvataksesi)</WaveformSnapToSceneChanges>
     <WaveformBorderHitMs1>Reunaviivojen näyttöaika</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekuntia</WaveformBorderHitMs2>
     <WaveformColor>Väri</WaveformColor>
     <WaveformSelectedColor>Valinnan väri</WaveformSelectedColor>
     <WaveformBackgroundColor>Taustaväri</WaveformBackgroundColor>
+    <WaveformCursorColor>Osoittimen väri</WaveformCursorColor>
     <WaveformTextColor>Tekstiväri</WaveformTextColor>
     <WaveformTextFontSize>Fonttikoko</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Tyhjennä aaltomuoto- ja taajuusanalyysikansiot</WaveformAndSpectrogramsFolderEmpty>
@@ -1928,6 +1954,15 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <DialogStyleDashBothLinesWithoutSpace>Molemmille riveille viiva</DialogStyleDashBothLinesWithoutSpace>
     <DialogStyleDashSecondLineWithSpace>Jälkimmäisille riveille viiva ja väli</DialogStyleDashSecondLineWithSpace>
     <DialogStyleDashSecondLineWithoutSpace>Jälkimmäisille riveille viiva</DialogStyleDashSecondLineWithoutSpace>
+    <ContinuationStyle>Jatkumisen tyyli</ContinuationStyle>
+    <ContinuationStyleNone>Ei</ContinuationStyleNone>
+    <ContinuationStyleNoneTrailingDots>Ei, tauoille pisteet vain alussa</ContinuationStyleNoneTrailingDots>
+    <ContinuationStyleNoneLeadingTrailingDots>Ei, tauoille pisteet
+</ContinuationStyleNoneLeadingTrailingDots>
+    <ContinuationStyleOnlyTrailingDots>Pisteet, vain alussa</ContinuationStyleOnlyTrailingDots>
+    <ContinuationStyleLeadingTrailingDots>Pisteet</ContinuationStyleLeadingTrailingDots>
+    <ContinuationStyleLeadingTrailingDash>Tavuviivat</ContinuationStyleLeadingTrailingDash>
+    <ContinuationStyleLeadingTrailingDashDots>Tavuviivat, tauoille pisteet</ContinuationStyleLeadingTrailingDashDots>
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
     <MusicSymbolsReplace>Korvattavat musiikkisymbolit (pilkuin eroteltuina)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset tekstintunnistusvirheet</FixCommonOcrErrorsUseHardcodedRules>
@@ -1957,10 +1992,22 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustStartXMsForward>Siirrä alkua {0} ms eteenpäin</AdjustStartXMsForward>
     <AdjustEndXMsBack>Siirrä loppua {0} ms taaksepäin</AdjustEndXMsBack>
     <AdjustEndXMsForward>Siirrä loppua {0} ms eteenpäin</AdjustEndXMsForward>
+    <AdjustStartOneFrameBack>Siirrä alkua kehyksen verran taaksepäin</AdjustStartOneFrameBack>
+    <AdjustStartOneFrameForward>Siirrä alkua  kehyksen verran eteenpäin</AdjustStartOneFrameForward>
+    <AdjustEndOneFrameBack>Siirrä loppua kehyksen verran taaksepäin</AdjustEndOneFrameBack>
+    <AdjustEndOneFrameForward>Siirrä loppua  kehyksen verran eteenpäin</AdjustEndOneFrameForward>
+    <AdjustStartOneFrameBackKeepGapPrev>Siirrä alkua kehyksen verran  taaksepäin (säilytä tarvittaessa väli edelliseen)</AdjustStartOneFrameBackKeepGapPrev>
+    <AdjustStartOneFrameForwardKeepGapPrev>Siirrä alkua  kehyksen verran eteenpäin (säilytä tarvittaessa väli edelliseen)</AdjustStartOneFrameForwardKeepGapPrev>
+    <AdjustEndOneFrameBackKeepGapNext>Siirrä loppua kehyksen verran taaksepäin (säilytä tarvittaessa väli seuraavaan)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Siirrä loppua  kehyksen verran eteenpäin (säilytä tarvittaessa väli seuraavaan)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Aseta aloitusaika, säilytä kesto</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi suraavaan tekstitykseen taienimmäiskestoon</AdjustExtendCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi seuraavaan tekstitykseen tai enimmäiskestoon</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Laajenna valitut rivit seuraavaan kohtauksenvaihtoon (tai teksitykseen)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToPreviousSceneChange>Laajenna valitut rivit edelliseen kohtauksenvaihtoon (tai teksitykseen)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Laajenna valitut rivit seuraavaan tekstitykseen</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Laajenna valitut rivit edelliseen tekstitykseen</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Laske uudelleen nykyisen tekstityksen kesto</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
     <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
@@ -1970,6 +2017,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoToCurrentSubtitleEnd>Siirry nykyisen rivin loppuun</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Siirry edelliselle riville ja aseta sijainti</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Siirry seuraavalle riville ja aseta sijainti</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Siirry edelliselle riville ja toista</GoToPrevSubtitleAndPlay>
+    <GoToNextSubtitleAndPlay>Siirry seuraavalle riville ja toista</GoToNextSubtitleAndPlay>
     <ToggleFocus>Vaihda luettelonäkymän ja tekstitysruudun välillä</ToggleFocus>
     <ToggleDialogDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogDashes>
     <ToggleMusicSymbols>Vaihda musiikkisymbolit</ToggleMusicSymbols>
@@ -2014,8 +2063,13 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoForward1Second>Sekunti eteenpäin</GoForward1Second>
     <GoBack5Seconds>Viisi sekuntia takaisin</GoBack5Seconds>
     <GoForward5Seconds>Viisi sekuntia eteenpäin</GoForward5Seconds>
-    <WaveformGoToPrevSubtitle>Siirry edelliseen tekstitykseen</WaveformGoToPrevSubtitle>
-    <WaveformGoToNextSubtitle>Siirry seuraavaan tekstitykseen</WaveformGoToNextSubtitle>
+    <GoBack3Second>Kolme sekuntia takaisin</GoBack3Second>
+    <GoToStartCurrent>Siirrä videokohta nykyisen tekstityksen alkuun</GoToStartCurrent>
+    <ToggleStartEndCurrent>Videokohta nykyisen tekstityksen alkuun/loppuun</ToggleStartEndCurrent>
+    <PlayCurrent>Toista nykyinen tekstitys</PlayCurrent>
+    <WaveformGoToPrevSubtitle>Siirry edelliseen tekstitykseen (videolta)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Siirry seuraavaan tekstitykseen (videolta)</WaveformGoToNextSubtitle>
+    <WaveformSelectNextSubtitle>Valitse seuraava tekstitys (videolta, säilytä videokohta)</WaveformSelectNextSubtitle>
     <TogglePlayPause>Vaihda toisto/tauko</TogglePlayPause>
     <Pause>Tauko</Pause>
     <Fullscreen>Kokonäyttö</Fullscreen>
@@ -2032,10 +2086,16 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SyntaxColorDurationIfTooSmall>Korosta kesto, jos se on liian lyhyt</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Korosta kesto, josse on  liian pitkä</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Korosta teksti, jos se on liian pitkä</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooWide>Korosta teksti, jos se on liian leveä kuvapisteinä</SyntaxColorTextIfTooWide>
     <SyntaxColorTextMoreThanMaxLines>Korosta teksti jos sen rivimäärä yli {0}</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Korosta aikaleimojen päällekkäisyys</SyntaxColorOverlap>
     <SyntaxColorGap>Korosta liian lyhyet välit</SyntaxColorGap>
     <SyntaxErrorColor>Korostusväri</SyntaxErrorColor>
+    <SyntaxLineWidthSettings>Asetukset...</SyntaxLineWidthSettings>
+    <LineWidthSettings>Rivinleveyden asetukset</LineWidthSettings>
+    <MaximumLineWidth>Suurin rivileveys:</MaximumLineWidth>
+    <Pixels>kuvapistettä</Pixels>
+    <MeasureFont>Mittausfontti:</MeasureFont>
     <GoToFirstSelectedLine>Siirry ensimmäiselle valitulle riville</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Siirry seuraavalle tyhjälle riville</GoToNextEmptyLine>
     <MergeSelectedLines>Yhdistä valitut rivit</MergeSelectedLines>
@@ -2092,6 +2152,16 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <RestoreDefaultSettings>Palauta oletusarvoihin</RestoreDefaultSettings>
     <RestoreDefaultSettingsMsg>Palautetaanko kaikki asetukset oletusarvoihinsa?</RestoreDefaultSettingsMsg>
     <RemoveTimeCodes>Poista aikaleimat</RemoveTimeCodes>
+    <EditFixContinuationStyleSettings>Muokkaa jatkumistyylin asetuksia...</EditFixContinuationStyleSettings>
+    <FixContinuationStyleSettings>Jatkumistyylin asetukset</FixContinuationStyleSettings>
+    <UncheckInsertsAllCaps>Tunnista ja poista yksittäiset otsikot (kaikki kirjainkoot, esim. PÄÄSY KIELLETTY)</UncheckInsertsAllCaps>
+    <UncheckInsertsItalic>Tunnista ja poista kursivoidut yksittäiset otsikot ja sanoitukset</UncheckInsertsItalic>
+    <UncheckInsertsLowercase>Tunnista ja poista yksittäiset otsikot ja sanoitukset (pienet kirjaimet)</UncheckInsertsLowercase>
+    <HideContinuationCandidatesWithoutName>Piilota lauseet, jotka eivät todennäköisesti jatku</HideContinuationCandidatesWithoutName>
+    <IgnoreLyrics>Älä huomioi musikkisymbolien välisiä sanoituksia</IgnoreLyrics>
+    <MinFrameGap>Kehysten minimiväli</MinFrameGap>
+    <XFramesAtYFrameRateGivesZMs>{0} kehystä nopeudella {1} vastaa {2} millisekuntia.</XFramesAtYFrameRateGivesZMs>
+    <UseXAsNewGap>Käytetäänkö kehysten uutena minimivälinä "{0}" millisekuntia?</UseXAsNewGap>
   </Settings>
   <SettingsMpv>
     <Title>mpv:n asetukset</Title>
@@ -2152,6 +2222,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AddXToNames>Lisää '{0}' nimi/etc -luetteloon</AddXToNames>
     <AddXToUserDictionary>Lisää '{0}' omaan sanastoon</AddXToUserDictionary>
     <AutoFixNames>Korjaa automaattisesti nimet, joissa vain kirjainkoot eroavat</AutoFixNames>
+    <AutoFixNamesViaSuggestions>Korjaa automaattisesti myös nimet käyttäen 'oikolukuehdotuksia'</AutoFixNamesViaSuggestions>
     <CheckOneLetterWords>Kysy varmistus tuntemattomille, yksikirjaisimille sanoille</CheckOneLetterWords>
     <TreatINQuoteAsING>Kohtele 'in'-päätteisiä sanoja kuten 'ing'-päätteisiä (vain englanti)</TreatINQuoteAsING>
     <RememberUseAlwaysList>Muista 'Käytä aina' -luettelo</RememberUseAlwaysList>
@@ -2243,6 +2314,9 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SingleLineLengthMinimum>Yhden rivin pituus - pienin: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Yhden rivin pituus - suurin: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Yhden rivin pituus - keskiarvo: {0}</SingleLineLengthAverage>
+    <SingleLineWidthMinimum>Tekstityksen pituus - pienin: {0} kuvapistettä</SingleLineWidthMinimum>
+    <SingleLineWidthMaximum>Tekstityksen pituus - suurin: {0} kuvapistettä</SingleLineWidthMaximum>
+    <SingleLineWidthAverage>Yhden rivin pituus - keskiarvo: {0} kuvapistettä</SingleLineWidthAverage>
     <DurationMinimum>Kesto - pienin: {0:0.000} sekuntia</DurationMinimum>
     <DurationMaximum>Kesto - suurin: {0:0.000} sekuntia</DurationMaximum>
     <DurationAverage>Kesto - keskiarvo: {0:0.000} sekuntia</DurationAverage>
@@ -2373,12 +2447,14 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Tuo/tekstintunnista VobSub (sub/idx) -tekstitys</Title>
     <TitleBluRay>Tuo/tekstintunnista Blu-ray (.sup) -tekstitys</TitleBluRay>
     <OcrMethod>Tekstintunnistusmenetelmä</OcrMethod>
+    <OcrViaTesseractVersionX>Tesseract {0}</OcrViaTesseractVersionX>
     <OcrViaImageCompare>Tekstintunnistus kuvavertailun avulla</OcrViaImageCompare>
     <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää Microsoft Officea</OcrViaModi>
     <OcrViaNOCR>Tekstintunnistus käyttäen nOCR:ia</OcrViaNOCR>
     <TesseractEngineMode>Tunnistustapa</TesseractEngineMode>
-    <TesseractEngineModeLegacy>Vain alkuperäinen Tesseract (tunnistaa italian)</TesseractEngineModeLegacy>
+    <TesseractEngineModeLegacy>Vain alkuperäinen Tesseract (tunnistaa kursivoinnin)</TesseractEngineModeLegacy>
     <TesseractEngineModeNeural>Vain LSTM (Keinoälyverkot)</TesseractEngineModeNeural>
+    <TesseractEngineModeBoth>Tesseract + LSTM</TesseractEngineModeBoth>
     <TesseractEngineModeDefault>Oletus, perustuen käytettävissäoleviin</TesseractEngineModeDefault>
     <Language>Kieli</Language>
     <ImageDatabase>Kuvapankki</ImageDatabase>
@@ -2427,16 +2503,26 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <CaptureTopAlign>Kiinnitä yläreunan tasaus</CaptureTopAlign>
     <InspectCompareMatchesForCurrentImage>Tarkista vertailuvastaavuudet nykyisessä kuvassa</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Muokkaa viimeisen kuvan vertailulisäyksiä</EditLastAdditions>
-    <SetUnitalicFactor>Poista kursivointi</SetUnitalicFactor>
+    <SetItalicAngle>Aseta kursivoinnin kallistuskulma ...</SetItalicAngle>
+    <ItalicAngle>Kursivoinnin kallistuskulma</ItalicAngle>
     <DiscardTitle>Hylätäänkö tekstintunnistuksessa tehdyt muutokset?</DiscardTitle>
     <DiscardText>Hylätäänkö nykyisessä tekstintunnistuksessa tehdyt muutokset?</DiscardText>
     <MinLineSplitHeight>Pienin sallittu rivikorkeus jaettaessa</MinLineSplitHeight>
     <FallbackToX>Siirry vanhempaan</FallbackToX>
     <ImagePreProcessing>Kuvankäsittely</ImagePreProcessing>
     <EditImageDb>Muokkaa kuvatietokantaa</EditImageDb>
+    <OcrTraining>Tekstintunnistuksen (ORC) harjoittelu</OcrTraining>
+    <SubtitleTrainingFile>Harjoittelussa käytettävä tekstitys</SubtitleTrainingFile>
+    <LetterCombinations>Kirjainyhdistelmät jotka saatetaan tulkita yhdeksi merkiksi</LetterCombinations>
+    <TrainingOptions>Harjoitteluvalinnat</TrainingOptions>
+    <NumberOfSegments>Segmenttejä per kirjain</NumberOfSegments>
+    <AlsoTrainItalic>Harjoittele myös kursivointia</AlsoTrainItalic>
+    <AlsoTrainBold>Harjoittele myös lihavointia</AlsoTrainBold>
+    <StartTraining>Aloita harjoittelu</StartTraining>
+    <NowTraining>Harjoitellaan fontilla '{1}'. Merkkejä harjoiteltu {0:#,###,##0}, tunnistettu {2:#,###,##0}.</NowTraining>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - manuaalinen kuva tekstiksi</Title>
+    <Title>ORC - manuaalinen kuva tekstiksi</Title>
     <ShrinkSelection>Pienennä valintaa</ShrinkSelection>
     <ExpandSelection>Laajenna valintaa</ExpandSelection>
     <SubtitleImage>Tekstityskuva</SubtitleImage>
@@ -2461,12 +2547,12 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Uusi kansio</Title>
     <Message>Anna merkkitietokantakansiolle uusi nimi</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-    <Title>Säädä kursivoinninpoistoa</Title>
-    <Description>Säädä tekstitystä normaaliksi, ei kursivoiduksi (HUOM Alkuperäinen kuva säilyy kursivoituna)</Description>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicAngle>
+    <Title>Aseta kursivoinnin kallistuskulma</Title>
+    <Description>Säädä arvoa kunnes kirjaintyyli on normaali, ei kursivoitu. HUOM! Alkuperäisen kuvatekstin tulee olla kursivoitu.</Description>
+  </VobSubOcrSetItalicAngle>
   <OcrPreprocessing>
-    <Title>OCR tektintunnistus</Title>
+    <Title>OCR tekstintunnistus</Title>
     <Colors>Värit</Colors>
     <AdjustAlpha>Säädä arvoa kunnes teksti näkyy terävästi (yleensä 200 - 300)</AdjustAlpha>
     <OriginalImage>Alkuperäinen kuva</OriginalImage>
@@ -2500,11 +2586,15 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AddParagraphHereAndPasteText>Lisää teksti leikepöydältä tähän</AddParagraphHereAndPasteText>
     <SetParagraphAsSelection>Määritä uudeksi valinnaksi</SetParagraphAsSelection>
     <FocusTextBox>Tarkka tekstilaatikko</FocusTextBox>
+    <GoToPrevious>Siirry edelliseen tekstitykseen</GoToPrevious>
+    <GoToNext>Siirry seuraavaan tekstitykseen</GoToNext>
     <DeleteParagraph>Poista teksti</DeleteParagraph>
     <Split>Katkaise</Split>
     <SplitAtCursor>Katkaise kursoriin</SplitAtCursor>
     <MergeWithPrevious>Yhdistä edellisen kanssa</MergeWithPrevious>
     <MergeWithNext>Yhdistä seuraavaan</MergeWithNext>
+    <ExtendToPrevious>Laajenna edelliseen</ExtendToPrevious>
+    <ExtendToNext>Laajenna seuraavaan</ExtendToNext>
     <PlaySelection>Toista valinta</PlaySelection>
     <ShowWaveformAndSpectrogram>Näytä aaltomuoto ja taajuusanalyysi</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Näytä vain aaltomuoto</ShowWaveformOnly>
