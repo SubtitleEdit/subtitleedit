@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -10,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// The PAC format was developed by Screen Electronics
     /// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
     /// </summary>
-    public class Pac : SubtitleFormat
+    public class Pac : SubtitleFormat, IBinaryPersistableSubtitle
     {
         public interface IGetPacEncoding
         {
@@ -2282,6 +2283,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             internal string Character { get; set; }
             internal bool SwitchOrder { get; set; }
             internal int Priority { get; set; }
+        }
+
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            return Save(fileName, stream, subtitle);
         }
     }
 }

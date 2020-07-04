@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -814,6 +815,56 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
             }
+        }
+
+        internal void InitializeBatch(IList<IBinaryParagraph> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
+        {
+            if (subtitles.Count == 0)
+            {
+                return;
+            }
+
+            if (subtitles.First() is TransportStreamSubtitle)
+            {
+                var tssList = new List<TransportStreamSubtitle>();
+                foreach (var binaryParagraph in subtitles)
+                {
+                    tssList.Add(binaryParagraph as TransportStreamSubtitle);
+                }
+
+                InitializeBatch(tssList, vobSubOcrSettings, fileName, forcedOnly, language, ocrEngine);
+            }
+        }
+
+        internal void InitializeBatch(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
+        {
+            Initialize(subtitles, vobSubOcrSettings, fileName, language);
+            _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
+            var oldNOcrDrawText = checkBoxNOcrDrawUnknownLetters.Checked;
+
+            if (ocrEngine?.ToLowerInvariant() == "nocr")
+            {
+                InitializeNOcrForBatch(language);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = Configuration.Settings.VobSubOcr.TesseractLastLanguage;
+                }
+
+                if (string.IsNullOrEmpty(language))
+                {
+                    language = "en";
+                }
+
+                InitializeTesseract(language);
+                SetTesseractLanguageFromLanguageString(language);
+            }
+
+            checkBoxShowOnlyForced.Checked = forcedOnly;
+            DoBatch();
+            checkBoxNOcrDrawUnknownLetters.Checked = oldNOcrDrawText;
         }
 
         internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null, string ocrEngine = null)
@@ -7374,6 +7425,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 LoadBluRaySup();
             }
+            else if (_dvbSubtitles != null)
+            {
+                LoadDvbSubtitles();
+            }
             else
             {
                 LoadVobRip();
@@ -7408,6 +7463,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
+        }
+
+        private void LoadDvbSubtitles()
+        {
+
         }
 
         private void checkBoxUseTimeCodesFromIdx_CheckedChanged(object sender, EventArgs e)

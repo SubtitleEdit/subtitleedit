@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -577,10 +578,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             };
         }
 
-        public static SubtitleFormat FromName(string formatName)
+        public static SubtitleFormat FromName(string formatName, SubtitleFormat defaultFormat)
         {
             string trimmedFormatName = formatName.Trim();
-            foreach (SubtitleFormat format in AllSubtitleFormats)
+            foreach (var format in AllSubtitleFormats)
             {
                 if (format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
                     format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
@@ -588,7 +589,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return format;
                 }
             }
-            return new SubRip();
+
+            return defaultFormat;
+        }
+
+        public static SubtitleFormat BinaryPersistableFromName(string formatName, bool batchMode)
+        {
+            string trimmedFormatName = formatName.Trim();
+            foreach (var format in GetBinaryFormats(batchMode))
+            {
+                if (format is IBinaryPersistableSubtitle &&
+                    format.Name.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase) ||
+                    format.FriendlyName.Trim().Equals(trimmedFormatName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return format;
+                }
+            }
+
+            return null;
         }
     }
 }
