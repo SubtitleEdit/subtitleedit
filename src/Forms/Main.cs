@@ -14304,26 +14304,32 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeftWithPlay)
+            else if (e.KeyData == _shortcuts.Video1FrameLeftWithPlay)
             {
-                double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSecondsNewPosition = startSeconds;
-                mediaPlayer.CurrentPosition = startSeconds;
-                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
-                mediaPlayer.Play();
-                _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSecondsNewPosition = startSeconds;
+                    mediaPlayer.CurrentPosition = startSeconds;
+                    UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                    mediaPlayer.Play();
+                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                }
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameRightWithPlay)
+            else if (e.KeyData == _shortcuts.Video1FrameRightWithPlay)
             {
-                double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSecondsNewPosition = startSeconds;
-                mediaPlayer.CurrentPosition = startSeconds;
-                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
-                mediaPlayer.Play();
-                _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
+                    _endSecondsNewPosition = startSeconds;
+                    mediaPlayer.CurrentPosition = startSeconds;
+                    UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                    mediaPlayer.Play();
+                    _endSecondsNewPositionTicks = DateTime.UtcNow.Ticks;
+                }
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video100MsLeft)
