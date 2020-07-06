@@ -1,5 +1,21 @@
 ﻿Subtitle Edit Changelog
 
+3.5.17 (xth September 2020) BETA
+* NEW:
+* IMPROVED:
+   * Update Bulgarian translation - thx KalinM
+   * Update Hungarian translation - thx Zityi
+   * Update Finnish translation - thx Teijo S
+   * Improve support for transport stream cmd line convert
+   * Cmd line convert use header from EBU STL file - thx malashin
+   * Add "ocrengine" parameter to cmd line convert
+* FIXED:
+   * Fix for overlap in "Tools -> Adjust durations" - thx Christian
+   * Fix some shortcuts being written to text box - thx rebawest
+   * Fix casing in OCR for italian letter "Ú"
+   * Fix "Import plain text" for small resolutions - thx doquan0
+
+
 3.5.16 (16th June 2020)
 * NEW:
    * OCR method "nOCR" (vector based with auto training) - thx Janusz
