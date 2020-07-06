@@ -5822,6 +5822,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
+                    SubtitleListview1.SyntaxColorAllLines(_subtitle);
                 }
             }
 
