@@ -993,7 +993,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isMatroska = true;
                     }
-                    else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
+                    else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
                     {
                         isTs = true;
                     }
@@ -1398,8 +1398,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (ListViewItem item in listViewConvertOptions.Items)
             {
-                var fixItem = item.Tag as FixActionItem;
-                if (fixItem.Action == action)
+                if (item.Tag is FixActionItem fixItem && fixItem.Action == action)
                 {
                     return item.Checked;
                 }
@@ -1416,7 +1415,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         /// <summary>
-        /// Text based functions retuires text, so no image to image convert
+        /// Text based functions requires text, so no image to image convert
         /// </summary>
         /// <returns></returns>
         private bool AllowImageToImage()
@@ -1746,7 +1745,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.SourceFormat == null)
                 {
                     var ext = Path.GetExtension(p.FileName);
-                    if (ext != null && (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase)) &&
+                    if (ext != null && (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mts", StringComparison.OrdinalIgnoreCase)) &&
                         (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
                     {
                         if (p.ToFormat == BluRaySubtitle || p.ToFormat == BdnXmlSubtitle)
