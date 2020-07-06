@@ -20010,6 +20010,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisibleFaster(idx);
             }
             SetTitle();
+            labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
         }
 
         private void InitializePlayRateDropDown()
