@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 new DlDd(), new Ted20(), new Captionate(), new TimeLineAscii(), new TimeLineFootageAscii(),  new TimedTextImage(),
                 new FinalCutProImage(), new SpuImage(), new Dost(), new SeImageHtmlIndex(), new BdnXml(), new Wsb(),
-                new JsonTypeOnlyLoad1(), new TranscriptiveJson(), new KaraokeCdgCreatorText()
+                new JsonTypeOnlyLoad1(), new TranscriptiveJson(), new KaraokeCdgCreatorText(), new VidIcelandic(),
             };
         }
 
