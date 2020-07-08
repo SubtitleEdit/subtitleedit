@@ -20803,7 +20803,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // let the cleanup proccess be handled by a worker thread
                     System.Threading.Tasks.Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
-
                 }
             }
 
