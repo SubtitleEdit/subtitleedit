@@ -19,18 +19,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "Not implemented!";
         }
 
-        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        public override void LoadSubtitle(Subtitle subtitle, List<string> inputLines, string fileName)
         {
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
 
+            var lines = new List<string>(inputLines);
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) && File.Exists(fileName))
             {
                 lines = FileUtil.ReadAllLinesShared(fileName, Encoding.GetEncoding(861)); // icelandic dos encoding
             }
 
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (line.StartsWith('#') && RegexTimeCodes.IsMatch(line))
                 {
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTimeCode(string line)
+        private static TimeCode DecodeTimeCode(string line)
         {
             var hour = line.Substring(2, 1);
             var minutes = line.Substring(3, 2);
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
-        private TimeCode DecodeDuration(TimeCode startTime, string line)
+        private static TimeCode DecodeDuration(TimeCode startTime, string line)
         {
             var seconds = line.Substring(10, 2);
             var frames = line.Substring(12, 2);
