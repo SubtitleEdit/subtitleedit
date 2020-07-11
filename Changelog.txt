@@ -7,7 +7,8 @@
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
    * Update Finnish translation - thx Teijo S
-   * Improve support for transport stream cmd line convert
+   * Improve support for transport stream in "cmd line convert"
+   * Improve support for transport stream in "Batch convert"
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
 * FIXED:
