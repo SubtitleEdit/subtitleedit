@@ -12,25 +12,9 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsConvert
     {
-        public static bool ConvertFromTs(string targetFormat, string fileName, string outputFolder, bool overwrite, ref int count, ref int converted, ref int errors, List<SubtitleFormat> formats, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution, TextEncoding targetEncoding, List<CommandLineConverter.BatchAction> actions, TimeSpan offset, int pacCodePage, double? targetFrameRate, HashSet<string> multipleReplaceImportFiles, string ocrEngine)
+        public static bool ConvertFromTs(string targetFormat, string fileName, string outputFolder, bool overwrite, ref int count, ref int converted, ref int errors, List<SubtitleFormat> formats, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution, TextEncoding targetEncoding, List<CommandLineConverter.BatchAction> actions, TimeSpan offset, int pacCodePage, double? targetFrameRate, HashSet<string> multipleReplaceImportFiles, string ocrEngine, bool teletextOnly)
         {
             var success = false;
-            bool teletextOnly = false;
-
-            if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-            {
-                success = TsToBluRaySup.ConvertFromTsToBluRaySup(fileName, outputFolder, overwrite, count, stdOutWriter, progressCallback, resolution);
-                converted++;
-                teletextOnly = true;
-            }
-
-            if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-            {
-                success = TsToBdnXml.ConvertFromTsToBdnXml(fileName, outputFolder, overwrite, stdOutWriter, progressCallback, resolution);
-                converted++;
-                teletextOnly = true;
-            }
-
             var programMapTableParser = new ProgramMapTableParser();
             programMapTableParser.Parse(fileName); // get languages
             var tsParser = new TransportStreamParser();
@@ -47,16 +31,33 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             {
                 foreach (int id in tsParser.SubtitlePacketIds)
                 {
-                    var binaryParagraphs = new List<IBinaryParagraph>();
-                    var subtitle = new Subtitle();
-                    foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
+                    if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
-                        binaryParagraphs.Add(transportStreamSubtitle);
-                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
+                        TsToBluRaySup.WriteTrack(fileName, outputFolder, overwrite, count, stdOutWriter, progressCallback, resolution, programMapTableParser, id, tsParser);
+                        success = true;
                     }
+                    else if (BatchConvert.BdnXmlSubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                    {
+                        TsToBdnXml.WriteTrack(fileName, outputFolder, overwrite, stdOutWriter, progressCallback, resolution, programMapTableParser, id, tsParser);
+                        success = true;
+                    }
+                    else
+                    {
+                        var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
+                        var binaryParagraphs = new List<IBinaryParagraph>();
+                        var subtitle = new Subtitle();
+                        foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
+                        {
+                            binaryParagraphs.Add(transportStreamSubtitle);
+                            subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
+                        }
 
-                    //TODO: use language or PID in file name - var language = programMapTableParser.GetSubtitleLanguage(id);
-                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine);
+                        success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), binaryParagraphs, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, ocrEngine, preExt);
+                        if (success)
+                        {
+                            converted--;
+                        }
+                    }
                 }
             }
 
@@ -67,8 +68,12 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 {
                     var subtitle = new Subtitle(kvp.Value);
                     subtitle.Renumber();
-                    //TODO: use language or PID in file name
-                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                    var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
+                    success = CommandLineConverter.BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, subtitle, new SubRip(), null, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true, null, null, null, preExt);
+                    if (success)
+                    {
+                        converted--;
+                    }
                 }
             }
 

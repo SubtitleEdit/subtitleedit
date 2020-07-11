@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -1152,10 +1153,84 @@ namespace Nikse.SubtitleEdit.Forms
                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr + "  " + progress;
                                     listViewInputFiles.Refresh();
                                 };
-                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, "Tesseract");
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, false, null);
                                 sub = vobSubOcr.SubtitleFromOcr;
                             }
                         }
+                        else if (isTs)
+                        {
+                            var programMapTableParser = new ProgramMapTableParser();
+                            programMapTableParser.Parse(fileName); // get languages
+                            var tsParser = new TransportStreamParser();
+                            tsParser.Parse(fileName, (position, total) =>
+                            {
+                                var percent = (int)Math.Round(position * 100.0 / total);
+                                item.SubItems[3].Text = $"Read: {percent}%";
+                                listViewInputFiles.Refresh();
+                            });
+
+                            var outputFolder = textBoxOutputFolder.Text;
+                            var overwrite = checkBoxOverwrite.Checked;
+                            if (radioButtonSaveInSourceFolder.Checked)
+                            {
+                                outputFolder = Path.GetDirectoryName(fileName);
+                            }
+
+                            var targetEncoding = GetCurrentEncoding(fileName);
+
+                            var targetFrameRate = 0.0;
+                            if (double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
+                            {
+                                targetFrameRate = toFrameRate;
+                            }
+
+                            // images
+                            foreach (int id in tsParser.SubtitlePacketIds)
+                            {
+                                void ProgressCallback(string progress)
+                                {
+                                    item.SubItems[3].Text = progress;
+                                    listViewInputFiles.Refresh();
+                                }
+
+                                if (BluRaySubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                                {
+                                    TsToBluRaySup.WriteTrack(fileName, outputFolder, overwrite, 0, null, ProgressCallback, null, programMapTableParser, id, tsParser);
+                                }
+                                else if (BdnXmlSubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                                {
+                                    TsToBdnXml.WriteTrack(fileName, outputFolder, overwrite, null, ProgressCallback, null, programMapTableParser, id, tsParser);
+                                }
+                                else
+                                {
+                                    var tsBinaryParagraphs = new List<IBinaryParagraph>();
+                                    var subtitle = new Subtitle();
+                                    foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
+                                    {
+                                        binaryParagraphs.Add(transportStreamSubtitle);
+                                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
+                                    }
+
+                                    var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
+                                    int dummy = 0;
+                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), tsBinaryParagraphs, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                }
+                            }
+
+                            // teletext
+                            foreach (var program in tsParser.TeletextSubtitlesLookup)
+                            {
+                                foreach (var kvp in program.Value)
+                                {
+                                    var subtitle = new Subtitle(kvp.Value);
+                                    subtitle.Renumber();
+                                    var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
+                                    int dummy = 0;
+                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                }
+                            }
+                        }
+
                         if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                         {
                             if (!string.IsNullOrWhiteSpace(_assStyle) && !checkBoxUseStyleFromSource.Checked)
@@ -1748,21 +1823,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ext != null && (ext.Equals(".ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".m2ts", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mts", StringComparison.OrdinalIgnoreCase)) &&
                         (FileUtil.IsTransportStream(p.FileName) || FileUtil.IsM2TransportStream(p.FileName)))
                     {
-                        if (p.ToFormat == BluRaySubtitle || p.ToFormat == BdnXmlSubtitle)
-                        {
-                            progressCallback = progress =>
-                            {
-                                p.Item.SubItems[3].Text = progress;
-                                listViewInputFiles.Refresh();
-                            };
-                        }
-                        else
-                        {
-                            p.Item.SubItems[3].Text = $"Only {BluRaySubtitle} or {BdnXmlSubtitle}";
-                            IncrementAndShowProgress();
-                            return;
-                        }
+                        IncrementAndShowProgress();
+                        return;
                     }
+
                     p.SourceFormat = new SubRip();
                 }
 
