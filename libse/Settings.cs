@@ -1546,6 +1546,9 @@ $HorzAlign          =   Center
         public string MainToolsChangeCasing { get; set; }
         public string MainToolsAutoDuration { get; set; }
         public string MainToolsBatchConvert { get; set; }
+        public string MainToolsSplit { get; set; }
+        public string MainToolsAppend { get; set; }
+        public string MainToolsJoin { get; set; }
         public string MainToolsBeamer { get; set; }
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
@@ -5820,6 +5823,24 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainToolsBatchConvert = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsSplit");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsSplit = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsAppend");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsAppend = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsJoin");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsJoin = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsBeamer");
                 if (subNode != null)
                 {
@@ -7648,6 +7669,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
                 textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
                 textWriter.WriteElementString("MainToolsBatchConvert", settings.Shortcuts.MainToolsBatchConvert);
+                textWriter.WriteElementString("MainToolsSplit", settings.Shortcuts.MainToolsSplit);
+                textWriter.WriteElementString("MainToolsAppend", settings.Shortcuts.MainToolsAppend);
+                textWriter.WriteElementString("MainToolsJoin", settings.Shortcuts.MainToolsJoin);
                 textWriter.WriteElementString("MainToolsBeamer", settings.Shortcuts.MainToolsBeamer);
                 textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
                 textWriter.WriteElementString("MainEditInverseSelection", settings.Shortcuts.MainEditInverseSelection);
