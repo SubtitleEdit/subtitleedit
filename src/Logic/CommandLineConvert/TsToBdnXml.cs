@@ -11,20 +11,8 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
     public static class TsToBdnXml
     {
-        public static bool ConvertFromTsToBdnXml(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution)
+        internal static void WriteTrack(string fileName, string outputFolder, bool overwrite, StreamWriter stdOutWriter, CommandLineConverter.BatchConvertProgress progressCallback, Point? resolution, ProgramMapTableParser programMapTableParser, int pid, TransportStreamParser tsParser)
         {
-            var programMapTableParser = new ProgramMapTableParser();
-            programMapTableParser.Parse(fileName); // get languages from PMT if possible
-            var tsParser = new TransportStreamParser();
-            tsParser.Parse(fileName, (position, total) =>
-            {
-                var percent = (int)Math.Round(position * 100.0 / total);
-                stdOutWriter?.Write("\rParsing transport stream: {0}%", percent);
-                progressCallback?.Invoke($"{percent}%");
-            });
-            stdOutWriter?.Write("\r".PadRight(32, ' '));
-            stdOutWriter?.Write("\r");
-
             var overrideScreenSize = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenHeight > 0 &&
                                      Configuration.Settings.Tools.BatchConvertTsScreenWidth > 0 ||
@@ -32,115 +20,110 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 
             using (var form = new ExportPngXml())
             {
-                if (tsParser.SubtitlePacketIds.Count == 0)
+                var language = TsToBluRaySup.GetFileNameEnding(programMapTableParser, pid);
+                var nameNoExt = Utilities.GetFileNameWithoutExtension(fileName) + "." + language;
+                var folder = Path.Combine(outputFolder, nameNoExt);
+                if (!Directory.Exists(folder))
                 {
-                    stdOutWriter?.WriteLine("No subtitles found");
-                    progressCallback?.Invoke("No subtitles found");
-                    return false;
+                    Directory.CreateDirectory(folder);
                 }
-                foreach (int pid in tsParser.SubtitlePacketIds)
+
+                var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(nameNoExt + Path.GetExtension(fileName), ".xml", folder, overwrite);
+                stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
+                progressCallback?.Invoke($"Save PID {pid}");
+                var sub = tsParser.GetDvbSubtitles(pid);
+                var subtitle = new Subtitle();
+                foreach (var p in sub)
                 {
-                    var language = TsToBluRaySup.GetFileNameEnding(programMapTableParser, pid);
-                    var nameNoExt = Utilities.GetFileNameWithoutExtension(fileName) + "." + language;
-                    var folder = Path.Combine(outputFolder, nameNoExt);
-                    if (!Directory.Exists(folder))
-                    {
-                        Directory.CreateDirectory(folder);
-                    }
-                    var outputFileName = CommandLineConverter.FormatOutputFileNameForBatchConvert(nameNoExt + Path.GetExtension(fileName), ".xml", folder, overwrite);
-                    stdOutWriter?.WriteLine($"Saving PID {pid} to {outputFileName}...");
-                    progressCallback?.Invoke($"Save PID {pid}");
-                    var sub = tsParser.GetDvbSubtitles(pid);
-                    var subtitle = new Subtitle();
-                    foreach (var p in sub)
-                    {
-                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds));
-                    }
+                    subtitle.Paragraphs.Add(new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds));
+                }
 
-                    var res = TsToBluRaySup.GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
-                    var videoInfo = new VideoInfo { Success = true, Width = res.X, Height = res.Y };
-                    form.Initialize(subtitle, new SubRip(), BatchConvert.BdnXmlSubtitle, fileName, videoInfo, fileName);
-                    var sb = new StringBuilder();
-                    var imagesSavedCount = 0;
-                    for (int index = 0; index < sub.Count; index++)
+                var res = TsToBluRaySup.GetSubtitleScreenSize(sub, overrideScreenSize, resolution);
+                var videoInfo = new VideoInfo { Success = true, Width = res.X, Height = res.Y };
+                form.Initialize(subtitle, new SubRip(), BatchConvert.BdnXmlSubtitle, fileName, videoInfo, fileName);
+                var sb = new StringBuilder();
+                var imagesSavedCount = 0;
+                for (int index = 0; index < sub.Count; index++)
+                {
+                    var p = sub[index];
+                    var pos = p.GetPosition();
+                    var bmp = sub[index].GetBitmap();
+                    var tsWidth = bmp.Width;
+                    var tsHeight = bmp.Height;
+                    var nBmp = new NikseBitmap(bmp);
+                    pos.Top += nBmp.CropTopTransparent(0);
+                    pos.Left += nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                    bmp.Dispose();
+                    bmp = nBmp.GetBitmap();
+                    var mp = form.MakeMakeBitmapParameter(index, videoInfo.Width, videoInfo.Height);
+
+                    if (overrideScreenSize)
                     {
-                        var p = sub[index];
-                        var pos = p.GetPosition();
-                        var bmp = sub[index].GetBitmap();
-                        var tsWidth = bmp.Width;
-                        var tsHeight = bmp.Height;
-                        var nBmp = new NikseBitmap(bmp);
-                        pos.Top += nBmp.CropTopTransparent(0);
-                        pos.Left += nBmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), true);
+                        var widthFactor = (double)videoInfo.Width / tsWidth;
+                        var heightFactor = (double)videoInfo.Height / tsHeight;
+                        var resizeBmp = ResizeBitmap(bmp, (int)Math.Round(bmp.Width * widthFactor), (int)Math.Round(bmp.Height * heightFactor));
                         bmp.Dispose();
-                        bmp = nBmp.GetBitmap();
-                        var mp = form.MakeMakeBitmapParameter(index, videoInfo.Width, videoInfo.Height);
+                        bmp = resizeBmp;
+                        pos.Left = (int)Math.Round(pos.Left * widthFactor);
+                        pos.Top = (int)Math.Round(pos.Top * heightFactor);
+                        progressCallback?.Invoke($"Save PID {pid}: {(index + 1) * 100 / sub.Count}%");
+                    }
 
-                        if (overrideScreenSize)
+                    mp.Bitmap = bmp;
+                    mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
+                    mp.ScreenWidth = videoInfo.Width;
+                    mp.ScreenHeight = videoInfo.Height;
+                    int bottomMarginInPixels;
+                    if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition || Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
+                    {
+                        if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition && Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
                         {
-                            var widthFactor = (double)videoInfo.Width / tsWidth;
-                            var heightFactor = (double)videoInfo.Height / tsHeight;
-                            var resizeBmp = ResizeBitmap(bmp, (int)Math.Round(bmp.Width * widthFactor), (int)Math.Round(bmp.Height * heightFactor));
-                            bmp.Dispose();
-                            bmp = resizeBmp;
-                            pos.Left = (int)Math.Round(pos.Left * widthFactor);
-                            pos.Top = (int)Math.Round(pos.Top * heightFactor);
-                            progressCallback?.Invoke($"Save PID {pid}: {(index + 1) * 100 / sub.Count}%");
+                            var x = (int)Math.Round(videoInfo.Width / 2.0 - mp.Bitmap.Width / 2.0);
+                            if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
+                            {
+                                x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
+                            }
+                            else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
+                            {
+                                x = videoInfo.Width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
+                            }
+
+                            var y = videoInfo.Height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                            mp.OverridePosition = new Point(x, y);
                         }
-
-                        mp.Bitmap = bmp;
-                        mp.P = new Paragraph(string.Empty, p.StartMilliseconds, p.EndMilliseconds);
-                        mp.ScreenWidth = videoInfo.Width;
-                        mp.ScreenHeight = videoInfo.Height;
-                        int bottomMarginInPixels;
-                        if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition || Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
+                        else if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition)
                         {
-                            if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition && Configuration.Settings.Tools.BatchConvertTsOverrideYPosition)
+                            var x = (int)Math.Round(videoInfo.Width / 2.0 - mp.Bitmap.Width / 2.0);
+                            if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
                             {
-                                var x = (int)Math.Round(videoInfo.Width / 2.0 - mp.Bitmap.Width / 2.0);
-                                if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
-                                }
-                                else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    x = videoInfo.Width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
-                                }
-                                var y = videoInfo.Height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
-                                mp.OverridePosition = new Point(x, y);
+                                x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
                             }
-                            else if (Configuration.Settings.Tools.BatchConvertTsOverrideXPosition)
+                            else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
                             {
-                                var x = (int)Math.Round(videoInfo.Width / 2.0 - mp.Bitmap.Width / 2.0);
-                                if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("left", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    x = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
-                                }
-                                else if (Configuration.Settings.Tools.BatchConvertTsOverrideHAlign.Equals("right", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    x = videoInfo.Width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
-                                }
-                                mp.OverridePosition = new Point(x, pos.Top);
+                                x = videoInfo.Width - Configuration.Settings.Tools.BatchConvertTsOverrideHMargin - mp.Bitmap.Width;
                             }
-                            else
-                            {
-                                var y = videoInfo.Height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
-                                mp.OverridePosition = new Point(pos.Left, y);
-                            }
-                            bottomMarginInPixels = Configuration.Settings.Tools.BatchConvertTsScreenHeight - pos.Top - mp.Bitmap.Height;
+
+                            mp.OverridePosition = new Point(x, pos.Top);
                         }
                         else
                         {
-                            mp.OverridePosition = new Point(pos.Left, pos.Top); // use original position
-                            bottomMarginInPixels = Configuration.Settings.Tools.BatchConvertTsScreenHeight - pos.Top - mp.Bitmap.Height;
+                            var y = videoInfo.Height - Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin - mp.Bitmap.Height;
+                            mp.OverridePosition = new Point(pos.Left, y);
                         }
 
-                        imagesSavedCount = form.WriteBdnXmlParagraph(videoInfo.Width, sb, bottomMarginInPixels, videoInfo.Height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
+                        bottomMarginInPixels = Configuration.Settings.Tools.BatchConvertTsScreenHeight - pos.Top - mp.Bitmap.Height;
                     }
-                    form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
+                    else
+                    {
+                        mp.OverridePosition = new Point(pos.Left, pos.Top); // use original position
+                        bottomMarginInPixels = Configuration.Settings.Tools.BatchConvertTsScreenHeight - pos.Top - mp.Bitmap.Height;
+                    }
+
+                    imagesSavedCount = form.WriteBdnXmlParagraph(videoInfo.Width, sb, bottomMarginInPixels, videoInfo.Height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
                 }
+
+                form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
             }
-            return true;
         }
 
         private static Bitmap ResizeBitmap(Bitmap b, int width, int height)
