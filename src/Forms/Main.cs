@@ -5952,7 +5952,8 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
-                    SubtitleFormat format = GetCurrentSubtitleFormat();
+                    var oldSubtitle = new Subtitle(_subtitle);
+                    var format = GetCurrentSubtitleFormat();
                     var list = textBoxSource.Lines.ToList();
                     format = new Subtitle().ReloadLoadSubtitle(list, null, format);
                     if (format == null)
@@ -5975,6 +5976,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         index++;
+                    }
+
+                    for (int i = 0; i < oldSubtitle.Paragraphs.Count; i++)
+                    {
+                        if (oldSubtitle.Paragraphs[i].Bookmark != null)
+                        {
+                            var newParagraph = _subtitle.GetFirstAlike(oldSubtitle.Paragraphs[i]);
+                            if (newParagraph != null)
+                            {
+                                newParagraph.Bookmark = oldSubtitle.Paragraphs[i].Bookmark;
+                            }
+                        }
                     }
 
                     if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
