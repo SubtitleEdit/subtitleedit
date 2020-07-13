@@ -304,9 +304,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // Removed stuff after time codes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
-            if (line.Length > 30 && line[29] == ' ')
+            if (line.Length > 30)
             {
-                line = line.Substring(0, 29);
+                if (line[29] == ' ')
+                {
+                    line = line.Substring(0, 29);
+                }
+                else if (line[28] == ' ')
+                {
+                    line = line.Substring(0, 28);
+                }
+                else if (line[27] == ' ')
+                {
+                    line = line.Substring(0, 27);
+                }
             }
 
             // removes all extra spaces
