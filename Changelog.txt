@@ -12,6 +12,8 @@
    * Improve support for transport stream in "Batch convert"
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
+   * Improve reading of badly formatted srt files - thx Gordon
+   * Add "Export to FCP+image" in OCR window - thx Marko
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
@@ -20,6 +22,7 @@
    * Fix syntax coloring after replace - thx OmrSi
    * Fix minor label issue at startup - thx Bill
    * Keep bookmarks after edit in source view - thx Ingo
+   * Fix crash on very very long text lines
 
 
 3.5.16 (16th June 2020)
