@@ -33,11 +33,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     lock (GdiLock)
                     {
-                        var lineTwoWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
-                        LengthPixels.Add(lineTwoWidth);
+                        var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
+                        LengthPixels.Add(lineOneWidth);
                     }
                 }
-
 
                 if (Lines[1].Length > 1000)
                 {
