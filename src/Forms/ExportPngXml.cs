@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Dictionary<string, int> LineHeight { get; set; }
             public bool Forced { get; set; }
             public bool FullFrame { get; set; }
-            public Color FullFrameBackgroundcolor { get; set; }
+            public Color FullFrameBackgroundColor { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (param.FullFrame)
             {
                 var nbmp = new NikseBitmap(param.Bitmap);
-                nbmp.ReplaceTransparentWith(param.FullFrameBackgroundcolor);
+                nbmp.ReplaceTransparentWith(param.FullFrameBackgroundColor);
                 using (var bmp = nbmp.GetBitmap())
                 {
                     int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                     {
-                        b.Fill(param.FullFrameBackgroundcolor);
+                        b.Fill(param.FullFrameBackgroundColor);
                         using (var fullSize = b.GetBitmap())
                         {
                             if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
                 LineHeight = _lineHeights,
                 FullFrame = checkBoxFullFrameImage.Checked,
-                FullFrameBackgroundcolor = panelFullFrameBackground.BackColor,
+                FullFrameBackgroundColor = panelFullFrameBackground.BackColor,
             };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -2353,7 +2353,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.SubtitleFontBold = _subtitleFontBold;
             mbp.LineHeight = _lineHeights;
             mbp.FullFrame = checkBoxFullFrameImage.Checked;
-            mbp.FullFrameBackgroundcolor = panelFullFrameBackground.BackColor;
+            mbp.FullFrameBackgroundColor = panelFullFrameBackground.BackColor;
             mbp.OverridePosition = GetAssPoint(p.Text);
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
@@ -2400,9 +2400,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.BackgroundColor = panelBorderColor.BackColor;
             }
 
-            int width;
-            int height;
-            GetResolution(out width, out height);
+            GetResolution(out var width, out var height);
             mbp.ScreenWidth = width;
             mbp.ScreenHeight = height;
             mbp.VideoResolution = comboBoxResolution.Text;
@@ -2712,32 +2710,44 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     parameter.Type3D = 0; // fix later
                 }
-                Color oldBackgroundColor = parameter.BackgroundColor;
+                var oldBackgroundColor = parameter.BackgroundColor;
                 if (parameter.P.Text.Contains(BoxSingleLineText))
                 {
                     parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
 
-                bool italicOn = false;
-                string fontTag = string.Empty;
-                foreach (string line in parameter.P.Text.SplitToLines())
+                var italicOn = false;
+                var boldOn = false;
+                var fontTag = string.Empty;
+                foreach (var line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
+
                     if (italicOn)
                     {
                         parameter.P.Text = "<i>" + parameter.P.Text;
                     }
-                    italicOn = parameter.P.Text.Contains("<i>") && !parameter.P.Text.Contains("</i>");
+                    italicOn = parameter.P.Text.Contains("<i>", StringComparison.OrdinalIgnoreCase) && !parameter.P.Text.Contains("</i>", StringComparison.OrdinalIgnoreCase);
                     if (italicOn)
                     {
                         parameter.P.Text += "</i>";
                     }
 
-                    parameter.P.Text = fontTag + parameter.P.Text;
-                    if (parameter.P.Text.Contains("<font ") && !parameter.P.Text.Contains("</font>"))
+                    if (boldOn)
                     {
-                        int start = parameter.P.Text.LastIndexOf("<font ", StringComparison.Ordinal);
+                        parameter.P.Text = "<b>" + parameter.P.Text;
+                    }
+                    boldOn = parameter.P.Text.Contains("<b>", StringComparison.OrdinalIgnoreCase) && !parameter.P.Text.Contains("</b>", StringComparison.OrdinalIgnoreCase);
+                    if (boldOn)
+                    {
+                        parameter.P.Text += "</b>";
+                    }
+
+                    parameter.P.Text = fontTag + parameter.P.Text;
+                    if (parameter.P.Text.Contains("<font ", StringComparison.OrdinalIgnoreCase) && !parameter.P.Text.Contains("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        int start = parameter.P.Text.LastIndexOf("<font ", StringComparison.OrdinalIgnoreCase);
                         int end = parameter.P.Text.IndexOf('>', start);
                         fontTag = parameter.P.Text.Substring(start, end - start + 1);
                     }
@@ -2827,7 +2837,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                Color oldBackgroundColor = parameter.BackgroundColor;
+                var oldBackgroundColor = parameter.BackgroundColor;
                 string oldText = parameter.P.Text;
                 if (parameter.P.Text.Contains(BoxMultiLineText) || parameter.P.Text.Contains(BoxSingleLineText))
                 {
