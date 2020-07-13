@@ -25,16 +25,31 @@ namespace Nikse.SubtitleEdit.Core
             LengthPixels = new List<float>();
             if (Configuration.Settings.Tools.AutoBreakUsePixelWidth)
             {
-                lock (GdiLock)
+                if (Lines[0].Length > 1000)
                 {
-                    var lineOneWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
-                    LengthPixels.Add(lineOneWidth);
+                    SpaceLengthPixels = Lines[0].Length * 7;
+                }
+                else
+                {
+                    lock (GdiLock)
+                    {
+                        var lineTwoWidth = Graphics.MeasureString(Lines[0], DefaultFont).Width;
+                        LengthPixels.Add(lineTwoWidth);
+                    }
                 }
 
-                lock (GdiLock)
+
+                if (Lines[1].Length > 1000)
                 {
-                    var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
-                    LengthPixels.Add(lineTwoWidth);
+                    SpaceLengthPixels = Lines[1].Length * 7;
+                }
+                else
+                {
+                    lock (GdiLock)
+                    {
+                        var lineTwoWidth = Graphics.MeasureString(Lines[1], DefaultFont).Width;
+                        LengthPixels.Add(lineTwoWidth);
+                    }
                 }
 
                 if (Math.Abs(SpaceLengthPixels) < 0.01)
