@@ -8770,6 +8770,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        internal void finalCutProImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                _fromMenuItem = true;
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.Fcp, FileName, this, _importLanguageString);
+                exportBdnXmlPng.ShowDialog(this);
+                _fromMenuItem = false;
+            }
+        }
+
         internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, string language, bool skipMakeBinary = false)
         {
             SetButtonsStartOcr();
@@ -9278,6 +9289,5 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             _numericUpDownPixelsIsSpace = (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value;
         }
-
     }
 }
