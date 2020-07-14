@@ -24,6 +24,7 @@
    * Keep bookmarks after edit in source view - thx Ingo
    * Fix crash on very very long text lines
    * Fix bug with multi-line-bold in export/box-for-each-line - thx thehulk
+   * Fix a few shortcuts for menu items - thx LiMa79#4271
 
 
 3.5.16 (16th June 2020)
