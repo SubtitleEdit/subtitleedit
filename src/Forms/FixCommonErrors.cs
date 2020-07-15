@@ -507,6 +507,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemInverseSelection.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAll.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            selectDefaultToolStripMenuItem.Text = _language.SelectDefault;
+            setCurrentFixesAsDefaultToolStripMenuItem.Text = _language.SetDefault;
 
             toolStripMenuItemInverseRules.Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
             toolStripMenuItemSelectAllRules.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
@@ -1886,7 +1888,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonResetDefault_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.CommonErrors.SetDefaultFixes();
+            Configuration.Settings.CommonErrors.LoadUserDefaultFixes(Configuration.Settings.CommonErrors.DefaultFixes);
             AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).GetThreeLetterIsoLanguageName());
         }
 
@@ -1956,6 +1958,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = !item.Checked;
             }
+        }
+
+        private void setCurrentFixesAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveConfiguration();
+            Configuration.Settings.CommonErrors.SaveUserDefaultFixes();
+            AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).GetThreeLetterIsoLanguageName());
+        }
+
+        private void selectDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonResetDefault_Click(null, null);
         }
     }
 }

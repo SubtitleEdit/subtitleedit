@@ -702,6 +702,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Select default</SelectDefault>
+    <SetDefault>Set current fixes as default</SetDefault>
     <FixContinuationStyleX>Fix continuation style: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} fixed continuation style</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Remove unnecessary leading dots</FixUnnecessaryLeadingDots>

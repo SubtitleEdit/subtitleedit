@@ -4,6 +4,7 @@
 * NEW:
    * Add new subtitle format - thx Holmgeir
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
+   * Can set "default fixes" for FCE
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
