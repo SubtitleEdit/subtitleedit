@@ -4,17 +4,17 @@
 * NEW:
    * Add new subtitle format - thx Holmgeir
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
-   * Can set "default fixes" for FCE
+   * Add context menu item for "Set default fixes" in FCE
+   * Cmd line convert use header from EBU STL file - thx malashin
+   * Add "ocrengine" parameter to cmd line convert
+   * Add "Export to FCP+image" in OCR window - thx Marko
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
    * Update Finnish translation - thx Teijo S
    * Improve support for transport stream in "cmd line convert"
    * Improve support for transport stream in "Batch convert"
-   * Cmd line convert use header from EBU STL file - thx malashin
-   * Add "ocrengine" parameter to cmd line convert
    * Improve reading of badly formatted srt files - thx Gordon
-   * Add "Export to FCP+image" in OCR window - thx Marko
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
