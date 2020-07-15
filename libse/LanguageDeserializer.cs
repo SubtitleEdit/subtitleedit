@@ -1873,6 +1873,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/SelectDefault":
                     language.FixCommonErrors.SelectDefault = reader.Value;
                     break;
+                case "FixCommonErrors/SetDefault":
+                    language.FixCommonErrors.SetDefault = reader.Value;
+                    break;
                 case "FixCommonErrors/FixContinuationStyleX":
                     language.FixCommonErrors.FixContinuationStyleX = reader.Value;
                     break;
