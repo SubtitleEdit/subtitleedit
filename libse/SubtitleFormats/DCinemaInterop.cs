@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -313,13 +314,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     html.Append(nodeTemp.InnerXml);
                                     txt.Clear();
                                 }
-                                string c = line.Substring(i + 12, endOfFont - (i + 12));
-                                c = c.Trim('"').Trim('\'').Trim();
-                                if (c.StartsWith('#'))
-                                {
-                                    c = c.TrimStart('#').ToUpperInvariant().PadLeft(8, 'F');
-                                }
-
+                                string c = GetDCinemaColorString(line.Substring(i + 12, endOfFont - (i + 12)));
                                 fontColors.Push(c);
                                 fontNo++;
                                 i = endOfFont;
@@ -490,6 +485,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Replace("horizontal\"> <Font", "horizontal\"><Font");
             }
             return s;
+        }
+
+        internal static string GetDCinemaColorString(string c)
+        {
+            c = c.Trim('"').Trim('\'').Trim();
+            if (c.StartsWith('#'))
+            {
+                c = c.TrimStart('#').ToUpperInvariant().PadLeft(8, 'F');
+            }
+            else
+            {
+                try
+                {
+                    var color = ColorTranslator.FromHtml(c);
+                    c = "FF" + Utilities.ColorToHex(color).TrimStart('#').ToUpperInvariant();
+                }
+                catch
+                {
+                    // ignore error
+                }
+            }
+
+            return c;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

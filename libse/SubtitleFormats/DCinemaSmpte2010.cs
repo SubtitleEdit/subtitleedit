@@ -329,13 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     html.Append(nodeTemp.InnerXml);
                                     txt.Clear();
                                 }
-                                string c = line.Substring(i + 12, endOfFont - (i + 12));
-                                c = c.Trim('"').Trim('\'').Trim();
-                                if (c.StartsWith('#'))
-                                {
-                                    c = c.TrimStart('#').ToUpperInvariant().PadLeft(8, 'F');
-                                }
-
+                                var c = DCinemaInterop.GetDCinemaColorString(line.Substring(i + 12, endOfFont - (i + 12)));
                                 fontColors.Push(c);
                                 fontNo++;
                                 i = endOfFont;
