@@ -2951,9 +2951,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     bool tempItalicOn = false;
                     bool tempBoldOn = false;
+                    var tempFontOn = string.Empty;
                     foreach (string line in text.SplitToLines())
                     {
-                        var tempLine = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagFont);
+                        var tempLine = line;
 
                         if (tempItalicOn)
                         {
@@ -2963,6 +2964,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (tempBoldOn)
                         {
                             tempLine = "<b>" + tempLine;
+                        }
+
+                        if (!string.IsNullOrEmpty(tempFontOn))
+                        {
+                            tempLine = tempFontOn + tempLine;
+                        }
+
+                        if (tempLine.LastIndexOf("<font ", StringComparison.Ordinal) >= 0 &&
+                            tempLine.LastIndexOf("</font>", StringComparison.Ordinal) <
+                            tempLine.LastIndexOf("<font ", StringComparison.Ordinal))
+                        {
+                            var start = tempLine.LastIndexOf("<font ", StringComparison.Ordinal);
+                            var end = tempLine.IndexOf('>', start);
+                            if (end > 0)
+                            {
+                                tempFontOn = tempLine.Substring(start, end - start + 1);
+                            }
+                        }
+                        else if (tempLine.LastIndexOf("</font>", StringComparison.Ordinal) >= 0)
+                        {
+                            tempFontOn = string.Empty;
                         }
 
                         if (tempLine.Contains("<i>") && !tempLine.Contains("</i>"))
@@ -2975,7 +2997,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             tempBoldOn = true;
                         }
 
-                        var w = CalcWidthViaDraw(tempLine, parameter);
+                        int w;
+                        if (text.Contains("<font", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var tempBmp = GenerateBitmapForCalc(tempLine, parameter);
+                            tempBmp.CropTransparentSidesAndBottom(0, false);
+                            tempBmp.GetBitmap().Save(@"j:\temp\a_" + widths.Count + ".bmp");
+                            w = tempBmp.Width;
+                        }
+                        else
+                        {
+                            tempLine = HtmlUtil.RemoveOpenCloseTags(tempLine, HtmlUtil.TagFont);
+                            w = CalcWidthViaDraw(tempLine, parameter);
+                        }
+
                         widths.Add(w);
                         if (parameter.AlignLeft)
                         {
@@ -3422,6 +3457,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
 
                                 isItalic = false;
+                                i += 3;
+                            }
+                            else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && !isItalic)
+                            {
                                 i += 3;
                             }
                             else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
