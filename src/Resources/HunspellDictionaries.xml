@@ -236,8 +236,8 @@
   <Dictionary>
     <EnglishName>Polish</EnglishName>
     <NativeName>polski</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/806/4/pl-dict.oxt</DownloadLink>
-    <Description>Zestaw polskich słowników do OpenOffice.org 3.0 - 2014-10-06</Description>
+    <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/hunspell/pl_PL.zip</DownloadLink>
+    <Description>Polish by https://sjp.pl - 2020-07-18</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (Brazilian) - Libreoffice</EnglishName>
