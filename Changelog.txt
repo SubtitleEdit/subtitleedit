@@ -12,6 +12,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
    * Update Finnish translation - thx Teijo S
+   * Update Polish spell check dictionary - thx borifax
    * Improve support for transport stream in "cmd line convert"
    * Improve support for transport stream in "Batch convert"
    * Improve reading of badly formatted srt files - thx Gordon
@@ -25,6 +26,7 @@
    * Keep bookmarks after edit in source view - thx Ingo
    * Fix crash on very very long text lines
    * Fix bug in export multi-line-bold/box-for-each-line - thx thehulk
+   * Fix bug in export text with font-size - thx thehulk
    * Fix shortcut validation for a few menu items - thx LiMa79#4271
    * Fix web color to hex color in DCinema - thx Antonio
 
