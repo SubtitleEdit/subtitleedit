@@ -18,7 +18,7 @@
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
-   * Fix casing in OCR for italian letter "Ú"
+   * Fix casing in OCR for italian letter "Ù"
    * Fix "Import plain text" for small resolutions - thx doquan0
    * Fix syntax coloring after replace - thx OmrSi
    * Fix minor label issue at startup - thx Bill
