@@ -1119,6 +1119,7 @@ $HorzAlign          =   Center
         public string PreviewAssaText { get; set; }
         public bool ShowProgress { get; set; }
         public bool ShowNegativeDurationInfoOnSave { get; set; }
+        public bool ShowFormatRequiresUtf8Warning { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public string TitleBarAsterisk { get; set; } // Show asteriks "before" or "after" file name (any other value will hide asteriks)
         public bool UseDarkTheme { get; set; }
@@ -1243,6 +1244,7 @@ $HorzAlign          =   Center
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;
             ShowNegativeDurationInfoOnSave = true;
+            ShowFormatRequiresUtf8Warning = true;
             UseDarkTheme = false;
             TitleBarAsterisk = "before";
             PreviewAssaText = "ABCDEFGHIJKL abcdefghijkl 123";
@@ -3344,6 +3346,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.ShowNegativeDurationInfoOnSave = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
+            subNode = node.SelectSingleNode("ShowFormatRequiresUtf8Warning");
+            if (subNode != null)
+            {
+                settings.General.ShowFormatRequiresUtf8Warning = Convert.ToBoolean(subNode.InnerText.Trim());
             }
 
             subNode = node.SelectSingleNode("TitleBarAsterisk");
@@ -7406,6 +7414,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("PreviewAssaText", settings.General.PreviewAssaText);
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowNegativeDurationInfoOnSave", settings.General.ShowNegativeDurationInfoOnSave.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ShowFormatRequiresUtf8Warning", settings.General.ShowFormatRequiresUtf8Warning.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TitleBarAsterisk", settings.General.TitleBarAsterisk);
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString(CultureInfo.InvariantCulture));

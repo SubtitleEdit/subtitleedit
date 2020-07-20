@@ -1321,6 +1321,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
 File is read-only!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Unable to save subtitle file {0}
 Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>UTF-8 encoding should be used when saving {0} files!</FormatXShouldUseUft8>
     <BeforeNew>Before new</BeforeNew>
     <New>New</New>
     <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>

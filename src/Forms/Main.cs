@@ -3197,6 +3197,15 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
+                else if (formatType == typeof(DCinemaSmpte2014))
+                {
+                    format.ToText(_subtitle, string.Empty);
+                    string errors = (format as DCinemaSmpte2014).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
                 else if (formatType == typeof(CsvNuendo))
                 {
                     if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
@@ -3858,15 +3867,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // force encoding
-                if (format.GetType() == typeof(WebVTT) || format.GetType() == typeof(WebVTTFileWithLineNumber))
+                var formatType = format.GetType();
+                if (formatType == typeof(WebVTT) || formatType == typeof(WebVTTFileWithLineNumber))
                 {
                     SetEncoding(Encoding.UTF8);
                     currentEncoding = Encoding.UTF8;
                 }
-                else if (format.GetType() == typeof(SwiftInterchange2))
+                else if (formatType == typeof(SwiftInterchange2))
                 {
                     SetEncoding(Encoding.Unicode);
                     currentEncoding = Encoding.Unicode;
+                }
+
+                if (Configuration.Settings.General.ShowFormatRequiresUtf8Warning && !currentEncoding.Equals(Encoding.UTF8) && 
+                    (formatType == typeof(DCinemaInterop) || formatType == typeof(DCinemaSmpte2007) || 
+                     formatType == typeof(DCinemaSmpte2010) || formatType == typeof(DCinemaSmpte2014)))
+                {
+                    using (var form = new DialogDoNotShowAgain(Title, string.Format(_language.FormatXShouldUseUft8, GetCurrentSubtitleFormat().FriendlyName)))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.General.ShowFormatRequiresUtf8Warning = !form.DoNoDisplayAgain;
+                    }
                 }
 
                 if (format.Extension == ".rtf")
@@ -3879,7 +3900,7 @@ namespace Nikse.SubtitleEdit.Forms
                     allText = allText.Replace("\r\n", "\n");
                 }
 
-                if (format.GetType() == typeof(ItunesTimedText) || format.GetType() == typeof(ScenaristClosedCaptions) || format.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
+                if (formatType == typeof(ItunesTimedText) || formatType == typeof(ScenaristClosedCaptions) || formatType == typeof(ScenaristClosedCaptionsDropFrame))
                 {
                     var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
@@ -3887,7 +3908,7 @@ namespace Nikse.SubtitleEdit.Forms
                         file.Write(allText);
                     }
                 }
-                else if (Equals(currentEncoding, Encoding.UTF8) && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                else if (Equals(currentEncoding, Encoding.UTF8) && (formatType == typeof(TmpegEncAW5) || formatType == typeof(TmpegEncXml)))
                 {
                     var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
@@ -3927,7 +3948,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new BookmarkPersistence(_subtitle, _fileName).Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
-                if (format.GetType() == typeof(NetflixTimedText))
+                if (formatType == typeof(NetflixTimedText))
                 {
                     NetflixGlyphCheck(true);
                 }
@@ -6033,6 +6054,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         format.ToText(_subtitle, string.Empty);
                         string errors = (format as DCinemaSmpte2010).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                        {
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2014))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2014).Errors;
                         if (!string.IsNullOrEmpty(errors))
                         {
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -19637,7 +19667,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemDvdStudioProProperties.Visible = false;
             }
 
-            if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
+            if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2014) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }
