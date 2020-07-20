@@ -2656,6 +2656,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/UnableToSaveSubtitleX":
                     language.Main.UnableToSaveSubtitleX = reader.Value;
                     break;
+                case "Main/FormatXShouldUseUft8":
+                    language.Main.FormatXShouldUseUft8 = reader.Value;
+                    break;
                 case "Main/BeforeNew":
                     language.Main.BeforeNew = reader.Value;
                     break;

@@ -1212,6 +1212,7 @@ namespace Nikse.SubtitleEdit.Core
                 OverwriteModifiedFile = "Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?",
                 FileXIsReadOnly = "Cannot save {0}" + Environment.NewLine + Environment.NewLine + "File is read-only!",
                 UnableToSaveSubtitleX = "Unable to save subtitle file {0}" + Environment.NewLine + "Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!",
+                FormatXShouldUseUft8 = "UTF-8 encoding should be used when saving {0} files!",
                 BeforeNew = "Before new",
                 New = "New",
                 BeforeConvertingToX = "Before converting to {0}",

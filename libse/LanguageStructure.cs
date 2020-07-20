@@ -1082,6 +1082,7 @@
             public string OverwriteModifiedFile { get; set; }
             public string FileXIsReadOnly { get; set; }
             public string UnableToSaveSubtitleX { get; set; }
+            public string FormatXShouldUseUft8 { get; set; }
             public string BeforeNew { get; set; }
             public string New { get; set; }
             public string BeforeConvertingToX { get; set; }
