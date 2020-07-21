@@ -16,10 +16,10 @@
    * Improve support for transport stream in "cmd line convert"
    * Improve support for transport stream in "Batch convert"
    * Improve reading of badly formatted srt files - thx Gordon
+   * Show warning when saving DCinema formats in non-utf-8
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
-   * Fix casing in OCR for italian letter "Ù"
    * Fix "Import plain text" for small resolutions - thx doquan0
    * Fix syntax coloring after replace - thx OmrSi
    * Fix minor label issue at startup - thx Bill
@@ -29,6 +29,7 @@
    * Fix bug in export text with font-size - thx thehulk
    * Fix shortcut validation for a few menu items - thx LiMa79#4271
    * Fix web color to hex color in DCinema - thx Antonio
+   * Ignore comments (NOTE) in VTT - thx Issity 
 
 
 3.5.16 (16th June 2020)
