@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool hadEmptyLine = false;
             int numbers = 0;
             double addSeconds = 0;
+            bool noteOn = false;
             for (var index = 0; index < lines.Count; index++)
             {
                 string line = lines[index];
@@ -144,6 +145,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (index < lines.Count - 1)
                 {
                     next = lines[index + 1];
+                }
+
+                if (index > 0 && string.IsNullOrEmpty(lines[index - 1]) &&
+                    (line.StartsWith("NOTE ", StringComparison.Ordinal) || line == "NOTE"))
+                {
+                    noteOn = true;
+                }
+
+                if (noteOn && !string.IsNullOrEmpty(line))
+                {
+                    continue;
+                }
+
+                if (noteOn)
+                {
+                    noteOn = false;
                 }
 
                 var s = line;
