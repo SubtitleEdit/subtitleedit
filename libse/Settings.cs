@@ -1756,6 +1756,7 @@ $HorzAlign          =   Center
         public string MainFileSaveAll { get; set; }
         public string MainFileOpenOriginal { get; set; }
         public string MainFileCloseOriginal { get; set; }
+        public string MainFileCompare { get; set; }
         public string MainFileImportPlainText { get; set; }
         public string MainFileImportTimeCodes { get; set; }
         public string MainFileExportEbu { get; set; }
@@ -5924,6 +5925,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainFileCloseOriginal = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileCompare");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainFileCompare = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpenOriginal");
                 if (subNode != null)
                 {
@@ -7896,6 +7903,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainFileSaveOriginalAs", settings.Shortcuts.MainFileSaveOriginalAs);
                 textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
                 textWriter.WriteElementString("MainFileCloseOriginal", settings.Shortcuts.MainFileCloseOriginal);
+                textWriter.WriteElementString("MainFileCompare", settings.Shortcuts.MainFileCompare);
                 textWriter.WriteElementString("MainFileOpenOriginal", settings.Shortcuts.MainFileOpenOriginal);
                 textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
                 textWriter.WriteElementString("MainFileImportPlainText", settings.Shortcuts.MainFileImportPlainText);
