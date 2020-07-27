@@ -908,7 +908,7 @@ $HorzAlign          =   Center
             FixCommasTicked = list.Contains(nameof(FixCommasTicked));
             MissingSpacesTicked = list.Contains(nameof(MissingSpacesTicked));
             AddMissingQuotesTicked = list.Contains(nameof(AddMissingQuotesTicked));
-            Fix3PlusLinesTicked= list.Contains(nameof(Fix3PlusLinesTicked));
+            Fix3PlusLinesTicked = list.Contains(nameof(Fix3PlusLinesTicked));
             FixHyphensTicked = list.Contains(nameof(FixHyphensTicked));
             FixHyphensRemoveSingleLineTicked = list.Contains(nameof(FixHyphensRemoveSingleLineTicked));
             UppercaseIInsideLowercaseWordTicked = list.Contains(nameof(UppercaseIInsideLowercaseWordTicked));
@@ -1776,6 +1776,8 @@ $HorzAlign          =   Center
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsMergeShortLines { get; set; }
+        public string MainToolsMergeDuplicateText { get; set; }
+        public string MainToolsMergeSameTimeCodes { get; set; }
         public string MainToolsMakeEmptyFromCurrent { get; set; }
         public string MainToolsSplitLongLines { get; set; }
         public string MainToolsDurationsBridgeGap { get; set; }
@@ -6027,6 +6029,18 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainToolsMergeShortLines = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainToolsMergeDuplicateText");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsMergeDuplicateText = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainToolsMergeSameTimeCodes");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainToolsMergeSameTimeCodes = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsMakeEmptyFromCurrent");
                 if (subNode != null)
                 {
@@ -7921,6 +7935,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
                 textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
                 textWriter.WriteElementString("MainToolsMergeShortLines", settings.Shortcuts.MainToolsMergeShortLines);
+                textWriter.WriteElementString("MainToolsMergeDuplicateText", settings.Shortcuts.MainToolsMergeDuplicateText);
+                textWriter.WriteElementString("MainToolsMergeSameTimeCodes", settings.Shortcuts.MainToolsMergeSameTimeCodes);
                 textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
                 textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
                 textWriter.WriteElementString("MainToolsMinimumDisplayTimeBetweenParagraphs", settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);

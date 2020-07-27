@@ -20178,6 +20178,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             fixToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
             toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
+            toolStripMenuItemMergeDuplicateText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeDuplicateText);
+            toolStripMenuItemMergeLinesWithSameTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeSameTimeCodes);
             toolStripMenuItemMakeEmptyFromCurrent.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
             toolStripMenuItemAutoSplitLongLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
             toolStripMenuItemSubtitlesBridgeGaps.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap);

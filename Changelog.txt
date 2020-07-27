@@ -4,6 +4,8 @@
 * NEW:
    * Add new subtitle format - thx Holmgeir
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
+   * Add shortcuts for "Merge line with same text/time-code" - thx Mike
+   * Add shortcuts for compare
    * Add context menu item for "Set default fixes" in FCE
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
