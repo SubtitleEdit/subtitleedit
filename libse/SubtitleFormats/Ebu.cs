@@ -1675,30 +1675,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            if (lines.Count == 1)
+            var sb = new StringBuilder();
+            foreach (var line in lines)
             {
-                var count = Utilities.CountTagInText(text, "<font ");
-                if (count == 1 && !text.Contains("</font>"))
+                var s = line;
+                var count = Utilities.CountTagInText(s, "<font ");
+                if (HtmlUtil.RemoveHtmlTags(s).Length > 0)
                 {
-                    text += "</font>";
+                    sb.Append(s);
+                    if (count == 1 && !s.Contains("</font>"))
+                    {
+                        sb.Append("</font>");
+                    }
+
+                    sb.AppendLine();
                 }
             }
-            else if (lines.Count == 2)
-            {
-                var count1 = Utilities.CountTagInText(lines[0], "<font ");
-                var count2 = Utilities.CountTagInText(lines[1], "<font ");
-                if (count1 == 1 && !lines[0].Contains("</font>"))
-                {
-                    lines[0] += "</font>";
-                }
 
-                if (count2 == 1 && !lines[1].Contains("</font>"))
-                {
-                    lines[1] += "</font>";
-                }
-
-                text = lines[0] + Environment.NewLine + lines[1];
-            }
+            text = sb.ToString().TrimEnd();
 
             while (text.Contains(Environment.NewLine + " "))
             {
