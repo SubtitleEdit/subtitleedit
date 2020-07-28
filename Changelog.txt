@@ -5,7 +5,7 @@
    * Add new subtitle format - thx Holmgeir
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
    * Add shortcuts for "Merge line with same text/time-code" - thx Mike
-   * Add shortcuts for compare
+   * Add shortcut for File - Compare
    * Add context menu item for "Set default fixes" in FCE
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
@@ -19,13 +19,14 @@
    * Improve support for transport stream in "Batch convert"
    * Improve reading of badly formatted srt files - thx Gordon
    * Show warning when saving DCinema formats in non-utf-8
+   * Improve "Import plain text" for small resolutions - thx doquan0
+   * Improve end-color-font-tag for EBU 3+ lines
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
-   * Fix "Import plain text" for small resolutions - thx doquan0
+   * Keep bookmarks after edit in source view - thx Ingo
    * Fix syntax coloring after replace - thx OmrSi
    * Fix minor label issue at startup - thx Bill
-   * Keep bookmarks after edit in source view - thx Ingo
    * Fix crash on very very long text lines
    * Fix bug in export multi-line-bold/box-for-each-line - thx thehulk
    * Fix bug in export text with font-size - thx thehulk
