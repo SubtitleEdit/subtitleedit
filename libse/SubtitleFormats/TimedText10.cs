@@ -1,8 +1,4 @@
-﻿//http://www.w3.org/TR/ttaf1-dfxp/
-//Timed Text Markup Language (TTML) 1.0
-//W3C Recommendation 18 November 2010
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -11,6 +7,11 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
+    /// <summary>
+    /// See http://www.w3.org/TR/ttaf1-dfxp/
+    /// Timed Text Markup Language (TTML) 1.0
+    /// W3C Recommendation 18 November 2010
+    /// </summary>
     public class TimedText10 : SubtitleFormat
     {
         public override string Extension => Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
@@ -784,7 +785,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     ReadParagraph(pText, node, styles, xml);
 
-                    // Timecodes
+                    // Time codes
                     ExtractTimeCodes(node, subtitle, out var begin, out var end);
 
                     // Style
@@ -1263,6 +1264,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms-two-digits";
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 10);
+            }
+            else if (s.Length == 8 && s[2] == ':' && s[5] == ':')
+            {
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
             }
 
             if (frames)
