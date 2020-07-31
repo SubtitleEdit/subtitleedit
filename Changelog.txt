@@ -14,6 +14,7 @@
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
    * Update Finnish translation - thx Teijo S
+   * Update Korean translation - thx domddol
    * Update Polish spell check dictionary - thx borifax
    * Improve support for transport stream in "cmd line convert"
    * Improve support for transport stream in "Batch convert"
@@ -33,6 +34,7 @@
    * Fix shortcut validation for a few menu items - thx LiMa79#4271
    * Fix web color to hex color in DCinema - thx Antonio
    * Ignore comments (NOTE) in VTT - thx Issity 
+   * Fix for TTML short time code - thx Aylen
 
 
 3.5.16 (16th June 2020)
