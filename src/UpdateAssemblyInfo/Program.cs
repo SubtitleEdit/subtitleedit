@@ -36,13 +36,13 @@ namespace UpdateAssemblyInfo
 
         private class VersionInfo : IComparable<VersionInfo>, IEquatable<VersionInfo>
         {
-            public int Major { get; private set; }
-            public int Minor { get; private set; }
-            public int Maintenance { get; private set; }
-            public int Build { get; private set; }
-            public string RevisionGuid { get; private set; }
+            private int Major { get; }
+            private int Minor { get; }
+            private int Maintenance { get; }
+            public int Build { get; }
+            public string RevisionGuid { get; }
 
-            public string FullVersion  => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
+            public string FullVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}.{3:D} {4}", Major, Minor, Maintenance, Build, RevisionGuid).TrimEnd();
             public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
             public string MajorMinor => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}", Major, Minor);
 
@@ -125,12 +125,12 @@ namespace UpdateAssemblyInfo
 
             public static bool operator ==(VersionInfo vi1, VersionInfo vi2)
             {
-                return ReferenceEquals(vi2, null) ? ReferenceEquals(vi1, null) : vi2.Equals(vi1);
+                return vi2?.Equals(vi1) ?? ReferenceEquals(vi1, null);
             }
 
             public static bool operator !=(VersionInfo vi1, VersionInfo vi2)
             {
-                return ReferenceEquals(vi2, null) ? !ReferenceEquals(vi1, null) : !vi2.Equals(vi1);
+                return !vi2?.Equals(vi1) ?? !ReferenceEquals(vi1, null);
             }
 
             public static bool operator >(VersionInfo vi1, VersionInfo vi2)
@@ -150,7 +150,7 @@ namespace UpdateAssemblyInfo
             //   <language-id> "-" <script-id> "-" <region-id> ".xml"  (e.g., sr-Cyrl-RS.xml)
             //   <language-id> "-" <script-id> ".xml"  (e.g., zh-Hans.xml)
             //   <language-id> "-" <region-id> ".xml"  (e.g., nb-NO.xml)
-            var fileNamePattern = string.Format(@"[\{0}\{1}][a-z]{{2,3}}-[A-Z][A-Za-z-]+\.xml\z", Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var fileNamePattern = $@"[\{Path.AltDirectorySeparatorChar}\{Path.DirectorySeparatorChar}][a-z]{{2,3}}-[A-Z][A-Za-z-]+\.xml\z";
             var fileNameRegex = new Regex(fileNamePattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
             var translation = new XmlDocument { XmlResolver = null };
 
@@ -158,8 +158,7 @@ namespace UpdateAssemblyInfo
             {
                 translation.Load(fileName);
 
-                var node = translation.DocumentElement.SelectSingleNode("General/Version") as XmlElement;
-                if (node != null && node.InnerText.Trim() == oldVersion.ShortVersion)
+                if (translation.DocumentElement?.SelectSingleNode("General/Version") is XmlElement node && node.InnerText.Trim() == oldVersion.ShortVersion)
                 {
                     node.InnerText = newVersion.ShortVersion;
                 }
@@ -185,7 +184,7 @@ namespace UpdateAssemblyInfo
                 var length = tmx14Match.Groups["version"].Length;
                 tmx14Text = tmx14Text.Remove(index, length).Insert(index, newVersion.MajorMinor);
 
-                File.WriteAllText(tmx14FileName, tmx14Text, Encoding.UTF8);
+                SaveWithRetry(tmx14FileName, tmx14Text);
             }
         }
 
@@ -212,17 +211,34 @@ namespace UpdateAssemblyInfo
                 length = templateMatch.Groups["year"].Length;
                 templateText = templateText.Remove(index, length).Insert(index, DateTime.UtcNow.Year.ToString("D4", CultureInfo.InvariantCulture));
 
-                File.WriteAllText(templateFileName, templateText, Encoding.UTF8);
+                SaveWithRetry(templateFileName, templateText);
             }
 
             var assemblyInfoText = templateText.Replace("[REVNO]", newVersion.Build.ToString(CultureInfo.InvariantCulture)).Replace("[GITHASH]", newVersion.RevisionGuid);
             var assemblyInfoFileName = templateFileName.Replace(".template", string.Empty);
-            File.WriteAllText(assemblyInfoFileName, assemblyInfoText, Encoding.UTF8);
+            SaveWithRetry(assemblyInfoFileName, assemblyInfoText);
+        }
+
+        private static void SaveWithRetry(string fileName, string content)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    File.WriteAllText(fileName, content, Encoding.UTF8);
+                    return;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
+            File.WriteAllText(fileName, content, Encoding.UTF8);
         }
 
         private static void GetRepositoryVersions(out VersionInfo currentRepositoryVersion, out VersionInfo latestRepositoryVersion)
         {
-            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var workingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location);
             var clrHash = new CommandLineRunner();
             var clrTags = new CommandLineRunner();
             var gitPath = GetGitPath();
@@ -267,7 +283,9 @@ namespace UpdateAssemblyInfo
             }
             catch
             {
+                // ignored
             }
+
             return new VersionInfo();
         }
 
@@ -294,7 +312,7 @@ namespace UpdateAssemblyInfo
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
-            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly().Location : myName);
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
             if (args.Length != 2)
             {
                 Console.WriteLine("Usage: " + myName + " <se-assmbly-template> <libse-assmbly-template>");
@@ -307,11 +325,9 @@ namespace UpdateAssemblyInfo
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
-                VersionInfo currentRepositoryVersion;
-                VersionInfo latestRepositoryVersion;
                 VersionInfo newVersion;
 
-                GetRepositoryVersions(out currentRepositoryVersion, out latestRepositoryVersion);
+                GetRepositoryVersions(out var currentRepositoryVersion, out var latestRepositoryVersion);
                 var currentVersion = GetCurrentVersion(seTemplateFileName);
                 var updateTemplateFile = false;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)
@@ -338,9 +354,9 @@ namespace UpdateAssemblyInfo
                     if (updateTemplateFile)
                     {
                         var oldVersion = GetTemplateVersion(seTemplateFileName);
-                        var languagesFolderName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(seTemplateFileName)), "Languages");
+                        var languagesFolderName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(seTemplateFileName)) ?? throw new InvalidOperationException(), "Languages");
                         UpdateTranslations(languagesFolderName, newVersion, oldVersion);
-                        var tmx14FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(libSeTemplateFileName)), "SubtitleFormats", "Tmx14.cs");
+                        var tmx14FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(libSeTemplateFileName)) ?? throw new InvalidOperationException(), "SubtitleFormats", "Tmx14.cs");
                         UpdateTmx14ToolVersion(tmx14FileName, newVersion, oldVersion);
                     }
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
@@ -457,6 +473,5 @@ namespace UpdateAssemblyInfo
             WriteWarning("Might not be able to run Git command line tool!");
             return "git";
         }
-
     }
 }
