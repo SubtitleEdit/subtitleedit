@@ -22,6 +22,7 @@
    * Show warning when saving DCinema formats in non-utf-8
    * Improve "Import plain text" for small resolutions - thx doquan0
    * Improve end-color-font-tag for EBU 3+ lines
+   * Update Finnish spell check to libvoikko 4.3 (2019-11-24)
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix some shortcuts being written to text box - thx rebawest
