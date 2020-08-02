@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 return null;
             }
 
-            List<byte> bytes = new List<byte>();
+            var bytes = new List<byte>();
             unsafe
             {
                 for (byte* p = (byte*)ptr; *p != 0; p++)
@@ -53,12 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private static string N2S(byte[] bytes)
         {
-            if (bytes == null)
-            {
-                return null;
-            }
-
-            return Encoding.UTF8.GetString(bytes);
+            return bytes == null ? null : Encoding.UTF8.GetString(bytes);
         }
 
         private static byte[] S2N(string str)
@@ -73,22 +69,13 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private static byte[] S2Encoding(string str, Encoding encoding)
         {
-            if (str == null)
-            {
-                return null;
-            }
-
-            return encoding.GetBytes(str + '\0');
+            return str == null ? null : encoding.GetBytes(str + '\0');
         }
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = NativeMethods.GetProcAddress(_libDll, name);
-            if (address != IntPtr.Zero)
-            {
-                return Marshal.GetDelegateForFunctionPointer(address, type);
-            }
-            return null;
+            var address = NativeMethods.CrossGetProcAddress(_libDll, name);
+            return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : null;
         }
 
         /// <summary>
@@ -97,18 +84,26 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         /// <param name="baseFolder"></param>
         private void LoadLibVoikkoDynamic(string baseFolder)
         {
-            string dllFile = Path.Combine(baseFolder, "Voikkox86.dll");
-            if (IntPtr.Size == 8)
+            var dllFile = Path.Combine(baseFolder, "Voikkox86.dll");
+            if (Configuration.IsRunningOnWindows)
             {
-                dllFile = Path.Combine(baseFolder, "Voikkox64.dll");
+                if (IntPtr.Size == 8)
+                {
+                    dllFile = Path.Combine(baseFolder, "Voikkox64.dll");
+                }
+
+                if (!File.Exists(dllFile))
+                {
+                    throw new FileNotFoundException(dllFile);
+                }
+            }
+            else
+            {
+                dllFile = Path.Combine(baseFolder, "libvoikko.so");
             }
 
-            if (!File.Exists(dllFile))
-            {
-                throw new FileNotFoundException(dllFile);
-            }
+            _libDll = NativeMethods.CrossLoadLibrary(dllFile);
 
-            _libDll = NativeMethods.LoadLibrary(dllFile);
             if (_libDll == IntPtr.Zero)
             {
                 throw new FileLoadException("Unable to load " + dllFile);
@@ -122,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
             if (_voikkoInit == null || _voikkoTerminate == null || _voikkoSpell == null || _voikkoSuggest == null || _voikkoFreeCstrArray == null)
             {
-                throw new FileLoadException("Not all methods in Voikko dll could be found!");
+                throw new FileLoadException("Not all methods in lib Voikko could be found!");
             }
         }
 
@@ -144,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 return suggestions;
             }
 
-            IntPtr voikkoSuggestCstr = _voikkoSuggest(_libVoikko, S2N(word));
+            var voikkoSuggestCstr = _voikkoSuggest(_libVoikko, S2N(word));
             if (voikkoSuggestCstr == IntPtr.Zero)
             {
                 return suggestions;
@@ -190,12 +185,13 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
                 if (_libDll != IntPtr.Zero)
                 {
-                    NativeMethods.FreeLibrary(_libDll);
+                    NativeMethods.CrossFreeLibrary(_libDll);
                     _libDll = IntPtr.Zero;
                 }
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -213,6 +209,5 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             }
             ReleaseUnmanagedResources();
         }
-
     }
 }
