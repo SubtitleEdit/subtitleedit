@@ -408,6 +408,8 @@
     <Word from="SIäpp" to="Släpp" />
     <Word from="BIås" to="Blås" />
     <Word from="BIi" to="Bli" />
+    <Word from="Iatinos" to="latinos" />
+    <Word from="Iitegrann" to="litegrann" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
