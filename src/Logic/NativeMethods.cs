@@ -230,6 +230,4 @@ namespace Nikse.SubtitleEdit.Logic
 
         #endregion
     }
-
-
 }

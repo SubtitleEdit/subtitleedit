@@ -73,11 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private object GetDllType(Type type, string name)
         {
             var address = NativeMethods.CrossGetProcAddress(_libMpvDll, name);
-            if (address != IntPtr.Zero)
-            {
-                return Marshal.GetDelegateForFunctionPointer(address, type);
-            }
-            return null;
+            return address != IntPtr.Zero ? Marshal.GetDelegateForFunctionPointer(address, type) : null;
         }
 
         private void LoadLibMpvDynamic()
