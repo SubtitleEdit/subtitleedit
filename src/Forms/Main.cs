@@ -9972,7 +9972,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (continuationStyle != ContinuationStyle.None)
                             {
-                                if (language == "ar")
+                                if (languageOriginal == "ar")
                                 {
                                     originalCurrent.Text = ContinuationUtilities.ConvertToForArabic(originalCurrent.Text);
                                     originalNew.Text = ContinuationUtilities.ConvertToForArabic(originalNew.Text);
@@ -9985,7 +9985,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     originalNew.Text = ContinuationUtilities.AddPrefixIfNeeded(originalNew.Text, continuationProfile, false);
                                 }
 
-                                if (language == "ar")
+                                if (languageOriginal == "ar")
                                 {
                                     originalCurrent.Text = ContinuationUtilities.ConvertBackForArabic(originalCurrent.Text);
                                     originalNew.Text = ContinuationUtilities.ConvertBackForArabic(originalNew.Text);
