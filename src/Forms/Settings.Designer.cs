@@ -4428,7 +4428,7 @@
             // 
             this.numericUpDownSsaMarginVertical.Location = new System.Drawing.Point(168, 33);
             this.numericUpDownSsaMarginVertical.Maximum = new decimal(new int[] {
-            250,
+            1000,
             0,
             0,
             0});
@@ -4441,7 +4441,7 @@
             // 
             this.numericUpDownSsaMarginRight.Location = new System.Drawing.Point(93, 33);
             this.numericUpDownSsaMarginRight.Maximum = new decimal(new int[] {
-            250,
+            1000,
             0,
             0,
             0});
@@ -4453,7 +4453,7 @@
             // 
             this.numericUpDownSsaMarginLeft.Location = new System.Drawing.Point(16, 33);
             this.numericUpDownSsaMarginLeft.Maximum = new decimal(new int[] {
-            250,
+            1000,
             0,
             0,
             0});
