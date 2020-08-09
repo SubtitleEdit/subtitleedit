@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int italic = 0;
             var sb = new StringBuilder();
             int count = 1;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 text = line.Trim();
                 if (count > 0)
@@ -582,7 +582,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(' ');
                 }
 
-                sb.Append(GetCenterCodes(text, count, lines.Count, topAlign));
+                var centerCodes = GetCenterCodes(text, count, lines.Count, topAlign);
+                sb.Append(centerCodes);
                 count++;
                 int i = 0;
                 string code = string.Empty;
@@ -590,6 +591,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     sb.Append("91ae 91ae "); // italic
                 }
+
                 while (i < text.Length)
                 {
                     string s = text.Substring(i, 1);
@@ -614,15 +616,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             sb.Append(code + " ");
                             code = string.Empty;
                         }
+
                         if (code.Length == 0)
                         {
                             code = "80";
                         }
+
                         if (code.Length == 2)
                         {
                             code += "a7";
                             sb.Append(code + " ");
                         }
+
                         code = "9229";
                         newCode = "";
                     }
@@ -688,11 +693,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             code = string.Empty;
                         }
+
                         sb.Append(newCode.TrimEnd() + " ");
                     }
 
                     i++;
                 }
+
                 if (code.Length == 2)
                 {
                     code += "80";
@@ -726,10 +733,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string GetCenterCodes(string text, int lineNumber, int totalLines, bool topAlign)
         {
             int row = 14 - (totalLines - lineNumber);
-            //if (topAlign)
-            //{
-            //    row = 1;
-            //}
+            if (topAlign)
+            {
+                row = lineNumber;
+            }
             var rowCodes = new List<string> { "91", "91", "92", "92", "15", "15", "16", "16", "97", "97", "10", "13", "13", "94", "94" };
             string rowCode = rowCodes[row];
 
@@ -1655,7 +1662,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 y = cp.Y;
                             }
 
-                            if (y == 1)
+                            if (y < 4)
                             {
                                 alignment = "{\\an8}";
                             }
