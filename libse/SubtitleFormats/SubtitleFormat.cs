@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
                     new MPlayer2(),
+                    new MsOfficeWorkbook(),
                     new NciTimedRollUpCaptions(),
                     new NetflixImsc11Japanese(),
                     new NetflixTimedText(),
