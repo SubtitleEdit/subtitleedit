@@ -3,6 +3,7 @@
 3.5.17 (xth September 2020) BETA
 * NEW:
    * Add new subtitle format - thx Holmgeir
+   * Add new subtitle (Excel) format - thx Jecy
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
    * Add shortcuts for "Merge line with same text/time-code" - thx Mike
    * Add shortcut for File - Compare
