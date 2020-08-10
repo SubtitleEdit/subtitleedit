@@ -549,11 +549,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
                 sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t94ae 94ae 9420 9420 {ToSccText(p.Text, language)} 942f 942f");
                 sb.AppendLine();
 
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                var next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {
                     sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t942c 942c");
@@ -569,6 +569,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var topAlign = text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
                            text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
                            text.StartsWith("{\\an9}", StringComparison.Ordinal);
+
+            var leftAlign = text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                            text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                            text.StartsWith("{\\an1}", StringComparison.Ordinal);
+
+            var rightAlign = text.StartsWith("{\\an9}", StringComparison.Ordinal) ||
+                             text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
+                             text.StartsWith("{\\an3}", StringComparison.Ordinal);
+
+            var verticalCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                                 text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                                 text.StartsWith("{\\an6}", StringComparison.Ordinal);
+
             text = Utilities.RemoveSsaTags(text);
             var lines = text.Trim().SplitToLines();
             int italic = 0;
@@ -582,7 +595,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(' ');
                 }
 
-                var centerCodes = GetCenterCodes(text, count, lines.Count, topAlign);
+                var centerCodes = GetCenterCodes(text, count, lines.Count, topAlign, leftAlign, rightAlign, verticalCenter);
                 sb.Append(centerCodes);
                 count++;
                 int i = 0;
@@ -730,17 +743,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return LettersCodeLookup.TryGetValue(hexCode, out var letter) ? letter : null;
         }
 
-        public static string GetCenterCodes(string text, int lineNumber, int totalLines, bool topAlign)
+        public static string GetCenterCodes(string text, int lineNumber, int totalLines, bool topAlign, bool leftAlign, bool rightAlign, bool verticalCenter)
         {
-            int row = 14 - (totalLines - lineNumber);
+            var row = 14 - (totalLines - lineNumber);
             if (topAlign)
             {
                 row = lineNumber;
             }
+            else if (verticalCenter)
+            {
+                row = 6 - totalLines / 2 + lineNumber;
+            }
             var rowCodes = new List<string> { "91", "91", "92", "92", "15", "15", "16", "16", "97", "97", "10", "13", "13", "94", "94" };
-            string rowCode = rowCodes[row];
+            var rowCode = rowCodes[row];
 
-            int left = (32 - text.Length) / 2;
+            var left = (32 - text.Length) / 2;
+            if (leftAlign)
+            {
+                left = 0;
+            }
+            else if (rightAlign)
+            {
+                left = 32 - text.Length;
+            }
             int columnRest = left % 4;
             int column = left - columnRest;
 
@@ -772,7 +797,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     columnCodes = new List<string> { "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "5e", "fe", "5e", "fe" };
                     break;
             }
-            string code = rowCode + columnCodes[row];
+            var code = rowCode + columnCodes[row];
 
             if (columnRest == 1)
             {
@@ -794,7 +819,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string ToTimeCode(double totalMilliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
+            var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             if (DropFrame)
             {
                 return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
@@ -1593,6 +1618,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string GetSccText(string s, ref int errorCount)
         {
             int y = 0;
+            int x = -1;
             string[] parts = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();
             bool first = true;
@@ -1662,9 +1688,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 y = cp.Y;
                             }
 
+                            x = cp.X;
+
                             if (y < 4)
                             {
                                 alignment = "{\\an8}";
+                            }
+
+                            if (y >= 7 && y <= 9)
+                            {
+                                alignment = "{\\an5}";
                             }
 
                             if ((cp.Style & FontStyle.Italic) == FontStyle.Italic && !italicOn)
@@ -1764,7 +1797,55 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 first = false;
                 k++;
             }
-            string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
+
+            var leftAlign = false;
+            var rightAlign = false;
+            if (x >= 0)
+            {
+                var text = sb.ToString().Trim().SplitToLines().LastOrDefault();
+                text = HtmlUtil.RemoveHtmlTags(text);
+                if (text != null && !string.IsNullOrEmpty(text))
+                {
+                    if (text.Length < 28)
+                    {
+                        if (x < 3)
+                        {
+                            leftAlign = true;
+                        }
+                        else if (x + text.Length >= 30)
+                        {
+                            rightAlign = true;
+                        }
+                    }
+                }
+            }
+
+            if (alignment == "{\\an8}" && leftAlign)
+            {
+                alignment = "{\\an7}";
+            }
+            else if (alignment == "{\\an8}" && rightAlign)
+            {
+                alignment = "{\\an9}";
+            }
+            else if (alignment == "{\\an5}" && leftAlign)
+            {
+                alignment = "{\\an4}";
+            }
+            else if (alignment == "{\\an5}" && rightAlign)
+            {
+                alignment = "{\\an6}";
+            }
+            else if (string.IsNullOrEmpty(alignment) && leftAlign)
+            {
+                alignment = "{\\an1}";
+            }
+            else if (string.IsNullOrEmpty(alignment) && rightAlign)
+            {
+                alignment = "{\\an3}";
+            }
+
+            var res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
             {
@@ -1776,7 +1857,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode ParseTimeCode(string start)
         {
-            string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
     }
