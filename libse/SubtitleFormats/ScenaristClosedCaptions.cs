@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             int count = 0;
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (count < 4)
                 {
@@ -468,19 +468,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsAllOkay(List<string> lines)
         {
-            if (lines.Count > 4)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (lines[i].Length > 32)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return lines.Count <= 4 && lines.All(line => line.Length <= 32);
         }
 
         private static int GetLastIndexOfSpace(string s, int endCount)
@@ -811,10 +799,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (columnRest == 3)
             {
-                return code + " " + code + " 9723 9723 ";
+                return $"{code} {code} 9723 9723 ";
             }
 
-            return code + " " + code + " ";
+            return $"{code} {code} ";
         }
 
         private string ToTimeCode(double totalMilliseconds)

@@ -6,11 +6,13 @@
    * Add new subtitle (Excel) format - thx Jecy
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
    * Add shortcuts for "Merge line with same text/time-code" - thx Mike
+   * Add shortcuts "Set end and pause" + "Export to PAC" - thx Milenko
    * Add shortcut for File - Compare
    * Add context menu item for "Set default fixes" in FCE
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
    * Add "Export to FCP+image" in OCR window - thx Marko
+   * Add alignment support for .scc files - thx madprogramer 
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
