@@ -1611,6 +1611,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             bool first = true;
             bool italicOn = false;
+            bool fontOn = false;
             int k = 0;
             var alignment = string.Empty;
 
@@ -1686,6 +1687,72 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (y >= 7 && y <= 9)
                             {
                                 alignment = "{\\an5}";
+                            }
+
+                            if (cp.ForeColor == Color.Green)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Green\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.Blue)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Blue\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.Cyan)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Cyan\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.Red)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Red\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.Yellow)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Yellow\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.Magenta)
+                            {
+                                if (fontOn)
+                                {
+                                    sb.Append("</font>");
+                                }
+                                sb.Append("<font color=\"Magenta\">");
+                                fontOn = true;
+                            }
+                            else if (cp.ForeColor == Color.White && fontOn)
+                            {
+                                sb.Append("</font>");
+                                sb.Append("</font>");
+                                fontOn = false;
+                            }
+                            else if (cp.ForeColor == Color.Black && fontOn)
+                            {
+                                sb.Append("</font>");
+                                fontOn = false;
                             }
 
                             if ((cp.Style & FontStyle.Italic) == FontStyle.Italic && !italicOn)
@@ -1800,7 +1867,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             leftAlign = true;
                         }
-                        else if (x + text.Length >= 30)
+                        else if (x + text.Length > 30)
                         {
                             rightAlign = true;
                         }
@@ -1834,6 +1901,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
+            if (fontOn)
+            {
+                res += "</font>";
+            }
+
+            res = res.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
             {
