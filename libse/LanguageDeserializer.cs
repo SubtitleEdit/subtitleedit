@@ -5431,6 +5431,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustSetEndTimeAndGoToNext":
                     language.Settings.AdjustSetEndTimeAndGoToNext = reader.Value;
                     break;
+                case "Settings/AdjustSetEndTimeAndPause":
+                    language.Settings.AdjustSetEndTimeAndPause = reader.Value;
+                    break;
                 case "Settings/AdjustSetStartAutoDurationAndGoToNext":
                     language.Settings.AdjustSetStartAutoDurationAndGoToNext = reader.Value;
                     break;

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -10,12 +10,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string Color { get; private set; }
 
-        public EbuColorPicker()
+        public EbuColorPicker(bool showBlack)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ColorChooser.Title;
+            if (!showBlack)
+            {
+                buttonBlack.Visible = false;
+                buttonBlue.Top -= buttonBlue.Height;
+                buttonCyan .Top -= buttonBlue.Height;
+                buttonGreen.Top -= buttonBlue.Height;
+                buttonMagenta.Top -= buttonBlue.Height;
+                buttonRed.Top -= buttonBlue.Height;
+                buttonWhite.Top -= buttonBlue.Height;
+                buttonYellow.Top -= buttonBlue.Height;
+                Height -= buttonBlue.Height;
+            }
         }
 
         private void EbuColorPicker_KeyDown(object sender, KeyEventArgs e)
