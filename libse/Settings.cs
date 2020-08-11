@@ -1760,6 +1760,7 @@ $HorzAlign          =   Center
         public string MainFileImportPlainText { get; set; }
         public string MainFileImportTimeCodes { get; set; }
         public string MainFileExportEbu { get; set; }
+        public string MainFileExportPac { get; set; }
         public string MainFileExportPlainText { get; set; }
         public string MainEditUndo { get; set; }
         public string MainEditRedo { get; set; }
@@ -1833,6 +1834,7 @@ $HorzAlign          =   Center
         public string MainListViewItalic { get; set; }
         public string MainListViewBold { get; set; }
         public string MainListViewUnderline { get; set; }
+        public string MainListViewBox { get; set; }
         public string MainListViewSplit { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewToggleMusicSymbols { get; set; }
@@ -1875,6 +1877,7 @@ $HorzAlign          =   Center
         public string MainCreateInsertSubAtVideoPosNoTextBoxFocus { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
+        public string MainAdjustSetEndAndPause { get; set; }
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
@@ -1964,7 +1967,6 @@ $HorzAlign          =   Center
             MainFileSaveOriginalAs = string.Empty;
             MainFileSaveAs = string.Empty;
             MainFileSaveAll = string.Empty;
-            MainFileExportEbu = string.Empty;
             MainEditUndo = "Control+Z";
             MainEditRedo = "Control+Y";
             MainEditFind = "Control+F";
@@ -5957,6 +5959,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainFileExportPac");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainFileExportPac = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExportPlainText");
                 if (subNode != null)
                 {
@@ -6383,6 +6391,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainListViewUnderline = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainListViewBox");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainListViewBox = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewSplit");
                 if (subNode != null)
                 {
@@ -6645,6 +6659,12 @@ $HorzAlign          =   Center
                 if (subNode != null)
                 {
                     settings.Shortcuts.MainCreateSetEnd = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndPause");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSetEndAndPause = subNode.InnerText;
                 }
 
                 subNode = node.SelectSingleNode("MainCreateSetEndAddNewAndGoToNew");
@@ -7924,6 +7944,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainFileImportTimeCodes", settings.Shortcuts.MainFileImportTimeCodes);
                 textWriter.WriteElementString("MainFileExportPlainText", settings.Shortcuts.MainFileExportPlainText);
                 textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
+                textWriter.WriteElementString("MainFileExportPac", settings.Shortcuts.MainFileExportPac);
                 textWriter.WriteElementString("MainEditUndo", settings.Shortcuts.MainEditUndo);
                 textWriter.WriteElementString("MainEditRedo", settings.Shortcuts.MainEditRedo);
                 textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
@@ -7994,6 +8015,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
                 textWriter.WriteElementString("MainListViewBold", settings.Shortcuts.MainListViewBold);
                 textWriter.WriteElementString("MainListViewUnderline", settings.Shortcuts.MainListViewUnderline);
+                textWriter.WriteElementString("MainListViewBox", settings.Shortcuts.MainListViewBox);
                 textWriter.WriteElementString("MainListViewSplit", settings.Shortcuts.MainListViewSplit);
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
                 textWriter.WriteElementString("MainListViewToggleMusicSymbols", settings.Shortcuts.MainListViewToggleMusicSymbols);
@@ -8037,6 +8059,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPosNoTextBoxFocus", settings.Shortcuts.MainCreateInsertSubAtVideoPosNoTextBoxFocus);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
                 textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
+                textWriter.WriteElementString("MainAdjustSetEndAndPause", settings.Shortcuts.MainAdjustSetEndAndPause);
                 textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
                 textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
                 textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);

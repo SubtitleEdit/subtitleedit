@@ -2168,6 +2168,7 @@
             public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
+            public string AdjustSetEndTimeAndPause { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
             public string AdjustSetEndNextStartAndGoToNext { get; set; }
             public string AdjustStartDownEndUpAndGoToNext { get; set; }

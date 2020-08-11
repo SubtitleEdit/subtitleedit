@@ -3879,8 +3879,8 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.Unicode;
                 }
 
-                if (Configuration.Settings.General.ShowFormatRequiresUtf8Warning && !currentEncoding.Equals(Encoding.UTF8) && 
-                    (formatType == typeof(DCinemaInterop) || formatType == typeof(DCinemaSmpte2007) || 
+                if (Configuration.Settings.General.ShowFormatRequiresUtf8Warning && !currentEncoding.Equals(Encoding.UTF8) &&
+                    (formatType == typeof(DCinemaInterop) || formatType == typeof(DCinemaSmpte2007) ||
                      formatType == typeof(DCinemaSmpte2010) || formatType == typeof(DCinemaSmpte2014)))
                 {
                     using (var form = new DialogDoNotShowAgain(Title, string.Format(_language.FormatXShouldUseUft8, GetCurrentSubtitleFormat().FriendlyName)))
@@ -11545,9 +11545,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
 
                 string color;
-                if (GetCurrentSubtitleFormat().GetType() == typeof(Ebu))
+                var formatType = GetCurrentSubtitleFormat().GetType();
+                if (formatType == typeof(Ebu))
                 {
-                    using (var form = new EbuColorPicker())
+                    using (var form = new EbuColorPicker(true))
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                        {
+                            return;
+                        }
+
+                        color = form.Color;
+                    }
+                }
+                else if (formatType == typeof(ScenaristClosedCaptions) || formatType == typeof(ScenaristClosedCaptionsDropFrame))
+                {
+                    using (var form = new EbuColorPicker(false))
                     {
                         if (form.ShowDialog(this) != DialogResult.OK)
                         {
@@ -14753,6 +14766,13 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_shortcuts.MainCreateSetEnd == e.KeyData)
             {
                 StopAutoDuration();
+                ButtonSetEndClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustSetEndAndPause == e.KeyData)
+            {
+                StopAutoDuration();
+                mediaPlayer.Pause();
                 ButtonSetEndClick(null, null);
                 e.SuppressKeyPress = true;
             }
@@ -20162,6 +20182,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
             toolStripMenuItemImportTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportTimeCodes);
             eBUSTLToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+            pACScreenElectronicsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPac);
             plainTextToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
 
             toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
@@ -20215,6 +20236,8 @@ namespace Nikse.SubtitleEdit.Forms
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
             underlineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
+            boxToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBox);
+            boxToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBox);
             splitLineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewSplit);
             toolStripMenuItemSurroundWithMusicSymbols.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
@@ -21750,9 +21773,22 @@ namespace Nikse.SubtitleEdit.Forms
             int selectionStart = tb.SelectionStart;
 
             string color;
-            if (GetCurrentSubtitleFormat().GetType() == typeof(Ebu))
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            if (formatType == typeof(Ebu))
             {
-                using (var form = new EbuColorPicker())
+                using (var form = new EbuColorPicker(true))
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    color = form.Color;
+                }
+            }
+            else if (formatType == typeof(ScenaristClosedCaptions) || formatType == typeof(ScenaristClosedCaptionsDropFrame))
+            {
+                using (var form = new EbuColorPicker(false))
                 {
                     if (form.ShowDialog(this) != DialogResult.OK)
                     {
@@ -23650,8 +23686,24 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemRuby.Visible = true;
                 }
             }
+            else if (formatType == typeof(Ebu))
+            {
+                Ebu.EbuGeneralSubtitleInformation header;
+                if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+                {
+                    header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                }
+                else
+                {
+                    header = new Ebu.EbuGeneralSubtitleInformation();
+                }
+
+                var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
+                boxToolStripMenuItem.Visible = open;
+            }
             else
             {
+                boxToolStripMenuItem1.Visible = false;
                 boldToolStripMenuItem1.Visible = true;
                 underlineToolStripMenuItem1.Visible = true;
                 colorToolStripMenuItem1.Visible = true;
@@ -27735,6 +27787,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSetEnd_MouseEnter(object sender, EventArgs e)
         {
             ShowButtonShortcut(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+        }
+
+        private void boxToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var tb = GetFocusedTextBox();
+            tb.Text = HtmlUtil.ToggleTag(tb.Text, "box");
         }
     }
 }
