@@ -26,7 +26,7 @@ namespace UpdateLanguageFiles
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
-            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly().Location : myName);
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly()?.Location : myName);
             if (args.Length != 2)
             {
                 Console.Write("Usage: " + myName + @" <LanguageMaster> <LanguageDeserializer>
@@ -40,7 +40,7 @@ namespace UpdateLanguageFiles
 
             try
             {
-                int noOfChanges = 0;
+                var noOfChanges = 0;
 
                 var language = new Nikse.SubtitleEdit.Core.Language { General = { Version = FindVersionNumber() } };
                 var languageAsXml = language.GetCurrentLanguageAsXml();
@@ -52,7 +52,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageAsXml != languageAsXml)
                 {
-                    language.Save(args[0]);
+                    SaveWithRetry(args[0], language);
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
@@ -66,15 +66,7 @@ namespace UpdateLanguageFiles
 
                 if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
-                    try
-                    {
-                        File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
-                    }
-                    catch
-                    {
-                        System.Threading.Thread.Sleep(100);
-                        File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
-                    }
+                    SaveWithRetry(args[1], languageDeserializerContent);
                     noOfChanges++;
                     Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }
@@ -97,6 +89,40 @@ namespace UpdateLanguageFiles
 
                 return 2;
             }
+        }
+
+        private static void SaveWithRetry(string fileName, string content)
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                try
+                {
+                    File.WriteAllText(fileName, content, Encoding.UTF8);
+                    return;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
+            File.WriteAllText(fileName, content, Encoding.UTF8);
+        }
+
+        private static void SaveWithRetry(string fileName, Nikse.SubtitleEdit.Core.Language language)
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                try
+                {
+                    language.Save(fileName);
+                    return;
+                }
+                catch
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
+            language.Save(fileName);
         }
 
         private static string FindVersionNumber()
@@ -144,6 +170,5 @@ namespace UpdateLanguageFiles
 
             return "unknown";
         }
-
     }
 }
