@@ -1177,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
-                var hebrewEncoding = Encoding.GetEncoding(28598); // Hebrew
+                var hebrewEncoding = Encoding.GetEncoding(1255); // Hebrew
                 if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
                 {
                     if (GetCount(hebrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
@@ -1212,7 +1212,13 @@ namespace Nikse.SubtitleEdit.Core
                     return portugueseCount28591 > portugueseCount1252 ? encoding28591 : encoding1252;
                 }
 
-                return EncodingTools.DetectInputCodepage(buffer);
+                var encoding = EncodingTools.DetectInputCodepage(buffer);
+                if (encoding.CodePage == 28599)
+                {
+                    return Encoding.GetEncoding(1254); // prefer 1254 over 28599 
+                }
+
+                return encoding;
             }
             catch
             {

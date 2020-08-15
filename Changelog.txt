@@ -29,6 +29,7 @@
    * Update Finnish spell check to libvoikko 4.3 (2019-11-24)
    * Finnish spell check should now also work on Linux - thx Gitraffe
    * Allow higher (1000) max margin for SSA/ASS thx Looi
+   * Change preferred ANSI code page for Turkish(1254)/Hebrew(1255)
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix bug in EBU STL ms to frames - thx Lucius Snow
