@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             var sb = new StringBuilder();
-            foreach (string s in lines)
+            foreach (var s in lines)
             {
                 sb.Append(s);
             }
@@ -83,7 +83,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             sb.AppendLine(Json.DecodeJsonText(textLine));
                         }
-                        subtitle.Paragraphs.Add(new Paragraph(sb.ToString().Trim(), TimeCode.ParseToMilliseconds(start), TimeCode.ParseToMilliseconds(end)));
+                        var startArr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        var endArr = end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (startArr.Length == 4 && endArr.Length == 4)
+                        {
+                            subtitle.Paragraphs.Add(new Paragraph(sb.ToString().Trim(), TimeCode.ParseToMilliseconds(start), TimeCode.ParseToMilliseconds(end)));
+                        }
                     }
                     catch (Exception)
                     {
