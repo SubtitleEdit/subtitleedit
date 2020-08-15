@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder(@"[");
             int count = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 if (count > 0)
                 {
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             var sb = new StringBuilder();
-            foreach (string s in lines)
+            foreach (var s in lines)
             {
                 sb.Append(s);
             }
@@ -99,12 +99,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string start = ReadTag(s, "start");
                 string end = ReadTag(s, "end");
                 string text = ReadTag(s, "text");
-                if (start != null && end != null && text != null)
+                if (start != null && end != null && text != null && !IsTagArray(s, "text"))
                 {
-                    double startSeconds;
-                    double endSeconds;
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
+                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startSeconds) &&
+                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var endSeconds))
                     {
                         subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
                     }
@@ -119,6 +117,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
+        }
+
+        private static bool IsTagArray(string content, string tag)
+        {
+            var startIndex = content.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
+            if (startIndex < 0)
+            {
+                return false;
+            }
+
+            return content.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart().StartsWith('[');
         }
 
         public static string ConvertJsonSpecialCharacters(string s)
@@ -401,6 +410,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             return list;
         }
-
     }
 }
