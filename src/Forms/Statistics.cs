@@ -357,7 +357,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 text = text.Replace("</font>", ".");
             }
 
-            foreach (string word in text.Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var word in Utilities.RemoveSsaTags(text).Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 var s = word.Trim();
                 if (s.Length > 1 && hashtable.ContainsKey(s))
@@ -380,6 +380,8 @@ https://github.com/SubtitleEdit/subtitleedit
                 .Replace("..", ".")
                 .Replace('-', ' ')
                 .FixExtraSpaces();
+
+            text = Utilities.RemoveSsaTags(text);
 
             foreach (string line in text.Split('.'))
             {
@@ -504,7 +506,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 {
                     string fileName = saveDialog.FileName;
                     var statistic = string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines);
-                    System.IO.File.WriteAllText(fileName, statistic);
+                    File.WriteAllText(fileName, statistic);
                 }
             }
         }
