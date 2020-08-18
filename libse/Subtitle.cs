@@ -402,27 +402,47 @@ namespace Nikse.SubtitleEdit.Core
 
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
         {
+            // invalid fix duration
+            if (fixedDurationMilliseconds == 0)
+            {
+                return;
+            }
+
+            // index provided
+            if (selectedIndexes != null)
+            {
+                foreach (var idx in selectedIndexes)
+                {
+                    SetFixedDuration(idx, fixedDurationMilliseconds);
+                }
+                return;
+            }
+
             for (int i = 0; i < Paragraphs.Count; i++)
             {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                SetFixedDuration(i, fixedDurationMilliseconds);
+            }
+        }
+
+        private void SetFixedDuration(int index, double fixeDurInMs)
+        {
+            var p = GetParagraphOrDefault(index);
+            if (p == null)
+            {
+                return;
+            }
+
+            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixeDurInMs;
+
+            var next = GetParagraphOrDefault(index + 1);
+
+            // fix overlaps
+            if (next != null && p.StartTime.TotalMilliseconds + fixeDurInMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+            {
+                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                if (p.Duration.TotalMilliseconds <= 0)
                 {
-                    var p = GetParagraphOrDefault(i);
-                    if (p == null)
-                    {
-                        continue;
-                    }
-
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
-
-                    var next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
-                    {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.Duration.TotalMilliseconds <= 0)
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                        }
-                    }
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                 }
             }
         }
