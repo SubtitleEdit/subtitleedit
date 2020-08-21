@@ -45,8 +45,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             catch (CultureNotFoundException exception)
             {
-                MessageBox.Show(exception.Message);
-                return;
+                try
+                {
+                    // try for fix e.g. "es-ANY"
+                    var arr = languageString.Replace('_', '-').Split('-');
+                    var ci2 = CultureInfo.GetCultureInfo(arr[0] + "-" + arr[0]);
+                    _threeLetterIsoLanguageName = ci2.GetThreeLetterIsoLanguageName();
+                }
+                catch
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
+                }
             }
             var ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(_threeLetterIsoLanguageName);
             ocrFixReplaceList.AddWordOrPartial(key, value);

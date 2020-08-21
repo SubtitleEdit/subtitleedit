@@ -46,6 +46,7 @@
    * Ignore comments (NOTE) in VTT - thx Issity 
    * Fix for TTML short time code - thx Aylen
    * Fix bug in split with continuation style / Arabic - thx OmrSi
+   * Fix crash in "Add pair to OCR list" - thx jdsanchezii
 
 
 3.5.16 (16th June 2020)
