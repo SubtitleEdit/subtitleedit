@@ -21,7 +21,6 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms
 {
