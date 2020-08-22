@@ -211,6 +211,11 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <MultipleReplaceErrorX>Mehrfach ersetzen: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
     <OffsetTimeCodes>Zeitstempel verschieben</OffsetTimeCodes>
+	<AutoShutdown>PC ausschalten nach Abschluss</AutoShutdown>
+    <AutoShutdownDialogCaption>Subtitle Edit PC ausschalten gestartet</AutoShutdownDialogCaption>
+	<AutoShutdownDialogText>Die Stapelkonvertierung von Subtitle Edit ist abgeschlossen. Sie haben sich entschieden, den PC nach Abschluss automatisch herunterzufahren. Dies erfolgt in {0} Sekunden.
+	
+Wählen Sie OK, um jetzt zu schließen. Wählen Sie Abbrechen, um das Herunterfahren des PCs abzubrechen.</AutoShutdownDialogText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
