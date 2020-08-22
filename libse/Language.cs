@@ -371,6 +371,11 @@ namespace Nikse.SubtitleEdit.Core
                 MkvLanguageStyleTwoLetter = "Two letter language code",
                 MkvLanguageStyleThreeLetter = "Three letter language code",
                 MkvLanguageStyleEmpty = "No language code",
+                AutoShutdown = "Shutdown PC after completion",
+                AutoShutdownDialogCaption = "Subtitle Edit PC shutdown initiated",
+                AutoShutdownDialogText = @"Subtitle Edit batch conversion completed. You choose to automatically shutdown your PC after completion. This will occur in {0} seconds. 
+
+Press OK to shutdown now. Press Cancel to cancel auto shutdown."
             };
 
             Beamer = new LanguageStructure.Beamer

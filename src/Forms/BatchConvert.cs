@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic.CommandLineConvert;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -20,6 +21,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -309,6 +311,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
             checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
+            checkboxAutoShutdownAfterCompletion.Text = Configuration.Settings.Language.BatchConvert.AutoShutdown;
             if (Configuration.Settings.General.SubtitleLineMaximumLength > numericUpDownMaxCharacters.Maximum)
             {
                 numericUpDownMaxCharacters.Value = numericUpDownMaxCharacters.Maximum;
@@ -876,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
             progressBar1.Value = 0;
-            progressBar1.Visible = progressBar1.Maximum > 2;
+            progressBar1.Visible = progressBar1.Maximum > 1;
             string toFormat = comboBoxSubtitleFormats.Text;
             SetControlState(false);
 
@@ -1430,6 +1433,46 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+
+            if (checkboxAutoShutdownAfterCompletion.Checked)
+            {
+                var shutdownTimeSpan = TimeSpan.FromSeconds(30);
+                var timer = new Timer
+                {
+                    Interval = (int)shutdownTimeSpan.TotalMilliseconds
+                };
+
+                timer.Tick += (o, ea) => { ShutdownApplicationAndWindows(); };
+                timer.Start();
+
+                TopMost = true;
+
+                var dialogResult = MessageBox.Show(
+                    string.Format(Configuration.Settings.Language.BatchConvert.AutoShutdownDialogText, shutdownTimeSpan.TotalSeconds),
+                    Configuration.Settings.Language.BatchConvert.AutoShutdownDialogCaption, 
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Cancel)
+                {
+                    timer.Stop();
+                }
+                else if (dialogResult == DialogResult.OK)
+                {
+                    ShutdownApplicationAndWindows();
+                }
+            }
+        }
+
+        private void ShutdownApplicationAndWindows()
+        {
+            Application.Exit();
+
+            var psi = new ProcessStartInfo("shutdown", "/s /t 5")
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            Process.Start(psi);
         }
 
         private void UpdateChangeCasingSettings()

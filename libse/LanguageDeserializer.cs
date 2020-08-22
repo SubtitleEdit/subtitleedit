@@ -634,6 +634,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/MkvLanguageStyleEmpty":
                     language.BatchConvert.MkvLanguageStyleEmpty = reader.Value;
                     break;
+                case "BatchConvert/AutoShutdown":
+                    language.BatchConvert.AutoShutdown = reader.Value;
+                    break;
+                case "BatchConvert/AutoShutdownDialogText":
+                    language.BatchConvert.AutoShutdownDialogText = reader.Value;
+                    break;
+                case "BatchConvert/AutoShutdownDialogCaption":
+                    language.BatchConvert.AutoShutdownDialogCaption = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;

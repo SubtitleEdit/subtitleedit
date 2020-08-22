@@ -241,6 +241,9 @@
             public string MkvLanguageStyleTwoLetter { get; set; }
             public string MkvLanguageStyleThreeLetter { get; set; }
             public string MkvLanguageStyleEmpty { get; set; }
+            public string AutoShutdown { get; set; }
+            public string AutoShutdownDialogText { get; set; }
+            public string AutoShutdownDialogCaption { get; set; }
         }
 
         public class Beamer

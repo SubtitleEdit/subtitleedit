@@ -231,6 +231,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MkvLanguageStyleTwoLetter>Two letter language code</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Three letter language code</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>No language code</MkvLanguageStyleEmpty>
+    <AutoShutdown>Shutdown PC after completion</AutoShutdown>
+    <AutoShutdownDialogText>Subtitle Edit batch conversion completed. You choose to automatically shutdown your PC after completion. This will occur in {0} seconds. 
+
+Press OK to shutdown now. Press Cancel to cancel auto shutdown.</AutoShutdownDialogText>
+    <AutoShutdownDialogCaption>Subtitle Edit PC shutdown initiated</AutoShutdownDialogCaption>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>

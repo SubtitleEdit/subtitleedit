@@ -72,6 +72,7 @@
             this.numericUpDownMaxMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.labelMaxCharacters = new System.Windows.Forms.Label();
+            this.checkboxAutoShutdownAfterCompletion = new System.Windows.Forms.CheckBox();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
             this.buttonBrowseEncoding = new System.Windows.Forms.Button();
             this.radioButtonSaveInOutputFolder = new System.Windows.Forms.RadioButton();
@@ -111,6 +112,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxConvertOptions.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
@@ -125,13 +127,14 @@
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonConvert
             // 
-            this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonConvert.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConvert.Location = new System.Drawing.Point(844, 618);
+            this.buttonConvert.Location = new System.Drawing.Point(831, 3);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 23);
             this.buttonConvert.TabIndex = 2;
@@ -141,9 +144,9 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(948, 618);
+            this.buttonCancel.Location = new System.Drawing.Point(935, 3);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
@@ -295,7 +298,6 @@
             // 
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
@@ -635,6 +637,17 @@
             this.labelMaxCharacters.TabIndex = 40;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
+            // checkboxAutoShutdownAfterCompletion
+            // 
+            this.checkboxAutoShutdownAfterCompletion.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.checkboxAutoShutdownAfterCompletion.AutoSize = true;
+            this.checkboxAutoShutdownAfterCompletion.Location = new System.Drawing.Point(673, 6);
+            this.checkboxAutoShutdownAfterCompletion.Name = "checkboxAutoShutdownAfterCompletion";
+            this.checkboxAutoShutdownAfterCompletion.Size = new System.Drawing.Size(152, 17);
+            this.checkboxAutoShutdownAfterCompletion.TabIndex = 11;
+            this.checkboxAutoShutdownAfterCompletion.Text = "Shutdown after completion";
+            this.checkboxAutoShutdownAfterCompletion.UseVisualStyleBackColor = true;
+            // 
             // groupBoxOutput
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -969,7 +982,7 @@
             this.toolStripSeparator1,
             this.convertMkvSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 120);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 98);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
@@ -1011,22 +1024,45 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(15, 627);
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(70, 3);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(820, 10);
+            this.progressBar1.Size = new System.Drawing.Size(597, 24);
             this.progressBar1.TabIndex = 8;
             // 
             // labelStatus
             // 
-            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.labelStatus.AutoEllipsis = true;
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 611);
+            this.labelStatus.Location = new System.Drawing.Point(5, 8);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.ColumnCount = 5;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.buttonCancel, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.buttonConvert, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelStatus, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.checkboxAutoShutdownAfterCompletion, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.progressBar1, 1, 0);
+            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 611);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1014, 30);
+            this.tableLayoutPanel1.TabIndex = 15;
             // 
             // BatchConvert
             // 
@@ -1034,12 +1070,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1035, 651);
-            this.Controls.Add(this.labelStatus);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxInput);
-            this.Controls.Add(this.buttonConvert);
-            this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(1024, 578);
             this.Name = "BatchConvert";
@@ -1069,8 +1102,9 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1157,5 +1191,7 @@
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem convertMkvSettingsToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkboxAutoShutdownAfterCompletion;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

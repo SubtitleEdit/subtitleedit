@@ -232,6 +232,11 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <MkvLanguageStyleTwoLetter>Tweeletterige taalcode</MkvLanguageStyleTwoLetter>
     <MkvLanguageStyleThreeLetter>Drieletterige taalcode</MkvLanguageStyleThreeLetter>
     <MkvLanguageStyleEmpty>Geen taalcode</MkvLanguageStyleEmpty>
+    <AutoShutdown>PC afsluiten na voltooien (erg lange beschrijving)</AutoShutdown>
+    <AutoShutdownDialogCaption>Subtitle Edit PC afsluiten gestart</AutoShutdownDialogCaption>
+	<AutoShutdownDialogText>De bulkverwerking van Subtitle Edit is voltooid. U heeft ervoor gekozen de PC automatisch af te sluiten na voltooien. Dit vindt plaats in {0} seconden.
+	
+Kies Ok om nu af te sluiten. Kies Annuleren om het afsluiten van de PC te annuleren.</AutoShutdownDialogText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
