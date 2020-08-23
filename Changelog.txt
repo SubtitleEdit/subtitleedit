@@ -6,6 +6,7 @@
    * Add new subtitle (Excel) format - thx Jecy
    * Add new subtitle (json) format - thx Maksim
    * Add new subtitle format FCP Xml 1.8 - thx Maria
+   * Add new subtitle (dv) format - thx George
    * Add shortcuts for Tools menu items Split/Append/Join - thx z3us
    * Add shortcuts for "Merge line with same text/time-code" - thx Mike
    * Add shortcuts "Set end and pause" + "Export to PAC" - thx Milenko
