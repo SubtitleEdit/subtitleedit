@@ -174,7 +174,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 _errorCount = 1;
-                return;
             }
         }
 

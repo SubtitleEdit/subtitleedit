@@ -15,20 +15,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static IGetYouTubeAnnotationStyles GetYouTubeAnnotationStyles { get; set; }
 
-        private bool _promtForStyles = true;
+        private bool _promptForStyles = true;
 
         public override string Extension => ".xml";
 
-        public const string NameOfFormat = "YouTube Annotations";
+        public static readonly string NameOfFormat = "YouTube Annotations";
 
         public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
-            _promtForStyles = false;
+            _promptForStyles = false;
             LoadSubtitle(subtitle, lines, fileName);
-            _promtForStyles = true;
+            _promptForStyles = true;
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 xml.LoadXml(xmlText);
                 var styles = new List<string> { "speech" };
 
-                if (_promtForStyles)
+                if (_promptForStyles)
                 {
                     var stylesWithCount = new Dictionary<string, int>();
                     foreach (XmlNode node in xml.SelectNodes("//annotation"))
@@ -229,13 +229,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 _errorCount = 1;
-                return;
             }
         }
 
         private static TimeCode DecodeTimeCode(string time)
         {
-            string[] arr = time.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var arr = time.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length == 3)
             {
                 return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -249,6 +248,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //0:01:08.0
             return $"{timeCode.Hours}:{timeCode.Minutes:00}:{timeCode.Seconds:00}.{timeCode.Milliseconds}";
         }
-
     }
 }

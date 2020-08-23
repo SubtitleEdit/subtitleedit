@@ -401,6 +401,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -651,6 +652,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             Configuration.Settings.General.CurrentFrameRate = frameRate;
         }
-
     }
 }

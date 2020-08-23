@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var textNodes = title.SelectNodes("text");
                             if (textNodes != null && textNodes.Count > 0)
                             {
-                                Paragraph p = new Paragraph();
+                                var p = new Paragraph();
                                 p.StartTime = DecodeTime(title.Attributes["offset"]);
                                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(title.Attributes["duration"]).TotalMilliseconds;
                                 var text = new StringBuilder();
@@ -122,7 +122,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch
             {
                 _errorCount = 1;
-                return;
             }
         }
 
@@ -136,7 +135,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]));
                 }
-                else if (arr.Length == 1)
+
+                if (arr.Length == 1)
                 {
                     return TimeCode.FromSeconds(float.Parse(arr[0]));
                 }
