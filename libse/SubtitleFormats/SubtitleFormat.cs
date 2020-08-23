@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
+                    new DvSubtitle(),
                     new Ebu(),
                     new Edl(),
                     new Eeg708(),
