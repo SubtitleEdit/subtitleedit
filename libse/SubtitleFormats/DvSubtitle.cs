@@ -146,11 +146,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = new Regex("ž(\\p{Lu})").Replace(text, "Ž$1");
             text = new Regex("(\\p{Lu}\\p{Lu})ž").Replace(text, "$1Ž");
 
-            text = new Regex("Q(\\p{Lu})").Replace(text, "LJ$1");
-            text = new Regex("(\\p{Lu}\\p{Lu})Q").Replace(text, "$1LJ");
+            text = new Regex("Lj(\\p{Lu})").Replace(text, "LJ$1");
+            text = new Regex("(\\p{Lu}\\p{Lu})Lj").Replace(text, "$1LJ");
 
-            text = new Regex("W(\\p{Lu})").Replace(text, "NJ$1");
-            text = new Regex("(\\p{Lu}\\p{Lu})W").Replace(text, "$1NJ");
+            text = new Regex("Nj(\\p{Lu})").Replace(text, "NJ$1");
+            text = new Regex("(\\p{Lu}\\p{Lu})Nj").Replace(text, "$1NJ");
 
             var arr = text.TrimEnd('0').Replace("' '", "\n").SplitToLines();
             var sb = new StringBuilder();
