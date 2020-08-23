@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension => ".xml";
 
-        public const string NameOfFormat = "MS Office Workbook";
+        public static readonly string NameOfFormat = "MS Office Workbook";
 
         public override string Name => NameOfFormat;
 

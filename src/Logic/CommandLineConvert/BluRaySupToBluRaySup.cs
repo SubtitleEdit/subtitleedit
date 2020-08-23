@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
 {
-    public class BluRaySupToBluRaySup
+    public static class BluRaySupToBluRaySup
     {
         public static void ConvertFromBluRaySupToBluRaySup(string fileName, List<BluRaySupParser.PcsData> sub, Point? resolution)
         {
