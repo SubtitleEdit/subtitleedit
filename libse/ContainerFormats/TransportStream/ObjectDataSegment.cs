@@ -38,8 +38,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             ObjectId = Helper.GetEndianWord(buffer, index);
             ObjectVersionNumber = buffer[index + 2] >> 4;
-            ObjectCodingMethod = (buffer[index + 2] & Helper.B00001100) >> 2;
-            NonModifyingColorFlag = (buffer[index + 2] & Helper.B00000010) > 0;
+            ObjectCodingMethod = (buffer[index + 2] & 0b00001100) >> 2;
+            NonModifyingColorFlag = (buffer[index + 2] & 0b00000010) > 0;
             TopFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 3);
             BottomFieldDataBlockLength = Helper.GetEndianWord(buffer, index + 5);
             BufferIndex = index;
@@ -154,10 +154,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 //4 entry numbers of 4-bits each; entry number 0 first, entry number 3 last
                 twoToFourBitColorLookup[0] = buffer[index] >> 4;
-                twoToFourBitColorLookup[1] = buffer[index] & Helper.B00001111;
+                twoToFourBitColorLookup[1] = buffer[index] & 0b00001111;
                 index++;
                 twoToFourBitColorLookup[2] = buffer[index] >> 4;
-                twoToFourBitColorLookup[3] = buffer[index] & Helper.B00001111;
+                twoToFourBitColorLookup[3] = buffer[index] & 0b00001111;
                 index++;
             }
             else if (dataType == MapTable2To8Bit)
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     if (nextByte != 0)
                     {
-                        runLength = nextByte & Helper.B01111111; // 1-127
+                        runLength = nextByte & 0b01111111; // 1-127
                     }
                     else
                     {
@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
                 else
                 {
-                    runLength = nextByte & Helper.B01111111; // 3-127
+                    runLength = nextByte & 0b01111111; // 3-127
                     pixelCode = Next8Bits(buffer, ref index);
                 }
             }
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (startHalf)
             {
                 startHalf = false;
-                result = buffer[index] & Helper.B00001111;
+                result = buffer[index] & 0b00001111;
                 index++;
             }
             else
@@ -348,11 +348,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             else
             {
                 int next1 = Next4Bits(buffer, ref index, ref startHalf);
-                if ((next1 & Helper.B00001000) == 0)
+                if ((next1 & 0b00001000) == 0)
                 {
                     if (next1 != 0)
                     {
-                        runLength = (next1 & Helper.B00000111) + 2; // 3-9
+                        runLength = (next1 & 0b00000111) + 2; // 3-9
                     }
                     else
                     {
@@ -364,12 +364,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         return false;
                     }
                 }
-                else if (next1 == Helper.B00001100)
+                else if (next1 == 0b00001100)
                 {
                     runLength = 1;
                     pixelCode = 0;
                 }
-                else if (next1 == Helper.B00001101)
+                else if (next1 == 0b00001101)
                 {
                     runLength = 2;
                     pixelCode = 0;
@@ -377,20 +377,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 else
                 {
                     int next2 = Next4Bits(buffer, ref index, ref startHalf);
-                    if ((next1 & Helper.B00000100) == 0)
+                    if ((next1 & 0b00000100) == 0)
                     {
-                        runLength = (next1 & Helper.B00000011) + 4; // 4-7
+                        runLength = (next1 & 0b00000011) + 4; // 4-7
                         pixelCode = next2;
                     }
                     else
                     {
                         int next3 = Next4Bits(buffer, ref index, ref startHalf);
-                        if ((next1 & Helper.B00000001) == 0)
+                        if ((next1 & 0b00000001) == 0)
                         {
                             runLength = next2 + 9; // 9-24
                             pixelCode = next3;
                         }
-                        else if (next1 == Helper.B00001111)
+                        else if (next1 == 0b00001111)
                         {
                             runLength = ((next2 << 4) + next3) + 25; // 25-280
                             pixelCode = Next4Bits(buffer, ref index, ref startHalf);
@@ -407,22 +407,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             if (bitIndex == 0)
             {
                 bitIndex++;
-                result = (buffer[index] & Helper.B11000000) >> 6;
+                result = (buffer[index] & 0b11000000) >> 6;
             }
             else if (bitIndex == 1)
             {
                 bitIndex++;
-                result = (buffer[index] & Helper.B00110000) >> 4;
+                result = (buffer[index] & 0b00110000) >> 4;
             }
             else if (bitIndex == 2)
             {
                 bitIndex++;
-                result = (buffer[index] & Helper.B00001100) >> 2;
+                result = (buffer[index] & 0b00001100) >> 2;
             }
             else // 3 - last bit pair
             {
                 bitIndex = 0;
-                result = buffer[index] & Helper.B00000011;
+                result = buffer[index] & 0b00000011;
                 index++;
             }
             return result;
@@ -448,24 +448,24 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
                 else if (next > 1)
                 {
-                    runLength = ((next & Helper.B00000001) << 2) + Next2Bits(buffer, ref index, ref bitIndex) + 3; // 3-10
+                    runLength = ((next & 0b00000001) << 2) + Next2Bits(buffer, ref index, ref bitIndex) + 3; // 3-10
                     pixelCode = Next2Bits(buffer, ref index, ref bitIndex);
                 }
                 else
                 {
                     int next2 = Next2Bits(buffer, ref index, ref bitIndex);
-                    if (next2 == Helper.B00000001)
+                    if (next2 == 0b00000001)
                     {
                         runLength = 2;
                         pixelCode = 0;
                     }
-                    else if (next2 == Helper.B00000010)
+                    else if (next2 == 0b00000010)
                     {
                         runLength = (Next2Bits(buffer, ref index, ref bitIndex) << 2) +  // 12-27
                                      Next2Bits(buffer, ref index, ref bitIndex) + 12;
                         pixelCode = Next2Bits(buffer, ref index, ref bitIndex);
                     }
-                    else if (next2 == Helper.B00000011)
+                    else if (next2 == 0b00000011)
                     {
                         runLength = (Next2Bits(buffer, ref index, ref bitIndex) << 6) + // 29 - 284
                                     (Next2Bits(buffer, ref index, ref bitIndex) << 4) +

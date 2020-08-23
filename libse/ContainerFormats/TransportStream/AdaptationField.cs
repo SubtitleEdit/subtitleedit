@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 ProgramClockReferenceBase = (packetBuffer[index] * 256 + packetBuffer[index + 1]) << 1;
                 ProgramClockReferenceBase += packetBuffer[index + 2] >> 7;
-                ProgramClockReferenceExtension = (packetBuffer[index + 2] & Helper.B00000001) * 256 + packetBuffer[index + 3];
+                ProgramClockReferenceExtension = (packetBuffer[index + 2] & 0b0000_0001) * 256 + packetBuffer[index + 3];
                 index += 4;
             }
 
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 OriginalProgramClockReferenceBase = (packetBuffer[index] * 256 + packetBuffer[index + 1]) << 1;
                 OriginalProgramClockReferenceBase += packetBuffer[index + 2] >> 7;
-                OriginalProgramClockReferenceExtension = (packetBuffer[index + 2] & Helper.B00000001) * 256 + packetBuffer[index + 3];
+                OriginalProgramClockReferenceExtension = (packetBuffer[index + 2] & 0b00000001) * 256 + packetBuffer[index + 3];
                 index += 4;
             }
 

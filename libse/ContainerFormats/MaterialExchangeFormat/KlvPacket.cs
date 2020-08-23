@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.VobSub;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -59,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
             int first = stream.ReadByte();
             if (first > 127) // first bit set
             {
-                bytesInLength = first & Helper.B01111111;
+                bytesInLength = first & 0b01111111;
                 if (bytesInLength > 8)
                 {
                     throw new Exception("MXF KLV packet - lenght bytes > 8");

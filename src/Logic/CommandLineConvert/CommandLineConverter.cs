@@ -1377,7 +1377,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                     if (BatchConvert.BluRaySubtitle.RemoveChar(' ').Equals(targetFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
-                        outputFileName = FormatOutputFileNameForBatchConvert(fileName,  preExt + ".sup", outputFolder, overwrite);
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, preExt + ".sup", outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {

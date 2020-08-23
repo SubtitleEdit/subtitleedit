@@ -21,10 +21,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 rcse.ClutEntryId = buffer[k];
                 byte flags = buffer[k + 1];
 
-                rcse.ClutEntry2BitClutEntryFlag = (flags & Helper.B10000000) > 0;
-                rcse.ClutEntry4BitClutEntryFlag = (flags & Helper.B01000000) > 0;
-                rcse.ClutEntry8BitClutEntryFlag = (flags & Helper.B00100000) > 0;
-                rcse.FullRangeFlag = (flags & Helper.B00000001) > 0;
+                rcse.ClutEntry2BitClutEntryFlag = (flags & 0b10000000) > 0;
+                rcse.ClutEntry4BitClutEntryFlag = (flags & 0b01000000) > 0;
+                rcse.ClutEntry8BitClutEntryFlag = (flags & 0b00100000) > 0;
+                rcse.FullRangeFlag = (flags & 0b00000001) > 0;
 
                 if (rcse.FullRangeFlag)
                 {
@@ -37,9 +37,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 else
                 {
                     rcse.ClutEntryY = buffer[k + 2] >> 2;
-                    rcse.ClutEntryCr = ((buffer[k + 2] & Helper.B00000011) << 2) + (buffer[k + 2]) >> 6;
-                    rcse.ClutEntryCb = ((buffer[k + 3] & Helper.B00111111) >> 2);
-                    rcse.ClutEntryT = buffer[k + 3] & Helper.B00000011;
+                    rcse.ClutEntryCr = ((buffer[k + 2] & 0b00000011) << 2) + (buffer[k + 2]) >> 6;
+                    rcse.ClutEntryCb = ((buffer[k + 3] & 0b00111111) >> 2);
+                    rcse.ClutEntryT = buffer[k + 3] & 0b00000011;
                     k += 4;
                 }
                 Entries.Add(rcse);

@@ -99,14 +99,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         if (packet.Payload != null && packet.Payload.Length > 10)
                         {
                             int presentationTimestampDecodeTimestampFlags = packet.Payload[7] >> 6;
-                            if (presentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
-                                presentationTimestampDecodeTimestampFlags == Helper.B00000011)
+                            if (presentationTimestampDecodeTimestampFlags == 0b00000010 ||
+                                presentationTimestampDecodeTimestampFlags == 0b00000011)
                             {
                                 firstVideoMs = (ulong)packet.Payload[9 + 4] >> 1;
                                 firstVideoMs += (ulong)packet.Payload[9 + 3] << 7;
-                                firstVideoMs += (ulong)(packet.Payload[9 + 2] & Helper.B11111110) << 14;
+                                firstVideoMs += (ulong)(packet.Payload[9 + 2] & 0b11111110) << 14;
                                 firstVideoMs += (ulong)packet.Payload[9 + 1] << 22;
-                                firstVideoMs += (ulong)(packet.Payload[9 + 0] & Helper.B00001110) << 29;
+                                firstVideoMs += (ulong)(packet.Payload[9 + 0] & 0b00001110) << 29;
                                 firstVideoMs = firstVideoMs / 90;
                             }
                         }
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             SubtitlePacketIds.Sort();
 
             // Merge packets and set start/end time
-            foreach (int pid in SubtitlePacketIds.Where(p=> !DvbSubtitlesLookup.ContainsKey(p)))
+            foreach (int pid in SubtitlePacketIds.Where(p => !DvbSubtitlesLookup.ContainsKey(p)))
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));

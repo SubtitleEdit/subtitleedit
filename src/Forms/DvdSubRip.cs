@@ -375,27 +375,27 @@ namespace Nikse.SubtitleEdit.Forms
             var buffer5B = BitConverter.GetBytes((UInt64)newPts);
             if (BitConverter.IsLittleEndian)
             {
-                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[0] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[0] << 1 | 0b00000001); // last 7 bits + '1'
                 buffer[presentationTimestampIndex + 3] = (byte)((buffer5B[0] >> 7) + (buffer5B[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[1] >> 6 | Helper.B00000001) + (buffer5B[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[1] >> 6 | 0b00000001) + (buffer5B[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
                 buffer[presentationTimestampIndex + 1] = (byte)((buffer5B[2] >> 6) + (buffer5B[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimestampIndex] = (byte)((buffer5B[3] >> 6 | Helper.B00000001) + (buffer5B[4] << 2));
+                buffer[presentationTimestampIndex] = (byte)((buffer5B[3] >> 6 | 0b00000001) + (buffer5B[4] << 2));
             }
             else
             {
-                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[7] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[7] << 1 | 0b00000001); // last 7 bits + '1'
                 buffer[presentationTimestampIndex + 3] = (byte)((buffer5B[7] >> 7) + (buffer5B[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[6] >> 6 | Helper.B00000001) + (buffer5B[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[6] >> 6 | 0b00000001) + (buffer5B[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
                 buffer[presentationTimestampIndex + 1] = (byte)((buffer5B[5] >> 6) + (buffer5B[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimestampIndex] = (byte)((buffer5B[4] >> 6 | Helper.B00000001) + (buffer5B[3] << 2));
+                buffer[presentationTimestampIndex] = (byte)((buffer5B[4] >> 6 | 0b00000001) + (buffer5B[3] << 2));
             }
-            if (vsp.PacketizedElementaryStream.PresentationTimestampDecodeTimestampFlags == Helper.B00000010)
+            if (vsp.PacketizedElementaryStream.PresentationTimestampDecodeTimestampFlags == 0b00000010)
             {
-                buffer[presentationTimestampIndex] += Helper.B00100000;
+                buffer[presentationTimestampIndex] += 0b00100000;
             }
             else
             {
-                buffer[presentationTimestampIndex] += Helper.B00110000;
+                buffer[presentationTimestampIndex] += 0b00110000;
             }
         }
 

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 Buffer.BlockCopy(data, index + 2, CaSystemId, 0, 2);
 
                 // 13 bytes (skip first 3)
-                CaPid = (uint)((data[index + 4] & Helper.B00011111) * 256 + // first 5 bytes
+                CaPid = (uint)((data[index + 4] & 0b00011111) * 256 + // first 5 bytes
                          data[index + 5]); // last 8 bytes
 
                 PrivateDataBytes = new byte[length - 4];

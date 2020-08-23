@@ -1,12 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
-using Helper = Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream.Helper;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -48,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var firstByte = (byte)(value / 256);
             if (firstBitValue == 1)
             {
-                firstByte = (byte)(firstByte | Helper.B10000000);
+                firstByte = (byte)(firstByte | 0b10000000);
             }
 
             stream.WriteByte(firstByte);
@@ -61,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var firstByte = (byte)(value);
             if (firstBitValue == 1)
             {
-                firstByte = (byte)(firstByte | Helper.B10000000);
+                firstByte = (byte)(firstByte | 0b10000000);
             }
 
             stream.WriteByte(firstByte);
@@ -181,7 +180,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public DialogStyleSegment(byte[] buffer)
             {
-                PlayerStyleFlag = (buffer[9] & Helper.B10000000) > 0;
+                PlayerStyleFlag = (buffer[9] & 0b10000000) > 0;
                 NumberOfRegionStyles = buffer[11];
                 NumberOfUserStyles = buffer[12];
 
@@ -223,21 +222,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         UserStyleId = buffer[idx],
                         RegionHorizontalPositionDirection = buffer[idx + 1] >> 7,
-                        RegionHorizontalPositionDelta = ((buffer[idx + 1] & Helper.B01111111) << 8) + buffer[idx + 2],
+                        RegionHorizontalPositionDelta = ((buffer[idx + 1] & 0b01111111) << 8) + buffer[idx + 2],
                         RegionVerticalPositionDirection = buffer[idx + 3] >> 7,
-                        RegionVerticalPositionDelta = ((buffer[idx + 3] & Helper.B01111111) << 8) + buffer[idx + 4],
+                        RegionVerticalPositionDelta = ((buffer[idx + 3] & 0b01111111) << 8) + buffer[idx + 4],
                         FontSizeIncDec = buffer[idx + 5] >> 7,
-                        FontSizeDelta = (buffer[idx + 5] & Helper.B01111111),
+                        FontSizeDelta = (buffer[idx + 5] & 0b01111111),
                         TextBoxHorizontalPositionDirection = buffer[idx + 6] >> 7,
-                        TextBoxHorizontalPositionDelta = ((buffer[idx + 6] & Helper.B01111111) << 8) + buffer[idx + 7],
+                        TextBoxHorizontalPositionDelta = ((buffer[idx + 6] & 0b01111111) << 8) + buffer[idx + 7],
                         TextBoxVerticalPositionDirection = buffer[idx + 8] >> 7,
-                        TextBoxVerticalPositionDelta = ((buffer[idx + 8] & Helper.B01111111) << 8) + buffer[idx + 9],
+                        TextBoxVerticalPositionDelta = ((buffer[idx + 8] & 0b01111111) << 8) + buffer[idx + 9],
                         TextBoxWidthIncDec = buffer[idx + 10] >> 7,
-                        TextBoxWidthDelta = ((buffer[idx + 10] & Helper.B01111111) << 8) + buffer[idx + 11],
+                        TextBoxWidthDelta = ((buffer[idx + 10] & 0b01111111) << 8) + buffer[idx + 11],
                         TextBoxHeightIncDec = buffer[idx + 12] >> 7,
-                        TextBoxHeightDelta = ((buffer[idx + 12] & Helper.B01111111) << 8) + buffer[idx + 13],
+                        TextBoxHeightDelta = ((buffer[idx + 12] & 0b01111111) << 8) + buffer[idx + 13],
                         LineSpaceIncDec = buffer[idx + 14] >> 7,
-                        LineSpaceDelta = (buffer[idx + 14] & Helper.B01111111)
+                        LineSpaceDelta = (buffer[idx + 14] & 0b01111111)
                     };
                     UserStyles.Add(us);
                     idx += 15;
@@ -283,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (PlayerStyleFlag)
                     {
-                        ms.WriteByte(Helper.B10000000);
+                        ms.WriteByte(0b10000000);
                     }
                     else
                     {
@@ -738,15 +737,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 StartPts += (ulong)buffer[idx + 12] << 8;
                 StartPts += (ulong)buffer[idx + 11] << 16;
                 StartPts += (ulong)buffer[idx + 10] << 24;
-                StartPts += (ulong)(buffer[idx + 9] & Helper.B00000001) << 32;
+                StartPts += (ulong)(buffer[idx + 9] & 0b00000001) << 32;
 
                 EndPts = buffer[idx + 18];
                 EndPts += (ulong)buffer[idx + 17] << 8;
                 EndPts += (ulong)buffer[idx + 16] << 16;
                 EndPts += (ulong)buffer[idx + 15] << 24;
-                EndPts += (ulong)(buffer[idx + 14] & Helper.B00000001) << 32;
+                EndPts += (ulong)(buffer[idx + 14] & 0b00000001) << 32;
 
-                PaletteUpdate = (buffer[idx + 19] & Helper.B10000000) > 0;
+                PaletteUpdate = (buffer[idx + 19] & 0b10000000) > 0;
                 idx += 20;
                 PaletteUpdates = new List<Palette>();
                 if (PaletteUpdate)
@@ -769,7 +768,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Regions = new List<SubtitleRegion>(numberOfRegions);
                 for (int i = 0; i < numberOfRegions; i++)
                 {
-                    var region = new SubtitleRegion { ContinuousPresentation = (buffer[idx] & Helper.B10000000) > 0, Forced = (buffer[idx] & Helper.B01000000) > 0 };
+                    var region = new SubtitleRegion { ContinuousPresentation = (buffer[idx] & 0b10000000) > 0, Forced = (buffer[idx] & 0b01000000) > 0 };
                     idx++;
                     region.RegionStyleId = buffer[idx++];
                     int regionSubtitleLength = buffer[idx + 1] + (buffer[idx] << 8);
@@ -963,12 +962,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         byte flags = 0;
                         if (subtitleRegion.ContinuousPresentation)
                         {
-                            flags = (byte)(flags | Helper.B10000000);
+                            flags = (byte)(flags | 0b10000000);
                         }
 
                         if (subtitleRegion.Forced)
                         {
-                            flags = (byte)(flags | Helper.B01000000);
+                            flags = (byte)(flags | 0b01000000);
                         }
 
                         ms.WriteByte(flags); // first byte=continuous_present_flag, second byte=force, next 6 bits reserved
@@ -1185,6 +1184,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             return false;
         }
-
     }
 }

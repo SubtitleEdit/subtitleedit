@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 if (!useCustomColors)
                                 {
                                     SetColor(fourColors, 3, imageColor[0] >> 4, colorLookUpTable);
-                                    SetColor(fourColors, 2, imageColor[0] & Helper.B00001111, colorLookUpTable);
+                                    SetColor(fourColors, 2, imageColor[0] & 0b00001111, colorLookUpTable);
                                     SetColor(fourColors, 1, imageColor[1] >> 4, colorLookUpTable);
-                                    SetColor(fourColors, 0, imageColor[1] & Helper.B00001111, colorLookUpTable);
+                                    SetColor(fourColors, 0, imageColor[1] & 0b00001111, colorLookUpTable);
                                 }
                             }
                             commandIndex += 3;
@@ -139,9 +139,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 if (imageContrast[0] + imageContrast[1] > 0)
                                 {
                                     SetTransparency(fourColors, 3, (imageContrast[0] & 0xF0) >> 4);
-                                    SetTransparency(fourColors, 2, imageContrast[0] & Helper.B00001111);
+                                    SetTransparency(fourColors, 2, imageContrast[0] & 0b00001111);
                                     SetTransparency(fourColors, 1, (imageContrast[1] & 0xF0) >> 4);
-                                    SetTransparency(fourColors, 0, imageContrast[1] & Helper.B00001111);
+                                    SetTransparency(fourColors, 0, imageContrast[1] & 0b00001111);
                                 }
                             }
                             commandIndex += 3;
@@ -150,9 +150,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             if (_data.Length > commandIndex + 6 && ImageDisplayArea.Width == 0 && ImageDisplayArea.Height == 0)
                             {
                                 int startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
-                                int endingX = (_data[commandIndex + 2] & Helper.B00001111) << 8 | _data[commandIndex + 3];
+                                int endingX = (_data[commandIndex + 2] & 0b00001111) << 8 | _data[commandIndex + 3];
                                 int startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
-                                int endingY = (_data[commandIndex + 5] & Helper.B00001111) << 8 | _data[commandIndex + 6];
+                                int endingY = (_data[commandIndex + 5] & 0b00001111) << 8 | _data[commandIndex + 6];
                                 ImageDisplayArea = new Rectangle(startingX, startingY, endingX - startingX, endingY - startingY);
                             }
                             commandIndex += 7;
@@ -450,14 +450,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (onlyHalf)
             {
                 byte b3 = data[index + 2];
-                b1 = (byte)(((b1 & Helper.B00001111) << 4) | ((b2 & Helper.B11110000) >> 4));
-                b2 = (byte)(((b2 & Helper.B00001111) << 4) | ((b3 & Helper.B11110000) >> 4));
+                b1 = (byte)(((b1 & 0b00001111) << 4) | ((b2 & 0b11110000) >> 4));
+                b2 = (byte)(((b2 & 0b00001111) << 4) | ((b3 & 0b11110000) >> 4));
             }
 
             if (b1 >> 2 == 0)
             {
                 runLength = (b1 << 6) | (b2 >> 2);
-                color = b2 & Helper.B00000011;
+                color = b2 & 0b00000011;
                 if (runLength == 0)
                 {
                     // rest of line + skip 4 bits if Only half
@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (b1 >> 4 == 0)
             {
                 runLength = (b1 << 2) | (b2 >> 6);
-                color = (b2 & Helper.B00110000) >> 4;
+                color = (b2 & 0b00110000) >> 4;
                 if (onlyHalf)
                 {
                     onlyHalf = false;
@@ -487,12 +487,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (b1 >> 6 == 0)
             {
                 runLength = b1 >> 2;
-                color = b1 & Helper.B00000011;
+                color = b1 & 0b00000011;
                 return 1;
             }
 
             runLength = b1 >> 6;
-            color = (b1 & Helper.B00110000) >> 4;
+            color = (b1 & 0b00110000) >> 4;
 
             if (onlyHalf)
             {
