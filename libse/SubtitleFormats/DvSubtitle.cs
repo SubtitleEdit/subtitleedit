@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
+    /// <summary>
+    /// Used in the nineties by some translation agencies in Serbia.
+    /// </summary>
     public class DvSubtitle : SubtitleFormat
     {
         private static readonly Regex LinePattern = new Regex(@"^c 1 \d{8} \d{8} .+", RegexOptions.Compiled);
@@ -42,8 +45,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private static string WriteText(string text)
+        private static string WriteText(string input)
         {
+            var text = input
+            .Replace("Đ", "\\")
+            .Replace("đ", "|")
+            .Replace("Dž", "Y")
+            .Replace("DŽ", "Y")
+            .Replace("dž", "y")
+            .Replace("dŽ", "y")
+            .Replace("Ž", "@")
+            .Replace("ž", "`")
+            .Replace("Lj", "Q")
+            .Replace("lj", "q")
+            .Replace("Nj", "W")
+            .Replace("nj", "w")
+            .Replace("Ć", "]")
+            .Replace("ć", "}")
+            .Replace("Č", "^")
+            .Replace("č", "~")
+            .Replace("Š", "[")
+            .Replace("š", "{");
+
             var sb = new StringBuilder();
             var lines = text.SplitToLines();
             foreach (var line in lines)
@@ -98,9 +121,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private string ReadText(string input)
+        private static string ReadText(string input)
         {
-            var arr = input.TrimEnd('0').Replace("' '", "\n").SplitToLines();
+            var text = input
+                .Replace("\\", "Đ")
+                .Replace("|", "đ")
+                .Replace("@", "Ž")
+                .Replace("`", "ž")
+                .Replace("Q", "Lj")
+                .Replace("q", "lj")
+                .Replace("W", "Nj")
+                .Replace("w", "nj")
+                .Replace("]", "Ć")
+                .Replace("}", "ć")
+                .Replace("^", "Č")
+                .Replace("~", "č")
+                .Replace("Y", "Dž")
+                .Replace("y", "dž")
+                .Replace("[", "Š")
+                .Replace("{", "š");
+
+            text = new Regex("ž(\\p{Lu})").Replace(text, "Ž$1");
+            text = new Regex("(\\p{Lu}\\p{Lu})ž").Replace(text, "$1Ž");
+
+            var arr = text.TrimEnd('0').Replace("' '", "\n").SplitToLines();
             var sb = new StringBuilder();
             for (var index = 0; index < arr.Count; index++)
             {
