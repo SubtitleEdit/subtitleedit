@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                             _stdOutWriter.WriteLine($"ERROR: Unexpected argument '{argument}'.");
                         }
                     }
-                    throw new Exception(string.Empty);
+                    throw new ArgumentException();
                 }
 
                 var formats = SubtitleFormat.AllSubtitleFormats.ToList();

@@ -7,10 +7,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 {
     public class DvbSubPes
     {
-        public const int HeaderLength = 6;
-        public const int Mpeg2HeaderLength = 14;
-        public const int DefaultScreenWidth = 720;
-        public const int DefaultScreenHeight = 576;
+        public static readonly int HeaderLength = 6;
+        public static readonly int Mpeg2HeaderLength = 14;
+        public static readonly int DefaultScreenWidth = 720;
+        public static readonly int DefaultScreenHeight = 576;
 
         public int Length { get; }
         public ulong? PresentationTimestamp { get; }
