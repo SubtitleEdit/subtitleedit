@@ -202,7 +202,10 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsTurkish =
         {
-            "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "çalýþýyor", "burada", "efendim"
+            "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "çalýþýyor", "Aldırma",
+            "burada", "efendim", "şey", "çok", "Çok", "için", "Merhaba", "Evet", "kötü", "musun",
+            "güzel", "çünkü", "büyük", "Bebeğim", "olduğunu", "istiyorum", "değilsin", "bilmiyorum",
+            "otursana", "Selam", "Tabii","konuda","istiyor","Tetekkürler", "istemiyorum", "Gerçekte"
         };
 
         private static readonly string[] AutoDetectWordsCroatianAndSerbian =
@@ -1210,6 +1213,14 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     var portugueseCount28591 = GetCount(encoding28591.GetString(buffer), AutoDetectWordsPortuguese);
                     return portugueseCount28591 > portugueseCount1252 ? encoding28591 : encoding1252;
+                }
+
+                var encoding1254 = Encoding.GetEncoding(1254);
+                var turkishText = encoding1254.GetString(buffer);
+                var turkish1254Count = GetCount(turkishText, AutoDetectWordsTurkish);
+                if (turkish1254Count > wordMinCount)
+                {
+                    return encoding1254;
                 }
 
                 var encoding = EncodingTools.DetectInputCodepage(buffer);
