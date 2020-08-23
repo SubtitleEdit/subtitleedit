@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Core
 {
     public static class SccPositionAndStyleTable
     {
-        public static readonly List<SccPositionAndStyle> SccPositionAndStyles = new List<SccPositionAndStyle>
+        public static readonly ReadOnlyCollection<SccPositionAndStyle> SccPositionAndStyles =
+            new ReadOnlyCollection<SccPositionAndStyle>(new List<SccPositionAndStyle>
         {
             //NO x-coordinate?
             new SccPositionAndStyle(Color.White, FontStyle.Regular, 01, 0, "1140"),
@@ -736,6 +738,6 @@ namespace Nikse.SubtitleEdit.Core
             new SccPositionAndStyle(Color.Transparent, FontStyle.Italic | FontStyle.Underline, -1, -1, "912f"),
 
             new SccPositionAndStyle(Color.Transparent, FontStyle.Regular, -1, -1, "94a8"), // turn flash on
-        };
+        });
     }
 }
