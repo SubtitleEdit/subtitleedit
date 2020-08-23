@@ -1,5 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.VobSub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -425,15 +424,15 @@ namespace Nikse.SubtitleEdit.Core
 
         private static void WriteRle(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
         {
-            if (count <= Helper.B00000011) // 1-3 repetitions
+            if (count <= 0b00000011) // 1-3 repetitions
             {
                 WriteOneNibble(buffer, count, lastColor, ref index, ref indexHalfNibble);
             }
-            else if (count <= Helper.B00001111) // 4-15 repetitions
+            else if (count <= 0b00001111) // 4-15 repetitions
             {
                 WriteTwoNibbles(buffer, count, lastColor, ref index, indexHalfNibble);
             }
-            else if (count <= Helper.B00111111) // 4-15 repetitions
+            else if (count <= 0b00111111) // 4-15 repetitions
             {
                 WriteThreeNibbles(buffer, count, lastColor, ref index, ref indexHalfNibble); // 16-63 repetitions
             }
@@ -462,7 +461,7 @@ namespace Nikse.SubtitleEdit.Core
                 var firstNibble = (byte)(n >> 4);
                 buffer[index] = firstNibble;
                 index++;
-                var secondNibble = (byte)((n & Helper.B00001111) << 4);
+                var secondNibble = (byte)((n & 0b00001111) << 4);
                 buffer[index] = secondNibble;
             }
             else
@@ -470,7 +469,7 @@ namespace Nikse.SubtitleEdit.Core
                 var firstNibble = (byte)(n >> 8);
                 buffer[index] = firstNibble;
                 index++;
-                var secondNibble = (byte)(n & Helper.B11111111);
+                var secondNibble = (byte)(n & 0b11111111);
                 buffer[index] = secondNibble;
                 index++;
             }
@@ -491,7 +490,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 buffer[index] = (byte)(n >> 4);
                 index++;
-                buffer[index] = (byte)((n & Helper.B00011111) << 4);
+                buffer[index] = (byte)((n & 0b00011111) << 4);
             }
 
             indexHalfNibble = !indexHalfNibble;
@@ -506,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var firstNibble = (byte)(n >> 4);
                 buffer[index] = (byte)(buffer[index] | firstNibble);
-                var secondNibble = (byte)((n & Helper.B00001111) << 4);
+                var secondNibble = (byte)((n & 0b00001111) << 4);
                 index++;
                 buffer[index] = secondNibble;
             }

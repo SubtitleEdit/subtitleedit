@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public byte LanguageTag { get; set; }
             public string DisplayMode { get; set; }
             public byte DisplayModeControl { get; set; }
-            public string Iso639Languagecode { get; set; }
+            public string Iso639LanguageCode { get; set; }
             public byte Format { get; set; }
             public string CharacterEncoding { get; set; }
             public string RollupMode { get; set; }
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public CaptionTextPageManagement(byte[] buffer, int index)
             {
                 DataGroupId = (byte)(buffer[index] >> 2);
-                DataGroupVersion = (byte)(buffer[index] & VobSub.Helper.B00000011);
+                DataGroupVersion = (byte)(buffer[index] & 0b00000011);
                 DataGroupLinkNumber = buffer[index + 1];
                 LastDataGroupLinkNumber = buffer[index + 2];
                 DataGroupSize = (buffer[index + 3] << 8) + buffer[index + 4];
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 NumberOfLanguages = buffer[index + 12];
                 LanguageTag = (byte)(buffer[index + 13] >> 5);
                 DisplayModeControl = buffer[index + 13];
-                Iso639Languagecode = Encoding.ASCII.GetString(buffer, index + 14, 3);
+                Iso639LanguageCode = Encoding.ASCII.GetString(buffer, index + 14, 3);
                 Format = (byte)(buffer[index + 18] >> 4);
             }
         }
@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public CaptionText(byte[] buffer, int index, string languageCode)
             {
                 DataGroupId = (byte)(buffer[index] >> 2);
-                DataGroupVersion = (byte)(buffer[index] & VobSub.Helper.B00000011);
+                DataGroupVersion = (byte)(buffer[index] & 0b00000011);
                 DataGroupLinkNumber = buffer[index + 1];
                 LastDataGroupLinkNumber = buffer[index + 2];
                 DataGroupSize = (buffer[index + 3] << 8) + buffer[index + 4];
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var subtitleDataLength = (buffer[index++] << 8) + buffer[index++];
                             try
                             {
-                                var captionText = new CaptionText(buffer, index, captionTextPageManagement.Iso639Languagecode);
+                                var captionText = new CaptionText(buffer, index, captionTextPageManagement.Iso639LanguageCode);
                                 var p = new Paragraph
                                 {
                                     StartTime = pageManagementInformation.GetStartTime(),

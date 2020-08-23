@@ -98,12 +98,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ContinuityCounter = packetBuffer[3] & 15;
             AdaptionFieldLength = AdaptationFieldControl > 1 ? (0xFF & packetBuffer[4]) + 1 : 0;
 
-            if (AdaptationFieldControl == Helper.B00000010 || AdaptationFieldControl == Helper.B00000011)
+            if (AdaptationFieldControl == 0b00000010 || AdaptationFieldControl == 0b00000011)
             {
                 AdaptationField = new AdaptationField(packetBuffer);
             }
 
-            if (AdaptationFieldControl == Helper.B00000001 || AdaptationFieldControl == Helper.B00000011) // Payload exists -  binary '01' || '11'
+            if (AdaptationFieldControl == 0b00000001 || AdaptationFieldControl == 0b00000011) // Payload exists -  binary '01' || '11'
             {
                 int payloadStart = 4;
                 if (AdaptationField != null)

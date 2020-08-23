@@ -14,7 +14,7 @@
         public DisplayDefinitionSegment(byte[] buffer, int index)
         {
             DisplayDefinitionVersionNumber = buffer[index] >> 4;
-            DisplayWindowFlag = (buffer[index] & Helper.B00001000) > 0;
+            DisplayWindowFlag = (buffer[index] & 0b00001000) > 0;
             DisplayWith = Helper.GetEndianWord(buffer, index + 1);
             DisplayHeight = Helper.GetEndianWord(buffer, index + 3);
             if (DisplayWindowFlag)
@@ -25,6 +25,5 @@
                 DisplayWindowVerticalPositionMaximum = Helper.GetEndianWord(buffer, index + 11);
             }
         }
-
     }
 }

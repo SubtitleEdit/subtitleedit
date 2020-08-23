@@ -28,17 +28,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 index++;
             }
             TableId = packetBuffer[index];
-            SectionLength = (packetBuffer[index + 1] & Helper.B00000011) * 256 + packetBuffer[index + 2];
+            SectionLength = (packetBuffer[index + 1] & 0b00000011) * 256 + packetBuffer[index + 2];
             ProgramNumber = packetBuffer[index + 3] * 256 + packetBuffer[index + 4];
-            VersionNumber = (packetBuffer[index + 5] & Helper.B00111110) >> 1;
+            VersionNumber = (packetBuffer[index + 5] & 0b00111110) >> 1;
             CurrentNextIndicator = packetBuffer[index + 5] & 1;
             SectionNumber = packetBuffer[index + 6];
             LastSectionNumber = packetBuffer[index + 7];
-            PcrId = (packetBuffer[index + 8] & Helper.B00011111) * 256 + packetBuffer[index + 9];
-            var programInfoLength = (packetBuffer[index + 10] & Helper.B00001111) * 256 + packetBuffer[index + 11];
+            PcrId = (packetBuffer[index + 8] & 0b00011111) * 256 + packetBuffer[index + 9];
+            var programInfoLength = (packetBuffer[index + 10] & 0b00001111) * 256 + packetBuffer[index + 11];
 
             Descriptors = ProgramMapTableDescriptor.ReadDescriptors(packetBuffer, programInfoLength, index + 12);
-            var newIndex = index + 12 +  Descriptors.Sum(p => p.Size);
+            var newIndex = index + 12 + Descriptors.Sum(p => p.Size);
             Streams = new List<ProgramMapTableStream>();
             while (newIndex - index < SectionLength - 4)
             {

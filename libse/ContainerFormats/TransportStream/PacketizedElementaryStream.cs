@@ -40,18 +40,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             StreamId = buffer[index + 3];
             Length = Helper.GetEndianWord(buffer, index + 4);
 
-            ScramblingControl = (buffer[index + 6] >> 4) & Helper.B00000011;
-            Priority = buffer[index + 6] & Helper.B00001000;
-            DataAlignmentIndicator = buffer[index + 6] & Helper.B00000100;
-            Copyright = buffer[index + 6] & Helper.B00000010;
-            OriginalOrCopy = buffer[index + 6] & Helper.B00000001;
+            ScramblingControl = (buffer[index + 6] >> 4) & 0b00000011;
+            Priority = buffer[index + 6] & 0b00001000;
+            DataAlignmentIndicator = buffer[index + 6] & 0b00000100;
+            Copyright = buffer[index + 6] & 0b00000010;
+            OriginalOrCopy = buffer[index + 6] & 0b00000001;
             PresentationTimestampDecodeTimestampFlags = buffer[index + 7] >> 6;
-            ElementaryStreamClockReferenceFlag = buffer[index + 7] & Helper.B00100000;
-            EsRateFlag = buffer[index + 7] & Helper.B00010000;
-            DsmTrickModeFlag = buffer[index + 7] & Helper.B00001000;
-            AdditionalCopyInfoFlag = buffer[index + 7] & Helper.B00000100;
-            CrcFlag = buffer[index + 7] & Helper.B00001000;
-            ExtensionFlag = buffer[index + 7] & Helper.B00000010;
+            ElementaryStreamClockReferenceFlag = buffer[index + 7] & 0b00100000;
+            EsRateFlag = buffer[index + 7] & 0b00010000;
+            DsmTrickModeFlag = buffer[index + 7] & 0b00001000;
+            AdditionalCopyInfoFlag = buffer[index + 7] & 0b00000100;
+            CrcFlag = buffer[index + 7] & 0b00001000;
+            ExtensionFlag = buffer[index + 7] & 0b00000010;
 
             HeaderDataLength = buffer[index + 8];
 
@@ -65,15 +65,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             int tempIndex = index + 9;
-            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
-                PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == 0b00000010 ||
+                PresentationTimestampDecodeTimestampFlags == 0b00000011)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
                 PresentationTimestamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
-            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == 0b00000011)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);

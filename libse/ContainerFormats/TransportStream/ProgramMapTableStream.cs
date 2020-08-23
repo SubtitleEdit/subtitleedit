@@ -18,10 +18,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             StreamType = data[index];
 
             // 13 bytes (skip first 3)
-            ElementaryPid = (data[index + 1] & Helper.B00011111) * 256 + // first 5 bytes
+            ElementaryPid = (data[index + 1] & 0b00011111) * 256 + // first 5 bytes
                             data[index + 2]; // last 8 bytes
 
-            var esInfoLength = (data[index + 3] & Helper.B00001111) * 256 + // first 5 bytes
+            var esInfoLength = (data[index + 3] & 0b00001111) * 256 + // first 5 bytes
                                data[index + 4]; // last 8 bytes
 
             Descriptors = ProgramMapTableDescriptor.ReadDescriptors(data, esInfoLength, index + 5);

@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -72,8 +71,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 X = buffer[4] << 8 | buffer[5];
                 Y = buffer[6] << 8 | buffer[7];
                 NumberOfColoredPixels = buffer[8] << 8 | buffer[9];
-                Italic = (buffer[10] & Helper.B10000000) > 0;
-                ExpandCount = buffer[10] & Helper.B01111111;
+                Italic = (buffer[10] & 0b10000000) > 0;
+                ExpandCount = buffer[10] & 0b01111111;
                 Hash = (uint)(buffer[11] << 24 | buffer[12] << 16 | buffer[13] << 8 | buffer[14]);
                 int textLen = buffer[15];
                 if (textLen > 0)
@@ -162,10 +161,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
             WriteInt16(stream, (ushort)NumberOfColoredPixels);
 
-            byte flags = (byte)(ExpandCount & Helper.B01111111);
+            byte flags = (byte)(ExpandCount & 0b01111111);
             if (Italic)
             {
-                flags = (byte)(flags + Helper.B10000000);
+                flags = (byte)(flags + 0b10000000);
             }
 
             stream.WriteByte(flags);
