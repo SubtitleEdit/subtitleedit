@@ -150,7 +150,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch
             {
                 _errorCount = 1;
-                return;
             }
         }
 
