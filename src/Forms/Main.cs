@@ -15095,7 +15095,15 @@ namespace Nikse.SubtitleEdit.Forms
                         historyAdded = true;
                     }
 
-                    p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestStartTimeWithGap);
+                    if (Configuration.Settings.General.ExtendToSceneChangeBehavior == 0)
+                    {
+                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestStartTimeWithGap);
+                    }
+                    else
+                    {
+                        var twoFrames = Math.Round(2 * 1000 / CurrentFrameRate);
+                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - twoFrames, nearestStartTimeWithGap);
+                    }
 
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {

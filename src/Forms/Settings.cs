@@ -489,6 +489,27 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxSplitBehavior.DropDownWidth = dropDownSplitBehaviorWidth;
 
+            comboBoxExtendToSceneChangeBehavior.Items.Clear();
+            comboBoxExtendToSceneChangeBehavior.Items.Add(language.ExtendToSceneChangeBehaviorNormal);
+            comboBoxExtendToSceneChangeBehavior.Items.Add(language.ExtendToSceneChangeBehaviorTwoFrames);
+            comboBoxExtendToSceneChangeBehavior.SelectedIndex = gs.ExtendToSceneChangeBehavior;
+            labelExtendToSceneChangeBehavior.Text = language.ExtendToSceneChangeBehavior;
+            comboBoxExtendToSceneChangeBehavior.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
+            if (labelExtendToSceneChangeBehavior.Width > labelTimeCodeMode.Width)
+            {
+                comboBoxExtendToSceneChangeBehavior.Left = labelExtendToSceneChangeBehavior.Left + labelExtendToSceneChangeBehavior.Width + 4;
+            }
+
+            var dropDownExtendToSceneChangeBehaviorWidth = comboBoxExtendToSceneChangeBehavior.Width;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                foreach (var item in comboBoxExtendToSceneChangeBehavior.Items)
+                {
+                    var itemWidth = (int)g.MeasureString((string)item, Font).Width + 5;
+                    dropDownExtendToSceneChangeBehaviorWidth = Math.Max(itemWidth, dropDownExtendToSceneChangeBehaviorWidth);
+                }
+            }
+            comboBoxExtendToSceneChangeBehavior.DropDownWidth = dropDownExtendToSceneChangeBehaviorWidth;
 
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
@@ -1708,6 +1729,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             gs.SplitBehavior = comboBoxSplitBehavior.SelectedIndex;
+
+            gs.ExtendToSceneChangeBehavior = comboBoxExtendToSceneChangeBehavior.SelectedIndex;
 
             gs.SpellChecker = comboBoxSpellChecker.SelectedIndex == 1 ? "word" : "hunspell";
 

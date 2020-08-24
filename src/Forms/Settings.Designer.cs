@@ -36,6 +36,8 @@
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.labelSplitBehavior = new System.Windows.Forms.Label();
             this.comboBoxSplitBehavior = new System.Windows.Forms.ComboBox();
+            this.labelExtendToSceneChangeBehavior = new System.Windows.Forms.Label();
+            this.comboBoxExtendToSceneChangeBehavior = new System.Windows.Forms.ComboBox();
             this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
             this.comboBoxSaveAsFileNameFrom = new System.Windows.Forms.ComboBox();
             this.labelSaveAsFileNameFrom = new System.Windows.Forms.Label();
@@ -471,7 +473,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(506, 563);
+            this.buttonOK.Location = new System.Drawing.Point(506, 572);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 0;
@@ -483,7 +485,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(587, 563);
+            this.buttonCancel.Location = new System.Drawing.Point(587, 572);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 1;
@@ -510,7 +512,7 @@
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
-            this.tabControlSettings.Size = new System.Drawing.Size(840, 546);
+            this.tabControlSettings.Size = new System.Drawing.Size(840, 555);
             this.tabControlSettings.TabIndex = 2;
             this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
             // 
@@ -520,7 +522,7 @@
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(832, 520);
+            this.tabPageGeneral.Size = new System.Drawing.Size(832, 529);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -532,6 +534,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMiscellaneous.Controls.Add(this.labelSplitBehavior);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSplitBehavior);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelExtendToSceneChangeBehavior);
+            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxExtendToSceneChangeBehavior);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAutoSave);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSaveAsFileNameFrom);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSaveAsFileNameFrom);
@@ -566,7 +570,7 @@
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(6, 6);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
-            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 508);
+            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 517);
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
@@ -589,13 +593,31 @@
             this.comboBoxSplitBehavior.Size = new System.Drawing.Size(207, 21);
             this.comboBoxSplitBehavior.TabIndex = 21;
             // 
+            // labelExtendToSceneChangeBehavior
+            // 
+            this.labelExtendToSceneChangeBehavior.AutoSize = true;
+            this.labelExtendToSceneChangeBehavior.Location = new System.Drawing.Point(438, 318);
+            this.labelExtendToSceneChangeBehavior.Name = "labelExtendToSceneChangeBehavior";
+            this.labelExtendToSceneChangeBehavior.Size = new System.Drawing.Size(72, 13);
+            this.labelExtendToSceneChangeBehavior.TabIndex = 22;
+            this.labelExtendToSceneChangeBehavior.Text = "Scene Change Behavior";
+            // 
+            // comboBoxExtendToSceneChangeBehavior
+            // 
+            this.comboBoxExtendToSceneChangeBehavior.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExtendToSceneChangeBehavior.FormattingEnabled = true;
+            this.comboBoxExtendToSceneChangeBehavior.Location = new System.Drawing.Point(528, 315);
+            this.comboBoxExtendToSceneChangeBehavior.Name = "comboBoxExtendToSceneChangeBehavior";
+            this.comboBoxExtendToSceneChangeBehavior.Size = new System.Drawing.Size(207, 21);
+            this.comboBoxExtendToSceneChangeBehavior.TabIndex = 23;
+            // 
             // checkBoxAutoSave
             // 
             this.checkBoxAutoSave.AutoSize = true;
-            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 453);
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 483);
             this.checkBoxAutoSave.Name = "checkBoxAutoSave";
             this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
-            this.checkBoxAutoSave.TabIndex = 30;
+            this.checkBoxAutoSave.TabIndex = 32;
             this.checkBoxAutoSave.Text = "Auto save";
             this.checkBoxAutoSave.UseVisualStyleBackColor = true;
             // 
@@ -603,18 +625,18 @@
             // 
             this.comboBoxSaveAsFileNameFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSaveAsFileNameFrom.FormattingEnabled = true;
-            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(441, 386);
+            this.comboBoxSaveAsFileNameFrom.Location = new System.Drawing.Point(441, 417);
             this.comboBoxSaveAsFileNameFrom.Name = "comboBoxSaveAsFileNameFrom";
             this.comboBoxSaveAsFileNameFrom.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxSaveAsFileNameFrom.TabIndex = 25;
+            this.comboBoxSaveAsFileNameFrom.TabIndex = 27;
             // 
             // labelSaveAsFileNameFrom
             // 
             this.labelSaveAsFileNameFrom.AutoSize = true;
-            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(438, 370);
+            this.labelSaveAsFileNameFrom.Location = new System.Drawing.Point(438, 401);
             this.labelSaveAsFileNameFrom.Name = "labelSaveAsFileNameFrom";
             this.labelSaveAsFileNameFrom.Size = new System.Drawing.Size(160, 13);
-            this.labelSaveAsFileNameFrom.TabIndex = 24;
+            this.labelSaveAsFileNameFrom.TabIndex = 26;
             this.labelSaveAsFileNameFrom.Text = "\"Save as...\" will take name from";
             // 
             // groupBoxGeneralRules
@@ -1027,27 +1049,27 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 421);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 452);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
-            this.comboBoxAutoBackupDeleteAfter.TabIndex = 29;
+            this.comboBoxAutoBackupDeleteAfter.TabIndex = 31;
             // 
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 424);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 455);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
-            this.labelAutoBackupDeleteAfter.TabIndex = 28;
+            this.labelAutoBackupDeleteAfter.TabIndex = 30;
             this.labelAutoBackupDeleteAfter.Text = "Delete after";
             // 
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 453);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(522, 483);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxCheckForUpdates.TabIndex = 31;
+            this.checkBoxCheckForUpdates.TabIndex = 33;
             this.checkBoxCheckForUpdates.Text = "Check for updates";
             this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
@@ -1165,18 +1187,18 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 421);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 452);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAutoBackup.TabIndex = 27;
+            this.comboBoxAutoBackup.TabIndex = 29;
             // 
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 424);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 455);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
-            this.labelAutoBackup.TabIndex = 26;
+            this.labelAutoBackup.TabIndex = 28;
             this.labelAutoBackup.Text = "Auto-backup";
             // 
             // checkBoxRememberSelectedLine
@@ -1217,18 +1239,18 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 337);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 368);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxListViewDoubleClickEvent.TabIndex = 23;
+            this.comboBoxListViewDoubleClickEvent.TabIndex = 25;
             // 
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 321);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 352);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
-            this.labelListViewDoubleClickEvent.TabIndex = 22;
+            this.labelListViewDoubleClickEvent.TabIndex = 24;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
             // labelShowLineBreaksAs
@@ -4673,7 +4695,7 @@
             // buttonReset
             // 
             this.buttonReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonReset.Location = new System.Drawing.Point(668, 563);
+            this.buttonReset.Location = new System.Drawing.Point(668, 572);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(185, 23);
             this.buttonReset.TabIndex = 2;
@@ -4691,7 +4713,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(865, 598);
+            this.ClientSize = new System.Drawing.Size(865, 607);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.tabControlSettings);
@@ -5173,6 +5195,8 @@
         private System.Windows.Forms.CheckBox checkBoxWaveformSingleClickSelect;
         private System.Windows.Forms.Label labelSplitBehavior;
         private System.Windows.Forms.ComboBox comboBoxSplitBehavior;
+        private System.Windows.Forms.Label labelExtendToSceneChangeBehavior;
+        private System.Windows.Forms.ComboBox comboBoxExtendToSceneChangeBehavior;
         private System.Windows.Forms.Button buttonLineWidthSettings;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextTooWide;
         private System.Windows.Forms.Label labelContinuationStyle;

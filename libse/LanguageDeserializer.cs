@@ -5074,6 +5074,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SplitBehaviorNext":
                     language.Settings.SplitBehaviorNext = reader.Value;
                     break;
+                case "Settings/ExtendToSceneChangeBehavior":
+                    language.Settings.ExtendToSceneChangeBehavior = reader.Value;
+                    break;
+                case "Settings/ExtendToSceneChangeBehaviorNormal":
+                    language.Settings.ExtendToSceneChangeBehaviorNormal = reader.Value;
+                    break;
+                case "Settings/ExtendToSceneChangeBehaviorTwoFrames":
+                    language.Settings.ExtendToSceneChangeBehaviorTwoFrames = reader.Value;
+                    break;
                 case "Settings/VideoEngine":
                     language.Settings.VideoEngine = reader.Value;
                     break;

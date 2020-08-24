@@ -2049,6 +2049,9 @@
             public string SplitBehaviorPrevious { get; set; }
             public string SplitBehaviorHalf { get; set; }
             public string SplitBehaviorNext { get; set; }
+            public string ExtendToSceneChangeBehavior { get; set; }
+            public string ExtendToSceneChangeBehaviorNormal { get; set; }
+            public string ExtendToSceneChangeBehaviorTwoFrames { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }

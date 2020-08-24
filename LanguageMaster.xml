@@ -1884,6 +1884,9 @@ can edit in same subtitle file (collaboration)</Information>
     <SplitBehaviorPrevious>Add gap to the left of split point (focus right)</SplitBehaviorPrevious>
     <SplitBehaviorHalf>Add gap in the center of split point (focus left)</SplitBehaviorHalf>
     <SplitBehaviorNext>Add gap to the right of split point (focus left)</SplitBehaviorNext>
+    <ExtendToSceneChangeBehavior>Extend behavior</ExtendToSceneChangeBehavior>
+    <ExtendToSceneChangeBehaviorNormal>To next scene change</ExtendToSceneChangeBehaviorNormal>
+    <ExtendToSceneChangeBehaviorTwoFrames>Two frames before next scene change (NETFLIX)</ExtendToSceneChangeBehaviorTwoFrames>
     <VideoEngine>Video engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
