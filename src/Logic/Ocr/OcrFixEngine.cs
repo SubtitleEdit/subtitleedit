@@ -1504,6 +1504,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
                             }
                         }
+
+                        if (!correct && _spellCheckWordLists.HasUserWord("-" + word))
+                        {
+                            correct = true;
+                        }
                     }
 
                     if (!correct && word.Contains('/') && !word.Contains("//", StringComparison.Ordinal))
