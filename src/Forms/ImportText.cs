@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = buttonOpenText.Text;
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
             {
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.rtf|" + Configuration.Settings.Language.General.AllFiles + " |*.*";
             }
             else
             {
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _startFromNumber = 1;
                 if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 {
-                    foreach (string fileName in openFileDialog1.FileNames)
+                    foreach (var fileName in openFileDialog1.FileNames)
                     {
                         AddInputFile(fileName);
                     }
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var lines = html
                 .Replace($"<br />{Environment.NewLine}", "<br />")
-                .Replace($"<br />\\n", "<br />")
+                .Replace("<br />\\n", "<br />")
                 .SplitToLines();
 
             // A line will look like this: #1:4:06,288->4:09,375<div style='text-align:center'><img src='0001.png' /><br /><div style='font-size:22px; background-color:LightGreen'>My mommy always said<br />there were no monsters.</div></div><br /><hr />
@@ -273,8 +273,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var indexOfFirstDiv = line.IndexOf("<div", StringComparison.OrdinalIgnoreCase);
                 if (indexOfText > 0 && indexOfFirstColon > 0 && indexOfTimeSplit > 0 && indexOfFirstDiv > 0)
                 {
-                    var start = line.Substring(indexOfFirstColon + 1, indexOfTimeSplit - indexOfFirstColon -1);
-                    var end = line.Substring(indexOfTimeSplit + 2, indexOfFirstDiv - indexOfTimeSplit -2);
+                    var start = line.Substring(indexOfFirstColon + 1, indexOfTimeSplit - indexOfFirstColon - 1);
+                    var end = line.Substring(indexOfTimeSplit + 2, indexOfFirstDiv - indexOfTimeSplit - 2);
                     var text = line.Substring(indexOfText + 1)
                         .Replace("</div>", string.Empty)
                         .Replace("<hr />", string.Empty)
@@ -303,11 +303,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (parts.Length == 3)
                 {
-                    return new TimeCode(0,  int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])).TotalMilliseconds;
+                    return new TimeCode(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2])).TotalMilliseconds;
                 }
                 if (parts.Length == 4)
                 {
-                    return new TimeCode( int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])).TotalMilliseconds;
+                    return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])).TotalMilliseconds;
                 }
             }
             catch
@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = line.Replace("|", Environment.NewLine);
                 if (comboBoxLineBreak.Text.Length > 0)
                 {
-                    foreach (string splitter in comboBoxLineBreak.Text.Split(';'))
+                    foreach (var splitter in comboBoxLineBreak.Text.Split(';'))
                     {
                         var tempSplitter = splitter.Trim();
                         if (tempSplitter.Length > 0)
@@ -648,8 +648,8 @@ namespace Nikse.SubtitleEdit.Forms
             text = string.Empty;
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
             {
-                var breaked = Utilities.AutoBreakLine(input).SplitToLines();
-                if (breaked.Count == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                var splitLines = Utilities.AutoBreakLine(input).SplitToLines();
+                if (splitLines.Count == 2 && (splitLines[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || splitLines[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     var first = new StringBuilder();
                     var second = new StringBuilder();
@@ -736,9 +736,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Paragraph p = null;
-            if (CanMakeThreeLiner(out var threeliner, sb.ToString()))
+            if (CanMakeThreeLiner(out var threeLiner, sb.ToString()))
             {
-                var parts = threeliner.SplitToLines();
+                var parts = threeLiner.SplitToLines();
                 FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
                 FixedSubtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
                 return;
@@ -856,7 +856,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tagWhiteSpaceRegex = new Regex(@"(>|$)(\W|\n|\r)+<", RegexOptions.Multiline); // matches one or more (white space or line breaks) between '>' and '<'
 
             // Decode html specific characters
-            var text = System.Net.WebUtility.HtmlDecode(html);
+            var text = WebUtility.HtmlDecode(html);
 
             // Remove tag whitespace/line breaks
             text = tagWhiteSpaceRegex.Replace(text, "><");
@@ -884,11 +884,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 var text = FileUtil.ReadAllTextShared(fileName, encoding);
                 if (fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                 {
                     text = HtmlToPlainText(text);
+                }
+                if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase))
+                {
+                    text = GetRtfString(fileName);
                 }
 
                 return text;
@@ -933,6 +937,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadRtf(string fileName)
         {
+            try
+            {
+                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
+                labelStatus.Refresh();
+                textBoxText.Text = GetRtfString(fileName);
+                SetVideoFileName(fileName);
+                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                GeneratePreview();
+            }
+            finally
+            {
+                labelStatus.Text = string.Empty;
+            }
+        }
+
+        private static string GetRtfString(string fileName)
+        {
             const int bomHeaderLength = 3;
             var encoding = FileUtil.HasUtf8Bom(fileName) ? Encoding.UTF8 : Encoding.ASCII;
             var bytes = FileUtil.ReadAllBytesShared(fileName);
@@ -941,15 +962,78 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 rtf = encoding.GetString(bytes, bomHeaderLength, bytes.Length - bomHeaderLength);
             }
+
             using (var rtb = new RichTextBox { Rtf = rtf })
             {
-                textBoxText.Text = string.Join(Environment.NewLine, rtb.Text.SplitToLines());
-            }
-            SetVideoFileName(fileName);
-            Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
-            GeneratePreview();
-        }
+                var sb = new StringBuilder();
+                bool italicOn = false;
+                bool boldOn = false;
+                bool underlineOn = false;
+                for (int i = 0; i < rtb.TextLength; i++)
+                {
+                    rtb.SelectionStart = i;
+                    rtb.SelectionLength = 1;
+                    if (rtb.SelectionFont.Italic)
+                    {
+                        if (!italicOn)
+                        {
+                            sb.Append("<i>");
+                            italicOn = true;
+                        }
+                    }
+                    else
+                    {
+                        if (italicOn)
+                        {
+                            sb.Append("</i>");
+                            italicOn = false;
+                        }
+                    }
 
+                    if (rtb.SelectionFont.Bold)
+                    {
+                        if (!boldOn)
+                        {
+                            sb.Append("<b>");
+                            boldOn = true;
+                        }
+                    }
+                    else
+                    {
+                        if (boldOn)
+                        {
+                            sb.Append("</b>");
+                            boldOn = false;
+                        }
+                    }
+
+                    if (rtb.SelectionFont.Underline)
+                    {
+                        if (!underlineOn)
+                        {
+                            sb.Append("<u>");
+                            underlineOn = true;
+                        }
+                    }
+                    else
+                    {
+                        if (underlineOn)
+                        {
+                            sb.Append("</u>");
+                            underlineOn = false;
+                        }
+                    }
+
+                    sb.Append(rtb.SelectedText);
+                }
+
+                var text = sb.ToString();
+                text = text.Replace(" </i>", "</i> ");
+                text = text.Replace(" </b>", "</b> ");
+                text = text.Replace(" </u>", "</u> ");
+                return string.Join(Environment.NewLine, text.SplitToLines());
+            }
+        }
 
         private void LoadAdobeStory(string fileName)
         {
