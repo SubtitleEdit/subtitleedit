@@ -91,16 +91,18 @@
             // 
             // textBoxOcrFixValue
             // 
+            this.textBoxOcrFixValue.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxOcrFixValue.Location = new System.Drawing.Point(141, 29);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(120, 20);
+            this.textBoxOcrFixValue.Size = new System.Drawing.Size(120, 21);
             this.textBoxOcrFixValue.TabIndex = 47;
             // 
             // textBoxOcrFixKey
             // 
+            this.textBoxOcrFixKey.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxOcrFixKey.Location = new System.Drawing.Point(15, 29);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(120, 20);
+            this.textBoxOcrFixKey.Size = new System.Drawing.Size(120, 21);
             this.textBoxOcrFixKey.TabIndex = 46;
             // 
             // AddToOcrReplaceList
