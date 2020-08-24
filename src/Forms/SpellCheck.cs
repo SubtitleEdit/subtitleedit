@@ -666,8 +666,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!correct && _wordsIndex > 1 && _words.Count > _wordsIndex &&
                                 _words[_wordsIndex - 1].Text.ToLowerInvariant() == "www" &&
-                                (_words[_wordsIndex + 1].Text.ToLowerInvariant() == "com" || 
-                                 _words[_wordsIndex + 1].Text.ToLowerInvariant() == "org" || 
+                                (_words[_wordsIndex + 1].Text.ToLowerInvariant() == "com" ||
+                                 _words[_wordsIndex + 1].Text.ToLowerInvariant() == "org" ||
                                  _words[_wordsIndex + 1].Text.ToLowerInvariant() == "net") &&
                                 _currentParagraph.Text.IndexOf(_words[_wordsIndex - 1].Text + "." +
                                                                _currentWord + "." +
@@ -711,6 +711,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (!correct)
                                 {
                                     correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
+                                }
+
+                                if (!correct && _spellCheckWordLists.HasUserWord("-" + _currentWord))
+                                {
+                                    correct = true;
                                 }
                             }
                             if (!correct && _wordsIndex < _words.Count - 1 && (_currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '-' || _currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '‑'))
