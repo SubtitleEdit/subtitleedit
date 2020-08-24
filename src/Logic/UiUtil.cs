@@ -463,31 +463,35 @@ namespace Nikse.SubtitleEdit.Logic
                     font = new Font(Configuration.DefaultLinuxFontName, 8F);
                 }
 
-                try
+                if (IsFontPresent(font.Name))
                 {
-                    // Bold + italic + regular must be present
-                    font = new Font(font.Name, 9, FontStyle.Bold);
-                    font = new Font(font.Name, 9, FontStyle.Italic);
-                    font = new Font(font.Name, 9, FontStyle.Regular);
+                    _defaultSystemFont = font;
                 }
-                catch
+                else if (IsFontPresent(SystemFonts.DefaultFont.Name)) // system default
                 {
-                    try
-                    {
-                        font = SystemFonts.DefaultFont;
-                        font = new Font(font.Name, 9, FontStyle.Bold);
-                        font = new Font(font.Name, 9, FontStyle.Italic);
-                        font = new Font(font.Name, 9, FontStyle.Regular);
-                    }
-                    catch
-                    {
-                        font = new Font("Microsoft Sans Serif", 9F);
-                    }
+                    _defaultSystemFont = SystemFonts.DefaultFont;
                 }
 
-                _defaultSystemFont = font;
-                return font;
+                return _defaultSystemFont ?? new Font("Microsoft Sans Serif", 9F);
             }
+        }
+
+        private static bool IsFontPresent(string fontName)
+        {
+            try
+            {
+                // Bold + italic + regular must be present
+                _ = new Font(fontName, 9, FontStyle.Bold);
+                _ = new Font(fontName, 9, FontStyle.Italic);
+                _ = new Font(fontName, 9, FontStyle.Regular);
+                return true;
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return false;
         }
 
         public static Font GetDefaultFont()
