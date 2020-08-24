@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Forms
                             listViewItems.Add(MakeListViewItem(p, i));
                         }
                     }
-                    else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines) 
+                    else if (comboBoxRule.SelectedIndex == FunctionMoreThanTwoLines)
                     {
                         if (p.Text.SplitToLines().Count > 2)
                         {
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (comboBoxRule.SelectedIndex == FunctionAlUppercase) // all uppercase
                     {
-                        if (p.Text == p.Text.ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
+                        if (HtmlUtil.RemoveHtmlTags(p.Text, true) == HtmlUtil.RemoveHtmlTags(p.Text, true).ToUpperInvariant() && p.Text != p.Text.ToLowerInvariant())
                         {
                             listViewItems.Add(MakeListViewItem(p, i));
                         }

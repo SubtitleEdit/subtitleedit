@@ -33,6 +33,7 @@
    * Allow higher (1000) max margin for SSA/ASS thx Looi
    * Change preferred ANSI code page for Turkish(1254)/Hebrew(1255)
    * Keep italic/bold/u from RTF in "Import plain text" - thx George
+   * "Modify selection/uppercase" now ignores tags - thx  Lokotito
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix bug in EBU STL ms to frames - thx Lucius Snow
