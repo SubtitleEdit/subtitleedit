@@ -81,9 +81,10 @@
             // 
             // textBoxAddName
             // 
+            this.textBoxAddName.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxAddName.Location = new System.Drawing.Point(15, 36);
             this.textBoxAddName.Name = "textBoxAddName";
-            this.textBoxAddName.Size = new System.Drawing.Size(221, 20);
+            this.textBoxAddName.Size = new System.Drawing.Size(221, 21);
             this.textBoxAddName.TabIndex = 19;
             // 
             // labelDescription
