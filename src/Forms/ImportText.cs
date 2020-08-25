@@ -1027,6 +1027,21 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append(rtb.SelectedText);
                 }
 
+                if (italicOn)
+                {
+                    sb.Append("</i>");
+                }
+
+                if (boldOn)
+                {
+                    sb.Append("</b>");
+                }
+
+                if (underlineOn)
+                {
+                    sb.Append("</u>");
+                }
+
                 var text = sb.ToString();
                 text = text.Replace(" </i>", "</i> ");
                 text = text.Replace(" </b>", "</b> ");
