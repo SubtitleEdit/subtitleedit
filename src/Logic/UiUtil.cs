@@ -457,22 +457,13 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 var font = SystemFonts.MessageBoxFont;
-
-                if (Configuration.IsRunningOnLinux)
+                if (Configuration.IsRunningOnLinux && IsFontPresent(Configuration.DefaultLinuxFontName))
                 {
                     font = new Font(Configuration.DefaultLinuxFontName, 8F);
                 }
 
-                if (IsFontPresent(font.Name))
-                {
-                    _defaultSystemFont = font;
-                }
-                else if (IsFontPresent(SystemFonts.DefaultFont.Name)) // system default
-                {
-                    _defaultSystemFont = SystemFonts.DefaultFont;
-                }
-
-                return _defaultSystemFont ?? new Font("Microsoft Sans Serif", 9F);
+                _defaultSystemFont = IsFontPresent(font.Name) ? font : SystemFonts.DefaultFont;
+                return _defaultSystemFont;
             }
         }
 
