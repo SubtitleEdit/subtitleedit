@@ -479,7 +479,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _wordsIndex = int.MaxValue - 1;
                     break;
                 case SpellCheckAction.DeleteLine:
-                    _mainWindow.DeleteLine(_currentIndex, _currentParagraph);
+                    _mainWindow.DeleteLine();
                     _currentIndex--; // re-spellcheck current line
                     _wordsIndex = int.MaxValue - 1;
                     break;
