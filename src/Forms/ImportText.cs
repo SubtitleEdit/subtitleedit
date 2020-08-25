@@ -1027,9 +1027,9 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append(rtb.SelectedText);
                 }
 
-                if (italicOn)
+                if (underlineOn)
                 {
-                    sb.Append("</i>");
+                    sb.Append("</u>");
                 }
 
                 if (boldOn)
@@ -1037,9 +1037,9 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append("</b>");
                 }
 
-                if (underlineOn)
+                if (italicOn)
                 {
-                    sb.Append("</u>");
+                    sb.Append("</i>");
                 }
 
                 var text = sb.ToString();
