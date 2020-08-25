@@ -128,6 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate;
 
         private bool _cancelWordSpellCheck = true;
+        private bool _cleanupHasRun = false;
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
@@ -20556,7 +20557,6 @@ namespace Nikse.SubtitleEdit.Forms
             CallPluginTranslateSelectedLines(sender);
         }
 
-
         private void CallPlugin(object sender, bool allowChangeFormat, bool translate)
         {
             try
@@ -20873,8 +20873,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    // let the cleanup proccess be handled by a worker thread
-                    System.Threading.Tasks.Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
+                    // the clean up process can only happen minimum once per month. don't keep creating new threading
+                    if (!_cleanupHasRun)
+                    {
+                        // let the cleanup process be handled by worker thread
+                        System.Threading.Tasks.Task.Factory.StartNew(() => { RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths); });
+                        _cleanupHasRun = true;
+                    }
                 }
             }
 
