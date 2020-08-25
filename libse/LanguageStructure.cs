@@ -2191,6 +2191,7 @@
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
             public string AdjustExtendToNextSceneChange { get; set; }
+            public string AdjustExtendToNextSceneChangeWithGap { get; set; }
             public string AdjustExtendToPreviousSceneChange { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
