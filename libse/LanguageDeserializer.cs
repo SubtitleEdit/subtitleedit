@@ -5500,6 +5500,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustExtendToNextSceneChange":
                     language.Settings.AdjustExtendToNextSceneChange = reader.Value;
                     break;
+                case "Settings/AdjustExtendToNextSceneChangeWithGap":
+                    language.Settings.AdjustExtendToNextSceneChangeWithGap = reader.Value;
+                    break;
                 case "Settings/AdjustExtendToPreviousSceneChange":
                     language.Settings.AdjustExtendToPreviousSceneChange = reader.Value;
                     break;
