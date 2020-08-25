@@ -5314,7 +5314,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (isFirst)
                 {
                     MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
-                    isFirst = false;
                     _makeHistoryPaused = true;
                     if (start >= 0)
                     {
@@ -5395,7 +5394,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
             {
-                SourceListReplaceAllRegEx(replaceDialog, findHelper);
+                SourceListReplaceAllRegEx(replaceDialog);
                 return;
             }
 
@@ -5450,7 +5449,7 @@ namespace Nikse.SubtitleEdit.Forms
             replaceDialog.Dispose();
         }
 
-        private void SourceListReplaceAllRegEx(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
+        private void SourceListReplaceAllRegEx(ReplaceDialog replaceDialog)
         {
             var start = textBoxSource.SelectionStart;
             var s = textBoxSource.Text;
@@ -7135,7 +7134,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void DeleteLine(int i, Paragraph p)
+        public void DeleteLine()
         {
             MakeHistoryForUndo(Configuration.Settings.Language.Main.OneLineDeleted);
             DeleteSelectedLines();
