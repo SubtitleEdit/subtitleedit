@@ -20873,7 +20873,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    // the clean up process can only happen minimum once per month. don't keep creating new threading
                     if (!_cleanupHasRun)
                     {
                         // let the cleanup process be handled by worker thread
