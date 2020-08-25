@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate;
 
         private bool _cancelWordSpellCheck = true;
-        private bool _cleanupHasRun = false;
+        private bool _cleanupHasRun;
 
         private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
