@@ -386,6 +386,7 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonResetUIStyleDefault = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -3999,6 +4000,7 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.buttonResetUIStyleDefault);
             this.groupBoxFont.Controls.Add(this.labelFontNote);
             this.groupBoxFont.Controls.Add(this.groupBoxFontTextBox);
             this.groupBoxFont.Controls.Add(this.groupBoxFontListViews);
@@ -4687,6 +4689,16 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // buttonResetUIStyleDefault
+            // 
+            this.buttonResetUIStyleDefault.Location = new System.Drawing.Point(716, 337);
+            this.buttonResetUIStyleDefault.Name = "buttonResetUIStyleDefault";
+            this.buttonResetUIStyleDefault.Size = new System.Drawing.Size(104, 23);
+            this.buttonResetUIStyleDefault.TabIndex = 38;
+            this.buttonResetUIStyleDefault.Text = "Reset";
+            this.buttonResetUIStyleDefault.UseVisualStyleBackColor = true;
+            this.buttonResetUIStyleDefault.Click += new System.EventHandler(this.buttonResetUIStyleDefault_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5184,5 +5196,6 @@
         private System.Windows.Forms.Button buttonGapChoose;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNamesViaSuggestions;
         private System.Windows.Forms.ComboBox comboBoxBoxBingTokenEndpoint;
+        private System.Windows.Forms.Button buttonResetUIStyleDefault;
     }
 }

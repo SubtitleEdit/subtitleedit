@@ -3395,5 +3395,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
+        private void buttonResetUIStyleDefault_Click(object sender, EventArgs e)
+        {
+            // general
+            comboBoxSubtitleFont.SelectedItem = comboBoxSubtitleFont.Items.OfType<string>().FirstOrDefault(f => f.Equals("Tahoma", StringComparison.OrdinalIgnoreCase));
+
+            panelSubtitleFontColor.BackColor = Color.Black;
+            panelSubtitleBackgroundColor.BackColor = Color.White;
+
+            // listview
+            comboBoxSubtitleListViewFontSize.SelectedIndex = 3; // 10
+            checkBoxSubtitleListViewFontBold.Checked = false;
+
+            // textbox
+            comboBoxSubtitleFontSize.SelectedIndex = 3; // 10
+            checkBoxSubtitleFontBold.Checked = false;
+            checkBoxSubtitleCenter.Checked = false;
+        }
     }
 }
