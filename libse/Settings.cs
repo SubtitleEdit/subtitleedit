@@ -1906,6 +1906,7 @@ $HorzAlign          =   Center
         public string MoveEndOneFrameBackKeepGapNext { get; set; }
         public string MoveEndOneFrameForwardKeepGapNext { get; set; }
         public string MainAdjustExtendToNextSceneChange { get; set; }
+        public string MainAdjustExtendToNextSceneChangeWithGap { get; set; }
         public string MainAdjustExtendToPreviousSceneChange { get; set; }
         public string MainAdjustExtendToNextSubtitle { get; set; }
         public string MainAdjustExtendToPreviousSubtitle { get; set; }
@@ -2062,6 +2063,7 @@ $HorzAlign          =   Center
             Waveform1000MsRight = "Right";
             MainTranslateGoogleTranslate = "Control+Shift+G";
             MainAdjustExtendToNextSceneChange = string.Empty;
+            MainAdjustExtendToNextSceneChangeWithGap = string.Empty;
             MainAdjustExtendToPreviousSceneChange = string.Empty;
             MainAdjustExtendToNextSubtitle = "Control+Shift+E";
             MainAdjustExtendToPreviousSubtitle = "Alt+Shift+E";
@@ -6835,6 +6837,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainAdjustExtendToNextSceneChange = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendToPreviousSceneChange");
                 if (subNode != null)
                 {
@@ -8088,6 +8096,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
                 textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
+                textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);

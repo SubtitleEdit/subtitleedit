@@ -14717,6 +14717,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ExtendSelectedLinesToNextSceneChange();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainAdjustExtendToNextSceneChangeWithGap == e.KeyData)
+            {
+                ExtendSelectedLinesToNextSceneChange(true);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainAdjustExtendToPreviousSceneChange == e.KeyData)
             {
                 ExtendSelectedLinesToPreviousSceneChange();
@@ -15076,7 +15081,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ExtendSelectedLinesToNextSceneChange()
+        private void ExtendSelectedLinesToNextSceneChange(bool withGap = false)
         {
             var historyAdded = false;
             foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
@@ -15096,7 +15101,14 @@ namespace Nikse.SubtitleEdit.Forms
                         historyAdded = true;
                     }
 
-                    p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestStartTimeWithGap);
+                    if (!withGap)
+                    {
+                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestStartTimeWithGap);
+                    }
+                    else
+                    {
+                        p.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestStartTimeWithGap);
+                    }
 
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
