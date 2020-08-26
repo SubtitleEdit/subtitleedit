@@ -1046,6 +1046,12 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Replace(" </i>", "</i> ");
                 text = text.Replace(" </b>", "</b> ");
                 text = text.Replace(" </u>", "</u> ");
+                text = text.Replace($" {Environment.NewLine}", Environment.NewLine);
+                text = text.Replace($"</i>{Environment.NewLine}<i>", string.Empty);
+                text = text.Replace($"</b></i>{Environment.NewLine}<i><b>", string.Empty);
+                text = text.Replace($"</u></i>{Environment.NewLine}<i><u>", string.Empty);
+                text = text.Replace($"</u></b>{Environment.NewLine}<b><u>", string.Empty);
+                text = text.Replace($"</u></b></i>{Environment.NewLine}<i><b><u>", string.Empty);
                 return string.Join(Environment.NewLine, text.SplitToLines());
             }
         }

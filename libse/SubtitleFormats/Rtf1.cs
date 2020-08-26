@@ -70,7 +70,6 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
             }
 
             lines = rtf.FromRtf().SplitToLines();
-            _errorCount = 0;
             Paragraph p = null;
             char[] splitChars = { ':', ';', ',' };
             foreach (string line in lines)
