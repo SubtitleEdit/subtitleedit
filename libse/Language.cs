@@ -3070,12 +3070,11 @@ Keep changes?",
             s.Serialize(w, this);
             w.Close();
 
-            string xml = sb.ToString();
-            xml = xml.Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" ", string.Empty);
-            xml = xml.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
-            xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
-            xml = xml.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
-            return xml.Trim();
+            sb.Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" ", string.Empty);
+            sb.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ", string.Empty);
+            sb.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
+            sb.Replace("<TranslatedBy> </TranslatedBy>", "<TranslatedBy>Translated by Nikse</TranslatedBy>");
+            return sb.ToString().Trim();
         }
 
         public void Save(string fileName)
