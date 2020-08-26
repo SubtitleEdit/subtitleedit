@@ -2007,6 +2007,7 @@
 
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
+            public string Reset { get; set; }
             public string SubtitleBackgroundColor { get; set; }
             public string SpellChecker { get; set; }
             public string RememberRecentFiles { get; set; }

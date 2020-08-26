@@ -1843,6 +1843,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AllowVolumeBoost>Allow volume boost</AllowVolumeBoost>
     <SubtitleCenter>Center</SubtitleCenter>
     <SubtitleFontColor>Subtitle font color</SubtitleFontColor>
+    <Reset>Reset</Reset>
     <SubtitleBackgroundColor>Subtitle background color</SubtitleBackgroundColor>
     <SpellChecker>Spell checker</SpellChecker>
     <RememberRecentFiles>Show recent files (for reopen)</RememberRecentFiles>

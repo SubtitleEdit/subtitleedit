@@ -4951,6 +4951,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SubtitleFontColor":
                     language.Settings.SubtitleFontColor = reader.Value;
                     break;
+                case "Settings/Reset":
+                    language.Settings.Reset = reader.Value;
+                    break;
                 case "Settings/SubtitleBackgroundColor":
                     language.Settings.SubtitleBackgroundColor = reader.Value;
                     break;
