@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -16,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            subtitle.Paragraphs.Clear();
             _errorCount = 0;
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName) || Path.GetExtension(fileName).ToLowerInvariant() != Extension)
             {
@@ -60,6 +63,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                     }
                 }
+            }
+
+            while (subtitle.Paragraphs.Count > 0 && Math.Abs(subtitle.Paragraphs.Last().EndTime.TotalMilliseconds) < 0.001)
+            {
+                subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
             }
         }
 
