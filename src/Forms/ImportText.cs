@@ -973,55 +973,40 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     rtb.SelectionStart = i;
                     rtb.SelectionLength = 1;
-                    if (rtb.SelectionFont.Italic)
+                    if (rtb.SelectionFont.Italic && !italicOn)
                     {
-                        if (!italicOn)
-                        {
-                            sb.Append("<i>");
-                            italicOn = true;
-                        }
-                    }
-                    else
-                    {
-                        if (italicOn)
-                        {
-                            sb.Append("</i>");
-                            italicOn = false;
-                        }
+                        sb.Append("<i>");
+                        italicOn = true;
                     }
 
-                    if (rtb.SelectionFont.Bold)
+                    if (rtb.SelectionFont.Bold && !boldOn)
                     {
-                        if (!boldOn)
-                        {
-                            sb.Append("<b>");
-                            boldOn = true;
-                        }
-                    }
-                    else
-                    {
-                        if (boldOn)
-                        {
-                            sb.Append("</b>");
-                            boldOn = false;
-                        }
+                        sb.Append("<b>");
+                        boldOn = true;
                     }
 
-                    if (rtb.SelectionFont.Underline)
+                    if (rtb.SelectionFont.Underline && !underlineOn)
                     {
-                        if (!underlineOn)
-                        {
-                            sb.Append("<u>");
-                            underlineOn = true;
-                        }
+                        sb.Append("<u>");
+                        underlineOn = true;
                     }
-                    else
+
+                    if (!rtb.SelectionFont.Underline && underlineOn)
                     {
-                        if (underlineOn)
-                        {
-                            sb.Append("</u>");
-                            underlineOn = false;
-                        }
+                        sb.Append("</u>");
+                        underlineOn = false;
+                    }
+
+                    if (!rtb.SelectionFont.Bold && boldOn)
+                    {
+                        sb.Append("</b>");
+                        boldOn = false;
+                    }
+
+                    if (!rtb.SelectionFont.Italic && italicOn)
+                    {
+                        sb.Append("</i>");
+                        italicOn = false;
                     }
 
                     sb.Append(rtb.SelectedText);
@@ -1042,17 +1027,18 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append("</i>");
                 }
 
-                var text = sb.ToString();
-                text = text.Replace(" </i>", "</i> ");
-                text = text.Replace(" </b>", "</b> ");
-                text = text.Replace(" </u>", "</u> ");
-                text = text.Replace($" {Environment.NewLine}", Environment.NewLine);
-                text = text.Replace($"</i>{Environment.NewLine}<i>", string.Empty);
-                text = text.Replace($"</b></i>{Environment.NewLine}<i><b>", string.Empty);
-                text = text.Replace($"</u></i>{Environment.NewLine}<i><u>", string.Empty);
-                text = text.Replace($"</u></b>{Environment.NewLine}<b><u>", string.Empty);
-                text = text.Replace($"</u></b></i>{Environment.NewLine}<i><b><u>", string.Empty);
-                return string.Join(Environment.NewLine, text.SplitToLines());
+                return string.Join(Environment.NewLine, sb.ToString().SplitToLines())
+                    .Replace($" {Environment.NewLine}", Environment.NewLine)
+                    .Replace(" </i>", "</i> ")
+                    .Replace(" </b>", "</b> ")
+                    .Replace(" </u>", "</u> ")
+                    .Replace($"</u></b></i>{Environment.NewLine}<i><b><u>", Environment.NewLine)
+                    .Replace($"</b></i>{Environment.NewLine}<i><b>", Environment.NewLine)
+                    .Replace($"</u></i>{Environment.NewLine}<i><u>", Environment.NewLine)
+                    .Replace($"</u></b>{Environment.NewLine}<b><u>", Environment.NewLine)
+                    .Replace($"</i>{Environment.NewLine}<i>", Environment.NewLine)
+                    .Replace($"</b>{Environment.NewLine}<b>", Environment.NewLine)
+                    .Replace($"</u>{Environment.NewLine}<u>", Environment.NewLine);
             }
         }
 
