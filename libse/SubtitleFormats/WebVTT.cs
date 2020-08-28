@@ -9,11 +9,10 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
+    /// https://w3c.github.io/webvtt/
     /// </summary>
     public class WebVTT : SubtitleFormat
     {
-
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
@@ -60,13 +59,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT");
             sb.AppendLine();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            if (subtitle.Header != null && (subtitle.Header.StartsWith("STYLE") || subtitle.Header.StartsWith("NOTE")))
+            {
+                sb.AppendLine(subtitle.Header.Trim());
+                sb.AppendLine();
+            }
+
+            foreach (var p in subtitle.Paragraphs)
             {
                 string start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
                 string positionInfo = GetPositionInfoFromAssTag(p);
 
-                string style = string.Empty;
+                var style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
                 {
                     style = p.Extra;
@@ -137,7 +142,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool hadEmptyLine = false;
             int numbers = 0;
             double addSeconds = 0;
-            bool noteOn = false;
+            var noteOn = false;
+            var styleOn = false;
+            var header = new StringBuilder();
             for (var index = 0; index < lines.Count; index++)
             {
                 string line = lines[index];
@@ -151,16 +158,41 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     (line.StartsWith("NOTE ", StringComparison.Ordinal) || line == "NOTE"))
                 {
                     noteOn = true;
+                    if (subtitle.Paragraphs.Count == 0)
+                    {
+                        header.AppendLine();
+                    }
+                }
+                else if (line == "STYLE" && subtitle.Paragraphs.Count == 0)
+                {
+                    styleOn = true;
+                    header.AppendLine();
+                }
+
+                if (styleOn && !string.IsNullOrEmpty(line))
+                {
+                    header.AppendLine(line);
+                    continue;
                 }
 
                 if (noteOn && !string.IsNullOrEmpty(line))
                 {
+                    if (subtitle.Paragraphs.Count == 0)
+                    {
+                        header.AppendLine(line);
+                    }
+
                     continue;
                 }
 
                 if (noteOn)
                 {
                     noteOn = false;
+                }
+
+                if (styleOn)
+                {
+                    styleOn = false;
                 }
 
                 var s = line;
@@ -211,11 +243,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     subtitle.Header = "WEBVTT";
                 }
-                else if (p != null && hadEmptyLine && Utilities.IsInteger(line.RemoveChar('-')) &&
+                else if (p != null && hadEmptyLine && 
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
                 {
+                    // can both be number or an "identifier" which can be text
                     numbers++;
                 }
                 else if (p != null)
@@ -262,6 +295,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.EndTime.TotalMilliseconds += addSeconds * 1000;
             }
             subtitle.Renumber();
+            if (header.Length > 0)
+            {
+                subtitle.Header = header.ToString().Trim();
+            }
         }
 
         private static double GetXTimeStampSeconds(string input)

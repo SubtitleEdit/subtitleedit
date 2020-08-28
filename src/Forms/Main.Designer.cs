@@ -453,6 +453,7 @@
             this.labelText = new System.Windows.Forms.Label();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -2415,6 +2416,7 @@
             this.toolStripMenuItemSetRegion,
             this.toolStripMenuItemSetLanguage,
             this.toolStripMenuItemWebVTT,
+            this.toolStripMenuItemPreview,
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
             this.toolStripMenuItemInsertAfter,
@@ -4358,6 +4360,13 @@
             this.toolStripMenuItemWebVttVoice.Size = new System.Drawing.Size(273, 22);
             this.toolStripMenuItemWebVttVoice.Text = "WebVTT voice";
             // 
+            // toolStripMenuItemPreview
+            // 
+            this.toolStripMenuItemPreview.Name = "toolStripMenuItemPreview";
+            this.toolStripMenuItemPreview.Size = new System.Drawing.Size(273, 22);
+            this.toolStripMenuItemPreview.Text = "WebVTT browser preview";
+            this.toolStripMenuItemPreview.Click += new System.EventHandler(this.toolStripMenuItemPreview_Click);
+            // 
             // toolStripSeparatorWebVTT
             // 
             this.toolStripSeparatorWebVTT.Name = "toolStripSeparatorWebVTT";
@@ -5523,6 +5532,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpumux;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPreview;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemModifySelection;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInverseSelection;
