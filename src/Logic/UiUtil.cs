@@ -298,12 +298,12 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                if (autobreakIndex > 0)
+                int autoBreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                if (autoBreakIndex > 0)
                 {
                     int selectionStart = textBox.SelectionStart;
                     textBox.Text = newText;
-                    if (selectionStart > autobreakIndex)
+                    if (selectionStart > autoBreakIndex)
                     {
                         selectionStart += Environment.NewLine.Length - 1;
                     }

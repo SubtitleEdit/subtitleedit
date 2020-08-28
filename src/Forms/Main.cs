@@ -7520,6 +7520,11 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            toolStripMenuItemPreview.Visible = formatType == typeof(WebVTT) &&
+                                               !string.IsNullOrEmpty(_videoFileName) &&
+                                               (_videoFileName.ToLowerInvariant().EndsWith(".mp4") || _videoFileName.ToLowerInvariant().EndsWith(".m4v")) &&
+                                               IsSubtitleLoaded;
+
             toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
             List<string> actors = null;
@@ -23655,6 +23660,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripSeparatorWebVTT.Visible = false;
                 toolStripMenuItemWebVttVoice.Visible = false;
+                toolStripMenuItemWebVttVoice.Visible = false;
             }
 
             if (formatType == typeof(NetflixImsc11Japanese))
@@ -27808,6 +27814,30 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var tb = GetFocusedTextBox();
             tb.Text = HtmlUtil.ToggleTag(tb.Text, "box");
+        }
+
+        private void toolStripMenuItemPreview_Click(object sender, EventArgs e)
+        {
+            var htmlFileName = Path.Combine(Path.GetTempPath(), $"WebVttPreview_{Guid.NewGuid()}.html");
+            var subText = Encoding.UTF8.GetBytes(new WebVTT().ToText(_subtitle, "preview"));
+            File.WriteAllText(htmlFileName, @"<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>WebVTT preview</title>
+</head>
+  <body>
+    <video controls preload='metadata'>
+      <source src='[VIDEO]' type ='video/[EXT]' />
+      <track label='English' kind='subtitles' srclang='en' src='data:text/vtt;base64, [BASE64]' default>
+    </video>
+  </body>
+</html>"
+                .Replace('\'', '"')
+                .Replace("[BASE64]", Convert.ToBase64String(subText))
+                .Replace("[VIDEO]", "file://" + _videoFileName)
+                .Replace("[EXT]", Path.GetExtension(_videoFileName).TrimStart('.').ToLowerInvariant()), Encoding.UTF8);
+            UiUtil.OpenFile(htmlFileName);
         }
     }
 }
