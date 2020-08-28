@@ -2286,6 +2286,15 @@ $HorzAlign          =   Center
                     settings.Shortcuts.GeneralToggleTranslationMode = "Control+Shift+O";
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
                 }
+
+                if (settings.General.UseFFmpegForWaveExtraction && string.IsNullOrEmpty(settings.General.FFmpegLocation) && Configuration.IsRunningOnWindows)
+                {
+                    var guessPath = Path.Combine(Configuration.DataDirectory, "ffmpeg", "ffmpeg.exe");
+                    if (File.Exists(guessPath))
+                    {
+                        settings.General.FFmpegLocation = guessPath;
+                    }
+                }
             }
 
             return settings;
