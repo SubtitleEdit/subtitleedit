@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
             {
-                return;
+                //skip
             }
             else
             {
