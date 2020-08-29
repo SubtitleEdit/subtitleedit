@@ -386,6 +386,12 @@
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.buttonReset = new System.Windows.Forms.Button();
             this.toolTipContinuationPreview = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPageMisc = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxLoadPlugin = new System.Windows.Forms.CheckBox();
+            this.checkBoxLoadSubFromPlugin = new System.Windows.Forms.CheckBox();
+            this.comboBoxPluginRawFormat = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -465,6 +471,8 @@
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
+            this.tabPageMisc.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -507,6 +515,7 @@
             this.tabControlSettings.Controls.Add(this.tabPageFont);
             this.tabControlSettings.Controls.Add(this.tabPageSsaStyle);
             this.tabControlSettings.Controls.Add(this.tabPageNetwork);
+            this.tabControlSettings.Controls.Add(this.tabPageMisc);
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
@@ -1606,6 +1615,7 @@
             // 
             // contextMenuStripShortcuts
             // 
+            this.contextMenuStripShortcuts.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripShortcuts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemShortcutsCollapse});
             this.contextMenuStripShortcuts.Name = "contextMenuStripShortcuts";
@@ -4687,6 +4697,71 @@
             this.toolTipContinuationPreview.InitialDelay = 500;
             this.toolTipContinuationPreview.ReshowDelay = 100;
             // 
+            // tabPageMisc
+            // 
+            this.tabPageMisc.Controls.Add(this.groupBox3);
+            this.tabPageMisc.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMisc.Name = "tabPageMisc";
+            this.tabPageMisc.Size = new System.Drawing.Size(832, 520);
+            this.tabPageMisc.TabIndex = 11;
+            this.tabPageMisc.Text = "Misc";
+            this.tabPageMisc.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Controls.Add(this.comboBoxPluginRawFormat);
+            this.groupBox3.Controls.Add(this.checkBoxLoadSubFromPlugin);
+            this.groupBox3.Controls.Add(this.checkBoxLoadPlugin);
+            this.groupBox3.Location = new System.Drawing.Point(9, 14);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(814, 183);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Plugins:";
+            // 
+            // checkBoxLoadPlugin
+            // 
+            this.checkBoxLoadPlugin.AutoSize = true;
+            this.checkBoxLoadPlugin.Checked = true;
+            this.checkBoxLoadPlugin.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxLoadPlugin.Location = new System.Drawing.Point(40, 42);
+            this.checkBoxLoadPlugin.Name = "checkBoxLoadPlugin";
+            this.checkBoxLoadPlugin.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxLoadPlugin.TabIndex = 1;
+            this.checkBoxLoadPlugin.Text = "Load plugins";
+            this.checkBoxLoadPlugin.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxLoadSubFromPlugin
+            // 
+            this.checkBoxLoadSubFromPlugin.AutoSize = true;
+            this.checkBoxLoadSubFromPlugin.Location = new System.Drawing.Point(40, 65);
+            this.checkBoxLoadSubFromPlugin.Name = "checkBoxLoadSubFromPlugin";
+            this.checkBoxLoadSubFromPlugin.Size = new System.Drawing.Size(183, 17);
+            this.checkBoxLoadSubFromPlugin.TabIndex = 3;
+            this.checkBoxLoadSubFromPlugin.Text = "Load subtitle format from plugins";
+            this.checkBoxLoadSubFromPlugin.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxPluginRawFormat
+            // 
+            this.comboBoxPluginRawFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPluginRawFormat.FormattingEnabled = true;
+            this.comboBoxPluginRawFormat.Location = new System.Drawing.Point(40, 131);
+            this.comboBoxPluginRawFormat.Name = "comboBoxPluginRawFormat";
+            this.comboBoxPluginRawFormat.Size = new System.Drawing.Size(183, 21);
+            this.comboBoxPluginRawFormat.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(38, 115);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(163, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Default format for \"raw\" param: ";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4820,6 +4895,9 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
+            this.tabPageMisc.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5184,5 +5262,11 @@
         private System.Windows.Forms.Button buttonGapChoose;
         private System.Windows.Forms.CheckBox checkBoxSpellCheckAutoChangeNamesViaSuggestions;
         private System.Windows.Forms.ComboBox comboBoxBoxBingTokenEndpoint;
+        private System.Windows.Forms.TabPage tabPageMisc;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkBoxLoadSubFromPlugin;
+        private System.Windows.Forms.CheckBox checkBoxLoadPlugin;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBoxPluginRawFormat;
     }
 }

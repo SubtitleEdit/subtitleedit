@@ -315,38 +315,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle100(),
                 };
 
-                string path = Configuration.PluginsDirectory;
-                if (Directory.Exists(path))
+                if (Configuration.Settings.Misc.LoadPlugins && Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins)
                 {
-                    foreach (string pluginFileName in Directory.EnumerateFiles(path, "*.DLL"))
-                    {
-                        try
-                        {
-                            var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                            foreach (var exportedType in assembly.GetExportedTypes())
-                            {
-                                try
-                                {
-                                    object pluginObject = Activator.CreateInstance(exportedType);
-                                    if (pluginObject is SubtitleFormat po)
-                                    {
-                                        _allSubtitleFormats.Insert(1, po);
-                                    }
-                                }
-                                catch
-                                {
-                                    // ignored
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    }
+                    LoadSubtitleFormatFromPlugins();
                 }
 
                 return _allSubtitleFormats;
+            }
+        }
+
+        public static void LoadSubtitleFormatFromPlugins()
+        {
+            string path = Configuration.PluginsDirectory;
+            if (Directory.Exists(path))
+            {
+                foreach (string pluginFileName in Directory.EnumerateFiles(path, "*.DLL"))
+                {
+                    try
+                    {
+                        var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
+                        foreach (var exportedType in assembly.GetExportedTypes())
+                        {
+                            try
+                            {
+                                object pluginObject = Activator.CreateInstance(exportedType);
+                                if (pluginObject is SubtitleFormat po)
+                                {
+                                    _allSubtitleFormats.Insert(1, po);
+                                }
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
             }
         }
 

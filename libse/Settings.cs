@@ -649,6 +649,19 @@ $HorzAlign          =   Center
         }
     }
 
+    public class Misc
+    {
+        public bool LoadPlugins { get; set; }
+        public bool LoadSubtitleFormatFromPlugins { get; set; }
+        public string SubtitleFormatForRaw { get; set; }
+
+        public Misc()
+        {
+            LoadPlugins = true;
+            SubtitleFormatForRaw = "SubRip";
+        }
+    }
+
     public class FixCommonErrorsSettings
     {
         public string StartPosition { get; set; }
@@ -2151,6 +2164,7 @@ $HorzAlign          =   Center
         public VideoControlsSettings VideoControls { get; set; }
         public NetworkSettings NetworkSettings { get; set; }
         public Shortcuts Shortcuts { get; set; }
+        public Misc Misc { get; set; }
         public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
         public SubtitleBeaming SubtitleBeaming { get; set; }
         public List<MultipleSearchAndReplaceGroup> MultipleSearchAndReplaceGroups { get; set; }
@@ -2177,6 +2191,7 @@ $HorzAlign          =   Center
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
             Compare = new CompareSettings();
+            Misc = new Misc();
         }
 
         private Settings()
@@ -5411,6 +5426,29 @@ $HorzAlign          =   Center
                 }
             }
 
+            // Misc
+            node = doc.DocumentElement.SelectSingleNode("MiscSettings");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode(nameof(Configuration.Settings.Misc.LoadPlugins));
+                if (subNode != null)
+                {
+                    settings.Misc.LoadPlugins = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode(nameof(Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins));
+                if (subNode != null)
+                {
+                    settings.Misc.LoadSubtitleFormatFromPlugins = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
+                subNode = node.SelectSingleNode(nameof(Configuration.Settings.Misc.SubtitleFormatForRaw));
+                if (subNode != null)
+                {
+                    settings.Misc.SubtitleFormatForRaw = subNode.InnerText;
+                } 
+            }
+
             // VobSub Ocr
             node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
             subNode = node.SelectSingleNode("XOrMorePixelsMakesSpace");
@@ -7847,6 +7885,12 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
                 textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("MiscSettings", string.Empty);
+                textWriter.WriteElementString(nameof(settings.Misc.LoadPlugins), settings.Misc.LoadPlugins.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString(nameof(settings.Misc.LoadSubtitleFormatFromPlugins), settings.Misc.LoadSubtitleFormatFromPlugins.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString(nameof(settings.Misc.SubtitleFormatForRaw), settings.Misc.SubtitleFormatForRaw);
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VobSubOcr", string.Empty);

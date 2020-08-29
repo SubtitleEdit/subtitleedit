@@ -999,7 +999,26 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = false;
             UpdateSsaExample();
+
+            InitPluginTab();
         }
+
+        private void InitPluginTab()
+        {
+            checkBoxLoadPlugin.CheckedChanged += (sender, e) =>
+            {
+                bool status = checkBoxLoadPlugin.Checked;
+                checkBoxLoadSubFromPlugin.Enabled = status;
+                comboBoxPluginRawFormat.Enabled = status;
+            };
+
+            checkBoxLoadPlugin.Checked = Configuration.Settings.Misc.LoadPlugins;
+            checkBoxLoadSubFromPlugin.Checked = Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins;
+
+            // init combobox format
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxPluginRawFormat, Configuration.Settings.Misc.SubtitleFormatForRaw);
+        }
+
 
         private void SetDialogStyle(DialogType dialogStyle)
         {
@@ -1894,6 +1913,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 kvp.Key.Shortcut.SetValue(Configuration.Settings.Shortcuts, kvp.Value, null);
             }
+
+            // misc
+            Configuration.Settings.Misc.LoadPlugins = checkBoxLoadPlugin.Checked;
+            Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins = checkBoxLoadSubFromPlugin.Checked;
+            Configuration.Settings.Misc.SubtitleFormatForRaw = comboBoxPluginRawFormat.SelectedItem.ToString();
 
             Configuration.Settings.Save();
         }

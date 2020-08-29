@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             set { _videoFileName = value; }
         }
 
+        private bool _loadPluginnAtStarttup;
         private DateTime _fileDateTime;
         private string _title;
         private FindReplaceDialogHelper _findHelper;
@@ -4667,6 +4668,15 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.VideoPlayerContainerResize(null, null);
             ShowLineInformationListView();
             ShowSourceLineNumber();
+
+            if (Configuration.Settings.Misc.LoadPlugins)
+            {
+                // only if it it wasn't load at beginning
+                if (!_loadPluginnAtStarttup)
+                {
+                    LoadPlugins();
+                }
+            }
         }
 
         private void SetAudioVisualizerSettings()
@@ -20062,7 +20072,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
             InitializePlayRateDropDown();
 
-            LoadPlugins();
+            if (Configuration.Settings.Misc.LoadPlugins)
+            {
+                LoadPlugins();
+                _loadPluginnAtStarttup = true;
+            }
 
             mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
@@ -25631,7 +25645,10 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new PluginsGet())
             {
                 form.ShowDialog(this);
-                LoadPlugins();
+                if (Configuration.Settings.Misc.LoadPlugins)
+                {
+                    LoadPlugins();
+                }
             }
         }
 
