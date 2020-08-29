@@ -20343,7 +20343,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
+        public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version,
+            out string description, out string actionType, out string shortcut, out MethodInfo mi, object mainInstance)
         {
             name = null;
             text = null;
@@ -20372,7 +20373,9 @@ namespace Nikse.SubtitleEdit.Forms
                     return null;
                 }
 
-                object pluginObject = Activator.CreateInstance(pluginType);
+                ConstructorInfo ci = pluginType.GetConstructor(new[] { typeof(Form) });
+                // if there is a contructor that take typeof(Form) as parameter, call that otherwise call the parametreless constructor
+                object pluginObject = mainInstance != null && ci != null ? ci.Invoke(new[] { mainInstance }) : Activator.CreateInstance(pluginType);
 
                 // IPlugin
                 var t = pluginType.GetInterface("IPlugin");
@@ -20454,7 +20457,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string name, description, text, shortcut, actionType;
                     decimal version;
                     MethodInfo mi;
-                    GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                    GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi, this);
                     if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
                         var item = new ToolStripMenuItem { Text = text, Tag = pluginFileName };
@@ -20578,7 +20581,9 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var item = (ToolStripItem)sender;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out var name, out var text, out var version, out var description, out var actionType, out var shortcut, out var mi);
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out var name, out var text, out var version,
+                    out var description, out var actionType, out var shortcut, out var mi, this);
+
                 if (mi == null)
                 {
                     return;
@@ -20723,7 +20728,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string name, description, text, shortcut, actionType;
                 decimal version;
                 MethodInfo mi;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi, this);
                 if (mi == null)
                 {
                     return;
