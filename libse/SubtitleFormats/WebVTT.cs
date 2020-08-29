@@ -57,11 +57,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
-            sb.AppendLine("WEBVTT");
-            sb.AppendLine();
-            if (subtitle.Header != null && (subtitle.Header.StartsWith("STYLE") || subtitle.Header.StartsWith("NOTE")))
+            if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
             {
                 sb.AppendLine(subtitle.Header.Trim());
+                sb.AppendLine();
+            }
+            else
+            {
+                sb.AppendLine("WEBVTT");
                 sb.AppendLine();
             }
 
@@ -72,9 +75,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string positionInfo = GetPositionInfoFromAssTag(p);
 
                 var style = string.Empty;
-                if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
+                if (subtitle.Header != null && subtitle.Header.StartsWith("WEBVTT", StringComparison.Ordinal))
                 {
-                    style = p.Extra;
+                    if (!string.IsNullOrEmpty(p.Extra))
+                    {
+                        style = p.Extra;
+                    }
+
+                    if (!string.IsNullOrEmpty(p.Region))
+                    {
+                        positionInfo = $" region:{p.Region} {positionInfo}".Replace("  ", " ").TrimEnd();
+                    }
                 }
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, FormatText(p), style, Environment.NewLine));
@@ -144,7 +155,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             double addSeconds = 0;
             var noteOn = false;
             var styleOn = false;
+            var regionOn = false;
             var header = new StringBuilder();
+            header.AppendLine("WEBVTT");
+            header.AppendLine();
             for (var index = 0; index < lines.Count; index++)
             {
                 string line = lines[index];
@@ -154,22 +168,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     next = lines[index + 1];
                 }
 
+                if (index == 0 && line.StartsWith("WEBVTT", StringComparison.Ordinal))
+                {
+                    header.Clear();
+                    header.AppendLine(line);
+                    header.AppendLine();
+                    continue;
+                }
+
                 if (index > 0 && string.IsNullOrEmpty(lines[index - 1]) &&
-                    (line.StartsWith("NOTE ", StringComparison.Ordinal) || line == "NOTE"))
+                    (line == "NOTE" || line.StartsWith("NOTE ", StringComparison.Ordinal)))
                 {
                     noteOn = true;
                     if (subtitle.Paragraphs.Count == 0)
                     {
                         header.AppendLine();
+                        header.AppendLine();
                     }
                 }
-                else if (line == "STYLE" && subtitle.Paragraphs.Count == 0)
+                else if ((line == "STYLE" || line.StartsWith("STYLE ", StringComparison.Ordinal)) && subtitle.Paragraphs.Count == 0)
                 {
                     styleOn = true;
+                    header.AppendLine();
+                    header.AppendLine();
+                }
+                else if ((line == "REGION" || line.StartsWith("REGION ", StringComparison.Ordinal)) && subtitle.Paragraphs.Count == 0)
+                {
+                    regionOn = true;
+                    header.AppendLine();
                     header.AppendLine();
                 }
 
                 if (styleOn && !string.IsNullOrEmpty(line))
+                {
+                    header.AppendLine(line);
+                    continue;
+                }
+
+                if (regionOn && !string.IsNullOrEmpty(line))
                 {
                     header.AppendLine(line);
                     continue;
@@ -185,15 +221,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     continue;
                 }
 
-                if (noteOn)
-                {
-                    noteOn = false;
-                }
-
-                if (styleOn)
-                {
-                    styleOn = false;
-                }
+                noteOn = false;
+                styleOn = false;
+                regionOn = false;
 
                 var s = line;
                 bool isTimeCode = line.Contains("-->");
@@ -229,6 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             EndTime = GetTimeCodeFromString(parts[1])
                         };
                         positionInfo = GetPositionInfo(s);
+                        p.Region = GetRegion(s);
                     }
                     catch (Exception exception)
                     {
@@ -239,11 +270,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     hadEmptyLine = false;
                 }
-                else if (subtitle.Paragraphs.Count == 0 && line.Trim() == "WEBVTT")
-                {
-                    subtitle.Header = "WEBVTT";
-                }
-                else if (p != null && hadEmptyLine && 
+                else if (p != null && hadEmptyLine &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
@@ -297,7 +324,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
             if (header.Length > 0)
             {
-                subtitle.Header = header.ToString().Trim();
+                subtitle.Header = header
+                    .ToString()
+                    .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine)
+                    .Trim();
             }
         }
 
@@ -462,6 +492,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return positionInfo;
+        }
+
+        internal static string GetRegion(string s)
+        {
+            var region = GetTag(s, "region:");
+            return region;
         }
 
         private static string GetTag(string s, string tag)
