@@ -4677,6 +4677,10 @@ namespace Nikse.SubtitleEdit.Forms
                     LoadPlugins();
                 }
             }
+            else
+            {
+                UnloadPlugins();
+            }
         }
 
         private void SetAudioVisualizerSettings()
@@ -20447,12 +20451,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            UiUtil.CleanUpMenuItemPlugin(fileToolStripMenuItem);
-            UiUtil.CleanUpMenuItemPlugin(toolsToolStripMenuItem);
-            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSpellCheckMain);
-            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
-            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
-            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
+            UnloadPlugins();
 
             var fileMenuItems = new List<ToolStripMenuItem>();
             var toolsMenuItems = new List<ToolStripMenuItem>();
@@ -20534,6 +20533,16 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemTranslateSelected.DropDownItems.AddRange(translateSelectedLinesMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSynchronization.DropDownItems.AddRange(syncMenuItems.OrderBy(p => p.Text).ToArray());
             toolStripMenuItemSpellCheckMain.DropDownItems.AddRange(spellCheckMenuItems.OrderBy(p => p.Text).ToArray());
+        }
+
+        private void UnloadPlugins()
+        {
+            UiUtil.CleanUpMenuItemPlugin(fileToolStripMenuItem);
+            UiUtil.CleanUpMenuItemPlugin(toolsToolStripMenuItem);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSpellCheckMain);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
