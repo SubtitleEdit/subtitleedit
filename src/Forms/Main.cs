@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             set { _videoFileName = value; }
         }
 
-        private bool _loadPluginnAtStarttup;
+        private bool _pluginsLoadedAtStartup;
         private DateTime _fileDateTime;
         private string _title;
         private FindReplaceDialogHelper _findHelper;
@@ -4671,10 +4671,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.Misc.LoadPlugins)
             {
-                // only if it it wasn't load at beginning
-                if (!_loadPluginnAtStarttup)
+                // plugin should only be loaded when closing settings if it wasn't previously loaded
+                // else it should be loading only at-startup - this will prevent filling memory / appdomain with assemblies
+                // everytime settings opens and closes
+                if (!_pluginsLoadedAtStartup)
                 {
                     LoadPlugins();
+                    _pluginsLoadedAtStartup = true;
                 }
             }
             else
@@ -20079,7 +20082,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.Misc.LoadPlugins)
             {
                 LoadPlugins();
-                _loadPluginnAtStarttup = true;
+                _pluginsLoadedAtStartup = true;
             }
 
             mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
@@ -20543,6 +20546,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
             UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
+            // TODO: unload appdomain when supported in the future
         }
 
         private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
