@@ -653,12 +653,10 @@ $HorzAlign          =   Center
     {
         public bool LoadPlugins { get; set; }
         public bool LoadSubtitleFormatFromPlugins { get; set; }
-        public string SubtitleFormatForRaw { get; set; }
 
         public Misc()
         {
             LoadPlugins = true;
-            SubtitleFormatForRaw = "SubRip";
         }
     }
 
@@ -5441,12 +5439,6 @@ $HorzAlign          =   Center
                 {
                     settings.Misc.LoadSubtitleFormatFromPlugins = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
                 }
-
-                subNode = node.SelectSingleNode(nameof(Configuration.Settings.Misc.SubtitleFormatForRaw));
-                if (subNode != null)
-                {
-                    settings.Misc.SubtitleFormatForRaw = subNode.InnerText;
-                } 
             }
 
             // VobSub Ocr
@@ -7890,7 +7882,6 @@ $HorzAlign          =   Center
                 textWriter.WriteStartElement("MiscSettings", string.Empty);
                 textWriter.WriteElementString(nameof(settings.Misc.LoadPlugins), settings.Misc.LoadPlugins.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString(nameof(settings.Misc.LoadSubtitleFormatFromPlugins), settings.Misc.LoadSubtitleFormatFromPlugins.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString(nameof(settings.Misc.SubtitleFormatForRaw), settings.Misc.SubtitleFormatForRaw);
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VobSubOcr", string.Empty);

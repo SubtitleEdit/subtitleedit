@@ -1009,14 +1009,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool status = checkBoxLoadPlugin.Checked;
                 checkBoxLoadSubFromPlugin.Enabled = status;
-                comboBoxPluginRawFormat.Enabled = status;
             };
 
             checkBoxLoadPlugin.Checked = Configuration.Settings.Misc.LoadPlugins;
             checkBoxLoadSubFromPlugin.Checked = Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins;
-
-            // init combobox format
-            UiUtil.InitializeSubtitleFormatComboBox(comboBoxPluginRawFormat, Configuration.Settings.Misc.SubtitleFormatForRaw);
         }
 
 
@@ -1917,7 +1913,6 @@ namespace Nikse.SubtitleEdit.Forms
             // misc
             Configuration.Settings.Misc.LoadPlugins = checkBoxLoadPlugin.Checked;
             Configuration.Settings.Misc.LoadSubtitleFormatFromPlugins = checkBoxLoadSubFromPlugin.Checked;
-            Configuration.Settings.Misc.SubtitleFormatForRaw = comboBoxPluginRawFormat.SelectedItem.ToString();
 
             Configuration.Settings.Save();
         }
