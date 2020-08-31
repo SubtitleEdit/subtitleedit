@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     _subtitlesHeight = 57;
                 }
-                _mpvTextFileName = null;
+                DeleteTempMpvFileName();
                 VideoPlayerContainerResize(this, null);
             }
         }
@@ -377,7 +377,6 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitlesHeight = 57;
                     VideoPlayerContainerResize(null, null);
                     DeleteTempMpvFileName();
-                    _mpvTextFileName = null;
                 }
                 SubtitleText = text;
             }
@@ -481,6 +480,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (File.Exists(_mpvTextFileName))
                 {
                     File.Delete(_mpvTextFileName);
+                    _mpvTextFileName = null;
                 }
             }
             catch
@@ -1139,7 +1139,7 @@ namespace Nikse.SubtitleEdit.Controls
             ResizeTimeCode();
 
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
-            _mpvTextFileName = null;
+            DeleteTempMpvFileName();
         }
 
         private void ResizeTimeCode()
