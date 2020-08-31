@@ -17,6 +17,11 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                _wc.Dispose();
+                _wc = null;
+            }
             base.Dispose(disposing);
         }
 
@@ -111,8 +116,8 @@
             // 
             // listViewGetPlugins
             // 
-            this.listViewGetPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listViewGetPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewGetPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
@@ -151,8 +156,8 @@
             // 
             // tabControlPlugins
             // 
-            this.tabControlPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tabControlPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlPlugins.Controls.Add(this.tabPageInstalledPlugins);
             this.tabControlPlugins.Controls.Add(this.tabPageGetPlugins);
@@ -199,8 +204,8 @@
             // 
             // listViewInstalledPlugins
             // 
-            this.listViewInstalledPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.listViewInstalledPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewInstalledPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderInsName,

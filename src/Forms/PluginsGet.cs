@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class PluginsGet : Form
     {
-
         public class PluginInfoItem
         {
             public string Version { get; set; }
@@ -32,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _updatingAllPlugins;
         private int _updatingAllPluginsCount;
         private bool _fetchingData;
+        private WebClient _wc;
 
         private static string GetPluginXmlFileUrl()
         {
@@ -75,6 +75,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
 
             buttonUpdateAll.Visible = false;
+
+            _wc = new WebClient
+            {
+                Proxy = Utilities.GetProxy(),
+                Encoding = System.Text.Encoding.UTF8,
+                CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+            };
+            _wc.Headers.Add("Accept-Encoding", "");
+
             DownloadPluginMetadataInfos();
         }
 
@@ -86,16 +95,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 ShowInstalledPlugins();
                 string url = GetPluginXmlFileUrl();
-                var wc = new WebClient
-                {
-                    Proxy = Utilities.GetProxy(),
-                    Encoding = System.Text.Encoding.UTF8,
-                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
-                };
-                wc.Headers.Add("Accept-Encoding", "");
-                wc.DownloadStringCompleted += wc_DownloadStringCompleted;
+                _wc.DownloadStringCompleted += wc_DownloadStringCompleted;
                 _fetchingData = true;
-                wc.DownloadStringAsync(new Uri(url));
+                _wc.DownloadStringAsync(new Uri(url));
             }
             catch (Exception exception)
             {
