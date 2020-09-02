@@ -20,7 +20,6 @@
             if (disposing)
             {
                 _wc.Dispose();
-                _wc = null;
             }
             base.Dispose(disposing);
         }

@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _updatingAllPlugins;
         private int _updatingAllPluginsCount;
         private bool _fetchingData;
-        private WebClient _wc;
+        private readonly WebClient _wc;
 
         private static string GetPluginXmlFileUrl()
         {
@@ -273,9 +273,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string url = plugin.Url;
                 _downloadedPluginName = plugin.Name;
 
-                var wc = new WebClient { Proxy = Utilities.GetProxy(), CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                _wc.DownloadDataCompleted += wc_DownloadDataCompleted;
+                _wc.DownloadDataAsync(new Uri(url));
             }
             catch (Exception exception)
             {
@@ -287,6 +286,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            // dispose the webclient if it's not the one declared as field (this will be the webclient used to
+            // download multiple plugin
+            if (sender != _wc)
+            {
+                ((WebClient)sender).Dispose();
+            }
+
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
