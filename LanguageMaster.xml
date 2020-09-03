@@ -1776,7 +1776,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowOnlyModifiedLines>Show only modified lines</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconds between lines</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Frame rate info</FrameInfo>
-    <OneFrameXisYMilliseconds>One frame at {0:0.00} fps is {1} milliseconds</OneFrameXisYMilliseconds>
+    <Frames>Frames</Frames>
+    <XFrameYisZMilliseconds>{0} frame(s) at {1} fps is {2} milliseconds</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Set Sync point for line {0}</Title>

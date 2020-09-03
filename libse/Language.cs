@@ -2066,7 +2066,8 @@ can edit in same subtitle file (collaboration)",
                 MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between lines",
                 ShowOnlyModifiedLines = "Show only modified lines",
                 FrameInfo = "Frame rate info",
-                OneFrameXisYMilliseconds = "One frame at {0:0.00} fps is {1} milliseconds",
+                Frames = "Frames",
+                XFrameYisZMilliseconds = "{0} frame(s) at {1} fps is {2} milliseconds",
             };
 
             SetSyncPoint = new LanguageStructure.SetSyncPoint

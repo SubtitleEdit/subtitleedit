@@ -1934,7 +1934,8 @@
             public string ShowOnlyModifiedLines { get; set; }
             public string MinimumMillisecondsBetweenParagraphs { get; set; }
             public string FrameInfo { get; set; }
-            public string OneFrameXisYMilliseconds { get; set; }
+            public string Frames { get; set; }
+            public string XFrameYisZMilliseconds { get; set; }
         }
 
         public class SetSyncPoint

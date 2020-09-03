@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Subtitle _subtitle;
         public int FixCount { get; private set; }
+        public int MinGapMs { get; internal set; }
 
         public SetMinimumDisplayTimeBetweenParagraphs()
         {
@@ -130,6 +131,23 @@ namespace Nikse.SubtitleEdit.Forms
             FixCount = fixes.Count;
         }
 
+        private void CalcMilliseconds()
+        {
+            var frameRate = GetFrameRate();
+            MinGapMs = (int)Math.Round(1000.0 / frameRate * (double)numericUpDownFrames.Value);
+            labelXFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.XFrameYisZMilliseconds, numericUpDownFrames.Value, frameRate, MinGapMs);
+        }
+
+        private double GetFrameRate()
+        {
+            if (double.TryParse(comboBoxFrameRate.Text, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var frameRate))
+            {
+                return frameRate;
+            }
+
+            return Configuration.Settings.General.CurrentFrameRate;
+        }
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -170,13 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var frameRate))
-            {
-                frameRate = 25.0;
-            }
-
-            long ms = (long)Math.Round(TimeCode.BaseUnit / frameRate);
-            labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);
+            CalcMilliseconds();
         }
 
         private void comboBoxFrameRate_KeyUp(object sender, KeyEventArgs e)
@@ -187,6 +199,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetMinimumDisplayTimeBetweenParagraphs_Shown(object sender, EventArgs e)
         {
             SubtitleListview1.Focus();
+        }
+
+        private void numericUpDownFrames_ValueChanged(object sender, EventArgs e)
+        {
+            CalcMilliseconds();
         }
 
     }
