@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Core
                 Join = "Join",
                 TotalNumberOfLinesX = "Total number of lines: {0:#,###,###}",
                 AlreadyCorrectTimeCodes = "Files already have correct time codes",
-                AppendTimeCodes = "Add end time of previous  file",
+                AppendTimeCodes = "Add end time of previous file",
                 AddMs = "Add milliseconds after each file"
             };
 
@@ -2314,8 +2314,8 @@ can edit in same subtitle file (collaboration)",
                 AdjustEndOneFrameForward = "Move end 1 frame forward",
                 AdjustStartOneFrameBackKeepGapPrev = "Move start 1 frame back (keep gap to previous if close)",
                 AdjustStartOneFrameForwardKeepGapPrev = "Move start 1 frame forward (keep gap to previous if close)",
-                AdjustEndOneFrameBackKeepGapNext = "Move end 1 frame back  (keep gap to next if close)",
-                AdjustEndOneFrameForwardKeepGapNext = "Move end 1 frame forward  (keep gap to next if close)",
+                AdjustEndOneFrameBackKeepGapNext = "Move end 1 frame back (keep gap to next if close)",
+                AdjustEndOneFrameForwardKeepGapNext = "Move end 1 frame forward (keep gap to next if close)",
                 AdjustSetStartTimeKeepDuration = "Set start time, keep duration",
                 AdjustSetEndAndOffsetTheRest = "Set end, offset the rest",
                 AdjustSetEndAndOffsetTheRestAndGoToNext = "Set end, offset the rest and go to next",
