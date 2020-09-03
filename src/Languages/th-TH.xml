@@ -1537,7 +1537,6 @@
     <ShowOnlyModifiedLines>แสดงเฉพาะบรรทัดที่แก้แล้ว</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>มิลลิวินาทีต่ำสุดระหว่างบรรทัด</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>ข้อมูลเฟรมเรต</FrameInfo>
-    <OneFrameXisYMilliseconds>หนึ่งเฟรมเรตที่ {0:0.00} fps คือ {1} มิลลิวินาที</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>กำหนดจุดซิงค์สำหรับบรรทัด {0}</Title>

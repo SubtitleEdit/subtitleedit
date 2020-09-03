@@ -1769,7 +1769,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ShowOnlyModifiedLines>Vis kun rettede linier</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum millisekunder mellem linjerne</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Frame info</FrameInfo>
-    <OneFrameXisYMilliseconds>En frame ved {0:0.00} fps er {1} milliseconds</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Set synkroniserings punkt for linje {0}</Title>

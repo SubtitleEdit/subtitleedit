@@ -1734,7 +1734,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowOnlyModifiedLines>Nur geänderte Texte anzeigen</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimale Millisekunden zwischen Texten</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Bildfrequenz info</FrameInfo>
-    <OneFrameXisYMilliseconds>Ein Bild mit {0:0.00} fps sind {1} Millisekunden</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Sync Punkt für Text {0} setzen</Title>

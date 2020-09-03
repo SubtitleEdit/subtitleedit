@@ -1732,7 +1732,6 @@ kan redigera i samma undertextfil (samarbete)</Information>
     <ShowOnlyModifiedLines>Visa endast ändrade rader</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minsta millisekunder mellan raderna</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Bildhastighetsinfo</FrameInfo>
-    <OneFrameXisYMilliseconds>En bildruta på {0:0.00} fps är {1} millisekunder</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Sätt synkpunkt för rad {0}</Title>

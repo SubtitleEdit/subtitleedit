@@ -1774,7 +1774,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ShowOnlyModifiedLines>Csak a módosított sorok megjelenítése</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum ezredmásodperc a sorok között</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Képarány információ</FrameInfo>
-    <OneFrameXisYMilliseconds>Képkockánként {0:0.00} fps 1} ezredmásodperc</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Szinkronizációs pont beállítása a(z) {0} sor esetén</Title>
