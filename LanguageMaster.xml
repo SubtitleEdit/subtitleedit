@@ -818,7 +818,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <Join>Join</Join>
     <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
     <AlreadyCorrectTimeCodes>Files already have correct time codes</AlreadyCorrectTimeCodes>
-    <AppendTimeCodes>Add end time of previous  file</AppendTimeCodes>
+    <AppendTimeCodes>Add end time of previous file</AppendTimeCodes>
     <AddMs>Add milliseconds after each file</AddMs>
   </JoinSubtitles>
   <LanguageNames>
@@ -2020,8 +2020,8 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustEndOneFrameForward>Move end 1 frame forward</AdjustEndOneFrameForward>
     <AdjustStartOneFrameBackKeepGapPrev>Move start 1 frame back (keep gap to previous if close)</AdjustStartOneFrameBackKeepGapPrev>
     <AdjustStartOneFrameForwardKeepGapPrev>Move start 1 frame forward (keep gap to previous if close)</AdjustStartOneFrameForwardKeepGapPrev>
-    <AdjustEndOneFrameBackKeepGapNext>Move end 1 frame back  (keep gap to next if close)</AdjustEndOneFrameBackKeepGapNext>
-    <AdjustEndOneFrameForwardKeepGapNext>Move end 1 frame forward  (keep gap to next if close)</AdjustEndOneFrameForwardKeepGapNext>
+    <AdjustEndOneFrameBackKeepGapNext>Move end 1 frame back (keep gap to next if close)</AdjustEndOneFrameBackKeepGapNext>
+    <AdjustEndOneFrameForwardKeepGapNext>Move end 1 frame forward (keep gap to next if close)</AdjustEndOneFrameForwardKeepGapNext>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
