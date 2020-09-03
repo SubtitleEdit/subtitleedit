@@ -1764,7 +1764,6 @@ Command line: {1} {2}
     <ShowOnlyModifiedLines>仅显示已修改的行</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>行间最小毫秒数</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>帧速率信息</FrameInfo>
-    <OneFrameXisYMilliseconds>帧速率为{0:0.00} 帧/秒时，每帧时长为 {1} 毫秒</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>为行 {0} 设置同步点</Title>

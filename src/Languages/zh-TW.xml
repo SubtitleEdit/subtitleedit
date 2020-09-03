@@ -1602,7 +1602,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <ShowOnlyModifiedLines>僅顯示已修改的行</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>行間最小間隔 (毫秒)</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>影格率訊息</FrameInfo>
-    <OneFrameXisYMilliseconds>影格率為 {0:0.00} 影格/秒 時，每影格持續時間為 {1} 毫秒</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>為行 {0} 設定同步點</Title>

@@ -1708,7 +1708,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyModifiedLines>Mostra només línies modificades</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisegons mínims entre línies</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info ràtio quadre</FrameInfo>
-    <OneFrameXisYMilliseconds>Un quadre a {0:0.00} fps és {1} milisegons</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estableix punt Sinc per la línia {0}</Title>

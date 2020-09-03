@@ -1769,7 +1769,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowOnlyModifiedLines>Показывать только измененные строки</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Минимальный интервал между строками (мс):</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Частота кадров</FrameInfo>
-    <OneFrameXisYMilliseconds>Один кадр в {0:0.00} fps - это {1} мс</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Установить точку синхронизации для строки {0}</Title>

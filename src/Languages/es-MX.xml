@@ -1743,7 +1743,6 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ShowOnlyModifiedLines>Mostrar sólo las líneas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisegundos mínimos entre líneas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Información de la velocidad de cuadros</FrameInfo>
-    <OneFrameXisYMilliseconds>Un fotograma a {0:0.00} fps son {1} milisegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Establecer sincronización puntual para la línea {0}</Title>

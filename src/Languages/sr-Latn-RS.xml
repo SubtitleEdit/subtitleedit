@@ -1737,7 +1737,6 @@ da uređujete određeni prevod sa drugim ljudima.</Information>
     <ShowOnlyModifiedLines>Prikaži samo izmenjene linije</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milisekundi između linija</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info o broju kadrova</FrameInfo>
-    <OneFrameXisYMilliseconds>Jedan kadar na {0:0.00} fps je {1} milisekundi</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Tačka sinhronizacije za liniju {0}</Title>

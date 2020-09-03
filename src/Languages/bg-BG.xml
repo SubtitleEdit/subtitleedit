@@ -1781,7 +1781,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyModifiedLines>Показване само редовете за промяна</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Минимален интервал (милисек.) между редовете със субтитри</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Честота на кадрите (fps)</FrameInfo>
-    <OneFrameXisYMilliseconds>Един кадър с {0:0.00} fps е = {1} милисек.</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Задаване на синхро точка за ред {0}</Title>

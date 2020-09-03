@@ -1697,7 +1697,6 @@ bisa mengedit dlm file subjudul yg sama (kolaborasi)</Information>
     <ShowOnlyModifiedLines>Hanya tampilkan baris yg dimodifikasi</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milidetik minimum di antara baris</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info laju frame</FrameInfo>
-    <OneFrameXisYMilliseconds>Satu frame pada {0:0.00} fps adalah {1} milidetik</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Atur Sinkron angka untuk baris {0}</Title>

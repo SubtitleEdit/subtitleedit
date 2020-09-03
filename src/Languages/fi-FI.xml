@@ -1755,7 +1755,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ShowOnlyModifiedLines>Näytä vain muokatut rivit</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Pienin aika (ms) rivien välillä</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Kehystietoja</FrameInfo>
-    <OneFrameXisYMilliseconds>Yksi kehys nopudella {0:0.00} fps on {1} millisekuntia</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Aseta tahdistuskohta riville {0}</Title>

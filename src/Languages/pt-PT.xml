@@ -1774,7 +1774,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informação da taxa de fotogramas</FrameInfo>
-    <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é de {1} milissegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Definir ponto de sincronia para a linha {0}</Title>

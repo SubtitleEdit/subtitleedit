@@ -1774,7 +1774,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ShowOnlyModifiedLines>Pokaż tylko zmodyfikowane linie</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milisekund między liniami</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informacje o ilości klatek na sekundę</FrameInfo>
-    <OneFrameXisYMilliseconds>Jedna klatka z {0:0.00} fps ma {1} milisekundy</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ustaw punkt synchronizacji dla linii {0}</Title>

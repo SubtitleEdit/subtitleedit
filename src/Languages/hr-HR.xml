@@ -1672,7 +1672,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowOnlyModifiedLines>&amp;Prikaži samo izmijenjene linije</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milisekundi između linija:</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info o broju sličica</FrameInfo>
-    <OneFrameXisYMilliseconds>Jedna sličica na {0:0:00} fps je {1} milisekunda</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Točka usklađivanja za liniju {0}</Title>

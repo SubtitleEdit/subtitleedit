@@ -1620,7 +1620,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyModifiedLines>Показувати тільки змінені рядки</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Мінімальна відстань між рядками, мілісекунд</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Інформація про частоту кадрів</FrameInfo>
-    <OneFrameXisYMilliseconds>Один кадр при частоті {0:0.00} кнс - це {1} мілісекунд</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Встановлення точки синхронізації для субтитру {0}</Title>

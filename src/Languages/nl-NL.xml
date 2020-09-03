@@ -1775,7 +1775,6 @@ hetzelfde ondertitelbestand bewerken (samenwerken)</Information>
     <ShowOnlyModifiedLines>Alleen gewĳzigde regels weergeven</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconden tussen regels</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Beeldsnelheidinformatie</FrameInfo>
-    <OneFrameXisYMilliseconds>Eén beeld op {0:0.00} fps is {1} milliseconden</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Sync-punt bepalen voor {0}</Title>
