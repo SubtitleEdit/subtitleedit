@@ -354,6 +354,7 @@ namespace Nikse.SubtitleEdit.Core
                 FilterMoreThanTwoLines = "More than two lines in one subtitle",
                 FilterContains = "Text contains...",
                 FilterFileNameContains = "File name contains...",
+                MkvLanguageCodeContains = "Mkv Language code contains...",
                 FixCommonErrorsErrorX = "Fix common errors: {0}",
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",

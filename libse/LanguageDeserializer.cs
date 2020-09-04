@@ -583,6 +583,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/FilterFileNameContains":
                     language.BatchConvert.FilterFileNameContains = reader.Value;
                     break;
+                case "BatchConvert/MkvLanguageCodeContains":
+                    language.BatchConvert.MkvLanguageCodeContains = reader.Value;
+                    break;
                 case "BatchConvert/FixCommonErrorsErrorX":
                     language.BatchConvert.FixCommonErrorsErrorX = reader.Value;
                     break;
