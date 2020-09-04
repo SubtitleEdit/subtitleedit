@@ -1746,7 +1746,6 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowOnlyModifiedLines>Прикажи само изменети линии</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Минимум милисекунди меѓу линии</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Инфо за број на кадри</FrameInfo>
-    <OneFrameXisYMilliseconds>Еден кадар во {0:0.00} fps е {1} милисекунди</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Постави точка за синхронизација на линија  {0}</Title>

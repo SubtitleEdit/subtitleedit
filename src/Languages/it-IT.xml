@@ -1603,7 +1603,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ShowOnlyModifiedLines>Mostra solo le linee modificate</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Millisecondi minimi fra le linee</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informazioni sul frame rate</FrameInfo>
-    <OneFrameXisYMilliseconds>Un frame a {0:0.00} fps è di {1} millisecondi</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Imposta punto sincr. per linea {0}</Title>

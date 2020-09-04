@@ -1688,7 +1688,6 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ShowOnlyModifiedLines>Sadece düzenlenen satırları göster</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Satırlar arası minimum milisaniye</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Kare hızı bilgisi</FrameInfo>
-    <OneFrameXisYMilliseconds>Bir kare {0:0.00}'de fps {1} milisaniyedir</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Satır için senkron noktası ayarla {0}</Title>

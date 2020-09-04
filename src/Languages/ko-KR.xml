@@ -1772,7 +1772,6 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <ShowOnlyModifiedLines>수정된 줄만 표시</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>단락 사이의 최소 간격 (밀리초)</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>프레임 속도 정보</FrameInfo>
-    <OneFrameXisYMilliseconds>{0:0.00} fps에서 1 프레임은 {1} 밀리초 입니다.</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>"{0}" 줄의 지점 동기화</Title>

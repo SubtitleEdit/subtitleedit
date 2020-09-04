@@ -1625,7 +1625,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <ShowOnlyModifiedLines>Vis kun endrete linjer</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minst antall millisekunder mellom linjer</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Bilderateinfo</FrameInfo>
-    <OneFrameXisYMilliseconds>Et bilde ved {0:0.00} bilder i sekundet er {1} millisekunder</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Velg synkpunkt for linje # {0}</Title>

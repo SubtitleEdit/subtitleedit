@@ -1499,7 +1499,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <ShowOnlyModifiedLines>Prikaži le spremenjene vrstice</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimalno milisekund med vrsticami</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informacija o hitrosti slik</FrameInfo>
-    <OneFrameXisYMilliseconds>Ena slika pri {0:0.00} fps je {1} milisekund</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Določi točko sinhronizacije za vrstico {0}</Title>

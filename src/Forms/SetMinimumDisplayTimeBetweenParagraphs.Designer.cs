@@ -36,7 +36,9 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.checkBoxShowOnlyChangedLines = new System.Windows.Forms.CheckBox();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
-            this.labelOneFrameIsXMS = new System.Windows.Forms.Label();
+            this.labelFrames = new System.Windows.Forms.Label();
+            this.numericUpDownFrames = new System.Windows.Forms.NumericUpDown();
+            this.labelXFrameIsXMS = new System.Windows.Forms.Label();
             this.groupBoxFrameInfo = new System.Windows.Forms.GroupBox();
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).BeginInit();
@@ -106,7 +108,7 @@
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 18);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(174, 13);
-            this.labelMaxMillisecondsBetweenLines.TabIndex = 0;
+            this.labelMaxMillisecondsBetweenLines.TabIndex = 2;
             this.labelMaxMillisecondsBetweenLines.Text = "Minimum milliseconds between lines";
             // 
             // buttonOK
@@ -156,21 +158,50 @@
             this.comboBoxFrameRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxFrameRate_SelectedIndexChanged);
             this.comboBoxFrameRate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxFrameRate_KeyUp);
             // 
-            // labelOneFrameIsXMS
+            // labelFrames
             // 
-            this.labelOneFrameIsXMS.AutoSize = true;
-            this.labelOneFrameIsXMS.Location = new System.Drawing.Point(6, 57);
-            this.labelOneFrameIsXMS.Name = "labelOneFrameIsXMS";
-            this.labelOneFrameIsXMS.Size = new System.Drawing.Size(135, 13);
-            this.labelOneFrameIsXMS.TabIndex = 1;
-            this.labelOneFrameIsXMS.Text = "One frame is x milliseconds";
+            this.labelFrames.AutoSize = true;
+            this.labelFrames.Location = new System.Drawing.Point(174, 29);
+            this.labelFrames.Name = "labelFrames";
+            this.labelFrames.Size = new System.Drawing.Size(174, 13);
+            this.labelFrames.TabIndex = 1;
+            this.labelFrames.Text = "Frames:";
+            // 
+            // numericUpDownFrames
+            // 
+            this.numericUpDownFrames.Location = new System.Drawing.Point(220, 25);
+            this.numericUpDownFrames.Maximum = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            this.numericUpDownFrames.Name = "numericUpDownFrames";
+            this.numericUpDownFrames.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownFrames.TabIndex = 52;
+            this.numericUpDownFrames.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numericUpDownFrames.ValueChanged += new System.EventHandler(this.numericUpDownFrames_ValueChanged);
+            // 
+            // labelXFrameIsXMS
+            // 
+            this.labelXFrameIsXMS.AutoSize = true;
+            this.labelXFrameIsXMS.Location = new System.Drawing.Point(6, 57);
+            this.labelXFrameIsXMS.Name = "labelXFrameIsXMS";
+            this.labelXFrameIsXMS.Size = new System.Drawing.Size(135, 13);
+            this.labelXFrameIsXMS.TabIndex = 3;
+            this.labelXFrameIsXMS.Text = "x frame is y milliseconds";
             // 
             // groupBoxFrameInfo
             // 
             this.groupBoxFrameInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFrameInfo.Controls.Add(this.comboBoxFrameRate);
-            this.groupBoxFrameInfo.Controls.Add(this.labelOneFrameIsXMS);
+            this.groupBoxFrameInfo.Controls.Add(this.labelFrames);
+            this.groupBoxFrameInfo.Controls.Add(this.numericUpDownFrames);
+            this.groupBoxFrameInfo.Controls.Add(this.labelXFrameIsXMS);
             this.groupBoxFrameInfo.Location = new System.Drawing.Point(355, 12);
             this.groupBoxFrameInfo.Name = "groupBoxFrameInfo";
             this.groupBoxFrameInfo.Size = new System.Drawing.Size(383, 76);
@@ -219,7 +250,9 @@
         private Controls.SubtitleListView SubtitleListview1;
         private System.Windows.Forms.CheckBox checkBoxShowOnlyChangedLines;
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
-        private System.Windows.Forms.Label labelOneFrameIsXMS;
+        private System.Windows.Forms.Label labelXFrameIsXMS;
+        private System.Windows.Forms.Label labelFrames;
+        private System.Windows.Forms.NumericUpDown numericUpDownFrames;
         private System.Windows.Forms.GroupBox groupBoxFrameInfo;
     }
 }

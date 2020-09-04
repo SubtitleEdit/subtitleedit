@@ -1734,7 +1734,6 @@ peuvent éditer le même fichier sous-titres (collaboration)</Information>
     <ShowOnlyModifiedLines>Afficher uniquement les lignes modifiées</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum de millisecondes entre les lignes</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informations sur la fréquence d'image</FrameInfo>
-    <OneFrameXisYMilliseconds>Une image à {0:0.00} fps c'est {1} millisecondes</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Définir point de synchronisation à la ligne {0}</Title>
