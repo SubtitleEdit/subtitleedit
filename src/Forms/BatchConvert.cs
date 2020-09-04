@@ -269,6 +269,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
             comboBoxFilter.Items[3] = l.FilterContains;
             comboBoxFilter.Items[4] = l.FilterFileNameContains;
+            comboBoxFilter.Items[5] = l.MkvLanguageCodeContains;
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
@@ -519,6 +520,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddInputFile(string fileName)
         {
+            if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0 && !fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
             try
             {
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
@@ -669,6 +674,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     foreach (var lang in mkvSrt)
                     {
+                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
                         item = new ListViewItem(fileName);
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
@@ -2435,7 +2444,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4;
+            textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3 || comboBoxFilter.SelectedIndex == 4 || comboBoxFilter.SelectedIndex == 5;
         }
 
         private void buttonTransportStreamSettings_Click(object sender, EventArgs e)
