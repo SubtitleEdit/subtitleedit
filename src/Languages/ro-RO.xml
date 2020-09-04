@@ -1773,7 +1773,6 @@ pot edita acelasi fișier de subtitrare (colaborare)</Information>
     <ShowOnlyModifiedLines>Arată numai linii modificate</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minim de milisecunde între linii</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informații ale ratei cadrului</FrameInfo>
-    <OneFrameXisYMilliseconds>Un cadru la {0:0.00} fps este {1} milisecunde</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Setare pct. sincroniz. ptr. linia {0}</Title>

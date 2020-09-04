@@ -1722,7 +1722,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ShowOnlyModifiedLines>Zobrazit pouze změněné řádky</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimálně milisekund mezi řádky</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informace o snímkové frekvenci</FrameInfo>
-    <OneFrameXisYMilliseconds>Jeden snímek při {0:0.00} fps je {1} milisekund</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Nastavit synchronizační bod pro řádek {0}</Title>

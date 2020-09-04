@@ -4765,8 +4765,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "SetMinimumDisplayTimeBetweenParagraphs/FrameInfo":
                     language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo = reader.Value;
                     break;
-                case "SetMinimumDisplayTimeBetweenParagraphs/OneFrameXisYMilliseconds":
-                    language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds = reader.Value;
+                case "SetMinimumDisplayTimeBetweenParagraphs/Frames":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.Frames = reader.Value;
+                    break;
+                case "SetMinimumDisplayTimeBetweenParagraphs/XFrameYisZMilliseconds":
+                    language.SetMinimumDisplayTimeBetweenParagraphs.XFrameYisZMilliseconds = reader.Value;
                     break;
                 case "SetSyncPoint/Title":
                     language.SetSyncPoint.Title = reader.Value;

@@ -1728,7 +1728,6 @@ Continue anyway?</PromptInsertSubtitleOverlap>
     <ShowOnlyModifiedLines>فقط نمایش تغییر خطوط</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>حداقل میلی ثانیه بین خطوط</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>اطلاعات نرخ فریم</FrameInfo>
-    <OneFrameXisYMilliseconds>یک فریم در {0:0.00} fps {1} میلی ثانیه است</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>تنظیم نقطه همگام سازی برای خط {0}</Title>

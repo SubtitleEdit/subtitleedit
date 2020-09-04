@@ -1765,7 +1765,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ShowOnlyModifiedLines>Mostrar somente linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Info da Taxa de quadros</FrameInfo>
-    <OneFrameXisYMilliseconds>Um quadro em {0:0.00} fps é {1} milissegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Estabelecer ponto de sincronização para a linha {0}</Title>

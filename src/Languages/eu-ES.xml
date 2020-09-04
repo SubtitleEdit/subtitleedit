@@ -1759,7 +1759,6 @@ Jarraitu horrela ere?</PromptInsertSubtitleOverlap>
     <ShowOnlyModifiedLines>&amp;Erakutsi aldatutako lerroak bakarrik</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Lerroen arteko segundumilaen gutxiengoa</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Frame neurri argibideak</FrameInfo>
-    <OneFrameXisYMilliseconds>Bat frame {0:0.00} fs-ko dira {1} segundumilaen</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ezarri Albiberetze gunea lerro honi {0}</Title>

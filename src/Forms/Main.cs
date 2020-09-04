@@ -13591,7 +13591,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
             {
                 // do not check for shortcuts if text is being entered and a textbox is focused
-                if ((fc.Name == textBoxListViewText.Name || fc.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) && e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z)
+                if ((fc.Name == textBoxListViewText.Name || fc.Name == textBoxListViewTextAlternate.Name || fc.Name == textBoxSearchWord.Name) && ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode >= Keys.OemSemicolon && e.KeyCode <= Keys.OemBackslash)))
                 {
                     return;
                 }
