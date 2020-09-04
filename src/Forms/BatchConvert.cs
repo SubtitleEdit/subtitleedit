@@ -2102,7 +2102,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // keep an item selected/focused for improved UX
-            if (first < listViewInputFiles.Items.Count)
+            if (first < listViewInputFiles.Items.Count && listViewInputFiles.Items.Count > 0)
             {
                 listViewInputFiles.Items[first].Selected = true;
                 listViewInputFiles.FocusedItem = listViewInputFiles.Items[first];
