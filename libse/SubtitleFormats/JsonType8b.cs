@@ -72,10 +72,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Json.ReadTag(s, "text");
                     if (start != null && end != null && text != null)
                     {
-                        double startMs;
-                        double endMs;
-                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startMs) &&
-                            double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endMs))
+                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startMs) &&
+                            double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var endMs))
                         {
                             subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startMs, endMs));
                         }

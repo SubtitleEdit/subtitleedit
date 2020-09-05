@@ -96,8 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Remove(text.Length - 1, 1);
                     }
 
-                    long number;
-                    if (long.TryParse(milliseconds, out number))
+                    if (long.TryParse(milliseconds, out var number))
                     {
                         subtitle.Paragraphs.Add(new Paragraph(text, number, number));
                     }

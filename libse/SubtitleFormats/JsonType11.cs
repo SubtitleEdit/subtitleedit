@@ -56,8 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Json.ReadTag(s, "line");
                     if (start != null && text != null)
                     {
-                        double startMilliseconds;
-                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startMilliseconds))
+                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startMilliseconds))
                         {
                             var duration = Utilities.GetOptimalDisplayMilliseconds(text);
                             var endMilliseconds = startMilliseconds + duration;
@@ -76,6 +75,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
-
     }
 }

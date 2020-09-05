@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -59,12 +60,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             var sb = new StringBuilder();
-            foreach (string s in lines)
+            foreach (var s in lines)
             {
                 sb.Append(s);
             }
 
-            string allText = sb.ToString();
+            var allText = sb.ToString();
             if (!allText.Contains("\"text\""))
             {
                 return;
@@ -74,15 +75,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var endTimes = Json.ReadArray(allText, "end");
             var texts = Json.ReadArray(allText, "text");
 
-            for (int i = 0; i < Math.Min(Math.Min(startTimes.Count, texts.Count), endTimes.Count); i++)
+            var max = Math.Min(Math.Min(startTimes.Count, texts.Count), endTimes.Count);
+            for (var i = 0; i < max; i++)
             {
-                try
+                if (int.TryParse(startTimes[i], out var startMs) && int.TryParse(endTimes[i], out var endMs))
                 {
-                    string text = Json.DecodeJsonText(texts[i]);
-                    var p = new Paragraph(text, int.Parse(startTimes[i]), int.Parse(endTimes[i]));
+                    var text = Json.DecodeJsonText(texts[i]);
+                    var p = new Paragraph(text, startMs, endMs);
                     subtitle.Paragraphs.Add(p);
                 }
-                catch
+                else
                 {
                     _errorCount++;
                 }
@@ -90,6 +92,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }

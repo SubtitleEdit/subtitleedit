@@ -78,25 +78,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.Append("],");
 
             sb.Append("\"timerange\":[");
-            Paragraph timerageP = subtitle.GetParagraphOrDefault(0);
-            if (timerageP == null)
+            var timeRangeParagraph = subtitle.GetParagraphOrDefault(0);
+            if (timeRangeParagraph == null)
             {
                 sb.Append('0');
             }
             else
             {
-                sb.Append(timerageP.StartTime.TotalMilliseconds);
+                sb.Append(timeRangeParagraph.StartTime.TotalMilliseconds);
             }
 
             sb.Append(',');
-            timerageP = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
-            if (timerageP == null)
+            timeRangeParagraph = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
+            if (timeRangeParagraph == null)
             {
                 sb.Append('0');
             }
             else
             {
-                sb.Append(timerageP.EndTime.TotalMilliseconds);
+                sb.Append(timeRangeParagraph.EndTime.TotalMilliseconds);
             }
 
             sb.Append(']');
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(s);
             }
 
-            string allText = sb.ToString();
+            var allText = sb.ToString();
             if (!allText.Contains("text_tees"))
             {
                 return;
@@ -125,46 +125,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var times = Json.ReadArray(allText, "text_tees");
             var texts = Json.ReadArray(allText, "text_content");
 
-            for (int i = 0; i < Math.Min(times.Count, texts.Count); i++)
+            for (var i = 0; i < Math.Min(times.Count, texts.Count); i++)
             {
-                try
+                var text = texts[i];
+                if (text.StartsWith('['))
                 {
-                    string text = texts[i];
-                    if (text.StartsWith('['))
+                    var textLines = Json.ReadArray("{\"text\":" + texts[i] + "}", "text");
+                    var textSb = new StringBuilder();
+                    foreach (string line in textLines)
                     {
-                        var textLines = Json.ReadArray("{\"text\":" + texts[i] + "}", "text");
-                        var textSb = new StringBuilder();
-                        foreach (string line in textLines)
+                        var t = Json.DecodeJsonText(line);
+                        if (t.StartsWith("[\"", StringComparison.Ordinal) && t.EndsWith("\"]", StringComparison.Ordinal))
                         {
-                            string t = Json.DecodeJsonText(line);
-                            if (t.StartsWith("[\"", StringComparison.Ordinal) && t.EndsWith("\"]", StringComparison.Ordinal))
+                            var innerSb = new StringBuilder();
+                            var innerTextLines = Json.ReadArray("{\"text\":" + t + "}", "text");
+                            foreach (string innerLine in innerTextLines)
                             {
-                                var innerSb = new StringBuilder();
-                                var innerTextLines = Json.ReadArray("{\"text\":" + t + "}", "text");
-                                foreach (string innerLine in innerTextLines)
-                                {
-                                    innerSb.Append(' ');
-                                    innerSb.Append(innerLine);
-                                }
-                                textSb.AppendLine(innerSb.ToString().Trim());
+                                innerSb.Append(' ');
+                                innerSb.Append(innerLine);
                             }
-                            else
-                            {
-                                textSb.AppendLine(t);
-                            }
+                            textSb.AppendLine(innerSb.ToString().Trim());
                         }
-                        text = textSb.ToString().Trim();
-                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        else
+                        {
+                            textSb.AppendLine(t);
+                        }
                     }
-                    var p = new Paragraph(text, int.Parse(times[i]), 0);
-                    if (i + 1 < times.Count)
-                    {
-                        p.EndTime.TotalMilliseconds = int.Parse(times[i + 1]);
-                    }
+                    text = textSb.ToString().Trim();
+                    text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                }
 
+                if (int.TryParse(times[i], out var startMs))
+                {
+                    var p = new Paragraph(text, startMs, 0);
+                    if (i + 1 < times.Count && int.TryParse(times[i + 1], out var endMs))
+                    {
+                        p.EndTime.TotalMilliseconds = endMs;
+                    }
                     subtitle.Paragraphs.Add(p);
                 }
-                catch
+                else
                 {
                     _errorCount++;
                 }
@@ -172,6 +172,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }
