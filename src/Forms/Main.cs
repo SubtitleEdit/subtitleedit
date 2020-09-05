@@ -17488,6 +17488,8 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Add(p);
                     }
 
+                    _subtitle.Renumber();
+
                     ShowStatus(string.Format(_language.MergedShortLinesX, formMergeShortLines.NumberOfMerges));
                     SaveSubtitleListviewIndices();
                     ShowSource();
@@ -24914,7 +24916,8 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeDisplaySubtitleJoin);
 
                     ResetSubtitle();
-                    _subtitle = joinSubtitles.JoinedSubtitle;
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(joinSubtitles.JoinedSubtitle.Paragraphs);
                     SetCurrentFormat(joinSubtitles.JoinedFormat);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
