@@ -17,6 +17,7 @@
    * Add "ocrengine" parameter to cmd line convert
    * Add "Export to FCP+image" in OCR window - thx Marko
    * Add alignment support for .scc files - thx madprogramer 
+   * Add "Batch convert" filter for MKV language code - thx OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
@@ -37,6 +38,8 @@
    * Keep italic/bold/u from RTF in "Import plain text" - thx George
    * "Modify selection/uppercase" now ignores tags - thx  Lokotito
    * Spell check: Allow user words starting with dash - thx t2YU2m8l83
+   * WebVTT: Improved support for style/region
+   * Better frame info in "Apply min. gap" - thx OmrSi
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix bug in EBU STL ms to frames - thx Lucius Snow
@@ -49,10 +52,13 @@
    * Fix bug in export text with font-size - thx thehulk
    * Fix shortcut validation for a few menu items - thx LiMa79#4271
    * Fix web color to hex color in DCinema - thx Antonio
-   * Ignore comments (NOTE) in VTT - thx Issity 
+   * Ignore comments (NOTE) in WebVTT - thx Issity 
    * Fix for TTML short time code - thx Aylen
    * Fix bug in split with continuation style / Arabic - thx OmrSi
    * Fix crash in "Add pair to OCR list" - thx jdsanchezii
+   * Don't leave .ass file in temp dir - thx Janusz
+   * Renumber after "Merge short lines"
+   * Fix "Undo" after "Tools - Join" - thx TehBotolSosro
 
 
 3.5.16 (16th June 2020)
