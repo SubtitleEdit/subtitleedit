@@ -54,8 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = Json.ReadTag(s, "text");
                 if (start != null && text != null)
                 {
-                    double startSeconds;
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds))
+                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startSeconds))
                     {
                         var endMs = Utilities.GetOptimalDisplayMilliseconds(text) + startSeconds * 1000.0;
                         subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * 1000.0, endMs));

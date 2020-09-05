@@ -65,10 +65,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string content = Json.ReadTag(s, "Text");
                 if (start != null && end != null && content != null)
                 {
-                    double startSeconds;
-                    double endSeconds;
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
+                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startSeconds) &&
+                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var endSeconds))
                     {
                         subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
                     }
@@ -84,6 +82,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
-
     }
 }
