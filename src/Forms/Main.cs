@@ -23502,6 +23502,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var p = _subtitle.GetParagraphOrDefault(index);
             var next = _subtitle.GetParagraphOrDefault(index + 1);
+            var afterNext = _subtitle.GetParagraphOrDefault(index + 2);
             if (p == null)
             {
                 return;
@@ -23565,7 +23566,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + addMilliseconds;
-                next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + oldDuration;
+                var newEndTime = afterNext != null && next.EndTime.TotalMilliseconds + oldDuration > afterNext.StartTime.TotalMilliseconds && afterNext.StartTime.TotalMilliseconds - addMilliseconds - next.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ? afterNext.StartTime.TotalMilliseconds - addMilliseconds : next.StartTime.TotalMilliseconds + oldDuration;
+                next.EndTime.TotalMilliseconds = newEndTime;
                 SubtitleListview1.SetStartTimeAndDuration(index + 1, next, _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             }
