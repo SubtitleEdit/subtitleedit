@@ -156,6 +156,7 @@
             public string Fixed { get; set; }
             public string Milliseconds { get; set; }
             public string ExtendOnly { get; set; }
+            public string AllowOverlap { get; set; }
         }
 
         public class ApplyDurationLimits

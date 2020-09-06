@@ -45,6 +45,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ExtendOnly => checkBoxExtendOnly.Checked;
 
+        public bool AllowOverlap => checkBoxAllowOverlap.Checked;
+
         public AdjustDisplayDuration()
         {
             UiUtil.PreInitialize(this);
@@ -71,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+            checkBoxAllowOverlap.Checked = Configuration.Settings.Tools.AdjustDurationAllowOverlap;
 
             LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
             Text = language.Title;
@@ -86,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonFixed.Text = language.Fixed;
             labelMillisecondsFixed.Text = language.Milliseconds;
             checkBoxExtendOnly.Text = language.ExtendOnly;
+            checkBoxAllowOverlap.Text = language.AllowOverlap;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
@@ -138,6 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
             numericUpDownOptimalCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
             checkBoxExtendOnly.Enabled = radioButtonAutoRecalculate.Checked;
+            checkBoxAllowOverlap.Enabled = radioButtonSeconds.Checked;
             numericUpDownFixedMilliseconds.Enabled = radioButtonFixed.Checked;
         }
 
@@ -151,6 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.AdjustDurationSeconds = numericUpDownSeconds.Value;
             Configuration.Settings.Tools.AdjustDurationPercent = (int)numericUpDownPercent.Value;
             Configuration.Settings.Tools.AdjustDurationExtendOnly = checkBoxExtendOnly.Checked;
+            Configuration.Settings.Tools.AdjustDurationAllowOverlap = checkBoxAllowOverlap.Checked;
 
             if (radioButtonSeconds.Checked)
             {

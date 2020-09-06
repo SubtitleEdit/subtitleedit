@@ -427,6 +427,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "AdjustDisplayDuration/ExtendOnly":
                     language.AdjustDisplayDuration.ExtendOnly = reader.Value;
                     break;
+                case "AdjustDisplayDuration/AllowOverlap":
+                    language.AdjustDisplayDuration.AllowOverlap = reader.Value;
+                    break;
                 case "ApplyDurationLimits/Title":
                     language.ApplyDurationLimits.Title = reader.Value;
                     break;

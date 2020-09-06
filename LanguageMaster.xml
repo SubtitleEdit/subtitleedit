@@ -154,6 +154,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Fixed>Fixed</Fixed>
     <Milliseconds>Milliseconds</Milliseconds>
     <ExtendOnly>Extend only</ExtendOnly>
+    <AllowOverlap>Allow Overlap</AllowOverlap>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>

@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes, bool allowOverlap = false)
         {
             if (Math.Abs(seconds) < 0.01)
             {
@@ -297,19 +297,19 @@ namespace Nikse.SubtitleEdit.Core
             {
                 foreach (var idx in selectedIndexes)
                 {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, allowOverlap);
                 }
             }
             else
             {
                 for (int idx = 0; idx < Paragraphs.Count; idx++)
                 {
-                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs);
+                    AdjustDisplayTimeUsingMilliseconds(idx, adjustMs, allowOverlap);
                 }
             }
         }
 
-        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms)
+        private void AdjustDisplayTimeUsingMilliseconds(int idx, double ms, bool allowOverlap)
         {
             var p = Paragraphs[idx];
             var nextStartTimeInMs = double.MaxValue;
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // handle overlap with next
-            if (newEndTimeInMs > nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+            if (newEndTimeInMs > nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines && !allowOverlap)
             {
                 newEndTimeInMs = nextStartTimeInMs - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }

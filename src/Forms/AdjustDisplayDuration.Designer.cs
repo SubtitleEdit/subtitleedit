@@ -48,6 +48,7 @@
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
+            this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
@@ -330,11 +331,22 @@
             this.checkBoxExtendOnly.Text = "Extend only";
             this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAllowOverlap
+            // 
+            this.checkBoxAllowOverlap.AutoSize = true;
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(13, 128);
+            this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
+            this.checkBoxAllowOverlap.TabIndex = 23;
+            this.checkBoxAllowOverlap.Text = "Allow overlap";
+            this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 268);
+            this.Controls.Add(this.checkBoxAllowOverlap);
             this.Controls.Add(this.checkBoxExtendOnly);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDownFixedMilliseconds);
@@ -395,5 +407,6 @@
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkBoxExtendOnly;
+        private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
     }
 }

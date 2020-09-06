@@ -292,6 +292,7 @@ namespace Nikse.SubtitleEdit.Core
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
         public bool AdjustDurationExtendOnly { get; set; }
+        public bool AdjustDurationAllowOverlap { get; set; }
         public bool AutoBreakCommaBreakEarly { get; set; }
         public bool AutoBreakDashEarly { get; set; }
         public bool AutoBreakLineEndingEarly { get; set; }
@@ -409,6 +410,7 @@ namespace Nikse.SubtitleEdit.Core
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
             AdjustDurationExtendOnly = true;
+            AdjustDurationAllowOverlap = false;
             AutoBreakCommaBreakEarly = false;
             AutoBreakDashEarly = true;
             AutoBreakLineEndingEarly = false;
@@ -4482,6 +4484,12 @@ $HorzAlign          =   Center
                 settings.Tools.AdjustDurationExtendOnly = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("AdjustDurationAllowOverlap");
+            if (subNode != null)
+            {
+                settings.Tools.AdjustDurationAllowOverlap = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoBreakCommaBreakEarly");
             if (subNode != null)
             {
@@ -7660,6 +7668,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
                 textWriter.WriteElementString("AdjustDurationExtendOnly", settings.Tools.AdjustDurationExtendOnly.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationAllowOverlap", settings.Tools.AdjustDurationAllowOverlap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakDashEarly", settings.Tools.AutoBreakDashEarly.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBreakLineEndingEarly", settings.Tools.AutoBreakLineEndingEarly.ToString(CultureInfo.InvariantCulture));

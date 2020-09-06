@@ -285,7 +285,8 @@ namespace Nikse.SubtitleEdit.Core
                 Note = "Note: Display time will not overlap start time of next text",
                 Fixed = "Fixed",
                 Milliseconds = "Milliseconds",
-                ExtendOnly = "Extend only"
+                ExtendOnly = "Extend only",
+                AllowOverlap = "Allow Overlap"
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
