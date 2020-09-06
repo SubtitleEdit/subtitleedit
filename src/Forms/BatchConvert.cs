@@ -2073,8 +2073,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
             openContainingFolderToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count == 1;
-            removeAllToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
-            toolStripSeparator1.Visible = listViewInputFiles.SelectedItems.Count > 0;
+            removeAllToolStripMenuItem.Visible = listViewInputFiles.Items.Count > 0;
+            toolStripSeparator1.Visible = listViewInputFiles.Items.Count > 0;
         }
 
         private void RemoveAllToolStripMenuItemClick(object sender, EventArgs e)
