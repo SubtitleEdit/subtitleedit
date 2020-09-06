@@ -23566,7 +23566,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + addMilliseconds;
-                var newEndTime = afterNext != null && next.EndTime.TotalMilliseconds + oldDuration > afterNext.StartTime.TotalMilliseconds && afterNext.StartTime.TotalMilliseconds - addMilliseconds - next.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ? afterNext.StartTime.TotalMilliseconds - addMilliseconds : next.StartTime.TotalMilliseconds + oldDuration;
+                var newEndTime = afterNext != null && next.StartTime.TotalMilliseconds + oldDuration > afterNext.StartTime.TotalMilliseconds && afterNext.StartTime.TotalMilliseconds - addMilliseconds - next.StartTime.TotalMilliseconds >= Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds ? afterNext.StartTime.TotalMilliseconds - addMilliseconds : next.StartTime.TotalMilliseconds + oldDuration;
                 next.EndTime.TotalMilliseconds = newEndTime;
                 SubtitleListview1.SetStartTimeAndDuration(index + 1, next, _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
