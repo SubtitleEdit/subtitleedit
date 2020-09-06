@@ -704,6 +704,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
     <SelectDefault>Изб. поПодразб.</SelectDefault>
+    <SetDefault>Задаване текущите корекции по подразбиране</SetDefault>
     <FixContinuationStyleX>Поправяне стила на продължение: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} поправен стил на продължение</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Премахване ненужните допълнителни точки</FixUnnecessaryLeadingDots>
@@ -754,7 +755,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslate>Microsoft превод</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Преминаване до субтитри с №</Title>
+    <Title>Преминаване до субтитър с №</Title>
     <XIsNotAValidNumber>Ред № {0} в текущия списък на субтитрите не съществува.
 
 Моля, въведете число в зададен диапазон.</XIsNotAValidNumber>
@@ -1037,7 +1038,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindNext>Следващо търсене</FindNext>
         <Replace>Замяна...</Replace>
         <MultipleReplace>Множествена замяна...</MultipleReplace>
-        <GoToSubtitleNumber>Преминаване до субтитри с №...</GoToSubtitleNumber>
+        <GoToSubtitleNumber>Преминаване до субтитър с №...</GoToSubtitleNumber>
         <RightToLeftMode>Режим отДясно наЛяво (RTL)</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Поправяне отДясно/наЛяво чрез Unicod контрол на символите (за избраните редове)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Превключване на отДясно/наЛяво, начало/край (за избраните редове)</ReverseRightToLeftStartEnd>
@@ -1290,7 +1291,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Позиц. видео:</VideoPosition>
-      <TranslateTip>Използвайте клавиши &lt;Alt+горна/долна стрелка&gt;, за предишни/следващи субтитри</TranslateTip>
+      <TranslateTip>Използвайте клавиши &lt;Alt+горна/долна стрелка&gt;, за предишен/следващ субтитър</TranslateTip>
       <BeforeChangingTimeInWaveformX>Преди промяната на времето във формата на звуковия сигнал: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Новия текст е вмъкнат в {0}</NewTextInsertAtX>
       <Center>Център</Center>
@@ -1324,6 +1325,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 Файлът е само за четене!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Не може да се запише файлът със субтитри {0}
 Може да е празен. Опитайте да го презапишете, ако работите с действителните субтитри!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>UTF-8 кодиране трябва да се използва при записване на {0} файлове!</FormatXShouldUseUft8>
     <BeforeNew>Преди новите</BeforeNew>
     <New>Нов</New>
     <BeforeConvertingToX>Преди конвертирането към {0}</BeforeConvertingToX>
@@ -1781,6 +1783,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyModifiedLines>Показване само редовете за промяна</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Минимален интервал (милисек.) между редовете със субтитри</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Честота на кадрите (fps)</FrameInfo>
+    <Frames>Кадри</Frames>
+    <XFrameYisZMilliseconds>{0} кадър(и) при {1} кадър в секунда е {2} милисек.</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Задаване на синхро точка за ред {0}</Title>
@@ -2006,8 +2010,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задаване край, добавяне нов и преминаване към него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Регулирайте чрез крайно положение</AdjustViaEndAutoStart>
-    <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване към следващите субтитри</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Задаване крайно време в позицията на курсора и преминаване към следващия субтитър</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Задаване на край и преминаване на следващ</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Задаване на край и пауза</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Задаване начало, авт. продължителност и преминаване на следващото</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Задаване край, следващо начало и преминаване на следващия</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Клавиш надолу=задаване начало. Клавиш нагоре=задаване край и преминаване на следващ</AdjustStartDownEndUpAndGoToNext>
@@ -2029,12 +2034,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetStartTimeKeepDuration>Задаване на начално време, запазване на времетраенето</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Задаване на край и начало на останалите</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Задаване на край и начало на останалите, и преминаване на следващите</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Удължаване на реда до след. субтитри или макс. продължителност</AdjustExtendCurrentSubtitle>
-    <AdjustExtendToNextSceneChange>Удължаване избраните редове до следващата промяна на сцената (или следващите субтитри)</AdjustExtendToNextSceneChange>
-    <AdjustExtendToPreviousSceneChange>Удължаване на избраните редове до предишната промяна на сцената (или предишните субтитри)</AdjustExtendToPreviousSceneChange>
-    <AdjustExtendToNextSubtitle>Удължаване на избраните редове до следващите субтитри</AdjustExtendToNextSubtitle>
-    <AdjustExtendToPreviousSubtitle>Удължаване на избраните редове до предишните субтитри</AdjustExtendToPreviousSubtitle>
-    <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущите субтитри</RecalculateDurationOfCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>Удължаване на реда до след. субтитър или макс. продължителност</AdjustExtendCurrentSubtitle>
+    <AdjustExtendToNextSceneChange>Удължаване избраните редове до следващата промяна на сцената (или следващия субтитър)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Удължаване избраните редове до следващата промяна на сцената с мин. разлика (или следващия субтитър)</AdjustExtendToNextSceneChangeWithGap>
+    <AdjustExtendToPreviousSceneChange>Удължаване на избраните редове до предишната промяна на сцената (или предишния субтитър)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToNextSubtitle>Удължаване на избраните редове до следващия субтитър</AdjustExtendToNextSubtitle>
+    <AdjustExtendToPreviousSubtitle>Удължаване на избраните редове до предишния субтитър</AdjustExtendToPreviousSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Преизчисляване продължителността на текущия субтитър</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Създаване на ново - стрелка НАДОЛУ, задаване крайно време - стрелка НАГОРЕ</MainCreateStartDownEndUp>
     <MergeDialog>Обединяване диалога (вмъкване на тирета)</MergeDialog>
     <GoToNext>Преминаване на следващия ред</GoToNext>
@@ -2150,8 +2156,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowBeamer>Пускане на субтитрите при пълноекранен режим на проектора</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Премести последната дума в следващия субтитърен ред</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Премести първата дума от следващият субтитърен ред нагоре</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxMoveFirstWordUpCurrent>Премести първата дума от следващия ред нагоре (текущите субтитри)</MainTextBoxMoveFirstWordUpCurrent>
-    <MainTextBoxMoveLastWordDownCurrent>Премести последната дума от първия ред надолу (текущите субтитри)</MainTextBoxMoveLastWordDownCurrent>
+    <MainTextBoxMoveFirstWordUpCurrent>Премести първата дума от следващия ред нагоре (текущия субтитър)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Премести последната дума от първия ред надолу (текущия субтитър)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Избраното в малки букви</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Избраното в ГЛАВНИ букви</MainTextBoxSelectionToUpper>
     <MainTextBoxSelectionToRuby>Избраното на Ruby (Японски)</MainTextBoxSelectionToRuby>
