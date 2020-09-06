@@ -124,7 +124,7 @@
             this.labelNote.Location = new System.Drawing.Point(10, 211);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
-            this.labelNote.TabIndex = 7;
+            this.labelNote.TabIndex = 14;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
             // labelAddInPercent
@@ -133,7 +133,7 @@
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 70);
             this.labelAddInPercent.Name = "labelAddInPercent";
             this.labelAddInPercent.Size = new System.Drawing.Size(89, 13);
-            this.labelAddInPercent.TabIndex = 3;
+            this.labelAddInPercent.TabIndex = 4;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
             // labelAddSeconds
@@ -153,7 +153,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(537, 231);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 21;
+            this.buttonCancel.TabIndex = 16;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -164,7 +164,7 @@
             this.buttonOK.Location = new System.Drawing.Point(456, 231);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 20;
+            this.buttonOK.TabIndex = 15;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -186,7 +186,7 @@
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownMaxCharsSec.TabIndex = 6;
+            this.numericUpDownMaxCharsSec.TabIndex = 8;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -199,7 +199,7 @@
             this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(354, 70);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 5;
+            this.labelMaxCharsPerSecond.TabIndex = 7;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
             // numericUpDownSeconds
@@ -223,7 +223,7 @@
             -2147483648});
             this.numericUpDownSeconds.Name = "numericUpDownSeconds";
             this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownSeconds.TabIndex = 3;
+            this.numericUpDownSeconds.TabIndex = 2;
             this.numericUpDownSeconds.Value = new decimal(new int[] {
             1,
             0,
@@ -245,7 +245,7 @@
             0});
             this.numericUpDownPercent.Name = "numericUpDownPercent";
             this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownPercent.TabIndex = 4;
+            this.numericUpDownPercent.TabIndex = 5;
             this.numericUpDownPercent.Value = new decimal(new int[] {
             110,
             0,
@@ -269,7 +269,7 @@
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
             this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownOptimalCharsSec.TabIndex = 7;
+            this.numericUpDownOptimalCharsSec.TabIndex = 10;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             17,
             0,
@@ -282,7 +282,7 @@
             this.labelOptimalCharsSec.Location = new System.Drawing.Point(354, 128);
             this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
             this.labelOptimalCharsSec.Size = new System.Drawing.Size(92, 13);
-            this.labelOptimalCharsSec.TabIndex = 10;
+            this.labelOptimalCharsSec.TabIndex = 9;
             this.labelOptimalCharsSec.Text = "Optimal chars/sec";
             // 
             // numericUpDownFixedMilliseconds
@@ -296,7 +296,7 @@
             0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
             this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownFixedMilliseconds.TabIndex = 9;
+            this.numericUpDownFixedMilliseconds.TabIndex = 13;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -318,7 +318,7 @@
             this.label1.Location = new System.Drawing.Point(264, 93);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(18, 13);
-            this.label1.TabIndex = 22;
+            this.label1.TabIndex = 6;
             this.label1.Text = "%";
             // 
             // checkBoxExtendOnly
@@ -327,7 +327,7 @@
             this.checkBoxExtendOnly.Location = new System.Drawing.Point(357, 184);
             this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
             this.checkBoxExtendOnly.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxExtendOnly.TabIndex = 8;
+            this.checkBoxExtendOnly.TabIndex = 11;
             this.checkBoxExtendOnly.Text = "Extend only";
             this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
             // 
@@ -337,7 +337,7 @@
             this.checkBoxAllowOverlap.Location = new System.Drawing.Point(13, 128);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
             this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
-            this.checkBoxAllowOverlap.TabIndex = 23;
+            this.checkBoxAllowOverlap.TabIndex = 3;
             this.checkBoxAllowOverlap.Text = "Allow overlap";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
