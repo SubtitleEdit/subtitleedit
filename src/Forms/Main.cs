@@ -6194,7 +6194,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     { // fixed duration
-                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds);
+                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds, adjustDisplayTime.AllowOverlap);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.FixedMilliseconds));
                     }
 

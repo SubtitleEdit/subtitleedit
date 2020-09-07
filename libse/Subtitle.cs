@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
+        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds, bool allowOverlap)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
             {
@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Core
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
 
                     var next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds && !allowOverlap)
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         if (p.Duration.TotalMilliseconds <= 0)

@@ -5839,7 +5839,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else // fixed duration
                     {
-                        _subtitle.SetFixedDuration(null, adjustDisplayTime.FixedMilliseconds);
+                        _subtitle.SetFixedDuration(null, adjustDisplayTime.FixedMilliseconds, false);
                     }
                 }
             }
