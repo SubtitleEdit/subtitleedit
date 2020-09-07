@@ -124,7 +124,7 @@
             this.labelNote.Location = new System.Drawing.Point(10, 211);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
-            this.labelNote.TabIndex = 14;
+            this.labelNote.TabIndex = 13;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
             // labelAddInPercent
@@ -150,7 +150,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(537, 231);
+            this.buttonCancel.Location = new System.Drawing.Point(537, 247);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 16;
@@ -161,7 +161,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(456, 231);
+            this.buttonOK.Location = new System.Drawing.Point(456, 247);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -186,7 +186,7 @@
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
             this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownMaxCharsSec.TabIndex = 8;
+            this.numericUpDownMaxCharsSec.TabIndex = 7;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
             0,
@@ -199,7 +199,7 @@
             this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(354, 70);
             this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 7;
+            this.labelMaxCharsPerSecond.TabIndex = 6;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
             // numericUpDownSeconds
@@ -269,7 +269,7 @@
             0});
             this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
             this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownOptimalCharsSec.TabIndex = 10;
+            this.numericUpDownOptimalCharsSec.TabIndex = 9;
             this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
             17,
             0,
@@ -282,7 +282,7 @@
             this.labelOptimalCharsSec.Location = new System.Drawing.Point(354, 128);
             this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
             this.labelOptimalCharsSec.Size = new System.Drawing.Size(92, 13);
-            this.labelOptimalCharsSec.TabIndex = 9;
+            this.labelOptimalCharsSec.TabIndex = 8;
             this.labelOptimalCharsSec.Text = "Optimal chars/sec";
             // 
             // numericUpDownFixedMilliseconds
@@ -296,7 +296,7 @@
             0});
             this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
             this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownFixedMilliseconds.TabIndex = 13;
+            this.numericUpDownFixedMilliseconds.TabIndex = 12;
             this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
             3000,
             0,
@@ -309,7 +309,7 @@
             this.labelMillisecondsFixed.Location = new System.Drawing.Point(498, 70);
             this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
             this.labelMillisecondsFixed.Size = new System.Drawing.Size(62, 13);
-            this.labelMillisecondsFixed.TabIndex = 12;
+            this.labelMillisecondsFixed.TabIndex = 11;
             this.labelMillisecondsFixed.Text = "Milliseconds";
             // 
             // label1
@@ -327,17 +327,17 @@
             this.checkBoxExtendOnly.Location = new System.Drawing.Point(357, 184);
             this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
             this.checkBoxExtendOnly.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxExtendOnly.TabIndex = 11;
+            this.checkBoxExtendOnly.TabIndex = 10;
             this.checkBoxExtendOnly.Text = "Extend only";
             this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
             // 
             // checkBoxAllowOverlap
             // 
             this.checkBoxAllowOverlap.AutoSize = true;
-            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(13, 128);
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(13, 229);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
             this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
-            this.checkBoxAllowOverlap.TabIndex = 6;
+            this.checkBoxAllowOverlap.TabIndex = 14;
             this.checkBoxAllowOverlap.Text = "Allow overlap";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
@@ -345,7 +345,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 268);
+            this.ClientSize = new System.Drawing.Size(624, 284);
             this.Controls.Add(this.checkBoxAllowOverlap);
             this.Controls.Add(this.checkBoxExtendOnly);
             this.Controls.Add(this.label1);
