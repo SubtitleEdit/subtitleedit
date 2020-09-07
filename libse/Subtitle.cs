@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
+        public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes, bool allowOverlap)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
             {
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     double newEndMilliseconds = Paragraphs[i].EndTime.TotalMilliseconds;
                     newEndMilliseconds = Paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - Paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100.0);
-                    if (newEndMilliseconds > nextStartMilliseconds)
+                    if (newEndMilliseconds > nextStartMilliseconds && !allowOverlap)
                     {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }

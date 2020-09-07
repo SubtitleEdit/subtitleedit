@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
             numericUpDownOptimalCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
             checkBoxExtendOnly.Enabled = radioButtonAutoRecalculate.Checked;
-            checkBoxAllowOverlap.Enabled = radioButtonSeconds.Checked;
+            checkBoxAllowOverlap.Enabled = radioButtonSeconds.Checked || radioButtonPercent.Checked;
             numericUpDownFixedMilliseconds.Enabled = radioButtonFixed.Checked;
         }
 

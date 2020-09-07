@@ -6177,7 +6177,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (adjustDisplayTime.AdjustUsingPercent)
                     {
                         double percent = double.Parse(adjustDisplayTime.AdjustValue);
-                        _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices);
+                        _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices, adjustDisplayTime.AllowOverlap);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture) + "%"));
                     }
                     else if (adjustDisplayTime.AdjustUsingSeconds)

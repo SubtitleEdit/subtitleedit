@@ -133,7 +133,7 @@
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 70);
             this.labelAddInPercent.Name = "labelAddInPercent";
             this.labelAddInPercent.Size = new System.Drawing.Size(89, 13);
-            this.labelAddInPercent.TabIndex = 4;
+            this.labelAddInPercent.TabIndex = 3;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
             // labelAddSeconds
@@ -245,7 +245,7 @@
             0});
             this.numericUpDownPercent.Name = "numericUpDownPercent";
             this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
-            this.numericUpDownPercent.TabIndex = 5;
+            this.numericUpDownPercent.TabIndex = 4;
             this.numericUpDownPercent.Value = new decimal(new int[] {
             110,
             0,
@@ -318,7 +318,7 @@
             this.label1.Location = new System.Drawing.Point(264, 93);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(18, 13);
-            this.label1.TabIndex = 6;
+            this.label1.TabIndex = 5;
             this.label1.Text = "%";
             // 
             // checkBoxExtendOnly
@@ -337,7 +337,7 @@
             this.checkBoxAllowOverlap.Location = new System.Drawing.Point(13, 128);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
             this.checkBoxAllowOverlap.Size = new System.Drawing.Size(109, 21);
-            this.checkBoxAllowOverlap.TabIndex = 3;
+            this.checkBoxAllowOverlap.TabIndex = 6;
             this.checkBoxAllowOverlap.Text = "Allow overlap";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
