@@ -639,14 +639,13 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (i > max)
                 {
-                    label.ForeColor = Color.Red;
                     sb.Append("...");
                     label.Text = sb.ToString();
                     return;
                 }
 
                 sb.Append(line.Length);
-                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     label.ForeColor = Color.Red;
                 }
@@ -670,7 +669,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (i > max)
                 {
-                    label.ForeColor = Color.Red;
                     sb.Append("...");
                     label.Text = sb.ToString();
                     return;
