@@ -7522,7 +7522,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemPreview.Visible = formatType == typeof(WebVTT) &&
                                                !string.IsNullOrEmpty(_videoFileName) &&
-                                               (_videoFileName.ToLowerInvariant().EndsWith(".mp4") || _videoFileName.ToLowerInvariant().EndsWith(".m4v")) &&
+                                               (_videoFileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || _videoFileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase) || _videoFileName.EndsWith(".webm", StringComparison.OrdinalIgnoreCase)) &&
                                                IsSubtitleLoaded;
 
             toolStripMenuItemSetRegion.Visible = false;
@@ -27841,6 +27841,26 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("[VIDEO]", "file://" + _videoFileName)
                 .Replace("[EXT]", Path.GetExtension(_videoFileName).TrimStart('.').ToLowerInvariant()), Encoding.UTF8);
             UiUtil.OpenFile(htmlFileName);
+
+            System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(25000), () =>
+            {
+                try
+                {
+                    File.Delete(htmlFileName);
+                }
+                catch 
+                {
+                    // Ignore
+                }
+            });
+        }
+
+        private void trackBarWaveformPosition_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                mediaPlayer.TogglePlayPause();
+            }
         }
     }
 }
