@@ -18011,7 +18011,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetupAlternateEdit()
         {
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 1)
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 InsertMissingParagraphs(_subtitle, _subtitleAlternate);
                 InsertMissingParagraphs(_subtitleAlternate, _subtitle);
