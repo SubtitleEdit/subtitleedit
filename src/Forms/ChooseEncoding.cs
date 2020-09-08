@@ -63,11 +63,12 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var enc in Configuration.AvailableEncodings)
             {
                 var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
-                listView1.Items.Add(item);
+                item.Tag = enc;
                 if (enc.CodePage == encoding.CodePage)
                 {
                     item.Selected = true;
                 }
+                listView1.Items.Add(item);
             }
             listView1.ListViewItemSorter = new ListViewSorter { ColumnNumber = 0, IsNumber = true };
             listView1.EndUpdate();
@@ -103,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                Encoding encoding = Encoding.GetEncoding(int.Parse(listView1.SelectedItems[0].Text));
+                Encoding encoding = listView1.SelectedItems[0].Tag as Encoding;
                 textBoxPreview.Text = encoding.GetString(_fileBuffer).Replace("\0", " ");
                 LabelPreview.Text = Configuration.Settings.Language.General.Preview + " - " + encoding.EncodingName;
             }

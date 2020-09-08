@@ -2681,20 +2681,22 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                var chooseEncoding = new ChooseEncoding();
-                chooseEncoding.Initialize(openFileDialog1.FileName);
-                if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                using (var chooseEncoding = new ChooseEncoding())
                 {
-                    var encoding = chooseEncoding.GetEncoding();
-                    for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
+                    chooseEncoding.Initialize(openFileDialog1.FileName);
+                    if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
                     {
-                        var item = comboBoxEncoding.Items[i];
-                        if (item is TextEncoding te)
+                        var encoding = chooseEncoding.GetEncoding();
+                        for (var i = 0; i < comboBoxEncoding.Items.Count; i++)
                         {
-                            if (te.Encoding.WebName == encoding.WebName)
+                            var item = comboBoxEncoding.Items[i];
+                            if (item is TextEncoding te)
                             {
-                                comboBoxEncoding.SelectedIndex = i;
-                                break;
+                                if (te.Encoding.WebName == encoding.WebName)
+                                {
+                                    comboBoxEncoding.SelectedIndex = i;
+                                    break;
+                                }
                             }
                         }
                     }
