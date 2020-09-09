@@ -334,12 +334,14 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
             checkBoxExtendOnly.Checked = Configuration.Settings.Tools.AdjustDurationExtendOnly;
+            checkBoxAllowOverlap.Checked = Configuration.Settings.Tools.AdjustDurationAllowOverlap;
 
             labelOptimalCharsSec.Text = Configuration.Settings.Language.Settings.OptimalCharactersPerSecond;
             labelMaxCharsPerSecond.Text = Configuration.Settings.Language.Settings.MaximumCharactersPerSecond;
             labelAddSeconds.Text = Configuration.Settings.Language.AdjustDisplayDuration.AddSeconds;
             labelMillisecondsFixed.Text = Configuration.Settings.Language.AdjustDisplayDuration.Milliseconds;
             checkBoxExtendOnly.Text = Configuration.Settings.Language.AdjustDisplayDuration.ExtendOnly;
+            checkBoxAllowOverlap.Text = Configuration.Settings.Language.AdjustDisplayDuration.AllowOverlap;
             labelAdjustViaPercent.Text = Configuration.Settings.Language.AdjustDisplayDuration.SetAsPercent;
 
 
@@ -1361,7 +1363,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var adjustmentType = comboBoxAdjustDurationVia.Text;
                                 if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Percent)
                                 {
-                                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null);
+                                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null, checkBoxAllowOverlap.Checked);
                                 }
                                 else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Recalculate)
                                 {
@@ -1369,11 +1371,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Fixed)
                                 {
-                                    sub.SetFixedDuration(null, (double)numericUpDownFixedMilliseconds.Value);
+                                    sub.SetFixedDuration(null, (double)numericUpDownFixedMilliseconds.Value, checkBoxAllowOverlap.Checked);
                                 }
                                 else
                                 {
-                                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null);
+                                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null, checkBoxAllowOverlap.Checked);
                                 }
                             }
 
@@ -2805,19 +2807,23 @@ namespace Nikse.SubtitleEdit.Forms
             panelAdjustDurationAddPercent.Visible = false;
             panelAdjustDurationFixed.Visible = false;
             panelAdjustDurationRecalc.Visible = false;
+            checkBoxAllowOverlap.Visible = true;
 
             var panel = panelAdjustDurationAddSeconds;
             if (comboBoxAdjustDurationVia.SelectedIndex == 1)
             {
                 panel = panelAdjustDurationAddPercent;
+                checkBoxAllowOverlap.Visible = true;
             }
             else if (comboBoxAdjustDurationVia.SelectedIndex == 2)
             {
                 panel = panelAdjustDurationRecalc;
+                checkBoxAllowOverlap.Visible = false;
             }
             else if (comboBoxAdjustDurationVia.SelectedIndex == 3)
             {
                 panel = panelAdjustDurationFixed;
+                checkBoxAllowOverlap.Visible = true;
             }
 
             panel.Visible = true;

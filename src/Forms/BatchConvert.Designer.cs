@@ -48,6 +48,7 @@
             this.labelAddSeconds = new System.Windows.Forms.Label();
             this.panelAdjustDurationRecalc = new System.Windows.Forms.Panel();
             this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
+            this.checkBoxAllowOverlap = new System.Windows.Forms.CheckBox();
             this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
@@ -209,6 +210,7 @@
             // 
             this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
             this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
+            this.groupBoxAdjustDuration.Controls.Add(this.checkBoxAllowOverlap);
             this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
             this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddPercent);
             this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddSeconds);
@@ -239,6 +241,16 @@
             this.labelAdjustDurationVia.Size = new System.Drawing.Size(51, 13);
             this.labelAdjustDurationVia.TabIndex = 7;
             this.labelAdjustDurationVia.Text = "AdjustVia";
+            // 
+            // checkBoxAllowOverlap
+            // 
+            this.checkBoxAllowOverlap.AutoSize = true;
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(11, 110);
+            this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
+            this.checkBoxAllowOverlap.Size = new System.Drawing.Size(81, 17);
+            this.checkBoxAllowOverlap.TabIndex = 17;
+            this.checkBoxAllowOverlap.Text = "Allow overlap";
+            this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
             // panelAdjustDurationFixed
             // 
@@ -1508,6 +1520,7 @@
         private System.Windows.Forms.Label labelMillisecondsFixed;
         private System.Windows.Forms.Panel panelAdjustDurationRecalc;
         private System.Windows.Forms.CheckBox checkBoxExtendOnly;
+        private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
         private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
         private System.Windows.Forms.Label labelOptimalCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
