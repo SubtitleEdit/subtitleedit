@@ -508,6 +508,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/RemoveFormatting":
                     language.BatchConvert.RemoveFormatting = reader.Value;
                     break;
+                case "BatchConvert/RemoveStyleActor":
+                    language.BatchConvert.RemoveStyleActor = reader.Value;
+                    break;
                 case "BatchConvert/RemoveTextForHI":
                     language.BatchConvert.RemoveTextForHI = reader.Value;
                     break;

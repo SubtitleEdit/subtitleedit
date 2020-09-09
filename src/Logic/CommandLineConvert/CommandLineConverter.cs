@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             MergeSameTimeCodes,
             RemoveTextForHI,
             RemoveFormatting,
+            RemoveStyle,
             RedoCasing,
             ReverseRtlStartEnd,
             BridgeGaps,
@@ -46,6 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
             ChangeFrameRate,
             OffsetTimeCodes,
             ChangeSpeed,
+            AdjustDisplayDuration,
             ApplyDurationLimits,
             RemoveLineBreaks
         }

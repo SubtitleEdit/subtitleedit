@@ -29,10 +29,37 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxAdjustDuration = new System.Windows.Forms.GroupBox();
+            this.comboBoxAdjustDurationVia = new System.Windows.Forms.ComboBox();
+            this.labelAdjustDurationVia = new System.Windows.Forms.Label();
+            this.panelAdjustDurationFixed = new System.Windows.Forms.Panel();
+            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.labelMillisecondsFixed = new System.Windows.Forms.Label();
+            this.panelAdjustDurationAddPercent = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownAdjustViaPercent = new System.Windows.Forms.NumericUpDown();
+            this.labelAdjustViaPercent = new System.Windows.Forms.Label();
+            this.panelAdjustDurationAddSeconds = new System.Windows.Forms.Panel();
+            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
+            this.labelAddSeconds = new System.Windows.Forms.Label();
+            this.panelAdjustDurationRecalc = new System.Windows.Forms.Panel();
+            this.checkBoxExtendOnly = new System.Windows.Forms.CheckBox();
+            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelOptimalCharsSec = new System.Windows.Forms.Label();
+            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
+            this.groupBoxRemoveStyle = new System.Windows.Forms.GroupBox();
+            this.textBoxRemoveStyle = new System.Windows.Forms.TextBox();
+            this.labelStyleName = new System.Windows.Forms.Label();
+            this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
+            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
+            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
+            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonConvertOptionsSettings = new System.Windows.Forms.Button();
             this.listViewConvertOptions = new System.Windows.Forms.ListView();
             this.ActionCheckBox = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -46,11 +73,6 @@
             this.labelToFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRateFrom = new System.Windows.Forms.ComboBox();
             this.labelFromFrameRate = new System.Windows.Forms.Label();
-            this.groupBoxOffsetTimeCodes = new System.Windows.Forms.GroupBox();
-            this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
-            this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
-            this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.groupBoxFixRtl = new System.Windows.Forms.GroupBox();
             this.radioButtonReverseStartEnd = new System.Windows.Forms.RadioButton();
             this.radioButtonRemoveUnicode = new System.Windows.Forms.RadioButton();
@@ -112,9 +134,20 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBoxAdjustDuration.SuspendLayout();
+            this.panelAdjustDurationFixed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
+            this.panelAdjustDurationAddPercent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).BeginInit();
+            this.panelAdjustDurationAddSeconds.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
+            this.panelAdjustDurationRecalc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            this.groupBoxRemoveStyle.SuspendLayout();
+            this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.contextMenuStripOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
-            this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxFixRtl.SuspendLayout();
             this.groupBoxSpeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
@@ -155,10 +188,12 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxAdjustDuration);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxRemoveStyle);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.buttonConvertOptionsSettings);
             this.groupBoxConvertOptions.Controls.Add(this.listViewConvertOptions);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeFrameRate);
-            this.groupBoxConvertOptions.Controls.Add(this.groupBoxOffsetTimeCodes);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxFixRtl);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxChangeCasing);
@@ -169,6 +204,351 @@
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // groupBoxAdjustDuration
+            // 
+            this.groupBoxAdjustDuration.Controls.Add(this.comboBoxAdjustDurationVia);
+            this.groupBoxAdjustDuration.Controls.Add(this.labelAdjustDurationVia);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationFixed);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddPercent);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationAddSeconds);
+            this.groupBoxAdjustDuration.Controls.Add(this.panelAdjustDurationRecalc);
+            this.groupBoxAdjustDuration.Location = new System.Drawing.Point(305, 16);
+            this.groupBoxAdjustDuration.Name = "groupBoxAdjustDuration";
+            this.groupBoxAdjustDuration.Size = new System.Drawing.Size(271, 251);
+            this.groupBoxAdjustDuration.TabIndex = 308;
+            this.groupBoxAdjustDuration.TabStop = false;
+            this.groupBoxAdjustDuration.Text = "Adjust duration";
+            this.groupBoxAdjustDuration.Visible = false;
+            // 
+            // comboBoxAdjustDurationVia
+            // 
+            this.comboBoxAdjustDurationVia.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAdjustDurationVia.FormattingEnabled = true;
+            this.comboBoxAdjustDurationVia.Location = new System.Drawing.Point(65, 19);
+            this.comboBoxAdjustDurationVia.Name = "comboBoxAdjustDurationVia";
+            this.comboBoxAdjustDurationVia.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxAdjustDurationVia.TabIndex = 8;
+            this.comboBoxAdjustDurationVia.SelectedIndexChanged += new System.EventHandler(this.comboBoxAdjustDurationVia_SelectedIndexChanged);
+            // 
+            // labelAdjustDurationVia
+            // 
+            this.labelAdjustDurationVia.AutoSize = true;
+            this.labelAdjustDurationVia.Location = new System.Drawing.Point(8, 22);
+            this.labelAdjustDurationVia.Name = "labelAdjustDurationVia";
+            this.labelAdjustDurationVia.Size = new System.Drawing.Size(51, 13);
+            this.labelAdjustDurationVia.TabIndex = 7;
+            this.labelAdjustDurationVia.Text = "AdjustVia";
+            // 
+            // panelAdjustDurationFixed
+            // 
+            this.panelAdjustDurationFixed.Controls.Add(this.numericUpDownFixedMilliseconds);
+            this.panelAdjustDurationFixed.Controls.Add(this.labelMillisecondsFixed);
+            this.panelAdjustDurationFixed.Location = new System.Drawing.Point(6, 123);
+            this.panelAdjustDurationFixed.Name = "panelAdjustDurationFixed";
+            this.panelAdjustDurationFixed.Size = new System.Drawing.Size(257, 57);
+            this.panelAdjustDurationFixed.TabIndex = 15;
+            // 
+            // numericUpDownFixedMilliseconds
+            // 
+            this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
+            20000,
+            0,
+            0,
+            0});
+            this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
+            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownFixedMilliseconds.TabIndex = 13;
+            this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            // 
+            // labelMillisecondsFixed
+            // 
+            this.labelMillisecondsFixed.AutoSize = true;
+            this.labelMillisecondsFixed.Location = new System.Drawing.Point(5, 8);
+            this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
+            this.labelMillisecondsFixed.Size = new System.Drawing.Size(64, 13);
+            this.labelMillisecondsFixed.TabIndex = 14;
+            this.labelMillisecondsFixed.Text = "Milliseconds";
+            // 
+            // panelAdjustDurationAddPercent
+            // 
+            this.panelAdjustDurationAddPercent.Controls.Add(this.label1);
+            this.panelAdjustDurationAddPercent.Controls.Add(this.numericUpDownAdjustViaPercent);
+            this.panelAdjustDurationAddPercent.Controls.Add(this.labelAdjustViaPercent);
+            this.panelAdjustDurationAddPercent.Location = new System.Drawing.Point(7, 79);
+            this.panelAdjustDurationAddPercent.Name = "panelAdjustDurationAddPercent";
+            this.panelAdjustDurationAddPercent.Size = new System.Drawing.Size(257, 63);
+            this.panelAdjustDurationAddPercent.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(90, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(15, 13);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "%";
+            // 
+            // numericUpDownAdjustViaPercent
+            // 
+            this.numericUpDownAdjustViaPercent.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownAdjustViaPercent.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownAdjustViaPercent.Minimum = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
+            this.numericUpDownAdjustViaPercent.Name = "numericUpDownAdjustViaPercent";
+            this.numericUpDownAdjustViaPercent.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownAdjustViaPercent.TabIndex = 24;
+            this.numericUpDownAdjustViaPercent.Value = new decimal(new int[] {
+            110,
+            0,
+            0,
+            0});
+            // 
+            // labelAdjustViaPercent
+            // 
+            this.labelAdjustViaPercent.AutoSize = true;
+            this.labelAdjustViaPercent.Location = new System.Drawing.Point(5, 8);
+            this.labelAdjustViaPercent.Name = "labelAdjustViaPercent";
+            this.labelAdjustViaPercent.Size = new System.Drawing.Size(86, 13);
+            this.labelAdjustViaPercent.TabIndex = 23;
+            this.labelAdjustViaPercent.Text = "Adjust in percent";
+            // 
+            // panelAdjustDurationAddSeconds
+            // 
+            this.panelAdjustDurationAddSeconds.Controls.Add(this.numericUpDownSeconds);
+            this.panelAdjustDurationAddSeconds.Controls.Add(this.labelAddSeconds);
+            this.panelAdjustDurationAddSeconds.Location = new System.Drawing.Point(8, 47);
+            this.panelAdjustDurationAddSeconds.Name = "panelAdjustDurationAddSeconds";
+            this.panelAdjustDurationAddSeconds.Size = new System.Drawing.Size(257, 55);
+            this.panelAdjustDurationAddSeconds.TabIndex = 13;
+            // 
+            // numericUpDownSeconds
+            // 
+            this.numericUpDownSeconds.DecimalPlaces = 3;
+            this.numericUpDownSeconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownSeconds.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownSeconds.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericUpDownSeconds.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownSeconds.Name = "numericUpDownSeconds";
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownSeconds.TabIndex = 12;
+            this.numericUpDownSeconds.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // labelAddSeconds
+            // 
+            this.labelAddSeconds.AutoSize = true;
+            this.labelAddSeconds.Location = new System.Drawing.Point(5, 8);
+            this.labelAddSeconds.Name = "labelAddSeconds";
+            this.labelAddSeconds.Size = new System.Drawing.Size(69, 13);
+            this.labelAddSeconds.TabIndex = 11;
+            this.labelAddSeconds.Text = "Add seconds";
+            // 
+            // panelAdjustDurationRecalc
+            // 
+            this.panelAdjustDurationRecalc.Controls.Add(this.checkBoxExtendOnly);
+            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownOptimalCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.labelOptimalCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.numericUpDownMaxCharsSec);
+            this.panelAdjustDurationRecalc.Controls.Add(this.labelMaxCharsPerSecond);
+            this.panelAdjustDurationRecalc.Location = new System.Drawing.Point(6, 66);
+            this.panelAdjustDurationRecalc.Name = "panelAdjustDurationRecalc";
+            this.panelAdjustDurationRecalc.Size = new System.Drawing.Size(257, 170);
+            this.panelAdjustDurationRecalc.TabIndex = 16;
+            // 
+            // checkBoxExtendOnly
+            // 
+            this.checkBoxExtendOnly.AutoSize = true;
+            this.checkBoxExtendOnly.Location = new System.Drawing.Point(8, 122);
+            this.checkBoxExtendOnly.Name = "checkBoxExtendOnly";
+            this.checkBoxExtendOnly.Size = new System.Drawing.Size(81, 17);
+            this.checkBoxExtendOnly.TabIndex = 14;
+            this.checkBoxExtendOnly.Text = "Extend only";
+            this.checkBoxExtendOnly.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownOptimalCharsSec
+            // 
+            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
+            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(8, 85);
+            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownOptimalCharsSec.TabIndex = 13;
+            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
+            17,
+            0,
+            0,
+            0});
+            // 
+            // labelOptimalCharsSec
+            // 
+            this.labelOptimalCharsSec.AutoSize = true;
+            this.labelOptimalCharsSec.Location = new System.Drawing.Point(5, 66);
+            this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
+            this.labelOptimalCharsSec.Size = new System.Drawing.Size(93, 13);
+            this.labelOptimalCharsSec.TabIndex = 15;
+            this.labelOptimalCharsSec.Text = "Optimal chars/sec";
+            // 
+            // numericUpDownMaxCharsSec
+            // 
+            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
+            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(8, 27);
+            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 20);
+            this.numericUpDownMaxCharsSec.TabIndex = 12;
+            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            // 
+            // labelMaxCharsPerSecond
+            // 
+            this.labelMaxCharsPerSecond.AutoSize = true;
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(5, 8);
+            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
+            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(81, 13);
+            this.labelMaxCharsPerSecond.TabIndex = 11;
+            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
+            // 
+            // groupBoxRemoveStyle
+            // 
+            this.groupBoxRemoveStyle.Controls.Add(this.textBoxRemoveStyle);
+            this.groupBoxRemoveStyle.Controls.Add(this.labelStyleName);
+            this.groupBoxRemoveStyle.Location = new System.Drawing.Point(307, 12);
+            this.groupBoxRemoveStyle.Name = "groupBoxRemoveStyle";
+            this.groupBoxRemoveStyle.Size = new System.Drawing.Size(271, 76);
+            this.groupBoxRemoveStyle.TabIndex = 307;
+            this.groupBoxRemoveStyle.TabStop = false;
+            this.groupBoxRemoveStyle.Text = "Remove style/actor";
+            this.groupBoxRemoveStyle.Visible = false;
+            // 
+            // textBoxRemoveStyle
+            // 
+            this.textBoxRemoveStyle.Location = new System.Drawing.Point(6, 35);
+            this.textBoxRemoveStyle.Name = "textBoxRemoveStyle";
+            this.textBoxRemoveStyle.Size = new System.Drawing.Size(257, 20);
+            this.textBoxRemoveStyle.TabIndex = 8;
+            // 
+            // labelStyleName
+            // 
+            this.labelStyleName.AutoSize = true;
+            this.labelStyleName.Location = new System.Drawing.Point(6, 20);
+            this.labelStyleName.Name = "labelStyleName";
+            this.labelStyleName.Size = new System.Drawing.Size(59, 13);
+            this.labelStyleName.TabIndex = 0;
+            this.labelStyleName.Text = "Style/actor";
+            // 
+            // groupBoxOffsetTimeCodes
+            // 
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
+            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
+            this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
+            this.groupBoxOffsetTimeCodes.TabIndex = 306;
+            this.groupBoxOffsetTimeCodes.TabStop = false;
+            this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
+            this.groupBoxOffsetTimeCodes.Visible = false;
+            // 
+            // radioButtonShowLater
+            // 
+            this.radioButtonShowLater.AutoSize = true;
+            this.radioButtonShowLater.Checked = true;
+            this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
+            this.radioButtonShowLater.Name = "radioButtonShowLater";
+            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonShowLater.TabIndex = 3;
+            this.radioButtonShowLater.TabStop = true;
+            this.radioButtonShowLater.Text = "Show later";
+            this.radioButtonShowLater.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonShowEarlier
+            // 
+            this.radioButtonShowEarlier.AutoSize = true;
+            this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
+            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
+            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonShowEarlier.TabIndex = 2;
+            this.radioButtonShowEarlier.Text = "Show earlier";
+            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownAdjust
+            // 
+            this.timeUpDownAdjust.AutoSize = true;
+            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
+            this.timeUpDownAdjust.TabIndex = 1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode2;
+            this.timeUpDownAdjust.UseVideoOffset = false;
+            // 
+            // labelHourMinSecMilliSecond
+            // 
+            this.labelHourMinSecMilliSecond.AutoSize = true;
+            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
+            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(90, 13);
+            this.labelHourMinSecMilliSecond.TabIndex = 0;
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
             // buttonConvertOptionsSettings
             // 
@@ -290,71 +670,6 @@
             this.labelFromFrameRate.Size = new System.Drawing.Size(80, 13);
             this.labelFromFrameRate.TabIndex = 0;
             this.labelFromFrameRate.Text = "From frame rate";
-            // 
-            // groupBoxOffsetTimeCodes
-            // 
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
-            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(305, 19);
-            this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(271, 119);
-            this.groupBoxOffsetTimeCodes.TabIndex = 306;
-            this.groupBoxOffsetTimeCodes.TabStop = false;
-            this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
-            this.groupBoxOffsetTimeCodes.Visible = false;
-            // 
-            // radioButtonShowLater
-            // 
-            this.radioButtonShowLater.AutoSize = true;
-            this.radioButtonShowLater.Checked = true;
-            this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
-            this.radioButtonShowLater.Name = "radioButtonShowLater";
-            this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonShowLater.TabIndex = 3;
-            this.radioButtonShowLater.TabStop = true;
-            this.radioButtonShowLater.Text = "Show later";
-            this.radioButtonShowLater.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonShowEarlier
-            // 
-            this.radioButtonShowEarlier.AutoSize = true;
-            this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
-            this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
-            this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
-            this.radioButtonShowEarlier.TabIndex = 2;
-            this.radioButtonShowEarlier.Text = "Show earlier";
-            this.radioButtonShowEarlier.UseVisualStyleBackColor = true;
-            // 
-            // timeUpDownAdjust
-            // 
-            this.timeUpDownAdjust.AutoSize = true;
-            this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownAdjust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
-            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(111, 27);
-            this.timeUpDownAdjust.TabIndex = 1;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode1;
-            this.timeUpDownAdjust.UseVideoOffset = false;
-            // 
-            // labelHourMinSecMilliSecond
-            // 
-            this.labelHourMinSecMilliSecond.AutoSize = true;
-            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
-            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
-            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(90, 13);
-            this.labelHourMinSecMilliSecond.TabIndex = 0;
-            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
             // groupBoxFixRtl
             // 
@@ -499,7 +814,7 @@
             this.groupBoxChangeCasing.Controls.Add(this.radioButtonNormal);
             this.groupBoxChangeCasing.Location = new System.Drawing.Point(308, 16);
             this.groupBoxChangeCasing.Name = "groupBoxChangeCasing";
-            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 253);
+            this.groupBoxChangeCasing.Size = new System.Drawing.Size(268, 125);
             this.groupBoxChangeCasing.TabIndex = 308;
             this.groupBoxChangeCasing.TabStop = false;
             this.groupBoxChangeCasing.Text = "Change casing to";
@@ -553,9 +868,9 @@
             this.groupBoxMergeShortLines.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
             this.groupBoxMergeShortLines.Controls.Add(this.labelMaxMillisecondsBetweenLines);
             this.groupBoxMergeShortLines.Controls.Add(this.labelMaxCharacters);
-            this.groupBoxMergeShortLines.Location = new System.Drawing.Point(308, 71);
+            this.groupBoxMergeShortLines.Location = new System.Drawing.Point(308, 23);
             this.groupBoxMergeShortLines.Name = "groupBoxMergeShortLines";
-            this.groupBoxMergeShortLines.Size = new System.Drawing.Size(268, 204);
+            this.groupBoxMergeShortLines.Size = new System.Drawing.Size(268, 149);
             this.groupBoxMergeShortLines.TabIndex = 304;
             this.groupBoxMergeShortLines.TabStop = false;
             this.groupBoxMergeShortLines.Text = "Merge short lines";
@@ -970,7 +1285,7 @@
             this.toolStripSeparator1,
             this.convertMkvSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 120);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 98);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
@@ -1049,11 +1364,28 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BatchConvert_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
+            this.groupBoxAdjustDuration.ResumeLayout(false);
+            this.groupBoxAdjustDuration.PerformLayout();
+            this.panelAdjustDurationFixed.ResumeLayout(false);
+            this.panelAdjustDurationFixed.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
+            this.panelAdjustDurationAddPercent.ResumeLayout(false);
+            this.panelAdjustDurationAddPercent.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAdjustViaPercent)).EndInit();
+            this.panelAdjustDurationAddSeconds.ResumeLayout(false);
+            this.panelAdjustDurationAddSeconds.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
+            this.panelAdjustDurationRecalc.ResumeLayout(false);
+            this.panelAdjustDurationRecalc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            this.groupBoxRemoveStyle.ResumeLayout(false);
+            this.groupBoxRemoveStyle.PerformLayout();
+            this.groupBoxOffsetTimeCodes.ResumeLayout(false);
+            this.groupBoxOffsetTimeCodes.PerformLayout();
             this.contextMenuStripOptions.ResumeLayout(false);
             this.groupBoxChangeFrameRate.ResumeLayout(false);
             this.groupBoxChangeFrameRate.PerformLayout();
-            this.groupBoxOffsetTimeCodes.ResumeLayout(false);
-            this.groupBoxOffsetTimeCodes.PerformLayout();
             this.groupBoxFixRtl.ResumeLayout(false);
             this.groupBoxFixRtl.PerformLayout();
             this.groupBoxSpeed.ResumeLayout(false);
@@ -1158,5 +1490,27 @@
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem convertMkvSettingsToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBoxRemoveStyle;
+        private System.Windows.Forms.TextBox textBoxRemoveStyle;
+        private System.Windows.Forms.Label labelStyleName;
+        private System.Windows.Forms.GroupBox groupBoxAdjustDuration;
+        private System.Windows.Forms.Label labelAdjustDurationVia;
+        private System.Windows.Forms.ComboBox comboBoxAdjustDurationVia;
+        private System.Windows.Forms.Panel panelAdjustDurationAddPercent;
+        private System.Windows.Forms.Panel panelAdjustDurationAddSeconds;
+        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
+        private System.Windows.Forms.Label labelAddSeconds;
+        private System.Windows.Forms.Panel panelAdjustDurationFixed;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDownAdjustViaPercent;
+        private System.Windows.Forms.Label labelAdjustViaPercent;
+        private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
+        private System.Windows.Forms.Label labelMillisecondsFixed;
+        private System.Windows.Forms.Panel panelAdjustDurationRecalc;
+        private System.Windows.Forms.CheckBox checkBoxExtendOnly;
+        private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
+        private System.Windows.Forms.Label labelOptimalCharsSec;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
+        private System.Windows.Forms.Label labelMaxCharsPerSecond;
     }
 }
