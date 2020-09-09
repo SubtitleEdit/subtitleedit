@@ -14733,6 +14733,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ExtendSelectedLinesToPreviousSceneChange();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap == e.KeyData)
+            {
+                ExtendSelectedLinesToPreviousSceneChange(true);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _shortcuts.MainListViewGoToNextError)
             {
                 GoToNextSyntaxError();
@@ -15139,7 +15144,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ExtendSelectedLinesToPreviousSceneChange()
+        private void ExtendSelectedLinesToPreviousSceneChange(bool withGap = false)
         {
             var historyAdded = false;
             foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
@@ -15172,11 +15177,25 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            original.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000, nearestOriginalEndTimeWithGap);
+                            if (!withGap)
+                            {
+                                original.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000, nearestOriginalEndTimeWithGap);
+                            }
+                            else
+                            {
+                                original.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestOriginalEndTimeWithGap);
+                            }
                         }
                     }
 
-                    p.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000, nearestEndTimeWithGap);
+                    if (!withGap)
+                    {
+                        p.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000, nearestEndTimeWithGap);
+                    }
+                    else
+                    {
+                        p.StartTime.TotalMilliseconds = Math.Max(nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestEndTimeWithGap);
+                    }
                 }
 
                 RefreshSelectedParagraphs();
