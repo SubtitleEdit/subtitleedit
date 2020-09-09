@@ -41,6 +41,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys Video1000MsRight { get; set; }
         public Keys Video5000MsLeft { get; set; }
         public Keys Video5000MsRight { get; set; }
+        public Keys VideoXSMsLeft { get; set; }
+        public Keys VideoXSMsRight { get; set; }
+        public Keys VideoXLMsLeft { get; set; }
+        public Keys VideoXLMsRight { get; set; }
         public Keys MainVideo3000MsLeft { get; set; }
         public Keys MainVideoGoToStartCurrent { get; set; }
         public Keys MainVideoToggleStartEndCurrent { get; set; }
@@ -201,6 +205,10 @@ namespace Nikse.SubtitleEdit.Logic
             Video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
             Video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
             Video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
+            VideoXSMsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXSMsLeft);
+            VideoXSMsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXSMsRight);
+            VideoXLMsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXLMsLeft);
+            VideoXLMsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXLMsRight);
             MainVideo3000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo3000MsLeft);
             MainVideoGoToStartCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
             MainVideoToggleStartEndCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent);

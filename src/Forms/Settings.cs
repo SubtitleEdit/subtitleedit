@@ -1209,6 +1209,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(videoNode, language.GoForward1Second, nameof(Configuration.Settings.Shortcuts.MainVideo1000MsRight));
             AddNode(videoNode, language.GoBack5Seconds, nameof(Configuration.Settings.Shortcuts.MainVideo5000MsLeft));
             AddNode(videoNode, language.GoForward5Seconds, nameof(Configuration.Settings.Shortcuts.MainVideo5000MsRight));
+            AddNode(videoNode, language.GoBackXSSeconds, nameof(Configuration.Settings.Shortcuts.MainVideoXSMsLeft));
+            AddNode(videoNode, language.GoForwardXSSeconds, nameof(Configuration.Settings.Shortcuts.MainVideoXSMsRight));
+            AddNode(videoNode, language.GoBackXLSeconds, nameof(Configuration.Settings.Shortcuts.MainVideoXLMsLeft));
+            AddNode(videoNode, language.GoForwardXLSeconds, nameof(Configuration.Settings.Shortcuts.MainVideoXLMsRight));
             AddNode(videoNode, language.GoBack3Second, nameof(Configuration.Settings.Shortcuts.MainVideo3000MsLeft));
             AddNode(videoNode, language.GoToStartCurrent, nameof(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent));
             AddNode(videoNode, language.ToggleStartEndCurrent, nameof(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent));
