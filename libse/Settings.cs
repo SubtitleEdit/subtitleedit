@@ -8131,7 +8131,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
-                textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
+                textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToNextSubtitle", settings.Shortcuts.MainAdjustExtendToNextSubtitle);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSubtitle", settings.Shortcuts.MainAdjustExtendToPreviousSubtitle);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
