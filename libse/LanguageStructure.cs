@@ -2196,6 +2196,7 @@
             public string AdjustExtendToNextSceneChange { get; set; }
             public string AdjustExtendToNextSceneChangeWithGap { get; set; }
             public string AdjustExtendToPreviousSceneChange { get; set; }
+            public string AdjustExtendToPreviousSceneChangeWithGap { get; set; }
             public string AdjustExtendToNextSubtitle { get; set; }
             public string AdjustExtendToPreviousSubtitle { get; set; }
             public string RecalculateDurationOfCurrentSubtitle { get; set; }

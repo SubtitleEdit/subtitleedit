@@ -1363,6 +1363,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange));
+            AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSubtitle));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSubtitle, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSubtitle));
             if (createAndAdjustNode.Nodes.Count > 0)
