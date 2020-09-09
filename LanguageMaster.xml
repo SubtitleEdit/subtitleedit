@@ -2031,6 +2031,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustExtendToNextSceneChange>Extend selected lines to next scene change (or next subtitle)</AdjustExtendToNextSceneChange>
     <AdjustExtendToNextSceneChangeWithGap>Extend selected lines to next scene change with min. gap (or next subtitle)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Extend selected lines to previous scene change (or previous subtitle)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Extend selected lines to previous scene change with min. gap (or previous subtitle)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Extend selected lines to next subtitle</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Extend selected lines to previous subtitle</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
