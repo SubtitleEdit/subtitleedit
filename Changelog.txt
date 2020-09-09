@@ -18,6 +18,8 @@
    * Add "Export to FCP+image" in OCR window - thx Marko
    * Add alignment support for .scc files - thx madprogramer 
    * Add "Batch convert" filter for MKV language code - thx OmrSi
+   * Add "Adjust Durations" to "Batch Convert" - thx JD
+   * Add "Remove cues with style/actor" to "Batch Convert"   
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
