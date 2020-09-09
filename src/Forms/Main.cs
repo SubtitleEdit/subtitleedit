@@ -15130,7 +15130,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 historyAdded = true;
                             }
 
-                            original.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestOriginalStartTimeWithGap);
+                            if (!withGap)
+                            {
+                                original.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000, nearestOriginalStartTimeWithGap);
+
+                            }
+                            else
+                            {
+                                original.EndTime.TotalMilliseconds = Math.Min(nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines, nearestStartTimeWithGap);
+                            }
                         }
                     }
                 }
