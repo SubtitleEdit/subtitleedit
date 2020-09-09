@@ -1814,6 +1814,10 @@ $HorzAlign          =   Center
         public string MainVideo1000MsRight { get; set; }
         public string MainVideo5000MsLeft { get; set; }
         public string MainVideo5000MsRight { get; set; }
+        public string MainVideoXSMsLeft { get; set; }
+        public string MainVideoXSMsRight { get; set; }
+        public string MainVideoXLMsLeft { get; set; }
+        public string MainVideoXLMsRight { get; set; }
         public string MainVideo3000MsLeft { get; set; }
         public string MainVideoGoToStartCurrent { get; set; }
         public string MainVideoToggleStartEndCurrent { get; set; }
@@ -2001,6 +2005,10 @@ $HorzAlign          =   Center
             MainVideo1000MsRight = string.Empty;
             MainVideo5000MsLeft = string.Empty;
             MainVideo5000MsRight = string.Empty;
+            MainVideoXSMsLeft = string.Empty;
+            MainVideoXSMsRight = string.Empty;
+            MainVideoXLMsLeft = string.Empty;
+            MainVideoXLMsRight = string.Empty;
             MainVideoFullscreen = "Alt+Return";
             MainVideoReset = "Control+D0";
             MainSpellCheck = "Control+Shift+S";
@@ -6286,6 +6294,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainVideo5000MsRight = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainVideoXSMsLeft");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoXSMsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXSMsRight");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoXSMsRight = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXLMsLeft");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoXLMsLeft = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainVideoXLMsRight");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainVideoXLMsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo3000MsLeft");
                 if (subNode != null)
                 {
@@ -8034,6 +8066,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainVideo1000MsRight", settings.Shortcuts.MainVideo1000MsRight);
                 textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
                 textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
+                textWriter.WriteElementString("MainVideoXSMsLeft", settings.Shortcuts.MainVideoXSMsLeft);
+                textWriter.WriteElementString("MainVideoXSMsRight", settings.Shortcuts.MainVideoXSMsRight);
+                textWriter.WriteElementString("MainVideoXLMsLeft", settings.Shortcuts.MainVideoXLMsLeft);
+                textWriter.WriteElementString("MainVideoXLMsRight", settings.Shortcuts.MainVideoXLMsRight);
                 textWriter.WriteElementString("MainVideo3000MsLeft", settings.Shortcuts.MainVideo3000MsLeft);
                 textWriter.WriteElementString("MainVideoGoToStartCurrent", settings.Shortcuts.MainVideoGoToStartCurrent);
                 textWriter.WriteElementString("MainVideoToggleStartEndCurrent", settings.Shortcuts.MainVideoToggleStartEndCurrent);

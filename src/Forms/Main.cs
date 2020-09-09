@@ -14436,6 +14436,26 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveVideoSeconds(5.0);
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXSMsLeft)
+            {
+                ButtonAdjustSecBackClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXSMsRight)
+            {
+                ButtonAdjustSecForwardClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXLMsLeft)
+            {
+                buttonAdjustSecBack2_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXLMsRight)
+            {
+                buttonAdjustSecForward2_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainToolsBeamer == e.KeyData)
             {
                 var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
