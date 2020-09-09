@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AdjustDisplayDuration : PositionAndSizeForm
     {
-        private const string Sec = "seconds";
-        private const string Per = "percent";
-        private const string Recal = "recalc";
-        private const string Fixed = "fixed";
+        internal const string Sec = "seconds";
+        internal const string Per = "percent";
+        internal const string Recal = "recalc";
+        internal const string Fixed = "fixed";
 
         public string AdjustValue
         {

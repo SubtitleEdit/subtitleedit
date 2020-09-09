@@ -172,6 +172,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertOverwriteExisting { get; set; }
         public bool BatchConvertSaveInSourceFolder { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
+        public bool BatchConvertRemoveStyle { get; set; }
         public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
@@ -188,6 +189,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertMergeSameTimeCodes { get; set; }
         public bool BatchConvertChangeFrameRate { get; set; }
         public bool BatchConvertChangeSpeed { get; set; }
+        public bool BatchConvertAdjustDisplayDuration { get; set; }
         public bool BatchConvertApplyDurationLimits { get; set; }
         public bool BatchConvertOffsetTimeCodes { get; set; }
         public string BatchConvertLanguage { get; set; }
@@ -3762,6 +3764,12 @@ $HorzAlign          =   Center
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
             }
 
+            subNode = node.SelectSingleNode("BatchConvertRemoveStyle");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertRemoveStyle = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertBridgeGaps");
             if (subNode != null)
             {
@@ -3850,6 +3858,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.Tools.BatchConvertChangeSpeed = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("BatchConvertAdjustDisplayDuration");
+            if (subNode != null)
+            {
+                settings.Tools.BatchConvertAdjustDisplayDuration = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("BatchConvertApplyDurationLimits");
@@ -7541,6 +7555,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertSaveInSourceFolder", settings.Tools.BatchConvertSaveInSourceFolder.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertRemoveStyle", settings.Tools.BatchConvertRemoveStyle.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString(CultureInfo.InvariantCulture));
@@ -7556,6 +7571,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertMergeSameText", settings.Tools.BatchConvertMergeSameText.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertMergeSameTimeCodes", settings.Tools.BatchConvertMergeSameTimeCodes.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertChangeSpeed", settings.Tools.BatchConvertChangeSpeed.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("BatchConvertAdjustDisplayDuration", settings.Tools.BatchConvertAdjustDisplayDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertApplyDurationLimits", settings.Tools.BatchConvertApplyDurationLimits.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertChangeFrameRate", settings.Tools.BatchConvertChangeFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BatchConvertOffsetTimeCodes", settings.Tools.BatchConvertOffsetTimeCodes.ToString(CultureInfo.InvariantCulture));
