@@ -14657,13 +14657,13 @@ namespace Nikse.SubtitleEdit.Forms
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     var p = _subtitle.Paragraphs[idx];
                     var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                    if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
                         historyAdded = true;
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                     }
-                    else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
+                    else
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustExtendCurrentSubtitle));
                         historyAdded = true;
@@ -14676,7 +14676,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (original != null)
                         {
                             var originalNext = _subtitleAlternate.GetParagraphOrDefault(_subtitleAlternate.GetIndex(original) + 1);
-                            if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                            if (originalNext == null || originalNext.StartTime.TotalMilliseconds > original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                             {
                                 if (!historyAdded)
                                 {
@@ -14685,7 +14685,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 original.EndTime.TotalMilliseconds = original.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                             }
-                            else if (originalNext != null && originalNext.StartTime.TotalMilliseconds > original.EndTime.TotalMilliseconds)
+                            else
                             {
                                 if (!historyAdded)
                                 {
