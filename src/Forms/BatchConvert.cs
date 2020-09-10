@@ -985,7 +985,11 @@ namespace Nikse.SubtitleEdit.Forms
             var mkvFileNames = new List<string>();
             Refresh();
             int index = 0;
-            while (index < listViewInputFiles.Items.Count && !_abort)
+
+            var binaryFormats = SubtitleFormat.GetBinaryFormats(true);
+            var otherTextFormats = SubtitleFormat.GetTextOtherFormats();
+            int subCount = listViewInputFiles.Items.Count;
+            while (index < subCount && !_abort)
             {
                 ListViewItem item = listViewInputFiles.Items[index];
                 string fileName = item.Text;
@@ -1001,7 +1005,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format == null)
                         {
-                            foreach (var f in SubtitleFormat.GetBinaryFormats(true))
+                            foreach (var f in binaryFormats)
                             {
                                 if (f.IsMine(null, fileName))
                                 {
@@ -1016,7 +1020,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                             var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
-                            foreach (var f in SubtitleFormat.GetTextOtherFormats())
+                            foreach (var f in otherTextFormats)
                             {
                                 if (f.IsMine(lines, fileName))
                                 {
@@ -2425,6 +2429,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ScanFiles(IEnumerable<string> fileNames)
         {
+            var binaryFormats = SubtitleFormat.GetBinaryFormats(true);
+            var otherTextFormats = SubtitleFormat.GetTextOtherFormats();
+
             foreach (string fileName in fileNames)
             {
                 labelStatus.Text = fileName;
@@ -2468,7 +2475,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var format = sub.LoadSubtitle(fileName, out _, enc, true, null, false);
                                 if (format == null)
                                 {
-                                    foreach (var f in SubtitleFormat.GetBinaryFormats(true))
+                                    foreach (var f in binaryFormats)
                                     {
                                         if (f.IsMine(null, fileName))
                                         {
@@ -2483,7 +2490,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                                     var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
-                                    foreach (var f in SubtitleFormat.GetTextOtherFormats())
+                                    foreach (var f in otherTextFormats)
                                     {
                                         if (f.IsMine(lines, fileName))
                                         {
@@ -2517,11 +2524,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddFromSearch(string fileName, FileInfo fi, string nameOfFormat)
+        private void AddFromSearch(string fileName, FileInfo fi, string formatName)
         {
             var item = new ListViewItem(fileName);
             item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-            item.SubItems.Add(nameOfFormat);
+            item.SubItems.Add(formatName);
             item.SubItems.Add("-");
             listViewInputFiles.Items.Add(item);
             UpdateNumberOfFiles();
