@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralFileSaveAll { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
         public Keys MainToolsBeamer { get; set; }
+        public Keys MainVideoFoucsSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
         public Keys VideoPlayPauseToggle { get; set; }
@@ -191,6 +192,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             MainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            MainVideoFoucsSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
             Video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
