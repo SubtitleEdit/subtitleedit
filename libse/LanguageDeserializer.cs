@@ -5425,6 +5425,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;
+                case "Settings/FoucsSetVideoPosition":
+                    language.Settings.FoucsSetVideoPosition = reader.Value;
+                    break;
                 case "Settings/ToggleDockUndockOfVideoControls":
                     language.Settings.ToggleDockUndockOfVideoControls = reader.Value;
                     break;

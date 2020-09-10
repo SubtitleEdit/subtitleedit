@@ -14340,6 +14340,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFoucsSetVideoPosition)
+            {
+                timeUpDownVideoPositionAdjust.Focus();
+                e.SuppressKeyPress = true;
+            }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
             {
                 var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;

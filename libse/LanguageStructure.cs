@@ -2166,6 +2166,7 @@
             public string ListView { get; set; }
             public string TextBox { get; set; }
             public string UpdateShortcut { get; set; }
+            public string FoucsSetVideoPosition { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStart { get; set; }

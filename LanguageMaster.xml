@@ -2001,6 +2001,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListView>List view</ListView>
     <TextBox>Text box</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
+    <FoucsSetVideoPosition>Focus set video position</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>
