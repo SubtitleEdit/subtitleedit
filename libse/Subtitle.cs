@@ -285,7 +285,12 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes, bool allowOverlap = false)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
+        {
+            AdjustDisplayTimeUsingSeconds(seconds, selectedIndexes, false);
+        }
+
+        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes, bool allowOverlap)
         {
             if (Math.Abs(seconds) < 0.01)
             {
