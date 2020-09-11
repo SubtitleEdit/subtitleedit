@@ -615,15 +615,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var ext = fi.Extension.ToLowerInvariant();
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                var isMkv = false;
-                var mkvPgs = new List<string>();
-                var mkvVobSub = new List<string>();
-                var mkvSrt = new List<string>();
-                var mkvSsa = new List<string>();
-                var mkvAss = new List<string>();
-                int mkvCount = 0;
-                var isTs = false;
-
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
                 if (fi.Length < ConvertMaxFileSize)
@@ -663,6 +654,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                var isTs = false;
+                var isMkv = false;
+                List<string> mkvPgs = null;
+                List<string> mkvVobSub = null;
+                List<string> mkvSrt = null;
+                List<string> mkvSsa = null;
+                List<string> mkvAss = null;
+                int mkvCount = 0;
+
                 if (format == null)
                 {
                     if (FileUtil.IsBluRaySup(fileName))
@@ -680,6 +680,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (matroska.IsValid)
                             {
+                                mkvVobSub = new List<string>();
+                                mkvPgs = new List<string>();
+                                mkvAss = new List<string>();
+                                mkvSsa = new List<string>();
                                 foreach (var track in matroska.GetTracks(true))
                                 {
                                     if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
@@ -705,7 +709,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count <= 0)
+
+                        // all adds to zero
+                        if (AnyHasValue(mkvVobSub, mkvPgs, mkvSrt, mkvSsa, mkvAss) == false)
                         {
                             item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                         }
@@ -733,58 +739,15 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewInputFiles.Items.Add(item);
                     }
 
-                    foreach (var lang in mkvPgs)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/PGS - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvVobSub)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/VobSub - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSrt)
-                    {
-                        if (comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SRT - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvSsa)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/SSA - " + lang);
-                        item.SubItems.Add("-");
-                    }
-                    foreach (var lang in mkvAss)
-                    {
-                        item = new ListViewItem(fileName);
-                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                        listViewInputFiles.Items.Add(item);
-                        item.SubItems.Add("Matroska/ASS - " + lang);
-                        item.SubItems.Add("-");
-                    }
+                    AddToListView(mkvPgs, fi, "Matroska/PGS - {0}");
+                    AddToListView(mkvVobSub, fi, "Matroska/VobSub - {0}");
+                    AddToListView(mkvSrt, fi, "Matroska/SRT - {0}", lang => comboBoxFilter.SelectedIndex == 5 && textBoxFilter.Text.Length > 0 && !lang.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase));
+                    AddToListView(mkvSsa, fi, "Matroska/SSA - {0}");
+                    AddToListView(mkvAss, fi, "Matroska/ASS - {0}");
                 }
                 else if (isTs)
                 {
-                    item = new ListViewItem(fileName);
-                    item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                    listViewInputFiles.Items.Add(item);
-                    item.SubItems.Add("Transport Stream");
-                    item.SubItems.Add("-");
+                    AddFileToListView(fi, "Transport Stream");
                 }
                 else
                 {
@@ -801,6 +764,46 @@ namespace Nikse.SubtitleEdit.Forms
                 // ignored
             }
             UpdateNumberOfFiles();
+        }
+
+        private void AddToListView(IList<string> tokens, FileInfo fi, string displayFormat, Predicate<string> filter = null)
+        {
+            if (tokens == null)
+            {
+                return;
+            }
+
+            foreach (string token in tokens)
+            {
+                // invoke filter if available
+                if (filter?.Invoke(token) == false)
+                {
+                    continue;
+                }
+
+                AddFileToListView(fi, string.Format(displayFormat, token));
+            }
+        }
+
+        /// <summary>
+        /// Add subtitle file to list of found file
+        /// </summary>
+        private void AddFileToListView(FileInfo fi, string formatDisplayName)
+        {
+            var item = new ListViewItem(fi.FullName);
+            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+            listViewInputFiles.Items.Add(item);
+            item.SubItems.Add(formatDisplayName);
+            item.SubItems.Add("-");
+        }
+
+        /// <summary>
+        /// Check if any of the lists has value. Safe with null.
+        /// </summary>
+        /// <returns>True if any of the lists has a element, else false</returns>
+        private static bool AnyHasValue(ICollection<string> l1, ICollection<string> l2, ICollection<string> l3, ICollection<string> l4, ICollection<string> l5)
+        {
+            return l1?.Count > 0 || l2?.Count > 0 || l3?.Count > 0 || l4?.Count > 0 || l5?.Count > 0;
         }
 
         private static string MakeMkvTrackInfoString(MatroskaTrackInfo track)
@@ -1729,39 +1732,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
         {
-            bool skip = false;
             if (comboBoxFilter.SelectedIndex == 1)
             {
-                if (format != null && format.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName))
+                if (format == null || format.GetType() != typeof(SubRip) || FileUtil.HasUtf8Bom(fileName) == false)
                 {
-                    skip = true;
+                    return false;
                 }
             }
             else if (comboBoxFilter.SelectedIndex == 2)
             {
-                skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
                     if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
                     {
-                        skip = false;
-                        break;
+                        return false;
                     }
                 }
             }
             else if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
             {
-                skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
                     if (p.Text != null && p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal))
                     {
-                        skip = false;
-                        break;
+                        return false;
                     }
                 }
             }
-            return skip;
+
+            return true;
         }
 
         private void IncrementAndShowProgress()
@@ -1770,10 +1769,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 progressBar1.Value++;
             }
-            else
-            {
-                progressBar1.Value = progressBar1.Maximum;
-            }
+
             progressBar1.Refresh();
 
             TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
