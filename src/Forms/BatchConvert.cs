@@ -998,7 +998,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
                     {
                         format = sub.LoadSubtitle(fileName, out _, null);
-
                         if (format == null)
                         {
                             foreach (var f in SubtitleFormat.GetBinaryFormats(true))
@@ -1012,10 +1011,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
+                        var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
                         if (format == null)
                         {
-                            var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-                            var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
+                            var lines = FileUtil.ReadAllTextShared(fileName, enc).SplitToLines();
                             foreach (var f in SubtitleFormat.GetTextOtherFormats())
                             {
                                 if (f.IsMine(lines, fileName))
@@ -1029,7 +1028,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (format == null)
                         {
-                            var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
                             var s = File.ReadAllText(fileName, enc);
 
                             // check for RTF file
