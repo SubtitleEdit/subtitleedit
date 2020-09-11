@@ -27914,6 +27914,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Space)
             {
                 mediaPlayer.TogglePlayPause();
+                e.SuppressKeyPress = true;
             }
         }
     }
