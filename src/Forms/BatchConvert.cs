@@ -2481,8 +2481,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (format == null)
                                 {
-                                    var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-                                    var lines = FileUtil.ReadAllTextShared(fileName, encoding).SplitToLines();
+                                    var lines = FileUtil.ReadAllTextShared(fileName, enc).SplitToLines();
                                     foreach (var f in SubtitleFormat.GetTextOtherFormats())
                                     {
                                         if (f.IsMine(lines, fileName))
