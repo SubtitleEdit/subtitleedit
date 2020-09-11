@@ -1090,8 +1090,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        var ext = Path.GetExtension(fileName);
-                        if (isMatroska && (ext.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mks", StringComparison.OrdinalIgnoreCase)))
+                        if (isMatroska)
                         {
                             using (var matroska = new MatroskaFile(fileName))
                             {
