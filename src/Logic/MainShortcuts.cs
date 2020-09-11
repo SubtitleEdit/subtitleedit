@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainGeneralFileSaveAll { get; set; }
         public Keys MainToolsAutoDuration { get; set; }
         public Keys MainToolsBeamer { get; set; }
+        public Keys MainVideoFoucsSetVideoPosition { get; set; }
         public Keys ToggleVideoDockUndock { get; set; }
         public Keys VideoPause { get; set; }
         public Keys VideoPlayPauseToggle { get; set; }
@@ -41,6 +42,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys Video1000MsRight { get; set; }
         public Keys Video5000MsLeft { get; set; }
         public Keys Video5000MsRight { get; set; }
+        public Keys VideoXSMsLeft { get; set; }
+        public Keys VideoXSMsRight { get; set; }
+        public Keys VideoXLMsLeft { get; set; }
+        public Keys VideoXLMsRight { get; set; }
         public Keys MainVideo3000MsLeft { get; set; }
         public Keys MainVideoGoToStartCurrent { get; set; }
         public Keys MainVideoToggleStartEndCurrent { get; set; }
@@ -187,6 +192,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
             MainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             VideoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            MainVideoFoucsSetVideoPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFoucsSetVideoPosition);
             ToggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             VideoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
             Video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
@@ -201,6 +207,10 @@ namespace Nikse.SubtitleEdit.Logic
             Video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
             Video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
             Video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
+            VideoXSMsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXSMsLeft);
+            VideoXSMsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXSMsRight);
+            VideoXLMsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXLMsLeft);
+            VideoXLMsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoXLMsRight);
             MainVideo3000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo3000MsLeft);
             MainVideoGoToStartCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToStartCurrent);
             MainVideoToggleStartEndCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleStartEndCurrent);

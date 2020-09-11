@@ -14340,6 +14340,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.MainVideoFoucsSetVideoPosition)
+            {
+                timeUpDownVideoPositionAdjust.Focus();
+                e.SuppressKeyPress = true;
+            }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video1FrameLeft)
             {
                 var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
@@ -14434,6 +14439,26 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.Video5000MsRight)
             {
                 MoveVideoSeconds(5.0);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXSMsLeft)
+            {
+                ButtonAdjustSecBackClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXSMsRight)
+            {
+                ButtonAdjustSecForwardClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXLMsLeft)
+            {
+                buttonAdjustSecBack2_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _shortcuts.VideoXLMsRight)
+            {
+                buttonAdjustSecForward2_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainToolsBeamer == e.KeyData)

@@ -5425,6 +5425,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;
+                case "Settings/FoucsSetVideoPosition":
+                    language.Settings.FoucsSetVideoPosition = reader.Value;
+                    break;
                 case "Settings/ToggleDockUndockOfVideoControls":
                     language.Settings.ToggleDockUndockOfVideoControls = reader.Value;
                     break;
@@ -5688,6 +5691,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoForward5Seconds":
                     language.Settings.GoForward5Seconds = reader.Value;
+                    break;
+                case "Settings/GoBackXSSeconds":
+                    language.Settings.GoBackXSSeconds = reader.Value;
+                    break;
+                case "Settings/GoForwardXSSeconds":
+                    language.Settings.GoForwardXSSeconds = reader.Value;
+                    break;
+                case "Settings/GoBackXLSeconds":
+                    language.Settings.GoBackXLSeconds = reader.Value;
+                    break;
+                case "Settings/GoForwardXLSeconds":
+                    language.Settings.GoForwardXLSeconds = reader.Value;
                     break;
                 case "Settings/GoBack3Second":
                     language.Settings.GoBack3Second = reader.Value;
