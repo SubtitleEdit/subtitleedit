@@ -410,10 +410,11 @@ namespace Nikse.SubtitleEdit.Core
             int letterCount = 0;
             int len = s.Length;
 
+            const string Symbols = " -,.!?[]()\r\n";
             for (int i = 0; i < len; i++)
             {
                 var ch = s[i];
-                if (char.IsLetter(ch) || " -,.!?[]()\r\n".Contains(ch))
+                if (char.IsLetter(ch) || Symbols.Contains(ch))
                 {
                     letterCount++;
                 }
