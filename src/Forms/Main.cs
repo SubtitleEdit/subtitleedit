@@ -9647,7 +9647,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string aTrimmed = HtmlUtil.RemoveHtmlTags(a).TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
-                    if ((aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟')) && Configuration.Settings.General.SplitRemovesDashes)
+                    if (Configuration.Settings.General.SplitRemovesDashes && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟')))
                     {
                         a = DialogSplitMerge.RemoveStartDash(a);
                         b = DialogSplitMerge.RemoveStartDash(b);
@@ -9873,7 +9873,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 originalNew.Text = "<b>" + originalNew.Text;
                             }
 
-                            if ((l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')) && Configuration.Settings.General.SplitRemovesDashes)
+                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')))
                             {
                                 originalCurrent.Text = DialogSplitMerge.RemoveStartDash(originalCurrent.Text);
                                 originalNew.Text = DialogSplitMerge.RemoveStartDash(originalNew.Text);
@@ -9952,7 +9952,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 b = "<b>" + b;
                             }
 
-                            if ((l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')) && Configuration.Settings.General.SplitRemovesDashes)
+                            if (Configuration.Settings.General.SplitRemovesDashes && (l0Trimmed.EndsWith('.') || l0Trimmed.EndsWith('!') || l0Trimmed.EndsWith('?') || l0Trimmed.EndsWith('؟')))
                             {
                                 a = DialogSplitMerge.RemoveStartDash(a);
                                 b = DialogSplitMerge.RemoveStartDash(b);

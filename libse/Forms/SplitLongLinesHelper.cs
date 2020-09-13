@@ -98,8 +98,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Length;
 
-                // only remove dash (if dialog) if first line is fully closed
-                if (IsTextClosed(oldParagraph.Text) && Configuration.Settings.General.SplitRemovesDashes)
+                // only remove dash (if dialog) if first line is fully closed and "Split removes dashes" is true
+                if (Configuration.Settings.General.SplitRemovesDashes && IsTextClosed(oldParagraph.Text))
                 {
                     RemoveInvalidDash(oldParagraph, newParagraph);
                 }
