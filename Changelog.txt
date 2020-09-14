@@ -12,6 +12,7 @@
    * Add shortcuts "Set end and pause" + "Export to PAC" - thx Milenko
    * Add shortcut for File - Compare
    * Add shortcut for "Ext sel lines to next sc - gap" - thx m0ck69/OmrSi
+   * Add shortcuts for "move selected lines" - thx OmrSi
    * Add context menu item for "Set default fixes" in FCE
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
@@ -20,6 +21,7 @@
    * Add "Batch convert" filter for MKV language code - thx OmrSi
    * Add "Adjust Durations" to "Batch Convert" - thx JD
    * Add "Remove cues with style/actor" to "Batch Convert"   
+   * Add hidden "Split removes dashes" option - thx OmrSi
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
@@ -61,6 +63,7 @@
    * Don't leave .ass file in temp dir - thx Janusz
    * Renumber after "Merge short lines"
    * Fix "Undo" after "Tools - Join" - thx TehBotolSosro
+   * Fix a bug w max dur in "Extend to next or Max" - thx OmrSi
 
 
 3.5.16 (16th June 2020)
