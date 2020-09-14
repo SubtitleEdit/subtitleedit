@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
-                                    if (isDialog)
+                                    if (Configuration.Settings.General.SplitRemovesDashes && isDialog)
                                     {
                                         newParagraph1.Text = DialogSplitMerge.RemoveStartDash(newParagraph1.Text);
                                         newParagraph2.Text = DialogSplitMerge.RemoveStartDash(newParagraph2.Text);
