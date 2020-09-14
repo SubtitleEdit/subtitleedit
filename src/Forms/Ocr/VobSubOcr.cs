@@ -4209,20 +4209,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 line = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
             }
 
-            line = FixNocrHardcodedStuff(line);
-            line = FixZeroInsideWords(line);
+            var fixCommonErrors = checkBoxAutoFixCommonErrors.Checked;
+            if (fixCommonErrors)
+            {
+                line = FixNocrHardcodedStuff(line);
+                line = FixZeroInsideWords(line);
+            }
 
             //OCR fix engine
             string textWithOutFixes = line;
             if (_ocrFixEngine != null && _ocrFixEngine.IsDictionaryLoaded)
             {
-                if (checkBoxAutoFixCommonErrors.Checked)
+                if (fixCommonErrors)
                 {
                     line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, GetAutoGuessLevel());
                 }
 
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out var correctWords);
-
 
                 // smaller space pixels for italic
                 if (wordsNotFound > 0 && !string.IsNullOrEmpty(line) && line.Contains("<i>", StringComparison.Ordinal))
@@ -4252,7 +4255,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var oldUnknownWordsFound = new List<LogItem>(_ocrFixEngine.UnknownWordsFound);
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-                    if (checkBoxAutoFixCommonErrors.Checked)
+                    if (fixCommonErrors)
                     {
                         tempLine = _ocrFixEngine.FixOcrErrors(tempLine, listViewIndex, _lastLine, true, GetAutoGuessLevel());
                     }
@@ -4263,6 +4266,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         wordsNotFound = tempWordsNotFound;
                         correctWords = tempCorrectWords;
                         line = tempLine;
+                        textWithOutFixes = tempLine;
+                        if (fixCommonErrors)
+                        {
+                            line = FixNocrHardcodedStuff(line);
+                            line = FixZeroInsideWords(line);
+                        }
                     }
                     else
                     {
@@ -4297,7 +4306,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 // Log unknown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
-                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
+                if (fixCommonErrors || checkBoxPromptForUnknownWords.Checked)
+                {
+                    ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
+                }
             }
 
             if (textWithOutFixes != null && textWithOutFixes.Trim() != line.Trim())
