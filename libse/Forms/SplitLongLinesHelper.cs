@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 bool autoBreak = true;
                 if (noHtmlLines.Count == 2 && noHtmlLines[0].Length <= totalLineMaxCharacters && noHtmlLines[1].Length < totalLineMaxCharacters &&
-                    (noHtmlLines[0].EndsWith('.') || noHtmlLines[0].EndsWith('!') || noHtmlLines[0].EndsWith('?')))
+                    (noHtmlLines[0].EndsWith('.') || noHtmlLines[0].EndsWith('!') || noHtmlLines[0].EndsWith('?') || noHtmlLines[0].EndsWith('؟')))
                 {
                     autoBreak = false;
                 }
@@ -98,8 +98,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * HtmlUtil.RemoveHtmlTags(newParagraph.Text, true).Length;
 
-                // only remove dash (if dialog) if first line is fully closed
-                if (IsTextClosed(oldParagraph.Text))
+                // only remove dash (if dialog) if first line is fully closed and "Split removes dashes" is true
+                if (Configuration.Settings.General.SplitRemovesDashes && IsTextClosed(oldParagraph.Text))
                 {
                     RemoveInvalidDash(oldParagraph, newParagraph);
                 }
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return false;
             }
             var lastChar = noTagText[noTagText.Length - 1];
-            return ".!?:)]♪".Contains(lastChar);
+            return ".!?؟:)]♪".Contains(lastChar);
         }
 
     }
