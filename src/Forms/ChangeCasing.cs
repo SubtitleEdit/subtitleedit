@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
 
-            LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
+            var language = Configuration.Settings.Language.ChangeCasing;
             Text = language.Title;
             groupBoxChangeCasing.Text = language.ChangeCasingTo;
             radioButtonNormal.Text = language.NormalCasing;

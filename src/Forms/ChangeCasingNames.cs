@@ -83,6 +83,18 @@ namespace Nikse.SubtitleEdit.Forms
             _nameListInclMulti = _nameList.GetAllNames(); // Will contains both one word names and multi names
 
             FindAllNames();
+            if (_language.StartsWith("en", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (ListViewItem item in listViewNames.Items)
+                {
+                    var name = item.SubItems[1].Text;
+                    if (name == "US")
+                    {
+                        item.Checked = false;
+                    }
+                }
+            }
+
             GeneratePreview();
         }
 
@@ -91,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            foreach (var p in _subtitle.Paragraphs)
             {
                 string text = p.Text;
                 foreach (ListViewItem item in listViewNames.Items)
@@ -130,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddCustomNames()
         {
-            foreach (string s in textBoxExtraNames.Text.Split(','))
+            foreach (var s in textBoxExtraNames.Text.Split(','))
             {
                 var name = s.Trim();
                 if (name.Length > 1 && !_nameListInclMulti.Contains(name))
@@ -145,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
             string textToLower = text.ToLowerInvariant();
             listViewNames.BeginUpdate();
-            foreach (string name in _nameListInclMulti)
+            foreach (var name in _nameListInclMulti)
             {
                 int startIndex = textToLower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
                 if (startIndex >= 0)
