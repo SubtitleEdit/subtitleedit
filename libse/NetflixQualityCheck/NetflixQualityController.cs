@@ -217,6 +217,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 new NetflixCheckStartNumberSpellOut(),
                 new NetflixCheckTextForHiUseBrackets(),
                 new NetflixCheckTwoFramesGap(),
+                new NetflixCheckBridgeGaps(),
                 new NetflixCheckWhiteSpace(),
                 new NetflixCheckItalics()
             };

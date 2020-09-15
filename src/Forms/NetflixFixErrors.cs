@@ -152,9 +152,14 @@ namespace Nikse.SubtitleEdit.Forms
                 list.Add(new NetflixCheckMaxCps());
             }
 
-            if (checkBoxGapMinTwoFrames.Checked)
+            if (checkBoxGapMin.Checked)
             {
                 list.Add(new NetflixCheckTwoFramesGap());
+            }
+
+            if (checkBoxGapBridge.Checked)
+            {
+                list.Add(new NetflixCheckBridgeGaps());
             }
 
             if (checkBoxTwoLinesMax.Checked)
