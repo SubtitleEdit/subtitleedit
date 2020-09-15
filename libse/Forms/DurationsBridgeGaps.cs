@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class DurationsBridgeGaps
     {
-        public static int BridgeGaps(Subtitle subtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<string, string> dic)
+        public static int BridgeGaps(Subtitle subtitle, int minMsBetweenLines, bool divideEven, double maxMs, List<int> fixedIndexes, Dictionary<string, string> dic, bool useFrames)
         {
             int fixedCount = 0;
             if (minMsBetweenLines > maxMs)
@@ -43,8 +44,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
                 fixedCount++;
 
-                double newGaps = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
-                dic?.Add(cur.Id, $"{currentGap / TimeCode.BaseUnit:0.000} => {newGaps / TimeCode.BaseUnit:0.000}");
+                double newGap = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
+                if (useFrames)
+                {
+                    dic?.Add(cur.Id, $"{SubtitleFormat.MillisecondsToFrames(currentGap)} => {SubtitleFormat.MillisecondsToFrames(newGap)}");
+                }
+                else
+                {
+                    dic?.Add(cur.Id, $"{currentGap / TimeCode.BaseUnit:0.000} => {newGap / TimeCode.BaseUnit:0.000}");
+                }
             }
 
             return fixedCount;

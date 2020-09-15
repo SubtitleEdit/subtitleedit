@@ -931,14 +931,26 @@ namespace Nikse.SubtitleEdit.Core
                 case "DurationsBridgeGaps/GapToNext":
                     language.DurationsBridgeGaps.GapToNext = reader.Value;
                     break;
+                case "DurationsBridgeGaps/GapToNextFrames":
+                    language.DurationsBridgeGaps.GapToNextFrames = reader.Value;
+                    break;
                 case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart1":
                     language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1 = reader.Value;
                     break;
                 case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2":
                     language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = reader.Value;
                     break;
+                case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart1Frames":
+                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1Frames = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2Frames":
+                    language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2Frames = reader.Value;
+                    break;
                 case "DurationsBridgeGaps/MinMillisecondsBetweenLines":
                     language.DurationsBridgeGaps.MinMillisecondsBetweenLines = reader.Value;
+                    break;
+                case "DurationsBridgeGaps/MinFramesBetweenLines":
+                    language.DurationsBridgeGaps.MinFramesBetweenLines = reader.Value;
                     break;
                 case "DurationsBridgeGaps/ProlongEndTime":
                     language.DurationsBridgeGaps.ProlongEndTime = reader.Value;

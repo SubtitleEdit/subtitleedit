@@ -529,9 +529,13 @@ namespace Nikse.SubtitleEdit.Core
                 Title = "Bridge small gaps between subtitles",
                 GapsBridgedX = "Number of small gaps bridged: {0}",
                 GapToNext = "Gap to next in seconds",
+                GapToNextFrames = "Gap to next in frames",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
+                BridgeGapsSmallerThanXPart1Frames = "Bridge gaps smaller than",
+                BridgeGapsSmallerThanXPart2Frames = "frames",
                 MinMillisecondsBetweenLines = "Min. milliseconds between lines",
+                MinFramesBetweenLines = "Min. frames between lines",
                 ProlongEndTime = "Previous text takes all gap time",
                 DivideEven = "Texts divide gap time",
             };

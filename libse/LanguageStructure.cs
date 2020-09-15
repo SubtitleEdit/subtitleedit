@@ -400,9 +400,14 @@
             public string Title { get; set; }
             public string GapsBridgedX { get; set; }
             public string GapToNext { get; set; }
+            public string GapToNextFrames { get; set; }
             public string BridgeGapsSmallerThanXPart1 { get; set; }
             public string BridgeGapsSmallerThanXPart2 { get; set; }
+            public string BridgeGapsSmallerThanXPart1Frames { get; set; }
+            public string BridgeGapsSmallerThanXPart2Frames { get; set; }
+
             public string MinMillisecondsBetweenLines { get; set; }
+            public string MinFramesBetweenLines { get; set; }
             public string ProlongEndTime { get; set; }
             public string DivideEven { get; set; }
         }
