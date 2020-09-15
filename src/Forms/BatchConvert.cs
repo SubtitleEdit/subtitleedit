@@ -1340,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps))
                             {
-                                Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
+                                Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null, false);
                             }
 
                             if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))

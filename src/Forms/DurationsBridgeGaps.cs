@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -39,15 +40,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
-            SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
+            SubtitleListview1.ShowExtraColumn(Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.DurationsBridgeGaps.GapToNextFrames : Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
             SubtitleListview1.AutoSizeAllColumns(this);
 
             labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1;
-            numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
             labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
-            labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
             labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMillisecondsBetweenLines;
-            numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
             groupBoxLinesFound.Text = string.Empty;
@@ -65,6 +63,23 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
+
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1Frames;
+                labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2Frames;
+
+                labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinFramesBetweenLines;
+
+                numericUpDownMaxMs.Value = SubtitleFormat.MillisecondsToFrames((double)numericUpDownMaxMs.Value);
+                numericUpDownMaxMs.Increment = 1;
+                numericUpDownMinMsBetweenLines.Value = SubtitleFormat.MillisecondsToFrames((double)numericUpDownMinMsBetweenLines.Value);
+                numericUpDownMinMsBetweenLines.Increment = 1;
+            }
+
+            numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
+            numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
+            labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
 
             if (subtitle != null)
             {
@@ -89,6 +104,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.BridgeGapMilliseconds = (int)numericUpDownMaxMs.Value;
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                Configuration.Settings.Tools.BridgeGapMilliseconds = SubtitleFormat.FramesToMilliseconds((double)numericUpDownMaxMs.Value);
+            }
+                
             DialogResult = DialogResult.OK;
         }
 
@@ -121,11 +141,18 @@ namespace Nikse.SubtitleEdit.Forms
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(FixedSubtitle.Paragraphs.Count);
             var minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
-            FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(FixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
+            var maxMs = (double)numericUpDownMaxMs.Value;
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                minMsBetweenLines = SubtitleFormat.FramesToMilliseconds(minMsBetweenLines);
+                maxMs = SubtitleFormat.FramesToMilliseconds(maxMs);
+            }
+
+            FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(FixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, maxMs, fixedIndexes, _dic, Configuration.Settings.General.UseTimeFormatHHMMSSFF);
             SubtitleListview1.Fill(FixedSubtitle);
             for (int i = 0; i < FixedSubtitle.Paragraphs.Count; i++)
             {
-                Paragraph cur = FixedSubtitle.Paragraphs[i];
+                var cur = FixedSubtitle.Paragraphs[i];
                 if (_dic.ContainsKey(cur.Id))
                 {
                     SubtitleListview1.SetExtraText(i, _dic[cur.Id], SubtitleListview1.ForeColor);
@@ -138,6 +165,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var gap = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
                         info = $"{ gap / TimeCode.BaseUnit:0.000}";
+                        if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                        {
+                            info = $"{ SubtitleFormat.MillisecondsToFrames(gap)}";
+                        }
                     }
                     SubtitleListview1.SetExtraText(i, info, SubtitleListview1.ForeColor);
                 }

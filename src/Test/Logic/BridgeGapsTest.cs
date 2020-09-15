@@ -11,7 +11,7 @@ namespace Test.Logic
         [TestMethod]
         public void InvalidMinMaxTest()
         {
-            Assert.AreEqual(0, DurationsBridgeGaps.BridgeGaps(GetSubtitle(), 1000, true, 10, null, null));
+            Assert.AreEqual(0, DurationsBridgeGaps.BridgeGaps(GetSubtitle(), 1000, true, 10, null, null, false));
         }
 
         [TestMethod]
@@ -20,7 +20,7 @@ namespace Test.Logic
             var stubDic = new Dictionary<string, string>();
             var stubList = new List<int>();
 
-            int result = DurationsBridgeGaps.BridgeGaps(GetSubtitle(), 24, true, 100, stubList, stubDic);
+            int result = DurationsBridgeGaps.BridgeGaps(GetSubtitle(), 24, true, 100, stubList, stubDic, false);
 
             Assert.AreNotEqual(0, result);
             // expedtec to contains both p and p + 1 index of adjusted paragraph

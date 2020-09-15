@@ -359,9 +359,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Bridge small gaps between subtitles</Title>
     <GapsBridgedX>Number of small gaps bridged: {0}</GapsBridgedX>
     <GapToNext>Gap to next in seconds</GapToNext>
+    <GapToNextFrames>Gap to next in frames</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>frames</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Min. frames between lines</MinFramesBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divide gap time</DivideEven>
   </DurationsBridgeGaps>
