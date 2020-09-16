@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
 
-            checkBoxSceneChange.Checked = _netflixQualityController.CheckShotChange && _netflixQualityController.SceneChangesExist;
-            checkBoxSceneChange.Enabled = _netflixQualityController.CheckShotChange && _netflixQualityController.SceneChangesExist;
+            checkBoxSceneChange.Checked = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
+            checkBoxSceneChange.Enabled = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
