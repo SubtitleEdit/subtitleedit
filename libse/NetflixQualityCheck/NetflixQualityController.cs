@@ -12,6 +12,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// <summary>
         /// Two letter language code (e.g. "en" is English)
         /// </summary>
+
+        public string VideoFileName { get; set; } = string.Empty;
+        
         public string Language { get; set; } = "en";
 
         public double FrameRate { get; set; } = 24;
@@ -99,9 +102,20 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         return false;
                     }
+                    if (Language == "ar") // Arabic
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }
+        }
+
+        public bool SceneChangesExist = true;
+
+        public bool CheckShotChange
+        {
+            get => string.IsNullOrEmpty(VideoFileName) ? false : true;
         }
 
         public class Record
@@ -219,7 +233,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 new NetflixCheckTwoFramesGap(),
                 new NetflixCheckBridgeGaps(),
                 new NetflixCheckWhiteSpace(),
-                new NetflixCheckItalics()
+                new NetflixCheckItalics(),
+                new NetflixCheckSceneChange()
             };
         }
 
