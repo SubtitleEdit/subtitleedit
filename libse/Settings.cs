@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
     public class RecentFileEntry
+
     {
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
@@ -1914,6 +1915,10 @@ $HorzAlign          =   Center
         public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
         public string MoveEndOneFrameBackKeepGapNext { get; set; }
         public string MoveEndOneFrameForwardKeepGapNext { get; set; }
+        public string MainAdjustSnapStartToNextSceneChange { get; set; }
+        public string MainAdjustSnapStartToNextSceneChangeWithGap { get; set; }
+        public string MainAdjustSnapEndToPreviousSceneChange { get; set; }
+        public string MainAdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
         public string MainAdjustExtendToNextSceneChange { get; set; }
         public string MainAdjustExtendToNextSceneChangeWithGap { get; set; }
         public string MainAdjustExtendToPreviousSceneChange { get; set; }
@@ -2076,6 +2081,10 @@ $HorzAlign          =   Center
             Waveform1000MsLeft = "Left";
             Waveform1000MsRight = "Right";
             MainTranslateGoogleTranslate = "Control+Shift+G";
+            MainAdjustSnapStartToNextSceneChange = string.Empty;
+            MainAdjustSnapStartToNextSceneChangeWithGap = string.Empty;
+            MainAdjustSnapEndToPreviousSceneChange = string.Empty;
+            MainAdjustSnapEndToPreviousSceneChangeWithGap = string.Empty;
             MainAdjustExtendToNextSceneChange = string.Empty;
             MainAdjustExtendToNextSceneChangeWithGap = string.Empty;
             MainAdjustExtendToPreviousSceneChange = string.Empty;
@@ -6903,6 +6912,30 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChange");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSnapStartToNextSceneChange = subNode.InnerText;
+                }
+                
+                subNode = node.SelectSingleNode("MainAdjustSnapStartToNextSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChange");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange = subNode.InnerText;
+                }
+
+                subNode = node.SelectSingleNode("MainAdjustSnapEndToPreviousSceneChangeWithGap");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustExtendToNextSceneChange");
                 if (subNode != null)
                 {
@@ -8181,6 +8214,10 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MoveStartOneFrameForwardKeepGapPrev", settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
                 textWriter.WriteElementString("MoveEndOneFrameBackKeepGapNext", settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
                 textWriter.WriteElementString("MoveEndOneFrameForwardKeepGapNext", settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
+                textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChange", settings.Shortcuts.MainAdjustSnapStartToNextSceneChange);
+                textWriter.WriteElementString("MainAdjustSnapStartToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
+                textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChange", settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange);
+                textWriter.WriteElementString("MainAdjustSnapEndToPreviousSceneChangeWithGap", settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChange", settings.Shortcuts.MainAdjustExtendToNextSceneChange);
                 textWriter.WriteElementString("MainAdjustExtendToNextSceneChangeWithGap", settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
                 textWriter.WriteElementString("MainAdjustExtendToPreviousSceneChange", settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);

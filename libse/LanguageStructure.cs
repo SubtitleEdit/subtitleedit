@@ -2199,6 +2199,10 @@
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
+            public string AdjustSnapStartToNextSceneChange { get; set; }
+            public string AdjustSnapStartToNextSceneChangeWithGap { get; set; }
+            public string AdjustSnapEndToPreviousSceneChange { get; set; }
+            public string AdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
             public string AdjustExtendToNextSceneChange { get; set; }
             public string AdjustExtendToNextSceneChangeWithGap { get; set; }
             public string AdjustExtendToPreviousSceneChange { get; set; }
