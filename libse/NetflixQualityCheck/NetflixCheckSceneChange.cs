@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 List<double> nextStartSceneChanges = SceneChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds)).ToList();
                 List<double> previousEndSceneChanges = SceneChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).ToList();
                 List<double> nextEndSceneChanges = SceneChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).ToList();
-                List<double> onSceneChange = SceneChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) == SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).ToList(); ;
+                var onSceneChange = SceneChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) == SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).Single();
 
                 if (previousStartSceneChanges.Count > 0)
                 {
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     }
                 }
 
-                if (nextStartSceneChanges.Count > 0)
+                if (nextEndSceneChanges.Count > 0)
                 {
                     double nearestStartNextSceneChange = nextStartSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
                     if (SubtitleFormat.MillisecondsToFrames(nearestStartNextSceneChange * 1000 - p.StartTime.TotalMilliseconds) < twelveFrames)
@@ -72,9 +72,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     }
                 }
 
-                if (onSceneChange.Count > 0)
+                if (onSceneChange != 0)
                 {
-                    fixedParagraph.EndTime.TotalMilliseconds = onSceneChange[0] * 1000 - twoFramesGap;
+                    fixedParagraph.EndTime.TotalMilliseconds = onSceneChange * 1000 - twoFramesGap;
                     comment = "The out-cue is on the Shot Change";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
