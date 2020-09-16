@@ -14749,6 +14749,26 @@ namespace Nikse.SubtitleEdit.Forms
                 ExtendSelectedLinesToPreviousLine();
                 e.SuppressKeyPress = true;
             }
+            else if (_shortcuts.MainAdjustSnapStartToNextSceneChange == e.KeyData)
+            {
+                SnapSelectedLinesStartToNextSceneChange();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap == e.KeyData)
+            {
+                SnapSelectedLinesStartToNextSceneChange(true);
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustSnapEndToPreviousSceneChange == e.KeyData)
+            {
+                SnapSelectedLinesEndToPreviousSceneChange();
+                e.SuppressKeyPress = true;
+            }
+            else if (_shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap == e.KeyData)
+            {
+                SnapSelectedLinesEndToPreviousSceneChange(true);
+                e.SuppressKeyPress = true;
+            }
             else if (_shortcuts.MainAdjustExtendToNextSceneChange == e.KeyData)
             {
                 ExtendSelectedLinesToNextSceneChange();
@@ -15117,6 +15137,140 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     p.StartTime.TotalMilliseconds = previous.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+
+                RefreshSelectedParagraphs();
+            }
+        }
+
+        private void SnapSelectedLinesStartToNextSceneChange(bool withGap = false)
+        {
+            var historyAdded = false;
+            foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
+            {
+                var idx = selectedItem.Index;
+                var p = _subtitle.Paragraphs[idx];
+                List<double> nextSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x > p.StartTime.TotalSeconds + 0.01).ToList() : new List<double>();
+                if (nextSceneChanges.Count > 0)
+                {
+                    double nearestSceneChange = nextSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
+
+                    if (!historyAdded)
+                    {
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
+                        historyAdded = true;
+                    }
+
+                    if (!withGap)
+                    {
+                        if (nearestSceneChange * 1000 < p.EndTime.TotalMilliseconds)
+                        {
+                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000; 
+                        }
+                    }
+                    else
+                    {
+                        if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
+                        {
+                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines; 
+                        }
+                    }
+
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            if (!historyAdded)
+                            {
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
+                                historyAdded = true;
+                            }
+
+                            if (!withGap)
+                            {
+                                if (nearestSceneChange * 1000 < p.EndTime.TotalMilliseconds)
+                                {
+                                    original.StartTime.TotalMilliseconds = nearestSceneChange * 1000; 
+                                }
+                            }
+                            else
+                            {
+                                if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
+                                {
+                                    original.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                RefreshSelectedParagraphs();
+            }
+        }
+
+        private void SnapSelectedLinesEndToPreviousSceneChange(bool withGap = false)
+        {
+            var historyAdded = false;
+            foreach (ListViewItem selectedItem in SubtitleListview1.SelectedItems)
+            {
+                var idx = selectedItem.Index;
+                var p = _subtitle.Paragraphs[idx];
+                List<double> previousSceneChanges = audioVisualizer.SceneChanges.Count > 0 ? audioVisualizer.SceneChanges.Where(x => x < p.EndTime.TotalSeconds + 0.01).ToList() : new List<double>();
+                if (previousSceneChanges.Count > 0)
+                {
+                    double nearestSceneChange = previousSceneChanges.Aggregate((x, y) => Math.Abs(x - p.EndTime.TotalSeconds) < Math.Abs(y - p.EndTime.TotalSeconds) ? x : y);
+
+                    if (!historyAdded)
+                    {
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapEndToPreviousSceneChange));
+                        historyAdded = true;
+                    }
+
+                    if (!withGap)
+                    {
+                        if (nearestSceneChange * 1000 > p.StartTime.TotalMilliseconds)
+                        {
+                            p.EndTime.TotalMilliseconds = nearestSceneChange * 1000;
+                        }
+                    }
+                    else
+                    {
+                        if (nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.StartTime.TotalMilliseconds)
+                        {
+                            p.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        }
+                    }
+
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            if (!historyAdded)
+                            {
+                                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapEndToPreviousSceneChange));
+                                historyAdded = true;
+                            }
+
+                            if (!withGap)
+                            {
+                                if (nearestSceneChange * 1000 > p.StartTime.TotalMilliseconds)
+                                {
+                                    original.EndTime.TotalMilliseconds = nearestSceneChange * 1000;
+                                }
+                            }
+                            else
+                            {
+                                if (nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.StartTime.TotalMilliseconds)
+                                {
+                                    original.EndTime.TotalMilliseconds = nearestSceneChange * 1000 - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+
+                                }
+                            }
+                        }
+                    }
                 }
 
                 RefreshSelectedParagraphs();
