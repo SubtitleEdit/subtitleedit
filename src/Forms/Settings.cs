@@ -1365,6 +1365,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createAndAdjustNode, language.AdjustEndOneFrameBackKeepGapNext, nameof(Configuration.Settings.Shortcuts.MoveEndOneFrameBackKeepGapNext));
             AddNode(createAndAdjustNode, language.AdjustEndOneFrameForwardKeepGapNext, nameof(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext));
             AddNode(createAndAdjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
+            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChange));
+            AddNode(createAndAdjustNode, language.AdjustSnapStartToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap));
+            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange));
+            AddNode(createAndAdjustNode, language.AdjustSnapEndToPreviousSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange));
             AddNode(createAndAdjustNode, language.AdjustExtendToNextSceneChangeWithGap, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap));
             AddNode(createAndAdjustNode, language.AdjustExtendToPreviousSceneChange, nameof(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange));

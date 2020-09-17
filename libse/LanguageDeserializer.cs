@@ -5521,6 +5521,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustExtendCurrentSubtitle":
                     language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
                     break;
+                case "Settings/AdjustSnapStartToNextSceneChange":
+                    language.Settings.AdjustSnapStartToNextSceneChange = reader.Value;
+                    break;
+                case "Settings/AdjustSnapStartToNextSceneChangeWithGap":
+                    language.Settings.AdjustSnapStartToNextSceneChangeWithGap = reader.Value;
+                    break;
+                case "Settings/AdjustSnapEndToPreviousSceneChange":
+                    language.Settings.AdjustSnapEndToPreviousSceneChange = reader.Value;
+                    break;
+                case "Settings/AdjustSnapEndToPreviousSceneChangeWithGap":
+                    language.Settings.AdjustSnapEndToPreviousSceneChangeWithGap = reader.Value;
+                    break;
                 case "Settings/AdjustExtendToNextSceneChange":
                     language.Settings.AdjustExtendToNextSceneChange = reader.Value;
                     break;

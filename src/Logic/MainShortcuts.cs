@@ -114,6 +114,10 @@ namespace Nikse.SubtitleEdit.Logic
         public Keys MainAdjustMoveStartOneFrameForwardKeepGapPrev { get; set; }
         public Keys MainAdjustMoveEndOneFrameBackKeepGapNext { get; set; }
         public Keys MainAdjustMoveEndOneFrameForwardKeepGapNext { get; set; }
+        public Keys MainAdjustSnapStartToNextSceneChange { get; set; }
+        public Keys MainAdjustSnapStartToNextSceneChangeWithGap { get; set; }
+        public Keys MainAdjustSnapEndToPreviousSceneChange { get; set; }
+        public Keys MainAdjustSnapEndToPreviousSceneChangeWithGap { get; set; }
         public Keys MainAdjustExtendToNextSceneChange { get; set; }
         public Keys MainAdjustExtendToNextSceneChangeWithGap { get; set; }
         public Keys MainAdjustExtendToPreviousSceneChange { get; set; }
@@ -298,6 +302,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustMoveStartOneFrameForwardKeepGapPrev = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveStartOneFrameForwardKeepGapPrev);
             MainAdjustMoveEndOneFrameBackKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameBackKeepGapNext);
             MainAdjustMoveEndOneFrameForwardKeepGapNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MoveEndOneFrameForwardKeepGapNext);
+            MainAdjustSnapStartToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChange);
+            MainAdjustSnapStartToNextSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapStartToNextSceneChangeWithGap);
+            MainAdjustSnapEndToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChange);
+            MainAdjustSnapEndToPreviousSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSnapEndToPreviousSceneChangeWithGap);
             MainAdjustExtendToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChange);
             MainAdjustExtendToNextSceneChangeWithGap = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToNextSceneChangeWithGap);
             MainAdjustExtendToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustExtendToPreviousSceneChange);
