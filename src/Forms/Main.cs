@@ -27037,7 +27037,7 @@ namespace Nikse.SubtitleEdit.Forms
             var messages = new List<string>();
             var reportFiles = new List<string>();
 
-            var netflixController = new NetflixQualityController { Language = language };
+            var netflixController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName };
             if (!string.IsNullOrEmpty(_videoFileName) && _videoInfo != null && _videoInfo.FramesPerSecond > 20)
             {
                 netflixController.FrameRate = _videoInfo.FramesPerSecond;
@@ -27057,19 +27057,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!isSaving)
                     {
-                        if (Configuration.Settings.General.ShowBetaStuff)
+                        using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat(), _fileName, _videoFileName))
                         {
-                            using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat(), _fileName))
+                            if (form.ShowDialog(this) == DialogResult.OK)
                             {
-                                if (form.ShowDialog(this) == DialogResult.OK)
-                                {
 
-                                }
                             }
-                        }
-                        else
-                        {
-                            dialog.ShowDialog(this);
                         }
                     }
                     else

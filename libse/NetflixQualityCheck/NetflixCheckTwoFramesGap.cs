@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+
+namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public class NetflixCheckTwoFramesGap : INetflixQualityChecker
     {
@@ -18,7 +20,7 @@
                 Paragraph p = subtitle.Paragraphs[index];
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
-                if (next != null && p.EndTime.TotalMilliseconds + twoFramesGap > next.StartTime.TotalMilliseconds)
+                if (next != null && SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds + twoFramesGap) > SubtitleFormat.MillisecondsToFrames(next.StartTime.TotalMilliseconds))
                 {
                     var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
                     string comment = "Minimum two frames gap";

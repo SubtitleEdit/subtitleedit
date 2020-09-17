@@ -16,16 +16,18 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Subtitle _subtitle;
         private readonly SubtitleFormat _subtitleFormat;
         private readonly string _subtitleFileName;
+        private readonly string _videoFileName;
         private bool _loading;
         private NetflixQualityController _netflixQualityController;
 
-        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName)
+        public NetflixFixErrors(Subtitle subtitle, SubtitleFormat subtitleFormat, string subtitleFileName, string videoFileName)
         {
             InitializeComponent();
 
             _subtitle = subtitle;
             _subtitleFormat = subtitleFormat;
             _subtitleFileName = subtitleFileName;
+            _videoFileName = videoFileName;
 
             labelTotal.Text = string.Empty;
             linkLabelOpenReportFolder.Text = string.Empty;
@@ -45,17 +47,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshCheckBoxes(string language)
         {
-            _netflixQualityController = new NetflixQualityController { Language = language };
+            _netflixQualityController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName };
 
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
+
+            checkBoxSceneChange.Checked = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
+            checkBoxSceneChange.Enabled = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
             checkBoxTtmlFrameRate.Enabled = checkFrameRate;
 
-            checkBoxDialogHypenNoSpace.Checked = _netflixQualityController.DualSpeakersHasHyphenAndNoSpace;
-            checkBoxDialogHypenNoSpace.Enabled = _netflixQualityController.DualSpeakersHasHyphenAndNoSpace;
+            checkBoxDialogHypenNoSpace.Text = !_netflixQualityController.DualSpeakersHasHyphenAndNoSpace ? "Dual Speakers: Use a hyphen with a space" : "Dual Speakers: Use a hyphen without a space";
 
             checkBox17CharsPerSecond.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumXCharsPerSecond, _netflixQualityController.CharactersPerSecond);
             checkBoxMaxLineLength.Text = string.Format(Configuration.Settings.Language.NetflixQualityCheck.MaximumLineLength, _netflixQualityController.SingleLineMaxLength);
@@ -210,6 +214,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxWhiteSpace.Checked)
             {
                 list.Add(new NetflixCheckWhiteSpace());
+            }
+
+            if (checkBoxSceneChange.Checked)
+            {
+                list.Add(new NetflixCheckSceneChange());
             }
 
             return list;

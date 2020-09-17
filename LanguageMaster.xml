@@ -2278,7 +2278,7 @@ Continue?</RestoreDefaultSettingsMsg>
     <OpenReportInFolder>Open report in folder</OpenReportInFolder>
     <FoundXIssues>Netflix quality check found {0:#,###} issues.</FoundXIssues>
     <CheckOk>Netflix quality check OK :)</CheckOk>
-    <MaximumXCharsPerSecond>Maximum {0} characters per second (excl. white spaces)</MaximumXCharsPerSecond>
+    <MaximumXCharsPerSecond>Maximum {0} characters per second (incl. white spaces)</MaximumXCharsPerSecond>
     <MaximumLineLength>Maximum line length ({0})</MaximumLineLength>
     <MinimumDuration>Minimum duration: 5/6 second (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
