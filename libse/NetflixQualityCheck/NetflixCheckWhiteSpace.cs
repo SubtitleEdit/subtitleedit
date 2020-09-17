@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
         private static readonly Regex LineEndingSpaceBefore = new Regex(@"^( |\n|\r\n)[^\s]", RegexOptions.Compiled);
         private static readonly Regex LineEndingSpaceAfter = new Regex(@"[^\s]( |\n|\r\n)$", RegexOptions.Compiled);
-        private static readonly Regex SpacesBeforePunctuation = new Regex(@"[^\s]( |\n|\r\n)[!?).,]", RegexOptions.Compiled);
+        private static readonly Regex SpacesBeforePunctuation = new Regex(@"[^\s]( |\n|\r\n)[!?).,؟،]", RegexOptions.Compiled);
         private static readonly Regex TwoPlusConsequentSpaces = new Regex(@"( |\n|\r\n){2,}", RegexOptions.Compiled);
 
         private static void AddWhiteSpaceWarning(Paragraph p, NetflixQualityController report, int pos)
