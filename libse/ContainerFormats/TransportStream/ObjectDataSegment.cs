@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 x = 0;
                 y = 0;
                 index = start;
-                while (index < start + TopFieldDataBlockLength)
+                while (index < start + TopFieldDataBlockLength && index < buffer.Length)
                 {
                     index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     start = index;
                 }
                 dataType = buffer[index - 1];
-                while (index < start + BottomFieldDataBlockLength - 1)
+                while (index < start + BottomFieldDataBlockLength - 1 && index < buffer.Length)
                 {
                     index = ProcessDataType(buffer, index, cds, ref dataType, start, twoToFourBitColorLookup, fourToEightBitColorLookup, twoToEightBitColorLookup, ref x, ref y, length, ref pixelCode, ref runLength);
                 }
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             else if (dataType == PixelDecoding4Bit)
             {
                 bool startHalf = false;
-                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
+                while (index < start + length - 1 && index < buffer.Length && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
                 {
                     DrawPixels(cds, fourToEightBitColorLookup[pixelCode], runLength, ref x, ref y);
                 }
@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 y += 2; // interlaced - skip one line
             }
 
-            if (index < start + length)
+            if (index < start + length && index < buffer.Length)
             {
                 dataType = buffer[index];
                 index++;
