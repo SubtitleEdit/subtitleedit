@@ -396,11 +396,12 @@ namespace Nikse.SubtitleEdit.Forms
                         matroska = new MatroskaFile(labelVideoFileName.Text);
                         if (matroska.IsValid)
                         {
-                            _delayInMilliseconds = (int)matroska.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
+                            _delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[_audioTrackNumber]);
                         }
                     }
-                    catch
+                    catch (Exception exception)
                     {
+                        SeLogger.Error(exception, $"Error getting delay from mkv: {labelVideoFileName.Text}");
                         _delayInMilliseconds = 0;
                     }
                     finally

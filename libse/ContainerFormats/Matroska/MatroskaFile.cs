@@ -111,6 +111,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             return 0;
         }
 
+        public long GetAudioTrackDelayMilliseconds(int audioTrackNumber)
+        {
+            var tracks = GetTracks(false);
+            var videoTrack = tracks.FirstOrDefault(p => p.IsVideo && p.IsDefault) ?? tracks.FirstOrDefault(p => p.IsVideo);
+            long videoDelay = 0;
+            if (videoTrack != null)
+            {
+                videoDelay = GetTrackStartTime(videoTrack.TrackNumber);
+            }
+
+            return GetTrackStartTime(audioTrackNumber) - videoDelay;
+        }
+
         private long FindTrackStartInCluster(Element cluster, int targetTrackNumber)
         {
             long clusterTimeCode = 0L;
