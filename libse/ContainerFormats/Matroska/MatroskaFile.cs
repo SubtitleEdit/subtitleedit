@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public long GetAudioTrackDelayMilliseconds(int audioTrackNumber)
         {
-            var tracks = GetTracks(false);
+            var tracks = GetTracks();
             var videoTrack = tracks.FirstOrDefault(p => p.IsVideo && p.IsDefault) ?? tracks.FirstOrDefault(p => p.IsVideo);
             long videoDelay = 0;
             if (videoTrack != null)
