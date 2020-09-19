@@ -316,13 +316,14 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     if (mkvAudioTrackNumbers.Count > 0)
                                     {
-                                        _delayInMilliseconds = (int)matroska.GetTrackStartTime(mkvAudioTrackNumbers[0]);
+                                        _delayInMilliseconds = (int)matroska.GetAudioTrackDelayMilliseconds(mkvAudioTrackNumbers[0]);
                                     }
                                 }
                             }
                         }
-                        catch
+                        catch (Exception exception)
                         {
+                            SeLogger.Error(exception, $"Error getting delay from mkv: {fileName}");
                             _delayInMilliseconds = 0;
                         }
                     }
