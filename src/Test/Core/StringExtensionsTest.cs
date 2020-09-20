@@ -204,7 +204,7 @@ namespace Test.Core
         public void CountLetters1()
         {
             string input = " Hallo  world! ";
-            var res = input.CountCharacters(false);
+            var res = input.CountCharacters(false, false);
             Assert.AreEqual(" Hallo  world! ".Length, res);
         }
 
@@ -212,7 +212,7 @@ namespace Test.Core
         public void CountLetters2()
         {
             string input = " Hallo " + Environment.NewLine + " world! ";
-            var res = input.CountCharacters(true);
+            var res = input.CountCharacters(true, false);
             Assert.AreEqual("Halloworld!".Length, res);
         }
 
@@ -220,7 +220,7 @@ namespace Test.Core
         public void CountLetters3()
         {
             string input = " Hallo" + Environment.NewLine + "world!";
-            var res = input.CountCharacters(false);
+            var res = input.CountCharacters(false, false);
             Assert.AreEqual(" Halloworld!".Length, res);
         }
 
@@ -228,7 +228,7 @@ namespace Test.Core
         public void CountLetters4Ssa()
         {
             string input = "{\\an1}Hallo";
-            var res = input.CountCharacters(true);
+            var res = input.CountCharacters(true, false);
             Assert.AreEqual("Hallo".Length, res);
         }
 
@@ -236,7 +236,7 @@ namespace Test.Core
         public void CountLetters4Html()
         {
             string input = "<i>Hallo</i>";
-            var res = input.CountCharacters(true);
+            var res = input.CountCharacters(true, false);
             Assert.AreEqual("Hallo".Length, res);
         }
 
@@ -244,7 +244,7 @@ namespace Test.Core
         public void CountLetters5HtmlFont()
         {
             string input = "<font color=\"red\"><i>Hal lo<i></font>";
-            var res = input.CountCharacters(true);
+            var res = input.CountCharacters(true, false);
             Assert.AreEqual("Hallo".Length, res);
         }
 
@@ -252,7 +252,7 @@ namespace Test.Core
         public void CountLetters6HtmlFontMultiLine()
         {
             string input = "<font color=\"red\"><i>Hal lo<i></font>" + Environment.NewLine + "<i>Bye!</i>";
-            var res = input.CountCharacters(true);
+            var res = input.CountCharacters(true, false);
             Assert.AreEqual("HalloBye!".Length, res);
         }
 

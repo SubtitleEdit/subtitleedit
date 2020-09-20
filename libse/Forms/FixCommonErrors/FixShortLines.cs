@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                var text = Helper.FixShortLines(p.Text);
+                var text = Helper.FixShortLines(p.Text, callbacks.Language);
                 if (callbacks.AllowFix(p, fixAction) && oldText != text)
                 {
                     p.Text = text;
