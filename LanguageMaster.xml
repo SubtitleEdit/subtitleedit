@@ -1043,6 +1043,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <GoToSubtitleNumber>&amp;Go to subtitle number...</GoToSubtitleNumber>
         <RightToLeftMode>Right-to-left mode</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>Fix RTL via Unicode control characters (for selected lines)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Remove Unicode control characters (from selected lines)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverse RTL start/end (for selected lines)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Show original text in audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modify selection...</ModifySelection>

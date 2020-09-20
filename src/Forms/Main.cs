@@ -1409,6 +1409,7 @@ namespace Nikse.SubtitleEdit.Forms
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
 
+            toolStripMenuItemRemoveUnicodeControlChars.Text = _language.Menu.Edit.RemoveUnicodeControlCharacters;
             toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixRtlViaUnicodeControlCharacters;
 
             toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
@@ -17608,6 +17609,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EditToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            toolStripMenuItemRemoveUnicodeControlChars.Visible = IsUnicode;
             toolStripMenuItemRtlUnicodeControlChars.Visible = IsUnicode;
             if (!IsUnicode || _subtitleListViewIndex == -1)
             {
@@ -26759,6 +26761,23 @@ namespace Nikse.SubtitleEdit.Forms
         private void startOfRighttoleftOverrideRLOToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PasteIntoActiveTextBox("\u202E");
+        }
+
+        private void toolStripMenuItemRemoveUnicodeControlChar_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = FirstSelectedIndex;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                var p = _subtitle.Paragraphs[index];
+                p.Text = Utilities.RemoveUnicodeChars(p.Text);
+                SubtitleListview1.SetText(index, p.Text);
+                if (index == selectedIndex)
+                {
+                    textBoxListViewText.Text = p.Text;
+                }
+            }
+
+            RefreshSelectedParagraph();
         }
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
