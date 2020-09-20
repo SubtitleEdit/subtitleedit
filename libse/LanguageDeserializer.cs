@@ -5635,6 +5635,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AutoDurationSelectedLines":
                     language.Settings.AutoDurationSelectedLines = reader.Value;
                     break;
+                case "Settings/FixRTLViaUnicodeChars":
+                    language.Settings.FixRTLViaUnicodeChars = reader.Value;
+                    break;
+                case "Settings/RemoveRTLUnicodeChars":
+                    language.Settings.RemoveRTLUnicodeChars = reader.Value;
+                    break;
                 case "Settings/ReverseStartAndEndingForRtl":
                     language.Settings.ReverseStartAndEndingForRtl = reader.Value;
                     break;

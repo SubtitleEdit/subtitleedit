@@ -2888,7 +2888,7 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static string RemoveUnicodeChars(string input)
+        public static string RemoveUnicodeControlChars(string input)
         {
             input = input.Replace("\u200E", string.Empty);
             input = input.Replace("\u200F", string.Empty);

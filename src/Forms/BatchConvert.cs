@@ -1796,7 +1796,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
-                    paragraph.Text = Utilities.RemoveUnicodeChars(paragraph.Text);
+                    paragraph.Text = Utilities.RemoveUnicodeControlChars(paragraph.Text);
                 }
             }
 
