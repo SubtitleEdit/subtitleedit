@@ -982,7 +982,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <MultipleReplace>Remplacements &amp;multiples...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Aller au sous-titre n°...</GoToSubtitleNumber>
         <RightToLeftMode>Mode droite à gauche (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Corriger RTL via caractères de contrôle Unicode (lignes sélec.)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Corriger RTL via caractères de contrôle Unicode (lignes sélec.)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inverser droite à gauche (lignes sélec.)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Visualiser textes originales sur l'audio / vidéo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifier la sélection...</ModifySelection>

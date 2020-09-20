@@ -998,7 +998,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <MultipleReplace>&amp;Mehrfach ersetzen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Gehe zu Untertitel Nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts nach links</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>RTL über Unicode Steuerzeichen korrigieren (ausgewählte Texte)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>RTL über Unicode Steuerzeichen korrigieren (ausgewählte Texte)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Rechts nach links Start/Ende umkehren</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originaltext in Audio/Videovorschau anzeigen</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Auswahl ändern</ModifySelection>

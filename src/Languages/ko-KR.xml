@@ -1033,7 +1033,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <MultipleReplace>다중 바꾸기(&amp;M)</MultipleReplace>
         <GoToSubtitleNumber>자막 번호로 이동(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>RTL 모드...</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>유니코드 제어 문자로 RTL 수정...</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>유니코드 제어 문자로 RTL 수정...</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>LTR 모드 (선택한 줄)...</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>오디오/비디오 미리 보기에 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>줄 선택 바꾸기</ModifySelection>

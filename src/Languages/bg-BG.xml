@@ -1040,7 +1040,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Множествена замяна...</MultipleReplace>
         <GoToSubtitleNumber>Преминаване до субтитър с №...</GoToSubtitleNumber>
         <RightToLeftMode>Режим отДясно наЛяво (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Поправяне отДясно/наЛяво чрез Unicod контрол на символите (за избраните редове)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Поправяне отДясно/наЛяво чрез Unicod контрол на символите (за избраните редове)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Превключване на отДясно/наЛяво, начало/край (за избраните редове)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Показване на оригиналния текст в аудио/видео прегледа</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Промяна на избраното...</ModifySelection>

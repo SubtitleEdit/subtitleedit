@@ -1035,7 +1035,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <MultipleReplace>&amp;Wielokrotne zastąpienia...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idź do linii o numerze...</GoToSubtitleNumber>
         <RightToLeftMode>Tryb od-prawej-do-lewej (PDL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Popraw PDL za pomocą kontroli znaków Unicode (dla wybranych linii)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Popraw PDL za pomocą kontroli znaków Unicode (dla wybranych linii)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Odwróć początek/koniec PDL (dla wybranych linii)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst w podglądzie audio/wideo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modyfikuj zaznaczone...</ModifySelection>

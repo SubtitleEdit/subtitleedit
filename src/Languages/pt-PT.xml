@@ -1035,7 +1035,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MultipleReplace>&amp;Substituição múltipla</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverter RTL início/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar a selecção...</ModifySelection>
