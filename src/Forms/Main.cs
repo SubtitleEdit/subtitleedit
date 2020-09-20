@@ -13705,6 +13705,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && inListView)
+            {
+                toolStripMenuItemRtlUnicodeControlChar_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (!toolStripMenuItemRemoveUnicodeControlChars.Visible && _shortcuts.MainEditRemoveRTLUnicodeChars == e.KeyData && inListView)
+            {
+                toolStripMenuItemRemoveUnicodeControlChar_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
             {
                 ReverseStartAndEndingForRtl();
@@ -26763,38 +26773,44 @@ namespace Nikse.SubtitleEdit.Forms
             PasteIntoActiveTextBox("\u202E");
         }
 
-        private void toolStripMenuItemRemoveUnicodeControlChar_Click(object sender, EventArgs e)
-        {
-            int selectedIndex = FirstSelectedIndex;
-            foreach (int index in SubtitleListview1.SelectedIndices)
-            {
-                var p = _subtitle.Paragraphs[index];
-                p.Text = Utilities.RemoveUnicodeChars(p.Text);
-                SubtitleListview1.SetText(index, p.Text);
-                if (index == selectedIndex)
-                {
-                    textBoxListViewText.Text = p.Text;
-                }
-            }
-
-            RefreshSelectedParagraph();
-        }
-
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
         {
-            int selectedIndex = FirstSelectedIndex;
-            foreach (int index in SubtitleListview1.SelectedIndices)
+            if (IsUnicode)
             {
-                var p = _subtitle.Paragraphs[index];
-                p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
-                SubtitleListview1.SetText(index, p.Text);
-                if (index == selectedIndex)
+                int selectedIndex = FirstSelectedIndex;
+                foreach (int index in SubtitleListview1.SelectedIndices)
                 {
-                    textBoxListViewText.Text = p.Text;
+                    var p = _subtitle.Paragraphs[index];
+                    p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                    if (index == selectedIndex)
+                    {
+                        textBoxListViewText.Text = p.Text;
+                    }
                 }
-            }
 
-            RefreshSelectedParagraph();
+                RefreshSelectedParagraph(); 
+            }
+        }
+
+        private void toolStripMenuItemRemoveUnicodeControlChar_Click(object sender, EventArgs e)
+        {
+            if (IsUnicode)
+            {
+                int selectedIndex = FirstSelectedIndex;
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    p.Text = Utilities.RemoveUnicodeControlChars(p.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                    if (index == selectedIndex)
+                    {
+                        textBoxListViewText.Text = p.Text;
+                    }
+                }
+
+                RefreshSelectedParagraph(); 
+            }
         }
 
         private void toolStripMenuItemImportImages_Click(object sender, EventArgs e)

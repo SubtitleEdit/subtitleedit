@@ -2237,6 +2237,8 @@
             public string CopyTextOnly { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
+            public string FixRTLViaUnicodeChars { get; set; }
+            public string RemoveRTLUnicodeChars { get; set; }
             public string ReverseStartAndEndingForRtl { get; set; }
             public string VerticalZoom { get; set; }
             public string VerticalZoomOut { get; set; }

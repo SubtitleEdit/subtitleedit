@@ -2071,6 +2071,8 @@ can edit in same subtitle file (collaboration)</Information>
     <CopyTextOnly>Copy text only to clipboard (selected lines)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Fix RTL via Unicode control characters</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Remove Unicode control characters</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Reverse RTL start/end</ReverseStartAndEndingForRtl>
     <VerticalZoom>Vertical zoom in</VerticalZoom>
     <VerticalZoomOut>Vertical zoom out</VerticalZoomOut>

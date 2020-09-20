@@ -1159,6 +1159,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.ModifySelection, nameof(Configuration.Settings.Shortcuts.MainEditModifySelection), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber, nameof(Configuration.Settings.Shortcuts.MainEditGoToLineNumber), true);
             AddNode(editNode, Configuration.Settings.Language.VobSubOcr.RightToLeft, nameof(Configuration.Settings.Shortcuts.MainEditRightToLeft), true);
+            AddNode(editNode, language.FixRTLViaUnicodeChars, nameof(Configuration.Settings.Shortcuts.MainEditFixRTLViaUnicodeChars), true);
+            AddNode(editNode, language.RemoveRTLUnicodeChars, nameof(Configuration.Settings.Shortcuts.MainEditRemoveRTLUnicodeChars), true);
             AddNode(editNode, language.ReverseStartAndEndingForRtl, nameof(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL), true);
             AddNode(editNode, language.ToggleTranslationAndOriginalInPreviews, nameof(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews), true);
             if (editNode.Nodes.Count > 0)
