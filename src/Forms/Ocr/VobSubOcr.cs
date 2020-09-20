@@ -5103,6 +5103,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly object _lockObj = new object();
         public void OcrDone(int index, TesseractThreadRunner.ImageJob job)
         {
+            if (_abort)
+            {
+                return;
+            }
+
             _tesseractAsyncStrings[index] = job.Result;
             Application.DoEvents();
             lock (_lockObj)
