@@ -1537,6 +1537,7 @@ namespace Nikse.SubtitleEdit.Core
                         GoToSubtitleNumber = "&Go to subtitle number...",
                         RightToLeftMode = "Right-to-left mode",
                         FixRtlViaUnicodeControlCharacters = "Fix RTL via Unicode control characters (for selected lines)",
+                        RemoveUnicodeControlCharacters = "Remove Unicode control characters (from selected lines)",
                         ReverseRightToLeftStartEnd = "Reverse RTL start/end (for selected lines)",
                         ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
                         ModifySelection = "Modify selection...",

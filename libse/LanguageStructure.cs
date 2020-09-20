@@ -1397,6 +1397,7 @@
                     public string GoToSubtitleNumber { get; set; }
                     public string RightToLeftMode { get; set; }
                     public string FixRtlViaUnicodeControlCharacters { get; set; }
+                    public string RemoveUnicodeControlCharacters { get; set; }
                     public string ReverseRightToLeftStartEnd { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string ModifySelection { get; set; }
