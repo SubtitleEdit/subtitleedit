@@ -959,7 +959,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <MultipleReplace>&amp;Višestruka zamjena…</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idi na liniju broj…</GoToSubtitleNumber>
         <RightToLeftMode>Zdesna na lijevo način</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Popravi RTL putem Unicode kontrolnih znakova (za odabrane linije)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Popravi RTL putem Unicode kontrolnih znakova (za odabrane linije)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrnuti RTL početak/kraj (za odabrane linije)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Prikaži originalni tekst u audio/video pregledima</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Promijeni izbor...</ModifySelection>

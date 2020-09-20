@@ -1033,7 +1033,7 @@ Treci la "Opțiuni -&gt; Setări -&gt; Unelte" ptr. a introduce codul API al Goo
         <MultipleReplace>&amp;Înlocuiește multiplu...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Mergi la numărul subtitrării...</GoToSubtitleNumber>
         <RightToLeftMode>Modul dreapta-stânga</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Corect. RTL prin caractere de control Unicode (ptr. liniile selectate)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Corect. RTL prin caractere de control Unicode (ptr. liniile selectate)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inversează începutul/sfârșitul RTL (ptr. linii selectate)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Arată textul original în previzualizări audio/video</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifică selectarea...</ModifySelection>

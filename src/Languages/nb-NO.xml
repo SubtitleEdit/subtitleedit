@@ -931,7 +931,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
         <MultipleReplace>&amp;Erstatt flere...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Hopp til undertekstnummer...</GoToSubtitleNumber>
         <RightToLeftMode>Høyre-til-venstre-modus</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Fiks høyre-til-venstre via Unicode-kontrolltegn (for valgte linjer)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Fiks høyre-til-venstre via Unicode-kontrolltegn (for valgte linjer)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reversert høyre-til-venstre start/slutt (for valgte linjer)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Vis opprinnelig tekst i lyd/video-forhåndsvisninger</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifiser valgte...</ModifySelection>

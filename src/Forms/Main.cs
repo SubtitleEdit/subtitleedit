@@ -1409,7 +1409,7 @@ namespace Nikse.SubtitleEdit.Forms
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
 
-            toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixTrlViaUnicodeControlCharacters;
+            toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixRtlViaUnicodeControlCharacters;
 
             toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
             toolStripMenuItemModifySelection.Text = _language.Menu.Edit.ModifySelection;

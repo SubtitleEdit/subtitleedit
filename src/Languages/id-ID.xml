@@ -972,7 +972,7 @@ Catatan: Periksa ruang kosong disk.</WaveFileMalformed>
         <MultipleReplace>&amp;Ganti banyak...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Pergi ke nomor subjudul...</GoToSubtitleNumber>
         <RightToLeftMode>Mode kanan-ke-kiri</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Perbaiki RTL melalui kendali karakter Unikode (untuk baris terpilih)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Perbaiki RTL melalui kendali karakter Unikode (untuk baris terpilih)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Balikkan mulai/akhir RTL (untuk jalur terpilih)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Tampilkan teks asli dlm pratinjau audio/video</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifikasi pilihan...</ModifySelection>

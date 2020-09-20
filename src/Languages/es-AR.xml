@@ -1007,7 +1007,7 @@ Ve a "Opciones -&gt; Configuración -&gt; Herramientas" para introducir la clave
         <MultipleReplace>Reemplazar &amp;Múltiple...</MultipleReplace>
         <GoToSubtitleNumber>Ir a subtítulo número...</GoToSubtitleNumber>
         <RightToLeftMode>Derecha a izquierda modo</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Arreglar RTL mediante caracteres de control Unicode (para líneas seleccionadas)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Arreglar RTL mediante caracteres de control Unicode (para líneas seleccionadas)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inicio Reverso RTL/fin (para las líneas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en el previsualizaciones de audio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar selección...</ModifySelection>

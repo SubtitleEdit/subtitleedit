@@ -995,7 +995,7 @@ Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klí
         <MultipleReplace>Hro&amp;madné nahrazení...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Přejít na řádek číslo...</GoToSubtitleNumber>
         <RightToLeftMode>Režim zprava doleva</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Opravit zprava do leva pomocí řídících znaků Unicode (pro vybrané řádky)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Opravit zprava do leva pomocí řídících znaků Unicode (pro vybrané řádky)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrátit začátek a konec zprava doleva (pro vybrané řádky)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Změnit výběr...</ModifySelection>

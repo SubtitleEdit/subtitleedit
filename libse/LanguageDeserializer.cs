@@ -3571,8 +3571,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Edit/RightToLeftMode":
                     language.Main.Menu.Edit.RightToLeftMode = reader.Value;
                     break;
-                case "Main/Menu/Edit/FixTrlViaUnicodeControlCharacters":
-                    language.Main.Menu.Edit.FixTrlViaUnicodeControlCharacters = reader.Value;
+                case "Main/Menu/Edit/FixRtlViaUnicodeControlCharacters":
+                    language.Main.Menu.Edit.FixRtlViaUnicodeControlCharacters = reader.Value;
                     break;
                 case "Main/Menu/Edit/ReverseRightToLeftStartEnd":
                     language.Main.Menu.Edit.ReverseRightToLeftStartEnd = reader.Value;

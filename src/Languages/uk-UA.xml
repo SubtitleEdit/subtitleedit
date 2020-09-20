@@ -923,7 +923,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Множинна заміна...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Перейти до субтитру номер...</GoToSubtitleNumber>
         <RightToLeftMode>Режим справа наліво (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Виправити RTL за допомогою керувальних символів Unicode (обрані рядки)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Виправити RTL за допомогою керувальних символів Unicode (обрані рядки)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Обміняти місцями початок/кінець RTL (обрані рядки)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Показувати оригінальний текст в попередніх аудіо-/відеопереглядах</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Змінити вибір...</ModifySelection>
