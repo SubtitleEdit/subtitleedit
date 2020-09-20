@@ -199,14 +199,17 @@ namespace Test.Logic
             sub.Paragraphs.Add(p1);
             var p2 = new Paragraph("Lorem ipsum." + Environment.NewLine + "Line 2.", 0, 832);
             sub.Paragraphs.Add(p2);
+            var p3 = new Paragraph("Lorem ipsum dolor sit amet," + Environment.NewLine + "consectetur adipiscing elit", 0, 832);
+            sub.Paragraphs.Add(p3);
 
             var controller = new NetflixQualityController();
             var checker = new NetflixCheckNumberOfLines();
 
             checker.Check(sub, controller);
 
-            Assert.AreEqual(1, controller.Records.Count);
+            Assert.AreEqual(2, controller.Records.Count);
             Assert.AreEqual(controller.Records[0].OriginalParagraph, p1);
+            Assert.AreEqual(controller.Records[1].FixedParagraph.Text, "Lorem ipsum. Line 2.");
         }
 
         [TestMethod]
