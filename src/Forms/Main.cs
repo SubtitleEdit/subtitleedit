@@ -4106,6 +4106,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fileDateTime = new DateTime();
             _oldSubtitleFormat = null;
             labelSingleLine.Text = string.Empty;
+            buttonSplitLine.Visible = false;
             labelSingleLinePixels.Text = string.Empty;
             RemoveAlternate(true, false);
             _splitDualSami = false;
@@ -8218,6 +8219,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = string.Empty;
                 textBoxListViewTextAlternate.Text = string.Empty;
                 textBoxListViewText.Enabled = false;
+                buttonSplitLine.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
                 labelCharactersPerSecond.Text = string.Empty;
                 labelTextLineTotal.Text = string.Empty;
