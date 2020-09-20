@@ -206,8 +206,8 @@ namespace Test.FixCommonErrors
             string expected = input;
             string expected2 = input2;
 
-            var result = Helper.FixShortLines(input);
-            var result2 = Helper.FixShortLines(input2);
+            var result = Helper.FixShortLines(input, "en");
+            var result2 = Helper.FixShortLines(input2, "en");
             Assert.AreEqual(result, expected); Assert.AreEqual(result2, expected2.Replace(Environment.NewLine, " "));
         }
 

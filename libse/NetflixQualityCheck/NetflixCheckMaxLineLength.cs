@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                             }
                         }
                     }
-                    else if (HtmlUtil.RemoveHtmlTags(line, true).Length > controller.SingleLineMaxLength)
+                    else if (HtmlUtil.RemoveHtmlTags(line, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);

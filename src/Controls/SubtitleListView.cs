@@ -1382,16 +1382,14 @@ namespace Nikse.SubtitleEdit.Controls
                 string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                 foreach (string line in s.SplitToLines())
                 {
-                    if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         return;
                     }
                 }
                 int noOfLines = paragraph.NumberOfLines;
-                // Length excluding new line characters. (\r\n)
-                int len = noOfLines > 1 ? s.Length - Environment.NewLine.Length * (noOfLines - 1) : s.Length;
-                if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                 {
                     if (noOfLines > Configuration.Settings.General.MaxNumberOfLines && _settings.Tools.ListViewSyntaxMoreThanXLines)
                     {

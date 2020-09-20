@@ -644,8 +644,8 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                sb.Append(line.Length);
-                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
+                sb.Append(line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics));
+                if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength || i >= Configuration.Settings.General.MaxNumberOfLines)
                 {
                     label.ForeColor = Color.Red;
                 }
