@@ -38,6 +38,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         {
             if (_abort)
             {
+                lock (QueueLock)
+                {
+                    _jobQueue.Clear();
+                }
                 return;
             }
 
@@ -62,26 +66,45 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 EngineMode = engineMode,
                 Run302 = run302
             };
-            bmp.Save(job.FileName, System.Drawing.Imaging.ImageFormat.Png);
-            ThreadPool.QueueUserWorkItem(DoOcr, job);
-            _jobQueue.Enqueue(job);
-        }
 
-        public void CheckQueue()
-        {
-            if (_abort || _jobQueue.Count == 0)
+            if (_abort)
             {
                 return;
             }
 
             lock (QueueLock)
             {
+                _jobQueue.Enqueue(job);
+            }
+            bmp.Save(job.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            ThreadPool.QueueUserWorkItem(DoOcr, job);
+        }
+
+        public void CheckQueue()
+        {
+            lock (QueueLock)
+            {
+                if (_jobQueue.Count == 0)
+                {
+                    return;
+                }
+
+                if (_abort)
+                {
+                    _jobQueue.Clear();
+                    return;
+                }
+
                 var checkTime = DateTime.UtcNow;
                 var job = _jobQueue.Peek();
                 if (job != null && job.Completed < checkTime)
                 {
                     _jobQueue.Dequeue();
-                    if (!_abort)
+                    if (_abort)
+                    {
+                        _jobQueue.Clear();
+                    }
+                    else
                     {
                         _callback?.Invoke(job.Index, job);
                     }
@@ -93,6 +116,5 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         {
             _abort = true;
         }
-
     }
 }
