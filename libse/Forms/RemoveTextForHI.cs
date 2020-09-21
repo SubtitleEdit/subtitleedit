@@ -800,7 +800,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 lineNumber++;
             }
 
+            if (st.Post.StartsWith('♪') || st.Post.StartsWith('♫') && text.Contains(" " + st.Post))
+            {
+                st.Post = " " + st.Post;
+            }
             text = st.Pre + sb.ToString().Trim() + st.Post;
+
             text = text.Replace("  ", " ").Trim();
             text = text.Replace("<i></i>", string.Empty);
             text = text.Replace("<i> </i>", " ");
