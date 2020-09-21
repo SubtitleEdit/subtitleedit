@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -103,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _isLoading = true;
         private string _exportType = ExportFormats.BdnXml;
         private string _fileName;
-        private VobSubOcr _vobSubOcr;
+        private IBinaryParagraphList _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
         private readonly Dictionary<string, int> _lineHeights;
@@ -167,9 +168,9 @@ namespace Nikse.SubtitleEdit.Forms
             return frames;
         }
 
-        private string ToHHMMSSFF(TimeCode timecode)
+        private string ToHHMMSSFF(TimeCode timeCode)
         {
-            return $"{timecode.Hours:00}:{timecode.Minutes:00}:{timecode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timecode.Milliseconds):00}";
+            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
@@ -4481,7 +4482,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
         }
 
-        internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
+        internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, IBinaryParagraphList vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
             if (_vobSubOcr != null && exportType != ExportFormats.VobSub)
