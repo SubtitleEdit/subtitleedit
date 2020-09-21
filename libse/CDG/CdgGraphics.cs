@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Core.CDG
     /// </summary>
     public class CdgGraphics
     {
-        public const int FullWidth = 300;
-        public const int FullHeight = 216;
+        public static int FullWidth => 300;
+        public static int FullHeight => 216;
 
-        public const double TimeMsFactor = 10.0 / 3.0;
+        public static double TimeMsFactor => 10.0 / 3.0; // each CD+G frame is 3.33 ms
 
         private const int ColorTableSize = 16;
         private const int TileHeight = 12;
@@ -360,27 +360,25 @@ namespace Nikse.SubtitleEdit.Core.CDG
             //Scroll Vertical - Calculate number of pixels
 
             var verticalScrollPixels = 0;
-            switch (verticalScrollCommand)
+            if (verticalScrollCommand == 2)
             {
-                case 2:
-                    verticalScrollPixels = -12;
-                    break;
-                case 1:
-                    verticalScrollPixels = 12;
-                    break;
+                verticalScrollPixels = -12;
+            }
+            else if (verticalScrollCommand == 1)
+            {
+                verticalScrollPixels = 12;
             }
 
             //Scroll Horizontal- Calculate number of pixels
 
             var horizontalScrollPixels = 0;
-            switch (horizontalScrollCommand)
+            if (horizontalScrollCommand == 2)
             {
-                case 2:
-                    horizontalScrollPixels = -6;
-                    break;
-                case 1:
-                    horizontalScrollPixels = 6;
-                    break;
+                horizontalScrollPixels = -6;
+            }
+            else if (horizontalScrollCommand == 1)
+            {
+                horizontalScrollPixels = 6;
             }
 
             if (horizontalScrollPixels == 0 && verticalScrollPixels == 0)

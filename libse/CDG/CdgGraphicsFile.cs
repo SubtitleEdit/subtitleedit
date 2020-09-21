@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.CDG
 {
-    public class CdgGraphicsFile
+    public static class CdgGraphicsFile
     {
         private const int PacketSize = 24;
 
