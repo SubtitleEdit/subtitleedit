@@ -1434,5 +1434,30 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
         }
+
+        public bool IsEqualTo(NikseBitmap bitmap)
+        {
+            if (Width != bitmap.Width || Height != bitmap.Height)
+            {
+                return false;
+            }
+
+            if (Width == bitmap.Width && Height == bitmap.Height  &&
+                Width == 0 && Height == 0)
+            {
+                return true;
+            }
+
+
+            for (int i=0; i<_bitmapData.Length; i++)
+            {
+                if (_bitmapData[i] != bitmap._bitmapData[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

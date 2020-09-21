@@ -2779,6 +2779,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            if (format == null || ext == ".cdg" && file.Length < 50_000_000)
+            {
+                try
+                {
+                    using (var importCdg = new ImportCdg(fileName))
+                    {
+                        if (importCdg.ShowDialog(this) == DialogResult.OK)
+                        {
+
+
+
+                            // load audio
+                        }
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
             // retry vobsub (file with wrong extension)
             if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
             {

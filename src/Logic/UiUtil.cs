@@ -1014,6 +1014,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new WinCaps32().Extension);
             AddExtension(sb, new IsmtDfxp().Extension);
             AddExtension(sb, new PlayCaptionsFreeEditor().Extension);
+            AddExtension(sb, ".cdg"); // karaoke
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {

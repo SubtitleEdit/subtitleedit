@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     using LogItem = OcrFixEngine.LogItem;
 
-    public sealed partial class VobSubOcr : PositionAndSizeForm
+    public sealed partial class VobSubOcr : PositionAndSizeForm, IBinaryParagraphList
     {
         internal class CompareItem
         {
