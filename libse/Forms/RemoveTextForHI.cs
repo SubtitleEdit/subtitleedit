@@ -800,7 +800,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 lineNumber++;
             }
 
-            if (st.Post.StartsWith('♪') || st.Post.StartsWith('♫') && text.Contains(" " + st.Post))
+            if (st.Post.StartsWith('♪') || st.Post.StartsWith('♫'))
             {
                 st.Post = " " + st.Post;
             }
