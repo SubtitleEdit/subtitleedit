@@ -5060,10 +5060,10 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    var tb = GetFindRepaceTextBox();
+                    var tb = GetFindReplaceTextBox();
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
                     bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex, startPos);
-                    tb = GetFindRepaceTextBox();
+                    tb = GetFindReplaceTextBox();
                     //if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
@@ -5115,7 +5115,7 @@ namespace Nikse.SubtitleEdit.Forms
             FindNext();
         }
 
-        private TextBox GetFindRepaceTextBox()
+        private TextBox GetFindReplaceTextBox()
         {
             return _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
         }
@@ -5125,7 +5125,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
             {
                 _findHelper.InProgress = true;
-                TextBox tb = GetFindRepaceTextBox();
+                TextBox tb = GetFindReplaceTextBox();
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
                     int selectedIndex = -1;
@@ -5143,7 +5143,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
-                        tb = GetFindRepaceTextBox();
+                        tb = GetFindReplaceTextBox();
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                         tb.Focus();
@@ -5208,7 +5208,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _findHelper.InProgress = true;
-            TextBox tb = GetFindRepaceTextBox();
+            TextBox tb = GetFindReplaceTextBox();
             if (tabControlSubtitle.SelectedIndex == TabControlListView)
             {
                 int selectedIndex = -1;
@@ -5226,7 +5226,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_findHelper.FindPrevious(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                 {
-                    tb = GetFindRepaceTextBox();
+                    tb = GetFindReplaceTextBox();
                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                     ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                     tb.Focus();
@@ -5659,7 +5659,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            var tb = GetFindRepaceTextBox();
+                            var tb = GetFindReplaceTextBox();
                             SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
@@ -5689,7 +5689,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _findHelper.ReplaceFromPosition = 0;
                                 if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                 {
-                                    var tb = GetFindRepaceTextBox();
+                                    var tb = GetFindReplaceTextBox();
                                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
@@ -5723,7 +5723,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (!replaceDialog.FindOnly) // replace once only
                     {
-                        var tb = GetFindRepaceTextBox();
+                        var tb = GetFindReplaceTextBox();
                         string msg = string.Empty;
                         if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                         {
@@ -5751,7 +5751,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
                             SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
-                            tb = GetFindRepaceTextBox();
+                            tb = GetFindReplaceTextBox();
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
                             tb.SelectionLength = _findHelper.FindTextLength;
@@ -5780,7 +5780,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
                                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
-                                        tb = GetFindRepaceTextBox();
+                                        tb = GetFindReplaceTextBox();
                                         tb.Focus();
                                         tb.SelectionStart = _findHelper.SelectedPosition;
                                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -5901,7 +5901,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (replace)
             {
-                var tb = GetFindRepaceTextBox();
+                var tb = GetFindReplaceTextBox();
                 tb.SelectionStart = _findHelper.SelectedPosition;
                 tb.SelectionLength = _findHelper.FindTextLength;
                 if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
