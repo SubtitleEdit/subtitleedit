@@ -19230,8 +19230,19 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
 
+            // prevent overlap
+            var endTotalMilliseconds = videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+            var next = _subtitle.Paragraphs[index];
+            if (next != null)
+            {
+                if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                {
+                    endTotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                } 
+            }
+
             // create and insert
-            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
+            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, endTotalMilliseconds);
             SetStyleForNewParagraph(newParagraph, index);
             if (_networkSession != null)
             {
