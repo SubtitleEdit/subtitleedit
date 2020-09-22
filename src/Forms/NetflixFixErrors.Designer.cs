@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxRules = new System.Windows.Forms.GroupBox();
+            this.checkBoxGapBridge = new System.Windows.Forms.CheckBox();
             this.checkBoxWhiteSpace = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxLineLength = new System.Windows.Forms.CheckBox();
             this.checkBoxSceneChange = new System.Windows.Forms.CheckBox();
@@ -46,7 +47,6 @@
             this.checkBoxTwoLinesMax = new System.Windows.Forms.CheckBox();
             this.checkBoxMinDuration = new System.Windows.Forms.CheckBox();
             this.checkBoxMaxDuration = new System.Windows.Forms.CheckBox();
-            this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.labelTotal = new System.Windows.Forms.Label();
             this.listViewFixes = new System.Windows.Forms.ListView();
@@ -54,9 +54,7 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.linkLabelOpenReportFolder = new System.Windows.Forms.LinkLabel();
-            this.checkBoxGapBridge = new System.Windows.Forms.CheckBox();
             this.groupBoxRules.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,6 +86,19 @@
             this.groupBoxRules.TabIndex = 0;
             this.groupBoxRules.TabStop = false;
             this.groupBoxRules.Text = "Rules";
+            // 
+            // checkBoxGapBridge
+            // 
+            this.checkBoxGapBridge.AutoSize = true;
+            this.checkBoxGapBridge.Checked = true;
+            this.checkBoxGapBridge.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxGapBridge.Location = new System.Drawing.Point(19, 147);
+            this.checkBoxGapBridge.Name = "checkBoxGapBridge";
+            this.checkBoxGapBridge.Size = new System.Drawing.Size(210, 17);
+            this.checkBoxGapBridge.TabIndex = 6;
+            this.checkBoxGapBridge.Text = "Frame gap:  3 to 11 frames => 2 frames";
+            this.checkBoxGapBridge.UseVisualStyleBackColor = true;
+            this.checkBoxGapBridge.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
             // checkBoxWhiteSpace
             // 
@@ -122,7 +133,7 @@
             this.checkBoxSceneChange.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSceneChange.Location = new System.Drawing.Point(19, 216);
             this.checkBoxSceneChange.Name = "checkBoxSceneChange";
-            this.checkBoxSceneChange.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxSceneChange.Size = new System.Drawing.Size(194, 17);
             this.checkBoxSceneChange.TabIndex = 9;
             this.checkBoxSceneChange.Text = "Check timing to Shot Changes rules";
             this.checkBoxSceneChange.UseVisualStyleBackColor = true;
@@ -187,7 +198,7 @@
             this.checkBox17CharsPerSecond.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox17CharsPerSecond.Location = new System.Drawing.Point(19, 101);
             this.checkBox17CharsPerSecond.Name = "checkBox17CharsPerSecond";
-            this.checkBox17CharsPerSecond.Size = new System.Drawing.Size(290, 17);
+            this.checkBox17CharsPerSecond.Size = new System.Drawing.Size(287, 17);
             this.checkBox17CharsPerSecond.TabIndex = 4;
             this.checkBox17CharsPerSecond.Text = "Maximum 17 characters per second (incl. white spaces)";
             this.checkBox17CharsPerSecond.UseVisualStyleBackColor = true;
@@ -258,7 +269,7 @@
             this.checkBoxDialogHypenNoSpace.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxDialogHypenNoSpace.Location = new System.Drawing.Point(409, 54);
             this.checkBoxDialogHypenNoSpace.Name = "checkBoxDialogHypenNoSpace";
-            this.checkBoxDialogHypenNoSpace.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxDialogHypenNoSpace.Size = new System.Drawing.Size(246, 17);
             this.checkBoxDialogHypenNoSpace.TabIndex = 10;
             this.checkBoxDialogHypenNoSpace.Text = "Dual Speakers: Use a hyphen without a space";
             this.checkBoxDialogHypenNoSpace.UseVisualStyleBackColor = true;
@@ -303,23 +314,11 @@
             this.checkBoxMaxDuration.UseVisualStyleBackColor = true;
             this.checkBoxMaxDuration.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
             // 
-            // buttonCancel
-            // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(953, 582);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(872, 582);
+            this.buttonOK.Location = new System.Drawing.Point(953, 582);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -342,17 +341,15 @@
             this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeader7});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.GridLines = true;
             this.listViewFixes.HideSelection = false;
-            this.listViewFixes.Location = new System.Drawing.Point(12, 277);
+            this.listViewFixes.Location = new System.Drawing.Point(12, 285);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(1016, 291);
             this.listViewFixes.TabIndex = 1;
@@ -376,13 +373,8 @@
             // 
             // columnHeader7
             // 
-            this.columnHeader7.Text = "Before";
-            this.columnHeader7.Width = 340;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "After";
-            this.columnHeader8.Width = 318;
+            this.columnHeader7.Text = "Text";
+            this.columnHeader7.Width = 700;
             // 
             // linkLabelOpenReportFolder
             // 
@@ -396,19 +388,6 @@
             this.linkLabelOpenReportFolder.Text = "Open report folder";
             this.linkLabelOpenReportFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenReportFolder_LinkClicked);
             // 
-            // checkBoxGapBridge
-            // 
-            this.checkBoxGapBridge.AutoSize = true;
-            this.checkBoxGapBridge.Checked = true;
-            this.checkBoxGapBridge.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxGapBridge.Location = new System.Drawing.Point(19, 147);
-            this.checkBoxGapBridge.Name = "checkBoxGapBridge";
-            this.checkBoxGapBridge.Size = new System.Drawing.Size(210, 17);
-            this.checkBoxGapBridge.TabIndex = 6;
-            this.checkBoxGapBridge.Text = "Frame gap:  3 to 11 frames => 2 frames";
-            this.checkBoxGapBridge.UseVisualStyleBackColor = true;
-            this.checkBoxGapBridge.CheckedChanged += new System.EventHandler(this.RuleCheckedChanged);
-            // 
             // NetflixFixErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,7 +396,6 @@
             this.Controls.Add(this.linkLabelOpenReportFolder);
             this.Controls.Add(this.labelTotal);
             this.Controls.Add(this.listViewFixes);
-            this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxRules);
             this.MinimumSize = new System.Drawing.Size(928, 505);
@@ -448,7 +426,6 @@
         private System.Windows.Forms.CheckBox checkBoxTwoLinesMax;
         private System.Windows.Forms.CheckBox checkBoxMinDuration;
         private System.Windows.Forms.CheckBox checkBoxMaxDuration;
-        private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label labelTotal;
         private System.Windows.Forms.ListView listViewFixes;
@@ -456,7 +433,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.CheckBox checkBoxNoItalics;
         private System.Windows.Forms.CheckBox checkBoxTtmlFrameRate;
         private System.Windows.Forms.CheckBox checkBoxMaxLineLength;
