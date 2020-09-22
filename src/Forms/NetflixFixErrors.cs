@@ -36,7 +36,6 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxRules.Text = Configuration.Settings.Language.Settings.Rules;
             checkBoxMinDuration.Text = Configuration.Settings.Language.NetflixQualityCheck.MinimumDuration;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             _loading = true;
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             InitializeLanguages(language);
@@ -124,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(p.Number.ToString());
             item.SubItems.Add(action);
             item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+  //          item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
