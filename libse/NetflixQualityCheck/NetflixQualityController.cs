@@ -111,9 +111,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
         }
 
-        public bool SceneChangesExist { set; get; } = true;
-
-        public bool CheckSceneChange
+        public bool VideoExists
         {
             get => string.IsNullOrEmpty(VideoFileName) ? false : true;
         }
