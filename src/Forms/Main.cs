@@ -5083,10 +5083,10 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    var tb = GetFindRepaceTextBox();
+                    var tb = GetFindReplaceTextBox();
                     int startPos = tb.SelectedText.Length > 0 ? tb.SelectionStart + 1 : tb.SelectionStart;
                     bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex, startPos);
-                    tb = GetFindRepaceTextBox();
+                    tb = GetFindReplaceTextBox();
                     //if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
@@ -5138,7 +5138,7 @@ namespace Nikse.SubtitleEdit.Forms
             FindNext();
         }
 
-        private TextBox GetFindRepaceTextBox()
+        private TextBox GetFindReplaceTextBox()
         {
             return _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
         }
@@ -5148,7 +5148,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
             {
                 _findHelper.InProgress = true;
-                TextBox tb = GetFindRepaceTextBox();
+                TextBox tb = GetFindReplaceTextBox();
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
                     int selectedIndex = -1;
@@ -5166,7 +5166,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
-                        tb = GetFindRepaceTextBox();
+                        tb = GetFindReplaceTextBox();
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                         tb.Focus();
@@ -5231,7 +5231,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _findHelper.InProgress = true;
-            TextBox tb = GetFindRepaceTextBox();
+            TextBox tb = GetFindReplaceTextBox();
             if (tabControlSubtitle.SelectedIndex == TabControlListView)
             {
                 int selectedIndex = -1;
@@ -5249,7 +5249,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (_findHelper.FindPrevious(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                 {
-                    tb = GetFindRepaceTextBox();
+                    tb = GetFindReplaceTextBox();
                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                     ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                     tb.Focus();
@@ -5682,7 +5682,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            var tb = GetFindRepaceTextBox();
+                            var tb = GetFindReplaceTextBox();
                             SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
@@ -5712,7 +5712,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _findHelper.ReplaceFromPosition = 0;
                                 if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                 {
-                                    var tb = GetFindRepaceTextBox();
+                                    var tb = GetFindReplaceTextBox();
                                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
@@ -5746,7 +5746,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (!replaceDialog.FindOnly) // replace once only
                     {
-                        var tb = GetFindRepaceTextBox();
+                        var tb = GetFindReplaceTextBox();
                         string msg = string.Empty;
                         if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                         {
@@ -5774,7 +5774,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
                             SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
-                            tb = GetFindRepaceTextBox();
+                            tb = GetFindReplaceTextBox();
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
                             tb.SelectionLength = _findHelper.FindTextLength;
@@ -5803,7 +5803,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
                                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
-                                        tb = GetFindRepaceTextBox();
+                                        tb = GetFindReplaceTextBox();
                                         tb.Focus();
                                         tb.SelectionStart = _findHelper.SelectedPosition;
                                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -5924,7 +5924,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (replace)
             {
-                var tb = GetFindRepaceTextBox();
+                var tb = GetFindReplaceTextBox();
                 tb.SelectionStart = _findHelper.SelectedPosition;
                 tb.SelectionLength = _findHelper.FindTextLength;
                 if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
@@ -8838,8 +8838,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSplitLine.Visible = false;
 
-            // remove unicode control characters
-            var s = text.RemoveControlCharacters(); // incl. new line
+            var s = text.Replace(Environment.NewLine, " ");
+            var len = text.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
 
             int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
@@ -8851,9 +8851,10 @@ namespace Nikse.SubtitleEdit.Forms
             var splitLines = text.SplitToLines();
             if (numberOfLines <= maxLines)
             {
-                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2) &&
+                if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2) &&
                     splitLines.Count == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') &&
-                    (splitLines[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || splitLines[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                    (splitLines[0].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength ||
+                    splitLines[1].CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     if (buttonUnBreak.Visible)
                     {
@@ -8862,18 +8863,18 @@ namespace Nikse.SubtitleEdit.Forms
                             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                             {
                                 var totalLengthPixels = TextWidth.CalcPixelWidth(s);
-                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", s.Length, totalLengthPixels));
+                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                             }
                             else
                             {
-                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, len);
                             }
                         }
 
                         buttonSplitLine.Visible = true;
                     }
                 }
-                else if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
+                else if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
                 {
                     lineTotal.ForeColor = UiUtil.ForeColor;
                     if (!textBoxHasFocus)
@@ -8881,11 +8882,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                         {
                             var totalLengthPixels = TextWidth.CalcPixelWidth(s);
-                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", s.Length, totalLengthPixels));
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                         }
                         else
                         {
-                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, len);
                         }
                     }
                 }
@@ -8897,11 +8898,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                         {
                             var totalLengthPixels = TextWidth.CalcPixelWidth(s);
-                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, string.Format("{0}     {1}", s.Length, totalLengthPixels));
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, string.Format("{0}     {1}", len, totalLengthPixels));
                         }
                         else
                         {
-                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, len);
                         }
                     }
 
@@ -8912,16 +8913,17 @@ namespace Nikse.SubtitleEdit.Forms
                             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                             {
                                 var totalLengthPixels = TextWidth.CalcPixelWidth(s);
-                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", s.Length, totalLengthPixels));
+                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                             }
                             else
                             {
-                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, len);
                             }
                         }
 
-                        var abl = Utilities.AutoBreakLine(s, "en").SplitToLines();
-                        if (abl.Count > maxLines || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                        var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                        var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
+                        if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
                         {
                             buttonSplitLine.Visible = true;
                         }
@@ -8935,17 +8937,17 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
                     {
                         var totalLengthPixels = TextWidth.CalcPixelWidth(s);
-                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", s.Length, totalLengthPixels));
+                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, string.Format("{0}     {1}", len, totalLengthPixels));
                     }
                     else
                     {
-                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, len);
                     }
                 }
 
                 var lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                 var abl = Utilities.AutoBreakLine(s, lang).SplitToLines();
-                if (abl.Count > maxLines || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength) &&
+                if (abl.Count > maxLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength) &&
                     !textBoxListViewTextAlternate.Visible)
                 {
                     buttonSplitLine.Visible = true;
@@ -24694,7 +24696,7 @@ namespace Nikse.SubtitleEdit.Forms
             int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
             var s = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-            int totalLength = s.Length;
+            int totalLength = s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
             string totalL;
 
             if (Configuration.Settings.Tools.ListViewSyntaxColorWideLines)
