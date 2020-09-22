@@ -51,8 +51,16 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNoItalics.Checked = !_netflixQualityController.AllowItalics;
             checkBoxNoItalics.Enabled = !_netflixQualityController.AllowItalics;
 
-            checkBoxSceneChange.Checked = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
-            checkBoxSceneChange.Enabled = _netflixQualityController.CheckSceneChange && _netflixQualityController.SceneChangesExist;
+            var sceneChangesExists = false;
+            if (_netflixQualityController.VideoExists)
+            {
+                if (SceneChangeHelper.FromDisk(_videoFileName).Count > 0)
+                {
+                    sceneChangesExists = true;
+                } 
+            }
+            checkBoxSceneChange.Checked = _netflixQualityController.VideoExists && sceneChangesExists;
+            checkBoxSceneChange.Enabled = _netflixQualityController.VideoExists && sceneChangesExists;
 
             var checkFrameRate = _subtitleFormat.GetType() == new NetflixTimedText().GetType();
             checkBoxTtmlFrameRate.Checked = checkFrameRate;
@@ -125,6 +133,16 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
   //          item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                Close();
+            }
+
+            return base.ProcessDialogKey(keyData);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
