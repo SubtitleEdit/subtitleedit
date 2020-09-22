@@ -157,15 +157,15 @@ https://github.com/SubtitleEdit/subtitleedit
 
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
-            sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Replace("\r\n", "\n").Length));
+            sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.ToString().CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics)));
             sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
-            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / TimeCode.BaseUnit)));
+            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) / (totalDuration / TimeCode.BaseUnit)));
             sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allTextToLower, "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allTextToLower, "<b>")));
             sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allTextToLower, "<u>")));
             sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allTextToLower, "<font ")));
-            sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allTextToLower, "{\\a")));
+            sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allTextToLower, "{\\an")));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength) + " (" + GetIndicesWithLength(minimumLineLength) + ")");
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength) + " (" + GetIndicesWithLength(maximumLineLength) + ")");
@@ -198,12 +198,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static int GetLineLength(Paragraph p)
         {
-            return HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, string.Empty), true).Length;
+            return HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, string.Empty), true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
         }
 
         private static int GetSingleLineLength(string s)
         {
-            return HtmlUtil.RemoveHtmlTags(s, true).Length;
+            return HtmlUtil.RemoveHtmlTags(s, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
         }
 
         private static int GetSingleLineWidth(string s)

@@ -53,26 +53,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             get { return new SubRip(); }
         }
 
-        private string _language = "en";
-
-        public string Language
-        {
-            get { return _language; }
-            set { _language = value; }
-        }
+        public string Language { get; set; } = "en";
 
         public bool IsName(string candidate)
         {
             return false;
         }
 
-        private Encoding _encoding = Encoding.UTF8;
-
-        public Encoding Encoding
-        {
-            get { return _encoding; }
-            set { _encoding = value; }
-        }
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
 
         public HashSet<string> GetAbbreviations()
         {

@@ -1039,6 +1039,7 @@ $HorzAlign          =   Center
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
         public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
+        public bool IgnoreArabicDiacritics { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
@@ -1174,6 +1175,7 @@ $HorzAlign          =   Center
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = TextEncoding.Utf8WithBom;
             AutoConvertToUtf8 = false;
+            IgnoreArabicDiacritics = false;
             AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -2904,6 +2906,12 @@ $HorzAlign          =   Center
             if (subNode != null)
             {
                 settings.General.CharactersPerSecondsIgnoreWhiteSpace = Convert.ToBoolean(subNode.InnerText);
+            }
+
+            subNode = node.SelectSingleNode("IgnoreArabicDiacritics");
+            if (subNode != null)
+            {
+                settings.General.IgnoreArabicDiacritics = Convert.ToBoolean(subNode.InnerText);
             }
 
             subNode = node.SelectSingleNode("SubtitleMaximumWordsPerMinute");
@@ -7509,6 +7517,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("IgnoreArabicDiacritics", settings.General.IgnoreArabicDiacritics.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DialogStyle", settings.General.DialogStyle.ToString());
                 textWriter.WriteElementString("ContinuationStyle", settings.General.ContinuationStyle.ToString());

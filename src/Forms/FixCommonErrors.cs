@@ -1365,18 +1365,19 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             text = HtmlUtil.RemoveHtmlTags(text, true);
+            text = NetflixImsc11Japanese.RemoveTags(text);
             UiUtil.GetLineLengths(labelSingleLine, text);
 
-            string s = text.Replace(Environment.NewLine, " ");
+            var s = text.Replace(Environment.NewLine, " ");
             labelTextLineTotal.ForeColor = Color.Black;
             buttonSplitLine.Visible = false;
             var abl = Utilities.AutoBreakLine(s, _autoDetectGoogleLanguage).SplitToLines();
-            if (abl.Count > Configuration.Settings.General.MaxNumberOfLines || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+            if (abl.Count > Configuration.Settings.General.MaxNumberOfLines || abl.Any(li => li.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength))
             {
                 buttonSplitLine.Visible = true;
                 labelTextLineTotal.ForeColor = Color.Red;
             }
-            labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+            labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, text.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics));
         }
 
         private void ButtonFixesSelectAllClick(object sender, EventArgs e)

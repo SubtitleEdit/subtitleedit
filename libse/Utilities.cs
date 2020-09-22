@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string s = RemoveLineBreaks(text);
-            if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
+            if (HtmlUtil.RemoveHtmlTags(s, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) < mergeLinesShorterThan)
             {
                 var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
                 if (Configuration.Settings.Tools.AutoBreakDashEarly && lastIndexOfDash > 4 && s.Substring(0, lastIndexOfDash).HasSentenceEnding(language))
@@ -920,7 +920,7 @@ namespace Nikse.SubtitleEdit.Core
                 optimalCharactersPerSecond = 14.7;
             }
 
-            var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / optimalCharactersPerSecond * TimeCode.BaseUnit;
+            var duration = text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace, Configuration.Settings.General.IgnoreArabicDiacritics) / optimalCharactersPerSecond * TimeCode.BaseUnit;
 
             if (duration < 1400)
             {
@@ -974,7 +974,7 @@ namespace Nikse.SubtitleEdit.Core
                 return 999;
             }
 
-            return paragraph.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / duration.TotalSeconds;
+            return paragraph.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace, Configuration.Settings.General.IgnoreArabicDiacritics) / duration.TotalSeconds;
         }
 
         public static double GetCharactersPerSecond(Paragraph paragraph, int numberOfCharacters)
