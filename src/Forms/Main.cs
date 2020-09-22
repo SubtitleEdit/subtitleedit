@@ -27214,8 +27214,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             string fileName = string.IsNullOrEmpty(_fileName) ? "UntitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-            var messages = new List<string>();
-            var reportFiles = new List<string>();
 
             var netflixController = new NetflixQualityController { Language = language, VideoFileName = _videoFileName };
             if (!string.IsNullOrEmpty(_videoFileName) && _videoInfo != null && _videoInfo.FramesPerSecond > 20)
@@ -27229,36 +27227,25 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string reportPath = Path.GetTempPath() + fileName + "_NetflixQualityCheck.csv";
                 netflixController.SaveCsv(reportPath);
-                string msgFormat = string.Format("{0}\r\n\r\n{1}", string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count),
-                    Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
-                messages.Add(string.Format(msgFormat, reportPath));
-                reportFiles.Add(reportPath);
-                using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
+                if (!isSaving)
                 {
-                    if (!isSaving)
+                    using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat(), _fileName, _videoFileName))
                     {
-                        using (var form = new NetflixFixErrors(_subtitle, GetCurrentSubtitleFormat(), _fileName, _videoFileName))
+                        if (form.ShowDialog(this) == DialogResult.OK)
                         {
-                            if (form.ShowDialog(this) == DialogResult.OK)
-                            {
 
-                            }
                         }
                     }
-                    else
-                    {
-                        ShowStatus(string.Format(_language.SavedSubtitleX, _fileName) + " - " +
-                                   string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
-                    }
+                }
+                else
+                {
+                    ShowStatus(string.Format(_language.SavedSubtitleX, _fileName) + " - " +
+                               string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
                 }
             }
             else if (!isSaving)
             {
-                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.CheckOk);
-                using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
-                {
-                    dialog.ShowDialog(this);
-                }
+                MessageBox.Show("Netflix Quality Check found no issues.", "Netflix Quality Check");
             }
         }
 

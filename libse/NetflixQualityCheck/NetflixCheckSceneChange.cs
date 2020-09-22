@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            if (string.IsNullOrEmpty(controller.VideoFileName))
+            if (!controller.VideoExists)
             {
                 return;
             }
@@ -21,7 +21,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             var SceneChanges = SceneChangeHelper.FromDisk(controller.VideoFileName);
             if (SceneChanges == null || SceneChanges.Count == 0)
             {
-                controller.SceneChangesExist = false;
                 return;
             }
 
