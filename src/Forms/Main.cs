@@ -16403,7 +16403,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDialogs()
         {
-            if (SubtitleListview1.SelectedItems.Count == 2 && SubtitleListview1.SelectedIndices[0] + 1 == SubtitleListview1.SelectedIndices[1])
+            if (SubtitleListview1.SelectedItems.Count == 1 || SubtitleListview1.SelectedItems.Count == 2 && SubtitleListview1.SelectedIndices[0] + 1 == SubtitleListview1.SelectedIndices[1])
             {
                 MergeWithLineAfter(true);
             }
