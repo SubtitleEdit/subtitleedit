@@ -8505,7 +8505,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                 {
-                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
 
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
