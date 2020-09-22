@@ -1028,7 +1028,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <MultipleReplace>Множественная замена...</MultipleReplace>
         <GoToSubtitleNumber>Перейти к субтитру №...</GoToSubtitleNumber>
         <RightToLeftMode>Режим Справа-Налево</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Исправить RTL на управляющие символы Unicode (для выделенных строк)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Исправить RTL на управляющие символы Unicode (для выделенных строк)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Обратить начало/конец RTL (для выделенных строк)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Показать исходные субтитры в предосмотре</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Изменить выделение...</ModifySelection>

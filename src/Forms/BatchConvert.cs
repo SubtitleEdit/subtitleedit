@@ -1796,15 +1796,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
-                    paragraph.Text = paragraph.Text.Replace("\u200E", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u200F", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u202A", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u202B", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u202C", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
-                    paragraph.Text = paragraph.Text.Replace("\u00C2", " "); // no break space
-                    paragraph.Text = paragraph.Text.Replace("\u00A0", " "); // no break space
+                    paragraph.Text = Utilities.RemoveUnicodeControlChars(paragraph.Text);
                 }
             }
 

@@ -1034,7 +1034,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Πολλαπλή αντικατάστση...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Μετάβαση σε αριθμό υπότιτλου...</GoToSubtitleNumber>
         <RightToLeftMode>Λειτουργία από δεξιά προς τα αριστερά</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Διόρθωση του RTL μέσω ελέγχου χαρακτήρων Unicode (επιλεγμένες γραμμές)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Διόρθωση του RTL μέσω ελέγχου χαρακτήρων Unicode (επιλεγμένες γραμμές)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Αντιστροφή έναρξης/λήξης του RTL (επιλεγμένες γραμμές)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Προβολή αρχικού κειμένου στις προεπισκόπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Επεξεργασία επιλογής...</ModifySelection>

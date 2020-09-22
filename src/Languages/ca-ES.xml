@@ -989,7 +989,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Múltiple substitució...</MultipleReplace>
         <GoToSubtitleNumber>Vés a nombre subtítol...</GoToSubtitleNumber>
         <RightToLeftMode>Mòde dreta a esquerre</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Fixa RTL amb control de caràcters Unicode (per a línies seleccionades)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Fixa RTL amb control de caràcters Unicode (per a línies seleccionades)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Inverteix dreta-a-esquerre Inici/final (selecció línies)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostra text original en visualitzacions audio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifica selecció...</ModifySelection>

@@ -1030,7 +1030,7 @@ Command line: {1} {2}
         <MultipleReplace>多重替换(&amp;M)...</MultipleReplace>
         <GoToSubtitleNumber>转到字幕编号(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>从右向左阅读模式</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>使用 Unicode 控制字符修复 RTL (针对选中的行)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>使用 Unicode 控制字符修复 RTL (针对选中的行)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反转 RTL 开始/结束 (所选行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音频/视频 预览中显示原始文本</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>更改选择...</ModifySelection>

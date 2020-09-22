@@ -1029,7 +1029,7 @@ Vá para "Opções -&gt; Configurações -&gt; Ferramentas" para inserir sua cha
         <MultipleReplace>Substituição &amp;múltipla...</MultipleReplace>
         <GoToSubtitleNumber>Ir para legenda número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo direita-para-esquerda</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Corrigir RTL via caracteres de controle Unicode</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via caracteres de controle Unicode</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverter início/fim RTL (para linhas selecionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Exibir texto original nas prévias de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar seleção...</ModifySelection>

@@ -1035,7 +1035,7 @@ Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordí
         <MultipleReplace>&amp;Többszörös csere...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ugrás egy felirat számra...</GoToSubtitleNumber>
         <RightToLeftMode>Jobbról balra írásmód</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>RTL javítása Unicode vezérlőkaraktereken keresztül (kijelölt soroknál)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>RTL javítása Unicode vezérlőkaraktereken keresztül (kijelölt soroknál)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RTL indítás/befejezés megfordítása (kijelölt soroknál)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Eredeti szöveg megjelenítése az audió/videó előzetesekben</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Kijelölés módosítása...</ModifySelection>

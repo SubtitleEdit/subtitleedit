@@ -3571,8 +3571,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Edit/RightToLeftMode":
                     language.Main.Menu.Edit.RightToLeftMode = reader.Value;
                     break;
-                case "Main/Menu/Edit/FixTrlViaUnicodeControlCharacters":
-                    language.Main.Menu.Edit.FixTrlViaUnicodeControlCharacters = reader.Value;
+                case "Main/Menu/Edit/FixRtlViaUnicodeControlCharacters":
+                    language.Main.Menu.Edit.FixRtlViaUnicodeControlCharacters = reader.Value;
+                    break;
+                case "Main/Menu/Edit/RemoveUnicodeControlCharacters":
+                    language.Main.Menu.Edit.RemoveUnicodeControlCharacters = reader.Value;
                     break;
                 case "Main/Menu/Edit/ReverseRightToLeftStartEnd":
                     language.Main.Menu.Edit.ReverseRightToLeftStartEnd = reader.Value;
@@ -5631,6 +5634,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AutoDurationSelectedLines":
                     language.Settings.AutoDurationSelectedLines = reader.Value;
+                    break;
+                case "Settings/FixRTLViaUnicodeChars":
+                    language.Settings.FixRTLViaUnicodeChars = reader.Value;
+                    break;
+                case "Settings/RemoveRTLUnicodeChars":
+                    language.Settings.RemoveRTLUnicodeChars = reader.Value;
                     break;
                 case "Settings/ReverseStartAndEndingForRtl":
                     language.Settings.ReverseStartAndEndingForRtl = reader.Value;

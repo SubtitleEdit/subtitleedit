@@ -1032,7 +1032,7 @@ Open ‘Instellingen -&gt; Voorkeuren -&gt; Extra’ voor meer informatie.</Goog
         <MultipleReplace>&amp;Meerdere vervangen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ga naar ondertitel...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts-naar-links (RNL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>RNL via markeringen corrigeren (geselecteerde ondertitels)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>RNL via markeringen corrigeren (geselecteerde ondertitels)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RNL begin/einde omkeren (geselecteerde ondertitels)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originele tekst weergeven in audio-/videovoorbeeld</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>&amp;Selectie wĳzigen...</ModifySelection>

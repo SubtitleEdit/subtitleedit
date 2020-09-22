@@ -1396,7 +1396,8 @@
                     public string MultipleReplace { get; set; }
                     public string GoToSubtitleNumber { get; set; }
                     public string RightToLeftMode { get; set; }
-                    public string FixTrlViaUnicodeControlCharacters { get; set; }
+                    public string FixRtlViaUnicodeControlCharacters { get; set; }
+                    public string RemoveUnicodeControlCharacters { get; set; }
                     public string ReverseRightToLeftStartEnd { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string ModifySelection { get; set; }
@@ -2236,6 +2237,8 @@
             public string CopyTextOnly { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
+            public string FixRTLViaUnicodeChars { get; set; }
+            public string RemoveRTLUnicodeChars { get; set; }
             public string ReverseStartAndEndingForRtl { get; set; }
             public string VerticalZoom { get; set; }
             public string VerticalZoomOut { get; set; }

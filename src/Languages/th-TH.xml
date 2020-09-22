@@ -870,7 +870,7 @@
         <MultipleReplace>แท&amp;นที่หลายข้อความ...</MultipleReplace>
         <GoToSubtitleNumber>&amp;ไปที่ซับไตเติ้ลหมายเลข...</GoToSubtitleNumber>
         <RightToLeftMode>โหมดจากขวาไปซ้าย</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>แก้ขวาไปซ้ายด้วยอักขระควบคุมยูนิโค้ด (บรรทัดที่เลือก)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>แก้ขวาไปซ้ายด้วยอักขระควบคุมยูนิโค้ด (บรรทัดที่เลือก)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>สลับอักษรตัวแรก/ตัวสุดท้าย (บรรทัดที่เลือก)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>แสดงข้อความต้นฉบับในพรีวิววิดีโอ/ออดิโอ</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>แก้ไขส่วนที่เลือก...</ModifySelection>
