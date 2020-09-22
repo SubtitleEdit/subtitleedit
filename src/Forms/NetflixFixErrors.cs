@@ -136,6 +136,16 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Add(item);
         }
 
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                Close();
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
