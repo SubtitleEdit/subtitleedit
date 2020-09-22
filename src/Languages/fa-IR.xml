@@ -997,7 +997,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>چندگانه و جایگزین</MultipleReplace>
         <GoToSubtitleNumber>برو به تعداد و نام</GoToSubtitleNumber>
         <RightToLeftMode>حالت راست به چپ</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>اصلاح RTL از طریق کاراکترهای کنترل یونیکد (برای خطوط انتخاب شده)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>اصلاح RTL از طریق کاراکترهای کنترل یونیکد (برای خطوط انتخاب شده)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>برعکس کردن شروع/پایان RTL (برای خطوط انتخاب شده)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>نمایش متن اصلی در پیش نمایش های صوتی/تصویری</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>اصلاح انتخاب...</ModifySelection>

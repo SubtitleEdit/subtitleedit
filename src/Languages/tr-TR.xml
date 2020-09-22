@@ -962,7 +962,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <MultipleReplace>&amp;Toplu yer değiştir...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Altyazı numarasına git...</GoToSubtitleNumber>
         <RightToLeftMode>Soldan-sağa modu...</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Unicode denetim karakteri üzerinden RTL düzeltme (seçilmiş satır için)...</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Unicode denetim karakteri üzerinden RTL düzeltme (seçilmiş satır için)...</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RTL başlangıç/bitişi ters çevir (seçilmiş satır için)...</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Ses/video önizlemesinde orijinal metni göster</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Değişiklik seçimleri...</ModifySelection>

@@ -1004,7 +1004,7 @@ Idite na "Opcije -&gt; Podešavanja -&gt; Alatke" i unesite vaš API ključ.</Go
         <MultipleReplace>&amp;Višestruka zamena...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idi na liniju broj...</GoToSubtitleNumber>
         <RightToLeftMode>Zdesna nalevo (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Popravi RTL preko Unicode kontrolnih znakova (za izabrane linije)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Popravi RTL preko Unicode kontrolnih znakova (za izabrane linije)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrni RTL početak/kraj (za izabrane redove)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Prikaži originalni tekst u audio/video prikazu</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifikuj izbor...</ModifySelection>

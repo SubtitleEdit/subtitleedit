@@ -2887,5 +2887,19 @@ namespace Nikse.SubtitleEdit.Core
             text = rtl + text.Replace(Environment.NewLine, Environment.NewLine + rtl);
             return text;
         }
+
+        public static string RemoveUnicodeControlChars(string input)
+        {
+            input = input.Replace("\u200E", string.Empty);
+            input = input.Replace("\u200F", string.Empty);
+            input = input.Replace("\u202A", string.Empty);
+            input = input.Replace("\u202B", string.Empty);
+            input = input.Replace("\u202C", string.Empty);
+            input = input.Replace("\u202D", string.Empty);
+            input = input.Replace("\u202E", string.Empty);
+            input = input.Replace("\u00C2", " "); // no break space
+            input = input.Replace("\u00A0", " "); // no break space
+            return input;
+        }
     }
 }

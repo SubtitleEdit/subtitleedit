@@ -999,7 +999,7 @@ Gå till "Alternativ -&gt; Inställningar -&gt; Verktyg" för att ange din Googl
         <MultipleReplace>Ersätt &amp;fler...</MultipleReplace>
         <GoToSubtitleNumber>Gå till undertextnummer...</GoToSubtitleNumber>
         <RightToLeftMode>Höger till vänsterläge</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Fixa RTL via Unicode-kontrolltecken (till utvalda rader)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Fixa RTL via Unicode-kontrolltecken (till utvalda rader)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Motsatt RTL start/slut (för valda rader)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Visa originaltext i ljud-/videoförhandsvisning</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Ändra markerade...</ModifySelection>

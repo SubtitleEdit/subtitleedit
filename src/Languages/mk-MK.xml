@@ -1010,7 +1010,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>Повеќебројна замена...</MultipleReplace>
         <GoToSubtitleNumber>Оди на реден бр. на титл...</GoToSubtitleNumber>
         <RightToLeftMode>Десно-кон-лево модалитет</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Поправи RTL преку Unicode контролни знаци (за селектирани линии)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Поправи RTL преку Unicode контролни знаци (за селектирани линии)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Обратен RTL почеток/крај (за селектирани линии)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Прикажи изворен текст во аудио/видео преглед</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Модифицирана селекција...</ModifySelection>

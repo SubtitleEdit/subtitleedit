@@ -1775,6 +1775,8 @@ $HorzAlign          =   Center
         public string MainEditMultipleReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
         public string MainEditRightToLeft { get; set; }
+        public string MainEditFixRTLViaUnicodeChars { get; set; }
+        public string MainEditRemoveRTLUnicodeChars { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainEditToggleTranslationOriginalInPreviews { get; set; }
         public string MainEditInverseSelection { get; set; }
@@ -2027,6 +2029,8 @@ $HorzAlign          =   Center
             MainSynchronizationPointSync = "Control+Shift+P";
             MainSynchronizationChangeFrameRate = string.Empty;
             MainListViewItalic = "Control+I";
+            MainEditFixRTLViaUnicodeChars = string.Empty;
+            MainEditRemoveRTLUnicodeChars = string.Empty;
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
@@ -6642,6 +6646,17 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainListViewRemoveTimeCodes = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainEditFixRTLViaUnicodeChars");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainEditFixRTLViaUnicodeChars = subNode.InnerText;
+                }
+                subNode = node.SelectSingleNode("MainEditRemoveRTLUnicodeChars");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainEditRemoveRTLUnicodeChars = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                 {
@@ -8169,6 +8184,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
                 textWriter.WriteElementString("MainListViewRemoveTimeCodes", settings.Shortcuts.MainListViewRemoveTimeCodes);
+                textWriter.WriteElementString("MainEditFixRTLViaUnicodeChars", settings.Shortcuts.MainEditFixRTLViaUnicodeChars);
+                textWriter.WriteElementString("MainEditRemoveRTLUnicodeChars", settings.Shortcuts.MainEditRemoveRTLUnicodeChars);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);

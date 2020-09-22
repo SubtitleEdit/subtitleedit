@@ -1409,7 +1409,8 @@ namespace Nikse.SubtitleEdit.Forms
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
 
-            toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixTrlViaUnicodeControlCharacters;
+            toolStripMenuItemRemoveUnicodeControlChars.Text = _language.Menu.Edit.RemoveUnicodeControlCharacters;
+            toolStripMenuItemRtlUnicodeControlChars.Text = _language.Menu.Edit.FixRtlViaUnicodeControlCharacters;
 
             toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
             toolStripMenuItemModifySelection.Text = _language.Menu.Edit.ModifySelection;
@@ -13725,6 +13726,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (!toolStripMenuItemRtlUnicodeControlChars.Visible && _shortcuts.MainEditFixRTLViaUnicodeChars == e.KeyData && inListView)
+            {
+                toolStripMenuItemRtlUnicodeControlChar_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (!toolStripMenuItemRemoveUnicodeControlChars.Visible && _shortcuts.MainEditRemoveRTLUnicodeChars == e.KeyData && inListView)
+            {
+                toolStripMenuItemRemoveUnicodeControlChar_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _shortcuts.MainEditReverseStartAndEndingForRtl == e.KeyData && inListView)
             {
                 ReverseStartAndEndingForRtl();
@@ -17629,6 +17640,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EditToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            toolStripMenuItemRemoveUnicodeControlChars.Visible = IsUnicode;
             toolStripMenuItemRtlUnicodeControlChars.Visible = IsUnicode;
             if (!IsUnicode || _subtitleListViewIndex == -1)
             {
@@ -26784,19 +26796,42 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
         {
-            int selectedIndex = FirstSelectedIndex;
-            foreach (int index in SubtitleListview1.SelectedIndices)
+            if (IsUnicode)
             {
-                var p = _subtitle.Paragraphs[index];
-                p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
-                SubtitleListview1.SetText(index, p.Text);
-                if (index == selectedIndex)
+                int selectedIndex = FirstSelectedIndex;
+                foreach (int index in SubtitleListview1.SelectedIndices)
                 {
-                    textBoxListViewText.Text = p.Text;
+                    var p = _subtitle.Paragraphs[index];
+                    p.Text = Utilities.FixRtlViaUnicodeChars(p.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                    if (index == selectedIndex)
+                    {
+                        textBoxListViewText.Text = p.Text;
+                    }
                 }
-            }
 
-            RefreshSelectedParagraph();
+                RefreshSelectedParagraph(); 
+            }
+        }
+
+        private void toolStripMenuItemRemoveUnicodeControlChar_Click(object sender, EventArgs e)
+        {
+            if (IsUnicode)
+            {
+                int selectedIndex = FirstSelectedIndex;
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    p.Text = Utilities.RemoveUnicodeControlChars(p.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                    if (index == selectedIndex)
+                    {
+                        textBoxListViewText.Text = p.Text;
+                    }
+                }
+
+                RefreshSelectedParagraph(); 
+            }
         }
 
         private void toolStripMenuItemImportImages_Click(object sender, EventArgs e)

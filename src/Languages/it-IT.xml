@@ -912,7 +912,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
         <MultipleReplace>S&amp;ostituzione multipla...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Vai al sottotitolo numero...</GoToSubtitleNumber>
         <RightToLeftMode>Modalità da Destra-a-Sinistra (DTS)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Correggi DTS con controllo caratteri Unicode (per linee selezionate)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Correggi DTS con controllo caratteri Unicode (per linee selezionate)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Modalità DTS inizio/fine (per linee selezionate)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostra il testo originale nell'anteprima audio/video</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifica selezione...</ModifySelection>

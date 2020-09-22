@@ -931,7 +931,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
         <MultipleReplace>Erlerc'hadennoù &amp;lies...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Mont an istitl n°...</GoToSubtitleNumber>
         <RightToLeftMode>Mod dehou da gleiz (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Reizhañ RTL dre arouezhioù koñtrol unikod (linennoù diuzet)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Reizhañ RTL dre arouezhioù koñtrol unikod (linennoù diuzet)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Eilpennañ dehou da gleiz (linennoù diuzet)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Hewelaat an testennoù orin war ar c'hlev/video</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Kemm an diuzadenn...</ModifySelection>

@@ -162,6 +162,7 @@
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemRightToLeftMode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRtlUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRemoveUnicodeControlChars = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemModifySelection = new System.Windows.Forms.ToolStripMenuItem();
@@ -1529,6 +1530,7 @@
             this.toolStripSeparator25,
             this.toolStripMenuItemRightToLeftMode,
             this.toolStripMenuItemRtlUnicodeControlChars,
+            this.toolStripMenuItemRemoveUnicodeControlChars,
             this.toolStripMenuItemReverseRightToLeftStartEnd,
             this.toolStripSeparator21,
             this.toolStripMenuItemModifySelection,
@@ -1640,6 +1642,13 @@
             this.toolStripMenuItemRtlUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
             this.toolStripMenuItemRtlUnicodeControlChars.Text = "Fix RTL via Unicode tags";
             this.toolStripMenuItemRtlUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRtlUnicodeControlChar_Click);
+            // 
+            // toolStripMenuItemRemoveUnicodeControlChars
+            // 
+            this.toolStripMenuItemRemoveUnicodeControlChars.Name = "toolStripMenuItemRemoveUnicodeControlChars";
+            this.toolStripMenuItemRemoveUnicodeControlChars.Size = new System.Drawing.Size(301, 22);
+            this.toolStripMenuItemRemoveUnicodeControlChars.Text = "Remove Unicode tags";
+            this.toolStripMenuItemRemoveUnicodeControlChars.Click += new System.EventHandler(this.toolStripMenuItemRemoveUnicodeControlChar_Click);
             // 
             // toolStripMenuItemReverseRightToLeftStartEnd
             // 
@@ -5565,6 +5574,7 @@
         private System.Windows.Forms.ToolStripMenuItem startOfLefttorightOverrideLROToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startOfRighttoleftOverrideRLOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRtlUnicodeControlChars;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRemoveUnicodeControlChars;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportImages;
         private System.Windows.Forms.ToolStripButton toolStripButtonRemoveTextForHi;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportDcinemaInterop;

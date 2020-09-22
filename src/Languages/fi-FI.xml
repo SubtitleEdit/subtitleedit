@@ -1028,7 +1028,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <MultipleReplace>Korvaa monta</MultipleReplace>
         <GoToSubtitleNumber>Siirry tekstitysnumeroon</GoToSubtitleNumber>
         <RightToLeftMode>Oikealta vasemmalle</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Korjaa RTL käyttäen Unicode-ohjausmerkkejä (valitut rivit)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Korjaa RTL käyttäen Unicode-ohjausmerkkejä (valitut rivit)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Käännä RTL-alku/loppu (valitut rivit)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Näytä alkuperäinen teksti audio/video-esikatselussa</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Muokkaa valintaa</ModifySelection>

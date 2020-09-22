@@ -1029,7 +1029,7 @@ Joan "Aukerk -&gt; Ezarpenak -&gt; Tresnak" zure Google itzulpena API gakoa sart
         <MultipleReplace>Ordezte &amp;anitza...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Joan azpidatzi zenbakira...</GoToSubtitleNumber>
         <RightToLeftMode>Eskuin-ezker &amp;modua</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Zuzendu ESEZ Uni&amp;code hizki agintearen bidez (hautaturiko lerroetan)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Zuzendu ESEZ Uni&amp;code hizki agintearen bidez (hautaturiko lerroetan)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Aldera&amp;ntzizkatu ESEZ hasiera/amaiera (hautaturiko lerroetan)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Erakutsi jatorrizko idatzia audio/bideo aurreikuspenetan</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Al&amp;datu hautapena...</ModifySelection>

@@ -911,7 +911,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <MultipleReplace>多重取代(&amp;M)...</MultipleReplace>
         <GoToSubtitleNumber>移至字幕編號(&amp;G)...</GoToSubtitleNumber>
         <RightToLeftMode>由右至左讀取模式</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>使用 Unicode 控制字元修復 RTL (針對選擇的行)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>使用 Unicode 控制字元修復 RTL (針對選擇的行)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>反轉 RTL 起始/結束 (針對選擇的行)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>在 音訊/視訊 預覽中顯示原始文字</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>修改選擇部份...</ModifySelection>

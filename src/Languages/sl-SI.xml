@@ -841,7 +841,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <MultipleReplace>&amp;Množično zamenjaj...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Pojdi na št. podnapisa...</GoToSubtitleNumber>
         <RightToLeftMode>Način iz desnega na levo</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Popravi RTL z Unicode nadzornimi simbolii (za izbrane vrstice)</FixTrlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Popravi RTL z Unicode nadzornimi simbolii (za izbrane vrstice)</FixRtlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Povrni RTL začetek/konec (za izbrane vrstice)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Prikaži izvorno besedilo v audio/video predogledih</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Uredi izbiro...</ModifySelection>
