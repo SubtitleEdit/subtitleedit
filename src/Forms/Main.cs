@@ -8505,7 +8505,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                 {
-                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
 
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -19230,8 +19230,19 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
 
+            // prevent overlap
+            var endTotalMilliseconds = videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
+            var next = _subtitle.Paragraphs[index];
+            if (next != null)
+            {
+                if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                {
+                    endTotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                } 
+            }
+
             // create and insert
-            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
+            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, endTotalMilliseconds);
             SetStyleForNewParagraph(newParagraph, index);
             if (_networkSession != null)
             {
