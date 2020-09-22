@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     string comment = "Two lines maximum";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
-                else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) && p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= controller.SingleLineMaxLength)
+                else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) &&
+                    p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ").CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) <= controller.SingleLineMaxLength &&
+                    p.Text != Utilities.AutoBreakLine(p.Text, controller.Language))
                 {
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
