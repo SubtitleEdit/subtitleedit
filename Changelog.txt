@@ -13,6 +13,8 @@
    * Add shortcut for File - Compare
    * Add shortcut for "Ext sel lines to next sc - gap" - thx m0ck69/OmrSi
    * Add shortcuts for "move selected lines" - thx OmrSi
+   * Add shortcuts for "Snap to Scene Change" - thx OmrSi
+   * Add shortcuts for Fixing RTL - thx OmrSi
    * Add context menu item for "Set default fixes" in FCE
    * Cmd line convert use header from EBU STL file - thx malashin
    * Add "ocrengine" parameter to cmd line convert
@@ -22,6 +24,7 @@
    * Add "Adjust Durations" to "Batch Convert" - thx JD
    * Add "Remove cues with style/actor" to "Batch Convert"   
    * Add hidden "Split removes dashes" option - thx OmrSi
+   * Add frame mode for "Bridge gaps between subtitles" - thx Jan
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx Zityi
@@ -44,6 +47,8 @@
    * Spell check: Allow user words starting with dash - thx t2YU2m8l83
    * WebVTT: Improved support for style/region
    * Better frame info in "Apply min. gap" - thx OmrSi
+   * Netflix quality check: Customizable and new rules - thx OmrSi/Jan
+   * Make "Merge dialog" work when one line is selected - thx OmrSi
 * FIXED:
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix bug in EBU STL ms to frames - thx Lucius Snow
@@ -64,6 +69,11 @@
    * Renumber after "Merge short lines"
    * Fix "Undo" after "Tools - Join" - thx TehBotolSosro
    * Fix a bug w max dur in "Extend to next or Max" - thx OmrSi
+   * Fix issue with space/music-sym in "Remove text for HI" - thx Sam
+   * Fix waveform delay sync issue in mkv - thx Joel
+   * Improve reading of broken ts streams - thx maknol
+   * Fix issue wtih Tesseract "Stop"
+   * No overlap in insert new sub at video pos - thx m0ck69/OmrSi
 
 
 3.5.16 (16th June 2020)
