@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textWriter.WriteStartElement(MultipleReplace.Group, string.Empty);
                 textWriter.WriteElementString(MultipleReplace.GroupName, group.Name);
+                textWriter.WriteElementString(MultipleReplace.GroupEnabled, group.Enabled.ToString());
                 foreach (var item in group.Rules)
                 {
                     textWriter.WriteStartElement(MultipleReplace.MultipleSearchAndReplaceItem, string.Empty);
