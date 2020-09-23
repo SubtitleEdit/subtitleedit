@@ -18558,6 +18558,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+            {
+                return;
+            }
+
             ShowSubtitleTimer.Stop();
             if (mediaPlayer.VideoPlayer != null)
             {
@@ -24560,6 +24565,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TimerTextUndoTick(object sender, EventArgs e)
         {
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0 || _listViewTextTicks == -1 || !CanFocus)
+            {
+                return;
+            }
+
             // progress check
             ShowTranslationProgress();
 
@@ -24570,7 +24580,7 @@ namespace Nikse.SubtitleEdit.Forms
                 index = _subtitleListViewIndex;
             }
 
-            if (_listViewTextTicks == -1 || !CanFocus || _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
+            if (index < 0 || index >= _subtitle.Paragraphs.Count)
             {
                 return;
             }
