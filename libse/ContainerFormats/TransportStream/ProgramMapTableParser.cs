@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
                 ms.Position = 0;
                 const int packetLength = 188;
-                var isM2TransportStream = TransportStreamParser.IsM3TransportStream(ms);
+                var isM2TransportStream = TransportStreamParser.IsM2TransportStream(ms);
                 var packetBuffer = new byte[packetLength];
                 var m2TsTimeCodeBuffer = new byte[4];
                 long position = 0;

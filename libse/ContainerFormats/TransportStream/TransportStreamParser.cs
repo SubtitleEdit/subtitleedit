@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         private List<Packet> SubtitlePackets { get; set; }
         private SortedDictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private SortedDictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; } // images
-        private bool IsM2TransportStream { get; set; }
+        private bool _isM2TransportStream;
 
         public void Parse(string fileName, LoadTransportStreamCallback callback)
         {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         /// <param name="callback">Optional callback event to follow progress</param>
         public void Parse(Stream ms, LoadTransportStreamCallback callback)
         {
-            IsM2TransportStream = false;
+            _isM2TransportStream = false;
             NumberOfNullPackets = 0;
             TotalNumberOfPackets = 0;
             TotalNumberOfPrivateStream1 = 0;
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             SubtitlePackets = new List<Packet>();
             ms.Position = 0;
             const int packetLength = 188;
-            IsM2TransportStream = IsM3TransportStream(ms);
+            _isM2TransportStream = IsM2TransportStream(ms);
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             ms.Seek(position, SeekOrigin.Begin);
             while (position < transportStreamLength)
             {
-                if (IsM2TransportStream)
+                if (_isM2TransportStream)
                 {
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     position += m2TsTimeCodeBuffer.Length;
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 else
                 {
                     // sync byte not found - search for it (will be very slow!)
-                    if (IsM2TransportStream)
+                    if (_isM2TransportStream)
                     {
                         position -= m2TsTimeCodeBuffer.Length;
                     }
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             }
 
             DvbSubtitlesLookup = new SortedDictionary<int, List<TransportStreamSubtitle>>();
-            if (IsM2TransportStream) // m2ts blu-ray images from PES packets
+            if (_isM2TransportStream) // m2ts blu-ray images from PES packets
             {
                 foreach (int pid in SubtitlesLookup.Keys)
                 {
@@ -397,7 +397,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            if (list.Any(p => p.IsDvbSubPicture) || IsM2TransportStream)
+            if (list.Any(p => p.IsDvbSubPicture) || _isM2TransportStream)
             {
                 if (SubtitlesLookup.ContainsKey(packetId))
                 {
@@ -531,7 +531,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             list.Add(pes);
         }
 
-        public static bool IsM3TransportStream(Stream ms)
+        public static bool IsM2TransportStream(Stream ms)
         {
             if (ms.Length > 192 + 192 + 5)
             {

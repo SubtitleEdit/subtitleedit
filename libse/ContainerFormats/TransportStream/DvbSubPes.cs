@@ -523,6 +523,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         {
             stream.Write(_dataBuffer, 0, _dataBuffer.Length);
         }
-
     }
 }
