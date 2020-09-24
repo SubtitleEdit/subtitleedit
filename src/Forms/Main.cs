@@ -2780,24 +2780,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (format == null || ext == ".cdg" && file.Length < 50_000_000)
+            if (format == null && ext == ".cdg" && file.Length < 50_000_000)
             {
-                try
+                using (var importCdg = new ImportCdg(fileName))
                 {
-                    using (var importCdg = new ImportCdg(fileName))
+                    if (importCdg.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (importCdg.ShowDialog(this) == DialogResult.OK)
-                        {
-
-
-
-                            // load audio
-                        }
+                        // load audio
+                        return;
                     }
-                }
-                catch
-                {
-                    format = null;
                 }
             }
 
@@ -19243,7 +19234,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
                 {
                     endTotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                } 
+                }
             }
 
             // create and insert
@@ -26833,7 +26824,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph(); 
+                RefreshSelectedParagraph();
             }
         }
 
@@ -26853,7 +26844,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                RefreshSelectedParagraph(); 
+                RefreshSelectedParagraph();
             }
         }
 

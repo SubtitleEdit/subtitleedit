@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                return TransportStreamParser.IsM3TransportStream(fs);
+                return TransportStreamParser.IsM2TransportStream(fs);
             }
         }
 
