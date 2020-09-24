@@ -24630,7 +24630,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_subtitle.Paragraphs.Count > 0 && !string.IsNullOrWhiteSpace(_videoFileName) && mediaPlayer != null && mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer.Duration > 0)
                 {
                     var last = _subtitle.Paragraphs.LastOrDefault();
-                    if (last != null)
+                    if (last != null && !last.StartTime.IsMaxTime)
                     {
                         var subtitleEndSeconds = last.EndTime.TotalSeconds;
                         var videoEndSeconds = mediaPlayer.VideoPlayer.Duration;
