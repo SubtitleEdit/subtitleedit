@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _original;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
-        public List<int> DeleteIndices { get; private set; }
+        public List<int> DeleteIndices { get; }
 
         public void SetDeleteIndices()
         {
@@ -902,6 +902,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewGroups.EndUpdate();
+            if (groups.Count == 0)
+            {
+                groupBoxReplaces.Text = string.Empty;
+            }
         }
 
         private void listViewGroups_SelectedIndexChanged(object sender, EventArgs e)
@@ -1244,12 +1248,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
-                            foreach (MultipleSearchAndReplaceGroup importGroup in importGroups.Where(g => form.ChosenGroups.Contains(g.Name)))
+                            var oldGroupsSelectedIndex = listViewGroups.SelectedIndices.Count == 0 ? -1 : listViewGroups.SelectedIndices[0];
+                            foreach (var importGroup in importGroups.Where(g => form.ChosenGroups.Contains(g.Name)))
                             {
                                 importGroup.Name = FixDuplicateName(importGroup.Name, Configuration.Settings.MultipleSearchAndReplaceGroups);
                                 Configuration.Settings.MultipleSearchAndReplaceGroups.Add(importGroup);
                             }
                             UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
+                            if (oldGroupsSelectedIndex == -1 && listViewGroups.Items.Count > 0)
+                            {
+                                listViewGroups.Items[0].Selected = true;
+                            }
                         }
                     }
                 }
