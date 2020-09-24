@@ -298,8 +298,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         }
 
         /// <summary>
-        /// Converts a starting '<' char to italic style (can be preceeded by a font tag)
-        /// E.g. "<Hi there." to "<i>Hi there.</i>"
+        /// Converts a starting '&lt;' char to italic style (can be preceded by a font tag)
+        /// E.g. "&lt;Hi there." to "&lt;i&gt;Hi there.&lt;/i&gt;"
         /// </summary>
         private static void FixTeletextItalics(SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> dictionary)
         {
