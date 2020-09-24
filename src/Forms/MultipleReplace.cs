@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         internal const string Group = "Group";
         internal const string GroupName = "Name";
+        internal const string GroupEnabled = "Enabled";
         internal const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
         internal const string RuleEnabled = "Enabled";
         internal const string FindWhat = "FindWhat";
@@ -167,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        ImportRulesFile(fileName);
+                        Configuration.Settings.MultipleSearchAndReplaceGroups.AddRange(ImportGroupsFile(fileName));
                     }
                 }
                 RunFromBatch(subtitle);
@@ -763,10 +764,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var group = new MultipleSearchAndReplaceGroup();
                     var nameNode = groupNode.SelectSingleNode(GroupName);
-                    if (nameNode != null)
-                    {
-                        group.Name = nameNode.InnerText;
-                    }
+                    var enabledNode = groupNode.SelectSingleNode(GroupEnabled);
+
+                    group.Name = nameNode != null ? nameNode.InnerText : "Untitled";
+                    group.Enabled = enabledNode != null ? Convert.ToBoolean(enabledNode.InnerText) : false;
 
                     group.Rules = new List<MultipleSearchAndReplaceSetting>();
                     list.Add(group);
@@ -786,9 +787,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (list.Count == 0)
             {
                 // import into "untitled" group if only rules
-                var group = new MultipleSearchAndReplaceGroup();
-                group.Name = "untitled";
-                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                var group = new MultipleSearchAndReplaceGroup
+                {
+                    Name = "untitled",
+                    Rules = new List<MultipleSearchAndReplaceSetting>()
+                };
                 var replaceItems = doc.DocumentElement?.SelectNodes("//MultipleSearchAndReplaceItem");
                 if (replaceItems != null)
                 {
