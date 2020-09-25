@@ -38,7 +38,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public int AdaptationFieldControl { get; set; }
 
         /// <summary>
-        /// Incremented only when a payload is present (AdaptationFieldExist = 10 or 11). Starts at 0.
+        /// Incremented only when a payload is present (AdaptationFieldExist = 10 or 11).
+        /// Starts at 0, after 15 the CC re-starts from 0.
         /// </summary>
         public int ContinuityCounter { get; set; }
 

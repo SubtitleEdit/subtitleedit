@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
         public int NumberOfNullPackets { get; private set; }
         public long TotalNumberOfPackets { get; private set; }
         public long TotalNumberOfPrivateStream1 { get; private set; }
-        public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public SortedDictionary<int, SortedDictionary<int, List<Paragraph>>> TeletextSubtitlesLookup { get; set; } // teletext
 
@@ -46,7 +45,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             NumberOfNullPackets = 0;
             TotalNumberOfPackets = 0;
             TotalNumberOfPrivateStream1 = 0;
-            TotalNumberOfPrivateStream1Continuation0 = 0;
             SubtitlePacketIds = new List<int>();
             SubtitlePackets = new List<Packet>();
             ms.Position = 0;
@@ -127,11 +125,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                             SubtitlePackets.RemoveAll(p => p.PacketId == packet.PacketId);
                         }
                         SubtitlePackets.Add(packet);
-
-                        if (packet.ContinuityCounter == 0)
-                        {
-                            TotalNumberOfPrivateStream1Continuation0++;
-                        }
                     }
                     TotalNumberOfPackets++;
                     position += packetLength;
@@ -397,7 +390,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
-            if (list.Any(p => p.IsDvbSubPicture) || _isM2TransportStream)
+            if (_isM2TransportStream || list.Any(p => p.IsDvbSubPicture))
             {
                 if (SubtitlesLookup.ContainsKey(packetId))
                 {
@@ -485,7 +478,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             return null;
         }
 
-        private List<DvbSubPes> ParseAndRemoveEmpty(List<DvbSubPes> list)
+        private static List<DvbSubPes> ParseAndRemoveEmpty(List<DvbSubPes> list)
         {
             var newList = new List<DvbSubPes>();
             foreach (var pes in list)
