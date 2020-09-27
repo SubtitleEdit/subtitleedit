@@ -19228,7 +19228,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // prevent overlap
             var endTotalMilliseconds = videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs;
-            var next = _subtitle.Paragraphs.ElementAtOrDefault(index);
+            var next = _subtitle.GetParagraphOrDefault(index);
             if (next != null)
             {
                 if (endTotalMilliseconds > next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines)
