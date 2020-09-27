@@ -123,6 +123,5 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 Buffer.BlockCopy(packetBuffer, payloadStart, Payload, 0, Payload.Length);
             }
         }
-
     }
 }
