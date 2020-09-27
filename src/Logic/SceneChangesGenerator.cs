@@ -11,8 +11,18 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class SceneChangesGenerator
     {
-        public StringBuilder Log { get; private set; }
-        public StringBuilder TimeCodes { get; private set; }
+        private StringBuilder Log { get; set; }
+
+        private StringBuilder _timeCodes;
+        public string GetTimeCodesString()
+        {
+            lock (TimeCodesLock)
+            {
+                return _timeCodes.ToString();
+            }
+        }
+
+        private static readonly object TimeCodesLock = new object();
         public double LastSeconds { get; private set; }
 
         private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
@@ -20,13 +30,16 @@ namespace Nikse.SubtitleEdit.Logic
         public SceneChangesGenerator()
         {
             Log = new StringBuilder();
-            TimeCodes = new StringBuilder();
+            _timeCodes = new StringBuilder();
         }
 
         public Process GetProcess(string videoFileName, decimal threshold)
         {
             Log = new StringBuilder();
-            TimeCodes = new StringBuilder();
+            lock (TimeCodesLock)
+            {
+                _timeCodes = new StringBuilder();
+            }
             var ffmpegLocation = Configuration.Settings.General.FFmpegLocation;
             if (!Configuration.IsRunningOnWindows && (string.IsNullOrEmpty(ffmpegLocation) || !File.Exists(ffmpegLocation)))
             {
@@ -67,7 +80,10 @@ namespace Nikse.SubtitleEdit.Logic
                 var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
                 if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds) && seconds > 0.2)
                 {
-                    TimeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortString());
+                    lock (TimeCodesLock)
+                    {
+                        _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortString());
+                    }
                     LastSeconds = seconds;
                 }
             }

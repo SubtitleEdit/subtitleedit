@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            var seconds = SceneChangesGenerator.GetSeconds(sceneChangesGenerator.TimeCodes.ToString().SplitToLines().ToArray());
+            var seconds = SceneChangesGenerator.GetSeconds(sceneChangesGenerator.GetTimeCodesString().SplitToLines().ToArray());
             if (seconds.Count > 0)
             {
                 SceneChangeHelper.SaveSceneChanges(videoFileName, seconds);

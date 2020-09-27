@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateImportTextBox()
         {
-            textBoxGenerate.Text = _sceneChangesGenerator.TimeCodes.ToString();
+            textBoxGenerate.Text = _sceneChangesGenerator.GetTimeCodesString();
             textBoxGenerate.SelectionStart = textBoxGenerate.Text.Length;
             textBoxGenerate.ScrollToCaret();
         }
