@@ -90,6 +90,7 @@
             this.toolStripMenuItemNuendoProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFcpProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAssaStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEbuProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDvdStudioProProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
@@ -984,6 +985,7 @@
             this.toolStripMenuItemNuendoProperties,
             this.toolStripMenuItemFcpProperties,
             this.toolStripMenuItemSubStationAlpha,
+            this.toolStripMenuItemAssaStyles,
             this.toolStripMenuItemEbuProperties,
             this.toolStripMenuItemDvdStudioProProperties,
             this.toolStripSeparator20,
@@ -1101,6 +1103,13 @@
             this.toolStripMenuItemSubStationAlpha.Size = new System.Drawing.Size(335, 22);
             this.toolStripMenuItemSubStationAlpha.Text = "Advanced Sub Station Alpha properties...";
             this.toolStripMenuItemSubStationAlpha.Click += new System.EventHandler(this.toolStripMenuItemSubStationAlpha_Click);
+            // 
+            // toolStripMenuItemAssaStyles
+            // 
+            this.toolStripMenuItemAssaStyles.Name = "toolStripMenuItemAssaStyles";
+            this.toolStripMenuItemAssaStyles.Size = new System.Drawing.Size(335, 22);
+            this.toolStripMenuItemAssaStyles.Text = "Advanced Sub Station Alpha styles...";
+            this.toolStripMenuItemAssaStyles.Click += new System.EventHandler(this.toolStripMenuItemAssaStyles_Click);
             // 
             // toolStripMenuItemEbuProperties
             // 
@@ -5650,5 +5659,6 @@
         private System.Windows.Forms.ToolStripMenuItem goToNextSubtitleStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dCinemaSMPTE2014ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssaStyles;
     }
 }
