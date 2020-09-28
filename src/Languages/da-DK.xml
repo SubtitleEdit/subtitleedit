@@ -185,6 +185,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <UseStyleFromSource>Benyt "style" fra kilde</UseStyleFromSource>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
+    <RemoveStyleActor>Fjern style/skuespiller</RemoveStyleActor>
     <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
     <RedoCasing>Sæt store/små bogstaver</RedoCasing>
@@ -211,6 +212,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Mere end to linjer i en undertekst</FilterMoreThanTwoLines>
     <FilterContains>Tekst indeholder...</FilterContains>
     <FilterFileNameContains>Filnavn indeholder...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Matroska (.mkv) sprogkode indeholder...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
@@ -354,9 +356,13 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Title>Lap små huller mellem tekster</Title>
     <GapsBridgedX>antal små huller lukket: {0}</GapsBridgedX>
     <GapToNext>Gap til næste</GapToNext>
+    <GapToNextFrames>Gap til næste i frames</GapToNextFrames>
     <BridgeGapsSmallerThanXPart1>Lap huller mindre end</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekunder</BridgeGapsSmallerThanXPart2>
+    <BridgeGapsSmallerThanXPart1Frames>Lap huller mindre end</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>frames</BridgeGapsSmallerThanXPart2Frames>
     <MinMillisecondsBetweenLines>Min. millisekunder mellem linjer</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Min. frames mellem linjer</MinFramesBetweenLines>
     <ProlongEndTime>Forrige tekst tager alle tiden</ProlongEndTime>
     <DivideEven>Tid deles</DivideEven>
   </DurationsBridgeGaps>
@@ -699,6 +705,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hej John! - Hej Ida! -&gt; Hej John!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
     <SelectDefault>Vælg standard</SelectDefault>
+    <SetDefault>Indstil aktuelle rettelser som standard</SetDefault>
     <FixContinuationStyleX>Fix fortsættelsestil: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} fast fortsættelsesstil</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Fjern unødvendige førende punktummer</FixUnnecessaryLeadingDots>
@@ -1033,6 +1040,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <GoToSubtitleNumber>&amp;Gå til undertekst nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Højre-mod-venstre mode</RightToLeftMode>
         <FixRtlViaUnicodeControlCharacters>Fix RTL via Unicode kontrol tegn</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Fjern Unicode-kontroltegn (fra valgte linjer)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Byt rundt på højre-mod-venstre start/slut</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificer markering...</ModifySelection>
@@ -1316,6 +1324,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
 
 Denne fil er skrivebeskyttet!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Kan ikke gemme undertekst fil {0}</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>UTF-8-kodning skal bruges, når du gemmer {0} filer!</FormatXShouldUseUft8>
     <BeforeNew>Før ny</BeforeNew>
     <New>Ny</New>
     <BeforeConvertingToX>Før konvertering til {0}</BeforeConvertingToX>
@@ -1769,6 +1778,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ShowOnlyModifiedLines>Vis kun rettede linier</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum millisekunder mellem linjerne</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Frame info</FrameInfo>
+    <Frames>Frames</Frames>
+    <XFrameYisZMilliseconds>{0} frame(s) ved {1} fps er {2} millisekunder</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Set synkroniserings punkt for linje {0}</Title>
@@ -1990,11 +2001,13 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListView>Listevisning</ListView>
     <TextBox>Tekstboks</TextBox>
     <UpdateShortcut>Opdater</UpdateShortcut>
+    <FoucsSetVideoPosition>Fokus, sæt videoposition</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Set slut og pause</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
@@ -2016,8 +2029,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>Snap valgte linjer start til næste sceneændring</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>Snap valgte linjer start til næste sceneændring med min. gap</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>Snap valgte linjer slut til forrige sceneændring</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>Snap valgte linjer slut til forrige sceneændring med min. gap</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>Udvid valgte linjer til næste sceneændring (eller næste undertekst)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Udvid valgte linjer til næste sceneændring med min. gap (eller næste undertekst)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Udvid valgte linjer til forrige sceneændring (eller forrige undertekst)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Udvid valgte linjer til tidligere sceneskift med min. gap (eller forrige undertekst)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Udvid valgte linjer til næste undertekst</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Udvid valgte linjer til forrige undertekst</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Genberegn varighed valgte undertekst</RecalculateDurationOfCurrentSubtitle>
@@ -2029,6 +2048,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
     <GoToPreviousSubtitleAndFocusVideo>Gå til foregående linje og indstil video position</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
+    <GoToPrevSubtitleAndPlay>Gå til forrige linje og afspil</GoToPrevSubtitleAndPlay>
     <GoToNextSubtitleAndPlay>Gå til næste linje og start video</GoToNextSubtitleAndPlay>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
@@ -2046,6 +2066,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Fix RTL via Unicode-kontroltegn</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Fjern Unicode-kontroltegn</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRtl>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <VerticalZoomOut>Lodret zoom ud</VerticalZoomOut>
@@ -2074,6 +2096,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForward1Second>Et sekund fremad</GoForward1Second>
     <GoBack5Seconds>Fem sekunder tilbage</GoBack5Seconds>
     <GoForward5Seconds>Fem sekunder frem</GoForward5Seconds>
+    <GoBackXSSeconds>Lille valgt tid tilbage</GoBackXSSeconds>
+    <GoForwardXSSeconds>Lille valgt tid frem</GoForwardXSSeconds>
+    <GoBackXLSeconds>Stor valgt tid tilbage</GoBackXLSeconds>
+    <GoForwardXLSeconds>Stor valgt tid frem</GoForwardXLSeconds>
     <GoBack3Second>Tre sekunder tilbage</GoBack3Second>
     <GoToStartCurrent>Indstil video pos til start af den aktuelle undertekst</GoToStartCurrent>
     <ToggleStartEndCurrent>Skift video pos mellem start/slut af aktuelle undertekst</ToggleStartEndCurrent>
