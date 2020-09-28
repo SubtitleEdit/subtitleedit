@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.17 (xth September 2020) BETA
+3.5.17 (xth October 2020) BETA
 * NEW:
    * Add new subtitle formats - thx Holmgeir
    * Add new subtitle (Excel) format - thx Jecy
@@ -50,6 +50,7 @@
    * Netflix quality check: Customizable and new rules - thx OmrSi/Jan
    * Make "Merge dialog" work when one line is selected - thx OmrSi
 * FIXED:
+   * Fix drop of subs in bd .sup files with overlap - thx mwalimu
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
    * Fix bug in EBU STL ms to frames - thx Lucius Snow
    * Fix some shortcuts being written to text box - thx rebawest

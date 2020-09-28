@@ -12438,6 +12438,7 @@ namespace Nikse.SubtitleEdit.Forms
             var log = new StringBuilder();
             var clusterStream = new MemoryStream();
             var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+            var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
             foreach (var p in sub)
             {
                 byte[] buffer = p.GetData(matroskaSubtitleInfo);
@@ -12452,7 +12453,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         clusterStream.Position = 0;
-                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes);
+                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes, lastBitmapObjects);
                         foreach (var sup in list)
                         {
                             sup.StartTime = (long)((p.Start - 1) * 90.0);
