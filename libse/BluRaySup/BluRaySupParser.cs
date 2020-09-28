@@ -282,19 +282,27 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 var r = Rectangle.Empty;
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
-                    var ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
-                    r = r.IsEmpty ? ioRect : Rectangle.Union(r, ioRect);
+                    if (ioIndex < BitmapObjects.Count)
+                    {
+                        var ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
+                        r = r.IsEmpty ? ioRect : Rectangle.Union(r, ioRect);
+                    }
                 }
+
                 var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
                 for (var ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
-                    var offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
-                    using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
-                    using (var gSideBySide = Graphics.FromImage(mergedBmp))
+                    if (ioIndex < BitmapObjects.Count)
                     {
-                        gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
+                        var offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
+                        using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
+                        using (var gSideBySide = Graphics.FromImage(mergedBmp))
+                        {
+                            gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
+                        }
                     }
                 }
+
                 return mergedBmp;
             }
 
@@ -372,7 +380,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                return ParseBluRaySup(fs, log, false);
+                var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+                var lastBitmapObjects = new Dictionary<int, List<OdsData>>();
+                return ParseBluRaySup(fs, log, false, lastPalettes, lastBitmapObjects);
             }
         }
 
@@ -422,7 +432,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // skipped:  8bit  window_id_ref
             // object_cropped_flag: 0x80, forced_on_flag = 0x040, 6bit reserved
             int forcedCropped = buffer[14 + offset];
-            pcs.IsForced = ((forcedCropped & 0x40) == 0x40);
+            pcs.IsForced = (forcedCropped & 0x40) == 0x40;
             pcs.Origin = new Point(BigEndianInt16(buffer, 15 + offset), BigEndianInt16(buffer, 17 + offset));
             return pcs;
         }
@@ -496,17 +506,17 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             pcs.PaletteInfos = new List<PaletteInfo>(palettes[pcs.PaletteId]);
             pcs.BitmapObjects = new List<List<OdsData>>();
+            var found = false;
             for (int index = 0; index < pcs.PcsObjects.Count; index++)
             {
                 int objId = pcs.PcsObjects[index].ObjectId;
-                if (!bitmapObjects.ContainsKey(objId))
+                if (bitmapObjects.ContainsKey(objId))
                 {
-                    return false;
+                    pcs.BitmapObjects.Add(bitmapObjects[objId]);
+                    found = true;
                 }
-
-                pcs.BitmapObjects.Add(bitmapObjects[objId]);
             }
-            return true;
+            return found;
         }
 
         /// <summary>
@@ -591,13 +601,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             };
         }
 
-        public static List<PcsData> ParseBluRaySup(Stream ms, StringBuilder log, bool fromMatroskaFile, Dictionary<int, List<PaletteInfo>> lastPalettes = null)
+        public static List<PcsData> ParseBluRaySup(Stream ms, StringBuilder log, bool fromMatroskaFile, Dictionary<int, List<PaletteInfo>> lastPalettes, Dictionary<int, List<OdsData>> bitmapObjects)
         {
             long position = ms.Position;
             int segmentCount = 0;
             var palettes = new Dictionary<int, List<PaletteInfo>>();
             bool forceFirstOds = true;
-            var bitmapObjects = new Dictionary<int, List<OdsData>>();
             PcsData latestPcs = null;
             var pcsList = new List<PcsData>();
             var headerBuffer = fromMatroskaFile ? new byte[3] : new byte[HeaderSize];
@@ -658,7 +667,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             }
                             break;
 
-                        case 0x15: // Image bitmap data
+                        case 0x15: // Object Definition Segment (image bitmap data)
                             if (latestPcs != null)
                             {
 #if DEBUG
@@ -744,8 +753,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                     int y = BigEndianInt16(buffer, 4 + offset);
                                     int width = BigEndianInt16(buffer, 6 + offset);
                                     int height = BigEndianInt16(buffer, 8 + offset);
-                                    log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}",
-                                        x, y, width, height, windowId));
+                                    log.AppendLine(string.Format("WinId: {4}, X: {0}, Y: {1}, Width: {2}, Height: {3}", x, y, width, height, windowId));
                                     offset += 9;
                                 }
                             }

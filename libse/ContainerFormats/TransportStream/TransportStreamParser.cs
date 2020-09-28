@@ -196,6 +196,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     var sb = new StringBuilder();
                     var subList = new List<TransportStreamSubtitle>();
                     var offset = (long)(firstVideoMs ?? 0); // when to use firstMs ?
+                    var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
+                    var lastBitmapObjects = new Dictionary<int, List<BluRaySupParser.OdsData>>();
                     for (var index = 0; index < list.Count; index++)
                     {
                         var item = list[index];
@@ -204,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                         if (item.DataIdentifier == 0x80)
                         {
                             bdMs.Position = 0;
-                            var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true);
+                            var bdList = BluRaySupParser.ParseBluRaySup(bdMs, sb, true, lastPalettes, lastBitmapObjects);
                             if (bdList.Count > 0)
                             {
                                 var startMs = currentList.First().PresentationTimestampToMilliseconds();
