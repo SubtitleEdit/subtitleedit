@@ -19909,15 +19909,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.AdvancedSubStationAlphaProperties;
+
+                toolStripMenuItemAssStyles.Visible = true;
+                toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
             }
             else if (ft == typeof(SubStationAlpha))
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.SubStationAlphaProperties;
+
+                toolStripMenuItemAssStyles.Visible = true;
+                toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
             }
             else
             {
                 toolStripMenuItemSubStationAlpha.Visible = false;
+                toolStripMenuItemAssStyles.Visible = false;
             }
 
             if (ft == typeof(Ebu))
@@ -28094,6 +28101,11 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.TogglePlayPause();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void toolStripMenuItemAssaStyles_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemAssStyles_Click(sender, e);
         }
     }
 }
