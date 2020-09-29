@@ -308,6 +308,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment, Point? overridePosition = null)
         {
             var bm = new NikseBitmap(bmp);
+            bm.SetTransparentTo(Color.Transparent);
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
             for (int i = 0; i < colorPalette.Count; i++)
