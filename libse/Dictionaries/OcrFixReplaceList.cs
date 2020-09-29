@@ -1113,7 +1113,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
-                    if (text.Substring(i).StartsWith(word, StringComparison.Ordinal) && i >= appendFrom)
+                    if (text[i] == word[0] && i >= appendFrom && text.Substring(i).StartsWith(word, StringComparison.Ordinal))
                     {
                         bool startOk = i == 0;
                         if (!startOk)
