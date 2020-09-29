@@ -1403,7 +1403,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 words.Add(w.Trim(trimChars));
             }
 
-            for (int i = 0; i < words.Count; i++)
+            for (int i = 0; i < words.Count && i < 1000; i++)
             {
                 string word = words[i].TrimStart('\'');
                 string wordNotEndTrimmed = word;
