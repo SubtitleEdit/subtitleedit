@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            if (!mergedIndexes.Contains(subtitle.Paragraphs.Count - 1))
+            if (subtitle.Paragraphs.Count > 0 && !mergedIndexes.Contains(subtitle.Paragraphs.Count - 1))
             {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
             }
