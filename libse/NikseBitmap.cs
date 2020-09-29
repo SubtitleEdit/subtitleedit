@@ -1442,14 +1442,14 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            if (Width == bitmap.Width && Height == bitmap.Height  &&
+            if (Width == bitmap.Width && Height == bitmap.Height &&
                 Width == 0 && Height == 0)
             {
                 return true;
             }
 
 
-            for (int i=0; i<_bitmapData.Length; i++)
+            for (int i = 0; i < _bitmapData.Length; i++)
             {
                 if (_bitmapData[i] != bitmap._bitmapData[i])
                 {
@@ -1458,6 +1458,22 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return true;
+        }
+
+        public void SetTransparentTo(in Color transparent)
+        {
+            var buffer = new byte[4];
+            buffer[0] = transparent.B;
+            buffer[1] = transparent.G;
+            buffer[2] = transparent.R;
+            buffer[3] = transparent.A;
+            for (var i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] == 0)
+                {
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+                }
+            }
         }
     }
 }
