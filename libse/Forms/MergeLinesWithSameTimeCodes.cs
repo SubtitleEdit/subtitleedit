@@ -89,11 +89,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     lineNumbers.Clear();
                 }
             }
+
             if (lineNumbers.Length > 0 && clearFixes && p != null)
             {
                 info.Paragraphs.Add(new Paragraph(p) { Extra = lineNumbers.ToString() });
             }
-            if (!lastMerged)
+
+            if (!lastMerged && subtitle.Paragraphs.Count > 0)
             {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
             }
