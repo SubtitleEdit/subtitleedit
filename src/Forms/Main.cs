@@ -15169,27 +15169,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     double nearestSceneChange = nextSceneChanges.Aggregate((x, y) => Math.Abs(x - p.StartTime.TotalSeconds) < Math.Abs(y - p.StartTime.TotalSeconds) ? x : y);
 
-                    if (!historyAdded)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
-                        historyAdded = true;
-                    }
-
-                    if (!withGap)
-                    {
-                        if (nearestSceneChange * 1000 < p.EndTime.TotalMilliseconds)
-                        {
-                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000;
-                        }
-                    }
-                    else
-                    {
-                        if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
-                        {
-                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        }
-                    }
-
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         var original = Utilities.GetOriginalParagraph(idx, p, _subtitleAlternate.Paragraphs);
@@ -15216,6 +15195,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 }
                             }
+                        }
+                    }
+
+                    if (!historyAdded)
+                    {
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.AdjustSnapStartToNextSceneChange));
+                        historyAdded = true;
+                    }
+
+                    if (!withGap)
+                    {
+                        if (nearestSceneChange * 1000 < p.EndTime.TotalMilliseconds)
+                        {
+                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000;
+                        }
+                    }
+                    else
+                    {
+                        if (nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines < p.EndTime.TotalMilliseconds)
+                        {
+                            p.StartTime.TotalMilliseconds = nearestSceneChange * 1000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         }
                     }
                 }
