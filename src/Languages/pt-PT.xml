@@ -189,6 +189,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Eliminar etiquetas de formatação</RemoveFormatting>
+    <RemoveStyleActor>Eliminar estilo/actor</RemoveStyleActor>
     <RemoveTextForHI>Eliminar texto para Deficientes Auditivos</RemoveTextForHI>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
     <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
@@ -215,6 +216,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FilterMoreThanTwoLines>Mais de duas linhas numa legenda</FilterMoreThanTwoLines>
     <FilterContains>O texto contém...</FilterContains>
     <FilterFileNameContains>O nome do ficheiro contém...</FilterFileNameContains>
+    <MkvLanguageCodeContains>Código linguístico Matroska (.mkv) contém...</MkvLanguageCodeContains>
     <FixCommonErrorsErrorX>Erros frequentes corrigidos: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
@@ -358,9 +360,13 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Unir pequenos intervalos entre linhas</Title>
     <GapsBridgedX>Número de pequenos intervalos unidos: {0}</GapsBridgedX>
     <GapToNext>Intervalo até ao seguinte em segundos</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores do que</BridgeGapsSmallerThanXPart1>
+    <GapToNextFrames>Intervalo até ao seguinte em fotogramas</GapToNextFrames>
+    <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milissegundos</BridgeGapsSmallerThanXPart2>
-    <MinMillisecondsBetweenLines>Min. milissegundos entre as linhas</MinMillisecondsBetweenLines>
+    <BridgeGapsSmallerThanXPart1Frames>Colmatar os intervalos menores que</BridgeGapsSmallerThanXPart1Frames>
+    <BridgeGapsSmallerThanXPart2Frames>fotogramas</BridgeGapsSmallerThanXPart2Frames>
+    <MinMillisecondsBetweenLines>Min. milissegundos entre linhas</MinMillisecondsBetweenLines>
+    <MinFramesBetweenLines>Min. fotogramas entre linhas</MinFramesBetweenLines>
     <ProlongEndTime>Texto anterior com todos os tempos de intervalo</ProlongEndTime>
     <DivideEven>Texto divide o tempo do intervalo</DivideEven>
   </DurationsBridgeGaps>
@@ -702,6 +708,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
     <SelectDefault>Predefinição</SelectDefault>
+    <SetDefault>Definir correcções actuais como padrão</SetDefault>
     <FixContinuationStyleX>Corrigir estilo de continuação: {0}</FixContinuationStyleX>
     <XFixContinuationStyle>{0} estilos de continuação corrigidos</XFixContinuationStyle>
     <FixUnnecessaryLeadingDots>Eliminar reticências iniciais desnecessárias</FixUnnecessaryLeadingDots>
@@ -1035,7 +1042,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MultipleReplace>&amp;Substituição múltipla</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
-        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixRtlViaUnicodeControlCharacters>
+        <FixRtlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (nas linhas seleccionadas)</FixRtlViaUnicodeControlCharacters>
+        <RemoveUnicodeControlCharacters>Eliminar controle de caracteres Unicode (nas linhas seleccionadas)</RemoveUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Reverter RTL início/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar a selecção...</ModifySelection>
@@ -1320,6 +1328,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
 Ficheiro é só de leitura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
 A legenda não parece ter linhas legendadas - tente guardar novamente se estiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
+    <FormatXShouldUseUft8>A codificação UTF-8 deve ser utilizada ao guardar ficheiros {0}!</FormatXShouldUseUft8>
     <BeforeNew>Antes de novo</BeforeNew>
     <New>Novo</New>
     <BeforeConvertingToX>Convertendo anterior para {0}</BeforeConvertingToX>
@@ -1774,6 +1783,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informação da taxa de fotogramas</FrameInfo>
+    <Frames>Fotogramas</Frames>
+    <XFrameYisZMilliseconds>{0} fotograma(s) a {1} fps é {2} milissegundos</XFrameYisZMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Definir ponto de sincronia para a linha {0}</Title>
@@ -1995,11 +2006,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListView>Exibição de lista</ListView>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
+    <FoucsSetVideoPosition>Evidenciar controlo posição do vídeo</FoucsSetVideoPosition>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para a seguinte</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Definir fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndPause>Definir fim e pausar</AdjustSetEndTimeAndPause>
     <AdjustSetStartAutoDurationAndGoToNext>Início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Definir fim, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
@@ -2021,8 +2034,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetEndAndOffsetTheRest>Defenir fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Prolongar tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
+    <AdjustSnapStartToNextSceneChange>As linhas seleccionadas começam na próxima mudança de cena</AdjustSnapStartToNextSceneChange>
+    <AdjustSnapStartToNextSceneChangeWithGap>As linhas seleccionadas começam na próxima mudança de cena com um intervalo mínimo</AdjustSnapStartToNextSceneChangeWithGap>
+    <AdjustSnapEndToPreviousSceneChange>As linhas seleccionadas terminam na mudança de cena anterior</AdjustSnapEndToPreviousSceneChange>
+    <AdjustSnapEndToPreviousSceneChangeWithGap>As linhas seleccionadas terminam na mudança de cena anterior com um intervalo mínimo</AdjustSnapEndToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSceneChange>Prolongar linhas seleccionadas até à mudança de cena seguinte (ou linha seguinte)</AdjustExtendToNextSceneChange>
+    <AdjustExtendToNextSceneChangeWithGap>Prolongar linhas seleccionadas até à próxima mudança de cena com intervalo mínimo (ou linha seguinte)</AdjustExtendToNextSceneChangeWithGap>
     <AdjustExtendToPreviousSceneChange>Prolongar linhas seleccionadas até à mudança de cena anterior (ou linha anterior)</AdjustExtendToPreviousSceneChange>
+    <AdjustExtendToPreviousSceneChangeWithGap>Prolongar linhas seleccionadas até à mudança de cena anterior com intervalo min. (ou linha anterior)</AdjustExtendToPreviousSceneChangeWithGap>
     <AdjustExtendToNextSubtitle>Prolongar linhas seleccionadas até à linha seguinte</AdjustExtendToNextSubtitle>
     <AdjustExtendToPreviousSubtitle>Prolongar linhas seleccionadas até à linha anterior</AdjustExtendToPreviousSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
@@ -2052,11 +2071,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CopyTextOnly>Copiar apenas o texto (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
+    <FixRTLViaUnicodeChars>Corrigir RTL através de controlo de caracteres Unicode</FixRTLViaUnicodeChars>
+    <RemoveRTLUnicodeChars>Eliminar controlo de caracteres Unicode</RemoveRTLUnicodeChars>
     <ReverseStartAndEndingForRtl>Inverter RTL início/fim</ReverseStartAndEndingForRtl>
     <VerticalZoom>Zoom vertical entrada</VerticalZoom>
     <VerticalZoomOut>Zoom vertical saída</VerticalZoomOut>
-    <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>
-    <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
+    <WaveformSeekSilenceForward>Localizar silêncio no áudio para frente</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Localizar silêncio no áudio para atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para uma selecção nova)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Adicionar texto aqui (para uma selecção nova a partir da área de transferência)</WaveformAddTextHereFromClipboard>
     <SetParagraphAsSelection>Definir a actual como nova selecção</SetParagraphAsSelection>
@@ -2068,19 +2089,23 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <WaveformGuessStart>Ajuste automático do início através da mudança de volume/cena</WaveformGuessStart>
-    <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
-    <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
-    <GoBack1FrameWithPlay>Um fotograma para atrás (através do reprodutor)</GoBack1FrameWithPlay>
-    <GoForward1FrameWithPlay>Um fotograma para a frente (através do reprodutor)</GoForward1FrameWithPlay>
-    <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
-    <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
-    <GoBack500Milliseconds>500 ms para atrás</GoBack500Milliseconds>
-    <GoForward500Milliseconds>500 ms para a frente</GoForward500Milliseconds>
-    <GoBack1Second>Um segundo para trás</GoBack1Second>
-    <GoForward1Second>Um segundo para a frente</GoForward1Second>
-    <GoBack5Seconds>Cinco segundos para trás</GoBack5Seconds>
-    <GoForward5Seconds>Cinco segundos para a frente</GoForward5Seconds>
-    <GoBack3Second>Três segundos para trás</GoBack3Second>
+    <GoBack1Frame>Atrasar 1 fotograma</GoBack1Frame>
+    <GoForward1Frame>Adiantar 1 fotograma</GoForward1Frame>
+    <GoBack1FrameWithPlay>Atrasar 1 fotograma (através do reprodutor)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Adiantar 1 fotograma (através do reprodutor)</GoForward1FrameWithPlay>
+    <GoBack100Milliseconds>Atrasar 100 ms</GoBack100Milliseconds>
+    <GoForward100Milliseconds>Adiantar 100 ms</GoForward100Milliseconds>
+    <GoBack500Milliseconds>Atrasar 500 ms</GoBack500Milliseconds>
+    <GoForward500Milliseconds>Adiantar 500 ms</GoForward500Milliseconds>
+    <GoBack1Second>Atrasar 1 segundo</GoBack1Second>
+    <GoForward1Second>Adiantar 1 segundo</GoForward1Second>
+    <GoBack5Seconds>Atrasar 5 segundos</GoBack5Seconds>
+    <GoForward5Seconds>Adiantar 5 segundos</GoForward5Seconds>
+    <GoBackXSSeconds>Atrasar um pouco os tempos seleccionados</GoBackXSSeconds>
+    <GoForwardXSSeconds>Adiantar um pouco os tempos seleccionados</GoForwardXSSeconds>
+    <GoBackXLSeconds>Atrasar os tempos seleccionados</GoBackXLSeconds>
+    <GoForwardXLSeconds>Adiantar os tempos seleccionados</GoForwardXLSeconds>
+    <GoBack3Second>Atrasar 3 segundos</GoBack3Second>
     <GoToStartCurrent>Definir posição de vídeo para o início da linha actual</GoToStartCurrent>
     <ToggleStartEndCurrent>Alternar posição do vídeo entre início/fim da linha actual</ToggleStartEndCurrent>
     <PlayCurrent>Reproduzir linha actual</PlayCurrent>
@@ -2261,7 +2286,7 @@ Continuar?</RestoreDefaultSettingsMsg>
     <OpenReportInFolder>Abrir relatório na pasta</OpenReportInFolder>
     <FoundXIssues>Verificação de qualidade Netflix {0:#,###} problemas encontrados.</FoundXIssues>
     <CheckOk>Controlo de qualidade Netflix OK :)</CheckOk>
-    <MaximumXCharsPerSecond>Máximo {0} de caracteres por segundo (sem espaços em branco)</MaximumXCharsPerSecond>
+    <MaximumXCharsPerSecond>Máximo {0} de caracteres por segundo (com espaços em branco)</MaximumXCharsPerSecond>
     <MaximumLineLength>Comprimento máximo da linha ({0})</MaximumLineLength>
     <MinimumDuration>Duração mínima: 5/6 segundo (833 ms)</MinimumDuration>
   </NetflixQualityCheck>
@@ -2452,7 +2477,7 @@ Continuar?</RestoreDefaultSettingsMsg>
 Manter as alterações?</KeepChangesMessage>
     <SynchronizationDone>Sincronia concluída!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>A cena inicial deve antecipar a cena final!</StartSceneMustComeBeforeEndScene>
-    <Tip>Dica: Usar teclas &lt;ctrl+seta esquerda/direita&gt; para mover 100 ms atrás/adiante</Tip>
+    <Tip>Dica: Usar teclas &lt;ctrl+seta esquerda/direita&gt; para mover 100 ms atrasar/adiantar</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Editar imagem comparando com a base de dados</Title>
