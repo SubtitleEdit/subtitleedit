@@ -2720,6 +2720,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var italicOn = false;
                 var boldOn = false;
                 var fontTag = string.Empty;
+                var lineWidts = new List<int>();
                 foreach (var line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
@@ -2753,6 +2754,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
 
                     var lineImage = GenerateImageFromTextWithStyleInner(parameter);
+                    lineWidts.Add(lineImage.Width);
                     if (bmp == null)
                     {
                         bmp = lineImage;
@@ -2774,6 +2776,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                         {
                             l1 = (int)Math.Round((w - bmp.Width) / 2.0);
+
+                            if (parameter.JustifyLeft)
+                            {
+                                l1 = 0;
+                            }
+                            else if (parameter.JustifyRight)
+                            {
+                                l1 = w - lineImage.Width;
+                            }
                         }
 
                         int l2;
@@ -2787,7 +2798,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else
                         {
-                            l2 = (int)Math.Round(((w - lineImage.Width) / 2.0));
+                            l2 = (int)Math.Round((w - lineImage.Width) / 2.0);
+
+                            if (parameter.JustifyLeft)
+                            {
+                                l2 = 0;
+                            }
+                            else if (parameter.JustifyRight)
+                            {
+                                l2 = w - lineImage.Width;
+                                if (parameter.BoxSingleLine)
+                                {
+                                    l1 = w - lineWidts[0];
+                                }
+                            }
                         }
 
                         var style = GetStyleName(parameter.P);
