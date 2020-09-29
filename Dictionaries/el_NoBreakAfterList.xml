@@ -1,4 +1,15 @@
-﻿<NoBreakAfterList>
+<NoBreakAfterList>
+  <Item>ένα</Item>
+  <Item>έναν</Item>
+  <Item>ένας</Item>
+  <Item>έχει</Item>
+  <Item>έχεις</Item>
+  <Item>έχετε</Item>
+  <Item>έχουμε</Item>
+  <Item>έχουν</Item>
+  <Item>έχω</Item>
+  <Item>έως</Item>
+  <Item>ή</Item>
   <Item>αν</Item>
   <Item>ανά</Item>
   <Item>αντί</Item>
@@ -7,36 +18,27 @@
   <Item>αυτή</Item>
   <Item>αυτήν</Item>
   <Item>αυτής</Item>
-  <Item>αυτό</Item>
   <Item>αυτοί</Item>
+  <Item>αυτού</Item>
+  <Item>αυτό</Item>
   <Item>αυτόν</Item>
   <Item>αυτός</Item>
-  <Item>αυτού</Item>
   <Item>για</Item>
   <Item>δεν</Item>
-  <Item>εγώ</Item>
-  <Item>εις</Item>
   <Item>είχα</Item>
   <Item>είχαμε</Item>
   <Item>είχαν</Item>
   <Item>είχατε</Item>
   <Item>είχε</Item>
   <Item>είχες</Item>
+  <Item>εγώ</Item>
+  <Item>εις</Item>
+  <Item>εκ</Item>
   <Item>εμείς</Item>
   <Item>εν</Item>
-  <Item>ένα</Item>
-  <Item>έναν</Item>
-  <Item>ένας</Item>
   <Item>ενός</Item>
   <Item>εσείς</Item>
   <Item>εσύ</Item>
-  <Item>έχει</Item>
-  <Item>έχεις</Item>
-  <Item>έχετε</Item>
-  <Item>έχουμε</Item>
-  <Item>έχουν</Item>
-  <Item>έχω</Item>
-  <Item>έως</Item>
   <Item>η</Item>
   <Item>θα</Item>
   <Item>κάθε</Item>
@@ -45,25 +47,20 @@
   <Item>κατιτίς</Item>
   <Item>κι</Item>
   <Item>μάς</Item>
+  <Item>μία</Item>
+  <Item>μίαν</Item>
+  <Item>μίας</Item>
   <Item>με</Item>
   <Item>μη</Item>
   <Item>μην</Item>
   <Item>μια</Item>
-  <Item>μία</Item>
   <Item>μιαν</Item>
-  <Item>μίαν</Item>
   <Item>μιας</Item>
-  <Item>μίας</Item>
-  <Item>μόνο</Item>
-  <Item>μου</Item>
   <Item>μού</Item>
+  <Item>μόνο</Item>
   <Item>να</Item>
   <Item>ο</Item>
-  <Item>ό,τι</Item>
   <Item>οι</Item>
-  <Item>όντως</Item>
-  <Item>όσο</Item>
-  <Item>ότι</Item>
   <Item>οτιδήποτε</Item>
   <Item>πάσα</Item>
   <Item>πιο</Item>
@@ -72,12 +69,10 @@
   <Item>προς</Item>
   <Item>πως</Item>
   <Item>πώς</Item>
+  <Item>σάς</Item>
   <Item>σα</Item>
   <Item>σαν</Item>
-  <Item>σας</Item>
-  <Item>σάς</Item>
   <Item>σε</Item>
-  <Item>σου</Item>
   <Item>σού</Item>
   <Item>στα</Item>
   <Item>στη</Item>
@@ -99,11 +94,16 @@
   <Item>τοις</Item>
   <Item>τον</Item>
   <Item>του</Item>
-  <Item>τού</Item>
   <Item>τους</Item>
+  <Item>τού</Item>
   <Item>τούς</Item>
   <Item>των</Item>
   <Item>υπό</Item>
   <Item>χωρίς</Item>
   <Item>ως</Item>
+  <Item>ό,τι</Item>
+  <Item>όντως</Item>
+  <Item>όσο</Item>
+  <Item>ότι</Item>
+  <Item>κάτι</Item>
 </NoBreakAfterList>
