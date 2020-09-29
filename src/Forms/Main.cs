@@ -4128,8 +4128,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
 
-            toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
-
             SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
