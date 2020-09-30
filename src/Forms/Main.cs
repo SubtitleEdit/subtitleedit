@@ -2425,10 +2425,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var encodingFromFile = encoding;
+            if (format == null)
+            {
+                encodingFromFile = LanguageAutoDetect.GetEncodingFromFile(fileName);
+            }
+
             if (format == null)
             {
                 var f = new TimeCodesOnly1();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                 if (f.IsMine(list, fileName))
                 {
                     f.LoadSubtitle(_subtitle, list, fileName);
@@ -2444,7 +2450,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (format == null)
             {
                 var f = new TimeCodesOnly2();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                 if (f.IsMine(list, fileName))
                 {
                     f.LoadSubtitle(_subtitle, list, fileName);
@@ -2462,7 +2468,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var bdnXml = new BdnXml();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (bdnXml.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2484,7 +2490,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var fcpImage = new FinalCutProImage();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (fcpImage.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2506,7 +2512,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var f = new DvdStudioProSpaceGraphic();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (f.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2528,7 +2534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var imageFormat = new SpuImage();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (imageFormat.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2565,7 +2571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var dost = new Dost();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (dost.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2587,7 +2593,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var timedtextImage = new TimedTextImage();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (timedtextImage.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2609,7 +2615,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var seImageHtmlIndex = new SeImageHtmlIndex();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (seImageHtmlIndex.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2631,7 +2637,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var son = new Son();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (son.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2679,7 +2685,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var satBoxPng = new SatBoxPng();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (satBoxPng.IsMine(list, fileName))
                     {
                         var subtitle = new Subtitle();
@@ -2703,7 +2709,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var sst = new SonicScenaristBitmaps();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (sst.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
@@ -2725,7 +2731,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var htmlSamiArray = new HtmlSamiArray();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                     if (htmlSamiArray.IsMine(list, fileName))
                     {
                         htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
@@ -2763,7 +2769,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (format == null)
             {
-                var lines = FileUtil.ReadAllTextShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)).SplitToLines();
+                var lines = FileUtil.ReadAllTextShared(fileName, encodingFromFile).SplitToLines();
                 foreach (var f in SubtitleFormat.GetTextOtherFormats())
                 {
                     if (f.IsMine(lines, fileName))
@@ -2905,7 +2911,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ext == ".xml" || ext == ".dfxp")
                 {
                     var sb = new StringBuilder();
-                    foreach (var line in File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)))
+                    foreach (var line in File.ReadAllLines(fileName, encodingFromFile))
                     {
                         sb.AppendLine(line);
                     }
@@ -2931,7 +2937,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Try to use a generic subtitle format parser (guessing subtitle format)
                 try
                 {
-                    var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                    var enc = encodingFromFile;
                     var s = File.ReadAllText(fileName, enc);
 
                     // check for RTF file
@@ -2970,7 +2976,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (format == null)
             {
                 var fd = new FinalDraftTemplate2();
-                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                var list = new List<string>(File.ReadAllLines(fileName, encodingFromFile));
                 if (fd.IsMine(list, fileName))
                 {
                     ImportPlainText(fileName);
