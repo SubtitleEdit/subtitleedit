@@ -2967,7 +2967,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (format == null && (FileUtil.IsPlainText(fileName) || new Tx3GTextOnly().IsMine(null, fileName)))
+            if (format == null && file.Length < 1_000_000 && (FileUtil.IsPlainText(fileName) || new Tx3GTextOnly().IsMine(null, fileName)))
             {
                 ImportPlainText(fileName);
                 return;

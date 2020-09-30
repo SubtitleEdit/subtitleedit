@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 sb.Append(EncodeTime(p.StartTime) + " " + (string.IsNullOrWhiteSpace(p.Actor) ? "Speaker" : p.Actor));
                 sb.AppendLine();
@@ -57,12 +57,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             var sb = new StringBuilder();
-            foreach (string line in lines)
+            Match match1 = null;
+            Match match2 = null;
+            foreach (var line in lines)
             {
                 string s = line.Trim();
-                var match1 = RegexTimeCodes1.Match(s);
-                var match2 = RegexTimeCodes2.Match(s);
-                if (match1.Success || match2.Success)
+                bool containsColon = s.IndexOf(':') > 0;
+                if (containsColon)
+                {
+                    match1 = RegexTimeCodes1.Match(s);
+                    match2 = RegexTimeCodes2.Match(s);
+                }
+                if (containsColon && (match1.Success || match2.Success))
                 {
                     var m = match1.Success ? match1 : match2;
                     if (p != null && sb.Length > 0)
@@ -72,6 +78,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (string.IsNullOrEmpty(p.Text))
                         {
                             _errorCount++;
+                            if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                            {
+                                return;
+                            }
                         }
                     }
 
@@ -84,6 +94,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (p.Actor.Split().Length > 3)
                     {
                         _errorCount++;
+                        if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                        {
+                            return;
+                        }
                     }
                 }
                 else if (p != null)
@@ -91,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.AppendLine(s);
                 }
             }
+
             if (p != null && sb.Length > 0)
             {
                 p.Text = sb.ToString().Trim();

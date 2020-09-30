@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string paragraphWriteFormat = "{4} . {3}{3}{0}{3}{3}{1}{3}{3}{2}{3}{3}";
             var sb = new StringBuilder();
             int count = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 count++;
                 var text = AddSpaces(HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont));
@@ -92,11 +92,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             Paragraph paragraph = null;
-            ExpectingLine expecting = ExpectingLine.Number;
+            var expecting = ExpectingLine.Number;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
                 if (expecting == ExpectingLine.Number && (RegexTimeCode.IsMatch(line) || RegexTimeCode2.IsMatch(line.Trim())))
                 {
@@ -188,6 +188,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (line.Length > 1)
                     {
                         _errorCount++;
+                        if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                        {
+                            return;
+                        }
                     }
                 }
             }
