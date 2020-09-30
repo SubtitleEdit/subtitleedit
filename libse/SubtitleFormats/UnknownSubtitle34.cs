@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (RegexTimeCodes.Match(s).Success && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
+                if (s.IndexOf(':') > 0 && RegexTimeCodes.Match(s).Success && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
                     {
@@ -94,6 +94,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (s.Length > 0 && !Utilities.IsInteger(s))
                 {
                     _errorCount++;
+                    if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                    {
+                        return;
+                    }
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text))
@@ -118,6 +122,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.RemoveEmptyLines();
         }
-
     }
 }

@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             const string paragraphWriteFormat = "{0}{3}{1}{3}{2}";
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
                 if (!text.Contains(Environment.NewLine))
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             Paragraph paragraph = null;
-            ExpectingLine expecting = ExpectingLine.TimeStart;
+            var expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
@@ -67,12 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.Text && (RegexTimeCode.IsMatch(line) || RegexTimeCode2.IsMatch(line)))
                 {
-                    if (string.IsNullOrEmpty(paragraph.Text))
-                    {
-                        _errorCount++;
-                    }
-
-                    if (paragraph.StartTime.TotalMilliseconds < 0.1)
+                    if (string.IsNullOrEmpty(paragraph.Text) || paragraph.StartTime.TotalMilliseconds < 0.1)
                     {
                         _errorCount++;
                     }
@@ -133,6 +128,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                     }
+                    else if (paragraph == null && line.Length > 0)
+                    {
+                        _errorCount++;
+                        if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                        {
+                            return;
+                        }
+                    }
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
@@ -147,6 +150,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             return $"{time.Hours:00} {time.Minutes:00} {time.Seconds:00} {MillisecondsToFramesMaxFrameRate(time.Milliseconds):00} ";
         }
-
     }
 }

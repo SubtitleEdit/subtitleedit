@@ -67,39 +67,46 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                var match = RegexTimeCodes2.Match(s);
-                if (match.Success)
+                if (s.IndexOf(':') > 0)
                 {
-                    s = s.Substring(0, match.Index + 13).Trim();
-                }
-                match = RegexTimeCodes1.Match(s);
-                if (match.Success && match.Index > 13)
-                {
-                    string text = s.Substring(0, match.Index).Trim();
-                    string timeCode = s.Substring(match.Index).Trim();
-
-                    string[] startParts = timeCode.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4)
+                    var match = RegexTimeCodes2.Match(s);
+                    if (match.Success)
                     {
-                        try
+                        s = s.Substring(0, match.Index + 13).Trim();
+                    }
+                    match = RegexTimeCodes1.Match(s);
+                    if (match.Success && match.Index > 13)
+                    {
+                        string text = s.Substring(0, match.Index).Trim();
+                        string timeCode = s.Substring(match.Index).Trim();
+
+                        string[] startParts = timeCode.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4)
                         {
-                            p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), new TimeCode(), text);
-                            subtitle.Paragraphs.Add(p);
-                        }
-                        catch (Exception exception)
-                        {
-                            _errorCount++;
-                            System.Diagnostics.Debug.WriteLine(exception.Message);
+                            try
+                            {
+                                p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), new TimeCode(), text);
+                                subtitle.Paragraphs.Add(p);
+                            }
+                            catch (Exception exception)
+                            {
+                                _errorCount++;
+                                System.Diagnostics.Debug.WriteLine(exception.Message);
+                            }
                         }
                     }
-                }
-                else if (string.IsNullOrWhiteSpace(line) || RegexTimeCodes1.IsMatch("   " + s))
-                {
-                    // skip empty lines
+                    else if (string.IsNullOrWhiteSpace(line) || RegexTimeCodes1.IsMatch("   " + s))
+                    {
+                        // skip empty lines
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     _errorCount++;
+                    if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -124,6 +131,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
-
     }
 }

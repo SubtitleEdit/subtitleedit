@@ -20,10 +20,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             int number = 1;
             int number2 = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 string line1 = string.Empty;
-                string line2 = string.Empty;
+                string line2;
                 var lines = p.Text.SplitToLines();
                 if (lines.Count > 2)
                 {
@@ -72,66 +72,73 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
-                if (RegexTimeCode1.IsMatch(s))
+                if (s.IndexOf(':') > 0)
                 {
-                    try
+                    if (RegexTimeCode1.IsMatch(s))
                     {
-                        if (p != null)
+                        try
                         {
-                            subtitle.Paragraphs.Add(p);
-                        }
-
-                        p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), s.Remove(0, 37).Trim());
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                        p = null;
-                    }
-                }
-                else if (RegexTimeCode1Empty.IsMatch(s))
-                {
-                    try
-                    {
-                        if (p != null)
-                        {
-                            subtitle.Paragraphs.Add(p);
-                        }
-
-                        p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), string.Empty);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                        p = null;
-                    }
-                }
-                else if (RegexTimeCode2.IsMatch(s))
-                {
-                    try
-                    {
-                        if (p != null)
-                        {
-                            p.EndTime = DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon);
-                            if (string.IsNullOrWhiteSpace(p.Text))
+                            if (p != null)
                             {
-                                p.Text = s.Remove(0, 37).Trim();
+                                subtitle.Paragraphs.Add(p);
                             }
-                            else
-                            {
-                                p.Text = p.Text + Environment.NewLine + s.Remove(0, 37).Trim();
-                            }
+
+                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), s.Remove(0, 37).Trim());
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                            p = null;
                         }
                     }
-                    catch
+                    else if (RegexTimeCode1Empty.IsMatch(s))
                     {
-                        _errorCount++;
-                        p = null;
+                        try
+                        {
+                            if (p != null)
+                            {
+                                subtitle.Paragraphs.Add(p);
+                            }
+
+                            p = new Paragraph(DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon), new TimeCode(), string.Empty);
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                            p = null;
+                        }
+                    }
+                    else if (RegexTimeCode2.IsMatch(s))
+                    {
+                        try
+                        {
+                            if (p != null)
+                            {
+                                p.EndTime = DecodeTimeCodeFrames(s.Substring(5, 11), SplitCharColon);
+                                if (string.IsNullOrWhiteSpace(p.Text))
+                                {
+                                    p.Text = s.Remove(0, 37).Trim();
+                                }
+                                else
+                                {
+                                    p.Text = p.Text + Environment.NewLine + s.Remove(0, 37).Trim();
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                            p = null;
+                        }
                     }
                 }
                 else if (!string.IsNullOrWhiteSpace(s))
                 {
                     _errorCount++;
+                    if (_errorCount > 200 && subtitle.Paragraphs.Count == 0)
+                    {
+                        return;
+                    }
                 }
             }
             if (p != null)
@@ -141,6 +148,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-
     }
 }
