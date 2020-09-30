@@ -136,7 +136,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NoAudioTracksFoundGenerateEmptyWaveform>Αδυναμία εύρεσης κομματιών ήχου! Δημιουργία κενής κυματομορφής;</NoAudioTracksFoundGenerateEmptyWaveform>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Μαζική δημιουργία δεδομένων κυματομορφμής</Title>
+    <Title>Μαζική δημιουργία δεδομένων κυματομορφής</Title>
     <ExtractingAudio>Εξαγωγή ήχου...</ExtractingAudio>
     <Calculating>Υπολογισμός...</Calculating>
     <Done>Έτοιμο</Done>
