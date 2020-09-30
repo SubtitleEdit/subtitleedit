@@ -1129,7 +1129,7 @@ namespace Nikse.SubtitleEdit.Logic.CommandLineConvert
                 }
 
                 // adjust frame rate
-                if (targetFrameRate.HasValue)
+                if (targetFrameRate.HasValue && targetFrameRate > 0)
                 {
                     sub.ChangeFrameRate(Configuration.Settings.General.CurrentFrameRate, targetFrameRate.Value);
                     Configuration.Settings.General.CurrentFrameRate = targetFrameRate.Value;
