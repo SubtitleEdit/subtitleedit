@@ -440,34 +440,33 @@ namespace Nikse.SubtitleEdit.Forms
                 DeleteToolStripMenuItemClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 listViewRules.SelectAll();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 listViewRules.SelectFirstSelectedItemOnly();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.I) //InverseSelection
             {
                 listViewRules.InverseSelection();
                 e.SuppressKeyPress = true;
             }
             else if (listViewRules.SelectedItems.Count == 1)
             {
-                if (e.KeyCode == Keys.Up && e.Control && !e.Alt && !e.Shift)
+                if (e.KeyData == (Keys.Control | Keys.Up))
                 {
                     moveUpToolStripMenuItem_Click(sender, e);
                 }
-
-                if (e.KeyCode == Keys.Down && e.Control && !e.Alt && !e.Shift)
+                else if (e.KeyData == (Keys.Control | Keys.Down))
                 {
                     moveDownToolStripMenuItem_Click(sender, e);
                 }
 
-                if (e.KeyData == (Keys.Control | Keys.Home))
+                else if (e.KeyData == (Keys.Control | Keys.Home))
                 {
                     moveTopToolStripMenuItem_Click(sender, e);
                 }
@@ -1098,6 +1097,16 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == (Keys.Control | Keys.Down))
             {
                 moveDownToolStripMenuItem1_Click(sender, null);
+                e.Handled = true;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.Home))
+            {
+                moveToTopToolStripMenuItem_Click(sender, null);
+                e.Handled = true;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.End))
+            {
+                moveToBottomToolStripMenuItem_Click(sender, null);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.F2)
