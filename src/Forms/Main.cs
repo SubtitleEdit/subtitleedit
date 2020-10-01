@@ -9480,13 +9480,20 @@ namespace Nikse.SubtitleEdit.Forms
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
-        private void MoveFirstWordInNextUp()
+        private void MoveFirstWordInNextUp(TextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex >= 0)
             {
                 var p = _subtitle.GetParagraphOrDefault(firstIndex);
                 var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+
+                if (tb == textBoxListViewTextAlternate)
+                {
+                    p = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
+                    next = Utilities.GetOriginalParagraph(firstIndex + 1, next, _subtitleAlternate.Paragraphs);
+                }
+
                 if (p != null && next != null)
                 {
                     var moveUpDown = new MoveWordUpDown(p.Text, next.Text);
@@ -9496,26 +9503,41 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
                         p.Text = moveUpDown.S1;
                         next.Text = moveUpDown.S2;
-                        SubtitleListview1.SetText(firstIndex, p.Text);
-                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        if (tb == textBoxListViewTextAlternate)
+                        {
+                            SubtitleListview1.SetAlternateText(firstIndex, p.Text);
+                            SubtitleListview1.SetAlternateText(firstIndex + 1, next.Text);
+                        }
+                        else
+                        {
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text); 
+                        }
                         var selectionStart = textBoxListViewText.SelectionStart;
-                        textBoxListViewText.Text = p.Text;
+                        tb.Text = p.Text;
                         if (selectionStart >= 0)
                         {
-                            textBoxListViewText.SelectionStart = selectionStart;
+                            tb.SelectionStart = selectionStart;
                         }
                     }
                 }
             }
         }
 
-        private void MoveLastWordDown()
+        private void MoveLastWordDown(TextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex >= 0)
             {
                 var p = _subtitle.GetParagraphOrDefault(firstIndex);
                 var next = _subtitle.GetParagraphOrDefault(firstIndex + 1);
+
+                if (tb == textBoxListViewTextAlternate)
+                {
+                    p = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
+                    next = Utilities.GetOriginalParagraph(firstIndex + 1, next, _subtitleAlternate.Paragraphs);
+                }
+
                 if (p != null && next != null)
                 {
                     var moveUpDown = new MoveWordUpDown(p.Text, next.Text);
@@ -9525,13 +9547,21 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
                         p.Text = moveUpDown.S1;
                         next.Text = moveUpDown.S2;
-                        SubtitleListview1.SetText(firstIndex, p.Text);
-                        SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        if (tb == textBoxListViewTextAlternate)
+                        {
+                            SubtitleListview1.SetAlternateText(firstIndex, p.Text);
+                            SubtitleListview1.SetAlternateText(firstIndex + 1, next.Text);
+                        }
+                        else
+                        {
+                            SubtitleListview1.SetText(firstIndex, p.Text);
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
+                        }
                         var selectionStart = textBoxListViewText.SelectionStart;
-                        textBoxListViewText.Text = p.Text;
+                        tb.Text = p.Text;
                         if (selectionStart >= 0)
                         {
-                            textBoxListViewText.SelectionStart = selectionStart;
+                            tb.SelectionStart = selectionStart;
                         }
                     }
                 }
@@ -14665,14 +14695,28 @@ namespace Nikse.SubtitleEdit.Forms
 
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDown == e.KeyData)
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveLastWordDown)
             {
-                MoveLastWordDown();
+                if (textBoxListViewTextAlternate.Focused)
+                {
+                    MoveLastWordDown(textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    MoveLastWordDown(textBoxListViewText);
+                }
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordFromNextUp == e.KeyData)
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordFromNextUp)
             {
-                MoveFirstWordInNextUp();
+                if (textBoxListViewTextAlternate.Focused)
+                {
+                    MoveFirstWordInNextUp(textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    MoveFirstWordInNextUp(textBoxListViewText);
+                }
                 e.SuppressKeyPress = true;
             }
             else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDownCurrent == e.KeyData)
