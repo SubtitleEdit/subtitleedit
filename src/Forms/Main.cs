@@ -14675,14 +14675,28 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveFirstWordInNextUp();
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveLastWordDownCurrent == e.KeyData)
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveLastWordDownCurrent)
             {
-                MoveWordUpDownInCurrent(true);
+                if (textBoxListViewTextAlternate.Focused)
+                {
+                    MoveWordUpDownInCurrent(true, textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    MoveWordUpDownInCurrent(true, textBoxListViewText);
+                }
                 e.SuppressKeyPress = true;
             }
-            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _shortcuts.MainTextBoxMoveFirstWordUpCurrent == e.KeyData)
+            else if (e.KeyData == _shortcuts.MainTextBoxMoveFirstWordUpCurrent)
             {
-                MoveWordUpDownInCurrent(false);
+                if (textBoxListViewTextAlternate.Focused)
+                {
+                    MoveWordUpDownInCurrent(false, textBoxListViewTextAlternate);
+                }
+                else
+                {
+                    MoveWordUpDownInCurrent(false, textBoxListViewText);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (_shortcuts.MainAutoCalcCurrentDuration == e.KeyData)
@@ -15739,7 +15753,7 @@ namespace Nikse.SubtitleEdit.Forms
             new BookmarkPersistence(_subtitle, _fileName).Save();
         }
 
-        private void MoveWordUpDownInCurrent(bool down)
+        private void MoveWordUpDownInCurrent(bool down, TextBox tb)
         {
             int firstIndex = FirstSelectedIndex;
             if (firstIndex < 0)
@@ -15748,6 +15762,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var p = _subtitle.GetParagraphOrDefault(firstIndex);
+            if (tb == textBoxListViewTextAlternate)
+            {
+                p = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
+            }
+
             if (p == null)
             {
                 return;
@@ -15791,8 +15810,15 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
                 var textCaretPos = textBoxListViewText.SelectionStart;
                 p.Text = newText;
-                SubtitleListview1.SetText(firstIndex, p.Text);
-                textBoxListViewText.Text = p.Text;
+                if (tb == textBoxListViewTextAlternate)
+                {
+                    SubtitleListview1.SetAlternateText(firstIndex, p.Text);
+                }
+                else
+                {
+                    SubtitleListview1.SetText(firstIndex, p.Text);
+                }
+                tb.Text = p.Text;
 
                 // keep cursor position
                 KeepCursorMoveWordUpdown(down, newText, oldText, textCaretPos);
