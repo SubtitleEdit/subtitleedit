@@ -1100,6 +1100,10 @@ namespace Nikse.SubtitleEdit.Forms
                 moveDownToolStripMenuItem1_Click(sender, null);
                 e.Handled = true;
             }
+            else if (e.KeyCode == Keys.F2)
+            {
+                ToolStripMenuItemRenameClick(sender, e);
+            }
         }
 
         private void SwapGroups(int index, int index2)
