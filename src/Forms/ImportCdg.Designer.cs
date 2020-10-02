@@ -52,7 +52,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 195);
+            this.buttonStart.Location = new System.Drawing.Point(15, 135);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(154, 32);
             this.buttonStart.TabIndex = 4;
@@ -63,7 +63,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(425, 252);
+            this.buttonCancel.Location = new System.Drawing.Point(322, 175);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -83,12 +83,13 @@
             // radioButtonASS
             // 
             this.radioButtonASS.AutoSize = true;
-            this.radioButtonASS.Location = new System.Drawing.Point(29, 122);
+            this.radioButtonASS.Location = new System.Drawing.Point(203, 12);
             this.radioButtonASS.Name = "radioButtonASS";
             this.radioButtonASS.Size = new System.Drawing.Size(190, 17);
             this.radioButtonASS.TabIndex = 8;
             this.radioButtonASS.Text = "Advanced Sub Station Alpha (.ass)";
             this.radioButtonASS.UseVisualStyleBackColor = true;
+            this.radioButtonASS.Visible = false;
             // 
             // label1
             // 
@@ -102,17 +103,18 @@
             // radioButtonSrt
             // 
             this.radioButtonSrt.AutoSize = true;
-            this.radioButtonSrt.Location = new System.Drawing.Point(29, 145);
+            this.radioButtonSrt.Location = new System.Drawing.Point(203, 35);
             this.radioButtonSrt.Name = "radioButtonSrt";
             this.radioButtonSrt.Size = new System.Drawing.Size(131, 17);
             this.radioButtonSrt.TabIndex = 10;
             this.radioButtonSrt.Text = "SubRip (.srt) with color";
             this.radioButtonSrt.UseVisualStyleBackColor = true;
+            this.radioButtonSrt.Visible = false;
             // 
             // labelProgress
             // 
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 230);
+            this.labelProgress.Location = new System.Drawing.Point(15, 170);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 11;
@@ -121,12 +123,13 @@
             // radioButtonSrtOnlyText
             // 
             this.radioButtonSrtOnlyText.AutoSize = true;
-            this.radioButtonSrtOnlyText.Location = new System.Drawing.Point(29, 168);
+            this.radioButtonSrtOnlyText.Location = new System.Drawing.Point(203, 58);
             this.radioButtonSrtOnlyText.Name = "radioButtonSrtOnlyText";
             this.radioButtonSrtOnlyText.Size = new System.Drawing.Size(146, 17);
             this.radioButtonSrtOnlyText.TabIndex = 12;
             this.radioButtonSrtOnlyText.Text = "SubRip (.srt) withour color";
             this.radioButtonSrtOnlyText.UseVisualStyleBackColor = true;
+            this.radioButtonSrtOnlyText.Visible = false;
             // 
             // radioButtonBluRaySup
             // 
@@ -143,7 +146,7 @@
             // labelProgress2
             // 
             this.labelProgress2.AutoSize = true;
-            this.labelProgress2.Location = new System.Drawing.Point(12, 248);
+            this.labelProgress2.Location = new System.Drawing.Point(15, 188);
             this.labelProgress2.Name = "labelProgress2";
             this.labelProgress2.Size = new System.Drawing.Size(76, 13);
             this.labelProgress2.TabIndex = 14;
@@ -153,7 +156,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 287);
+            this.ClientSize = new System.Drawing.Size(409, 210);
             this.Controls.Add(this.labelProgress2);
             this.Controls.Add(this.radioButtonBluRaySup);
             this.Controls.Add(this.radioButtonSrtOnlyText);

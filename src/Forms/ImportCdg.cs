@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -83,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 count++;
-                packetNumber++;
+                packetNumber += 20;
                 labelProgress.Text = $"Frame {count:#,###,##0} of {total:#,###,##0}";
                 labelProgress.Refresh();
                 labelProgress2.Text = $"Unique images {_imageList.Count:#,###,##0}";
@@ -91,6 +92,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Renumber();
+            new FixOverlappingDisplayTimes().Fix(_subtitle, new EmptyFixCallback());
+
+            // fix small gaps
+            for (int i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
+            {
+                var current = _subtitle.Paragraphs[i];
+                var next = _subtitle.Paragraphs[i + 1];
+                if (!next.StartTime.IsMaxTime && !current.EndTime.IsMaxTime)
+                {
+                    double gap = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+                    if (gap < 999)
+                    {
+                        current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    }
+                }
+            }
+
             using (var exportBdnXmlPng = new ExportPngXml())
             {
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
