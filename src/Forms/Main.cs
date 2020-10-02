@@ -23200,6 +23200,10 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.SetSpectrogram(null);
             audioVisualizer.SceneChanges = new List<double>();
             mediaPlayer.CurrentPosition = 0;
+            timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
+            timeUpDownVideoPositionAdjust.Enabled = false;
+            timeUpDownVideoPosition.TimeCode = new TimeCode();
+            timeUpDownVideoPosition.Enabled = false;
         }
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)
