@@ -1460,7 +1460,7 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        public void SetTransparentTo(in Color transparent)
+        public void SetTransparentTo(Color transparent)
         {
             var buffer = new byte[4];
             buffer[0] = transparent.B;
