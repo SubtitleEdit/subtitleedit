@@ -2790,11 +2790,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var importCdg = new ImportCdg(fileName))
                 {
-                    if (importCdg.ShowDialog(this) == DialogResult.OK)
-                    {
-                        // load audio
-                        return;
-                    }
+                    importCdg.ShowDialog(this);
+                    return;
                 }
             }
 
@@ -9511,7 +9508,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                         {
                             SubtitleListview1.SetText(firstIndex, p.Text);
-                            SubtitleListview1.SetText(firstIndex + 1, next.Text); 
+                            SubtitleListview1.SetText(firstIndex + 1, next.Text);
                         }
                         var selectionStart = textBoxListViewText.SelectionStart;
                         tb.Text = p.Text;
