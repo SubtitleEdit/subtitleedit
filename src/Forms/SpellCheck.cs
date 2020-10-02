@@ -718,7 +718,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     correct = true;
                                 }
                             }
-                            if (!correct && _wordsIndex < _words.Count - 1 && (_currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '-' || _currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '‑'))
+                            if (!correct && _wordsIndex < _words.Count - 1 && _words[_wordsIndex + 1].Index - 1 < _currentParagraph.Text.Length &&
+                                (_currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '-' || _currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '‑'))
                             {
                                 var wordWithDash = _currentWord + "-" + _words[_wordsIndex + 1].Text;
                                 correct = DoSpell(wordWithDash);
