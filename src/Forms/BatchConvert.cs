@@ -1244,6 +1244,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (isTs)
                         {
+                            int tsConvertedCount = 0;
                             var programMapTableParser = new ProgramMapTableParser();
                             programMapTableParser.Parse(fileName); // get languages
                             var tsParser = new TransportStreamParser();
@@ -1270,35 +1271,55 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             // images
-                            foreach (int id in tsParser.SubtitlePacketIds)
+                            if (!Configuration.Settings.Tools.BatchConvertTsOnlyTeletext)
                             {
-                                void ProgressCallback(string progress)
+                                foreach (int id in tsParser.SubtitlePacketIds)
                                 {
-                                    item.SubItems[3].Text = progress;
-                                    listViewInputFiles.Refresh();
-                                }
-
-                                if (BluRaySubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                                {
-                                    TsToBluRaySup.WriteTrack(fileName, outputFolder, overwrite, 0, null, ProgressCallback, null, programMapTableParser, id, tsParser);
-                                }
-                                else if (BdnXmlSubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
-                                {
-                                    TsToBdnXml.WriteTrack(fileName, outputFolder, overwrite, null, ProgressCallback, null, programMapTableParser, id, tsParser);
-                                }
-                                else
-                                {
-                                    var tsBinaryParagraphs = new List<IBinaryParagraph>();
-                                    var subtitle = new Subtitle();
-                                    foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
+                                    void ProgressCallback(string progress)
                                     {
-                                        binaryParagraphs.Add(transportStreamSubtitle);
-                                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
+                                        item.SubItems[3].Text = progress;
+                                        listViewInputFiles.Refresh();
                                     }
 
-                                    var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
-                                    int dummy = 0;
-                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), tsBinaryParagraphs, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                    if (BluRaySubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        TsToBluRaySup.WriteTrack(fileName, outputFolder, overwrite, 0, null, ProgressCallback, null, programMapTableParser, id, tsParser);
+                                        tsConvertedCount++;
+                                    }
+                                    else if (BdnXmlSubtitle.RemoveChar(' ').Equals(toFormat.RemoveChar(' '), StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        TsToBdnXml.WriteTrack(fileName, outputFolder, overwrite, null, ProgressCallback, null, programMapTableParser, id, tsParser);
+                                        tsConvertedCount++;
+                                    }
+                                    else
+                                    {
+                                        var tsBinaryParagraphs = new List<IBinaryParagraph>();
+                                        var subtitle = new Subtitle();
+                                        foreach (var transportStreamSubtitle in tsParser.GetDvbSubtitles(id))
+                                        {
+                                            tsBinaryParagraphs.Add(transportStreamSubtitle);
+                                            subtitle.Paragraphs.Add(new Paragraph(string.Empty, transportStreamSubtitle.StartMilliseconds, transportStreamSubtitle.EndMilliseconds));
+                                        }
+
+                                        using (var vobSubOcr = new VobSubOcr())
+                                        {
+                                            vobSubOcr.ProgressCallback = progress =>
+                                            {
+                                            //_stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
+                                            item.SubItems[3].Text = $"OCR: {progress}";
+
+                                                listViewInputFiles.Refresh();
+                                            };
+                                            vobSubOcr.FileName = Path.GetFileName(fileName);
+                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, null, null);
+                                            subtitle = vobSubOcr.SubtitleFromOcr;
+                                        }
+
+                                        var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
+                                        int dummy = 0;
+                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                        tsConvertedCount++;
+                                    }
                                 }
                             }
 
@@ -1312,7 +1333,13 @@ namespace Nikse.SubtitleEdit.Forms
                                     var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
                                     int dummy = 0;
                                     CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                    tsConvertedCount++;
                                 }
+                            }
+
+                            if (tsConvertedCount > 0)
+                            {
+                                item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
                             }
                         }
 
