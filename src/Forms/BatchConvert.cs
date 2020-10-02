@@ -2913,5 +2913,10 @@ namespace Nikse.SubtitleEdit.Forms
             panel.Left = 2;
             panel.Top = labelAdjustDurationVia.Top + labelAdjustDurationVia.Height + 9;
         }
+
+        private void addFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            buttonInputBrowse_Click(sender, e);
+        }
     }
 }

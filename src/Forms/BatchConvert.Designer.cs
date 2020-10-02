@@ -133,6 +133,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.addFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxAdjustDuration.SuspendLayout();
             this.panelAdjustDurationFixed.SuspendLayout();
@@ -1279,13 +1281,15 @@
             // contextMenuStripFiles
             // 
             this.contextMenuStripFiles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFilesToolStripMenuItem,
+            this.toolStripSeparator2,
             this.removeToolStripMenuItem,
             this.removeAllToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator1,
             this.convertMkvSettingsToolStripMenuItem});
             this.contextMenuStripFiles.Name = "contextMenuStripStyles";
-            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 98);
+            this.contextMenuStripFiles.Size = new System.Drawing.Size(400, 148);
             this.contextMenuStripFiles.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripFilesOpening);
             // 
             // removeToolStripMenuItem
@@ -1343,6 +1347,18 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
+            // 
+            // addFilesToolStripMenuItem
+            // 
+            this.addFilesToolStripMenuItem.Name = "addFilesToolStripMenuItem";
+            this.addFilesToolStripMenuItem.Size = new System.Drawing.Size(399, 22);
+            this.addFilesToolStripMenuItem.Text = "Add files";
+            this.addFilesToolStripMenuItem.Click += new System.EventHandler(this.addFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(396, 6);
             // 
             // BatchConvert
             // 
@@ -1512,5 +1528,7 @@
         private System.Windows.Forms.Label labelOptimalCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
+        private System.Windows.Forms.ToolStripMenuItem addFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
