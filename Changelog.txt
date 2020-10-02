@@ -52,6 +52,7 @@
    * Better frame info in "Apply min. gap" - thx OmrSi
    * Netflix quality check: Customizable and new rules - thx OmrSi/Jan
    * Make "Merge dialog" work when one line is selected - thx OmrSi
+   * Make move words between subs work with original - thx OmrSi
 * FIXED:
    * Fix drop of subs in bd .sup files with overlap - thx mwalimu
    * Fix for overlap in "Tools -> Adjust durations" - thx Christian
@@ -80,6 +81,7 @@
    * No overlap in insert new sub at video pos - thx m0ck69/OmrSi
    * Fix image export issue with align+justify for box
    * Fix transparent color in bdsup export - the thehulk
+   * Fix crash in spell check - thx FeMaster1
 
 
 3.5.16 (16th June 2020)
