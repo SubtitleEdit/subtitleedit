@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             bool doBreak = false;
             foreach (var line in s.SplitToLines())
             {
-                if (HtmlUtil.RemoveHtmlTags(line, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
+                if (line.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) > Configuration.Settings.General.SubtitleLineMaximumLength)
                 {
                     doBreak = true;
                     break;

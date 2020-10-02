@@ -159,7 +159,7 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.ToString().CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics)));
             sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
-            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) / (totalDuration / TimeCode.BaseUnit)));
+            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, allText.ToString().CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) / (totalDuration / TimeCode.BaseUnit)));
             sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allTextToLower, "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allTextToLower, "<b>")));
@@ -198,12 +198,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static int GetLineLength(Paragraph p)
         {
-            return HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, string.Empty), true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+            return p.Text.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
         }
 
         private static int GetSingleLineLength(string s)
         {
-            return HtmlUtil.RemoveHtmlTags(s, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
+            return s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics);
         }
 
         private static int GetSingleLineWidth(string s)

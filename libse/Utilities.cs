@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string s = RemoveLineBreaks(text);
-            if (HtmlUtil.RemoveHtmlTags(s, true).CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) < mergeLinesShorterThan)
+            if (s.CountCharacters(false, Configuration.Settings.General.IgnoreArabicDiacritics) < mergeLinesShorterThan)
             {
                 var lastIndexOfDash = s.LastIndexOf(" -", StringComparison.Ordinal);
                 if (Configuration.Settings.Tools.AutoBreakDashEarly && lastIndexOfDash > 4 && s.Substring(0, lastIndexOfDash).HasSentenceEnding(language))

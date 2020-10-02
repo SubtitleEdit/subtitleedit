@@ -450,45 +450,28 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         public static int CountCharacters(this string value, bool removeNormalSpace, bool ignoreArabicDiacritics)
         {
-            int length = 0;
-            const char zeroWidthSpace = '\u200B';
-            const char zeroWidthNoBreakSpace = '\uFEFF';
-            char normalSpace = removeNormalSpace ? ' ' : zeroWidthSpace;
-            bool ssaTagOn = false;
-            bool htmlTagOn = false;
-            var max = value.Length;
-            for (int i = 0; i < max; i++)
+            var newText = HtmlUtil.RemoveHtmlTags(value, true);
+            newText = Utilities.RemoveUnicodeControlChars(newText).Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\t", string.Empty).Replace("\u200B", string.Empty).Replace("\uFEFF", string.Empty);
+
+            if (removeNormalSpace)
             {
-                char ch = value[i];
-                if (ssaTagOn)
-                {
-                    if (ch == '}')
-                    {
-                        ssaTagOn = false;
-                    }
-                }
-                else if (htmlTagOn)
-                {
-                    if (ch == '>')
-                    {
-                        htmlTagOn = false;
-                    }
-                }
-                else if (ch == '{' && i < value.Length - 1 && value[i + 1] == '\\')
-                {
-                    ssaTagOn = true;
-                }
-                else if (ch == '<' && i < value.Length - 1 && (value[i + 1] == '/' || char.IsLetter(value[i + 1])) && value.IndexOf('>', i) > 0)
-                {
-                    htmlTagOn = true;
-                }
-                else if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace && ch != '\u202B' && !(ignoreArabicDiacritics && ch >= '\u064B' && ch <= '\u0653'))
-                {
-                    length++;
-                }
+                newText = newText.Replace(" ", string.Empty);
             }
 
-            return length;
+            if (ignoreArabicDiacritics)
+            {
+                newText = newText.Replace("\u064B", string.Empty)
+                    .Replace("\u064C", string.Empty)
+                    .Replace("\u064D", string.Empty)
+                    .Replace("\u064E", string.Empty)
+                    .Replace("\u064F", string.Empty)
+                    .Replace("\u0650", string.Empty)
+                    .Replace("\u0651", string.Empty)
+                    .Replace("\u0652", string.Empty)
+                    .Replace("\u0653", string.Empty);
+            }
+
+            return newText.Length;
         }
 
         public static bool HasSentenceEnding(this string value)
