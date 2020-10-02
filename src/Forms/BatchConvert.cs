@@ -1305,9 +1305,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             vobSubOcr.ProgressCallback = progress =>
                                             {
-                                            //_stdOutWriter?.Write($"\r{Configuration.Settings.Language.BatchConvert.Ocr} : {progress}");
-                                            item.SubItems[3].Text = $"OCR: {progress}";
-
+                                                item.SubItems[3].Text = $"OCR: {progress}";
                                                 listViewInputFiles.Refresh();
                                             };
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -1315,9 +1313,31 @@ namespace Nikse.SubtitleEdit.Forms
                                             subtitle = vobSubOcr.SubtitleFromOcr;
                                         }
 
+                                        // apply fixes step 1
+                                        subtitle = ApplyFixesStep1(subtitle, null);
+
+                                        // apply fixes step 2
+                                        var parameter = new ThreadDoWorkParameter(
+                                            IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
+                                            IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace),
+                                            IsActionEnabled(CommandLineConverter.BatchAction.FixRtl),
+                                            IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
+                                            IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
+                                            IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                            item,
+                                            subtitle,
+                                            GetCurrentSubtitleFormat(),
+                                            GetCurrentEncoding(fileName),
+                                            Configuration.Settings.Tools.BatchConvertLanguage,
+                                            fileName,
+                                            toFormat,
+                                            format,
+                                            binaryParagraphs);
+                                        ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
+
                                         var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, id);
                                         int dummy = 0;
-                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+                                        CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
                                         tsConvertedCount++;
                                     }
                                 }
@@ -1329,10 +1349,32 @@ namespace Nikse.SubtitleEdit.Forms
                                 foreach (var kvp in program.Value)
                                 {
                                     var subtitle = new Subtitle(kvp.Value);
-                                    subtitle.Renumber();
                                     var preExt = TsToBluRaySup.GetFileNameEnding(programMapTableParser, kvp.Key);
                                     int dummy = 0;
-                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
+
+                                    // apply fixes step 1
+                                    subtitle = ApplyFixesStep1(subtitle, null);
+
+                                    // apply fixes step 2
+                                    var parameter = new ThreadDoWorkParameter(
+                                        IsActionEnabled(CommandLineConverter.BatchAction.FixCommonErrors),
+                                        IsActionEnabled(CommandLineConverter.BatchAction.MultipleReplace),
+                                        IsActionEnabled(CommandLineConverter.BatchAction.FixRtl),
+                                        IsActionEnabled(CommandLineConverter.BatchAction.SplitLongLines),
+                                        IsActionEnabled(CommandLineConverter.BatchAction.BalanceLines),
+                                        IsActionEnabled(CommandLineConverter.BatchAction.SetMinGap),
+                                        item,
+                                        subtitle,
+                                        GetCurrentSubtitleFormat(),
+                                        GetCurrentEncoding(fileName),
+                                        Configuration.Settings.Tools.BatchConvertLanguage,
+                                        fileName,
+                                        toFormat,
+                                        format,
+                                        binaryParagraphs);
+                                    ApplyFixesStep2(parameter, Configuration.Settings.Tools.BatchConvertFixRtlMode);
+
+                                    CommandLineConverter.BatchConvertSave(toFormat, TimeSpan.Zero, targetEncoding, outputFolder, 0, ref dummy, ref dummy, SubtitleFormat.AllSubtitleFormats.ToList(), fileName, parameter.Subtitle, new SubRip(), null, overwrite, 0, targetFrameRate, null, new List<CommandLineConverter.BatchAction>(), null, true, null, null, null, preExt);
                                     tsConvertedCount++;
                                 }
                             }
@@ -1365,142 +1407,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps))
-                            {
-                                Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null, false);
-                            }
+                            sub = ApplyFixesStep1(sub, bluRaySubtitles);
 
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))
-                            {
-                                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
-                                sub = fixDurationLimits.Fix(sub);
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
-                            {
-                                sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
-                                sub.Renumber();
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
-                            {
-                                var adjustmentType = comboBoxAdjustDurationVia.Text;
-                                if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Percent)
-                                {
-                                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null);
-                                }
-                                else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Recalculate)
-                                {
-                                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked);
-                                }
-                                else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Fixed)
-                                {
-                                    sub.SetFixedDuration(null, (double)numericUpDownFixedMilliseconds.Value);
-                                }
-                                else
-                                {
-                                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null);
-                                }
-                            }
-
-                            var prev = sub.GetParagraphOrDefault(0);
-                            var first = true;
-                            foreach (var p in sub.Paragraphs)
-                            {
-                                if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI))
-                                {
-                                    _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
-                                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
-                                }
-                                if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting))
-                                {
-                                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                                }
-                                if (!numericUpDownPercent.Value.Equals(100) && IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed))
-                                {
-                                    var toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
-                                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
-                                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
-
-                                    if (first)
-                                    {
-                                        first = false;
-                                    }
-                                    else
-                                    {
-                                        if (prev.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
-                                        {
-                                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
-                                        }
-                                    }
-                                }
-                                prev = p;
-                            }
-                            if (bluRaySubtitles == null || bluRaySubtitles.Count == 0)
-                            {
-                                sub.RemoveEmptyLines(); //TODO: only for image export?
-                            }
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing))
-                            {
-                                _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
-                                _changeCasingNames.Initialize(sub);
-                                _changeCasingNames.FixCasing();
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
-                            {
-                                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
-                                if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
-                                {
-                                    sub.Paragraphs.Clear();
-                                    sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
-                                }
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveLineBreaks))
-                            {
-                                foreach (var paragraph in sub.Paragraphs)
-                                {
-                                    paragraph.Text = Utilities.UnbreakLine(paragraph.Text);
-                                }
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts))
-                            {
-                                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, 250);
-                                if (mergedSameTextsSub.Paragraphs.Count != sub.Paragraphs.Count)
-                                {
-                                    sub.Paragraphs.Clear();
-                                    sub.Paragraphs.AddRange(mergedSameTextsSub.Paragraphs);
-                                }
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes))
-                            {
-                                var mergedSameTimeCodesSub = MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
-                                if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
-                                {
-                                    sub.Paragraphs.Clear();
-                                    sub.Paragraphs.AddRange(mergedSameTimeCodesSub.Paragraphs);
-                                }
-                            }
-
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate) &&
-                                double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
-                                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
-                            {
-                                sub.ChangeFrameRate(fromFrameRate, toFrameRate);
-                            }
-                            if (IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes) && timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
-                            {
-                                var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
-                                if (radioButtonShowEarlier.Checked)
-                                {
-                                    totalMilliseconds *= -1;
-                                }
-
-                                sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
-                            }
                             while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
                             {
                                 Application.DoEvents();
@@ -1570,6 +1478,154 @@ namespace Nikse.SubtitleEdit.Forms
             TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             SetControlState(true);
             _bdLookup = new Dictionary<string, List<BluRaySupParser.PcsData>>();
+        }
+
+        private Subtitle ApplyFixesStep1(Subtitle sub, List<BluRaySupParser.PcsData> bluRaySubtitles)
+        {
+            if (IsActionEnabled(CommandLineConverter.BatchAction.BridgeGaps))
+            {
+                Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null, false);
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.ApplyDurationLimits))
+            {
+                var fixDurationLimits = new FixDurationLimits(Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                sub = fixDurationLimits.Fix(sub);
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveStyle) && !string.IsNullOrEmpty(textBoxRemoveStyle.Text))
+            {
+                sub.Paragraphs.RemoveAll(p => p.Extra == textBoxRemoveStyle.Text || p.Style == textBoxRemoveStyle.Text);
+                sub.Renumber();
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.AdjustDisplayDuration))
+            {
+                var adjustmentType = comboBoxAdjustDurationVia.Text;
+                if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Percent)
+                {
+                    sub.AdjustDisplayTimeUsingPercent((double)numericUpDownAdjustViaPercent.Value, null);
+                }
+                else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Recalculate)
+                {
+                    sub.RecalculateDisplayTimes((double)numericUpDownMaxCharsSec.Value, null, (double)numericUpDownOptimalCharsSec.Value, checkBoxExtendOnly.Checked);
+                }
+                else if (adjustmentType == Configuration.Settings.Language.AdjustDisplayDuration.Fixed)
+                {
+                    sub.SetFixedDuration(null, (double)numericUpDownFixedMilliseconds.Value);
+                }
+                else
+                {
+                    sub.AdjustDisplayTimeUsingSeconds((double)numericUpDownSeconds.Value, null);
+                }
+            }
+
+            var prev = sub.GetParagraphOrDefault(0);
+            var first = true;
+            foreach (var p in sub.Paragraphs)
+            {
+                if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveTextForHI))
+                {
+                    _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
+                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text, sub, sub.Paragraphs.IndexOf(p));
+                }
+
+                if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveFormatting))
+                {
+                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                }
+
+                if (!numericUpDownPercent.Value.Equals(100) && IsActionEnabled(CommandLineConverter.BatchAction.ChangeSpeed))
+                {
+                    var toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
+                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
+                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
+
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        if (prev.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
+                        {
+                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
+                        }
+                    }
+                }
+
+                prev = p;
+            }
+
+            if (bluRaySubtitles == null || bluRaySubtitles.Count == 0)
+            {
+                sub.RemoveEmptyLines(); //TODO: only for image export?
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.RedoCasing))
+            {
+                _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
+                _changeCasingNames.Initialize(sub);
+                _changeCasingNames.FixCasing();
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeShortLines))
+            {
+                var mergedShortLinesSub = MergeShortLinesUtils.MergeShortLinesInSubtitle(sub, Configuration.Settings.Tools.MergeShortLinesMaxGap, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeShortLinesOnlyContinuous);
+                if (mergedShortLinesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                {
+                    sub.Paragraphs.Clear();
+                    sub.Paragraphs.AddRange(mergedShortLinesSub.Paragraphs);
+                }
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.RemoveLineBreaks))
+            {
+                foreach (var paragraph in sub.Paragraphs)
+                {
+                    paragraph.Text = Utilities.UnbreakLine(paragraph.Text);
+                }
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTexts))
+            {
+                var mergedSameTextsSub = MergeLinesSameTextUtils.MergeLinesWithSameTextInSubtitle(sub, true, 250);
+                if (mergedSameTextsSub.Paragraphs.Count != sub.Paragraphs.Count)
+                {
+                    sub.Paragraphs.Clear();
+                    sub.Paragraphs.AddRange(mergedSameTextsSub.Paragraphs);
+                }
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.MergeSameTimeCodes))
+            {
+                var mergedSameTimeCodesSub = MergeLinesWithSameTimeCodes.Merge(sub, new List<int>(), out _, true, false, 1000, "en", new List<int>(), new Dictionary<int, bool>(), new Subtitle());
+                if (mergedSameTimeCodesSub.Paragraphs.Count != sub.Paragraphs.Count)
+                {
+                    sub.Paragraphs.Clear();
+                    sub.Paragraphs.AddRange(mergedSameTimeCodesSub.Paragraphs);
+                }
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.ChangeFrameRate) &&
+                double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
+                double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
+            {
+                sub.ChangeFrameRate(fromFrameRate, toFrameRate);
+            }
+
+            if (IsActionEnabled(CommandLineConverter.BatchAction.OffsetTimeCodes) && timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
+            {
+                var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
+                if (radioButtonShowEarlier.Checked)
+                {
+                    totalMilliseconds *= -1;
+                }
+
+                sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
+            }
+
+            return sub;
         }
 
         private void UpdateChangeCasingSettings()
@@ -1820,6 +1876,13 @@ namespace Nikse.SubtitleEdit.Forms
             var p = (ThreadDoWorkParameter)e.Argument;
             var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
 
+            ApplyFixesStep2(p, mode);
+
+            e.Result = p;
+        }
+
+        private static void ApplyFixesStep2(ThreadDoWorkParameter p, string mode)
+        {
             if (p.FixRtl && mode == RemoveUnicode)
             {
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
@@ -1840,6 +1903,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             l = LanguageAutoDetect.AutoDetectGoogleLanguage(p.Subtitle);
                         }
+
                         for (int i = 0; i < 3; i++)
                         {
                             fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding.Encoding, l);
@@ -1852,6 +1916,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Error = string.Format(Configuration.Settings.Language.BatchConvert.FixCommonErrorsErrorX, exception.Message);
                 }
             }
+
             if (p.MultipleReplaceActive)
             {
                 try
@@ -1868,6 +1933,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Error = string.Format(Configuration.Settings.Language.BatchConvert.MultipleReplaceErrorX, exception.Message);
                 }
             }
+
             if (p.SplitLongLinesActive)
             {
                 try
@@ -1879,6 +1945,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Error = string.Format(Configuration.Settings.Language.BatchConvert.AutoBalanceErrorX, exception.Message);
                 }
             }
+
             if (p.AutoBalanceActive)
             {
                 try
@@ -1894,17 +1961,18 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Error = string.Format(Configuration.Settings.Language.BatchConvert.AutoBalanceErrorX, exception.Message);
                 }
             }
+
             if (p.SetMinDisplayTimeBetweenSubtitles)
             {
-                double minumumMillisecondsBetweenLines = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                double minimumMillisecondsBetweenLines = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
                 {
-                    Paragraph current = p.Subtitle.GetParagraphOrDefault(i);
-                    Paragraph next = p.Subtitle.GetParagraphOrDefault(i + 1);
+                    var current = p.Subtitle.GetParagraphOrDefault(i);
+                    var next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                    if (gapsBetween < minumumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minumumMillisecondsBetweenLines)
+                    if (gapsBetween < minimumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minimumMillisecondsBetweenLines)
                     {
-                        current.EndTime.TotalMilliseconds -= (minumumMillisecondsBetweenLines - gapsBetween);
+                        current.EndTime.TotalMilliseconds -= (minimumMillisecondsBetweenLines - gapsBetween);
                     }
                 }
             }
@@ -1928,8 +1996,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             // always re-number
             p.Subtitle.Renumber();
-
-            e.Result = p;
         }
 
         private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
