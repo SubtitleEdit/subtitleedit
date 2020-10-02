@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxOverrideOriginalXPosition.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideXPosition;
             checkBoxOverrideOriginalYPosition.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideYPosition;
+            checkBoxOnlyTeletext.Checked = Configuration.Settings.Tools.BatchConvertTsOnlyTeletext;
             numericUpDownXMargin.Value = Configuration.Settings.Tools.BatchConvertTsOverrideHMargin;
             numericUpDownBottomMargin.Value = Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin;
             checkBoxOverrideVideoSize.Checked = Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize;
@@ -93,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.BatchConvertTsOverrideXPosition = checkBoxOverrideOriginalXPosition.Checked;
             Configuration.Settings.Tools.BatchConvertTsOverrideYPosition = checkBoxOverrideOriginalYPosition.Checked;
+            Configuration.Settings.Tools.BatchConvertTsOnlyTeletext = checkBoxOnlyTeletext.Checked;
             Configuration.Settings.Tools.BatchConvertTsOverrideBottomMargin = (int)numericUpDownBottomMargin.Value;
             Configuration.Settings.Tools.BatchConvertTsOverrideScreenSize = checkBoxOverrideVideoSize.Checked;
             Configuration.Settings.Tools.BatchConvertTsScreenWidth = (int)numericUpDownWidth.Value;

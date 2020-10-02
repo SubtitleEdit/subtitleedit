@@ -56,6 +56,7 @@
             this.twolettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.threelettercountrycodeuppercaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelFileEndingSample = new System.Windows.Forms.Label();
+            this.checkBoxOnlyTeletext = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
@@ -346,11 +347,22 @@
             this.labelFileEndingSample.TabIndex = 104;
             this.labelFileEndingSample.Text = "File name ending (before extension)";
             // 
+            // checkBoxOnlyTeletext
+            // 
+            this.checkBoxOnlyTeletext.AutoSize = true;
+            this.checkBoxOnlyTeletext.Location = new System.Drawing.Point(270, 138);
+            this.checkBoxOnlyTeletext.Name = "checkBoxOnlyTeletext";
+            this.checkBoxOnlyTeletext.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxOnlyTeletext.TabIndex = 105;
+            this.checkBoxOnlyTeletext.Text = "Only teletext";
+            this.checkBoxOnlyTeletext.UseVisualStyleBackColor = true;
+            // 
             // BatchConvertTsSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(571, 311);
+            this.Controls.Add(this.checkBoxOnlyTeletext);
             this.Controls.Add(this.labelFileEndingSample);
             this.Controls.Add(this.textBoxFileNameAppend);
             this.Controls.Add(this.labelFileNameEnding);
@@ -421,5 +433,6 @@
         private System.Windows.Forms.Label labelFileEndingSample;
         private System.Windows.Forms.ToolStripMenuItem twolettercountrycodeuppercaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem threelettercountrycodeuppercaseToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxOnlyTeletext;
     }
 }
