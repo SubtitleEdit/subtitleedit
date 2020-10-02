@@ -1308,8 +1308,10 @@ namespace Nikse.SubtitleEdit.Forms
                                                 item.SubItems[3].Text = $"OCR: {progress}";
                                                 listViewInputFiles.Refresh();
                                             };
+                                            var language = programMapTableParser.GetSubtitleLanguage(id);
+                                            language = string.IsNullOrEmpty(language) ? null : language;
                                             vobSubOcr.FileName = Path.GetFileName(fileName);
-                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, null, null);
+                                            vobSubOcr.InitializeBatch(tsBinaryParagraphs, Configuration.Settings.VobSubOcr, fileName, false, language, null);
                                             subtitle = vobSubOcr.SubtitleFromOcr;
                                         }
 
