@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress2.Text = string.Empty;
             labelFileName.Text = string.Format("File name: {0}", Path.GetFileName(fileName));
             labelDuration.Text = string.Format("Duration: {0}", TimeCode.FromSeconds(_cdgGraphics.DurationInMilliseconds / 1000.0).ToShortDisplayString());
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -66,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (!IsImagesTheSame(nBmp, lastNBmp))
+                        if (!AreImagesTheSame(nBmp, lastNBmp))
                         {
                             if (lastNBmp.Width > 0)
                             {
@@ -92,6 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Renumber();
+
             new FixOverlappingDisplayTimes().Fix(_subtitle, new EmptyFixCallback());
 
             // fix small gaps
@@ -101,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.Paragraphs[i + 1];
                 if (!next.StartTime.IsMaxTime && !current.EndTime.IsMaxTime)
                 {
-                    double gap = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+                    var gap = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
                     if (gap < 999)
                     {
                         current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
@@ -111,13 +113,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var exportBdnXmlPng = new ExportPngXml())
             {
+                var old = Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps;
+                Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
-                //        exportBdnXmlPng.SetResolution(new Point(bmp.Width, bmp.Height));
                 exportBdnXmlPng.ShowDialog(this);
+                Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
             }
         }
 
-        private bool IsImagesTheSame(NikseBitmap a, NikseBitmap b)
+        private bool AreImagesTheSame(NikseBitmap a, NikseBitmap b)
         {
             return a.IsEqualTo(b);
         }
