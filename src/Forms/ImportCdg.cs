@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
                     var old = Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps;
-                    Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = false; //true;
+                    Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = false; // Hm, not really sure if a 'true' is needed here - seems to give a small blink once in a while!?
                     exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.BluraySup, FileName, this, "Test123");
                     exportBdnXmlPng.ShowDialog(this);
                     Configuration.Settings.Tools.ExportBluRayRemoveSmallGaps = old;
