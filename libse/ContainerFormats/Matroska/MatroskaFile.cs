@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 }
             }
         }
+
         public List<MatroskaTrackInfo> GetTracks(bool subtitleOnly = false)
         {
             ReadSegmentInfoAndTracks();
@@ -698,6 +699,24 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var buffer = new byte[length];
             _stream.Read(buffer, 0, length);
             return encoding.GetString(buffer);
+        }
+
+        public static bool IsValidMatroskaFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            MatroskaFile mf = null;
+            try
+            {
+                mf = new MatroskaFile(fileName);
+                return mf.IsValid;
+            }
+            finally
+            {
+                mf.Dispose(true);
+            }
         }
     }
 }

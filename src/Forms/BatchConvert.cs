@@ -985,7 +985,8 @@ namespace Nikse.SubtitleEdit.Forms
             var mkvFileNames = new List<string>();
             Refresh();
             int index = 0;
-            while (index < listViewInputFiles.Items.Count && !_abort)
+            int count = listViewInputFiles.Items.Count;
+            while (index < count && !_abort)
             {
                 ListViewItem item = listViewInputFiles.Items[index];
                 string fileName = item.Text;
@@ -1063,28 +1064,40 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
+
+                    // init everything with defaults
+                    List<BluRaySupParser.PcsData> bluRaySubtitles = null;
                     bool isVobSub = false;
                     bool isMatroska = false;
                     bool isTs = false;
-                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
+                    bool isBluRay = false;
+
+                    // extra check for these special formats only when format is still null
+                    if (format == null)
                     {
-                        var log = new StringBuilder();
-                        bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                        // check here only after ensure the format is still null to avoid opening file
+                        isMatroska = MatroskaFile.IsValidMatroskaFile(fileName);
+                        if (!isMatroska)
+                        {
+                            if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
+                            {
+                                var log = new StringBuilder();
+                                bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+                                isBluRay = bluRaySubtitles.Count > 0;
+                            }
+                            else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtil.IsVobSub(fileName))
+                            {
+                                isVobSub = true;
+                            }
+                            else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
+                            {
+                                isTs = true;
+                            } 
+                        }
                     }
-                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtil.IsVobSub(fileName))
-                    {
-                        isVobSub = true;
-                    }
-                    else if (format == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska", StringComparison.Ordinal))
-                    {
-                        isMatroska = true;
-                    }
-                    else if (format == null && (fileName.EndsWith(".ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mts", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Transport Stream", StringComparison.Ordinal))
-                    {
-                        isTs = true;
-                    }
-                    if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska && !isTs)
+
+                    // no format found (invalid subtitle file)
+                    if (format == null && !isBluRay && !isVobSub && !isMatroska && !isTs)
                     {
                         IncrementAndShowProgress();
                     }
@@ -1092,6 +1105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (isMatroska)
                         {
+                            // get subtitle file name from matroska file
                             using (var matroska = new MatroskaFile(fileName))
                             {
                                 if (matroska.IsValid)
@@ -1201,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        else if (bluRaySubtitles.Count > 0)
+                        else if (isBluRay)
                         {
                             if ((toFormat == BdnXmlSubtitle || toFormat == BluRaySubtitle ||
                                 toFormat == VobSubSubtitle || toFormat == DostImageSubtitle) &&
@@ -1385,25 +1399,32 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
                             }
+
+                            // no more processing after this point
+                            continue; // while loop
                         }
 
-                        if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
+                        // read header only when none of the special formats
+                        if ((isMatroska || isBluRay || isVobSub || isTs) == false)
                         {
-                            if (!string.IsNullOrWhiteSpace(_assStyle) && !checkBoxUseStyleFromSource.Checked)
+                            if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                             {
-                                sub.Header = _assStyle;
+                                if (!string.IsNullOrWhiteSpace(_assStyle) && !checkBoxUseStyleFromSource.Checked)
+                                {
+                                    sub.Header = _assStyle;
+                                }
                             }
-                        }
-                        else if (comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat && _ssaStyle != null)
-                        {
-                            if (!string.IsNullOrWhiteSpace(_ssaStyle) && !checkBoxUseStyleFromSource.Checked)
+                            else if (comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat && _ssaStyle != null)
                             {
-                                sub.Header = _ssaStyle;
+                                if (!string.IsNullOrWhiteSpace(_ssaStyle) && !checkBoxUseStyleFromSource.Checked)
+                                {
+                                    sub.Header = _ssaStyle;
+                                }
                             }
                         }
 
-                        bool skip = CheckSkipFilter(fileName, format, sub);
-                        if (skip)
+                        // check filters
+                        if (ShouldSkipFile(fileName, format, sub))
                         {
                             item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.FilterSkipped;
                         }
@@ -1814,41 +1835,51 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
+        private bool ShouldSkipFile(string fileName, SubtitleFormat format, Subtitle sub)
         {
-            bool skip = false;
+            // subrip without utf8 boom
             if (comboBoxFilter.SelectedIndex == 1)
             {
-                if (format != null && format.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName))
+                if (format?.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName) == false)
                 {
-                    skip = true;
+                    return false;
                 }
             }
-            else if (comboBoxFilter.SelectedIndex == 2)
+
+            // more than two lines
+            if (comboBoxFilter.SelectedIndex == 2)
             {
-                skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
-                    if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
+                    if (Utilities.GetNumberOfLines(p.Text) > 2)
                     {
-                        skip = false;
-                        break;
+                        return false;
                     }
                 }
             }
-            else if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
+
+            // text contains
+            if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
             {
-                skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
-                    if (p.Text != null && p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal))
+                    if (p.Text?.Contains(textBoxFilter.Text, StringComparison.Ordinal) == true)
                     {
-                        skip = false;
-                        break;
+                        return false;
                     }
                 }
             }
-            return skip;
+
+            // matroska language code contains
+            if (comboBoxFilter.SelectedIndex == 4 && textBoxFilter.Text.Length > 0
+                && fileName.Contains(textBoxFilter.Text, StringComparison.OrdinalIgnoreCase)
+                && MatroskaFile.IsValidMatroskaFile(fileName))
+            {
+                return false;
+            }
+
+            // skip file
+            return true;
         }
 
         private void IncrementAndShowProgress()
