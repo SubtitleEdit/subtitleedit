@@ -758,12 +758,12 @@ namespace Nikse.SubtitleEdit.Core
             FindDialog = new LanguageStructure.FindDialog
             {
                 Title = "Find",
-                Find = "Find",
+                Find = "&Find",
                 Normal = "&Normal",
                 CaseSensitive = "&Case sensitive",
                 RegularExpression = "Regular e&xpression",
-                WholeWord = "Whole word",
-                Count = "Count",
+                WholeWord = "&Whole word",
+                Count = "Coun&t",
                 XNumberOfMatches = "{0:#,##0} matches",
                 OneMatch = "One match"
             };
