@@ -26831,8 +26831,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
                 {
-                    textBoxListViewTextAlternate.SelectedText = s;
-                    textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+                    if (!string.IsNullOrEmpty(textBoxListViewTextAlternate.SelectedText))
+                    {
+                        textBoxListViewTextAlternate.SelectedText = s; 
+                    }
+                    else
+                    {
+                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s + " "); 
+                    }
                 }
                 else
                 {
@@ -26852,7 +26858,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        textBoxListViewText.SelectedText = s;
+                        if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
+                        {
+                            textBoxListViewText.SelectedText = s;
+                        }
+                        else
+                        {
+                            textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s + " ");
+                        }
                     }
 
                     ShowSource();
