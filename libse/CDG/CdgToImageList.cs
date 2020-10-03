@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.CDG
         public delegate void CdgToImageSubtitleCallback(int currentNumber, int totalUnique);
 
         public int MergeGapSmallerThanXMilliseconds { get; set; } = 999;
-        public int SmallGapMilliseconds { get; set; } = 0;
+        public int SmallGapMilliseconds { get; set; }
         public int SkipPacketCount { get; set; } = 20;
 
         public List<NikseBitmap> MakeImageList(CdgGraphics cdgGraphics, Subtitle subtitle, CdgToImageSubtitleCallback callback)
