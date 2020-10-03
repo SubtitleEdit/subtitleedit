@@ -32,11 +32,8 @@
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelDuration = new System.Windows.Forms.Label();
-            this.radioButtonASS = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
-            this.radioButtonSrt = new System.Windows.Forms.RadioButton();
             this.labelProgress = new System.Windows.Forms.Label();
-            this.radioButtonSrtOnlyText = new System.Windows.Forms.RadioButton();
             this.radioButtonBluRaySup = new System.Windows.Forms.RadioButton();
             this.labelProgress2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -80,17 +77,6 @@
             this.labelDuration.TabIndex = 7;
             this.labelDuration.Text = "Duration:";
             // 
-            // radioButtonASS
-            // 
-            this.radioButtonASS.AutoSize = true;
-            this.radioButtonASS.Location = new System.Drawing.Point(203, 12);
-            this.radioButtonASS.Name = "radioButtonASS";
-            this.radioButtonASS.Size = new System.Drawing.Size(190, 17);
-            this.radioButtonASS.TabIndex = 8;
-            this.radioButtonASS.Text = "Advanced Sub Station Alpha (.ass)";
-            this.radioButtonASS.UseVisualStyleBackColor = true;
-            this.radioButtonASS.Visible = false;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -100,17 +86,6 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "Target format";
             // 
-            // radioButtonSrt
-            // 
-            this.radioButtonSrt.AutoSize = true;
-            this.radioButtonSrt.Location = new System.Drawing.Point(203, 35);
-            this.radioButtonSrt.Name = "radioButtonSrt";
-            this.radioButtonSrt.Size = new System.Drawing.Size(131, 17);
-            this.radioButtonSrt.TabIndex = 10;
-            this.radioButtonSrt.Text = "SubRip (.srt) with color";
-            this.radioButtonSrt.UseVisualStyleBackColor = true;
-            this.radioButtonSrt.Visible = false;
-            // 
             // labelProgress
             // 
             this.labelProgress.AutoSize = true;
@@ -119,17 +94,6 @@
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 11;
             this.labelProgress.Text = "labelProgress";
-            // 
-            // radioButtonSrtOnlyText
-            // 
-            this.radioButtonSrtOnlyText.AutoSize = true;
-            this.radioButtonSrtOnlyText.Location = new System.Drawing.Point(203, 58);
-            this.radioButtonSrtOnlyText.Name = "radioButtonSrtOnlyText";
-            this.radioButtonSrtOnlyText.Size = new System.Drawing.Size(146, 17);
-            this.radioButtonSrtOnlyText.TabIndex = 12;
-            this.radioButtonSrtOnlyText.Text = "SubRip (.srt) withour color";
-            this.radioButtonSrtOnlyText.UseVisualStyleBackColor = true;
-            this.radioButtonSrtOnlyText.Visible = false;
             // 
             // radioButtonBluRaySup
             // 
@@ -159,19 +123,20 @@
             this.ClientSize = new System.Drawing.Size(409, 210);
             this.Controls.Add(this.labelProgress2);
             this.Controls.Add(this.radioButtonBluRaySup);
-            this.Controls.Add(this.radioButtonSrtOnlyText);
             this.Controls.Add(this.labelProgress);
-            this.Controls.Add(this.radioButtonSrt);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.radioButtonASS);
             this.Controls.Add(this.labelDuration);
             this.Controls.Add(this.labelFileName);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.buttonCancel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ImportCdg";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import CD+G kareoke";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -184,11 +149,8 @@
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelDuration;
-        private System.Windows.Forms.RadioButton radioButtonASS;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton radioButtonSrt;
         private System.Windows.Forms.Label labelProgress;
-        private System.Windows.Forms.RadioButton radioButtonSrtOnlyText;
         private System.Windows.Forms.RadioButton radioButtonBluRaySup;
         private System.Windows.Forms.Label labelProgress2;
     }
