@@ -565,12 +565,12 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Find</Title>
-    <Find>Find</Find>
+    <Find>&amp;Find</Find>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Case sensitive</CaseSensitive>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
-    <WholeWord>Whole word</WholeWord>
-    <Count>Count</Count>
+    <WholeWord>&amp;Whole word</WholeWord>
+    <Count>Coun&amp;t</Count>
     <XNumberOfMatches>{0:#,##0} matches</XNumberOfMatches>
     <OneMatch>One match</OneMatch>
   </FindDialog>
