@@ -1,5 +1,4 @@
-﻿
-using Nikse.SubtitleEdit.Controls;
+﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats;
@@ -6668,6 +6667,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
+                        ShowSubtitleTimer.Stop();
+                        var oldHash = _changeSubtitleHash;
                         _subtitleAlternate = new Subtitle(_subtitle);
                         _subtitleAlternateFileName = _fileName;
                         _fileName = null;
@@ -6678,6 +6679,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         ShowStatus(_language.SubtitleTranslated);
+                        _changeAlternateSubtitleHash = oldHash;
+                        _changeSubtitleHash = -1;
+                        ShowSubtitleTimer.Start();
                     }
 
                     ShowSource();
@@ -6686,7 +6690,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
                         SubtitleListview1.AutoSizeAllColumns(this);
+                        var oldHash = _changeAlternateSubtitleHash;
                         SetupAlternateEdit();
+                        _changeAlternateSubtitleHash = oldHash;
                     }
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
