@@ -26833,11 +26833,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!string.IsNullOrEmpty(textBoxListViewTextAlternate.SelectedText))
                     {
-                        textBoxListViewTextAlternate.SelectedText = s; 
+                        textBoxListViewTextAlternate.SelectedText = s;
                     }
                     else
                     {
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s + " "); 
+                        var selectionStart = textBoxListViewTextAlternate.SelectionStart;
+                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+                        textBoxListViewTextAlternate.SelectionStart = selectionStart + s.Length;
                     }
                 }
                 else
@@ -26855,6 +26857,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = s + " " + p.Text;
                             SubtitleListview1.SetText(item.Index, p.Text);
                         }
+                        RefreshSelectedParagraph();
                     }
                     else
                     {
@@ -26864,12 +26867,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s + " ");
+                            var selectionStart = textBoxListViewText.SelectionStart;
+                            textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
+                            textBoxListViewText.SelectionStart = selectionStart + s.Length;
                         }
                     }
 
                     ShowSource();
-                    RefreshSelectedParagraph();
                 }
             }
         }
