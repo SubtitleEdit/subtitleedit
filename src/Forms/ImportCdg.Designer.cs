@@ -40,6 +40,8 @@
             this.labelBackgroundImage = new System.Windows.Forms.Label();
             this.pictureBoxBackgroundImage = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelAudioFileName = new System.Windows.Forms.Label();
+            this.buttonAudioFileBrowse = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackgroundImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,7 +56,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(15, 135);
+            this.buttonStart.Location = new System.Drawing.Point(15, 146);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(154, 32);
             this.buttonStart.TabIndex = 4;
@@ -85,7 +87,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 76);
+            this.label1.Location = new System.Drawing.Point(12, 87);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 9;
@@ -94,7 +96,7 @@
             // labelProgress
             // 
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(15, 170);
+            this.labelProgress.Location = new System.Drawing.Point(15, 181);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 11;
@@ -104,7 +106,7 @@
             // 
             this.radioButtonBluRaySup.AutoSize = true;
             this.radioButtonBluRaySup.Checked = true;
-            this.radioButtonBluRaySup.Location = new System.Drawing.Point(29, 99);
+            this.radioButtonBluRaySup.Location = new System.Drawing.Point(29, 110);
             this.radioButtonBluRaySup.Name = "radioButtonBluRaySup";
             this.radioButtonBluRaySup.Size = new System.Drawing.Size(200, 17);
             this.radioButtonBluRaySup.TabIndex = 13;
@@ -115,7 +117,7 @@
             // labelProgress2
             // 
             this.labelProgress2.AutoSize = true;
-            this.labelProgress2.Location = new System.Drawing.Point(15, 188);
+            this.labelProgress2.Location = new System.Drawing.Point(15, 199);
             this.labelProgress2.Name = "labelProgress2";
             this.labelProgress2.Size = new System.Drawing.Size(76, 13);
             this.labelProgress2.TabIndex = 14;
@@ -157,11 +159,32 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelAudioFileName
+            // 
+            this.labelAudioFileName.AutoSize = true;
+            this.labelAudioFileName.Location = new System.Drawing.Point(305, 15);
+            this.labelAudioFileName.Name = "labelAudioFileName";
+            this.labelAudioFileName.Size = new System.Drawing.Size(82, 13);
+            this.labelAudioFileName.TabIndex = 18;
+            this.labelAudioFileName.Text = "Audio file name:";
+            // 
+            // buttonAudioFileBrowse
+            // 
+            this.buttonAudioFileBrowse.Location = new System.Drawing.Point(308, 32);
+            this.buttonAudioFileBrowse.Name = "buttonAudioFileBrowse";
+            this.buttonAudioFileBrowse.Size = new System.Drawing.Size(25, 23);
+            this.buttonAudioFileBrowse.TabIndex = 19;
+            this.buttonAudioFileBrowse.Text = "...";
+            this.buttonAudioFileBrowse.UseVisualStyleBackColor = true;
+            this.buttonAudioFileBrowse.Click += new System.EventHandler(this.buttonAudioFileBrowse_Click);
+            // 
             // ImportCdg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(973, 474);
+            this.Controls.Add(this.buttonAudioFileBrowse);
+            this.Controls.Add(this.labelAudioFileName);
             this.Controls.Add(this.pictureBoxBackgroundImage);
             this.Controls.Add(this.labelBackgroundImage);
             this.Controls.Add(this.buttonChooseBackgroundImage);
@@ -199,5 +222,7 @@
         private System.Windows.Forms.Label labelBackgroundImage;
         private System.Windows.Forms.PictureBox pictureBoxBackgroundImage;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelAudioFileName;
+        private System.Windows.Forms.Button buttonAudioFileBrowse;
     }
 }

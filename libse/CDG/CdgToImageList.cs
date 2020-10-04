@@ -50,6 +50,13 @@ namespace Nikse.SubtitleEdit.Core.CDG
                                 p = new Paragraph(string.Empty, timeMs, timeMs);
                             }
                         }
+                        else
+                        {
+                            if (p != null)
+                            {
+                                p.EndTime.TotalMilliseconds = timeMs;
+                            }
+                        }
                         lastNBmp = nBmp;
                     }
                 }

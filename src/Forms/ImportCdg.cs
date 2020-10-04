@@ -8,18 +8,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportCdg : Form, IBinaryParagraphList
-    {
+    {        
+        //300x216
         private readonly CdgGraphics _cdgGraphics;
         private readonly Subtitle _subtitle;
         private List<NikseBitmap> _imageList;
+        private string _audioFileName;
+        private Bitmap _originalBackgroundImage;
+        private Bitmap _resizedBackgroundImage;
+        private int _durationSeconds;
 
         public string FileName { get; }
 
@@ -34,8 +37,30 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = string.Empty;
             labelProgress2.Text = string.Empty;
             labelFileName.Text = string.Format("File name: {0}", Path.GetFileName(fileName));
+            _durationSeconds = (int) (_cdgGraphics.DurationInMilliseconds / 1000.0 + 0.5);
             labelDuration.Text = string.Format("Duration: {0}", TimeCode.FromSeconds(_cdgGraphics.DurationInMilliseconds / 1000.0).ToDisplayString());
             buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+
+            if (fileName != null && fileName.Length > 3)
+            {
+                var audioFileName = fileName.Substring(0, fileName.Length - 3) + "mp3";
+                if (!File.Exists(audioFileName))
+                {
+                    audioFileName = fileName.Substring(0, fileName.Length - 3) + "ogg";
+                }
+                if (File.Exists(audioFileName))
+                {
+                    _audioFileName = audioFileName;
+                    labelAudioFileName.Text = "Audio file name: " + Path.GetFileName(audioFileName);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCdgBackgroundImage) &&
+                File.Exists(Configuration.Settings.Tools.ExportCdgBackgroundImage))
+            {
+                pictureBoxBackgroundImage.Image = new Bitmap(Configuration.Settings.Tools.ExportCdgBackgroundImage);
+                labelBackgroundImage.Text = Configuration.Settings.Tools.ExportCdgBackgroundImage;
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -67,8 +92,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
 
                         var tempFolder = Path.GetTempPath();
-                        var audioFileName = @"C:\Users\WinX\Desktop\auto-br\CDG\samples\FOR HE'S A JOLLY GOOD FELLOW.mp3";
-                        var processMakeVideo = GetFFmpegProcess(labelBackgroundImage.Text,)
+                        var tempMkv = Path.Combine(tempFolder, Guid.NewGuid() + ".mkv");
+                        var processMakeVideo = GetFFmpegProcess(labelBackgroundImage.Text, _audioFileName, tempMkv);
+                        processMakeVideo.Start();
+                        processMakeVideo.WaitForExit();
+
+                        var finalMkv = Path.Combine(Path.GetDirectoryName(FileName), Guid.NewGuid() + ".mkv");
+                        var processAddSubtitles = GetMkvMergeProcess(tempMkv, supFileName, finalMkv);
+                        processAddSubtitles.Start();
+                        processAddSubtitles.WaitForExit();
                     }
 
                     DialogResult = DialogResult.OK;
@@ -103,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             pictureBoxBackgroundImage.Image = new Bitmap(openFileDialog1.FileName);
             labelBackgroundImage.Text = openFileDialog1.FileName;
+            Configuration.Settings.Tools.ExportCdgBackgroundImage = openFileDialog1.FileName;
         }
 
         public Process GetFFmpegProcess(string imageFileName, string audioFileName, string outputFileName)
@@ -119,10 +152,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     FileName = ffmpegLocation,
                     Arguments = $"-loop 1 -i \"{imageFileName}\" -i \"{audioFileName}\" -c:v libx264 -tune stillimage -shortest \"{outputFileName}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
+                    //UseShellExecute = false,
+                    //RedirectStandardOutput = true,
+                    //RedirectStandardError = true,
+                    //CreateNoWindow = true
                 }
             };
             return process;
@@ -141,11 +174,11 @@ namespace Nikse.SubtitleEdit.Forms
                 StartInfo =
                 {
                     FileName = location,
-                    Arguments = $"-o \"{videoFileName}\" \"{outputFileName}\" \"{subtitleFileName}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
+                    Arguments = $"-o \"{outputFileName}\" \"{videoFileName}\" \"{subtitleFileName}\"",
+                    //UseShellExecute = false,
+                    //RedirectStandardOutput = true,
+                    //RedirectStandardError = true,
+                    //CreateNoWindow = true
                 }
             };
 
@@ -156,6 +189,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return process;
+        }
+
+        private void buttonAudioFileBrowse_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            _audioFileName = openFileDialog1.FileName;
+            labelAudioFileName.Text = "Audio file name: " + Path.GetFileName(_audioFileName);
         }
     }
 }
