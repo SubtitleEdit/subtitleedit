@@ -435,12 +435,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewRulesKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
-            {
-                DeleteToolStripMenuItemClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
                 listViewRules.SelectAll();
                 e.SuppressKeyPress = true;
@@ -454,27 +449,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listViewRules.InverseSelection();
                 e.SuppressKeyPress = true;
-            }
-            else if (listViewRules.SelectedItems.Count == 1)
-            {
-                if (e.KeyCode == Keys.Up && e.Control && !e.Alt && !e.Shift)
-                {
-                    moveUpToolStripMenuItem_Click(sender, e);
-                }
-
-                if (e.KeyCode == Keys.Down && e.Control && !e.Alt && !e.Shift)
-                {
-                    moveDownToolStripMenuItem_Click(sender, e);
-                }
-
-                if (e.KeyData == (Keys.Control | Keys.Home))
-                {
-                    moveTopToolStripMenuItem_Click(sender, e);
-                }
-                else if (e.KeyData == (Keys.Control | Keys.End))
-                {
-                    moveBottomToolStripMenuItem_Click(sender, e);
-                }
             }
         }
 
@@ -628,17 +602,6 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            int index = listViewRules.SelectedIndices[0];
-            if (index == 0)
-            {
-                return;
-            }
-
-            SwapRules(index, index - 1);
-        }
-
         private void SwapRules(int index, int index2)
         {
             if (_currentGroup == null)
@@ -674,12 +637,35 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewRules.Items[index].Selected = false;
             listViewRules.Items[index2].Selected = true;
+            listViewRules.Items[index2].Focused = true;
+            listViewRules.EnsureVisible(index2);
             GeneratePreview();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
         }
 
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewRules.SelectedItems.Count != 1 || listViewRules.Items.Count < 2)
+            {
+                return;
+            }
+
+            int index = listViewRules.SelectedIndices[0];
+            if (index == 0)
+            {
+                return;
+            }
+
+            SwapRules(index, index - 1);
+        }
+
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (listViewRules.SelectedItems.Count != 1 || listViewRules.Items.Count < 2)
+            {
+                return;
+            }
+
             int index = listViewRules.SelectedIndices[0];
             if (index == listViewRules.Items.Count - 1)
             {
@@ -691,6 +677,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void moveTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (listViewRules.SelectedItems.Count != 1 || listViewRules.Items.Count < 2)
+            {
+                return;
+            }
+
             int index = listViewRules.SelectedIndices[0];
             if (index == 0)
             {
@@ -711,6 +702,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (listViewRules.SelectedItems.Count != 1 || listViewRules.Items.Count < 2)
+            {
+                return;
+            }
+
             int index = listViewRules.SelectedIndices[0];
             int bottomIndex = listViewRules.Items.Count - 1;
             if (index == bottomIndex)
@@ -725,6 +721,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items[0].Selected = false;
             listViewRules.Items[bottomIndex].Selected = true;
             listViewRules.Items[bottomIndex].Focused = true;
+            listViewRules.EnsureVisible(bottomIndex);
             GeneratePreview();
         }
 
@@ -899,6 +896,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (group == focusGroup)
                 {
                     listViewGroups.Items[index].Selected = true;
+                    listViewGroups.Items[index].Focused = true;
+                    listViewGroups.EnsureVisible(index);
                 }
             }
             listViewGroups.EndUpdate();
@@ -1081,29 +1080,6 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Items.Clear();
             }
             UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
-        }
-
-        private void listViewGroups_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete)
-            {
-                deleteToolStripMenuItem1_Click(sender, null);
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.Control | Keys.Up))
-            {
-                moveUpToolStripMenuItem1_Click(sender, null);
-                e.Handled = true;
-            }
-            else if (e.KeyData == (Keys.Control | Keys.Down))
-            {
-                moveDownToolStripMenuItem1_Click(sender, null);
-                e.Handled = true;
-            }
-            else if (e.KeyCode == Keys.F2)
-            {
-                ToolStripMenuItemRenameClick(sender, e);
-            }
         }
 
         private void SwapGroups(int index, int index2)
