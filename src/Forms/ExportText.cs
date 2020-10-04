@@ -101,9 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Frames")
             {
                 radioButtonTimeCodeHHMMSSFF.Checked = true;
-            }
-
-            if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Milliseconds")
+            }else if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Milliseconds")
             {
                 radioButtonTimeCodeMs.Checked = true;
             }
