@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _isLoading = true;
         private string _exportType = ExportFormats.BdnXml;
         private string _fileName;
+        private string _outputFileName;
         private IBinaryParagraphList _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
@@ -111,6 +112,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
+
+        public string GetOutputFileName()
+        {
+            return _outputFileName;
+        }
 
         public ExportPngXml()
         {
@@ -476,6 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonExportClick(object sender, EventArgs e)
         {
             FixStartEndWithSameTimeCode();
+            var singleFile = false;
 
             if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
             {
@@ -497,6 +504,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.VobSub)
             {
@@ -504,6 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.sub";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "VobSub|*.sub";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.Fab)
             {
@@ -511,6 +520,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "FAB image scripts|*.txt";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.Stl)
             {
@@ -518,6 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "DVD Studio Pro STL|*.stl";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.Fcp)
             {
@@ -525,6 +536,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.Dost)
             {
@@ -532,6 +544,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.dost";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Dost files|*.dost";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.DCinemaInterop)
             {
@@ -539,6 +552,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.DCinemaSmpte2014)
             {
@@ -546,6 +560,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
+                singleFile = true;
             }
             else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
             {
@@ -553,23 +568,14 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.edl";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "EDL files|*.edl";
+                singleFile = true;
             }
 
-            if (_exportType == ExportFormats.BluraySup && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.VobSub && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.BdnXml && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Fab && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.ImageFrame && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Stl && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Spumux && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Fcp && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Dost && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.DCinemaInterop && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.DCinemaSmpte2014 && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.EdlClipName && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == ExportFormats.Edl && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            if (singleFile && saveFileDialog1.ShowDialog(this) == DialogResult.OK || !singleFile && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 GetResolution(out var width, out var height);
+
+                _outputFileName = singleFile ? saveFileDialog1.FileName : folderBrowserDialog1.SelectedPath;
 
                 FileStream binarySubtitleFile = null;
                 VobSubWriter vobSubWriter = null;
